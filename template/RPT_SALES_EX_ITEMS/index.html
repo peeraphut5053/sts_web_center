@@ -1,0 +1,241 @@
+<div class="row">
+    <div class="row quicksearch col-xs-10" >
+        <div class="row" >
+            <div>
+                <h1> Ledger Posted Oversea Sales Report </h1>
+            </div> 
+        </div> 
+        <div class="row col-xs-12">
+            <div class="col-xs-3" >   
+                <div class="input-group">
+                    <div class="input-group-addon">From date</div>
+                    <input type="text" autocomplete="off"  class="form-control txt-filter" id="InvFromDate">
+                </div>
+            </div>
+            <div class="col-xs-3">   
+                <div class="input-group">
+                    <div class="input-group-addon">To date</div>
+                    <input type="text" autocomplete="off"  class="form-control txt-filter" id="InvToDate">
+                </div>
+            </div>
+            <div class="col-xs-3">   
+                <div class="input-group">
+                    <div class="input-group-addon">inv num</div>
+                    <input type="text" class="form-control txt-filter" id="inv_num">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-3" >   
+                <div class="input-group">
+                    <div class="input-group-addon">cust num/name</div>
+                    <input type="text" class="form-control txt-filter" id="cust_num">
+                </div>
+            </div>
+            <div class="col-xs-3" >
+                <div class="input-group">
+                    <div class="input-group-addon">Item</div>
+                    <input type="text" class="form-control txt-filter" id="item" >
+                </div>
+            </div>
+            <div class="col-xs-3" >   
+                <select class="form-control txt-filter" id="country">
+                    <option value="">---- Country ----</option>
+                    <option value="Zealand">New Zealand</option>
+                    <option value="Laos">Laos</option>
+                    <option value="Australia">Australia</option>
+                    <option value="United">United State</option>
+                    <option value="Canada">Canada</option>
+                </select>
+            </div>      
+            <div class="col-xs-3" >
+                <button id="btnSearch" class="btn btn-info"><i class="fa fa-searh"></i>&nbsp;ค้นหา</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="row" id="divReport" >
+    <table class="table table-condensed table-bordered table-striped" id="tblReport" style="width:100%;">
+        <thead>
+            <tr>
+                <th>inv_date</th>
+                <th>inv_num</th>
+                <th>Country</th>
+                <th>Cust_name</th>
+                <th>item</th>
+                <th>item_name</th>
+                <th>Unit_weight</th>
+                <th>qty_um1</th>
+                <th>qty_um2</th>
+                <th>discount</th>
+                <th>VAT</th>
+                <th>amt_invoiced</th>
+                <th>Exchange_rate</th>    
+                <th>amt_booked</th>    
+            </tr>
+        </thead>
+    </table>
+</div>
+
+
+<script type="text/javascript" src="js/main.js"></script>
+<script type="text/javascript">
+    $("#InvFromDate , #InvToDate").datepicker({
+        dateFormat: 'yy-mm-dd',
+    });
+    $("#btnSearch").click(function () {
+        var tblReportId = '#tblReport';
+        var btnSearch = '#btnSearch';
+        SearchDataFooterFn(tblReportId, btnSearch, tablecolumsArr, "payment invoice checking", "ajax");
+        RowFooterBuild(tblReportId);
+    });
+    $("#txtFromDate,#txtToDate").val(GetToday());
+
+    $(".txt-filter").on("keypress", function (e) {
+        if (e.keyCode == 13) {
+            SearchItemNormal();
+            return false; // prevent the button click from happening
+        }
+    });
+    function footerCallback(api) {
+        $(api.column(3).footer()).html("<b>TOTAL</b>");
+        ColumnSumVal(6, api)
+        ColumnSumVal(7, api)
+        ColumnSumVal(8, api)
+        ColumnSumVal(11, api)
+        ColumnSumVal(12, api)
+        ColumnSumVal(13, api)
+    }
+
+    tablecolumsArr = [
+        {
+            "data": "inv_date",
+            width: 120,
+            "className": "text-right",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "inv_num",
+            width: 100,
+            "render": function (data, type, row) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "Country",
+            width: 100,
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "Cust_name",
+            "className": "text-center",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "Item",
+            "className": "text-right",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                ret = "<span>" + formatMoney(data) + "</span>";
+
+                return ret;
+            }
+        },
+        {
+            "data": "Item_name",
+            width: 120,
+            "className": "text-right",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "Unit_weight",
+            width: 120,
+            "className": "text-right",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "qty_um1",
+            width: 80,
+            "className": "text-right",
+            "render": function (data, type, row) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "qty_um2",
+            width: 80,
+            "className": "text-right",
+            "render": function (data, type, row) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "discount",
+            width: 80,
+            "className": "text-right",
+            "render": function (data, type, row) {
+                var ret = data;
+                return ret;
+            }
+        },
+         {
+            "data": "VAT",
+            width: 80,
+            "className": "text-right",
+            "render": function (data, type, row) {
+                var ret = data;
+                return ret;
+            }
+        },
+         {
+            "data": "amt_invoiced",
+            width: 80,
+            "className": "text-right",
+            "render": function (data, type, row) {
+                var ret = data;
+                return ret;
+            }
+        },
+         {
+            "data": "Exchange_rate",
+            width: 80,
+            "className": "text-right",
+            "render": function (data, type, row) {
+                var ret = data;
+                return ret;
+            }
+        },
+         {
+            "data": "amt_booked",
+            width: 80,
+            "className": "text-right",
+            "render": function (data, type, row) {
+                var ret = data;
+                return ret;
+            }
+        },
+    ];
+
+
+
+</script>

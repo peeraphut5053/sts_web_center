@@ -1,0 +1,280 @@
+<div class="row">
+    <div>
+        <h1>RPT Material Transachtions by PO/VC</h1>
+    </div> 
+    <div class="col-lg-2" >   
+        <div class="input-group">
+            <div class="input-group-addon">From Date</div>
+            <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtFromDate">
+        </div>
+    </div>
+    <div class="col-lg-2">   
+        <div class="input-group">
+            <div class="input-group-addon">To date</div>
+            <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtToDate">
+        </div>
+    </div>
+    <div class="col-lg-2">   
+        <div class="input-group">
+            <div class="input-group-addon">voucher Number</div>
+            <input type="text" class="form-control txt-filter" id="voucher_num">
+        </div>
+    </div>
+    <div class="col-lg-2">   
+        <div class="input-group">
+            <div class="input-group-addon">grn number</div>
+            <input type="text" class="form-control txt-filter" id="grn_num">
+        </div>
+    </div>     
+    <div class="col-lg-2">   
+        <div class="input-group">
+            <div class="input-group-addon">Po number</div>
+            <input type="text" class="form-control txt-filter" id="po_num">
+        </div>
+    </div>   
+    <div class="col-lg-2">   
+        <div class="input-group">
+            <div class="input-group-addon">item </div>
+            <input type="text" class="form-control txt-filter" id="item">
+        </div>
+    </div> 
+    <div class="col-lg-2">   
+        <div class="input-group">
+            <div class="input-group-addon">uf_lot</div>
+            <input type="text" class="form-control txt-filter" id="uf_lot">
+        </div>
+    </div> 
+    <div class="col-lg-2">   
+        <button id="btnSearch" class="btn btn-info"><i class="fa fa-searh"></i>&nbsp;ค้นหา</button>
+    </div>
+</div>
+
+<div class="row" id="divReport" >
+    <table class="table table-condensed table-bordered table-striped" id="tblReport" style="width:100%;">
+        <thead>
+            <tr>
+                <th>Transaction Number</th>
+                <th>trans_date</th>
+                <th>item</th>
+                <th>loc</th>
+                <th>lot</th>
+                <th>qty</th>
+                <th>cost</th>
+                <th>matl_cost</th>
+                <th>lbr_cost</th>
+                <th>fovhd_cost</th>
+                <th>vovhd_cost</th>
+                <th>out_cost</th>
+                <th>total_posted</th>
+                <th>createdby</th>
+                <th>po_num</th>
+                <th>po_line</th>
+                <th>grn_num</th>
+                <th>grn_line</th>
+                <th>voucher</th>
+                <th>STS_VCH</th>
+                <th>inv_num</th>
+                <th>sts_no</th>
+                <th>vend num</th>
+                <th>name</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+<script type="text/javascript">
+    $("#txtFromDate,#txtToDate").datepicker({
+        dateFormat: 'yy-mm-dd',
+    });
+    $("#txtFromDate,#txtToDate").val(GetToday());
+    $("#btnSearch").click(function () {
+        var tblReportId = '#tblReport';
+        var btnSearch = '#btnSearch';
+        SearchDataFn(tblReportId, btnSearch, tablecolumsArr, "Material_Transachtions_by_PO", "Material_Transachtions_by_PO");
+    });
+    var tablecolumsArr = [
+        {
+            "data": "trans_num",
+            "className": "text-right",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "width": 250,
+            "data": "trans_date",
+            "className": "text-center",
+            "render": function (data, type, row, meta) {
+                var ret = data.date.substring(0, 10);
+                return ret;
+            }
+        },
+        {
+            "data": "item",
+            "className": "text-center",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "loc",
+            "className": "text-right",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "lot",
+            "render": function (data, type, row) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "qty",
+            "className": "text-right",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "cost",
+            "render": function (data, type, row) {
+                var ret = addCommas(parseFloat(data).toFixed(2));
+                return data;
+            }
+        },
+        {
+            "data": "matl_cost",
+            "className": "text-right",
+
+            "render": function (data, type, row) {
+                var ret = addCommas(parseFloat(data).toFixed(2));
+                return data;
+            }
+        },
+        {
+            "data": "lbr_cost",
+            "className": "text-right",
+
+            "render": function (data, type, row) {
+                var ret = addCommas(parseFloat(data).toFixed(2));
+                return data;
+            }
+        },
+        {
+            "data": "fovhd_cost",
+            "className": "text-right",
+
+            "render": function (data, type, row) {
+                var ret = addCommas(parseFloat(data).toFixed(2));
+                return data;
+            }
+        },
+        {
+            "data": "vovhd_cost",
+            "className": "text-right",
+
+            "render": function (data, type, row) {
+                var ret = addCommas(parseFloat(data).toFixed(2));
+                return data;
+            }
+        },
+        {
+            "data": "out_cost",
+            "className": "text-right",
+
+            "render": function (data, type, row) {
+                var ret = addCommas(parseFloat(data).toFixed(2));
+                return data;
+            }
+        },
+        {
+            "data": "total_posted",
+            "render": function (data, type, row) {
+                var ret = data;
+                return data;
+            }
+        },
+        {
+            "data": "createdby",
+            "render": function (data, type, row) {
+                var ret = data;
+                return data;
+            }
+        },
+        {
+            "data": "po_num",
+            "render": function (data, type, row) {
+                var ret = data;
+                return data;
+            }
+        },
+        {
+            "data": "po_line",
+            "render": function (data, type, row) {
+                var ret = data;
+                return data;
+            }
+        },
+        {
+            "data": "grn_num",
+            "render": function (data, type, row) {
+                var ret = data;
+                return data;
+            }
+        },
+        {
+            "data": "grn_line",
+            "render": function (data, type, row) {
+                var ret = data;
+                return data;
+            }
+        },
+        {
+            "data": "voucher",
+            "render": function (data, type, row) {
+                var ret = data;
+                return data;
+            }
+        },
+        {
+            "data": "STS_VCH",
+            "render": function (data, type, row) {
+                var ret = data;
+                return data;
+            }
+        },
+        {
+            "data": "inv_num",
+            "render": function (data, type, row) {
+                var ret = data;
+                return data;
+            }
+        },
+        {
+            "data": "sts_no",
+            "render": function (data, type, row) {
+                var ret = data;
+                return data;
+            }
+        },
+        {
+            "data": "vend_num",
+            "render": function (data, type, row) {
+                var ret = data;
+                return data;
+            }
+        },
+        {
+            "data": "name",
+            "render": function (data, type, row) {
+                var ret = data;
+                return data;
+            }
+        },
+    ];
+</script>

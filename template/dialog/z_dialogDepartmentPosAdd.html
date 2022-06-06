@@ -1,0 +1,213 @@
+<style>
+    .col-label-a{
+        border-bottom: solid 1px #cdcdcd ;
+        padding-bottom: 10px;
+        margin-bottom:10px;
+        padding-top: 10px;
+        margin-top:10px;
+        color:  #000;
+        border-top:solid 1px #cdcdcd ;
+        /*padding:60%;*/
+        text-align: center;
+    }
+
+    .col-label{
+        text-align: right;
+        padding-top:5px;
+    }
+    .panel{
+        margin-bottom:5px;
+    }
+    .panel-body{
+        padding-bottom:5px;
+        padding-top:5px;
+    }
+    .missing-value{
+        border:solid 1px red;
+    }
+</style>
+
+<div id='rowDetails' class='rowDetails' >
+
+    <div class='panel panel-default'>
+        <div class='panel panel-heading'>
+            Department Position Create
+        </div>   
+        <div class='panel panel-body'>
+            <div class='row'>
+                <div class='col-3 col-xs-3 col-sm-3 col-md- col-lg-3 col-label'>
+                    Department Name :
+                    <input type="hidden" id="hdfDepId" value = "{txtDepId}">
+                </div>
+                <div class='col-3 col-xs-3 col-sm-3 col-md- col-lg-3 col-label'>
+                    <input type='text'id='txtDepName' disabled class='form-control' value='{txtDepName}'>
+                </div>
+                <div class='col-3 col-xs-3 col-sm-3 col-md- col-lg-3 col-label'>
+                    Section :
+                </div>
+                <div class='col-3 col-xs-3 col-sm-3 col-md- col-lg-3 col-label'>
+                    <input type='text'id='txtSec' disabled class='form-control' value='{txtSec}'>
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-3 col-xs-3 col-sm-3 col-md- col-lg-3 col-label'>
+                    Position Name :
+                </div>
+                <div class='col-3 col-xs-3 col-sm-3 col-md- col-lg-3 col-label'>
+                    <input type='text'id='txtPos' onblur="CheckDup();"  class='form-control' >
+                </div>
+                <div class='col-3 col-xs-3 col-sm-3 col-md- col-lg-3 col-label'>
+                    Position Level :
+                </div>
+                <div class='col-3 col-xs-3 col-sm-3 col-md- col-lg-3 col-label'>
+                    <select class="form-control" id="selPosLevel">
+                        <option value="0">..Select..</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-12 text-center'>
+                    <a href='#' class='btn btn-success' id='btnAdd'><i class='fas fa-check-circle'></i>&nbsp;SAVE</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class='row' id='flashMsg'>
+    </div>
+</div>
+<input type="hidden" id="isDup" value="0">
+<script type='text/javascript'>
+    $("#btnAdd").click(function () {
+        var ErrCount = 0;
+        var ErrTxt = "";
+        var txtPos = $("#txtPos").val();
+        var selPosLevel = $("#selPosLevel").val();     
+        var Marker = [];
+        if ((txtPos == "") || (txtPos == "undefined")) {
+            ErrCount++;
+            ErrTxt += "<br><i class='fa fa-chevron-right'></i>&nbsp;Missing [Department Position Name] ";
+            Marker.push("txtPos");
+        } else {
+            if ($("#isDup").val() == "1") {
+                ErrCount++;
+                ErrTxt += "<br><i class='fa fa-chevron-right'></i>&nbsp;Duplicate [Department Position Name] in Current Department ";
+                Marker.push("txtPos");
+            }
+        }
+        if (selPosLevel == "0") {
+            ErrCount++;
+            ErrTxt += "<br><i class='fa fa-chevron-right'></i>&nbsp;Missing [Position Level] ";
+            Marker.push("selPosLevel");
+        }        
+        if (ErrCount > 0) {
+            $.alert({
+                title: "<font color='red'><i class='fa fa-times'></i>&nbsp;Can't save data . </font>",
+                content: "<div align='left'>" + ErrTxt + "</p>",
+                theme: 'modern'
+
+            });
+            $.each(Marker, function (key, value) {
+                if (!$("#" + value).hasClass("missing-value")) {
+                    $("#" + value).addClass("missing-value")
+                }
+            });
+        } else {
+            $.confirm({
+                title: "SAVE DATA ? ",
+                content: "",
+                theme: 'modern',
+                buttons: {
+                    confirm: function () {
+                        AddNew();
+                    },
+                    canel: function () {
+
+                    },
+                }
+            });
+        }
+    });
+    function CheckDup() {
+        var txtPos = $("#txtPos").val();
+         var dep_id = $("#hdfDepId").val();
+        $.ajax({
+            url: "./module/MasterData.php",
+            type: 'post',
+            data: {
+                ajax: 'true',
+                action: "CheckDepPosDup",
+                dep_id : dep_id ,
+                pos_name : txtPos,
+            },
+            success: function (data) {
+                console.log(data);
+                $("#isDup").val(data);
+            },
+            error: function (xhr, status, error) {
+                var err = eval("(" + xhr.responseText + ")");
+                alert(err.Message);
+                $("#debug").html(error);
+            }
+        });
+    }
+    function AddNew() {
+        var dep_pos_name = $("#txtPos").val();
+        var dep_pos_level = $("#selPosLevel").val();
+        var dep_id = $("#hdfDepId").val();
+        $.ajax({
+            url: "./module/MasterData.php",
+            type: 'post',
+            data: {
+                ajax: 'true',
+                action: "AddNewDepPos",
+                dep_pos_name : dep_pos_name,
+                dep_pos_level :  dep_pos_level,
+                dep_id : dep_id,
+            },
+            success: function (data) {
+                 $.confirm({
+                        title: data.msg,
+                        content: "",
+                        theme: 'modern',
+                        buttons: {
+                            confirm: function () {
+                                location.reload();
+                            }
+                        }
+                    });
+//                if (data.result == "1") {
+//                    $.confirm({
+//                        title: "<font color='green'><i class='fa fa-check-circle'></i>&nbsp;SAVE COMPLETE </font>",
+//                        content: "",
+//                        theme: 'modern',
+//                        buttons: {
+//                            confirm: function () {
+//                                location.reload();
+//                            }
+//                        }
+//                    });
+//                } else {
+//                    $.alert({
+//                        title: "<font color='red'><i class='fa fa-times'></i>&nbsp;Can't save data . </font>",
+//                        content: "<div align='left'>" + data.msg + "</p>",
+//                        theme: 'modern'
+//
+//                    });
+//                }
+            },
+            error: function (xhr, status, error) {
+//                alert(error);
+                var err = eval("(" + xhr.responseText + ")");
+                alert(err.Message);
+                $("#debug").html(error);
+            },
+            dataType: "JSON"
+        });
+
+    }
+</script>

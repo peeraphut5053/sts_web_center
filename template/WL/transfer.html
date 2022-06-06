@@ -1,0 +1,323 @@
+<div class="row" >
+    <div class="col-md-6 text-left" style='font-size: 18px;'>
+        <a href='?WL/index'> <i class='fa fa-chevron-left'></i>&nbsp; WeightList </a>&nbsp;|&nbsp;transfer
+    </div>
+</div>
+<div class="row">
+    <div class='col-xs-5 col-sm-5 col-md-5 col-lg-5 text-right col-label'>
+        StartDate
+    </div>
+    <div class='col-xs-3 col-sm-3 col-md-3 col-lg-3 text-left '>
+        <input type="text" class="form-control" id="StartDate">      
+    </div>
+</div>
+<div class="row">
+    <div class='col-xs-5 col-sm-5 col-md-5 col-lg-5 text-right col-label'>
+        EndDate
+    </div>
+    <div class='col-xs-3 col-sm-3 col-md-3 col-lg-3 text-left '>
+        <input type="text" class="form-control" id="EndDate">      
+    </div>
+</div>
+<div class="row">
+    <div class='col-xs-5 col-sm-5 col-md-5 col-lg-5 text-right col-label'>
+        Transfer
+    </div>
+    <div class='col-xs-3 col-sm-3 col-md-3 col-lg-3 text-left '>
+        <select class="form-control" id="selTransfer">
+            <option value="A">All</option>
+            <option value="N">Not Transfer</option>
+            <option value="T">Transfer</option>
+        </select>     
+    </div>
+</div>
+<div class="row text-center" style='color:red;'>
+    ** การอัพโหลดจะอัพตามช่วงวันที่ และใช้ คอลัมน์ po_date ในการอัพ **
+    <br>
+       ** ควรทำการเช็คข้อมูลก่อนทำการอัพ และไม่ควรอัพข้อมูลมากกว่า 1500+ rows เพราะอาจทำให้ error ได้ **
+</div>
+
+<div class="row text-center">
+    <a OnClick="CheckData();" class="btn btn-default" id="checkData"><i class="fa fa-info-circle"></i>&nbsp;check</a>
+       <a OnCLick="ClearTransfer();"   class="btn btn-danger" id="clearData"><i class='fa fa-trash'></i>&nbsp;clear</a>
+    <a OnClick="StartTransfer();" class="btn btn-info" id="upData"><i class="fa fa-search"></i>&nbsp;upload</a>
+ 
+</div>
+<div class="row text-center" id='rowResult' style='font-size:20px;'>
+
+</div>
+
+<script type='text/javascript'>
+    $("#StartDate,#EndDate").datepicker({
+        dateFormat: 'yy-mm-dd',
+    });
+
+    function Upload() {
+        $.confirm({
+            title: ":: Confirm ::",
+            content: "ต้องการอัพโหลดข้อมูลจากฐานข้อมูลเก่า เข้าสู่ฐานข้อมูลใหม่หรือไม่ ?? ",
+            buttons: {
+                confirm: function () {
+                    StartUpload();
+                    $("#upData").removeAttr("OnClick");
+                },
+                cancel: function () {
+                }
+            }
+
+        });
+    }
+    function CheckData() {
+        var StartDate = $("#StartDate").val();
+        var EndDate = $("#EndDate").val();
+        var selTransfer = $("#selTransfer").val();
+        if ((StartDate == "") || (EndDate == "")) {
+            $.alert({
+                title: "!!",
+                content: "กรุณาระบุ StartDate + EndDate"
+            });
+        } else {
+            $.ajax({
+                url: "././module/WL/data.php",
+                type: 'post',
+                beforeSend: function () {
+                    $("#checkData").html("<i class='fa fa-spinner fa-spin'></i>");
+                    $("#rowResult").html("");
+                },
+                data: {
+                    load: "ajax_checkdata",
+                    StartDate: StartDate,
+                    EndDate: EndDate,
+                    selTransfer: selTransfer
+                },
+                success: function (data) {
+                    $("#checkData").html("<i class='fa fa-info-circle'></i>&nbsp;check");
+                    $("#rowResult").html(data + " rows ");
+                },
+                error: function (xhr, status, error) {
+                    var err = eval("(" + xhr.responseText + ")");
+                    alert(err.Message);
+                },
+            });
+        }
+    }
+    function ClearTransfer() {
+        var StartDate = $("#StartDate").val();
+        var EndDate = $("#EndDate").val();
+        var selDateType = $("#selDateType").val();
+
+        if ((StartDate == "") || (EndDate == "")) {
+            $.alert({
+                title: "!!",
+                content: "กรุณาระบุ StartDate + EndDate"
+            });
+        } else {
+            $.confirm({
+                title: ":: Confirm ::",
+                content: "ต้องการเคลียร์ข้อมูลตามที่เลือกไว้ ?? ",
+                buttons: {
+                    confirm: function () {
+                        $.ajax({
+                            url: "././module/WL/data.php",
+                            type: 'post',
+                            beforeSend: function () {
+                                $("#clearData").html("<i class='fa fa-spinner fa-spin'></i>");
+                                $("#rowResult").html("");
+                            },
+                            data: {
+                                load: "ajax_clear",
+                                StartDate: StartDate,
+                                EndDate: EndDate,
+
+                            },
+                            success: function (data) {
+                                $("#clearData").html("<i class='fa fa-trash'></i>&nbsp;clear");
+                                $("#rowResult").html("Clear data successful");
+                            },
+                            error: function (xhr, status, error) {
+                                var err = eval("(" + xhr.responseText + ")");
+                                alert(err.Message);
+                            },
+                        });
+                    },
+                    cancel: function () {
+                    }
+                }
+
+            });
+
+
+        }
+    }
+    function StartTransfer() {
+        var StartDate = $("#StartDate").val();
+        var EndDate = $("#EndDate").val();
+        var selTransfer = $("#selTransfer").val();
+        if ((StartDate == "") || (EndDate == "")) {
+            $.alert({
+                title: "!!",
+                content: "กรุณาระบุ StartDate + EndDate"
+            });
+        } else {
+            $.confirm({
+                title: ':: Confirm :: ',
+                content: 'ต้องการอัพโหลดข้อมูลใช่หรือไม่ ? ',
+                buttons: {
+                   
+                        $.ajax({
+                            url: "././module/WL/data.php",
+                            type: 'post',
+                            dataType: 'JSON',
+                            beforeSend: function () {
+                                $("#upData").html("<i class='fa fa-spinner fa-spin'></i>");
+                                $("#rowResult").html("");
+                            },
+                            data: {
+                                load: "ajax_transfer",
+                                StartDate: StartDate,
+                                EndDate: EndDate,
+                                selTransfer: selTransfer,
+                            },
+                            success: function (data) {
+                                $("#upData").html("<i class='fa fa-search'></i>&nbsp;upload");
+                                $("#rowResult").html("Success <font color='green'>" + data.Success + "</font> | Error <font color='red'>" + data.Error + "</font>");
+                            },
+                            error: function (xhr, status, error) {
+                                var err = eval("(" + xhr.responseText + ")");
+//                                alert(err.Message);
+                                $("#upData").html("<i class='fa fa-search'></i>&nbsp;upload");
+                                $("#rowResult").html("Error <font color='red'>" + err.Message + "</font>");
+
+                            },
+                        });
+                    },
+                    cancel: function () {
+
+                    }
+                }
+            });
+
+        }
+
+    }
+//    function StartUpload() {
+////        var sts_no = "";
+////        var ErrorCount = 0;
+////        var CompleteCount = 0;
+////        var sts_no = [];
+////        var s_no = [];
+////        var po_date = [];
+////        var c_no = [];
+////        var h_no = [];
+////        var weight = [];
+////        var realweight = [];
+////        var grade = [];
+////        var thick = [];
+////        var thicks = [];
+////        var width = [];
+////        var widths = [];
+////        var reference = [];
+////        var qa = [];
+////        var location = [];
+////        var i_date = [];
+////        var u_date = [];
+////        var pass = [];
+////        var rows = [];
+////        var remark = [];
+////        var upload_status = [];
+////        var upload_grn_num = [];
+////        var upload_po = [];
+////        var upload_po_line = [];
+////        var sl_lot = [];
+////        var sl_tag_status = [];
+////        var sl_trans = [];
+////        var sl_tag_id = [];
+////        $("td[id^='StsNo_']").each(function () {
+////            sts_no.push($(this).text().trim());
+////            s_no.push($("#SNo_" + sts_no).text().trim());
+////            po_date.push($("#PoDate_" + sts_no).text().trim());
+////            c_no.push($("#CNo_" + sts_no).text().trim());
+////            h_no.push($("#HNo_" + sts_no).text().trim());
+////            weight.push($("#Weight_" + sts_no).text().trim());
+////            realweight.push($("#RealWeight_" + sts_no).text().trim());
+////            grade.push($("#OtherValue_" + sts_no).attr("data-grade").trim());
+////            thick.push($("#OtherValue_" + sts_no).attr("data-thick").trim());
+////            thicks.push($("#OtherValue_" + sts_no).attr("data-thicks").trim());
+////            width.push($("#OtherValue_" + sts_no).attr("data-width").trim());
+////            widths.push($("#OtherValue_" + sts_no).attr("data-widths").trim());
+////            reference.push($("#Reference_" + sts_no).text().trim());
+////            qa.push($("#OtherValue_" + sts_no).attr("data-qa").trim());
+////            location.push($("#OtherValue_" + sts_no).attr("data-location").trim());
+////            i_date.push($("#OtherValue_" + sts_no).attr("data-idate").trim());
+////            u_date.push($("#OtherValue_" + sts_no).attr("data-udate").trim());
+////            pass.push($("#OtherValue_" + sts_no).attr("data-pass").trim());
+////            rows.push($("#OtherValue_" + sts_no).attr("data-rows").trim());
+////            remark.push($("#OtherValue_" + sts_no).attr("data-remark").trim());
+////            upload_status.push($("#OtherValue_" + sts_no).attr("data-uploadstatus").trim());
+////            upload_grn_num.push($("#OtherValue_" + sts_no).attr("data-uploadgrnnum").trim());
+////            upload_po.push($("#OtherValue_" + sts_no).attr("data-uploadpo").trim());
+////            upload_po_line.push($("#OtherValue_" + sts_no).attr("data-uploadpoline").trim());
+////            sl_lot.push($("#OtherValue_" + sts_no).attr("data-sllot").trim());
+////            sl_tag_status.push($("#OtherValue_" + sts_no).attr("data-sltagstatus").trim());
+////            sl_trans.push($("#OtherValue_" + sts_no).attr("data-sltrans").trim());
+////            sl_tag_id.push($("#OtherValue_" + sts_no).attr("data-sltagid").trim());
+////        });
+//
+//        $.ajax({
+//            url: "././module/WL/data.php",
+//            type: 'post',
+//            beforeSend: function () {
+//                $("#upData").html("<i class='fa fa-spinner fa-spin'></i>&nbsp;.Uploading..");
+//            },
+////            Complete: function () {
+////       
+////            },
+//            data: {
+//                load: "ajax_upload",
+//                sts_no : sts_no,
+////                sts_no: sts_no,
+////                s_no: s_no,
+////                po_date: po_date,
+////                c_no: c_no,
+////                h_no: h_no,
+////                weight: weight,
+////                realweight: realweight,
+////                grade: grade,
+////                thick: thick,
+////                thicks: thicks,
+////                width: width,
+////                widths: widths,
+////                reference: reference,
+////                qa: qa,
+////                location: location,
+////                i_date: i_date,
+////                u_date: u_date,
+////                pass: pass,
+////                rows: rows,
+////                remark: remark,
+////                upload_status: upload_status,
+////                upload_grn_num: upload_grn_num,
+////                upload_po: upload_po,
+////                upload_po_line: upload_po_line,
+////                sl_lot: sl_lot,
+////                sl_tag_status: sl_tag_status,
+////                sl_trans: sl_trans,
+////                sl_tag_id: sl_tag_id,
+//
+//            },
+//            success: function (data) {
+//                if (data != "error") {
+//                    $("#upData").html(" Upload " + $("td[id^='StsNo_']").length + " done !");
+//                    $("#upData").removeAttr("OnClick");
+//                } else {
+//
+//                }
+//            },
+//            error: function (xhr, status, error) {
+//                var err = eval("(" + xhr.responseText + ")");
+//                alert(err.Message);
+//            },
+//
+//        });
+//    }
+</script>

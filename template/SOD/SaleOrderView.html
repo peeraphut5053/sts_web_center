@@ -1,0 +1,850 @@
+<link href="./css/ind/SaleOrder.css" rel="stylesheet" type="text/css">
+<!--<link href="./css/ind/main.css" rel="stylesheet" type="text/css">-->
+<style>
+    .well{
+        margin-left:-15px;
+        margin-right:-15px;
+    }
+    td[id*=rowLine_]{
+        vertical-align: middle;
+        text-align: center;
+    }
+    .select2-container .select2-selection--single {
+        border-radius:0px;
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+        height:30px;
+        border:solid 1px #cdcdcd;
+
+    }
+    .tabledark th{
+        background-color: #666;
+        color:#ffffff;
+        text-align: center;
+        vertical-align: middle;
+    }
+    .table tr th{
+        font-size: 12px;
+    }
+    .table tr td{
+        font-size: 12px;
+    }
+    .btnLink {
+        height: 30px;
+        margin-left: 5px;
+    }
+
+    a[id*='btnRemove'] {
+        height: 30px;
+        width: 30px;
+        padding-left: 8px;
+        padding-top: 2px;
+    }
+
+    .tableview thead th {
+        background-color: #3b8aff;
+        vertical-align: middle;
+        color: #ffffff;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        text-align: center;
+        font-size:10px;
+    }
+
+    .col-Customer {
+        min-height: 70px;
+        border: solid 1px #dcdcdc;
+        margin-left: 3%;
+    }
+
+    .col-po {
+        min-height: 70px;
+        border: solid 1px #dcdcdc;
+    }
+
+    .col-info {
+        padding-left: 0px;
+    }
+
+
+
+    #divCustomerInfo {
+        font-size: 14px;
+        border: solid 1px #e4e4e4;
+        min-height: 65px;
+        margin-left: 20px;
+        margin-right: 0px;
+        border-radius: 10px;
+    }
+
+    #btnCollapse {
+        margin-right: 25px;
+        font-size: 14px;
+        float: right;
+        color: #ffffff;
+        /*        padding-right: 8px;
+                padding-left: 8px;
+                margin-top: -5px;*/
+    }
+
+    label {
+        font-size: 12px;
+    }
+
+    .input-group {
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+
+    .form-input {
+        height: 32px;
+    }
+
+    .row-item {
+        margin-left: -15px;
+        margin-right: -15px;
+        margin-top: 10px;
+        padding-left: 10px;
+        border: solid 1px #cdcdcd;
+        background-color: #bdd8f5;
+    }
+    .panel-heading{
+        /*padding-top:2px;*/
+        padding-bottom:2px;
+        font-size:12px;
+    }
+    .col-md-4{
+        color:#666;
+    }
+    .col-md-8{
+
+        color:#000;
+    }
+    .linked{
+        color:green;
+        font-weight: bold;
+    }
+    .notlink{
+        color:red;
+        font-weight: bold;
+    }
+    select .form-control{
+        border:solid 1px orange;
+    }
+</style>
+<div class="row rowheader" >
+
+    <div class="col-md-4 text-left" style="padding-top:10px;">
+        <a style="margin-left:-15px;" href="?SOD/SOD/SaleOrderIndex&fltStartDate={fltStartDate}&fltEndDate={fltEndDate}&fltStatus={fltStatus}" id="btnBack"  class="btn btn-default"><i class="fas fa-chevron-circle-left"></i></a>
+        <a href="index.php" > <i class="fas fa-home"></i> Home </a> / <a href="?SOD/SOD/SaleOrderIndex&fltStartDate={fltStartDate}&fltEndDate={fltEndDate}&fltStatus={fltStatus}"> Lists </a> / View [ {head_doc_no} ]
+        <input type="hidden" id="doc_no" value="{head_doc_no}">
+        <input type="hidden" id="cust_num" value="{cust_num}">
+    </div>
+    <div class="col-md-8 text-right" style="padding-right:0px;padding-bottom:3px;">
+        <a href="#" id="btnRefresh" OnClick="location.reload();" class="btn btn-default"><i class="fas fa-sync"></i>&nbsp;REFRESH</a>
+        <a href="#" id="btnPrint" class="btn btn-default"><i class="fas fa-print"></i>&nbsp;PRINT & EXPORT</a>
+
+        <!--        {edit_button}&nbsp;-->
+        <!--<a href="#" id="btnMatchItem"  class="btn btn-success"><i class="fas fa-check-circle"></i>&nbsp;ITEM MATCHING</a>-->
+        <a   href='#' id='btnUpload' OnClick="StartUpload();" class='btn btn-info'><i class='fas fa-upload'></i>&nbsp;UPLOAD TO SYTELINE</a>
+    </div>
+
+</div>
+<div >
+    <div class="well">
+        <div class='row'>
+            <div class="col-md-9">
+                <div class="row row-Customer-info">
+                    <div class="col-md-2">
+                        Customer    <b> {head_cust_name}</b>
+                    </div>
+                    <div class="col-md-11">
+                        <b>  {head_cust_addr}</b>
+                    </div>
+
+                </div>
+                <div class='row'>
+                    <div class="col-md-6">
+
+
+                        <div class="row">
+                            <div class="col-md-5 text-right">
+                                Ship By
+                            </div>
+                            <div class="col-md-7 text-left">
+                                <b>Sahathai</b>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5 text-right">
+                                Ship To
+                            </div>
+                            <div class="col-md-7 text-left">
+                                <b>{head_ship_to}</b>
+                                <input type="hidden" id="ship_to_id" value="{ship_to_id}">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5 text-right">
+                                Shipment date Ex-Mill
+                            </div>
+                            <div class="col-md-7 text-left">
+                                <b>   {head_shipment}</b>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5 text-right">
+                                Due date
+                            </div>
+                            <div class="col-md-7 text-left">
+                                <label style="font-size:14px;font-weight: bold;" id="due_date">{due_date}</label>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5 text-right">
+                                Attn
+                            </div>
+                            <div class="col-md-7 text-left">
+                                {head_attn}
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-md-6" >
+                        <div class="row">
+                            <div class="col-md-4 text-right">
+                                Doc No
+                            </div>
+                            <div class="col-md-4 text-left">
+                                <b> {head_doc_no} </b>
+                            </div>
+                            <div class="col-md-4 text-left">
+                                Date    <b>  {head_doc_date}</b>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 text-right">
+                                Po No
+                            </div>
+                            <div class="col-md-4 text-left">
+                                <b>  {head_po_num}</b>
+                                <input type="hidden" id="po_num" value="{head_po_num}">
+                            </div>
+                            <div class="col-md-4 text-left">
+                                Date  <b> {head_po_date}</b>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 text-right">
+                                Spec
+                            </div>
+                            <div class="col-md-8 text-left">
+                                {head_spec}
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4 text-right">
+                                Terms of purchase
+                            </div>
+                            <div class="col-md-8 text-left">
+                                {head_terms}
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 text-right">
+                                Remark
+                            </div>
+                            <div class="col-md-8 text-left">
+                                {head_remark}
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div class="row text-left" style="padding-left:20px;display:none;">
+                        <a id="btnEndCust" href="#" class="btn btn-default">End customer</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3" style="background-color:#dee9fc;border-radius:10px;">
+                <div class="row ">
+                    <div class="col-md-6 text-right">
+                        Customer Link :
+                    </div>
+                    <div class="col-md-6 text-left">
+                        <label  id="linkCustSyteline"></label>
+                        <!--<input type="hidden"  id="cust_num_sl" value="">-->
+                    </div>
+                </div>
+                <div class="row ">
+                    <div class="col-md-6 text-right">
+                        Doc uploaded :
+                    </div>
+
+
+                    <div class="col-md-6 text-left">
+                        <label style="color:green;font-weight: bold;" id="doc_uploaded">{doc_uploaded}</label>
+                    </div>
+                </div>
+                <div class="row ">
+                    <div class="col-md-6 text-right">
+                        Excel File :
+                    </div>
+                    <div class="col-md-6 text-left">
+                        <label  id="doc_uploaded">{xls_file}</label>
+                    </div>
+                </div>
+                <div class="row ">
+                    <div class="col-md-6 text-right">
+                        Excel Sheet :
+                    </div>
+                    <div class="col-md-6 text-left">
+                        <label id="doc_uploaded">{xls_sheet}</label>
+                    </div>
+                </div>
+                <!--                <div class="row ">
+                                    <div class="col-md-6 text-right">
+                                        Last Uploader : 
+                                    </div>
+                                    <div class="col-md-6 text-left">
+                                        <label  id="doc_uploaded">{upload_by}</label>
+                                    </div>
+                                </div>
+                                <div class="row ">
+                                    <div class="col-md-6 text-right">
+                                        Last Upload :
+                                    </div>
+                                    <div class="col-md-6 text-left">
+                                        <label  id="doc_uploaded">{upload_datetime}</label>
+                                    </div>
+                                </div>-->
+                <!--                  <div class="row " >
+                                    <div class="col-md-6 text-right">
+                                        Status :
+                                    </div>
+                                    <div class="col-md-6 text-left">
+                                               <label style="color:green;font-weight: bold;" id="doc_uploaded">{status}</label>
+                                    </div>
+                                </div>-->
+
+
+                <div class="row " id="RowGenCoNum">
+                    <div class="col-md-6 text-right">
+                        Auto Gen co_num :
+                    </div>
+                    <div class="col-md-6 text-left">
+                        <label  id="co_num"></label>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+<div  id="divEndCust" class="well" style="display:none;">
+    <div class="row text-left">
+        <div class="col-md-3 text-right">
+            End customer 1 :
+        </div>
+        <div class="col-md-9 text-left">
+            {end_customer1}
+        </div>
+    </div>
+    <div class="row text-left">
+        <div class="col-md-3 text-right">
+            End customer 2 :
+        </div>
+        <div class="col-md-9 text-left">
+            {end_customer2}
+        </div>
+    </div>
+    <div class="row text-left">
+        <div class="col-md-3 text-right">
+            End customer 3 :
+        </div>
+        <div class="col-md-9 text-left">
+            {end_customer3}
+        </div>
+    </div>
+    <div class="row text-left">
+        <div class="col-md-3 text-right">
+            End customer 4 :
+        </div>
+        <div class="col-md-9 text-left">
+            {end_customer4}
+        </div>
+    </div>
+    <div class="row text-left">
+        <div class="col-md-3 text-right">
+            End customer 5 :
+        </div>
+        <div class="col-md-9 text-left">
+            {end_customer5}
+        </div>
+    </div>
+    <div class="row text-left">
+        <div class="col-md-3 text-right">
+            End customer 6 :
+        </div>
+        <div class="col-md-9 text-left">
+            {end_customer6}
+        </div>
+    </div>
+    <div class="row text-left">
+        <div class="col-md-3 text-right">
+            End customer 7 :
+        </div>
+        <div class="col-md-9 text-left">
+            {end_customer7}
+        </div>
+    </div>
+    <div class="row text-left">
+        <div class="col-md-3 text-right">
+            End customer 8 :
+        </div>
+        <div class="col-md-9 text-left">
+            {end_customer8}
+        </div>
+    </div>
+    <div class="row text-left">
+        <div class="col-md-3 text-right">
+            End customer 9 :
+        </div>
+        <div class="col-md-9 text-left">
+            {end_customer9}
+        </div>
+    </div>
+    <div class="row text-left">
+        <div class="col-md-3 text-right">
+            End customer 10 :
+        </div>
+        <div class="col-md-9 text-left">
+            {end_customer10}
+        </div>
+    </div>
+</div>
+<div class="alert alert-warning" style="margin:0px -15px 0px -15px ;display:none;" align="center" id='divLoading'>  
+    <h4><b><i class="fa fa-spinner fa-spin"></i>&nbsp;... Finding Item in Infor SyteLine...Please wait ...</b></h4>
+</div>
+
+<div class='row' >
+    <table class="table table-bordered table-condensed tabledark " id="tableItemsFromFilter" >
+        <thead>
+            <tr >
+                <th rowspan="2"  align="center" style="width:3%;">#</th>
+                <th  rowspan="2"  align="center" style="width:3%;">SIZE</th>
+                <th  rowspan="2"  align="center" style="width:3%;">THEO WEIGHT(LBS/FT)</th>
+                <th  rowspan="2"  align="center" style="width:3%;">LENGTH(FT)</th>
+                <th  rowspan="2"  align="center" style="width:3%;">CATEGORY</th>     
+                <th  rowspan="2"  align="center" style="width:3%;">SCHEDULE</th>
+                <th  rowspan="2"  align="center" width="5%">PCS PER BNDL</th>
+                <th  colspan="4" >ORDER QUANTITY</th>
+                <th  rowspan="2" align="center" style="width:3%;">{flag_duty} LO ($/MT)</th>
+                <th  rowspan="2" align="center" style="width:3%;">{flag_duty} LO ($/FT)</th>
+                <th  rowspan="2" align="center" style="width:3%;">Ext.Price</th>
+            </tr>
+            <tr>
+                <th  style="width:3%;">BNDLS</th>
+                <th  style="width:3%;">TOTAL PIECES</th>
+                <th  style="width:3%;">{cust_measure}</th>
+                <!--<th  style="width:3%;">NET TONS</th>-->
+                <th  style="width:3%;">M. TONS</th>
+            </tr>
+        </thead>
+        <tbody id="tableItems">
+            {table_list}
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<div id="divprint"></div>
+<div id="selectItemSL"></div>
+
+<!-- Modal -->
+
+<script>
+    var cust_num_sl_global = "{cust_num_sl}";
+    console.log("get cust num sl = " + cust_num_sl_global);
+    if (cust_num_sl_global != "") {
+        $("#linkCustSyteline").text("linked");
+        $("#linkCustSyteline").removeClass("notlink");
+        $("#linkCustSyteline").addClass("linked");
+        $("#cust_num_sl").val(cust_num_sl_global);
+        $("#RowGenCoNum").hide();
+    } else {
+
+        $("#linkCustSyteline").text("no link");
+        $("#linkCustSyteline").removeClass("linked");
+        $("#linkCustSyteline").addClass("notlink");
+        $("#RowGenCoNum").show();
+    }
+
+
+    $("#btnEndCust").click(function () {
+
+        $("#divEndCust").toggle();
+    });
+    $("#loading").hide();
+//    $("#divPanDetail").toggle();
+//    GetTableDetail();
+//    LinkCustSyteline();
+
+    doc_uploaded = "{doc_uploaded}";
+
+
+    function GenNewCo_num() {
+//        alert();
+        $.ajax({
+            url: "./module/SOD/CustomerOrderSyteline.php",
+            type: 'post',
+            data: {
+                ajax: 'true',
+                action: 'GenNewCO',
+                cust_num: cust_num_sl_global
+            },
+            success: function (data) {
+                $("#co_num").text(data);
+
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+            },
+        }
+        );
+    }
+    GenNewCo_num();
+    function StartUpload() {
+        var ErrCount = 0;
+        var ErrMsg = "";
+        var CheckSelectBlank = 0;
+        var SplitWay = 0;
+        var CustLinkStatus = $("#linkCustSyteline").text().trim();
+
+        if (CustLinkStatus != "linked") {
+            ErrCount++;
+            ErrMsg = "<br> - Customer information not link to Syteline";
+        }
+        if (doc_uploaded == "No") {
+            SplitWay = 0;
+        } else {
+            SplitWay = 1;
+        }
+        $("select[id^='selSelectItem']").each(function () {
+            if ($(this).val() == "") {
+                CheckSelectBlank++;
+            }
+        });
+
+        if (ErrCount > 0) {
+            $.alert({
+                title: "<i class='fa fa-times'></i>&nbsp; :: Error ",
+                content: ErrMsg
+            });
+        } else {
+            if (SplitWay == 0) {
+                UploadFirstTime();
+            } else if (SplitWay == 1) {
+                UploadMoreTime();
+            }
+        }
+//    });
+    }
+    function UploadFirstTime() {
+//        alert("Upload first");
+        $.confirm({
+            title: " :: Confirm ",
+            content: "Do you want  to upload this data to  syteline ? ",
+            buttons: {
+                confirm: function () {
+                    Upload();
+                },
+                cancel: function () {
+
+                },
+            }
+        });
+    }
+    function UploadMoreTime() {
+//        alert("Upload more");
+        $.confirm({
+            title: " :: Confirm ",
+            content: "Do you want to upload this data to  syteline again ? ",
+            buttons: {
+                confirm: function () {
+                    UploadMore();
+                },
+                cancel: function () {
+
+                },
+            }
+        });
+    }
+
+    function Upload() {
+
+        var cust_num = "{cust_num_sl}";
+        var co_num = $("#co_num").text().trim();
+        var po_num = "{head_po_num}";
+        var cust_seq = $("#ship_to_id").val();
+        var doc_no = "{head_doc_no}";
+        var CountItem = $("h6[id^='rowItem_']").length;
+        var SelItem = "";
+        var AllItems = "";
+        var AllItemDesc = "";
+        var measure = "{cust_measure2}";
+        var due_date = "{due_date}";
+        var i = 0;
+        for (i = 1; i <= CountItem; i++) {
+            AllItems += $("#selSelectItem_" + i).val() + "!!";
+            AllItemDesc += $("#rowItem_" + i).val() + "!!";
+        }
+        AllItems = AllItems.slice(0, -2);
+        AllItemDesc = AllItemDesc.slice(0, -2);
+//        console.log(AllItems);
+        $.ajax({
+            url: "./module/SOD/CustomerOrderSyteline.php",
+            type: 'post',
+//            datatype :"json",
+            data: {
+                ajax: 'true',
+                action: 'Upload',
+                cust_num: cust_num,
+                cust_seq: cust_seq,
+                co_num: co_num,
+                AllItems: AllItems,
+                doc_no: doc_no,
+                measure: measure,
+                po_num: po_num,
+                AllItemDesc: AllItemDesc,
+                due_date: due_date
+            },
+            success: function (data) {
+                console.log(data);
+                if (data == "0") {
+//                    $.alert("upload to syteline complete");
+                    location.reload();
+                }
+
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+            },
+        }
+        );
+    }
+    function UploadMore() {
+
+        var cust_num = "{cust_num_sl}";
+        var co_num = $("#co_num").text().trim();
+        var po_num = "{head_po_num}";
+        var cust_seq = $("#ship_to_id").val();
+        var doc_no = "{head_doc_no}";
+        var CountItem = $("h6[id^='rowItem_']").length;
+        var SelItem = "";
+        var AllItems = "";
+        var AllItemDesc = "";
+        var AllLines = "";
+        var measure = "{cust_measure2}";
+        var due_date = "{due_date}";
+        var i = 0;
+        var Index = "";
+        $("input[id^='selSelectItem_']").each(function () {
+            if ($(this).val() != "") {
+                Index = $(this).attr("id").split("_")[1];
+                AllItems += $("#rowItem_" + Index).text().trim() + "!!";
+                SelItem += $(this).val() + "!!";
+                AllLines += $("#rowLine_" + Index).text().trim() + "!!";
+            }
+
+        });
+        AllItems = AllItems.slice(0, -2);
+        SelItem = SelItem.slice(0, -2);
+        AllLines = AllLines.slice(0, -2);
+        var sl_co = $("#doc_uploaded").text().trim();
+        if (AllItems.length > 0) {
+//            console.log(AllItems);
+//            console.log(SelItem);
+//            console.log(AllLines);
+
+            $.ajax({
+                url: "./module/SOD/CustomerOrderSyteline.php",
+                type: 'post',
+                data: {
+                    ajax: 'true',
+                    action: 'UploadMore',
+                    cust_num: cust_num,
+                    cust_seq: cust_seq,
+                    co_num: co_num,
+                    AllItems: AllItems,
+                    doc_no: doc_no,
+                    SelItem: SelItem,
+                    po_num: po_num,
+                    AllLines: AllLines,
+                    due_date: due_date,
+                    sl_co: sl_co,
+                    measure: measure
+
+                },
+                success: function (data) {
+                    console.log(data);
+                    if (data == "0") {
+//                    $.alert("upload to syteline complete");
+                        location.reload();
+                    }
+
+                },
+                error: function (xhr, status, error) {
+                    console.log(xhr.responseText);
+                },
+            }
+            );
+        }
+
+    }
+    $("#btnPrint").click(function () {
+        var doc_no = $("#doc_no").val();
+
+        $('#divprint').dialog({
+            modal: true,
+            autoOpen: true,
+            show: 'fade',
+            width: 1024,
+            height: 650,
+            title: ":: Print Preview"
+        })
+                .load("./module/SOD/SaleOrderPrint.php", {
+                    "doc_no": doc_no
+                });
+    });
+
+    $("#btnMatchItem").click(function () {
+        $.confirm({
+            title: ":: Confirm",
+            content: "Do you want to match all item ? ",
+            buttons: {
+                confirm: function () {
+                    MatchItem();
+                },
+                cancel: function () {
+
+                }
+            }
+        });
+    });
+
+    function MatchItemAuto() {
+        var TmpId = "";
+
+        $("input[id^='selSelectItem_']").each(function () {
+            TmpId = $(this).attr("id");
+            MatchItemAutoGo(TmpId);
+        });
+    }
+    function MatchItem(ThisId) {
+
+        var row = ThisId.split("_")[1];
+        $("#selSelectItem_" + row).val("");
+//        $("#selSelectItem_" + row).removeAttr("readonly");
+        var OldHtmlBeforeLoad = "<i class='fa fa-search'></i>";
+        var LoadingHtml = "<i class='fa fa-spinner fa-spin'></i>";
+        var SPEC = $("#rowItem_" + row).text().split("/")[0].trim();
+        var CATE = $("#rowCATE_" + row).text().trim();
+        var NPS = $("#rowSIZE_" + row).text().trim();
+        var LEN = $("#rowUL_" + row).text().trim();
+        var SCHED = $("#rowSCHED_" + row).text().trim();
+        if (SCHED.indexOf("/") != -1) {
+            SCHED = SCHED.split("/")[0].trim();
+        }
+
+        var doc_no = $("#doc_no").val();
+
+        $('#selectItemSL').dialog({
+            modal: true,
+            autoOpen: true,
+            show: 'fade',
+            width: 1024,
+            height: 650,
+            top: 0,
+            title: ":: ITEM SEARCH RESULT ::"
+        })
+                .load("./module/SOD/z_ItemSyteLineSelect.php", {
+                    SPEC: SPEC,
+                    CATE: CATE,
+                    NPS: NPS,
+                    LEN: LEN,
+                    SCHED: SCHED,
+                    row: row,
+                });
+
+    }
+    MatchItemAuto();
+    function selectItemFromDialog(thisId) {
+        var item = $("#" + thisId).attr("data-item");
+        var row = $("#" + thisId).attr("data-row");
+        $("#selSelectItem_" + row).val("");
+        $("#selSelectItem_" + row).val(item);
+        $('#selectItemSL').dialog("close");
+    }
+    function MatchItemAutoGo(ThisId) {
+        var row = ThisId.split("_")[1];
+        $("#selSelectItem_" + row).empty();
+        var OldHtmlBeforeLoad = "<i class='fa fa-search'></i>";
+        var LoadingHtml = "<i class='fa fa-spinner fa-spin'></i>";
+        var SPEC = $("#rowItem_" + row).text().split("/")[0].trim();
+        var CATE = $("#rowCATE_" + row).text().trim();
+        var NPS = $("#rowSIZE_" + row).text().trim();
+        var LEN = $("#rowUL_" + row).text().trim();
+        var SCHED = $("#rowSCHED_" + row).text().trim();
+
+        if (SCHED.indexOf("/") != -1) {
+            SCHED = SCHED.split("/")[0].trim();
+        }
+        var doc_no = $("#doc_no").val();
+        $.ajax({
+            url: "./module/ItemSyteline.php",
+            type: 'post',
+            dataType: "JSON",
+            data: {
+                ajax: 'true',
+                action: 'MatchItem',
+                SPEC: SPEC,
+                CATE: CATE,
+                NPS: NPS,
+                LEN: LEN,
+                SCHED: SCHED
+            },
+            beforeSend: function () {
+                $("#btnMatchItem_" + row).html(LoadingHtml);
+//                $("#divLoading").show();
+            },
+            complete: function () {
+                $("#btnMatchItem_" + row).html(OldHtmlBeforeLoad);
+//                $("#divLoading").hide();
+            },
+            success: function (data) {
+                var tmpOption = "";
+
+                if (data.length == 1) {
+//                    tmpOption = data[0].item + " | CATEGORY : " + data[0].Uf_TypeEnd + "  ,SPEC : " + data[0].Uf_spec + " ,NPS : " + data[0].Uf_NPS + " ,SCHEDULE " + data[0].Uf_Schedule;
+                    $("#selSelectItem_" + row).val(data[0].item);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+            },
+        }
+        );
+    }
+</script>
+
+

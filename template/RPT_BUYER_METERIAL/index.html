@@ -1,0 +1,200 @@
+<div class="row">
+    <div>
+        <h1>รายงานตัดเบิกจัดซื้อ</h1>
+    </div> 
+    <!--    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4 " >
+            <div class="input-group">
+                <div class="input-group-addon">Year</div>
+                <select class="form-control" id="RepByGroupYear">
+    
+                </select>
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4 " >
+            <div class="input-group">
+                <div class="input-group-addon">Month</div>
+                <select class="form-control" id="RepByGroupMonth">
+    
+                </select>
+            </div>
+        </div>-->
+    <div class="col-lg-2" >   
+        <div class="input-group">
+            <div class="input-group-addon">From Date</div>
+            <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtFromDate">
+        </div>
+    </div>
+    <div class="col-lg-2">   
+        <div class="input-group">
+            <div class="input-group-addon">To date</div>
+            <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtToDate">
+        </div>
+    </div>
+    <div class="col-lg-3">   
+        <div class="input-group">
+            <div class="input-group-addon">item </div>
+            <input type="text" class="form-control txt-filter" id="item">
+        </div>
+    </div> 
+    <div class="col-lg-3">   
+        <div class="input-group">
+            <div class="input-group-addon">Department </div>
+            <input type="text" class="form-control txt-filter" id="DepartmentName">
+        </div>
+    </div> 
+
+    <div class="col-lg-2">   
+        <button id="btnSearch" class="btn btn-info"><i class="fa fa-searh"></i>&nbsp;ค้นหา</button>
+    </div>
+</div>
+
+<div class="row" id="divReport" >
+    <table class="table table-condensed table-bordered table-striped" id="tblReport" style="width:100%;">
+        <thead>
+            <tr>
+                <th>Transaction Date</th>
+                <th>Transaction Description</th>
+                <th>Item</th>  
+                <th>Description</th>
+                <th>Qty</th>
+                <th>Cost</th>
+                <th>Location</th>
+                <th>Location name</th>
+                <th>Department</th>
+                <th>Department name</th>
+                <th>Create by</th>
+                <th>Document number</th>
+                <th>emp num</th>
+                <th>emp name</th>
+
+            </tr>
+        </thead>
+    </table>
+</div>
+<script type="text/javascript">
+
+    GetYearMonth("RepByGroupYear", "RepByGroupMonth");
+
+    $("#txtFromDate,#txtToDate").datepicker({
+        dateFormat: 'yy-mm-dd',
+    });
+    $("#txtFromDate,#txtToDate").val(GetToday());
+
+    $("#btnSearch").click(function () {
+        var tblReportId = '#tblReport';
+        var btnSearch = '#btnSearch';
+        SearchDataFn(tblReportId, btnSearch, tablecolumsArr, "รายงานตัดเบิกจัดซื้อ", "RPT_BUYER_METERIAL");
+    });
+    var tablecolumsArr = [
+        {
+            "data": "trans_date",
+            "className": "text-right",
+            "render": function (data, type, row, meta) {
+                var ret = data.date.substring(0, 10);
+                return ret;
+            }
+        },
+        {
+            "data": "trans_description",
+            "className": "text-center",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                return ret;
+            }
+        },
+
+        {
+            "data": "item",
+            "render": function (data, type, row) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "width": 250,
+            "data": "item_description",
+            "className": "text-center",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "qty",
+            "className": "text-right",
+            "render": function (data, type, row, meta) {
+                ret = "<span>" + formatMoney(data) + "</span>";
+                return ret;
+            }
+        },
+        {
+            "data": "cost",
+            "className": "text-right",
+            "render": function (data, type, row, meta) {
+                ret = "<span>" + data + "</span>";
+                return ret;
+            }
+        },
+        {
+            "data": "loc",
+            "className": "text-right",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                var ret = data;
+                +"</span>";
+                return ret;
+            }
+        },
+        {
+            "data": "location_name",
+            "className": "text-right",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "department",
+            "render": function (data, type, row) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "department_name",
+            "render": function (data, type, row) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "createdby",
+            "render": function (data, type, row) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "document_num",
+            "render": function (data, type, row) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "emp_num",
+            "render": function (data, type, row) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "emp_name",
+            "render": function (data, type, row) {
+                var ret = data;
+                return ret;
+            }
+        },
+    ];
+</script>

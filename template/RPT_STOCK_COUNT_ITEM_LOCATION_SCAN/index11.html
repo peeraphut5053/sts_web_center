@@ -1,0 +1,192 @@
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/js/select2.min.js"></script>
+
+
+<style>
+    .header-text{
+        font-weight:bold;
+    }
+    .box{
+        padding-top: 10px;
+    }
+
+</style>
+<body>
+    <div class="wrapperpage row" style="background: ghostwhite;">
+        <div class="col-sm-10 card-body box boxa" style="min-height: 75vh;background-color: inherit;" >
+            <!--            <div class="input-group" style="width: 100%;padding:5px">
+                            <input onblur="$('#txtItemSearch1').focus();" type="text" placeholder="ค้นหา Item,Location,Sts Tag" autocomplete="off"  class="form-control txt-filter" id="txtItemSearch">
+                            <div class="input-group-addon btn-info" style="cursor: pointer;background: #3c8dbc;color: #FFFFFF"  id="btnSearch" ><i class="fa fa-search"></i></div>
+                        </div>-->
+            <div class="col-xs-8">
+                <form id ="FormNote">
+                    <div class="input-group" style="width: 100%;padding:5px">
+                        <input onblur="$('#txtItemSearch1').focus();" type="text" placeholder="ค้นหา Item,Location,Sts Tag" autocomplete="off"  class="form-control txt-filter" id="txtItemSearch">
+                        <div class="input-group-addon btn-info" style="cursor: pointer;background: #3c8dbc;color: #FFFFFF"  id="btnSearch" ><i class="fa fa-search"></i></div>
+                    </div>
+                    <!--                    <input name="" id="" />-->
+                    <div class="card-body box boxa" style="height:35vh;min-height:70vh; overflow-y: scroll">
+                        <table class="table table-active" id="historytbl">
+                            <tr>
+                                <th>Item Name</th>
+                                <th>จำนวนเส้น</th>
+                                <th>นับเส้น</th>
+                                <th>จำนวนมัด</th>
+                                <th>นับมัด</th>
+                                <th>Note</th>
+                            </tr>
+                        </table>
+                    </div>
+                </form>
+            </div>
+            <div class="col-xs-4" style='/*height:40vh;min-height:40vh; overflow-y: scroll*/'>
+                <div class=" box dataItem card-body wrapperpage" style="box-shadow: 1px 1px 1px rgba(0.1,0.1,0.1,0.1);">
+                    <div class="row">
+                        <div class="col-xs-4 h4 header-text">
+                            Item Code :
+                        </div>
+                        <div class="col-xs-7 h5" style="text-align: right">
+                            <span id="item_code"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-4 h4 header-text">
+                            Item Name :
+                        </div>
+                        <div class="col-xs-7 h5" style="text-align: right">
+                            <span id="Itemdescription"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-4 h4 header-text">Item Location :</div>
+                        <div class="col-xs-7" style="text-align: right">
+                            <span id="loc"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6 h4 header-text">จำนวนทั้งหมด(เส้น) :</div>
+                        <div class="col-xs-5" style="text-align: right">
+                            <span id="sum_pcs"></span> 
+                        </div>
+                        <div>เส้น</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6 h4 header-text">จำนวน เส้น/มัด :</div>
+                        <div class="col-xs-5"  style="text-align: right">
+                            <span id="Uf_pack"></span> 
+                        </div>
+                        <div>ต่อมัด</div>
+                    </div>
+                    <div class="row" >
+                        <div class="col-xs-6 h4 header-text">จำนวนมัด :</div>
+                        <div class="col-xs-5" style="text-align: right">
+                            <span id="bundle_qty"></span> 
+                        </div>
+                        <div>มัด</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="handler">
+            <input style="width:100%" class="btn btn-primary" type="button" onclick="confirmCheck()" value="รายงานผลการตรวจ" />
+        </div>
+    </div>
+
+</body>
+</html>
+<script>
+
+    $('#txtItemSearch').keypress(function (e) {
+        var key = e.which;
+        if (key == 13) // the enter key code
+        {
+            SearchItem(txtItemSearch);
+            $("#txtItemSearch").val("");
+            return false;
+        }
+    });
+
+
+    $("#txtItemSearch").focus();
+
+    $("#txtCreateby").val(GetUserProp("login_username"));
+    var btnSearch = "#btnSearch";
+    var tblReport = "#tblItem";
+
+    $("#btnSearch").click(function () {
+        SearchItem(txtItemSearch);
+    });
+    function SearchItem() {
+        $("#txtItemSearch").focus();
+        var txtItemSearch = $("#txtItemSearch").val();
+        var url = "module/RPT_STOCK_COUNT_ITEM_LOCATION_SCAN/data.php";
+        var itemloc = txtItemSearch;
+        var itemlocSpilt = itemloc.split("+");
+        var loc = itemlocSpilt[0];
+        var item = itemlocSpilt[1];
+        var load;
+        if (txtItemSearch.length == '13') {
+            load = 'ByStsTag';
+        } else {
+            load = 'ByItemBarcode';
+        }
+        $.ajax({
+            type: 'POST',
+            url: url,
+            dataType: 'json',
+            beforeSend: function () {
+                //$(btnSearch).html("<i class='fa fa-spinner fa-spin'></i>");
+            },
+            data: {
+                "load": load,
+                "loc": loc,
+                "item": item,
+                "tag": txtItemSearch
+            },
+            success: function (data) {
+                console.log(data)
+                Uf_pack = data[0].Uf_pack
+                if (!Uf_pack) {
+                    Uf_pack = 1;
+                }
+                $("#item_code").html(data[0].item_code);
+                $("#Itemdescription").html(data[0].description);
+                $("#loc").html(data[0].loc);
+                $("#sum_pcs").html(Math.ceil(data[0].sum_pcs));
+                $("#Uf_pack").html(Uf_pack);
+                $("#bundle_qty").html(Math.ceil(data[0].sum_pcs / Uf_pack));
+                $("#txtItemSearch").val("");
+                $("#txtItemSearch").focus();
+                $("#historytbl").append("<tr>\n\
+        <td>" + data[0].description + "</td>\n\
+        <td>" + data[0].loc + "</td>\n\
+        <td>" + Math.ceil(data[0].sum_pcs) + "</td>\n\
+        <td>" + Math.ceil(data[0].sum_pcs / Uf_pack) + "</td>\n\
+        <td><div><input readonly name='note' onclick='Note(this.id)' style='width:100%' type='text' id='" + data[0].item_code + "'></div> </td>\n\
+                </tr>")
+            },
+            error: function (e) {
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+    }
+
+    function Note(item_code) {
+        var Note = prompt("Please enter your Note " + item_code + " ", "");
+        if (Note != null) {
+            $("#" + item_code).val(Note);
+            $('#txtItemSearch').focus();
+        }
+    }
+
+    function confirmCheck() {
+        var ConfirmCheck = confirm("ยืนยันการตรวจเช็คสต๊อค");
+        alert($('#FormNote').serialize());
+        $.post('server.php?' + $('#FormNote').serialize());
+    }
+
+
+</script>

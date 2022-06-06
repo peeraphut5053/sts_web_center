@@ -1,0 +1,570 @@
+<div class="row quicksearch" >
+    <div class="col-12 col-xs-12 col-sm-12 col-md-9 col-lg-9"  style="padding-left:0px;">
+        <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3" style="padding-left:0px;">   
+            <div class="input-group">
+                <div class="input-group-addon">From date</div>
+                <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtFromDate_Q">
+            </div>
+        </div>
+        <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3">   
+            <div class="input-group">
+                <div class="input-group-addon">To date</div>
+                <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtToDate_Q">
+            </div>
+        </div>
+        <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3">   
+            <div class="input-group">
+                <div class="input-group-addon">From INV.</div>
+                <input type="text" class="form-control txt-filter" id="txtFromInv_Q">
+            </div>
+        </div>
+        <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3">   
+            <div class="input-group">
+                <div class="input-group-addon">To INV.</div>
+                <input type="text" class="form-control txt-filter" id="txtToInv_Q">
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-xs-12 col-sm-12 col-md-3 col-lg-3" >
+        <button id="btnQuickSearch" class="btn btn-info"><i class="fa fa-searh"></i>&nbsp;Quick Search</button>
+        <button class="btn btn-success" id="btnModalAdvSearch"><i class="fa fa-search-plus"></i>&nbsp;Advance Search</button>
+    </div>
+
+
+</div>
+<div class="row" id="divReport" >
+    <table class="table table-condensed table-bordered table-striped" id="tblReport" >
+        <thead>
+            <tr>
+                <th>Inv Date</th>
+                <th>Inv Num</th>
+                <th>Customer</th>
+                <th>Item</th>  
+                <th>Description</th>  
+                <th>Group</th>  
+                <th>Unit Weight</th>
+                <th>U_M</th>
+                <th>QTY(PCS)</th>
+                <th>Price/PCS</th>
+                <th>Weight(KG)</th>                
+                <th>Price/KG</th>
+                <th>Discount</th>
+                <th>AMT_USD</th>
+                <th>AMT_THB</th>             
+            </tr>
+        </thead>
+    </table>
+</div>
+
+
+
+<div class="modal" id="modalAdvSearch" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document" style="width:60%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                Advance search
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color:red;">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="BodyModal">
+                <!--<div class="row">-->
+                <!--<div class="col-12 col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding-left:30px;">-->
+                <div class="row">
+                    Customer Select ( multiple selection )
+                </div>
+                <div class='row'>
+                    <select class="form-control" id="selCust"  multiple="multiple" style="height:100px;">
+                        <!--<option value="" selected>ทั้งหมด</option>-->
+                        {customer_data}
+                    </select>
+                </div>
+                <!--                    </div>
+                                    <div class="col-12 col-xs-12 col-sm-12 col-md-8 col-lg-8" style="padding-top:25px;">-->
+                <div class="row">
+                    <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3">                            
+                        <div class="input-group">
+                            <div class="input-group-addon">Item</div>
+                            <input type="text" class="form-control txt-filter" id="txtItem">
+                        </div>
+                    </div>
+                    <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3">    
+                        <div class="input-group">
+                            <div class="input-group-addon">ขนาด</div>
+                            <input type="text" class="form-control txt-filter" id="txtSize">
+                        </div>
+                    </div>
+                    <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3">      
+                        <div class="input-group">
+                            <div class="input-group-addon">หนา</div>
+                            <input type="text" class="form-control txt-filter" id="txtThick">
+                        </div>
+                    </div>
+                    <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3">    
+                        <div class="input-group">
+                            <div class="input-group-addon">ยาว</div>
+                            <input type="text" class="form-control txt-filter" id="txtWidth">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3">   
+                        <div class="input-group">
+                            <div class="input-group-addon">From date</div>
+                            <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtFromDate_A">
+                        </div>
+                    </div>
+                    <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3">   
+                        <div class="input-group">
+                            <div class="input-group-addon">To date</div>
+                            <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtToDate_A">
+                        </div>
+                    </div>
+                    <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3">   
+                        <div class="input-group">
+                            <div class="input-group-addon">From INV.</div>
+                            <input type="text" class="form-control txt-filter" id="txtFromInv_A">
+                        </div>
+                    </div>
+                    <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3">   
+                        <div class="input-group">
+                            <div class="input-group-addon">To INV.</div>
+                            <input type="text" class="form-control txt-filter" id="txtToInv_A">
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-6 col-xs-6 col-sm-6 col-md-10 col-lg-10">   
+                        <h6 style="color:red;">
+                            *เลือกความ หนา-ยาว ตามช่วงให้ใช้ '-' เช่น เลือกตั้งแต่ 1 ถึง 6 ให้ใส่ '1-6' แต่ถ้าหากระบุ 6 ตัวเดียวระบบจะหาข้อมูลที่เป็น 6 เท่านั้น*</h6>
+
+                    </div>
+                    <div class="col-6 col-xs-6 col-sm-6 col-md-2 col-lg-2 text-right">   
+                        <button id="btnSearch" class="btn btn-info"><i class="fa fa-search"></i>&nbsp;ค้นหา</button>  
+                    </div>
+                </div>
+
+                <!--</div>-->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="js/main.js"></script>
+<script type="text/javascript">
+
+
+
+
+    $("#txtFromDate_A , #txtToDate_A ,#txtFromDate_Q , #txtToDate_Q").datepicker({
+        dateFormat: 'yy-mm-dd',
+    });
+    $("#btnSearch").click(function () {
+        SearchItemNormal("A");
+    });
+    $("#btnQuickSearch").click(function () {
+        SearchItemNormal("Q");
+    });
+    $("#btnModalAdvSearch").click(function () {
+        $.ajax({
+            type: 'POST',
+            url: "././module/RPTINV_ITEM_EX/data.php",
+            dataType: 'json',
+            beforeSend: function () {
+
+            },
+            data: {
+                "load": "GetListCustomer",
+            },
+            success: function (data) {
+                $.each(data, function (key, value) {
+                    $('#selCust').append($("<option></option>")
+                            .attr("value", value["cust_num"])
+                            .text(value["cust_name"]));
+                });
+                $('#selCust').selectize({
+                    plugins: ['remove_button'],
+                    delimiter: ',',
+                    persist: false,
+                    create: function (input) {
+                        return {
+                            value: input,
+                            text: input
+                        }
+                    }
+                });
+                $("#modalAdvSearch").modal("show");
+            },
+            error: function (e) {
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+    });
+    $(".txt-filter").on("keypress", function (e) {
+        if (e.keyCode == 13) {
+            ReportItemSearch();
+            return false; // prevent the button click from happening
+        }
+    });
+    function ReCalGridAmount() {
+        var GrandAmount = 0;
+        var GrandVat = 0;
+        var GrandTotal = 0;
+        var i = 0;
+        $("#tblReport tbody tr ").each(function () {
+            GrandAmount += parseFloat($(this).find("td:eq(12)").text().replace(",", "").replace(",", ""));
+            GrandVat += parseFloat($(this).find("td:eq(13)").text().replace(",", "").replace(",", ""));
+            GrandTotal += parseFloat($(this).find("td:eq(14)").text().replace(",", "").replace(",", ""));
+            i++;
+        });
+        var x = 0;
+        $("#tblReport tfoot tr:eq(0)").find("td:eq(13)").text(addCommas(GrandAmount.toFixed(2)));
+        $("#tblReport tfoot tr:eq(0)").find("td:eq(14)").text(addCommas(GrandVat.toFixed(2)));
+        $("#tblReport tfoot tr:eq(0)").find("td:eq(15)").text(addCommas(GrandTotal.toFixed(2)));
+//        $("#tblReport tfoot tr:eq(0)").append(footline);
+    }
+    function getRootAppPath() {
+        var loc = window.location;
+        var pathName = loc.pathname.substring(0, loc.pathname.lastIndexOf('/') + 1);
+        var PathNames = loc.href.substring(0, loc.href.length - ((loc.pathname + loc.search + loc.hash).length - pathName.length));
+        var Path = PathNames;
+        var Paths = Path.split("/");
+        var Pathss = Path.replace(Paths[3] + '/', '');
+        return Pathss;
+    }
+    function SearchItemNormal(typeSearch) {
+        var Customers = [];
+        Customers = $("#selCust").val();
+        $("#tblReport tbody").empty();
+        $("#tblReport tfoot").remove();
+        var OldHtml = $("#btnSearch").html();
+        var txtFromDate = $("#txtFromDate_" + typeSearch).val();
+        var txtToDate = $("#txtToDate_" + typeSearch).val();
+        var txtFromInv = $("#txtFromInv_" + typeSearch).val();
+        var txtToInv = $("#txtToInv_" + typeSearch).val();
+        var txtItem = $("#txtItem").val();
+        var txtSize = $("#txtSize").val();
+        var txtThick = $("#txtThick").val();
+        var txtWidth = $("#txtWidth").val();
+        if (typeSearch == "A") {
+            $("#modalAdvSearch").modal("hide");
+        }
+
+
+
+        if ((txtFromDate == "") && (txtToDate == "") && (txtFromInv == "") && (txtToInv == "")) {
+            $.alert({
+                title: "ไม่ได้ระบุ Filter ",
+                content: "กรุณาระบุ Filter อย่างใดอย่างหนึ่ง เช่น ช่วงวันที่ หรือ ช่วงใบ Inv"
+            });
+        } else {
+            if (((txtFromDate != "") && (txtToDate == "")) || ((txtFromDate == "") && (txtToDate != ""))) {
+                $.alert({
+                    title: "",
+                    content: "ระบุช่วงวันต้องระบุทั้งสองช่อง คือ Start date และ End Date"
+                });
+            } else if (((txtFromInv != "") && (txtToInv == "")) || ((txtFromInv == "") && (txtToInv != ""))) {
+                $.alert({
+                    title: "",
+                    content: "ระบุช่วง Inv ต้องระบุทั้งสองช่อง คือ Start Inv และ End Inv"
+                });
+            } else {
+                $.ajax({
+                    type: 'POST',
+                    url: "././module/RPTINV_ITEM_EX/data.php",
+                    //                contentType: "text/plain",
+                    dataType: 'json',
+                    beforeSend: function () {
+                        // Pace.start();
+                        $("#btnSearch").html("<i class='fa fa-spinner fa-spin'></i>");
+                        $('#tblReport').loading();
+                    },
+                    data: {
+                        "load": "ajax",
+                        "txtItem": txtItem,
+                        "Customers": Customers,
+                        "txtSize": txtSize,
+                        "txtThick": txtThick,
+                        "txtWidth": txtWidth,
+                        "txtFromDate": txtFromDate,
+                        "txtToDate": txtToDate,
+                        "txtFromInv": txtFromInv,
+                        "txtToInv": txtToInv,
+                    },
+                    success: function (data) {
+                        console.log(data);
+                        $("#tblReport").DataTable().clear();
+                        var RowFooterBuild = "";
+                        var ColBuild = "";
+                        var ColCount = 14;
+                        var i = 0;
+                        RowFooterBuild = "<tfoot><tr>!!ColBuild!!</tr></tfoot>";
+                        for (i = 0; i <= ColCount; i++) {
+                            ColBuild += "<td></td>";
+                        }
+                        $("#tblReport").append(RowFooterBuild.replace("!!ColBuild!!", ColBuild));
+                        $('#tblReport').dataTable({
+                            "scrollX": true,
+                            "aaData": data,
+                            "paging": false,
+                            "searching": false,
+                            scrollY: 400,
+                            "initComplete": function (settings, json) {
+                                // ReCalGridAmount();
+                            },
+                            fixedHeader: true,
+                            destroy: true,
+                            'processing': true,
+                            "columns": [
+                                {
+                                    "data": "inv_date_conv",
+                                    "className": "text-center",
+                                    "render": function (data, type, row) {
+                                        var ret = data;
+                                        if (row["inv_num"].substring(0, 2) == "CX") {
+                                            ret = "<span style='color:red;'>" + data + "</span>";
+                                        }
+                                        return ret;
+                                    }
+                                },
+                                {
+                                    "data": "inv_num",
+                                    "render": function (data, type, row) {
+                                        var ret = data;
+                                        if (data.substring(0, 2) == "CX") {
+                                            ret = "<span style='color:red;'>" + data + "</span>";
+                                        }
+                                        return ret;
+                                    }
+                                },
+                                {
+                                    "data": "name",
+                                    "render": function (data, type, row) {
+                                        var ret = data;
+                                        if (row["inv_num"].substring(0, 2) == "CX") {
+                                            ret = "<span style='color:red;'>" + data + "</span>";
+                                        }
+                                        return ret;
+                                    }
+                                },
+                                {
+                                    "data": "item",
+                                    "render": function (data, type, row) {
+                                        var ret = data;
+                                        if (row["inv_num"].substring(0, 2) == "CX") {
+                                            ret = "<span style='color:red;'>" + ret + "</span>";
+                                        }
+                                        return ret;
+                                    }
+                                }
+                                ,
+                                {
+                                    "data": "description",
+                                    "render": function (data, type, row) {
+                                        var ret = data;
+                                        if (row["inv_num"].substring(0, 2) == "CX") {
+                                            ret = "<span style='color:red;'>" + data + "</span>";
+                                        }
+                                        return ret;
+                                    }
+                                },
+                                {
+                                    "data": "group_final",
+                                    "render": function (data, type, row) {
+                                        var ret = data;
+                                        if (row["inv_num"].substring(0, 2) == "CX") {
+                                            ret = "<span style='color:red;'>" + data + "</span>";
+                                        }
+                                        return ret;
+                                    }
+                                },
+                                {
+                                    "data": "unit_weight",
+                                    "className": "text-right",
+                                    "render": function (data, type, row, meta) {
+                                        var ret = data;
+                                        if (row["inv_num"].substring(0, 2) == "CX") {
+                                            ret = "<span style='color:red;'>" + data + "</span>";
+                                        }
+                                        return ret;
+                                    }
+                                }
+                                ,
+                                {
+                                    "data": "um",
+                                    "className": "text-center",
+                                    "render": function (data, type, row, meta) {
+                                        var ret = data;
+                                        if (row["inv_num"].substring(0, 2) == "CX") {
+                                            ret = "<span style='color:red;'>" + data + "</span>";
+                                        }
+                                        return ret;
+                                    }
+                                },
+                                {
+                                    "data": "QtyPCS",
+                                    "className": "text-right",
+                                    "render": function (data, type, row, meta) {
+                                        var ret = data;
+                                        if (row["inv_num"].substring(0, 2) == "CX") {
+                                            ret = "<span style='color:red;'>" + data + "</span>";
+                                        }
+                                        return ret;
+                                    }
+                                },
+                                {
+                                    "data": "PricePerPCS",
+                                    "className": "text-right",
+                                    "render": function (data, type, row) {
+                                        var ret = data;
+                                        if (row["inv_num"].substring(0, 2) == "CX") {
+                                            ret = "<span style='color:red;'>" + data + "</span>";
+                                        }
+                                        return ret;
+                                    }
+                                },
+                                {
+                                    "data": "QtyKG",
+                                    "className": "text-right",
+                                    "render": function (data, type, row, meta) {
+                                        var ret = data;
+                                        if (row["inv_num"].substring(0, 2) == "CX") {
+                                            ret = "<span style='color:red;'>" + data + "</span>";
+                                        }
+                                        return ret;
+                                    }
+                                },
+                                {
+                                    "data": "PricePerKG",
+                                    "className": "text-right",
+                                    "render": function (data, type, row) {
+                                        var ret = data;
+                                        if (row["inv_num"].substring(0, 2) == "CX") {
+                                            ret = "<span style='color:red;'>" + data + "</span>";
+                                        }
+                                        return ret;
+                                    }
+                                },
+                                {
+                                    "data": "Discount",
+                                    "className": "text-right",
+                                    "render": function (data, type, row, meta) {
+                                        var ret = data;
+                                        if (row["inv_num"].substring(0, 2) == "CX") {
+                                            ret = "<span style='color:red;'>" + data + "</span>";
+                                        }
+                                        return ret;
+                                    }
+                                },
+                                {
+                                    "data": "AMT_USD",
+                                    "className": "text-right",
+                                    "render": function (data, type, row) {
+                                        var ret = data;
+                                        if (row["inv_num"].substring(0, 2) == "CX") {
+                                            ret = "<span style='color:red;'>" + data + "</span>";
+                                        }
+                                        return ret;
+                                    }
+                                },
+                                {
+                                    "data": "AMT_THB",
+                                    "className": "text-right",
+                                    "render": function (data, type, row) {
+                                        var ret = data;
+                                        if (row["inv_num"].substring(0, 2) == "CX") {
+                                            ret = "<span style='color:red;'>" + data + "</span>";
+                                        }
+                                        return ret;
+                                    }
+                                }
+
+                            ],
+                            'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                                    "<'row'<'col-md-12'tr>>" +
+                                    "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                            buttons: [{
+                                    extend: 'print',
+                                    text: "<i class='fa fa-print'></i>&nbsp;Print",
+                                    title: ''
+                                },
+                                {
+                                    extend: 'excel',
+                                    footer: true,
+                                    text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                                    title: 'รายงาน  EXPORT SALES BY Items ' + 'ตั้งแต่วันที่ ' + txtFromDate + ' ถึง ' + txtToDate + ' วันที่ Export : ' + GetCurrDateTime()
+                                },
+                            ],
+                            "footerCallback": function (row, data, start, end, display) {
+                                var api = this.api(),
+                                        data;
+                                var intVal = function (i) {
+                                    return typeof i === 'string' ?
+                                            i.replace(/[\$,]/g, '') * 1 :
+                                            typeof i === 'number' ?
+                                            i : 0;
+                                };
+                                // computing column Total of the complete result
+                                var totalPCS = api
+                                        .column(8)
+                                        .data()
+                                        .reduce(function (a, b) {
+                                            return intVal(a) + intVal(b);
+                                        }, 0);
+                                var totalWeight = api
+                                        .column(10)
+                                        .data()
+                                        .reduce(function (a, b) {
+                                            return intVal(a) + intVal(b);
+                                        }, 0);
+                                var totalDisc = api
+                                        .column(12)
+                                        .data()
+                                        .reduce(function (a, b) {
+                                            return intVal(a) + intVal(b);
+                                        }, 0);
+                                var totalUSD = api
+                                        .column(13)
+                                        .data()
+                                        .reduce(function (a, b) {
+                                            return intVal(a) + intVal(b);
+                                        }, 0);
+                                var totalAMT = api
+                                        .column(14)
+                                        .data()
+                                        .reduce(function (a, b) {
+                                            return intVal(a) + intVal(b);
+                                        }, 0);
+                                $(api.column(7).footer()).html("<b>TOTAL</b>");
+                                $(api.column(8).footer()).html(addCommas(totalPCS.toFixed(2)));
+                                $(api.column(10).footer()).html(addCommas(totalWeight.toFixed(2)));
+                                $(api.column(12).footer()).html(addCommas(totalDisc.toFixed(2)));
+                                $(api.column(13).footer()).html(addCommas(totalUSD.toFixed(2)));
+                                $(api.column(14).footer()).html(addCommas(totalAMT.toFixed(2)));
+                                //$(api.column(15).footer()).html(addCommas(totalNetAmount.toFixed(2)));
+                            },
+                        });
+                        $('#tblReport').loading("stop");
+                        $("#btnSearch").html(OldHtml);
+                        //  Pace.start();
+
+                    },
+                    error: function (e) {
+                        console.log("There was an error with your request...");
+                        console.log("error: " + JSON.stringify(e));
+                    }
+                });
+            }
+        }
+    }
+
+
+
+
+</script>

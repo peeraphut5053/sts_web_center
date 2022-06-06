@@ -1,0 +1,187 @@
+<div class="row">
+    <div hidden class="col-lg-2 col-md-2 col-sm-4 col-xs-4 " >
+        <div class="input-group">
+            <div class="input-group-addon">Year</div>
+            <select class="form-control" id="RepByCustYear">
+
+            </select>
+            <select class="form-control" id="RepByCustMonth">
+
+            </select>
+        </div>
+    </div>
+    <div class="col-lg-2" >   
+        <div class="input-group">
+            <div class="input-group-addon">Date</div>
+            <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtFromDateCust">
+        </div>
+    </div>
+    <div class="col-lg-2">   
+        <div class="input-group">
+            <div class="input-group-addon">To date</div>
+            <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtToDateCust">
+        </div>
+    </div>
+
+    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4 " >
+        <button id="btnRepByCust" class="btn btn-info"><i class="fa fa-chart-bar"></i>&nbsp;Process </button>
+    </div>
+</div>
+<div class="row">
+    <table class="table table-condensed table-bordered table-striped" id="tblCustReport" >
+        <thead>
+            <tr>
+                <th>Cust Num</th>
+                <th>Cust Name</th>
+                <th>Summary KG</th>
+                <th>Summary Amount (bath)</th>                     
+            </tr>
+        </thead>
+    </table>
+</div>
+
+
+<script type="text/javascript">
+
+
+
+    $("#txtFromDateCust,#txtToDateCust").datepicker({
+        dateFormat: 'yy-mm-dd',
+    });
+    GetYearMonth("RepByCustYear", "RepByCustMonth");
+
+    $("#btnRepByCust").click(function () {
+        var txtFromDateCust = $("#txtFromDateCust").val();
+        var txtToDateCust = $("#txtToDateCust").val();
+
+        var RepByCustYear = $("#RepByCustYear").val();
+        var RepByCustMonth = $("#RepByCustMonth").val();
+        var tblId = "#tblCustReport";
+        $(tblId + " tfoot ").remove();
+        $.ajax({
+            type: 'POST',
+            url: "././module/RPTINV_ITEM_IN2020/data.php",
+            dataType: 'json',
+            beforeSend: function () {
+
+
+                $(tblId).loading();
+            },
+            data: {
+                "load": "ajax_by_cust",
+                "RepByCustYear": RepByCustYear,
+                "RepByCustMonth": RepByCustMonth,
+                "txtFromDateCust": txtFromDateCust,
+                "txtToDateCust": txtToDateCust,
+            },
+            success: function (data) {
+                console.log(data);
+
+                $(tblId).DataTable().clear();
+                var RowFooterBuild = "";
+                var ColBuild = "";
+                var ColCount = 4;
+                var i = 0;
+                RowFooterBuild = "<tfoot><tr>!!ColBuild!!</tr></tfoot>";
+                for (i = 1; i <= ColCount; i++) {
+                    ColBuild += "<td></td>";
+                }
+                $(tblId).append(RowFooterBuild.replace("!!ColBuild!!", ColBuild));
+
+                $(tblId).dataTable({
+                    "aaData": data,
+                    "paging": false,
+                    "searching": false,
+                    "initComplete": function (settings, json) {
+
+                    },
+                    fixedHeader: true,
+                    destroy: true,
+                    'processing': true,
+                    "columns": [
+                        {
+                            "data": "cust_num",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "cust_name",
+                            "className": "text-left",
+                        },
+                        {
+                            "data": "summary_kg",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = addCommas(parseFloat(data).toFixed(2));
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "summary_amount",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = addCommas(parseFloat(data).toFixed(2));
+                                return ret;
+                            }
+                        },
+                    ],
+                    'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                            "<'row'<'col-md-12'tr>>" +
+                            "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                    buttons: [{
+                            extend: 'print',
+                            text: "<i class='fa fa-print'></i>&nbsp;Print",
+                            title: ''
+                        },
+                        {
+                            extend: 'excel',
+                            footer: true,
+                            text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                            title: 'รายงาน inv item ' + GetCurrDateTime()
+                        },
+                    ],
+                    "footerCallback": function (row, data, start, end, display) {
+                        var api = this.api(),
+                                data;
+                        var intVal = function (i) {
+                            return typeof i === 'string' ?
+                                    i.replace(/[\$,]/g, '') * 1 :
+                                    typeof i === 'number' ?
+                                    i : 0;
+                        };
+
+
+                        var totalKG = api
+                                .column(2)
+                                .data()
+                                .reduce(function (a, b) {
+                                    return intVal(a) + intVal(b);
+                                }, 0);
+                        var totalAmt = api
+                                .column(3)
+                                .data()
+                                .reduce(function (a, b) {
+                                    return intVal(a) + intVal(b);
+                                }, 0);
+
+                        $(api.column(1).footer()).html("<b>TOTAL</b>");
+                        $(api.column(2).footer()).html(addCommas(totalKG.toFixed(2)));
+                        $(api.column(3).footer()).html(addCommas(totalAmt.toFixed(2)));
+
+                    },
+                });
+                $(tblId).loading("stop");
+            },
+            error: function (e) {
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+
+    });
+
+
+</script>

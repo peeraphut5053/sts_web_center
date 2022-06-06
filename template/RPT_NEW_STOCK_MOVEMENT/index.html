@@ -1,0 +1,276 @@
+<style>
+    .row{
+        padding: 2px;
+    }
+</style>
+
+<div class="row">
+    <div>
+        <h1>New Stock Movement</h1>
+    </div> 
+    <div class="row">
+        <div class="col-xs-11" >   
+            <div class="row">
+                <div class="col-xs-3">
+                    <div class="input-group">
+                        <div class="input-group-addon">Date</div>
+                        <input value="2019-09-30 00:00:00" type="text" autocomplete="off"  class="form-control txt-filter" id="Dst_Date">
+                    </div>
+                </div>
+                <div class="col-xs-3">
+                    <div class="input-group">
+                        <div class="input-group-addon">Item</div>
+                        <input value="FC021N0060000-M2BS040F02100H" type="text" autocomplete="off"  class="form-control txt-filter" id="Dst_Item">
+                    </div>
+                </div>
+                <div class="col-xs-3">
+                    <div class="input-group">
+                        <div class="input-group-addon">Qty Enter</div>
+                        <input value="1000" type="text" autocomplete="off"  class="form-control txt-filter" id="QtyEnter">
+                    </div>
+                </div>
+                <div class="col-xs-3">
+                    <div class="input-group">
+                        <div class="input-group-addon">Trans Type</div>
+                        <input value="F" type="text" autocomplete="off"  class="form-control txt-filter" id="TransTypeRun">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-1" >  
+            <div class="input-group">
+                <button style="align:right" id="btnSearch" class="btn btn-info"><i class="fa fa-search"></i>&nbsp;ค้นหา</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12" >
+        <div class="col-xs-11" style="outline: 1px solid #3c8dbc; padding-top:5px;padding-bottom: 5px">
+            <div class="row">
+                <div class="col-xs-3">
+                    <div class="input-group">
+                        <div class="input-group-addon">item</div>
+                        <input id="txtitem" readonly value="" type="text" autocomplete="off"  class="form-control txt-filter">
+                    </div> 
+                </div>
+                <div class="col-xs-3">
+                    <div class="input-group">
+                        <div class="input-group-addon">trans type</div>
+                        <input id="txttranstype" readonly value="" type="text" autocomplete="off"  class="form-control txt-filter">
+                    </div>   
+                </div>
+                <div class="col-xs-3">
+                    <div class="input-group">
+                        <div class="input-group-addon">ref type</div>
+                        <input id="txtreftype" readonly value="" type="text" autocomplete="off"  class="form-control txt-filter">
+                    </div> 
+                </div>
+                <div class="col-xs-3">
+                    <div class="input-group">
+                        <div class="input-group-addon">enter qty</div>
+                        <input id="txtenterqty"  readonly value="" type="text" autocomplete="off"  class="form-control txt-filter">
+                    </div>   
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-3">
+                    <div class="input-group">
+                        <div class="input-group-addon">cur qty</div>
+                        <input id="txtcurqty" readonly value="" type="text" autocomplete="off"  class="form-control txt-filter">
+                    </div> 
+                </div>
+                <div class="col-xs-3">
+                    <div class="input-group">
+                        <div class="input-group-addon">cur cost</div>
+                        <input id="txtcurcost" readonly value="" type="text" autocomplete="off"  class="form-control txt-filter">
+                    </div> 
+                </div>
+                <div class="col-xs-3">
+                    <div class="input-group">
+                        <div class="input-group-addon">adj qty</div>
+                        <input id="txtadjqty" readonly value="" type="text" autocomplete="off"  class="form-control txt-filter">
+                    </div>   
+                </div>
+                <div class="col-xs-3">
+                    <div class="input-group">
+                        <div class="input-group-addon">adj amount</div>
+                        <input id="txtadjamt" readonly value="" type="text" autocomplete="off"  class="form-control txt-filter">
+                    </div>   
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>        
+</div>
+
+<div class="row" id="divReport" >
+    <table class="table table-condensed table-bordered table-striped" id="tblReport" style="width:100%;">
+        <thead>
+            <tr>
+                <th>trans_date</th>
+                <th>item</th>
+                <th>trans_type</th>
+                <th>ref_type</th>
+                <th>enter qty</th>
+                <th>cur_qty</th>
+                <th>cur_cost</th>
+                <th>adj_qty</th>
+                <th>adj_amount </th>
+            </tr>
+        </thead>
+    </table>
+</div>
+<script type="text/javascript">
+
+
+
+    $("#txtFromDate").datepicker({
+        dateFormat: 'yy-mm-dd',
+    });
+    $("#txtFromDate,#txtToDate").val(GetToday());
+    $("#btnSearch").click(function () {
+        var tblReportId = '#tblReport';
+        var btnSearch = '#btnSearch';
+        var btnSearch = this.btnSearch;
+        var ModuleName = $("#CurrentPage").val();
+        var urlModule = "././module/" + ModuleName + "/data.php";
+        var datapost = SetDataPostElement("ajax");
+
+        var OldHtml = $(btnSearch).html();
+        $.ajax({
+            type: 'POST',
+            url: urlModule,
+            dataType: 'json',
+            beforeSend: function () {
+                $(btnSearch).html("<i class='fa fa-spinner fa-spin'></i>");
+                $(tblReportId).loading();
+            },
+            data: datapost,
+            success: function (data) {
+                console.log(data)
+                $("#txtitem").val(data[0].item);
+                $("#txttranstype").val(data[0].trans_type);
+                $("#txtreftype").val(data[0].ref_type);
+                $("#txtenterqty").val(data[0].enter_qty);
+                $("#txtcurqty").val(data[0].cur_qty);
+                $("#txtcurcost").val(data[0].cur_cost);
+                $("#txtadjqty").val(data[0].adj_qty);
+                $("#txtadjamt").val(data[0].adj_amount);
+                $(tblReportId).DataTable().clear();
+                $(tblReportId).dataTable({
+                    scrollY: 400,
+                    "scrollX": true,
+                    "aaData": data,
+                    "paging": false,
+                    "searching": true,
+                    "initComplete": function (settings, json) {
+                    },
+                    fixedHeader: true,
+                    destroy: true,
+                    'processing': true,
+                    "columns": tablecolumsArr,
+                    'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                            "<'row'<'col-md-12'tr>>" +
+                            "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                    buttons: [
+                        {
+                            extend: 'print',
+                            text: "<i class='fa fa-print'></i>&nbsp;Print",
+                            title: '',
+                        },
+                        {
+                            extend: 'excel',
+                            text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                            title: 'รายงาน  ' + GetCurrDateTime()
+                        },
+                    ],
+                });
+                $(tblReportId).loading("stop");
+                $(btnSearch).html(OldHtml);
+            },
+            error: function (e) {
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+    });
+
+
+
+
+
+    var tablecolumsArr = [
+        {
+            "data": "trans_date",
+            "className": "text-center",
+            "render": function (data, type, row, meta) {
+                var ret = data.date;
+                return ret;
+            }
+        },
+        {
+            "data": "item",
+            "className": "text-center",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "trans_type",
+            "className": "text-center",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "ref_type",
+            "className": "text-center",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "enter_qty",
+            "className": "text-center",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "cur_qty",
+            "className": "",
+            "render": function (data, type, row) {
+                var ret = "<div class='barcode-tag'>" + data + "</div>";
+                return ret;
+            }
+        },
+        {
+            "data": "cur_cost",
+            "className": "",
+            "render": function (data, type, row) {
+                var ret = "<div class='barcode-tag'>" + data + "</div>";
+                return ret;
+            }
+        },
+        {
+            "data": "adj_qty",
+            "className": "",
+            "render": function (data, type, row) {
+                var ret = "<div class='barcode-tag'>" + data + "</div>";
+                return ret;
+            }
+        },
+        {
+            "data": "adj_amount",
+            "className": "",
+            "render": function (data, type, row) {
+                var ret = "<div class='barcode-tag'>" + data + "</div>";
+                return ret;
+            }
+        },
+    ];
+</script>

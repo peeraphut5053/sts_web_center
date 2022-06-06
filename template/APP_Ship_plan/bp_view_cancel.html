@@ -1,0 +1,117 @@
+<style>
+    .col-data{
+        color:#0056b3;
+    }
+   .table thead th {
+    vertical-align: bottom;
+    border-bottom: 2px solid #17a2b8;
+    background-color: #17a2b8;
+    color:#ffffff;
+}
+.btn-default{
+    border:solid 1px #666;
+}
+.btn-round {
+    border:solid 1px #666;
+    border-radius: 20px;
+    width:25px;
+    height:25px;
+    padding-top:2px;
+    padding-left:1px;
+    padding-right:0px;
+}
+</style>
+
+<div class="container" style="background-color:#ffccd5;">
+            <div class="row rowheader"  >
+            <div class="col-8 col-back">
+                 <a href="?bp_list_cancel" id="btnBack" class="btn btn-success btn-small btn-back" ><i class="fa fa-mail-reply"></i></a> <strong>:: VIEW (Cancel)</strong>   
+            </div>
+            <div class="col-1 text-right ">
+                Code
+            </div>
+            <div class="col-3 text-right col-data">
+                {docno}
+               <input type="hidden" id="hdHeadCode" value="{docno}">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 col-4 text-right ">
+                M.V.
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 col-4 text-left col-data">
+                {MV}
+            </div>
+
+            <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 col-4 text-right ">
+                LIGHTER NO.
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 col-4 text-left col-data">
+               {LighterNo}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 col-4 text-right ">
+                BERTHED AT
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 col-4 text-left col-data">
+               {BerthedAt}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 col-4 text-right ">
+                START DATE
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 col-4 text-left col-data">
+               {StartDate}
+            </div>
+<!--            <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 col-4 text-left  text-right">
+                COMPLETED ON
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 col-4 text-left col-data">
+               {CPDate}
+            </div>-->
+        </div>
+        <div class="row text-right" >
+             <div class="col-6 text-left">
+                  <a id="restore" href="#" class="btn btn-success btn-small" style="width:120px;"><i class="fa fa-mail-reply"></i>&nbsp;RESTORE</a> 
+            </div>
+            <div class="col-6 text-right" style="visibility: {VisiblePrintEdit} ;">
+                  </div>
+        </div>
+        <div class="row " >
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th> Item Position</th>
+                        <th> Item Tag </th>
+                        <th> Item Description </th>
+                        <th> Item QTY </th>
+                        <!--<th> GROSS WEIGHT (MT) </th>-->
+                    </tr>
+                </thead>
+                <tbody>
+                    {lists}
+                </tbody>
+            </table>
+        </div> 
+       </div>
+<script type="text/javascript">
+           $("#restore").click(function(){
+               var ids = $("#hdHeadCode").val() ;
+              $.post("./module/bp_doc_cancel.php",{"HeadCode": ids,"Cancel":0}, function (data) {
+                
+//                if (data != "1") {
+//                    alert('Cancel Fail !');
+//                    return false;
+//                } else {
+                    //alert("Save [ "+data + " ] Complete ");
+                     // alert('Restore Complete .');
+                    window.location = "?bp_list_cancel" ;
+                    //$('#content').load("./module/view2.php", {"HeadCode": data });
+//                }
+
+            }, 'html');
+           });
+          
+    </script>

@@ -1,0 +1,312 @@
+<style>
+    .buttons-colvis {
+        transform: translate(100px,-120px);
+        margin-bottom: 0px;
+        margin-left: 1200px;
+        margin-top: -31px;
+        border: none;
+        border-radius: 5px;
+        height: 32px;
+        background-color: #FFFFFF !important;
+        color: black !important;
+    }
+    .col-search {
+        padding-left: 3px;
+        padding-right: 3px;
+    }
+    .table thead th {
+        text-align: center;
+    }
+
+    .col-flt-page {
+        padding-top: 10px;
+        font-weight: bold;
+    }
+
+    #tblReport tbody tr td a {
+        cursor: pointer;
+    }
+
+    table.dataTable.fixedHeader-floating,
+    table.dataTable.fixedHeader-locked {
+        background-color: white;
+        margin-top: 50px !important;
+        margin-bottom: 0 !important;
+    }
+
+    @media print {
+        table th:nth-child(0) {
+            width: 200px;
+            word-break: break-all;
+            white-space: pre-line;
+        }
+
+        table td:nth-child(0) {
+            width: 200px;
+            word-break: break-all;
+            white-space: pre-line;
+        }
+
+    }
+    .text-wrap {
+        white-space: normal;
+    }
+
+    .width-200 {
+        width: 200px;
+    }
+
+    input[type=checkbox] {
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+    .input-group-addon2 {
+        padding: 6px 12px;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 1;
+        color: #555;
+        height: 32px;
+        text-align: center;
+        background-color: #eee;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        border-top-right-radius: 0px;
+        border-bottom-right-radius: 0px;
+    }
+
+    .selectize-input {
+        padding-top: 5px;
+        padding-bottom: 5px;
+        height: 32px;
+        min-height: 64px;
+        border-top-left-radius: 0px;
+        border-bottom-left-radius: 0px;
+    }
+
+    .input-group .form-control {
+        padding-left: 1px;
+        padding-right: 1px;
+    }
+    .modal-body{
+        position: relative;
+        padding: 15px;
+        min-height: 550px;
+    }
+
+    ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+    ::-webkit-scrollbar-thumb {
+        background: #3c8dbc; 
+        border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: #3c8dbc; 
+    }
+</style>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+<div class="row">
+    <h2> STOCK CARD </h2>
+</div>
+<div class='row'>
+
+    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 " >
+        <div class="input-group">
+            <div class="input-group-addon">ITEM</div>
+            <input type="text" id="item" class="form-control" name="item">
+        </div>
+
+    </div>
+    <div class="col-lg-2 col-md-2 col-sm-6 col-xs-6 " >
+        <div class="input-group">
+            <div class="input-group-addon">START DATE</div>
+            <input type="text" value="2018-12-31" id="txtStartDate" class="form-control" name="txtStartDate" autocomplete="off">
+        </div>
+    </div>
+    <div class="col-lg-2 col-md-2 col-sm-6 col-xs-6 " >
+        <div class="input-group">
+            <div class="input-group-addon">End DATE</div>
+            <input type="text" id="txtEndDate" class="form-control" name="txtEndDate" autocomplete="off">
+        </div>
+    </div>
+    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 " >
+        <button class="btn btn-info" id="btnSearch"><i class="fa fa-search"></i>&nbsp;Search </button>
+    </div>
+
+</div>
+<div class="row" id="rowResultTable">
+    <table class="table table-condensed table-striped " width="100%" id="tblReport">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Item Number</th>
+                <th>Item Name</th>
+                <th>Unit Weight</th>
+                <th>Ref. Type</th>
+                <th>Tran. Type</th>
+                <th>Ref. No.</th>
+                <th>Doc. No. 1</th>
+                <th>Doc. No. 2</th>
+                <th>Quantity</th>
+                <th>Balance Quantity</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+<script type="text/javascript">
+    $("#btnSearch").click(function () {
+        if ($('#item').val() == '') {
+            alert('กรุณากรอก item');
+        } else {
+            ReportItemSearch();
+        }
+    });
+    $("#txtStartDate,#txtEndDate").datepicker({
+        dateFormat: 'yy-mm-dd'
+    });
+    $("#txtEndDate").val(GetToday());
+
+
+
+    function ReportItemSearch() {
+        var datapost = SetDataPostElement("ajax");
+        $("#tblReport").DataTable().clear();
+
+        $.ajax({
+            type: 'POST',
+            url: "././module/RPT_NEW_INVENTORY_BALANCE_STOCK_CARD/data.php",
+            dataType: 'json',
+            beforeSend: function () {
+                //$("#modalBody").empty();
+            },
+            data: datapost,
+            success: function (data) {
+                console.log(data);
+                $('#tblReport').dataTable({
+                    "aaData": data,
+                    "paging": false,
+                    fixedHeader: true,
+                    destroy: true,
+                    'processing': true,
+                    "order": false,
+                    scrollY: 400,
+                    "columns": [
+                        {
+                            "data": "TransDate",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "item",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "width": 200,
+                            "data": "itemDescription",
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "UnitWeight",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = addCommas(parseFloat(data).toFixed(2));
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "RefDescription",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "TransDescription",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "RefNum",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "DocumentNum",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "ThVendInvNum",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "NewQty",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = addCommas(parseFloat(data).toFixed(2));
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "BalQty",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = addCommas(parseFloat(data).toFixed(2));
+                                return ret;
+                            }
+                        },
+                    ],
+                    'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                            "<'row'<'col-md-12'tr>>" +
+                            "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                    buttons: [{
+                            extend: 'print',
+                            text: "<i class='fa fa-print'></i>&nbsp;Print",
+                            title: 'Inventory Balance Summary Report  '
+                        },
+                        {
+                            extend: 'excelHtml5',
+                            footer: true,
+                            text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                            title: 'Stock Card '
+                        },
+                    ],
+                });
+            },
+            error: function (e) {
+
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        })
+    }
+</script>

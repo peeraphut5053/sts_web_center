@@ -1,0 +1,475 @@
+<style>
+    .col-search{
+        padding-left:3px;
+        padding-right:3px;
+    }
+    .table thead th{
+        text-align: center;
+    }
+
+    .col-flt-page{
+        padding-top:10px;
+        font-weight: bold;
+    }
+
+    #tblReport tbody tr td a {
+        cursor: pointer ;
+    }
+    table.dataTable.fixedHeader-floating, table.dataTable.fixedHeader-locked {
+        background-color: white;
+        margin-top: 50px !important;
+        margin-bottom: 0 !important;
+    }
+
+    .tr-row-cn td{
+        color :red;
+    }
+    .input-text-value-success{
+        border: 2px solid green;
+    }
+</style>
+<div class="row">
+    <h4>รายงาน DO ที่ยังไม่เปิด INV</h4>
+</div>
+<div class='row' >
+
+    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12  col-search">
+        <div class="input-group">
+            <div class="input-group-addon">ค้นหาจากวันที่</div>
+            <select class="form-control" id="selFromDate">
+                <option value="DO_Date" selected>DO Date</option>
+                <option value="INV_Date"  >Ship Date</option>
+            </select>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12  col-search">
+        <div class="input-group">
+            <div class="input-group-addon">From date</div>
+            <input type="text" class="form-control txt-filter" id="txtFromDate">
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12  col-search">
+        <div class="input-group">
+            <div class="input-group-addon">To date</div>
+            <input type="text" class="form-control txt-filter" id="txtToDate">
+        </div>
+    </div>
+    <div class="col-lg-1 col-md-2 col-sm-1 col-xs-6  col-search">
+        <button id="btnSearch" class="btn btn-info"><i class="fa fa-search"></i>&nbsp;ค้นหา</button>
+    </div>
+</div>
+
+<div class="row" id="divReport">
+    <table class="table table-condensed table-bordered table-striped" id="tblReport">
+        <thead>
+            <tr>
+                <th>do_num</th>
+                <th>do</br>line</th>
+                <th>do</br>seq</th>
+                <th>do</br>status</th>
+                <th>co</br>num</th>
+                <th>co</br>line</th>
+                <th>cust</br>num</th>                
+                <th>cust</br>name</th>
+                <th>item</th>               
+                <th>item</br>name</th>   
+                <th>ship</br>date</th>   
+                <th>date</br>seq</th>  
+                <th>qty</br>shipped</th>  
+                <th>price</th> 
+                <th>do_value</th> 
+                <th>u_m</th>  
+                <th>qty</br>invoiced</th>         
+                <th>price</br>conv</th>         
+                <th>qty</br>ordered</th>         
+                <th>Total</br>qty_inv</th>         
+                <th>ship</br>UM</th>         
+                <th>cust</br>po</th>         
+                <th>lot</th>         
+                <th>remark</th>         
+            </tr>
+        </thead>
+        <tbody id="tblReportList">
+        </tbody>
+    </table>
+</div>
+
+
+<script type="text/javascript">
+
+
+    $("#txtFromDate,#txtToDate").val(GetToday());
+    $("#txtFromDate , #txtToDate").datepicker({
+        dateFormat: 'yy-mm-dd',
+    });
+    $("#btnSearch").click(function () {
+        ReportItemSearch();
+    });
+    $(".txt-filter").on("keypress", function (e) {
+        if (e.keyCode == 13) {
+            ReportItemSearch();
+            return false; // prevent the button click from happening
+        }
+    });
+    var url = '././module/RPTDO_PENDING_1/data.php';
+    function ReportItemSearch() {
+
+        var txtFromDate = $("#txtFromDate").val();
+        var txtToDate = $("#txtToDate").val();
+        if ((txtFromDate == "") || (txtToDate == "")) {
+            $.alert("Please select date");
+        } else {
+            $.ajax({
+                type: 'GET',
+                url: url,
+                contentType: "text/plain",
+                dataType: 'json',
+                beforeSend: function () {
+                },
+                data: {
+                    load: 'RPTDO_PENDING_1',
+                    txtFromDate: txtFromDate,
+                    txtToDate: txtToDate,
+                },
+                success: function (data) {
+                    console.log(data)
+                    var RowFooterBuild = "";
+                    var ColBuild = "";
+                    var ColCount = 22;
+                    var i = 0;
+                    RowFooterBuild = "<tfoot><tr>!!ColBuild!!</tr></tfoot>";
+                    for (i = 1; i <= ColCount; i++) {
+                        ColBuild += "<td></td>";
+                    }
+                    $('#tblReport').append(RowFooterBuild.replace("!!ColBuild!!", ColBuild));
+                    $('#tblReport').dataTable({
+                        fixedHeader: true,
+                        scrollX: true,
+                        scrollY: 400,
+                        "paging": false,
+                        "aaData": data,
+                        "searching": false,
+                        "bInfo": false,
+                        destroy: true,
+                        "columns": [
+
+                            {
+                                "data": "do_num",
+                                "className": "text-right",
+                                "render": function (data, type, row, meta) {
+                                    var ret = data;
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "do_line",
+                                "className": "text-right",
+                                "render": function (data, type, row, meta) {
+                                    var ret = data;
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "do_seq",
+                                "className": "text-right",
+                                "render": function (data, type, row, meta) {
+                                    var ret = data;
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "do_status",
+                                "className": "text-right",
+                                "render": function (data, type, row, meta) {
+                                    var ret = data;
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "co_num",
+                                "className": "text-right",
+                                "render": function (data, type, row, meta) {
+                                    var ret = data;
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "co_line",
+                                "className": "text-right",
+                                "render": function (data, type, row, meta) {
+                                    var ret = data;
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "cust_num",
+                                "className": "text-right",
+                                "render": function (data, type, row, meta) {
+                                    var ret = data;
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "cust_name",
+                                "className": "text-right",
+                                "render": function (data, type, row, meta) {
+                                    var ret = data;
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "item",
+                                "className": "text-right",
+                                "render": function (data, type, row, meta) {
+                                    var ret = data;
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "item_name",
+                                "className": "text-right",
+                                "render": function (data, type, row, meta) {
+                                    var ret = data;
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "ship_date",
+                                "className": "text-right",
+                                "render": function (data, type, row, meta) {
+                                    var ret = data.date.substring(0, 10);
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "date_seq",
+                                "className": "text-right",
+                                "render": function (data, type, row, meta) {
+                                    var ret = data;
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "qty_shipped",
+                                "className": "text-right",
+                                "render": function (data, type, row, meta) {
+                                    var ret = formatMoney(data);
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "price",
+                                "className": "text-right",
+                                "render": function (data, type, row, meta) {
+                                    var ret = formatMoney(data);
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "do_value",
+                                "className": "text-right",
+                                "render": function (data, type, row, meta) {
+                                    var ret = formatMoney(data);
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "u_m",
+                                "className": "text-right",
+                                "render": function (data, type, row, meta) {
+                                    var ret = data;
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "qty_invoiced",
+                                "className": "text-right",
+                                "render": function (data, type, row, meta) {
+                                    var ret = formatMoney(data);
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "price_conv",
+                                "className": "text-right",
+                                "render": function (data, type, row, meta) {
+                                    var ret = formatMoney(data);
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "qty_ordered_conv",
+                                "className": "text-right",
+                                "render": function (data, type, row, meta) {
+                                    var ret = formatMoney(data);
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "Total_qty_inv",
+                                "className": "text-right",
+                                "render": function (data, type, row, meta) {
+                                    var ret = formatMoney(data);
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "inv_UM",
+                                "className": "text-right",
+                                "render": function (data, type, row, meta) {
+                                    var ret = data;
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "cust_po",
+                                "className": "text-right",
+                                "render": function (data, type, row, meta) {
+                                    var ret = data;
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "lot",
+                                "className": "text-right",
+                                "render": function (data, type, row, meta) {
+                                    var ret = data;
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": {
+                                    co_num: "co_num",
+                                    co_line: "co_line",
+                                    do_num: "do_num",
+                                    do_line: "do_line",
+                                    do_seq: "do_seq",
+                                    lot: "lot",
+                                    remark: "remark",
+
+                                },
+                                "className": "text-right ",
+                                "render": function (data, type, row, meta) {
+                                    let class_name = `${data.co_num}_${data.co_line}_${data.do_num}_${data.do_line}_${data.do_seq}_${data.lot}`;
+                                    var ret = `<input type='text' value='${data.remark}'  id='${class_name}' onchange='DO_PENDING_REMARK("${class_name}")' /> `;
+                                    return ret;
+                                }
+                            },
+                        ],
+                        'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                                "<'row'<'col-md-12'tr>>" +
+                                "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                        buttons: [
+                            {
+                                extend: 'excel',
+                                footer: true,
+                                text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                                title: 'รายงาน inv item ' + GetCurrDateTime()
+                            },
+                        ],
+                        "footerCallback": function (row, data, start, end, display) {
+                            var api = this.api(),
+                                    data;
+                            var intVal = function (i) {
+                                return typeof i === 'string' ?
+                                        i.replace(/[\$,]/g, '') * 1 :
+                                        typeof i === 'number' ?
+                                        i : 0;
+                            };
+                            console.log(api);
+                            var total12 = api
+                                    .column(12)
+                                    .data()
+                                    .reduce(function (a, b) {
+                                        return intVal(a) + intVal(b);
+                                    }, 0);
+                            var total13 = api
+                                    .column(13)
+                                    .data()
+                                    .reduce(function (a, b) {
+                                        return intVal(a) + intVal(b);
+                                    }, 0);
+                            var total15 = api
+                                    .column(15)
+                                    .data()
+                                    .reduce(function (a, b) {
+                                        return intVal(a) + intVal(b);
+                                    }, 0);
+                            var total16 = api
+                                    .column(16)
+                                    .data()
+                                    .reduce(function (a, b) {
+                                        return intVal(a) + intVal(b);
+                                    }, 0);
+                            var total17 = api
+                                    .column(17)
+                                    .data()
+                                    .reduce(function (a, b) {
+                                        return intVal(a) + intVal(b);
+                                    }, 0);
+                            var total18 = api
+                                    .column(18)
+                                    .data()
+                                    .reduce(function (a, b) {
+                                        return intVal(a) + intVal(b);
+                                    }, 0);
+                            $(api.column(0).footer()).html("<b></b>");
+                            $(api.column(12).footer()).html(addCommas(total12.toFixed(2)));
+                            $(api.column(13).footer()).html(addCommas(total13.toFixed(2)));
+                            $(api.column(16).footer()).html(addCommas(total16.toFixed(2)));
+                            $(api.column(17).footer()).html(addCommas(total17.toFixed(2)));
+                            $(api.column(18).footer()).html(addCommas(total18.toFixed(2)));
+                        },
+                    });
+                },
+                error: function (e) {
+                    console.log("There was an error with your request...");
+                    console.log("error: " + JSON.stringify(e));
+                }
+            });
+        }
+
+    }
+
+
+    function DO_PENDING_REMARK(id) {
+        let idsplit = id.split("_");
+        let co_num = idsplit[0];
+        let co_line = idsplit[1];
+        let do_num = idsplit[2];
+        let do_line = idsplit[3];
+        let do_seq = idsplit[4];
+        let lot = idsplit[5];
+        if (lot == "null") {
+            lot = '';
+        }
+        let remark = $("#" + id).val();
+
+        $(`#${id}`).addClass("input-text-value-success");
+        setTimeout(function () {
+            $(`#${id}`).removeClass("input-text-value-success");
+        }, 2500)
+
+        $.ajax({
+            type: 'GET',
+            url: url,
+            dataType: 'json',
+            beforeSend: function () {
+            },
+            data: {
+                load: "DO_PENDING_REMARK",
+                co_num: co_num,
+                co_line: co_line,
+                do_num: do_num,
+                do_line: do_line,
+                do_seq: do_seq,
+                lot: lot,
+                remark: remark,
+            },
+            success: function (data) {
+                console.log(data)
+
+            },
+        });
+    }
+</script>

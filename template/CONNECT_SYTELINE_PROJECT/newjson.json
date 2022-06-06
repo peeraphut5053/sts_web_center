@@ -1,0 +1,28 @@
+{
+  "IDOName": "SLItems",
+  "Items": [
+    {
+      "EditStatus": 0,
+      "ID": "PBT=[item] itm.ID=[257dc74b-6371-421d-8dcc-9d72711798bd] itm.DT=[2019-09-27 14:53:07.773]",
+      "Properties": [
+        {
+          "Property": "FC011N0010000-T100230M06000N",
+          "Updated": false
+        }
+      ]
+    },
+    {
+      "EditStatus": 0,
+      "ID": "PBT=[item] itm.ID=[c677bbb8-0c14-4bbd-ad8a-b0b71ccb8a30] itm.DT=[2019-09-16 16:23:58.453]",
+      "Properties": [
+        {
+          "Property": "FC011N0011400-O100160M06850N",
+          "Updated": false
+        }
+      ]
+    }
+  ],
+  "PropertyList": [
+    "Item"
+  ]
+}

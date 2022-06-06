@@ -1,0 +1,285 @@
+<style>
+    .col-search{
+        padding-left:3px;
+        padding-right:3px;
+    }
+    /*    table.dataTable thead .sorting:after,
+        table.dataTable thead .sorting:before,
+        table.dataTable thead .sorting_asc:after,
+        table.dataTable thead .sorting_asc:before,
+        table.dataTable thead .sorting_asc_disabled:after,
+        table.dataTable thead .sorting_asc_disabled:before,
+        table.dataTable thead .sorting_desc:after,
+        table.dataTable thead .sorting_desc:before,
+        table.dataTable thead .sorting_desc_disabled:after,
+        table.dataTable thead .sorting_desc_disabled:before {
+            bottom: .5em;
+        }*/
+    .table thead th{
+        text-align: center;
+    }
+
+    .col-flt-page{
+        padding-top:10px;
+        font-weight: bold;
+    }
+
+    #tblReport tbody tr td a {
+        cursor: pointer ;
+    }
+    table.dataTable.fixedHeader-floating, table.dataTable.fixedHeader-locked {
+        background-color: white;
+        margin-top: 50px !important;
+        margin-bottom: 0 !important;
+    }
+</style>
+<div class="row">
+    <h4> รายงาน Material Transaction</h4>
+</div>
+
+<div class='row'>
+
+    <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12  col-search">
+        <div class="input-group">
+            <div class="input-group-addon">Start<font color='red'>*</font></div>
+            <input type="text" class="form-control txt-filter" id="StartDate">
+
+        </div>
+    </div>
+    <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12  col-search">
+        <div class="input-group">
+            <div class="input-group-addon">To<font color='red'>*</font></div>
+            <input type="text" class="form-control txt-filter" id="EndDate">
+        </div>
+    </div>
+    <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12  col-search">
+        <div class="input-group">
+            <div class="input-group-addon">trans_type</div>
+            <select class="form-control" id="selTransType">
+                <option value="">ทั้งหมด</option>
+                <option value="A">Adjustment</option>
+                <option value="B">CucleCount</option>
+                <option value="C">Split/Merge</option>
+                <option value="D">Scrap</option>
+                <option value="F">Finish</option>
+                <option value="G">Misc.Issue</option>
+                <option value="H">Misc.Receipt</option>
+                <option value="I">Issue/WIPChange</option>
+                <option value="L">TransferLoss</option>
+                <option value="M">StockMove</option>
+                <option value="N">Labor/NextOperation</option>
+                <option value="O">OtherCost</option>
+                <option value="P">PhysicalInventory</option>
+                <option value="R">Receipt</option>
+                <option value="S">Ship</option>
+                <option value="T">TransferOrder</option>
+                <option value="W">Withdrawal/Return</option>
+            </select>
+        </div>
+    </div>   
+    <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12  col-search">
+        <div class="input-group">
+            <div class="input-group-addon">ref_type</div>
+            <select class="form-control" id="selRefType">
+                <option value="">ทั้งหมด</option>
+                <option value="C">Project</option>
+                <option value="I">Inventory</option>
+                <option value="J">Job</option>
+                <option value="K">JIT Production</option>
+                <option value="O">Customer Order</option>
+                <option value="P">Purchase Order</option>
+                <option value="R">RMA</option>
+                <option value="S">Production Schedule</option>
+                <option value="T">Transfer</option>
+                <option value="W">Work Center</option>
+                <option value="F">Service Order</option>           
+            </select>
+        </div>
+    </div>   
+    <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12  col-search">
+        <div class="input-group">
+            <div class="input-group-addon">Item</div>
+            <input type="text" class="form-control txt-filter" id="txtItem">
+        </div>
+    </div>   
+    <div class="col-md-1 col-lg-1 col-sm-6 col-xs-12 col-search text-right">
+        <button id="btnSearch" class="btn btn-info"><i class="fa fa-search"></i>&nbsp;ค้นหา</button>
+        <!--<button id="btnExportExcel" class="btn btn-success"><i class="fa fa-download"></i>&nbsp;Export Excel</button>-->
+    </div>
+</div>
+<!--<div class="alert alert-warning text-center">
+    <h5 style="color:green;font-weight: bold;">สถานะการแก้ไข : กำลังเพิ่มฟิลด์</h5>
+</div>-->
+<div class="row" >
+    <table class="table table-condensed table-bordered table-striped" id="tblReport">
+        <thead>
+            <tr>
+                <th>Trans_Num</th>
+                <th>trans_date</th>
+                <th>trans_type</th>
+                <th>ref_type</th>
+                <th>backflush</th>                           
+                <th>warehouse</th>
+                <th>location</th>
+                <th>lot</th>  
+                <th>quantity</th>
+                <th>U/M</th>
+                <th>work_center</th>
+                <th>ref_num</th>
+                <th>ref_line</th>               
+                <th>ref_release</th>    
+                <th>reason_code</th>  
+                <th>reason_description</th>    
+                <th>Item</th>  
+                <th>Item description</th>    
+                <th>Material cost</th>    
+                <th>Labor cost</th>   
+                <th>Fovhd cost</th>  
+                <th>Vovhd cost</th>  
+                <th>Outside cost</th>  
+                <th>Unit cost</th>  
+                <th>trans description</th>  
+                <th>Total Post</th>  
+                <th>doc number</th>  
+                <th>user</th>  
+                <th>cost code</th>  
+                <th>From Site</th>  
+                <th>Employee</th>  
+                <!--<th>Date&Time of trans</th>-->  
+            </tr>
+        </thead>
+        <!--        <tbody id="tblReportList">
+                    <tr><td align="center" colspan="12">.... No item search ....</td></tr>
+                </tbody>-->
+    </table>
+</div>
+<script type="text/javascript">
+
+    $("#StartDate , #EndDate").val(GetToday()),
+            $("#btnSearch").click(function () {
+        loadData();
+    });
+    $(".txt-filter").on("keypress", function (e) {
+        if (e.keyCode == 13) {
+            ReportItemSearch();
+            return false; // prevent the button click from happening
+        }
+    });
+
+    $("#Loc").select2();
+
+
+    $("#StartDate,#EndDate").datepicker({
+        dateFormat: 'yy-mm-dd'
+    });
+    function addCommas(nStr) {
+        nStr += '';
+        var x = nStr.split('.');
+        var x1 = x[0];
+        var x2 = x.length > 1 ? '.' + x[1] : '';
+        var rgx = /(\d+)(\d{3})/;
+        while (rgx.test(x1)) {
+            x1 = x1.replace(rgx, '$1' + ',' + '$2');
+        }
+        return x1 + x2;
+    }
+    function loadData() {
+        var OldHtml = $("#btnSearch").html();
+        $("#btnSearch").html("<i class='fa fa-spinner fa-spin'></i>");
+        $("#tblReport").loading();
+        var Item = $("#txtItem").val();
+        var StartDate = $("#StartDate").val();
+        var EndDate = $("#EndDate").val();
+        var Loc = $("#Loc").val();
+        var TransType = $("#selTransType").val();
+        var RefType = $("#selRefType").val();
+
+        if ((StartDate == "") && (EndDate == "")) {
+            $.alert("กรุณาเลือก Start Date - To Date ");
+            return false;
+        } else {
+            $.ajax({
+                type: 'GET',
+                url: "././module/RPTMTL/data.php",
+                contentType: "text/plain",
+                dataType: 'json',
+                beforeSend: function () {
+                    $("#btnSearch").html("<i class='fa fa-spinner fa-spin'>");
+                },
+                data: {
+                    "load": "ajax",
+                    "Item": Item,
+                    "StartDate": StartDate,
+                    "EndDate": EndDate,
+                    "TransType": TransType,
+                    "RefType": RefType
+                },
+                success: function (data) {
+                    $("#tblReport").DataTable().clear();
+                    $('#tblReport').dataTable({
+                        "scrollX": true,
+                        "aaData": data,
+                        fixedHeader: true,
+                        destroy: true,
+                        'processing': true,
+                        "columns": [
+                            {"data": "Trans_Num", "className" : "text-center"},
+                            {"data": "TransDateConv"},
+                            {"data": "TransTypeConv"},
+                            {"data": "RefTypeConv"},
+                            {"data": "backflush", "className" : "text-center"},
+                            {"data": "whse"},
+                            {"data": "Loc"},
+                            {"data": "lot"},
+                            { "data": "Qty", "className" : "text-right"},
+                            {"data": "ItemUM", "className" : "text-center"},
+                            {"data": "wc", "className" : "text-center"},
+                            {"data": "ref_num", "className" : "text-center"},
+                            {"data": "ref_line_suf", "className" : "text-right"},
+                            {"data": "ref_release", "className" : "text-center"},
+                            {"data": "ReasonCode"},
+                            {"data": "ReasonDesc"},
+                            {"data": "Item"},
+                            {"data": "ItemDesc"},
+                            {"data": "matl_cost", "className" : "text-right" },
+                            {"data": "lbr_cost", "className" : "text-right" },
+                            {"data": "fovhd_cost", "className" : "text-right" },
+                            {"data": "vovhd_cost", "className" : "text-right" },
+                            {"data": "out_cost", "className" : "text-right" },
+                            {"data": "item_cost", "className" : "text-right"},
+                            {"data": "Type"},
+                            {"data": "TotalPost", "className" : "text-right"},
+                            {"data": "document_num"},
+                            {"data": "CreatedBy"},
+                            {"data": "cost_code"},
+                            {"data": "site_ref"},
+                            {"data": "emp_num"},
+
+                        ],
+                        'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                                "<'row'<'col-md-12'tr>>" +
+                                "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                        buttons: [
+                            {
+                                extend: 'print',
+                                text: "<i class='fa fa-print'></i>&nbsp;Print",
+                                title: ''
+                            },
+                            {
+                                extend: 'excel',
+                                text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                                title: ''
+                            },
+                        ]
+                    });
+                    $('#tblReport').loading("stop");
+                    $("#btnSearch").html(OldHtml);
+                },
+                error: function (e) {
+                    console.log("There was an error with your request...");
+                    console.log("error: " + JSON.stringify(e));
+                }
+            });
+        }
+    }
+</script>

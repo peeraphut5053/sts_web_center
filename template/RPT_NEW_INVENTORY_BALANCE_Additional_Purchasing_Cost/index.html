@@ -1,0 +1,284 @@
+<style>
+    .buttons-colvis {
+        transform: translate(100px,-120px);
+        margin-bottom: 0px;
+        margin-left: 1200px;
+        margin-top: -31px;
+        border: none;
+        border-radius: 5px;
+        height: 32px;
+        background-color: #FFFFFF !important;
+        color: black !important;
+    }
+    .col-search {
+        padding-left: 3px;
+        padding-right: 3px;
+    }
+    .table thead th {
+        text-align: center;
+    }
+
+    .col-flt-page {
+        padding-top: 10px;
+        font-weight: bold;
+    }
+
+    #tblReport tbody tr td a {
+        cursor: pointer;
+    }
+
+    table.dataTable.fixedHeader-floating,
+    table.dataTable.fixedHeader-locked {
+        background-color: white;
+        margin-top: 50px !important;
+        margin-bottom: 0 !important;
+    }
+
+    @media print {
+        table th:nth-child(0) {
+            width: 200px;
+            word-break: break-all;
+            white-space: pre-line;
+        }
+
+        table td:nth-child(0) {
+            width: 200px;
+            word-break: break-all;
+            white-space: pre-line;
+        }
+
+    }
+    .text-wrap {
+        white-space: normal;
+    }
+
+    .width-200 {
+        width: 200px;
+    }
+
+    input[type=checkbox] {
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+    .input-group-addon2 {
+        padding: 6px 12px;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 1;
+        color: #555;
+        height: 32px;
+        text-align: center;
+        background-color: #eee;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        border-top-right-radius: 0px;
+        border-bottom-right-radius: 0px;
+    }
+
+    .selectize-input {
+        padding-top: 5px;
+        padding-bottom: 5px;
+        height: 32px;
+        min-height: 64px;
+        border-top-left-radius: 0px;
+        border-bottom-left-radius: 0px;
+    }
+
+    .input-group .form-control {
+        padding-left: 1px;
+        padding-right: 1px;
+    }
+    .modal-body{
+        position: relative;
+        padding: 15px;
+        min-height: 550px;
+    }
+
+    ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+    ::-webkit-scrollbar-thumb {
+        background: #3c8dbc; 
+        border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: #3c8dbc; 
+    }
+</style>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+<div class="row">
+    <h2> Additional Purchasing Cost </h2>
+</div>
+<div class='row'>
+
+
+    <div class="col-lg-2 col-md-2 col-sm-6 col-xs-6 " >
+        <div class="input-group">
+            <div class="input-group-addon">START DATE</div>
+            <input type="text"  placeholder="YYYY-MM"  id="txtFromDate" class="form-control" name="txtFromDate" autocomplete="off">
+        </div>
+    </div>
+    <div class="col-lg-2 col-md-2 col-sm-6 col-xs-6 " >
+        <div class="input-group">
+            <div class="input-group-addon">End DATE</div>
+            <input type="text"   placeholder="YYYY-MM"   value="" id="txtToDate" class="form-control" name="txtToDate" autocomplete="off">
+        </div>
+    </div>
+    
+    <div class="col-lg-2 col-md-2 col-sm-6 col-xs-6 " >
+        <div class="input-group">
+            <div class="input-group-addon">Ref</div>
+            <input type="text" id="txtFromReference_No" class="form-control" name="txtFromReference_No" autocomplete="off">
+        </div>
+    </div>
+    
+ 
+    
+    
+    
+    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 " >
+        <button class="btn btn-info" id="btnSearch"><i class="fa fa-search"></i>&nbsp;Search </button>
+    </div>
+
+</div>
+<div class="row" id="rowResultTable">
+    <table class="table table-condensed table-striped " width="100%" id="tblReport">
+        <thead>
+            <tr>
+                <th>Reference No</th>
+                <th>Period</th>
+                <th>Purchase Quantity</th>
+                <th>Purchase Price</th>
+                <th>Landed Cost</th>
+                <th>Tax and Duty</th>
+            </tr>
+        </thead>
+
+    </table>
+</div>
+
+
+<script type="text/javascript">
+    $("#btnSearch").click(function () {
+        ReportItemSearch();
+    });
+//    $("#txtFromDate,#txtToDate").datepicker({
+//        dateFormat: 'yy-mm-dd'
+//    });
+//    $("#txtToDate").val(GetToday());
+
+
+
+    function ReportItemSearch() {
+        var datapost = SetDataPostElement("ajax");
+        var OldHtml = $("#btnSearch").html();
+
+        $("#tblReport").DataTable().clear();
+        $("#btnSearch").html("<i class='fa fa-spinner fa-spin'></i>");
+        $("#tblReport").loading();
+        $.ajax({
+            type: 'POST',
+            url: "././module/RPT_NEW_INVENTORY_BALANCE_Additional_Purchasing_Cost/data.php",
+            //                contentType: "text/plain",
+            dataType: 'json',
+            beforeSend: function () {
+                //$("#btnSearch").html("<i class='fa fa-spinner fa-spin'> </i>");
+                $("#tblReport").DataTable().clear();
+            },
+            data: datapost,
+            success: function (data) {
+
+                $("#tr-spinner").hide()
+                console.log(data);
+                $("#tblReport").DataTable().clear();
+                $('#tblReport').dataTable({
+                    scrollY: 400,
+                    "order": false,
+                    "aaData": data,
+                    "paging": false,
+                    fixedHeader: true,
+                    destroy: true,
+                    'processing': true,
+                    "columns": [
+                        {
+                            "data": "Reference_No",
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "Period",
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "Purchase_Quantity",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "Purchase_Price",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "Landed_Cost",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "Tax_and_Duty",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                    ],
+                    'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                            "<'row'<'col-md-12'tr>>" +
+                            "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                    buttons: [{
+                            extend: 'print',
+                            text: "<i class='fa fa-print'></i>&nbsp;Print",
+                            title: 'Inventory Balance Summary Report'
+                        },
+                        {
+                            extend: 'excel',
+                            footer: true,
+                            text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                            title: 'Inventory Balance Summary Report'
+                        },
+                    ],
+                });
+                $('#tblReport').loading("stop");
+                $("#btnSearch").html(OldHtml);
+
+            },
+            error: function (e) {
+
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+
+
+    }
+
+</script>

@@ -1,0 +1,595 @@
+<style>
+    .not-show-content{
+        display:none;
+    }
+    .footer{
+        color: blue ;
+        font-weight: bold;
+    }
+    .col-flt-page {
+        padding-top: 10px;
+        font-weight: bold;
+    }
+    table.dataTable.fixedHeader-floating,
+    table.dataTable.fixedHeader-locked {
+        background-color: white;
+        margin-top: 50px !important;
+        margin-bottom: 0 !important;
+    }
+    .tr-row-cn td {
+        color: red;
+    }
+    .selectize-input{
+        min-height: 80px;
+    }
+    .panel-body{
+        padding-top:5px;
+        padding-bottom:5px;
+    }
+    h2{
+        margin:0px;
+        text-transform: uppercase;
+    }
+    h6{
+        margin:0px;
+        color:#777;
+    }
+    .tabs{
+        position: fixed;
+        margin-top:10px;
+        font-size:15px;
+        padding:0px;
+        list-style:none;
+        background:#fff;
+        box-shadow:0px 5px 20px rgba(0,0,0,0.1);
+        display:inline-block;
+        border-radius:50px;
+        position:relative;
+    }
+    .tabs a{
+        text-decoration:none;
+        color: #777;
+        text-transform:uppercase;
+        padding:10px 20px;
+        display:inline-block;
+        position:relative;
+        z-index:1;
+        transition-duration:0.6s;
+    }
+    .tabs a.active{
+        color:#fff;
+    }
+    .tabs a i{
+        margin-right:5px;
+    }
+    .tabs .selector{
+        height:100%;
+        display:inline-block;
+        position:absolute;
+        top:0px;
+        z-index:1;
+        border-radius:50px;
+        transition-duration:0.6s;
+        transition-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        background: #05abe0;
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#05abe0', endColorstr='#8200f4',GradientType=1 );
+    }
+    .footer {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        text-align: center;
+    }
+    h3{
+        margin-top: 0px !important;
+        margin-bottom: 0px !important;
+    }
+    .misc-panel{
+
+        margin-top:20px;
+        margin-left: 20px;
+        margin-right : 20px;
+        margin-bottom: 20px;
+        border : solid 1px #cdcdcd;
+        padding:10px 10px 10px 10px ;
+    }
+    .misc-all{
+        padding-left:10%;
+        padding-right:10%;
+    }
+    input[class*="require"]{
+        background-color:#ffffcc;
+    }
+    @media screen and (max-width: 1024px) {
+        .misc-all{
+            padding-left:1%;
+            padding-right:1%;
+        }
+    }
+
+    input[type*=text]{
+        height:30px;
+
+    }
+    #txtAcct1 , #txtAcct2,#txtAcct3,#txtAcct4
+    {
+        margin-top:5px;
+    }
+
+    .selectize-input{
+        height:30px;
+        min-height: 30px;
+        padding-left : 0px ;
+        padding-right  : 0px ;
+        padding-top  : 0px ;
+        padding-bottom : 0px ;
+
+    }
+</style>
+<div style="text-align: center">
+    <h3>
+        QUANTITY MOVE
+    </h3>
+</div>
+<div id="content_upload">
+</div>
+<div class="misc-all">
+    <div class="misc-panel " id="miscpanel1">
+        <div class="row">
+            <div class="col-4 col-xs-4 col-sm-4 col-md-2 col-lg-2 text-right">
+                <font color="blue">
+                <b>
+                    Scan Tag
+                </b>
+                </font>
+                :
+            </div>
+            <div class="col-8 col-xs-8 col-sm-8 col-md-4 col-lg-4 ">
+                <input class="form-control" id="txtTag" type="text" value="">
+                </input>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4 col-xs-4 col-sm-4 col-md-2 col-lg-2 text-right">
+                <font color="red">
+                *
+                </font>
+                Warehouse :
+            </div>
+            <div class="col-6 col-xs-8 col-sm-8 col-md-2 col-lg-2 ">
+                <select class="form-control require" id="txtWhse" validate_text="WareHouse">
+                    {options_whse}
+                </select>
+            </div>
+            <div class="col-4 col-xs-4 col-sm-4 col-md-2 col-lg-2 text-right ">
+                <font color="red">
+                *
+                </font>
+                Transaction Date :
+            </div>
+            <div class="col-6 col-xs-8 col-sm-8 col-md-2 col-lg-2 ">
+                <input id="txtTransDate" autocomplete="off" class="form-control txt-filter txt-filter require"  type="text" validate_text="Transaction Date" value="">
+
+            </div>
+            <div class="col-4 col-xs-4 col-sm-4 col-md-2 col-lg-2 text-right">
+                Document Number :
+            </div>
+            <div class="col-6 col-xs-8 col-sm-8 col-md-2 col-lg-2 ">
+                <input class="form-control" id="txtDocNum" type="text">
+                </input>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4 col-xs-4 col-sm-4 col-md-2 col-lg-2 text-right ">
+                <font color="red">
+                *
+                </font>
+                From Location :
+            </div>
+            <div class="col-8 col-xs-8 col-sm-8 col-md-4 col-lg-4 ">
+                <select class="form-control require" id="selLoc_From" validate_text="From Location">
+                </select>
+            </div>
+            <div class="col-4 col-xs-4 col-sm-4 col-md-2 col-lg-2 text-right ">
+                <font color="red">
+                *
+                </font>
+                To Location :
+            </div>
+            <div class="col-8 col-xs-8 col-sm-8 col-md-4 col-lg-4 ">
+                <select class="form-control require" id="selLoc_To" validate_text="To Location">
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="misc-panel " id="miscpanel2">
+        <div class="row">
+            <div class="col-4 col-xs-4 col-sm-4 col-md-2 col-lg-2 text-right">
+                <font color="red">
+                *
+                </font>
+                Item :
+            </div>
+            <div class="col-8 col-xs-8 col-sm-8 col-md-4 col-lg-4 ">
+                <div class="input-group" style="width: 100%;">
+                    <input class="form-control require global-search" column-return="Item" disabled="" id="txtItem" type="text" validate_text="Item Code">
+                    <span class="input-group-addon " style="padding-left:0px;padding-right:0px;width:30px;border:none;">
+                        <button class="btn btn-default" id="btnItemClear" style="border-radius: 0px;">
+                            <span class="fa fa-times">
+                            </span>
+                        </button>
+                        <button class="btn btn-default" id="btnItemFilter" style=" border-radius: 0px;">
+                            <span class="fa fa-search">
+                            </span>
+                        </button>
+                    </span>
+                    </input>
+                </div>
+            </div>
+            <div class="col-4 col-xs-4 col-sm-4 hidden-lg hidden-md">
+            </div>
+            <div class="col-8 col-xs-8 col-sm-8 col-md-6 col-lg-6 ">
+                <input class="form-control global-search" column-return="Description" disabled="" id="txtItemDesc" type="text" value="">
+                </input>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4 col-xs-4 col-sm-4 col-md-2 col-lg-2 text-right">
+                Qty OnHand :
+            </div>
+            <div class="col-3 col-xs-3 col-sm-3 col-md-2 col-lg-2 ">
+                <input class="form-control global-search" column-return="Qty" disabled="" id="txtQtyOnhand" type="text">
+                </input>
+            </div>
+            <div class="col-3 col-xs-3 col-sm-3 col-md-2 col-lg-2 ">
+                <input class="form-control global-search" column-return="Um" disabled="" id="txtUm" type="text">
+                </input>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4 col-xs-4 col-sm-4 col-md-2 col-lg-2 text-right">
+                From Lot :
+            </div>
+            <div class="col-8 col-xs-8 col-sm-8 col-md-4 col-lg-4 ">
+                <input id="vGenLot" type="hidden" value="0">
+                <select class="form-control require" id="selLot_From" validate_text="Lot">
+                </select>
+                </input>
+            </div>
+            <div class="col-4 col-xs-4 col-sm-4 col-md-2 col-lg-2 text-right">
+                To Lot :
+            </div>
+            <div class="col-8 col-xs-8 col-sm-8 col-md-4 col-lg-4 ">
+                <input class="form-control" disabled="" id="txtLot_To" type="text" value="">
+                </input>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4 col-xs-4 col-sm-4 col-md-2 col-lg-2 text-right">
+                <font color="red">
+                *
+                </font>
+                Quantity Move :
+            </div>
+            <div class="col-4 col-xs-4 col-sm-4 col-md-4 col-lg-4 ">
+                <input class="form-control require AllowFloatNumber" id="txtQtyMove" type="text" validate_text="Qty Move">
+                </input>
+            </div>
+        </div>
+    </div>
+    <div class="row text-center">
+        <button class="btn btn-warning" id="btnReset">
+            RESET
+        </button>
+        <button class="btn btn-success" id="btnProcess">
+            PROCESS
+        </button>
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="GlobalSearchModalItem" role="dialog">
+    <div class="modal-dialog" style="width:100%;margin-left:10%;margin-right:10%;">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" data-dismiss="modal" type="button">
+                    ×
+                </button>
+                <h4 class="modal-title">
+                    Item Search
+                </h4>
+            </div>
+            <div class="modal-body" id="GlobalSearchModalItemContent">
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-default" data-dismiss="modal" type="button">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--<script type="text/javascript" src="js/main.js"></script>-->
+<script type="text/javascript">
+    $("#txtTransDate ").datepicker({
+        dateFormat: 'yy-mm-dd',
+    });
+
+    $('#txtTag').keypress(function (event) {
+        var keycode = (event.keyCode ? event.keyCode : event.which);
+        if (keycode == '13') {
+            GetTag($(this).val());
+        } else {
+            var ThisLen = $(this).val().length;
+            ClearAll();
+        }
+    });
+    $('#txtTag').change(function () {
+
+        if ($(this).val().length != 13) {
+            ClearAll();
+        }
+    });
+    $("#btnItemFilter").click(function () {
+        var arrMapElement = [];
+        var arrMapColumn = [];
+        $(".global-search").each(function () {
+            //====== element in this page ======
+            arrMapElement.push($(this).attr("id"));
+            //====== Column match with query in Models ====//
+            arrMapColumn.push($(this).attr("column-return"));
+        });
+        $("#GlobalSearchModalItem").modal("show");
+        $("#GlobalSearchModalItemContent").load(
+                "././module/_GLOBAL_SEARCH/search.php", {
+                    "arrMapElement": arrMapElement,
+                    "arrMapColumn": arrMapColumn
+                });
+    });
+    $("#btnItemClear").click(function () {
+        $("#txtItem").val("");
+        $("#txtItemDesc").val("");
+    });
+    $("#selloc").click(function () {
+        if ($("#txtItem").val() == "") {
+            $.alert("กรุณาเลือก Item ก่อน");
+        }
+    });
+    $("#selLot_From , #selLot_To").click(function () {
+        var err = 0;
+        var msg = "<b>ไม่ได้เลือกข้อมูลต่อไปนี้</b><br>";
+        if ($("#txtItem").val() == "") {
+            err++;
+            msg += "-Item<br>";
+        }
+        if ($("#selloc").val() == "") {
+            err++;
+            msg += "-Loc<br>";
+        }
+        if (err > 0) {
+            $.alert(msg);
+        }
+    });
+    $("#btnReset").click(function () {
+        $.confirm({
+            title: 'Confirm',
+            content: 'ต้องการ Reset การกรอกข้อมูลทั้งหมดใช่หรือไม่',
+            buttons: {
+                confirm: function () {
+                    location.reload();
+                },
+                cancel: function () {
+
+                },
+            }
+        });
+    });
+    $("#btnProcess").click(function () {
+        var FormValidate = MAIN_FormValidate();
+        var BlankCount = parseInt(FormValidate[0]);
+        var Msg = FormValidate[1];
+        if (BlankCount > 0) {
+            $.alert(Msg);
+        } else {
+            var QtyMove = parseFloat($("#txtQtyMove").val());
+            var Item = $("#txtItem").val();
+            var Lot = $("#selLot_From").val();
+            var CheckQty = false;
+
+            var CheckQty = CheckAvailableQty(Item, Lot, QtyMove);
+            if (!CheckQty) {
+                $.alert("Lot Quantity not enough");
+            } else {
+                $.confirm({
+                    title: '<i class="fa fa-check-circle"></i>&nbsp;Confirm',
+                    content: 'Process Quantity Move?',
+                    buttons: {
+                        confirm: function () { 
+                                StartProcessQuantityMove();
+                          
+                        },
+                        cancel: function () {
+
+                        },
+                    }
+                });
+            }
+
+        }
+
+
+    });
+    $("#selLoc_From , #selLoc_To").change(function () {
+
+        var txtItem = $("#txtItem").val();
+        var locFrom = "";
+        var locTo = "";
+        var loc = "";
+        if (txtItem) {
+            if (locFrom != "") {
+                $("#selLoc_From").empty();
+                loc = locFrom;
+            } else if (locTo != "") {
+                $("#selLoc_To").empty();
+                loc = locTo;
+            }
+            if (loc) {
+                var Url = "././module/APP_MISC/data.php";
+                var DivLoad = "#miscpanel2";
+                var ObjJson = {
+                    "load": "ajaxGetLotByLocItem",
+                    "item": txtItem,
+                    "loc": loc,
+                    "DefVal": ""
+                };
+                $.when(MAIN_GetAjaxJSON_Txt(Url, ObjJson, DivLoad)).done(function (data) {
+
+                    if (locFrom != "") {
+                        $("#selLot_From").append(data);
+                    } else if (locTo != "") {
+                        $("#selLot_To").append(data);
+                    }
+
+
+                });
+            }
+        }
+    });
+    $("#selLot_From").change(function () {
+        var thisVal = $(this).val();
+        $("#txtLot_To").val(thisVal);
+
+    });
+
+    function StartProcessQuantityMove() {
+        var Url = "././module/APP_MISC/data.php";
+        var DivLoad = "#miscpanel1,#miscpanel2";
+        var ObjJson = {
+            "load": "ajaxProcessQtyMove",
+            "spTransDate": $("#txtTransDate").val(),
+            "spItem": $("#txtItem").val(),
+            "spQtyMove": $("#txtQtyMove").val(),
+            "spWhse": $("#txtWhse").val(),
+            "spLocFrom": $("#selLoc_From").val(),
+            "spLocTo": $("#selLoc_To").val(),
+            "spLotFrom": $("#selLot_From").val(),
+            "spLotTo": $("#txtLot_To").val(),
+            "spDocNum": $("#txtDocNum").val(),
+            "spTagId": $("#txtTag").val()
+        };
+
+        $.when(MAIN_GetAjaxJSON_Txt(Url, ObjJson, DivLoad)).done(function (ajaxResults) {
+            $.confirm({
+                title: "Save result ",
+                content: "Successful ",
+                buttons: {
+                    confirm: function () {
+                        console.log(ajaxResults);
+                       location.reload();
+                    },
+
+                }
+            });
+        });
+
+
+
+    }
+
+    function SearchLocLotByItem(SwitchSearch, defaultSelected) {
+
+        //=== lock use loc only 
+
+        var txtItem = $("#txtItem").val();
+        if (SwitchSearch == "loc") {
+            $("#selLoc_From , #selLoc_To").empty();
+        } else {
+            $("#selLot_From").empty();
+            $("#txtLot_To").val("");
+        }
+
+        if (txtItem != "") {
+            var Url = "././module/APP_MISC/data.php";
+            var DivLoad = "#miscpanel2";
+            var ObjJson = {
+                "load": "ajaxLocLotByItem",
+                "item": txtItem,
+                "SwitchSearch": SwitchSearch,
+                "DefVal": defaultSelected
+            };
+            $.when(MAIN_GetAjaxJSON_Txt(Url, ObjJson, DivLoad)).done(function (data) {
+                var TargetEle = "";
+                SwitchSearch == "loc" ? TargetEle = "#selLoc_From , #selLoc_To" : TargetEle = "#selLot_From";
+                $(TargetEle).append(data);
+                $("#txtLot_To").val($("#selLot_From").val());
+            });
+        }
+    }
+
+    function GetTag(tag_id) {
+        var Url = "././module/APP_MISC/data.php";
+        var DivLoad = "#miscpanel1,#miscpanel2";
+        var ObjJson = {
+            "load": "ajax_get_tag",
+            "tag_id": tag_id
+        };
+        console.log("ajax");
+        // var ArrResult =[];
+
+        $.when(MAIN_GetAjaxJSON(Url, ObjJson, DivLoad)).done(function (data) {
+            if (data.length > 0) {
+                var Item = data[0]["item"];
+                var Qty = data[0]["Qty"];
+                var Lot = data[0]["lot"];
+                var Loc = data[0]["loc"];
+                $("#txtItem").val(Item);
+                $("#txtQtyOnhand").val(Qty);
+                $("#txtItemDesc").val(data[0]["description"]);
+                $("#txtUm").val(data[0]["Um"]);
+                $("#txtQtyMove").val(data[0]["Qty"]);
+                var err = 0;
+                var msg = "ไม่พบข้อมูลต่อไปนี้ ในข้อมูล Tag<br>";
+                if (Loc == "") {
+                    err++;
+                    msg += "-Location<br>";
+                } else {
+                    SearchLocLotByItem("loc", data[0]["loc"]);
+                }
+                if (Lot == "") {
+                    err++;
+                    msg += "-Lot<br>";
+                } else {
+                    SearchLocLotByItem("lot", Lot);
+                }
+                if (err > 0) {
+                    $.alert(msg);
+                }
+
+            } else {
+                $.alert("ไม่พบ tag");
+            }
+        });
+    }
+
+    function ClearAll() {
+        $("#txtItem , #txtItemDesc , #txtQtyOnhand , #txtUm , #txtLot_To").val("");
+        $("#selLoc_From , #selLoc_To , #selLot_From").empty();
+    }
+
+    function CheckAvailableQty(Item, Lot, QtyMove) {
+        var Url = "././module/APP_MISC/data.php";
+        var DivLoad = "#miscpanel2";
+        var ObjJson = {
+            "load": "ajaxCheckLotQtyMove",
+            "Item": Item,
+            "Lot": Lot,
+            "QtyMove": QtyMove
+        };
+        var ReturnVal = 0;
+        $.when(MAIN_GetAjaxJSON_Txt(Url, ObjJson, DivLoad)).done(function (ajaxResults) {
+            ReturnVal = ajaxResults;
+        });
+        return ReturnVal;
+    }
+</script>

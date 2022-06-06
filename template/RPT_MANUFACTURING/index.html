@@ -1,0 +1,521 @@
+<style>
+    .input-group-addon{
+        width: 100px;
+    }
+    .modal-body{
+        height: unset;
+    }
+</style>
+<div class="row">
+
+
+    <div class="row quicksearch col-lg-12" >
+        <div class="row" >
+            <div>
+                <h1>Manufacturing</h1>
+            </div> 
+            <div class="col-lg-2" >   
+                <div class="input-group">
+                    <div class="input-group-addon">Date</div>
+                    <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtFromDate">
+                </div>
+            </div>
+            <div class="col-lg-2">   
+                <div class="input-group">
+                    <div class="input-group-addon">To date</div>
+                    <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtToDate">
+                </div>
+            </div>
+            <div class="col-lg-2">   
+                <div class="input-group">
+                    <div class="input-group-addon">Item</div>
+                    <input type="text" class="form-control txt-filter" id="txtItem">
+                </div>
+            </div>
+            <div class="col-lg-2">   
+                <div class="input-group">
+                    <div class="input-group-addon">Ref num</div>
+                    <input type="text" class="form-control txt-filter" id="txtref_num">
+                </div>
+            </div>     
+            <div class="col-lg-3">   
+                <select class="form-control" id="txtw_c"></select>
+
+            </div>   
+            <div class="col-lg-1">   
+                <button id="btnQuickSearch" class="btn btn-info"><i class="fa fa-searh"></i>&nbsp;ค้นหา</button>
+                <!--        <button class="btn btn-success" id="btnModalAdvSearch"><i class="fa fa-search-plus"></i>&nbsp;Advance Search</button>-->
+                <input type="button" onclick="PrintPanel('printableArea')" value="พิมพ์รายงาน Forming" class="btn btn-info" />
+
+            </div>
+        </div> 
+    </div>
+    <div hidden class="col-lg-2">
+        <div class="nav-tabs-custom">
+            <!-- Tabs within a box -->
+            <ul class="nav nav-tabs pull-right">
+                <li class="pull-left header"><i class="fa fa-inbox"></i> Job transection</li>
+            </ul>
+            <div class="tab-content no-padding" id="Chart_graph">
+                <!-- Morris chart - Sales -->
+                <div class="chart tab-pane active" id="chart_donut" style="position: relative; height: 180px;">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" id="divReport" >
+    <table class="table table-condensed table-bordered table-striped" id="tblReport" style="width:100%;">
+        <thead>
+            <tr>
+                <th>Transaction Date</th>
+                <th>Ref Number</th>
+                <th>Item</th>  
+                <th>Description</th>
+                <th>unit weight</th>
+                <th>A</th>
+                <th>B</th>    
+                <th>C</th>
+                <th>Work center</th>
+                <th>Work center name</th>
+                <th>remark</th>
+            </tr>
+        </thead>
+
+    </table>
+</div>
+
+<!--style="visibility: hidden"-->
+<div id="printableArea" style="visibility: hidden">
+    <p><h2>รายงานการผลิตสินค้าเครื่องฟอร์มมิ่ง</h2></p>
+<p>ระหว่างวันที่ <span id='txtFromDateRPT'></span> ถึง <span id='txtToDateRPT'></span> 
+    <span id='txtw_cRPT'></span>
+</p>
+
+<table class="table table-condensed table-bordered table-striped" id="tblReport2" style="width:100%;border-collapse: collapse;font-size:14px">
+    <thead>
+        <tr >
+            <th rowspan='2'><p>NO.</p> </th>
+            <th rowspan='2'><p>รายการสินค้า</p><p>ขนาด - มาตรฐาน - ความยาว</p> </th>
+            <th colspan="2">รายการเหล็กสลิต</th>
+            <th colspan="3">จำนวนเส้นที่ผลิต</th>
+            <th rowspan='2'>น้ำหนักท่อ</th>
+            <th rowspan='2'>จำนวนที่ <p>ต่อได้(ม้วน)</p></th>
+            <th rowspan='2'>Lot</th>
+            <th colspan="2">รายการท่อที่มัด <p>(Speed เมตร/วินาที่)</p></th>
+        </tr>
+        <tr align="center" >
+            <th>ขนาด<p>Size</p></th>
+            <th>มาตรฐาน<p>Standard</p></th>
+            <th>เกรด A</th>  
+            <th>เกรด B</th>  
+            <th>เกรด C</th>  
+            <th>เส้น/มัด</th> 
+            <th>มัด</th>  
+    </thead>
+</table>
+
+<p>
+    ผู้ผลิต .......................................      
+    หัวหน้าแผนก ..................................    
+    ผู้จัดการฝ่าย ..................................
+</p>
+</div>
+
+
+
+<script type="text/javascript" src="js/main.js"></script>
+<script type="text/javascript">
+                    $("#txtw_c").select2();
+
+
+//============ Start append options to select box ============
+                    var IdSelectbox = "txtw_c";
+                    var url = "././module/RPT_MANUFACTURING/data.php";
+                    var load = "selectWorkCenter";
+                    var valueId = "wc";
+                    var valueShow = "description";
+                    GetSelectOption(IdSelectbox, url, load, valueId, valueShow, "work center");
+//============ End append options to select box ============
+
+                    $("#txtFromDate,#txtToDate").datepicker({
+                        dateFormat: 'yy-mm-dd',
+                    });
+                    $("#btnQuickSearch").click(function () {
+                        SearchItemNormal();
+                    });
+                    $("#txtFromDate,#txtToDate").val(GetToday());
+
+                    function SearchItemNormal() {
+                        $("#tblReport").DataTable().destroy();
+                        var tblReportId = '#tblReport';
+                        var btnSearch = '#btnSearch';
+                        var urlModule = "././module/RPT_MANUFACTURING/data.php";
+                        var datapost = {load: "ajax",
+                            txtFromDate: $("#txtFromDate").val(),
+                            txtToDate: $("#txtToDate").val(),
+                            txtItem: $("#txtItem").val(),
+                            txtref_num: $("#txtref_num").val(),
+                            txtw_c: $("#txtw_c").val()
+                        };
+                        var OldHtml = $(btnSearch).html();
+                        $.ajax({
+                            type: 'POST',
+                            url: urlModule,
+                            dataType: 'json',
+                            beforeSend: function () {
+                                $(btnSearch).html("<i class='fa fa-spinner fa-spin'></i>");
+                                $(tblReportId).loading();
+                            },
+                            data: datapost,
+                            success: function (data) {
+                                console.log(data)
+                                $("#tblReport").DataTable().clear();
+
+                                $(tblReportId).dataTable({
+                                    scrollY: 400,
+                                    "scrollX": true,
+                                    "aaData": data,
+                                    "paging": false,
+                                    "searching": true,
+                                    "initComplete": function (settings, json) {
+                                    },
+                                    fixedHeader: true,
+                                    destroy: true,
+                                    'processing': true,
+                                    "columns": [
+                                        {
+                                            "width": "120px",
+                                            "data": "trans_date",
+                                            "className": "text-right",
+                                            "render": function (data, type, row, meta) {
+                                                var ret = data;
+                                                return ret;
+                                            }
+                                        },
+                                        {
+                                            "width": "120px",
+                                            "data": "ref_num",
+                                            "render": function (data, type, row) {
+                                                //var ret = data.substring(0, 10);
+                                                var ret = data;
+                                                return ret;
+                                            }
+                                        },
+                                        {
+                                            "width": "70px",
+                                            "data": "item",
+                                            "className": "text-center",
+                                            "render": function (data, type, row, meta) {
+                                                var ret = data;
+                                                return ret;
+                                            }
+                                        },
+                                        {
+                                            "width": "70px",
+                                            "data": "ItemDesc",
+                                            "className": "text-center",
+                                            "render": function (data, type, row, meta) {
+                                                var ret = data;
+                                                return ret;
+                                            }
+                                        },
+                                        {
+                                            "width": "70px",
+                                            "data": "unit_weight",
+                                            "className": "text-center",
+                                            "render": function (data, type, row, meta) {
+                                                var ret = data;
+                                                ret = "<span>" + Number(data).toFixed(2);
+                                                +"</span>";
+                                                return ret;
+
+                                            }
+                                        },
+                                        {
+                                            "width": "100px",
+                                            "data": "qty_a",
+                                            "className": "text-right",
+                                            "render": function (data, type, row, meta) {
+                                                var ret = data;
+                                                ret = "<span>" + Number(data).toFixed(0);
+                                                +"</span>";
+
+                                                return ret;
+                                            }
+                                        },
+                                        {
+                                            "width": "100px",
+                                            "data": "qty_b",
+                                            "className": "text-right",
+                                            "render": function (data, type, row, meta) {
+                                                var ret = data;
+                                                ret = "<span>" + Number(data).toFixed(0);
+                                                +"</span>";
+                                                return ret;
+                                            }
+                                        },
+                                        {
+                                            "width": "80px",
+                                            "data": "qty_c",
+                                            "className": "text-right",
+                                            "render": function (data, type, row) {
+                                                var ret = data;
+                                                ret = "<span>" + Number(data).toFixed(0);
+                                                +"</span>";
+                                                return ret;
+                                            }
+                                        },
+                                        {
+                                            "width": "80px",
+                                            "data": "wc",
+                                            "render": function (data, type, row) {
+                                                var ret = data;
+                                                return ret;
+                                            }
+                                        },
+                                        {
+                                            "width": "80px",
+                                            "data": "wc_name",
+                                            "render": function (data, type, row) {
+                                                var ret = data;
+                                                return ret;
+                                            }
+                                        },
+                                        {
+                                            "data": {ref_num: "ref_num", remark: "remark"},
+                                            "className": "text-center",
+                                            "render": function (data, type, row, meta) {
+                                                let job = data.ref_num;
+
+                                                let ret = `<input id='${data.ref_num}' type='text'  onChange=updateRemark("${data.ref_num}") value="${data.remark}" />`;
+
+                                                return ret;
+                                            }
+                                        },
+                                    ],
+                                    'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                                            "<'row'<'col-md-12'tr>>" +
+                                            "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                                    buttons: [
+                                        {
+                                            extend: 'print',
+                                            text: "<i class='fa fa-print'></i>&nbsp;Print",
+                                            title: '',
+                                        },
+                                        {
+                                            extend: 'excel',
+                                            text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                                            title: 'รายงาน Tag item ' + GetCurrDateTime()
+                                        },
+                                    ],
+                                });
+                                $(tblReportId).loading("stop");
+                                $(btnSearch).html(OldHtml);
+
+                            },
+                            error: function (e) {
+                                console.log("There was an error with your request...");
+                                console.log("error: " + JSON.stringify(e));
+                            }
+                        });
+
+                    }
+
+
+                    function PrintPanel(tableId) {
+//                        SearchDataFnPackingReport('#tblReport2', '#btnQuickSearch', tablecolumsArr2, "Packing Report", "ajax");
+
+                        var tblReportId = '#tblReport2';
+                        var ModuleName = $("#CurrentPage").val();
+                        var urlModule = "././module/" + ModuleName + "/data.php";
+//                        var datapost = SetDataPostElement(postval);
+//                        console.log(datapost)
+                        $.ajax({
+                            type: 'GET',
+                            url: urlModule,
+                            dataType: 'json',
+                            data: {
+                                load: "ajax",
+                                txtFromDate: $("#txtFromDate").val(),
+                                txtToDate: $("#txtToDate").val(),
+                                txtItem: $("#txtItem").val(),
+                                txtref_num: $("#txtref_num").val(),
+                                txtw_c: $("#txtw_c").val()
+                            },
+                            success: function (data) {
+                                console.log(data)
+                                console.log(tablecolumsArr2)
+                                console.log(data)
+                                let total_bundle = 0;
+                                let total_pcs = 0;
+
+                                for (i = 0; i < data.length; i++) {
+
+
+                                    let LotNO = "";
+                                    var ret1 = data[i]["MinBundleNo"];
+                                    var ret2 = data[i]["MaxBundleNo"];
+                                    var ret3 = data[i]["PCSnoBundle"];
+                                    var nobundle = ""
+
+                                    $(tblReportId).append(`<tr>
+                                            <td style='text-align:center'> ${i + 1}</td>
+                                            <td style='text-align:center'> ${data[i]["size_spec"]}</td>
+                                            <td style='text-align:center;font-size:9px'> ${data[i]["Uf_thick_Min"]} </td>
+                                            <td style='text-align:center;'>${data[i]["uf_width"]}  </td>
+                                            <td style='text-align:right'> ${parseInt(Number(data[i]["qty_a"])) }</td>
+                                            <td style='text-align:right'> ${parseInt(Number(data[i]["qty_b"])) }</td>
+                                            <td style='text-align:right'> ${parseInt(Number(data[i]["qty_c"])) }</td>
+                                            <td style='text-align:center'> ${data[i]["unit_weight"]}</td>
+                                            <td style='text-align:center'> 0</td>
+                                            <td style='text-align:center'> lot</td>
+                                            <td style='text-align:center;'> 0</td>
+                                            <td style='text-align:center'> มัด</td>
+                                        </tr>`)
+
+                                }
+//                                $(tblReportId).append(`<tr>
+//                                        <td colspan='11'></td>
+//                                        <td style='text-align:right'>${total_bundle}</td>
+//                                        <td style='text-align:right'>${total_pcs}</td>
+//                                        
+//                                    </tr>`)
+                            },
+                            error: function (e) {
+                                console.log("There was an error with your request...");
+                                console.log("error: " + JSON.stringify(e));
+                            }
+                        })
+
+
+                        setTimeout(() => {
+                            $('#printableArea').attr("style", "visibility: visible")
+                            var divToPrint = document.getElementById(tableId);
+                            var htmlToPrint = '' +
+                                    '<style type="text/css">' +
+                                    'table th, table td {' +
+                                    'border:1px solid #000;' +
+                                    'padding;0.5em;' +
+                                    '}' +
+                                    '</style>';
+                            htmlToPrint += divToPrint.outerHTML;
+                            newWin = window.open("");
+                            newWin.document.write(htmlToPrint);
+                            newWin.print();
+                            newWin.close();
+                            $('#printableArea').attr("style", "visibility: hidden")
+                            location.reload();
+                        }, 1000)
+
+                    }
+
+                    function updateRemark(job) {
+                        let remark = $("#" + job + "").val();
+
+                        $.ajax({
+                            type: 'POST',
+                            url: "././module/RPT_MANUFACTURING/data.php",
+                            data: {
+                                load: "updateRemark",
+                                job: job,
+                                remark: remark,
+                            },
+                            success: function (data) {
+                                alert(data)
+                            }
+                        });
+                    }
+
+
+
+
+
+                    var tablecolumsArr2 = [
+                        {
+                            "data": "Uf_NPS",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "Uf_spec",
+                            "render": function (data, type, row) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "Uf_length",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "Uf_TypeEnd",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "pcs_qty",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = data.split(";");
+                                let resuult = "";
+                                for (i = 0; i < ret.length; i++) {
+                                    resuult = ret[i]
+                                    if (i > 0) {
+                                        resuult = resuult + "<hr>" + ret[i - 1];
+                                    }
+
+                                }
+
+                                return resuult;
+                            }
+                        },
+                        {
+                            "data": {MinBundleNo: "MinBundleNo", MaxBundleNo: "MaxBundleNo", PCSnoBundle: "PCSnoBundle"},
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                var ret1 = data.MinBundleNo;
+                                var ret2 = data.MaxBundleNo;
+                                var ret3 = data.PCSnoBundle;
+                                var nobundle = ""
+                                if (ret3 > 0) {
+                                    nobundle = "<hr>" + data.MaxBundleNo;
+                                    ret2 = ret2 - 1
+                                }
+                                return ret1 + "-" + ret2 + nobundle;
+                            }
+                        },
+                        {
+                            "data": "bundle",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = data.split(";");
+                                let resuult = "";
+                                for (i = 0; i < ret.length; i++) {
+                                    resuult = ret[i]
+                                    if (i > 0) {
+                                        resuult = resuult + "<hr>" + ret[i - 1];
+                                    }
+
+                                }
+
+                                return resuult;
+                            }
+                        },
+                    ];
+
+
+
+</script>

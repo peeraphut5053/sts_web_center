@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Bootstrap Example</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+        <script src = "http://cdn.datatables.net/1.10.18/js/jquery.dataTables.min.js" defer ></script>
+    </head>
+    <body>
+        <div class="container-fluid" style="width: 100% !important">
+            <div>
+                <div class="row h3">
+                    <div class="col-sm-6" >
+                        <b>Item :</b> {item}
+                    </div>
+                    <div class="col-sm-3" >
+                        <b>Start Date :</b> {StartDate}
+                    </div>
+                    <div class="col-sm-3" >
+                        <b>End Date :</b> {EndDate}
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="row" style="overflow-x:auto;overflow-y:auto;height:450px;">
+                    <table id="tblReportDetail" class="table table-striped" style="overflow-x:auto;font-size: 12px;">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Item Number</th>
+                                <th>Item Name</th>
+                                <th>Unit Weight</th>
+                                <th>Ref. Type</th>
+                                <th>Tran. Type</th>
+                                <th>Ref. No.</th>
+                                <th>Doc. No. 1</th>
+                                <th>Doc. No. 2</th>
+                                <th>Quantity</th>
+                                <th>Amount</th>
+                                <th>Unit</th>
+                                <th>Balance Quantity</th>
+                                <th>Balance Amount</th>
+                                <th>Balance Unit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {tableDetail}
+
+                        </tbody>
+                        <!--                        <tfoot>
+                                                    <tr>
+                                                        <th></th>
+                                                        <th></th>
+                                                        <th></th>
+                                                        <th style="text-align: right">Total : </th>
+                                                        <th style="text-align: right"><span align="right" id="summary"></span></th>
+                                                    </tr>
+                                                </tfoot>-->
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </body>
+</html>
+<script>
+    var sum = 0;
+    $(".money").each(function () {
+        var value = $(this).text();
+        if (!isNaN(value) && value.length != 0) {
+            sum += parseFloat(value);
+            $("#summary").text(sum);
+        }
+    });
+
+    $(document).ready(function () {
+
+        $('#tblReportDetail').DataTable({
+            "paging": false,
+            fixedHeader: true,
+            destroy: true,
+            'processing': true,
+            "ordering": false,
+            "orderable": false,
+            'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                    "<'row'<'col-md-12'tr>>" +
+                    "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+            buttons: [{
+                    extend: 'print',
+                    text: "<i class='fa fa-print'></i>&nbsp;Print",
+                    title: 'Inventory Transaction Detail  '
+                },
+                {
+                    extend: 'excel',
+                    footer: true,
+                    text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                    title: 'Inventory Transaction Detail '
+                },
+            ],
+        });
+
+    });
+
+
+//    $('#tblReportDetail').dataTable({
+//        "aaData": data,
+//        "paging": false,
+//        fixedHeader: true,
+//        destroy: true,
+//        'processing': true,
+//        "columns": [
+//            {
+//                "data": "item",
+//                "className": "text-right",
+//                "render": function (data, type, row, meta) {
+//                    var ret = data;
+//                    return ret;
+//                }
+//            },
+//        ],
+//        'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+//                "<'row'<'col-md-12'tr>>" +
+//                "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+//        buttons: [{
+//                extend: 'print',
+//                text: "<i class='fa fa-print'></i>&nbsp;Print",
+//                title: 'Inventory Transaction Detail  '
+//            },
+//            {
+//                extend: 'excel',
+//                footer: true,
+//                text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+//                title: 'Inventory Transaction Detail '
+//            },
+//        ],
+//    });
+
+</script>

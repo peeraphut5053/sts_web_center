@@ -1,0 +1,245 @@
+<div id="content_customer" >
+    <div class="row">
+        <div hidden class="col-lg-2 col-md-2 col-sm-4 col-xs-4 " >
+            <div class="input-group">
+                <div class="input-group-addon">Year</div>
+                <select class="form-control" id="RepByEndCustYear">
+
+                </select>
+            </div>
+        </div>
+        <div hidden class="col-lg-2 col-md-2 col-sm-4 col-xs-4 " >
+            <div class="input-group">
+                <div class="input-group-addon">Month</div>
+                <select class="form-control" id="RepByEndCustMonth">
+
+                </select>
+            </div>
+        </div>
+
+        <div class="col-lg-2" >   
+            <div class="input-group">
+                <div class="input-group-addon">Date</div>
+                <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtFromDateEndcustomer">
+            </div>
+        </div>
+        <div class="col-lg-2">   
+            <div class="input-group">
+                <div class="input-group-addon">To date</div>
+                <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtToDateEndcustomer">
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 " >
+            <div class="input-group">
+                <div class="input-group-addon">Customer Name</div>
+                <select class="form-control" id="cust_num">
+                    {CustOptions}
+                </select>
+            </div>
+
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 " >
+            <div class="input-group">
+                <div class="input-group-addon">City Name</div>
+                <select class="form-control" id="cust_seq">
+                    {CountryOptions}
+                </select>
+            </div>
+
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4 " >
+            <button id="btnRepByEndCust" class="btn btn-info"><i class="fa fa-chart-bar"></i>&nbsp;Process </button>
+        </div>
+    </div>
+    <div class="row">
+        <table class="table table-condensed table-bordered table-striped" id="tblCustReport" >
+            <thead>
+                <tr>
+                    <th>Cust Num</th>
+                    <th>Cust Name</th>
+                    <th>City</th>
+                    <th>Summary KG</th>
+                    <th>Summary Amount (USD)</th>      
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+
+<script type="text/javascript" src="js/main.js"></script>
+<script type="text/javascript">
+    var url = "././module/RPTINV_ITEM_EX/data.php";
+    GetSelectOption("cust_num", url , "GetSelectCust", "cust_num", "name", "Customer")
+    GetSelectOption("cust_seq", url, "GetSelectCountry", "country", "country", "country")
+
+
+    $(document).ready(function () {
+        $("#cust_num").change(function () {
+            cust_num = $(this).val();
+            $.ajax({
+                type: 'POST',
+                url: url,
+                dataType: 'json',
+                beforeSend: function () {
+                },
+                data: {
+                    "load": "ajax_cust_seq",
+                    "cust_num": cust_num,
+                    "txtFromDateStartcustomer": txtFromDateEndcustomer,
+                    "txtFromDateEndcustomer": txtFromDateEndcustomer
+                },
+                success: function (data) {
+                    console.log(data)
+                    var ele = document.getElementById('cust_seq');
+                    for (var i = 0; i < data.length; i++) {
+                        ele.innerHTML = ele.innerHTML +
+                                '<option value="' + data[i]['cust_seq'] + '">' + data[i]['city'] + '</option>';
+                    }
+                },
+                error: function (e) {
+                    console.log("There was an error with your request...");
+                    console.log("error: " + JSON.stringify(e));
+                }
+            });
+
+
+        });
+    });
+
+
+
+
+    $("#txtFromDateEndcustomer,#txtToDateEndcustomer").datepicker({
+        dateFormat: 'yy-mm-dd',
+    });
+    GetYearMonth("RepByEndCustYear", "RepByEndCustMonth");
+    $("#btnRepByEndCust").click(function () {
+        var RepByEndCustYear = $("#RepByEndCustYear").val();
+        var RepByEndCustMonth = $("#RepByEndCustMonth").val();
+        var txtFromDateEndcustomer = $("#txtFromDateEndcustomer").val();
+        var txtToDateEndcustomer = $("#txtToDateEndcustomer").val();
+
+        cust_num = $("#cust_num").val();
+        cust_seq = $("#cust_seq").val();
+        var tblId = "#tblCustReport";
+
+        $(tblId + " tfoot ").remove();
+        $.ajax({
+            type: 'POST',
+            url: "././module/RPTINV_ITEM_EX/data.php",
+            dataType: 'json',
+            beforeSend: function () {
+                $(tblId).loading();
+            },
+            data: {
+                "load": "ajax_by_end_cust",
+                "cust_num": cust_num,
+                "cust_seq": cust_seq,
+                "RepByEndCustYear": RepByEndCustYear,
+                "RepByEndCustMonth": RepByEndCustMonth,
+                "txtFromDateEndcustomer": txtFromDateEndcustomer,
+                "txtToDateEndcustomer": txtToDateEndcustomer,
+            },
+            success: function (data) {
+                console.log(data);
+                $(tblId).DataTable().clear();
+                var RowFooterBuild = "";
+                var ColBuild = "";
+                var ColCount = 5;
+                var i = 0;
+                RowFooterBuild = "<tfoot><tr>!!ColBuild!!</tr></tfoot>";
+                for (i = 1; i <= ColCount; i++) {
+                    ColBuild += "<td></td>";
+                }
+                $(tblId).append(RowFooterBuild.replace("!!ColBuild!!", ColBuild));
+
+                $(tblId).dataTable({
+                    "aaData": data,
+                    "paging": false,
+                    "searching": false,
+                    "initComplete": function (settings, json) {
+
+                    },
+                    fixedHeader: true,
+                    destroy: true,
+                    'processing': true,
+                    "columns": [
+                        {
+                            "data": "cust_num",
+                            "className": "text-center",
+                        },
+                        {
+                            "data": "name",
+                            "className": "text-left",
+                        },
+                        {
+                            "data": "city",
+                            "className": "text-left",
+                        },
+                        {
+                            "data": "QtyKG",
+                            "className": "text-right",
+                        },
+                        {
+                            "data": "AMT_USD",
+                            "className": "text-right",
+                        },
+                    ],
+                    'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                            "<'row'<'col-md-12'tr>>" +
+                            "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                    buttons: [{
+                            extend: 'print',
+                            text: "<i class='fa fa-print'></i>&nbsp;Print",
+                            title: ''
+                        },
+                        {
+                            extend: 'excel',
+                            footer: true,
+                            text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                            title: 'รายงาน inv item ' + GetCurrDateTime()
+                        },
+                    ],
+                    "footerCallback": function (row, data, start, end, display) {
+                        var api = this.api(),
+                                data;
+                        var intVal = function (i) {
+                            return typeof i === 'string' ?
+                                    i.replace(/[\$,]/g, '') * 1 :
+                                    typeof i === 'number' ?
+                                    i : 0;
+                        };
+
+
+                        var totalKG = api
+                                .column(2)
+                                .data()
+                                .reduce(function (a, b) {
+                                    return intVal(a) + intVal(b);
+                                }, 0);
+                        var totalAmt = api
+                                .column(3)
+                                .data()
+                                .reduce(function (a, b) {
+                                    return intVal(a) + intVal(b);
+                                }, 0);
+
+//                        $(api.column(1).footer()).html("<b>TOTAL</b>");
+//                        $(api.column(2).footer()).html(addCommas(totalKG.toFixed(2)));
+//                        $(api.column(3).footer()).html(addCommas(totalAmt.toFixed(2)));
+
+                    },
+                });
+                $(tblId).loading("stop");
+            },
+            error: function (e) {
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+
+    });
+
+</script>

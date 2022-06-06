@@ -1,0 +1,74 @@
+<style>
+    .ceter-block {
+        text-align: -webkit-center;
+    }
+    .input-group .input-group-addon{
+        width:10vw;   
+    }
+</style>
+<div class='container'>
+    <div class='row h1'>
+        Add menu
+    </div>
+    <div class='card'>
+        <div class='card-body'>
+            <div class="row ceter-block">
+                <div class="input-group col-lg-6">
+                    <div class="input-group-addon">project code</div>
+                    <input type="text" class="form-control txt-filter" id="prj_code">
+                </div>
+            </div>
+            <div class="row ceter-block">
+                <div class="input-group col-lg-6">
+                    <div class="input-group-addon">project description</div>
+                    <input type="text" class="form-control txt-filter" id="prj_description">
+                </div>
+            </div>
+            <div class="row ceter-block">
+                <div class="input-group col-lg-6">
+                    <div class="input-group-addon">project dep_id</div>
+                    <select id="dep_id"  class="form-control"></select>
+                </div>
+            </div>
+        </div>
+        <div class='card-footer'>
+            <div class="row ceter-block">
+                <input type='button' value="Add Menu" class=' btn btn-success' id='btnsave'>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let addr = new URL("https://developer.mozilla.org/en-US/docs/Web/API/URL_API");
+let host = addr.host;
+let path = addr.pathname;
+
+
+    GetSelectOption("dep_id", "././module/USER_MNG/data.php", "GetDepartmentAll", "dep_id", "dep_name", "department")
+    $("#btnsave").click(function () {
+        addMenu()
+    }
+    );
+    function addMenu() {
+        var prj_code = $('#prj_code').val();
+        var prj_description = $('#prj_description').val();
+        var dep_id = $('#dep_id').val();
+        $.ajax({
+            type: 'POST',
+            url: "././module/APP_ADDMENU/data.php",
+            dataType: 'json',
+            data: {
+                "load": "ajax",
+                "prj_code": prj_code,
+                "dep_id": dep_id,
+                "prj_description": prj_description,
+            },
+            success: function (data) {
+                console.log(data);
+                alert('Create Menu Success :'+prj_code);
+            }
+        });
+    }
+
+</script>

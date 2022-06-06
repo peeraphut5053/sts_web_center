@@ -1,0 +1,219 @@
+<div id='count_stock_list'>
+    <div class="h1 center-block">ใบนับสต๊อค</div>
+    <div class='row'>
+        <div class="col-xs-9">
+            <div class="row">
+                <div class="col-xs-6" >   
+                    <div class="input-group">
+                        <div class="input-group-addon">From date</div>
+                        <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtFromDate_start">
+                    </div>
+                </div>
+                <div class="col-xs-6">   
+                    <div class="input-group">
+                        <div class="input-group-addon">To date</div>
+                        <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtFromDate_end">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-6">   
+                    <div class="input-group">
+                        <div class="input-group-addon">Loc</div>
+                        <input type="text" autocomplete="off"  class="form-control txt-filter" id="loc">
+                    </div>
+                </div>
+                <div class="col-xs-6">   
+                    <div class="input-group">
+                        <div class="input-group-addon">Id</div>
+                        <input type="text" autocomplete="off"  class="form-control txt-filter" id="id_hdr">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class='col-xs-3'>
+            <div class="col-xs-6" >   
+                <div class="input-group">
+                    <button style="align:right" id="btnSearch" class="btn btn-info"><i class="fa fa-search"></i>&nbsp;ค้นหา</button>
+                    &nbsp;
+                    <button onclick="gotoCreatePage()" style="align:right" id="btnCreate" class="btn btn-success"><i class="fa fa-search"></i>&nbsp;สร้างใบนับสต๊อค</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    <div>
+        <table class="table table-condensed table-bordered table-striped" id="tblReport" style="width:100% !important" >
+            <thead>
+                <tr>
+                    <th>id</th>
+                    <th>date time create</th>
+                    <th>date time approve</th>
+                    <th>create by</th>
+                    <th>location</th>
+                    <th>คำสั่ง</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+
+
+</div>
+
+
+
+<div id='create_count_stock'>
+
+</div>
+
+
+
+<script>
+    function gotoCreatePage(id_hdr, location) {
+        $("#count_stock_list").empty();
+        Url = "././module/RPT_STOCK_COUNT_ITEM_LOCATION_SCAN/render.php";
+        var id_hdr = id_hdr;
+        pageHtml = "create_count_stock";
+        $("#create_count_stock").load(Url, {"pageHtml": pageHtml, "id_hdr": id_hdr, "location": location}, function (response, status, xhr) {
+        });
+    }
+
+
+    $("#txtFromDate_start , #txtFromDate_end").datepicker({
+        dateFormat: 'yy-mm-dd',
+    });
+
+
+    $("#btnSearch").click(function () {
+        var txtFromDate_start = $('#txtFromDate_start').val();
+        var txtFromDate_end = $('#txtFromDate_end').val();
+        Search()
+    });
+
+
+    Search();
+    function Search() {
+        var txtFromDate = $("#txtFromDate").val();
+        var txtToDate = $("#txtToDate").val();
+        var loc = $("#loc").val();
+        var id_hdr = $("#id_hdr").val();
+
+        var ajaxUrl = "././module/RPT_STOCK_COUNT_ITEM_LOCATION_SCAN/data.php";
+        $.ajax({
+            type: 'POST',
+            url: ajaxUrl,
+            //                contentType: "text/plain",
+            dataType: 'json',
+            beforeSend: function () {
+                $('#tblReport').loading();
+            },
+            data: {
+                "load": "GetCountStockList",
+                "txtFromDate": txtFromDate,
+                "txtToDate": txtToDate,
+                "loc": loc,
+                "id_hdr": id_hdr,
+            },
+            success: function (data) {
+                console.log(data);
+                $("#tblReport").DataTable().clear();
+                $('#tblReport').dataTable({
+                    "searching": false,
+                    "scrollX": true,
+                    "aaData": data,
+                    "paging": false,
+                    fixedHeader: true,
+                    destroy: true,
+                    'processing': true,
+                    "columns": [
+                        {
+                            "data": "id_hdr",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "conv_create_date",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "conv_approve_date",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                if(data == '1900-01-01 00:00:00'){
+                                    data = '-';
+                                }
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "create_by",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "location",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": {"id_hdr": "id_hdr", "location": "location", "approve_status": "approve_status"},
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = "";
+                                if (data.approve_status == '1') {
+                                    ret = "<button class='btn btn-defalt' onclick='gotoCreatePage(`" + data.id_hdr + "`,`" + data.location + "`)'>&nbsp;ดูข้อมูล</button>";
+                                } else {
+                                    ret = "<button class='btn btn-warning' onclick='gotoCreatePage(`" + data.id_hdr + "`,`" + data.location + "`)'>&nbsp;แก้ไข</button>";
+                                }
+                                return ret;
+                            }
+                        },
+                    ],
+                    'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                            "<'row'<'col-md-12'tr>>" +
+                            "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                    buttons: [{
+                            extend: 'print',
+                            text: "<i class='fa fa-print'></i>&nbsp;Print",
+                            title: ''
+                        },
+                        {
+                            extend: 'excel',
+                            footer: true,
+                            text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                            title: 'ใบรับมัดจำ detail ' + GetCurrDateTime()
+                        },
+                    ],
+                });
+                $('#tblReport').loading("stop");
+                $(".panel-body").slideToggle("slow");
+                // ReCalGridAmount();
+            },
+            error: function (e) {
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+    }
+
+</script>
+
+

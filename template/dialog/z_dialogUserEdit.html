@@ -1,0 +1,466 @@
+<style>
+    .head-name{
+        padding-bottom: 5px;margin-bottom:5px;
+        padding-top:10px;
+        border-bottom: solid 1px #cdcdcd;
+        color:orange;
+        /*wisth:80%;*/
+        font-weight: bold;
+    }
+    .col-label-a{
+        border-bottom: solid 1px #cdcdcd ;
+        padding-bottom: 10px;
+        margin-bottom:10px;
+        padding-top: 10px;
+        margin-top:10px;
+        color:  #000;
+        border-top:solid 1px #cdcdcd ;
+        /*padding:60%;*/
+        text-align: center;
+    }
+    .col-label{
+        text-align: right;
+        padding-top:5px;
+    }
+    .panel{
+        margin-bottom:5px;
+    }
+    .panel-body{
+        padding-bottom:5px;
+        padding-top:5px;
+    }
+    .missing-value{
+        border:solid 1px red;
+    }
+    li{
+        color:#666;
+    }
+    .select2-selection__rendered{
+        text-align: left;
+    }
+</style>
+
+<div id='rowDetails' class='rowDetails' >
+
+    <div  class="head-name" class="row">
+        <i class="fas fa-lock"></i> &nbsp;User Login
+    </div>
+    <div class='row'>
+        <div class='col-3 col-xs-3 col-sm-3 col-md- col-lg-3 col-label'>
+            User ID :
+        </div>
+        <div class='col-3 col-xs-3 col-sm-3 col-md- col-lg-3 col-label'>
+            <input type='text' disabled id="txtUserId" class='form-control' value='{user_id}'>
+        </div>
+        <div class='col-3 col-xs-3 col-sm-3 col-md- col-lg-3 col-label'>
+            <font color="red">*</font>Full Name :
+        </div>
+        <div class='col-3 col-xs-3 col-sm-3 col-md- col-lg-3 col-label'>
+            <input type='text' id="txtFullName" class='form-control' value='{FullName}'>
+        </div>
+    </div>
+    <div class='row'>
+        <div class='col-3 col-xs-3 col-sm-3 col-md-3 col-lg-3 col-label'>
+            <font color="red">*</font>Login Name :
+        </div>
+        <div class='col-3 col-xs-3 col-sm-3 col-md-3 col-lg-3 col-label'>
+            <input  OnBlur="CheckDupUserName();" id="txtUserName" type='text' class='form-control' value='{UserName}'>
+        </div>
+        <div class='col-6 col-xs-6 col-sm-6 col-md-6 col-lg-6  text-left' style="padding-top:10px;">
+            <label style="color:red; text-align: left;" id="validUsername"></label>
+        </div>
+    </div>
+    <div class='row'>
+        <div class='col-3 col-xs-3 col-sm-3 col-md- col-lg-3 col-label'>
+            <font color="red">*</font>Password :
+        </div>
+        <div class='col-3 col-xs-3 col-sm-3 col-md- col-lg-3 col-label'>
+            <input  id="txtPass1" type='password' maxlength="16" class='form-control' value=''>
+        </div>
+        <div class='col-3 col-xs-3 col-sm-3 col-md- col-lg-3 col-label'>
+            <font color="red">*</font>Confirm Password :
+        </div>
+        <div class='col-3 col-xs-3 col-sm-3 col-md- col-lg-3 col-label'>
+            <input id="txtPass2" type='password' maxlength="16" class='form-control' value=''>
+        </div>
+    </div>
+    <div class='row'>
+        <div class='col-3 col-xs-3 col-sm-3 col-md- col-lg-3 col-label'>
+            <font color="red">*</font>Sys Level :
+        </div>
+        <div class='col-3 col-xs-3 col-sm-3 col-md- col-lg-3 col-label'>
+            <select  id="selLevel" class='form-control'>
+                <option {SLV0}  value="0">..Select..</option>
+                <option {SLV1} value="1">1</option>
+                <option {SLV2} value="2">2</option>
+                <option {SLV3} value="3">3</option>
+                <option {SLV4} value="4">4</option>
+                <option {SLV5} value="5">5</option>
+            </select>
+        </div>
+        <div class='col-3 col-xs-3 col-sm-3 col-md- col-lg-3 col-label'>
+            <font color="red">*</font> User Type :
+        </div>
+        <div class='col-3 col-xs-3 col-sm-3 col-md- col-lg-3 col-label'>
+            <select  id="selType" class='form-control'>
+                <option {UT0} value="0">..Select..</option>
+                <option {UTA} value="A">Admin</option>
+                <option {UTU} value="U">User</option>
+                <option {UTC} value="C">Customer</option>
+            </select>
+        </div>
+    </div>
+    <div class='row'>
+        <div class='col-3 col-xs-3 col-sm-3 col-md- col-lg-3 col-label'>
+            Customer Link  :
+        </div>
+        <div class='col-9 col-xs-9 col-sm-9 col-md- col-lg-9 col-label'>
+            <select  disabled id="selCustomerLink" class='form-control'>
+                {Customer_link}
+            </select>
+        </div>
+    </div>
+    <div  class="head-name" class="row">
+        <i class="fas fa-info-circle"></i>&nbsp; User Info
+    </div>
+
+    <div class='row'>
+        <div class='col-3 col-xs-3 col-sm-3 col-md- col-lg-3 col-label'>
+            <font color="red">*</font>Department :
+        </div>
+        <div class='col-3 col-xs-3 col-sm-3 col-md- col-lg-3 col-label'>
+            <select  id="selDep" class='form-control'>
+                {options_dep}
+            </select>
+        </div>
+        <div class='col-3 col-xs-3 col-sm-3 col-md- col-lg-3 col-label'>
+            Position :
+        </div>
+        <div class='col-3 col-xs-3 col-sm-3 col-md- col-lg-3 col-label'>
+            <select  id="selDepPos"  class='form-control'>
+                {options_deppos}
+            </select>
+        </div>
+    </div>
+
+
+    <div class='row'>
+        <div class='col-3 col-xs-3 col-sm-3 col-md- col-lg-3 col-label'>
+            Address  :
+        </div>
+        <div class='col-9 col-xs-9 col-sm-9 col-md- col-lg-9 col-label'>
+            <input  id="txtAddr1" type='text' class='form-control' value='{Address1}'>
+            <input  id="txtAddr2" type='text' class='form-control' value='{Address2}'>
+        </div>
+    </div>
+    <div class='row'>
+        <div class='col-3 col-xs-3 col-sm-3 col-md- col-lg-3 col-label'>
+            Tel(Work)  :
+        </div>
+        <div class='col-3 col-xs-3 col-sm-3 col-md- col-lg-3 col-label'>
+            <input  id="txtTel" type='text' class='form-control' value='{Tel}'>
+        </div>
+        <div class='col-3 col-xs-3 col-sm-3 col-md- col-lg-3 col-label'>
+            Tel(Mobile)  :
+        </div>
+        <div class='col-3 col-xs-3 col-sm-3 col-md- col-lg-3 col-label'>
+            <input  id="txtMobile" type='text' class='form-control' value='{Mobile}'>
+        </div>
+    </div>
+    <div class='row'>
+        <div class='col-3 col-xs-3 col-sm-3 col-md- col-lg-3 col-label'>
+            Email :
+        </div>
+        <div class='col-3 col-xs-3 col-sm-3 col-md- col-lg-3 col-label'>
+            <input  id="txtEmail" type='text' class='form-control' value='{Email}'>
+        </div>
+        <div class='col-3 col-xs-3 col-sm-3 col-md- col-lg-3 col-label'>
+            Remark / Etc.  :
+        </div>
+        <div class='col-3 col-xs-3 col-sm-3 col-md- col-lg-3 col-label'>
+            <input  id="txtRemark" type='text' class='form-control' value='{Remark}'>
+        </div>
+    </div>
+
+    <div class='row'>
+        <div class='col-12 text-center'><a href='#'  id='btnCreate' class='btn btn-info'>Create</a>
+        </div>
+    </div>
+    <div class='row' id='flashMsg'> </div>
+    <input type="hidden" id="hdDupUserName" value="0">
+    <input type="hidden" id="hdOldUsername" value="{old_username}">
+</div>
+
+<script type='text/javascript'>
+    GetCustomer();
+    $('#selDep').on('change', function () {
+        GetDepartmentPosition();
+    });
+    function GetDepartmentPosition() {
+        if (($("#selDep").val() == "0") || ($("#selDep").val() == "")) {
+//            $.alert({
+//                title: "Please select department ",
+//                content: "",
+//                theme: 'modern'
+//            });
+            $("#selDepPos").empty();
+            $("#selDepPos").attr("disabled", "disabled");
+        } else {
+//            alert();
+            $("#selDepPos").removeAttr("disabled");
+            $("#selDepPos").empty();
+            $.ajax({
+                url: "./module/MasterData.php",
+                type: 'post',
+                data: {
+                    ajax: 'true',
+                    action: "GetDepPosRows",
+                    dep_id: $("#selDep").val(),
+                },
+                success: function (data) {
+
+                    $("#selDepPos").empty();
+                    $("#selDepPos").append("<option value='0'>..Select..</option>");
+                    $.each(data, function (index, row) {
+                        $("#selDepPos").append("<option value='" + row["dep_pos_id"] + "'>" + row["dep_pos_name"] + "</option>");
+                    });
+                },
+                error: function (xhr, status, error) {
+                    var err = eval("(" + xhr.responseText + ")");
+                    $("#debug").html(error);
+                },
+                dataType: "JSON"
+            });
+        }
+    }
+    $('#selType').on('change', function () {
+
+        if ($(this).val() == "3") {
+            GetCustomer();
+        }
+
+    });
+
+    function GetCustomer() {
+        if (($("#selType").val() == "0") || ($("#selType").val() == "")) {
+            $("#selCustomerLink").empty();
+            $("#selCustomerLink").attr("disabled", "disabled");
+        } else {
+
+            $("#selCustomerLink").removeAttr("disabled");
+            $("#selCustomerLink").empty();
+            $.ajax({
+                url: "./module/SOD/CustomerSaleOrder.php",
+                type: 'post',
+                data: {
+                    ajax: 'true',
+                    action: "GetItemToDropdown",
+                },
+                success: function (data) {
+                    var items = [];
+                    var GetArray = new Array(data);
+                    items.push({
+                        "id": "ALL",
+                        "text": "ALL"
+                    });
+                    $.each(data, function (key, value) {
+                        items.push({
+                            "id": key,
+                            "text": value
+                        });
+                    });
+
+                    $('#selCustomerLink').select2({
+                        data: items
+                    });
+//                    if (selectId == "selItemCategory") {
+//                        $("#selItemCategory").removeAttr("disabled");
+//                    }
+                },
+                error: function (xhr, status, error) {
+                    var err = eval("(" + xhr.responseText + ")");
+                    $("#debug").html(error);
+                },
+                dataType: "JSON"
+            });
+        }
+    }
+    function CheckDupUserName() {
+        var txtUserName = $("#txtUserName").val();
+        var oldUserName = $("#hdOldUsername").val();
+        $("#hdDupUserName").val("0");
+        $.ajax({
+            url: "./module/User.php",
+            type: 'post',
+            data: {
+                ajax: 'true',
+                action: "CheckUserNameDupEdit",
+                username: txtUserName,
+                old_username: oldUserName,
+            },
+            success: function (data) {
+                $("#hdDupUserName").val(data);
+
+                if (data > 0) {
+                    $("#txtUserName").addClass("missing-value");
+                    $("#validUsername").text("*Username duplicate");
+
+                } else {
+                    $("#validUsername").text("");
+                    $("#txtUserName").removeClass("missing-value");
+
+                }
+            },
+            error: function (xhr, status, error) {
+                var err = eval("(" + xhr.responseText + ")");
+                $("#debug").html(error);
+            }
+        });
+    }
+    $("#btnCreate").click(function () {
+        $.confirm({
+            title: "EDIT",
+            content: "Do you want to change data ?",
+            theme: 'modern',
+            buttons: {
+                confirm: function () {
+                    Edit();
+                },
+                cancel: function () {
+
+                }
+            }
+        });
+    });
+    function Edit() {
+        var ErrCount = 0;
+        var ErrHead = "Can not save because ...";
+        var ErrTxt = "";
+        var hdDupUserName = $("#hdDupUserName").val();
+        var txtUserId = $("#txtUserId").val();
+        var txtFullName = $("#txtFullName").val();
+        var txtUserName = $("#txtUserName").val();
+        var txtPass1 = $("#txtPass1").val();
+        var txtPass2 = $("#txtPass2").val();
+        var selDep = $("#selDep").val();
+        var selDepPos = $("#selDepPos").val();
+        var selLevel = $("#selLevel").val();
+        var txtAddr1 = $("#txtAddr1").val();
+        var txtAddr2 = $("#txtAddr2").val();
+        var txtTel = $("#txtTel").val();
+        var txtMobile = $("#txtMobile").val();
+        var txtEmail = $("#txtEmail").val();
+        var txtRemark = $("#txtRemark").val();
+
+        var selCustomerLink = $("#selCustomerLink").val();
+        var selType = $("#selType").val();
+        var Marker = [];
+        if (txtUserName != "") {
+            var str = $('#txtUserName').val();
+            if (/^[a-zA-Z0-9-]*$/.test(str) == false) {
+                ErrCount++;
+                ErrTxt += "<br>- Login Name not allow SPACE and  SPECIAL CHARACTER ";
+                Marker.push("txtUserName");
+            } else if (txtUserName.length < 4) {
+                ErrCount++;
+                ErrTxt += "<br>- Input Login Name 4-16 character ";
+                Marker.push("txtUserName");
+            } else if ($("#hdDupUserName").val() == "1") {
+                ErrCount++;
+                ErrTxt += "<br>- Username is exists .";
+                Marker.push("txtUserName");
+            }
+        } else {
+            ErrCount++;
+            ErrTxt += "<br>- Login Name is empty ";
+            Marker.push("txtUserName");
+        }
+        if (txtFullName == "") {
+            ErrCount++;
+            ErrTxt += "<br>- Full Name is empty ";
+            Marker.push("txtFullName");
+        }
+        if (txtPass1.length < 4) {
+            ErrCount++;
+            ErrTxt += "<br>- Input password 4-16 character ";
+            Marker.push("txtPass1");
+        } else {
+            if (txtPass1 != txtPass2) {
+                ErrCount++;
+                ErrTxt += "<br>- Confirm password not match ";
+                Marker.push("txtPass2");
+            }
+        }
+        if (selDep == "0") {
+            ErrCount++;
+            ErrTxt += "<br>- Not select department .";
+            Marker.push("selDep");
+        }
+        if (selLevel == "0") {
+            ErrCount++;
+            ErrTxt += "<br>- Not select System level .";
+            Marker.push("selLevel");
+        }
+        if (selType == "0") {
+            ErrCount++;
+            ErrTxt += "<br>- Not select User Type .";
+            Marker.push("selType");
+        }
+        if (hdDupUserName > 0) {
+            ErrCount++;
+            ErrTxt += "<br>- Username Exists  .";
+        }
+        if (ErrCount > 0) {
+            $.alert({
+                title: ErrHead,
+                content: ErrTxt,
+                theme: 'modern'
+            });
+        } else {
+            $.ajax({
+                url: "./module/User.php",
+                type: 'post',
+                data: {
+                    ajax: 'true',
+                    action: "SaveUser",
+                    saveStat: "U",
+                    txtUserId: txtUserId,
+                    txtUserName: txtUserName,
+                    txtFullName: txtFullName,
+                    txtPass1: txtPass1,
+                    txtPass2: txtPass2,
+                    selDep: selDep,
+                    selDepPos: selDepPos,
+                    selLevel: selLevel,
+                    selType: selType,
+                    selCustomerLink: selCustomerLink,
+                    txtAddr1: txtAddr1,
+                    txtAddr2: txtAddr2,
+                    txtTel: txtTel,
+                    txtMobile: txtMobile,
+                    txtEmail: txtEmail,
+                    txtRemark: txtRemark,
+                },
+                success: function (data) {
+
+                    $.confirm({
+                        title: "EDIT COMPLETE",
+                        content: "",
+                        theme: 'modern',
+                        buttons: {
+                            confirm: function () {
+                                location.reload();
+                            }
+                        }
+                    });
+
+                },
+                error: function (xhr, status, error) {
+                    var err = eval("(" + xhr.responseText + ")");
+                    $("#debug").html(error);
+                }
+            });
+
+        }
+    }
+</script>

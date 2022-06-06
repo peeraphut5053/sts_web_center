@@ -1,0 +1,292 @@
+<style>
+    .col-search{
+        padding-left:3px;
+        padding-right:3px;
+    }
+    /*    table.dataTable thead .sorting:after,
+        table.dataTable thead .sorting:before,
+        table.dataTable thead .sorting_asc:after,
+        table.dataTable thead .sorting_asc:before,
+        table.dataTable thead .sorting_asc_disabled:after,
+        table.dataTable thead .sorting_asc_disabled:before,
+        table.dataTable thead .sorting_desc:after,
+        table.dataTable thead .sorting_desc:before,
+        table.dataTable thead .sorting_desc_disabled:after,
+        table.dataTable thead .sorting_desc_disabled:before {
+            bottom: .5em;
+        }*/
+    .table thead th{
+        text-align: center;
+    }
+
+    .col-flt-page{
+        padding-top:10px;
+        font-weight: bold;
+    }
+
+    #tblReport tbody tr td a {
+        cursor: pointer ;
+    }
+    table.dataTable.fixedHeader-floating, table.dataTable.fixedHeader-locked {
+        background-color: white;
+        margin-top: 50px !important;
+        margin-bottom: 0 !important;
+    }
+    @media print {
+        table th:nth-child(0) {
+            width: 200px;
+            word-break: break-all;
+            white-space: pre-line;
+        }
+        table td:nth-child(0) {
+            width: 200px; 
+            word-break: break-all;
+            white-space: pre-line;
+        }
+
+    }
+    /*    table {
+      table-layout: fixed;
+    }*/
+
+    .text-wrap{
+        white-space:normal;
+    }
+    .width-200{
+        width:200px;
+    }
+    .selectize-input{
+        min-height: 70px;
+    }
+</style>
+<div class="row">
+    <h4> รายงานสต็อคเหล็กม้วน</h4>
+</div>
+
+<div class='row'>
+    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
+        <div class="col-md-2 col-lg-2 text-right">
+            <div class="row" style="padding-top:5px;padding-right:10px;">
+                เลือกคลัง    
+            </div>
+        </div>
+        <div class="col-md-10 col-lg-10">
+            <div class="row">
+                <select class="form-control" id="selWH"  multiple="multiple" style="display:none;height:70px;">
+                    <!--<option value="ALL" selected>ทั้งหมด</option>-->
+                    {options_warehouse}
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-5 col-md-5 col-sm-12 col-xs-12 " style="padding-top:0px;">
+        <div class="row" style="margin-top:0px;">
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
+                <div class="row">
+                    <div class="input-group">
+                        <div class="input-group-addon">
+                            ความหนา 
+                        </div>
+                        <input type='text' class='form-control' id='txtThick' >
+                    </div>    
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
+                <div class="row">
+                    <div class="input-group">
+                        <div class="input-group-addon">
+                            หน้ากว้าง 
+                        </div>
+                        <input type='text' class='form-control' id='txtWidth' >
+                    </div>   
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3 col-lg-3 col-sm-4 col-xs-4 text-right">
+                <input type="checkbox" id="cbDatePicker" value="1"> &nbsp;ระบุวันรับเข้า
+            </div>
+            <div class="col-md-9 col-lg-9 col-sm-8 col-xs-8" style="padding-right:0px;">
+                <div class="input-group">
+                    <div class="input-group-addon">วันที่</div>
+                    <input type="text" class="form-control"  id="txtStartDate">
+                    <div class="input-group-addon">ถึง</div>
+                    <input type="text" class="form-control"  id="txtToDate">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-1 col-lg-1 col-sm-6 col-xs-12 col-search text-right">     
+            <button   id="btnSearch" class="btn btn-info "><i class="fa fa-search"></i>&nbsp;ค้นหา</button>
+        </div>
+    </div>
+
+</div>
+<div class="row"  id="rowResultTable">
+    <table class="table table-condensed table-striped "  width="100%" id="tblReport">
+        <thead>
+            <tr>
+                <!--<th >#</th>-->
+
+                <th >Item</th>
+                <th >Description</th>
+                <th >Thick</th>
+                <th >Width</th>
+                <th >Standard</th>
+                <th >Location</th>
+                <th >วันที่รับเข้า</th>
+                <th >Serial</th>
+                <th >ม้วน</th>
+                <th >น้ำหนัก</th>
+            </tr>
+        </thead>
+        <tbody id="tblReportList">
+            <!--<tr><td align="center" colspan="12">.... No item search ....</td></tr>-->
+        </tbody>
+    </table>
+</div>
+
+
+
+
+<script type="text/javascript">
+    cb_click();
+    $("#cbDatePicker").click(function () {
+        cb_click();
+    });
+    function cb_click() {
+        var cb = $("input[id='cbDatePicker']:checked").val();
+        if (cb == "1") {
+            $("#txtStartDate").removeAttr("disabled");
+            $("#txtToDate").removeAttr("disabled");
+        } else {
+            $("#txtStartDate").attr("disabled", true);
+            $("#txtToDate").attr("disabled", true);
+        }
+    }
+    $("#txtStartDate , #txtToDate").datepicker({
+        dateFormat: 'yy-mm-dd',
+    });
+//    SelecRadio();
+    $(document).ready(function () {
+        $('#selWH').selectize({
+            plugins: ['remove_button'],
+            delimiter: ',',
+            persist: false,
+            create: function (input) {
+                return {
+                    value: input,
+                    text: input
+                }
+            }
+        });
+    });
+    $("#btnSearch").click(function () {
+        ReportItemSearch();
+    });
+    $("#txtLoc").on("keypress", function (e) {
+
+        if (e.keyCode == 13) {
+            ReportItemSearch();
+            return false; // prevent the button click from happening
+        }
+    });
+    function ReportItemSearch() {
+        var oldHtmlBtn = $("#btnSearch").html();
+        var cb = $("input[id='cbDatePicker']:checked").val();
+        $("#btnSearch").html("<i class='fa fa-spinner fa-spin'></i>");
+        $("#rowResultTable").loading();
+        var txtThick = $("#txtThick").val();
+        var txtWidth = $("#txtWidth").val();
+        var txtStartDate = $("#txtStartDate").val();
+        var txtToDate = $("#txtToDate").val();
+        var Loc = $("#txtLoc").val();
+        var Locs = [];
+        Locs = $("#selWH").val();
+//        console.log(Locs);
+        if (Loc == "") {
+            $.alert("กรุณาเลือก Location");
+            return false;
+        } else if ((cb == "1") && ((txtStartDate == "") || (txtToDate == ""))) {
+            $.alert("กรุณาเลือก วันที่รับเข้าสินค้า จากวันที่ ถึงวันที่");
+            return false;
+        } else {
+            $("#tblReportList").load("././module/RPTHR/data.php", {
+                "load": "ajax",
+                "Loc": Loc,
+                "Locs": Locs,
+                "Thick": txtThick,
+                "Width": txtWidth,
+                "txtStartDate": txtStartDate,
+                "txtToDate": txtToDate,
+                "cb": cb
+
+            }, function () {
+
+                $('#tblReport').DataTable({
+                    ordering: false,
+                    searching: false,
+                    fixedHeader: true,
+                    retrieve: true,
+                    scrollX: true,
+                    scrollY: 400,
+                    columnDefs: [
+                        {
+                            render: function (data, type, full, meta) {
+                                return "<div class='text-wrap width-200'>" + data + "</div>";
+                            },
+                            targets: 0
+                        }
+                    ],
+                    "pageLength": 999999999,
+                    'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'>>" +
+                            "<'row'<'col-md-12'tr>>" +
+                            "<'row'<'col-md-5'><'col-sm-7'>>",
+                    buttons: [
+                        {
+                            extend: 'print',
+                            text: "<i class='fa fa-print'></i>&nbsp;Print",
+                            title: ''
+                        },
+                        {
+                            extend: 'excel',
+                            text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                            title: ''
+                        },
+                    ]
+                });
+                var len = $(".table tbody tr").length - 1;
+                $("#btnSearch").html(oldHtmlBtn);
+                $("#rowResultTable").loading("stop");
+//                $(".col-flt-page").text("จำนวนทั้งหมด : " + len);
+            });
+        }
+    }
+    $("#btnExportExcel").click(function () {
+        //        onclick="javascript:
+
+        //       xport.toCSV('tblReport');
+    });
+    function ExportExcel() {
+        var dt = new Date();
+        var day = dt.getDate();
+        var month = dt.getMonth() + 1;
+        var year = dt.getFullYear();
+        var hour = dt.getHours();
+        var mins = dt.getMinutes();
+        var postfix = day + "-" + month + "-" + year + "_" + hour + "-" + mins;
+        var filename = 'SyteLine_Item_Report_' + postfix + '.xls';
+        //        tablesToExcel(ArrId, ArrName, filename);
+        tablesToExcel("tblReport", "text", filename);
+    }
+
+
+
+//    $("#Loc").select2();
+
+
+    $("#StartDate,#EndDate").datepicker({
+        dateFormat: 'yy-mm-dd'
+    });
+</script>

@@ -1,0 +1,62 @@
+<form name="form1" id="formCreate" method="post">
+  <input type="hidden" class="form-control" id="IdRun" name="IdRun" value="{IdRun}">
+  <div class="row">
+    <div class="col-4 text-right col-label">
+      ชื่อท่าเรือ
+    </div>
+    <div class="col-6 text-right">
+      <input type="text" class="form-control" id="txtHN" name="txtHN" value="{HN}">
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-4 text-right  col-label">
+      สถานะท่าเรือ
+    </div>
+    <div class="col-6 text-left col-label">
+      <input type="radio" {cBoth} name="rdHS" value="2"> Both
+      <input type="radio" {cBerth} name="rdHS" value="0"> Berthed At
+      <input type="radio" {cTo} name="rdHS" value="1"> Ship To
+      <!-- <input type="text" class="form-control" id="txtHS" name="txtHS" value="{HS}"> -->
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12 text-center">
+      <button type="button" id="btnSubmit" class="btn btn-success">Save</button>
+    </div>
+  </div>
+</form>
+
+<script>
+  $("#btnSubmit").click(function() {
+    if ($("#txtHN").val() == "") {
+      alert("ไม่ได้ระบุ ชื่อท่าเรือ ");
+      $("#txtMV").focus();
+      return false;
+    }
+    // if ($("#txtHS").val() == "") {
+    //   alert("ไม่ได้ระบุ ทะเบียนเรือ ");
+    //   $("#txtLighterNo").focus();
+    //   return false;
+    // }
+    var act = "";
+    //  alert($("IdRun").val());
+    // if ($("IdRun").val() == "undefined") {
+    //   act = "createsave";
+    // } else {
+    //   act = "editsave";
+    // }
+    //alert(act);
+    $.post("./module/SHP/mt_harbor_save.php", $('#formCreate').serialize(),
+      function(data) {
+        //  alert(data);
+
+        if (data.substr(0, 5) == "Error") {
+          alert(data);
+          return false;
+        } else {
+          location.reload();
+        }
+      }, 'html');
+
+  });
+</script>

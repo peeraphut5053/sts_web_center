@@ -1,0 +1,20 @@
+<script>
+    GetLocation()
+    function GetLocation() {
+        var LocOptionSelected = $("#LocOptionSelected").val();
+
+        $.ajax({
+            type: 'GET',
+            url: "http://localhost:88/sts_web_center_new/webservice/demo.php",
+            dataType: 'json',
+            beforeSend: function () {
+            },
+            data: {
+                load: 'GetLocation',
+            },
+            success: function (data) {
+                console.log(data)
+            },
+        });
+    }
+</script>

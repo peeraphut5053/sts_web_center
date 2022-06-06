@@ -1,0 +1,274 @@
+<head>
+
+    <!-- datepicker Carlendar -->
+    <!--        <script src="bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>-->
+    <!--    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">-->
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+    <style>
+
+    </style>
+
+
+</head>
+
+<div>
+    <div class="col-xs-6">
+        <div class='col-xs-12'>
+            <h3>control</h3>
+        </div>
+        <div class='row'>
+            <div class='col-xs-6' style="text-align: right"><label>ส่วนต่างนาทีที่ไม่มีการเคลื่อนไหว</label></div>
+            <div class='col-xs-6'>
+
+                <input class='form-control' type="number" id="minkick" min="4" max="999" value="9" />
+            </div>
+        </div>
+        <div class='row'>
+            <div class='col-xs-6' style="text-align: right"><label>ข้อความที่ส่ง</label></div>
+            <div class='col-xs-6'>
+                <!--                <input class='form-control' type="text" id="textline" value="ครับผม เข้าได้เลยครับ !!" />-->
+                <select class='form-control' id="textline">
+                    <option value="ครับผม เข้าได้เลยครับ !!">ครับผม เข้าได้เลยครับ !! </option>
+                    <option value="ครับผม สักครู่นะครับทีม IT กำลังตรวจสอบให้">สักครู่นะครับทีม IT กำลังตรวจสอบให้</option>
+                    <option value="ขออนุญาติ Restart server 5 นาทีนะครับ">ขออนุญาติ Restart server 5 นาทีนะครับ</option>
+                </select>
+            </div>
+        </div>
+        <div class='row'>
+            <div class='col-xs-6' style="text-align: right"><label>ส่งข้อความเข้าไลน์</label></div>
+            <div class='col-xs-6'>
+                <input type="checkbox" checked="checked" id="con_sendtoline" value='1' />
+            </div>
+        </div>
+        <div class='row'>
+            <div class='col-xs-6' style="text-align: right"><label>เตะ User ตามเงื่อนไข</label></div>
+            <div class='col-xs-6'>
+                <input type="checkbox" checked="checked" id="con_clickuser" value='1' />
+            </div>
+        </div>
+        <div class='col-xs-12' style='margin-bottom: 0px; text-align: center'>
+            <button onclick="minkick()" class="btn btn-danger">Precess</button> 
+        </div>
+
+    </div>
+    <div class="col-xs-6">
+        <h3>
+            ผู้ใช้ที่เข้า Infor Syteline ตอนนี้
+        </h3>
+        <table class="table table-condensed table-bordered table-striped" id="tblReportUserInfor" >
+            <thead>
+                <tr>
+                    <td>UserName</td>
+                    <td>เข้าตั้งแต่</td>
+                    <td>เคลื่อนไหวล่าสุด</td>
+                    <td>ส่วนต่างนาที</td>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <div class="col-xs-6">
+        <h3>
+            ผู้ใช้ที่ไม่มีการเคลื่อนไหวมากกว่า 15 นาที
+        </h3>
+        <table class="table table-condensed table-bordered table-striped" id="tblReportUserInfor2" >
+            <thead>
+                <tr>
+                    <td>UserName</td>
+                    <td>นาทีที่ไม่มีการเคลื่อนไหว</td>
+                    <td>เคลื่อนไหวล่าสุด</td>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <div class="col-xs-6">
+        <h3>
+            ผู้ใช้ที่ Online แยกตาม Department
+        </h3>
+        <table class="table table-condensed table-bordered table-striped" id="tblReportUserInfor3" >
+            <thead>
+                <tr>
+                    <td>ชื่อแผนก</td>
+                    <td>Description</td>
+                    <td>จำนวน</td>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+
+<script>
+//    setInterval(function () {
+//        loadData();
+//        loadData2();
+//        loadData3();
+//        //LineNotification();
+//    }, 120000)
+    loadData();
+    loadData2();
+    loadData3();
+    //LineNotification();
+    function loadData() {
+        $.ajax({
+            type: 'GET',
+            url: "././module/APP_Infor_syteline_user_session/data.php",
+            contentType: "text/plain",
+            dataType: 'json',
+            beforeSend: function () {
+                $("#tblReportUserInfor").dataTable().fnDestroy();
+                $("#btnSearch").html("<i class='fa fa-spinner fa-spin'>");
+            },
+            data: {
+                load: 'ConnectionInformation',
+            },
+            success: function (data) {
+                console.log(data)
+                $("#tblReport").dataTable().fnDestroy();
+                $("#tblReportList").DataTable().clear();
+                $('#tblReportUserInfor').dataTable({
+                    "order": [[2, 'desc']],
+                    scrollY: 300,
+                    "paging": false,
+                    "aaData": data,
+                    "searching": false,
+                    "columns": [
+                        {"data": "UserName"},
+                        {"data": "CreateDate"},
+                        {"data": "RecordDate"},
+                        {"data": "minutediff"},
+                    ],
+                });
+                $('#tblReport').loading("stop");
+            },
+            error: function (e) {
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+    }
+    function loadData2() {
+        $.ajax({
+            type: 'GET',
+            url: "././module/APP_Infor_syteline_user_session/data.php",
+            contentType: "text/plain",
+            dataType: 'json',
+            beforeSend: function () {
+                $("#tblReport2").dataTable().fnDestroy();
+            },
+            data: {
+                load: 'ConnectionInformation2',
+            },
+            success: function (data) {
+                console.log(data)
+                $("#tblReportUserInfor2").dataTable().fnDestroy();
+                $("#tblReportListUserInfor2").DataTable().clear();
+                $('#tblReportUserInfor2').dataTable({
+                    "order": [[2, 'desc']],
+                    scrollY: 300,
+                    "paging": false,
+                    "aaData": data,
+                    "searching": false,
+                    "columns": [
+                        {"data": "UserName"},
+                        {"data": "minutediff"},
+                        {"data": "RecordDate"},
+                    ],
+                });
+                $('#tblReportUserInfor').loading("stop");
+            },
+            error: function (e) {
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+    }
+    function loadData3() {
+        $.ajax({
+            type: 'GET',
+            url: "././module/APP_Infor_syteline_user_session/data.php",
+            contentType: "text/plain",
+            dataType: 'json',
+            beforeSend: function () {
+                $("#tblReport3").dataTable().fnDestroy();
+            },
+            data: {
+                load: 'ConnectionInformation3',
+            },
+            success: function (data) {
+                console.log(data)
+                $("#tblReportUserInfor3").dataTable().fnDestroy();
+                $("#tblReportListUserInfor3").DataTable().clear();
+                $('#tblReportUserInfor3').dataTable({
+                    "order": [[2, 'desc']],
+                    scrollY: 300,
+                    "paging": false,
+                    "aaData": data,
+                    "searching": false,
+                    "columns": [
+                        {"data": "GroupName"},
+                        {"data": "GroupName"},
+                        {"data": "useronline"}
+                    ],
+                });
+                $('#tblReportUserInfor').loading("stop");
+            },
+            error: function (e) {
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+    }
+    function LineNotification() {
+        $.ajax({
+            type: 'GET',
+            url: "././module/APP_Infor_syteline_user_session/data.php",
+            contentType: "text/plain",
+            dataType: 'json',
+            beforeSend: function () {
+                $("#tblReport2").dataTable().fnDestroy();
+            },
+            data: {
+                load: 'LineNotification',
+            },
+            success: function (data) {
+
+            },
+            error: function (e) {
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+    }
+    function minkick() {
+        let minkick = $("#minkick").val();
+        let textline = $("#textline").val();
+        let con_sendtoline = $('#con_sendtoline:checked').val();
+        let con_clickuser = $('#con_clickuser:checked').val();
+
+        $.ajax({
+            type: 'GET',
+            url: "././module/APP_Infor_syteline_user_session/data.php",
+            contentType: "text/plain",
+            dataType: 'json',
+            beforeSend: function () {
+                $("#tblReport2").dataTable().fnDestroy();
+            },
+            data: {
+                load: 'minkick',
+                minkick: minkick,
+                textline: textline,
+                con_sendtoline: con_sendtoline,
+                con_clickuser: con_clickuser
+            },
+            success: function (data) {
+
+            },
+            error: function (e) {
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+        loadData();
+    }
+</script>

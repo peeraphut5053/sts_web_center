@@ -1,0 +1,166 @@
+<style>
+    @font-face {
+        font-family: "code39";
+        src: url('../../fonts/Code39Barcode.ttf') format('truetype');
+    }
+    .barcode-tag{
+        font-family: Code39;
+        height: 25px;
+        margin: 15px;
+        text-align: center;
+        padding-bottom: 20px;
+    }
+    .row{
+        width:100% !important;
+    }
+    /*    .odd{
+            background-color: red !important;
+        }*/
+
+</style>
+<script src="../../bower_components/jquery/dist/jquery.min.js"></script>
+<script defer type="text/javascript" src="../../datatable/DataTables-1.10.18/js/jquery.dataTables.min.js"></script>
+<script defer type="text/javascript" src="../../datatable/DataTables-1.10.18/js/dataTables.bootstrap.min.js"></script>
+
+<script defer type="text/javascript" src="../../datatable/Buttons-1.5.4/js/dataTables.buttons.min.js"></script>
+<script defer type="text/javascript" src="../../datatable/Buttons-1.5.4/js/buttons.print.min.js"></script>
+<script defer type="text/javascript" src="../../datatable/FixedHeader-3.1.4/js/dataTables.fixedHeader.min.js"></script>
+<script defer type="text/javascript" src="../../datatable/JSZip-2.5.0/jszip.min.js"></script>
+<script defer type="text/javascript" src="../../datatable/Buttons-1.5.4/js/buttons.html5.min.js"></script>
+<script defer type="text/javascript" src="../../datatable/pdfmake-0.1.36/pdfmake.min.js"></script>
+<script defer type="text/javascript" src="../../datatable/pdfmake-0.1.36/vfs_fonts.js"></script>
+<script src="../../js/jquery.loading.min.js" type="text/javascript"></script>
+<script src="../../js/jquery.mask.min.js" type="text/javascript"></script>
+<script src="../../js/DataTable.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+
+
+
+<script type="text/javascript" src="../../scanmobile/src/jquery.qrcode.js"></script>
+<script type="text/javascript" src="../../scanmobile/src/qrcode.js"></script>
+
+
+
+<link rel="stylesheet" type="text/css" href="../../datatable/DataTables-1.10.18/css/jquery.dataTables.min.css">
+
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<script>
+</script>
+<html>
+    <head>
+        <title>Print Stock</title>
+        <meta charset="UTF-8">
+        <!--        <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+    </head>
+    <body>
+        <div class="h3" style="text-align: center"></div>
+        <table class="table table-condensed table-bordered table-striped" id="tblReport" style="width:100% !important ;">
+            <thead>
+                <tr>
+                    <th>location</th>
+                    <th>item code</th>
+<!--                    <th>item description</th> -->
+                    <th>qty</th>
+                </tr>
+            </thead>
+        </table>
+    </body>
+
+
+
+
+    <script type="text/javascript">
+        var urlParams = new URLSearchParams(location.search);
+        var loc = urlParams.get('loc');
+        var item = urlParams.get('item');
+
+        var tblReportId = '#tblReport';
+        var btnSearch = '#btnSearch';
+        var urlModule = "../../module/RPT_STOCK_COUNT_ITEM_LOCATION/data.php";
+
+        $.ajax({
+            type: 'POST',
+            url: urlModule,
+            dataType: 'json',
+            beforeSend: function () {
+                $(btnSearch).html("<i class='fa fa-spinner fa-spin'></i>");
+            },
+            data: {
+                load: "ajax",
+                loc: loc,
+                item: item
+            },
+            success: function (data) {
+                console.log(data)
+                $("#barcodeLoc").html(loc);
+                console.log(loc);
+                $(tblReportId).DataTable().clear();
+                $(tblReportId).dataTable({
+                    "scrollX": false,
+                    "aaData": data,
+                    "paging": false,
+                    "searching": false,
+                    "initComplete": function (settings, json) {
+                    },
+                    destroy: true,
+                    'processing': true,
+                    "columns": tablecolumsArr,
+                });
+                $(tblReportId).loading("stop");
+                setTimeout(function () {
+                    window.print();
+                }, 2000);
+            },
+            error: function (e) {
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+
+        var tablecolumsArr = [
+//            {
+//                width: 30,
+//                "data": "description",
+//                "className": "text-center",
+//                "render": function (data, type, row, meta) {
+//                    var ret = data;
+//                    return ret;
+//                }
+//            },
+            {
+                "data": "loc",
+                "className": "text-center",
+                "render": function (data, type, row, meta) {
+                    var ret = data;
+                    return ret;
+                }
+            },
+            {
+                "data": {item_code: "item_code", loc: "loc", item_desc: "item_desc"},
+                "className": "text-center",
+                "render": function (data, type, row) {
+                    var ret = "<div class ='barcode-tag'>*" + data.item_code + "*</div>";
+                    var ret2 = "<div class='text-center'>" + data.item_desc + "</div>";
+                    return ret  +"<hr>" + ret2;
+                }
+            },
+            
+            {
+                width: 100,
+                "data": "qty_on_hand",
+                "className": "text-right",
+                "render": function (data, type, row, meta) {
+                    var ret = Math.ceil(data);
+                    return ret;
+                }
+            },
+        ];
+    </script>
+</html>

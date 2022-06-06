@@ -1,0 +1,226 @@
+<div class="row">
+    <div class="row quicksearch col-lg-10" >
+        <div class="row" >
+            <div>
+                <h1>WORKBANCH SHIPPING</h1>
+            </div> 
+        </div> 
+        <div class="row col-lg-12">
+            <div class="col-lg-3" >   
+                <div class="input-group">
+                    <div class="input-group-addon">From date</div>
+                    <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtFromDate">
+                </div>
+            </div>
+            <div class="col-lg-3">   
+                <div class="input-group">
+                    <div class="input-group-addon">To date</div>
+                    <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtToDate">
+                </div>
+            </div>
+            <div class="col-lg-3">   
+                <div class="input-group">
+                    <div class="input-group-addon">Lot.</div>
+                    <input type="text" class="form-control txt-filter" id="txtLot">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-3" >   
+                <div class="input-group">
+                    <div class="input-group-addon">Ref num</div>
+                    <input type="text" class="form-control txt-filter" id="txtref_num">
+                </div>
+            </div>
+            <div class="col-lg-3" >   
+                <select class="form-control txt-filter" id="txttrans_type">
+                </select>
+            </div>      
+            <div class="col-lg-3" >
+                <select class="form-control txt-filter" id="txtu_m">
+                </select>
+            </div>
+            <div class="col-lg-3" >
+                <button id="btnSearch" class="btn btn-info"><i class="fa fa-searh"></i>&nbsp;ค้นหา</button>
+            </div>
+        </div>
+    </div>
+    <!--    <div class="col-lg-2">
+            <div class="nav-tabs-custom">
+                 Tabs within a box 
+                <ul class="nav nav-tabs pull-right">
+                    <li class="pull-left header"><i class="fa fa-inbox"></i> Job transection</li>
+                </ul>
+                <div class="tab-content no-padding" id="Chart_graph">
+                     Morris chart - Sales 
+                    <div class="chart tab-pane active" id="chart_donut" style="position: relative; height: 120px;">
+    
+                    </div>
+                </div>
+            </div>
+        </div>-->
+</div>
+
+<div class="row" id="divReport" >
+    <table class="table table-condensed table-bordered table-striped" id="tblReport" style="width:100%;">
+        <thead>
+            <tr>
+                <th>inv num</th>
+                <th>cust_num</th>
+                <th>name</th>  
+                <th>amount</th>
+                <th>inv_date</th>
+                <th>RECEIVEdate</th>    
+                <th>datedif</th>
+                <th>credit_term</th>
+                <th>type</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+
+<script type="text/javascript" src="js/main.js"></script>
+<script type="text/javascript">
+
+
+    $("#txtFromDate , #txtToDate").datepicker({
+        dateFormat: 'yy-mm-dd',
+    });
+    $("#btnSearch").click(function () {
+        var tblReportId = '#tblReport';
+        var btnSearch = '#btnSearch';
+        SearchDataFooterFn(tblReportId, btnSearch, tablecolumsArr, "Slit Report", "ajax");
+        RowFooterBuild(tblReportId);
+    });
+    $("#txtFromDate,#txtToDate").val(GetToday());
+
+    $(".txt-filter").on("keypress", function (e) {
+        if (e.keyCode == 13) {
+            SearchItemNormal();
+            return false; // prevent the button click from happening
+        }
+    });
+
+    var url = "././module/RPT_JOBORDERPROCESSING/data.php";
+    GetSelectOption("txtu_m", url, "GetUMList", "u_m", "u_m", "U/M");
+    GetSelectOption("txttrans_type", url, "GetTranstypeList", "trans_type", "trans_description", "Trans type");
+
+    function footerCallback(api) {
+        $(api.column(6).footer()).html("<b>TOTAL</b>");
+        ColumnSumVal(7, api)
+    }
+
+    tablecolumsArr = [
+        {
+            "data": "trans_date.date",
+            "className": "text-right",
+            "render": function (data, type, row, meta) {
+                var ret = data.substring(0, 10);
+                return ret;
+            }
+        },
+        {
+            "data": "trans_description",
+            "render": function (data, type, row) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "loc", "className": "text-center",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "lot",
+            "className": "text-right",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                ret = "<span>" + data + "</span>";
+
+                return ret;
+            }
+        },
+        {
+            "data": "ref_num",
+            "className": "text-right",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "item",
+            "render": function (data, type, row) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "ItemDesc",
+            "render": function (data, type, row) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "qty",
+            "className": "text-right",
+            "render": function (data, type, row) {
+                var ret = parseFloat(data).toFixed(2);
+                return ret;
+            }
+        },
+        {
+            "data": "ItemUM",
+            "render": function (data, type, row) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "RecordDate.date",
+            "className": "text-left",
+            "render": function (data, type, row) {
+                var ret = data.substring(1, 19);
+                return ret;
+            }
+        },
+    ];
+
+
+
+//        $.ajax({
+//            type: 'POST',
+//            url: url,
+//            dataType: 'json',
+//            beforeSend: function () {
+//                $('#Chart_graph').loading();
+//            },
+//            data: datapost,
+//            success: function (data) {
+//                $('#Chart_graph').loading("stop");
+//                // Donut Chart
+//                var donut = new Morris.Donut({
+//                    element: 'chart_donut',
+//                    resize: true,
+//                    colors: ['#3c8dbc', '#f56954', '#00a65a', '#B9FAF8', '#B8D0EB', '#ff4dff', '#99e600', '#ffcc00'],
+//                    data: data,
+//                    hideHover: 'auto'
+//                });
+//                // Fix for charts under tabs
+//                $('.box ul.nav a').on('shown.bs.tab', function () {
+//                    area.redraw();
+//                    donut.redraw();
+//                    line.redraw();
+//                });
+//            },
+//            error: function (e) {
+//                console.log("There was an error with your request...");
+//                console.log("error: " + JSON.stringify(e));
+//            }
+//        });
+</script>

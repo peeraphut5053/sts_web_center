@@ -1,0 +1,161 @@
+<style>
+    .col-search {
+        padding-left: 3px;
+        padding-right: 3px;
+    }
+
+    /*    table.dataTable thead .sorting:after,
+          table.dataTable thead .sorting:before,
+          table.dataTable thead .sorting_asc:after,
+          table.dataTable thead .sorting_asc:before,
+          table.dataTable thead .sorting_asc_disabled:after,
+          table.dataTable thead .sorting_asc_disabled:before,
+          table.dataTable thead .sorting_desc:after,
+          table.dataTable thead .sorting_desc:before,
+          table.dataTable thead .sorting_desc_disabled:after,
+          table.dataTable thead .sorting_desc_disabled:before {
+              bottom: .5em;
+          }*/
+    .table thead th {
+        text-align: center;
+    }
+
+    .col-flt-page {
+        padding-top: 10px;
+        font-weight: bold;
+    }
+
+    #tblReport tbody tr td a {
+        cursor: pointer;
+    }
+
+    table.dataTable.fixedHeader-floating,
+    table.dataTable.fixedHeader-locked {
+        background-color: white;
+        margin-top: 50px !important;
+        margin-bottom: 0 !important;
+    }
+
+    @media print {
+        table th:nth-child(0) {
+            width: 200px;
+            word-break: break-all;
+            white-space: pre-line;
+        }
+
+        table td:nth-child(0) {
+            width: 200px;
+            word-break: break-all;
+            white-space: pre-line;
+        }
+
+    }
+
+    .text-wrap {
+        white-space: normal;
+    }
+
+    .width-200 {
+        width: 200px;
+    }
+
+    input[type=checkbox] {
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+
+    /*
+      .cb_lb{
+          margin-top:-5px;
+      }*/
+
+
+    .input-group-addon2 {
+        padding: 6px 12px;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 1;
+        color: #555;
+        height: 32px;
+        text-align: center;
+        background-color: #eee;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        border-top-right-radius: 0px;
+        border-bottom-right-radius: 0px;
+    }
+
+    .selectize-input {
+        padding-top: 5px;
+        padding-bottom: 5px;
+        height: 32px;
+        min-height: 32px;
+        border-top-left-radius: 0px;
+        border-bottom-left-radius: 0px;
+    }
+
+    .input-group .form-control {
+        padding-left: 1px;
+        padding-right: 1px;
+    }
+</style>
+<div class="row">
+    <h4>Consolidate Invoicing Commit (ใช้ชั่วคราว)</h4>
+</div>
+<div class='row text-center'>
+    <h2>ระบุเลข INVOICE NUMBER</h2>
+    <hr>
+</div>
+
+<div class='row text-center' style="padding-left: 35%;padding-right: 35%;">
+    <input type="text" class="form-control" id="txtInvNum" >
+</div>
+<div class='row text-center' style="padding-left: 25%;padding-right: 25%;">
+    <a href="#" id="btnCommit" OnClick="Commit();" class="btn btn-success">Commit</a>
+</div>
+
+<script type="text/javascript">
+
+    function CheckInv(txtInvNum) {
+        var OldHtml = $("#btnSearch").html();
+        $.ajax({
+            type: 'POST',
+            url: "././module/CONSOL_COMMIT/data.php",
+            //                contentType: "text/plain",
+//              dataType: 'json',
+            beforeSend: function () {
+                $("#btnSearch").html("<i class='fa fa-spinner fa-spin'>");
+            },
+            data: {
+                "load": "checkInv",
+                "inv_num" : txtInvNum
+
+            },
+            success: function (data) {
+                alert(data);
+                $("#btnSearch").html(OldHtml);
+            },
+            error: function (e) {
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        }
+        );
+    }
+
+    function Commit() {
+
+        var txtInvNum = $("#txtInvNum").val();
+
+        if (txtInvNum == "") {
+            $.alert("Please input Inv num ");
+            return false;
+        }else{
+            CheckInv(txtInvNum);
+        }
+
+
+    }
+
+
+</script>

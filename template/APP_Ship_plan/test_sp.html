@@ -1,0 +1,32 @@
+<div class="container">
+    <div class="row">
+        <div class="col-12" >
+            <h3> TEST EXECUTE STORED PROCEDURE FROM PHP</h3>
+            <hr  style="border-bottom:solid 2px orange;">
+        </div>
+
+    </div>
+    <div class="row">      
+        <div class="col-3 text-right">
+            Params 1 
+        </div>
+        <div class="col-3 text-left">
+            <input type="text" class="form-control" id="txtParam1" >
+        </div>
+    </div>
+    <div class="row">      
+        <div class="col-12 text-center">
+            <a  style="width:150px;" href="#" class="btn btn-default" id="btnRunSp"> RUN </a>
+        </div>            
+    </div>
+</div>
+
+<script>
+    $("#btnRunSp").click(function () {
+        var Param1 = $("#txtParam1").val();        
+        $.post("./module/ajax/test_sp.php", {'Param1': Param1}, function (data) {
+            alert(data);
+        }, 'html');
+    });
+
+</script>

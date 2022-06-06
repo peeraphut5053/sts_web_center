@@ -1,0 +1,497 @@
+<style>
+    .buttons-colvis {
+        transform: translate(100px,-120px);
+        margin-bottom: 0px;
+        margin-left: 1200px;
+        margin-top: -31px;
+        border: none;
+        border-radius: 5px;
+        height: 32px;
+        background-color: #FFFFFF !important;
+        color: black !important;
+    }
+    .col-search {
+        padding-left: 3px;
+        padding-right: 3px;
+    }
+    .table thead th {
+        text-align: center;
+    }
+
+    .col-flt-page {
+        padding-top: 10px;
+        font-weight: bold;
+    }
+
+    #tblReport tbody tr td a {
+        cursor: pointer;
+    }
+
+    table.dataTable.fixedHeader-floating,
+    table.dataTable.fixedHeader-locked {
+        background-color: white;
+        margin-top: 50px !important;
+        margin-bottom: 0 !important;
+    }
+
+    @media print {
+        table th:nth-child(0) {
+            width: 200px;
+            word-break: break-all;
+            white-space: pre-line;
+        }
+
+        table td:nth-child(0) {
+            width: 200px;
+            word-break: break-all;
+            white-space: pre-line;
+        }
+
+    }
+
+    .text-wrap {
+        white-space: normal;
+    }
+
+    .width-200 {
+        width: 200px;
+    }
+
+    input[type=checkbox] {
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+    .input-group-addon2 {
+        padding: 6px 12px;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 1;
+        color: #555;
+        height: 32px;
+        text-align: center;
+        background-color: #eee;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        border-top-right-radius: 0px;
+        border-bottom-right-radius: 0px;
+    }
+
+    .selectize-input {
+        padding-top: 5px;
+        padding-bottom: 5px;
+        height: 32px;
+        min-height: 64px;
+        border-top-left-radius: 0px;
+        border-bottom-left-radius: 0px;
+    }
+
+    .input-group .form-control {
+        padding-left: 1px;
+        padding-right: 1px;
+    }
+    div.dt-button-collection button.dt-button, div.dt-button-collection div.dt-button, div.dt-button-collection a.dt-button {
+        width: 100%;
+    }
+    .footer {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        background-color: #FFFFFF;
+        color: white;
+        text-align: center;
+    }
+</style>
+
+
+<link href="template/RPT_NEW_INVENTORY_BALANCE_JOBFINISH/datatable-colvis.css" rel="stylesheet" /> 
+
+
+
+<script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.colVis.min.js"></script> 
+
+
+<div class="row">
+    <h2> Job finish </h2>
+</div>
+<div class='row'>
+
+    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 " >
+
+        <div class="input-group">
+            <div class="input-group-addon">ITEM</div>
+            <input type="text" id="txtItemStart" class="form-control" name="txtItemStart">
+        </div>
+
+    </div>
+    <div hidden class="col-lg-3 col-md-3 col-sm-3 col-xs-3 " >
+
+        <div class="input-group">
+            <div class="input-group-addon">ITEM Ending</div>
+            <input type="text" id="txtItemEnd" class="form-control" name="txtItemEnd">
+        </div>
+    </div>
+
+    <div class="col-lg-2 col-md-2 col-sm-6 col-xs-6 " >
+        <div class="input-group">
+            <div class="input-group-addon">START DATE</div>
+            <input type="text" value="2018-12-31" id="txtStartDate" class="form-control" name="txtStartDate" autocomplete="off">
+        </div>
+    </div>
+    <div class="col-lg-2 col-md-2 col-sm-6 col-xs-6 " >
+        <div class="input-group">
+            <div class="input-group-addon">End DATE</div>
+            <input type="text" id="txtEndDate" class="form-control" name="txtEndDate" autocomplete="off">
+        </div>
+    </div>
+    <div class="hidden col-lg-2 col-md-2 col-sm-6 col-xs-6 " >
+        <select  id='TrandesctionSelect' class='form-control'>
+            <option>---- Select ----</option>
+        </select>
+
+    </div>
+
+
+
+
+    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 " >
+        <button class="btn btn-info" id="btnSearch"><i class="fa fa-search"></i>&nbsp;Search </button>
+    </div>
+
+</div>
+<div class="row" id="rowResultTable">
+    <table class="table table-condensed table-striped " id="tblReport">
+        <thead>
+            <tr>
+                <th>Trans Date</th>
+                <th>TransNum</th>
+                <th>Item</th>
+                <th>Item Description</th>
+                <th>Unit Weight</th>
+                <th>Ref Description</th>
+                <th>Trans Description</th>
+                <th>Ref num</th>
+                <th>Doc No.1</th>
+                <th>Doc No.2</th>
+                <th>lot</th>
+                <th>Location</th>
+                <th>Quantity</th>
+                <th>Amount</th>
+                <th>Unit</th>
+                <th>Material</th>
+                <th>Labor</th>
+                <th>Fixed overhead</th>
+                <th>Variable overhead</th>
+                <th>Outside</th>
+            </tr>
+        </thead>
+
+    </table>
+</div>
+<div class="footer">
+    <p>Footer</p>
+</div>
+
+<script type="text/javascript">
+
+    //Init render page environment //
+    $(document).ready(function () {
+        $('#SelAcct').selectize({
+            //            plugins: ['remove_button'],
+            delimiter: ',',
+            persist: false,
+            create: function (input) {
+                return {
+                    value: input,
+                    text: input
+                }
+            }
+        });
+    });
+    $("#btnSearch").click(function () {
+        ReportItemSearch();
+    });
+    $("#txtStartDate,#txtEndDate").datepicker({
+        dateFormat: 'yy-mm-dd'
+    });
+
+    setTimeout(function () {
+        ReportItemSearch();
+    }, 200);
+
+    //
+    function ReportItemSearch() {
+        $("#tblReport").DataTable().clear();
+        var OldHtml = $("#btnSearch").html();
+        var ErrCount = 0;
+        var ErrMsg = "";
+        var txtItemStart = $("#txtItemStart").val();
+        var txtItemEnd = $("#txtItemEnd").val();
+        var txtStartDate = $("#txtStartDate").val();
+        var txtEndDate = $("#txtEndDate").val();
+        var TrandesctionSelect = $("#TrandesctionSelect").val();
+        var FirstSearch = $("#txtItemEnd").val();
+        if (FirstSearch == "") {
+            FirstSearch = 1;
+        } else {
+            FirstSearch = 0;
+        }
+
+        if (((txtStartDate == "") || (txtStartDate == null)) && FirstSearch == 0) {
+            ErrMsg += "- กรุณากรอกเลือก Start Date ";
+            ErrCount++;
+        } else if (((txtEndDate == "") || (txtEndDate == null)) && FirstSearch == 0) {
+            ErrMsg += "- กรุณากรอกเลือก End Date ";
+            ErrCount++;
+        }
+
+        if (ErrCount > 0) {
+            $.alert({
+                title: "<font color='red'><b>ผิดพลาด</b></font>",
+                content: ErrMsg,
+            });
+            return false;
+        } else {
+            $.ajax({
+                type: 'POST',
+                url: "././module/RPT_NEW_INVENTORY_BALANCE_JOBFINISH/data.php",
+                //                contentType: "text/plain",
+                dataType: 'json',
+                beforeSend: function () {
+                    $("#btnSearch").html("<i class='fa fa-spinner fa-spin' > </i>");
+                    $("#tblReport").DataTable().clear();
+                    $("#tblReport").append("<tr id ='tr-spinner'><td colspan='50' style ='text-align: center; font-size:50px'>  <i class='fa fa-spinner fa-spin'> </i></td></tr>")
+                },
+                data: {
+                    "load": "detail",
+                    "Item": txtItemStart,
+                    "txtItemEnd": txtItemEnd,
+                    "txtStartDate": txtStartDate,
+                    "txtEndDate": txtEndDate,
+                    "TrandesctionSelect": TrandesctionSelect,
+                    "FirstSearch": 1
+                },
+                success: function (data) {
+                    $("#tr-spinner").hide()
+                    console.log(data);
+                    $("#tblReport").DataTable().clear();
+                    $('#tblReport').dataTable({
+                        "sScrollX": "100%",
+                        "sScrollXInner": "110%",
+                        "bScrollCollapse": true,
+                        scrollY: 450,
+                        dom: 'Bfrtip',
+                        stateSave: true,
+                        "order": false,
+                        "aaData": data,
+                        "paging": false,
+                        destroy: true,
+                        'processing': true,
+                        buttons: [{
+                                extend: 'print',
+                                text: "<i class='fa fa-print'></i>&nbsp;Print",
+                                title: ' Inventory transaction report '
+                            },
+                            {
+                                extend: 'excel',
+                                footer: true,
+                                text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                                title: 'Inventory transaction report',
+                                exportOptions: {
+                                    columns: ':visible'
+                                }
+                            },
+                            {
+                                extend: 'colvis',
+                                text: "...",
+                            },
+                            ,
+                        ],
+                        "columns":
+                                [
+                                    {
+                                        "data": "trans_date_conv",
+                                        "className": "text-center",
+                                        "render": function (data, type, row, meta) {
+                                            ret = data;
+                                            return ret;
+                                        }
+                                    },
+                                    {
+                                        "data": "trans_num",
+                                        "className": "text-center",
+                                        "render": function (data, type, row, meta) {
+                                            var ret = data;
+                                            return ret;
+                                        }
+                                    },
+                                    {
+                                        "data": "item",
+                                        "className": "text-center",
+                                        "render": function (data, type, row, meta) {
+                                            var ret = data;
+                                            return ret
+                                            //return '<input class="form-control" id="Markup" name="Markup" type="text"  value = ' + ret + '  >';
+                                        }
+                                    },
+                                    {
+                                        "data": "itemDescription",
+                                        "className": "text-center",
+                                        "render": function (data, type, row, meta) {
+                                            var ret = data;
+                                            return ret
+                                            //return '<input class="form-control" id="Markup" name="Markup" type="text"  value = ' + ret + '  >';
+                                        }
+                                    },
+                                    {
+                                        "data": "UnitWeight",
+                                        "className": "text-center",
+                                        "render": function (data, type, row, meta) {
+                                            (!data) ? data = 0 : data = data;
+                                            var ret = addCommas(parseFloat(data).toFixed(2));
+                                            return ret
+                                            //return '<input class="form-control" id="Markup" name="Markup" type="text"  value = ' + ret + '  >';
+                                        }
+                                    },
+                                    {
+                                        "data": "RefDescription",
+                                        "className": "text-right",
+                                        "render": function (data, type, row, meta) {
+                                            (!data) ? data = 0 : data = data;
+                                            var ret = data;
+                                            return ret;
+                                        }
+                                    },
+                                    {
+                                        "data": "TransDescription",
+                                        "className": "text-right",
+                                        "render": function (data, type, row, meta) {
+                                            (!data) ? data = 0 : data = data;
+                                            var ret = data;
+                                            return ret;
+                                        }
+                                    },
+                                    {
+                                        "data": "RefNum",
+                                        "className": "text-left",
+                                        "render": function (data, type, row, meta) {
+                                            var ret = data;
+                                            return ret;
+                                        }
+                                    },
+                                    {
+                                        "data": "DocumentNum",
+                                        "className": "text-left",
+                                        "render": function (data, type, row, meta) {
+                                            var ret = data;
+                                            return ret;
+                                        }
+                                    },
+                                    {
+                                        "data": "ThVendInvNum",
+                                        "className": "text-left",
+                                        "render": function (data, type, row, meta) {
+                                            var ret = data;
+                                            return ret;
+                                        }
+                                    },
+                                    {
+                                        "data": "lot",
+                                        "className": "text-right",
+                                        "render": function (data, type, row, meta) {
+                                            var ret = data;
+                                            return ret;
+                                        }
+                                    },
+                                    {
+                                        "data": "loc",
+                                        "className": "text-right",
+                                        "render": function (data, type, row, meta) {
+                                            var ret = data;
+                                            return ret;
+                                        }
+                                    },
+                                    {
+                                        "data": "qty",
+                                        "className": "text-right",
+                                        "render": function (data, type, row, meta) {
+                                            var ret = addCommas(parseFloat(data).toFixed(2));
+                                            return ret;
+                                        }
+                                    },
+                                    {
+                                        "data": "NewAmt",
+                                        "className": "text-right",
+                                        "render": function (data, type, row, meta) {
+                                            (!data) ? data = 0 : data = data;
+                                            var ret = addCommas(parseFloat(data).toFixed(2));
+                                            return ret;
+                                        }
+                                    },
+                                    {
+                                        "data": "NewUnit",
+                                        "className": "text-right",
+                                        "render": function (data, type, row, meta) {
+                                            (!data) ? data = 0 : data = data;
+                                            var ret = addCommas(parseFloat(data).toFixed(2));
+                                            return ret;
+                                        }
+                                    },
+                                    {
+                                        "data": "matl_amt",
+                                        "className": "text-right",
+                                        "render": function (data, type, row, meta) {
+                                            var ret = addCommas(parseFloat(data).toFixed(2));
+                                            return ret;
+                                        }
+                                    },
+                                    {
+                                        "data": "lbr_amt",
+                                        "className": "text-right",
+                                        "render": function (data, type, row, meta) {
+                                            var ret = addCommas(parseFloat(data).toFixed(2));
+                                            return ret;
+                                        }
+                                    },
+                                    {
+                                        "data": "fovhd_amt",
+                                        "className": "text-right",
+                                        "render": function (data, type, row, meta) {
+                                            var ret = addCommas(parseFloat(data).toFixed(2));
+                                            return ret;
+                                        }
+                                    },
+                                    {
+                                        "data": "vovhd_amt",
+                                        "className": "text-right",
+                                        "render": function (data, type, row, meta) {
+                                            var ret = addCommas(parseFloat(data).toFixed(2));
+                                            return ret;
+                                        }
+                                    },
+                                    {
+                                        "data": "out_amt",
+                                        "className": "text-right",
+                                        "render": function (data, type, row, meta) {
+                                            var ret = addCommas(parseFloat(data).toFixed(2));
+                                            return ret;
+                                        }
+                                    },
+                                ],
+                    });
+                    //$('#tblReport').loading("stop");
+                    $("#btnSearch").html(OldHtml);
+                },
+                error: function (e) {
+
+                    console.log("There was an error with your request...");
+                    console.log("error: " + JSON.stringify(e));
+                }
+            });
+        }
+    }
+
+
+    GetSelectOption("TrandesctionSelect", "././module/RPT_NEW_INVENTORY_BALANCE_JOBFINISH/data.php", "TrandesctionSelect", "TransDescription", "TransDescription", "Transsaction")
+
+</script>

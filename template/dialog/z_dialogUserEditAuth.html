@@ -1,0 +1,134 @@
+<style>
+    .head-name{
+        padding-bottom: 5px;margin-bottom:5px;
+        padding-top:10px;
+        border-bottom: solid 1px #cdcdcd;
+        color:orange;
+        /*wisth:80%;*/
+        font-weight: bold;
+    }
+    .col-label-a{
+        border-bottom: solid 1px #cdcdcd ;
+        padding-bottom: 10px;
+        margin-bottom:10px;
+        padding-top: 10px;
+        margin-top:10px;
+        color:  #000;
+        border-top:solid 1px #cdcdcd ;
+        /*padding:60%;*/
+        text-align: center;
+    }
+    .col-label{
+        text-align: right;
+        padding-top:5px;
+    }
+    .panel{
+        margin-bottom:5px;
+    }
+    .panel-body{
+        padding-bottom:5px;
+        padding-top:5px;
+    }
+    .missing-value{
+        border:solid 1px red;
+    }
+    li{
+        color:#666;
+    }
+    .select2-selection__rendered{
+        text-align: left;
+    }
+</style>
+
+<div id='rowDetails' class='rowDetails' >
+
+
+    <div class='row'>
+        <div class='col-3 col-xs-3 col-sm-3 col-md- col-lg-3 col-label'>
+            User ID :
+        </div>
+        <div class='col-3 col-xs-3 col-sm-3 col-md- col-lg-3 col-label'>
+            <input type='text' disabled id="txtUserId" class='form-control' value='{user_id}'>
+        </div>
+        <div class='col-3 col-xs-3 col-sm-3 col-md- col-lg-3 col-label'>
+            Login Name :
+        </div>
+        <div class='col-3 col-xs-3 col-sm-3 col-md- col-lg-3 col-label'>
+            <input disabled id="txtUserName" type='text' class='form-control' value='{UserName}'>
+        </div>
+    </div>   
+    <div  class="head-name" class="row">  
+        <i class="fas fa-cog"></i>&nbsp;User Authorize
+    </div>
+  
+        {authorize_zone} 
+
+     <div class='row text-center' id='flashMsg'> 
+         <a href="#" id="btnUpdate" OnClick='UpdateAuth();' class='btn btn-success'> Update </a>
+     </div>
+    <div class='row' id='flashMsg'> </div>
+    <input type="hidden" id="hdDupUserName" value="0">
+    <input type="hidden" id="hdOldUsername" value="{old_username}">
+</div>
+
+<script type='text/javascript'>
+    $("#btnCreate").click(function () {
+        UpdateAuth();
+    });
+    function UpdateAuth(tId) {
+        var user_id = $("#txtUserId").val();
+        var ArrAuth = [];
+        var RefId = "" ;
+        var SelVal = "" ;
+        $("select[id^='sel_']").each(function(){
+            RefId=$(this).attr("ref_id");
+            SelVal =$(this).val();
+            ArrAuth[RefId] = SelVal;
+        });
+        console.log(ArrAuth);
+        $.ajax({
+            url: "./module/User.php",
+            type: 'post',
+            data: {
+                ajax: 'true',
+                action: "UpdateUserAuthorize", 
+                ArrAuth : ArrAuth,
+                user_id: user_id,
+            },
+            success: function (data) {
+                console.log(data);
+//                if (data.result == "1") {
+//                    $.confirm({
+//                        title: "UPDATE COMPLETE",
+//                        content: "",
+//                        theme: 'modern',
+//                        buttons: {
+//                            confirm: function () {
+//                                location.reload();
+//                            }
+//                        }
+//                    });
+//                } else {
+//                    $.confirm({
+//                        title: "UPDATE FAIL",
+//                        content: data,
+//                        theme: 'modern',
+//                        buttons: {
+//                            confirm: function () {
+//                            }
+//                        }
+//                    });
+//
+//                }
+            },
+            error: function (xhr, status, error) {
+                var err = eval("(" + xhr.responseText + ")");
+                alert(err.Message);
+                $("#debug").html(error);
+            },
+            dataType: "JSON"
+        });
+
+    }
+
+</script>

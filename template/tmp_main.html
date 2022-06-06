@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <link rel="stylesheet" href="adminlte_template/css/fonts.css">
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>STS WEB CENTER - Main</title>
+        <!-- Tell the browser to be responsive to screen width -->
+        <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+        <!-- Bootstrap 3.3.7 -->
+        <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+        <!-- Font Awesome -->
+        <link href="adminlte_template/css/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+        <!-- Theme style -->
+        <link rel="stylesheet" href="adminlte_template/css/AdminLTE.min.css">
+        <!-- AdminLTE Skins. Choose a skin from the css/skins
+                 folder instead of downloading all of them to reduce the load. -->
+        <link rel="stylesheet" href="adminlte_template/css/skins/_all-skins.min.css">
+        <!--search Dropdown-->
+        <link rel="stylesheet" media="all" type="text/css" href="css/select2.min.css" />
+        <link rel="stylesheet" media="all" type="text/css" href="css/jquery-confirm.css" />
+        <link rel="stylesheet" type="text/css" href="datatable/DataTables-1.10.18/css/jquery.dataTables.min.css">
+        <link rel="stylesheet" type="text/css" href="datatable/Buttons-1.5.4/css/buttons.bootstrap4.min.css">
+        <link rel="stylesheet" type="text/css" href="datatable/FixedHeader-3.1.4/css/fixedHeader.bootstrap.min.css">
+        <link rel="stylesheet" media="all" type="text/css" href="css/main.css" />
+        <!-- select mutiple choice -->
+        <link href="css/selectize.bootstrap3.css" rel="stylesheet" type="text/css" />
+        <!-- <script src="js/selectize.min.js" type="text/javascript"></script> -->
+        <link href="css/jquery.loading.min.css" rel="stylesheet" type="text/css" />
+        <!--        <script src="js/jquery.loading.min.js" type="text/javascript"></script> -->
+        <script src="js/tmp_main.js" type="text/javascript"></script> 
+        <script src="js/AppSyteLine.js" ></script> 
+
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+        <!--<script src="js/main.js" ></script>--> 
+    </head>
+    <!--sidebar-collapse-->
+    <body style="font-family: 'Athiti', sans-serif;" class="hold-transition skin-blue sidebar-mini wysihtml5-supported sidebar-collapse">
+        <div class="wrapper">
+            <header class="main-header">
+                <!-- Logo -->
+                <a OnClick="LeftMenuClick(this.id);" id="LeftMainBtn_999" href="#" link="?DASHBOARD/index" class="logo">
+                    <!-- mini logo for sidebar mini 50x50 pixels -->
+                    <span class="logo-mini">STS</span>
+                    <!-- logo for regular state and mobile devices -->
+                    <span class="logo-lg"> </span>
+                </a>
+                <!-- Header Navbar: style can be found in header.less -->
+                <nav class="navbar navbar-static-top">
+                    <!-- Sidebar toggle button-->
+                    <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+                        <span class="sr-only">Toggle navigation</span>
+                    </a>
+
+                    <div class="navbar-custom-menu">
+                        <ul class="nav navbar-nav">
+                            <li class="dropdown user user-menu">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    <img src="adminlte_template/img/user2-160x160.jpg" class="user-image" alt="User Image">
+                                    <span class="username_session"></span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <!-- User image -->
+                                    <li class="user-header">
+                                        <img src="adminlte_template/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+
+                                        <p>
+                                            STS Developer - Web Developer
+                                            <small>Member since Nov. 2012</small>
+                                        </p>
+                                    </li>
+                                    <!-- Menu Body -->
+                                    <li class="user-body">
+                                        <div class="row">
+                                            <div class="col-xs-4 text-center">
+                                                <a href="#">Followers</a>
+                                            </div>
+                                            <div class="col-xs-4 text-center">
+                                                <a href="#">Sales</a>
+                                            </div>
+                                            <div class="col-xs-4 text-center">
+                                                <a href="#">Friends</a>
+                                            </div>
+                                        </div>
+                                        <!-- /.row -->
+                                    </li>
+                                    <!-- Menu Footer-->
+                                    <li class="user-footer">
+                                        <div class="pull-left">
+                                            <a OnClick="UserProfileDetail()" class="btn btn-default btn-flat">Profile</a>
+                                        </div>
+                                        <div class="pull-right">
+                                            <a href="#" id="btnLogOut" class="btn btn-default btn-flat">Sign out</a>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
+                            <!-- Control Sidebar Toggle Button -->
+                            <li>
+                                <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </header>
+            <!-- Left side column. contains the logo and sidebar -->
+            <aside class="main-sidebar">
+                <!-- sidebar: style can be found in sidebar.less -->
+                <section class="sidebar">
+                    <!-- Sidebar user panel -->
+                    <div class="user-panel">
+                        <div class="pull-left image">
+                            <img src="adminlte_template/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+                        </div>
+                        <div class="pull-left info">
+                            <p>
+                                <span class="username_session"></span>
+                            </p>
+                            <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+                        </div>
+                    </div>
+                    <ul class="sidebar-menu" data-widget="tree">
+                        <li class="header">MAIN NAVIGATION</li>
+                        {AllDeps}
+                    </ul>
+                </section>
+            </aside>
+            <div class="content-wrapper" id="MainContent">
+            </div>
+            <footer class="main-footer">
+                <div class="pull-right hidden-xs">
+                    <b>Version</b> 2.4.13
+                </div>
+                <strong>Copyright &copy; 2019 : Sahathai Steelpipe </strong> All rights
+                reserved.
+            </footer>
+        </div>
+        <div class="modal" id="NewsModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <label id="lblModalHead">Create User</label>
+                        <button type="button" class="close" data-dismiss="modal"></button>
+                    </div>
+                    <div id="modalBodyNews" class="modal-body" >
+
+                    </div>
+                    <div id="modal-footer" class="modal-footer">
+                        <button onclick="save_user()" type="button" class="btn btn-success" id="btn_save" >Save</button>
+                        <button onclick="Logout()" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <script src="bower_components/jquery/dist/jquery.min.js"></script>
+        <link rel="stylesheet" media="all" type="text/css" href="css/jquery-ui.css" />
+        <link rel="stylesheet" media="all" type="text/css" href="css/jquery-ui-timepicker-addon.css" />
+        <link rel="stylesheet" media="all" type="text/css" href="css/ind/mainstyle.css" />
+        <link rel="stylesheet" media="all" type="text/css" href="css/jquery-confirm.css" />
+        <script type="text/javascript" src="js/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="js/jquery-ui-timepicker-addon.js"></script>
+        <script type="text/javascript" src="js/jquery-ui-sliderAccess.js"></script>
+        <!-- Slimscroll -->
+        <script src="bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+
+        <!-- AdminLTE App -->
+        <script src="adminlte_template/js/adminlte.min.js"></script>
+        <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+        <!--        <script src="adminlte_template/js/pages/dashboard.js"></script>-->
+        <!-- AdminLTE for demo purposes -->
+        <script src="adminlte_template/js/demo.js"></script>
+        <!--old include-->
+        <script type="text/javascript" src="js/select2.min.js"></script>
+        <script defer type="text/javascript" src="js/jquery-confirm.js"></script>
+        <script defer type="text/javascript" src="datatable/DataTables-1.10.18/js/jquery.dataTables.min.js"></script>
+
+        <script defer type="text/javascript" src="datatable/DataTables-1.10.18/js/dataTables.bootstrap.min.js"></script>
+
+        <script defer type="text/javascript" src="datatable/Buttons-1.5.4/js/dataTables.buttons.min.js"></script>
+        <script defer type="text/javascript" src="datatable/Buttons-1.5.4/js/buttons.print.min.js"></script>
+
+        <script defer type="text/javascript" src="datatable/FixedHeader-3.1.4/js/dataTables.fixedHeader.min.js"></script>
+        <script defer type="text/javascript" src="datatable/JSZip-2.5.0/jszip.min.js"></script>
+        <script defer type="text/javascript" src="DataTables_210820/Buttons-1.6.3/js/buttons.html5.min.js"></script>
+        <script defer type="text/javascript" src="datatable/FixedColumns-3.2.5/js/dataTables.fixedColumns.min.js"></script>
+        <!--        <script defer type="text/javascript" src="datatable/pdfmake-0.1.36/pdfmake.min.js"></script>-->
+        <script defer type="text/javascript" src="datatable/pdfmake-0.1.36/vfs_fonts.js"></script>
+        <script src="js/jquery.loading.min.js" type="text/javascript"></script>
+        <script src="js/jquery.mask.min.js" type="text/javascript"></script>
+        <script src="js/selectize.min.js" type="text/javascript"></script>
+        <script src="js/jquery-loading-overlay.js" type="text/javascript"></script>
+        <!-- Bootstrap 3.3.7 -->
+        <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+        <!-- Morris.js charts -->
+        <script src="bower_components/raphael/raphael.min.js"></script>
+        <script src="bower_components/morris.js/morris.min.js"></script>
+        <script src="js/main.js" ></script> 
+
+
+
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.21/af-2.3.5/b-1.6.3/b-colvis-1.6.3/b-flash-1.6.3/b-html5-1.6.3/b-print-1.6.3/cr-1.5.2/fc-3.3.1/fh-3.1.7/kt-2.5.2/r-2.2.5/rg-1.1.2/rr-1.2.7/sc-2.0.2/sp-1.1.1/sl-1.3.1/datatables.min.css"/>
+
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+        <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.21/af-2.3.5/b-1.6.3/b-colvis-1.6.3/b-flash-1.6.3/b-html5-1.6.3/b-print-1.6.3/cr-1.5.2/fc-3.3.1/fh-3.1.7/kt-2.5.2/r-2.2.5/rg-1.1.2/rr-1.2.7/sc-2.0.2/sp-1.1.1/sl-1.3.1/datatables.min.js"></script>
+
+    </body>
+
+</html>
+
+<input type="hidden" id="CurrentPage" value="{CurrentPage}" />
+
+<script type="text/javascript">
+                            if ($("#CurrentPage").val() == "DASHBOARD") {
+                                $("body").removeClass("sidebar-collapse");
+                            } else {
+                                $("body").addClass("sidebar-collapse");
+                            }
+
+                            var username_session = GetUserProp("login_username");
+                            $(".username_session").html(username_session);
+                            $(".logo-lg").append(GetUserProp("DATABASE"));
+
+                            function UserProfileDetail() {
+                                var UserId = $("#user_prop").attr("login_user_id");
+                                var modalBodyId = "#modalBody";
+                                var modalId = "#UserModal";
+                                var Url = "././module/USER_MNG/load_form.php";
+                                $("#lblModalHead").text("User Detail");
+                                $(modalId).modal("show");
+                                $(modalBodyId).empty();
+                                $(modalBodyId).loading();
+                                $(modalBodyId).load(Url, {
+                                    "form": "UserDetail",
+                                    "id": UserId,
+                                    "method": "",
+                                }, function () {
+                                    $(modalBodyId).loading("stop");
+                                    $("input").prop('readonly', true);
+                                    $("#btn_save").hide();
+                                });
+                            }
+
+                            var ModuleName = $("#CurrentPage").val();
+                            var LinkLoad = "././module/" + ModuleName + "/index.php";
+                            $("#MainContent").load(LinkLoad
+                                    , function () {
+                                    });
+                            $("#btnLogOut").click(function () {
+                                $.confirm({
+                                    title: 'Do you want to logout ?',
+                                    theme: 'modern',
+                                    content: '',
+                                    buttons: {
+                                        confirm: function () {
+                                            Logout()
+                                        },
+                                        cancel: function () {
+
+                                        },
+                                    }
+                                });
+                            });
+
+                            function Logout() {
+                                var AjaxPage = "User";
+                                $.ajax({
+                                    url: "./module/" + AjaxPage + ".php",
+                                    type: 'post',
+                                    data: {
+                                        ajax: 'true',
+                                        action: "LogOut"
+                                    },
+                                    success: function (data) {
+                                        var Url = 'http://' + document.location.hostname;
+                                        var UrlPort = document.location.port;
+                                        var PathName = document.location.pathname;
+                                        var UrlAndPort = Url + ':' + UrlPort + PathName;
+                                        location.href = UrlAndPort;
+                                    },
+                                    error: function (xhr, status, error) {
+                                    },
+                                });
+                            }
+
+                            function LeftMenuClick(ThisId) {
+                                if (ThisId == "LeftMainBtn_999") {
+                                    $("body").removeClass("sidebar-collapse");
+                                } else {
+                                    $("body").addClass("sidebar-collapse");
+                                }
+                                $("i[id^='LeftCircle_']").removeClass("active");
+                                var prj_id = ThisId.split("_")[1];
+                                var prj_link = $("#" + ThisId).attr("link");
+                                var Module1 = prj_link.split("/")[0];
+                                var ModuleName = Module1.split("?")[1];
+                                var LinkLoad = "././module/" + ModuleName + "/index.php";
+                                //==========Remember Control ========
+                                $.ajax({
+                                    type: 'POST',
+                                    url: "./module/PageController.php",
+                                    data: {
+                                        "CurrentPageLiving": ModuleName,
+                                        "CurrentPageUrl": LinkLoad,
+                                        "CurrentPageLeftMenuId": ThisId,
+                                    },
+                                    beforeSend: function () {
+                                        $("#MainContent").loading();
+                                    },
+                                    success: function (data) {
+                                        $("#CurrentPage").val(ModuleName)
+                                        // console.log(data);
+                                        $("#MainContent").load(LinkLoad
+                                                , function () {
+                                                    //                                    $("#" + ThisId).addClass("active");
+                                                    $("#LeftCircle_" + prj_id).addClass("active");
+                                                    $("#MainContent").loading("stop");
+                                                });
+                                    },
+                                    error: function (e) {
+                                        console.log("There was an error with your request...");
+                                        console.log("error: " + JSON.stringify(e));
+                                    }
+                                });
+                            }
+
+                            if (username_session == 'guest') {
+                                let Url = "././template/USER_MNG/_From.html";
+                                $("#NewsModal").modal(
+                                        {
+                                            backdrop: 'static',
+                                            keyboard: false
+                                        }
+                                );
+                                $("#modalBodyNews").load(Url, {
+                                    "form": "",
+                                    "method": "Insert",
+                                }, function () {
+                                });
+                            }
+                            $('.AllowFloatNumber').keypress(function (event) {
+                                if ((event.which != 46 || $(this).val().indexOf('.') != -1) && (event.which < 48 || event.which > 57)) {
+                                    event.preventDefault();
+                                }
+                            });
+
+
+</script>
+
+
+
+<style>
+    #MainContent {
+        padding: 0px !important
+    }
+    ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+    ::-webkit-scrollbar-thumb {
+        background: #3c8dbc; 
+        border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: #3c8dbc; 
+    }
+</style>

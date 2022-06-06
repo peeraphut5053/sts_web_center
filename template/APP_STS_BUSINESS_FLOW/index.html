@@ -1,0 +1,116 @@
+<link rel="stylesheet" href="././template/APP_STS_BUSINESS_FLOW/style.css">
+<link rel="stylesheet" href="././template/APP_STS_BUSINESS_FLOW/flowchart-signal.css">
+
+<script src="template/APP_STS_BUSINESS_FLOW/app.js"></script>
+<style>
+    .card {
+        position: relative;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+        flex-direction: column;
+        min-width: 0;
+        word-wrap: break-word;
+        background-color: #fff;
+        background-clip: border-box;
+        border: 1px solid rgba(0,0,0,.125);
+        border-radius: .25rem;
+    }
+    .btn-menu{
+        width: 100%;
+    }
+
+    .details-content{
+        height: 18vh;
+        font-size: 1em;
+        overflow-y: scroll;
+    }
+
+
+</style>
+<p>
+    <button class="btn btn-default" type="button" data-toggle="collapse" 
+            data-target=".multi-collapse" aria-expanded="false" 
+            aria-controls="
+            multiCardsCtrl-1
+            multiCardsCtrl-2">
+        Show/Hide
+    </button>
+</p>
+
+<script>
+    ProcessOfWork()
+
+</script>
+
+
+<style>
+    .line{
+        width: 1px;
+        height: 2vw;
+        background-color: black;
+        position: inherit;
+        margin: auto;
+    }
+
+    .line-rotate90{
+        transform: rotate(90deg) !important;
+    }
+
+    .line-rotate180{
+        transform: rotate(180deg) !important;
+    }
+
+
+    .line1 {
+        width: 15%;
+        border-bottom: 1px solid red;
+        -webkit-transform:
+            rotate(90deg) !important; 
+        position: relative;
+        top:35%;
+        margin-top:  7%;
+        margin-left: 45%;
+    }
+    .line22 {
+        width: 50%;
+        border-bottom: 1px solid green;
+        -webkit-transform:
+            translateY(20px)
+            translateX(5px)
+            rotate(-180deg);
+        position: relative;
+        margin-top:  -6%;
+        margin-left: 48%;
+    }
+   
+
+
+</style>
+<body>
+
+
+
+    <div class="grid-container">
+
+    </div>
+
+
+
+    <div class="modal" id="AppModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <label id="lblModalHead"></label>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <button type="button" class="close" data-dismiss="modal"></button>
+                </div>
+                <div id="AppModalBody" class="modal-body" >
+
+                </div>
+            </div>
+        </div>
+    </div>

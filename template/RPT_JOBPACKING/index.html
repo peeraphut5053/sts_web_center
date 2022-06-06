@@ -1,0 +1,796 @@
+<head>
+    <style>
+        .tableReport, tr-tableReport, td-tableReport {
+            border: 1px solid black;
+        }
+
+    </style>
+
+</head>
+<div>
+    <iframe src="http://172.18.1.194:5000/app/productionReport" height="90%" width="100%" title="Iframe Example"></iframe>
+</div>
+
+
+<!--
+<div class="row" >
+    <div class="row quicksearch col-lg-12" >
+        <div class="row" >
+            <div>
+                <h1>Packing Report</h1>
+            </div> 
+        </div>
+        <div class="row" >
+            <div class="col-xs-10" > 
+                <div class="col-lg-3" >   
+                    <div class="input-group">
+                        <div class="input-group-addon">Date</div>
+                        <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtFromDate">
+                    </div>
+                </div>
+                <div class="col-lg-3">   
+                    <div class="input-group">
+                        <div class="input-group-addon">To date</div>
+                        <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtToDate">
+                    </div>
+                </div>
+                <div class="col-lg-3">   
+                    <div class="input-group">
+                        <div class="input-group-addon">Item</div>
+                        <input type="text" class="form-control txt-filter" id="txtItem">
+                    </div>
+                </div>
+                <div class="col-lg-3">   
+                    <div class="input-group">
+                        <div class="input-group-addon">Ref num</div>
+                        <input type="text" class="form-control txt-filter" id="txtref_num" value="">
+                    </div>
+                </div>     
+                <div class="col-lg-3">   
+                    <div class="input-group">
+                        <div class="input-group-addon">Work center</div>
+                        <input type="text" class="form-control txt-filter" id="txtw_c">
+                    </div>
+                </div>   
+                <div class="col-xs-4" >
+
+                </div>
+            </div>
+            <div class="col-xs-2" > 
+                <button id="btnQuickSearch" class="btn btn-info"><i class="fa fa-searh"></i>&nbsp;ค้นหา</button>
+                <input type="button" onclick="PrintPanel('printableArea')" value="พิมพ์รายงาน" class="btn btn-info" />
+                <input type="button" onclick="PrintPanelGetJobPackingDialy('printableAreaJobPackingDialy')" value="ใบตรวจสอบมัดท่อประจำวัน" class="btn btn-info" />
+
+            </div>
+        </div> 
+    </div>
+</div>
+
+<div class="row" id="divReport" >
+
+    <table class="table table-condensed table-bordered table-striped" id="tblReport" style="width:100%;">
+        <thead>
+            <tr align="center">
+                <th>Transaction Date</th>
+                <th>Ref Number</th>
+                <th>Item</th>  
+                <th>Description</th>
+                <th>PCS/Bundle</th>
+                <th>Bundle</th>
+                                <th>PCS no Bundle</th>
+                <th>Bundle Tag No- No.</th>
+                <th>Total PCS</th>
+                <th>Total PCS2</th>
+                <th>Work center</th>
+                <th>Work center name</th>
+                <th>cust num</th>
+                <th>cust name</th>
+                <th>sts</th> 
+                <th>ref</th> 
+                <th>remark</th> 
+
+        </thead>
+    </table>
+</div>
+
+style="visibility: hidden"
+
+<div id="printableArea" style="visibility: hidden" >
+    <p><h2>รายงานการมัดท่อประจำวัน(Packing production records)</h2></p>
+<p>ระหว่างวันที่ <span class='txtFromDateRPT'></span> ถึง <span class='txtToDateRPT'></span> 
+    <span id='txtw_cRPT'></span>
+</p>
+
+<table class="table table-condensed table-bordered table-striped" id="tblReport2" style="width:100%;border-collapse: collapse;font-size:14px">
+    <thead>
+        <tr align="center" >
+            <th>No.</th>
+            <th>ขนาด<p>Size</p></th>
+            <th>มาตรฐาน<p>Standard</p></th>
+            <th>เกรด<p>Grade</p></th>
+            <th>ความหนา<p>SCH</p></th>
+            <th>ความยาว<p>Length</p></th>  
+            <th>ชนิด<p>Type</p></th>  
+            <th>city<p></p></th> 
+            <th>Job<p></p></th> 
+            <th>Lot no</th>  
+            <th>เส้น/มัด<p>PCS/Bundle</p></th>  
+            <th>จำนวนมัด<p>Bundle</p></th>  
+            <th>ทั้งหมด(เส้น)<p>Total(pcs)</p></th>  
+    </thead>
+</table>
+<footer>
+    <p>
+        ผู้ผลิต .......................................      
+        หัวหน้าแผนก ..................................    
+        ผู้จัดการฝ่าย ..................................
+    </p>
+
+    <p>FOMFN-08/01-AUG-03</p>
+</footer>
+
+</div>
+
+
+<div id="printableAreaJobPackingDialy" style="visibility: hidden" >
+    <p><h2>ใบตรวจสอบการมัดท่อประจำวัน(Packing Inspection From)</h2></p>
+<p>ระหว่างวันที่ <span class='txtFromDateRPT'></span> ถึง <span class='txtToDateRPT'></span> 
+    <span id='txtw_cRPT'></span>
+</p>
+<table class="table table-condensed table-bordered table-striped" id="tblReportDialy" style="width:100%;border-collapse: collapse;font-size:14px">
+
+</table>
+
+<footer>
+    <p>
+        Prepare ผู้บันทึก .......................................      
+        Review by ผู้ทบทวน ..................................
+    </p>
+
+    <p>FOMQC-45/09-Nov-15</p>
+</footer>
+
+</div>
+
+
+
+<script type="text/javascript" src="js/main.js"></script>
+<script type="text/javascript">
+                    $("#txtFromDate").val(GetTodayTime());
+                    $("#txtToDate").val(GetTodayTime());
+                    $('input').keypress(function (e) {
+                        var key = e.which;
+                        if (key == 13)
+                        {
+                            $('#btnQuickSearch').click();
+                            return false;
+                        }
+                    });
+                    $("#txtFromDate,#txtToDate").datetimepicker({
+                        showSecond: true,
+                        dateFormat: 'yy-mm-dd',
+                        timeFormat: 'HH:mm:ss',
+                        stepHour: 1,
+                        stepMinute: 1,
+                        stepSecond: 1
+                    });
+                    $("#btnQuickSearch").click(function () {
+                        //alert($("#txtFromDate").val())
+                        var tblReportId = '#tblReport';
+                        var btnSearch = '#btnQuickSearch';
+                        var ModuleName = $("#CurrentPage").val();
+                        var urlModule = "././module/" + ModuleName + "/data.php";
+//                        var datapost = SetDataPostElement(postval);
+//                        console.log(datapost)
+                        var OldHtml = $(btnSearch).html();
+                        $.ajax({
+                            type: 'GET',
+                            url: urlModule,
+                            dataType: 'json',
+                            beforeSend: function () {
+                                $(btnSearch).html("<i class='fa fa-spinner fa-spin'></i>");
+                                $(tblReportId).loading();
+                            },
+                            data: {
+                                load: "ajax",
+                                txtFromDate: $("#txtFromDate").val(),
+                                txtToDate: $("#txtToDate").val(),
+                                txtItem: $("#txtItem").val(),
+                                txtref_num: $("#txtref_num").val(),
+                                txtw_c: $("#txtw_c").val()
+                            },
+                            success: function (data) {
+                                console.log(data)
+                                $(tblReportId).DataTable().clear();
+                                $(tblReportId).dataTable({
+                                    scrollY: 400,
+                                    "scrollX": true,
+                                    "aaData": data,
+                                    "paging": false,
+                                    "searching": false,
+                                    "initComplete": function (settings, json) {
+                                    },
+                                    fixedHeader: true,
+                                    destroy: true,
+                                    'processing': true,
+                                    "columns": tablecolumsArr,
+                                    'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                                            "<'row'<'col-md-12'tr>>" +
+                                            "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                                    buttons: [
+                                        {
+                                            extend: 'print',
+                                            text: "<i class='fa fa-print'></i>&nbsp;Print",
+                                            title: '',
+                                        },
+                                        {
+                                            extend: 'excel',
+                                            text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                                            title: 'รายงาน ' + "Packing Report" + ' ' + GetCurrDateTime()
+                                        },
+                                    ],
+                                });
+                                $(tblReportId).loading("stop");
+                                $(btnSearch).html(OldHtml);
+                            },
+                            error: function (e) {
+                                console.log("There was an error with your request...");
+                                console.log("error: " + JSON.stringify(e));
+                            }
+                        });
+                        $(".txtFromDateRPT").text($("#txtFromDate").val())
+                        $(".txtToDateRPT").text($("#txtToDate").val())
+                        if ($("#txtw_c").val() !== '') {
+                            $("#txtw_cRPT").text("| work center : " + $("#txtw_c").val())
+                        }
+                    });
+                    function PrintPanel(tableId) {
+//                        SearchDataFnPackingReport('#tblReport2', '#btnQuickSearch', tablecolumsArr2, "Packing Report", "ajax");
+
+                        var tblReportId = '#tblReport2';
+                        var ModuleName = $("#CurrentPage").val();
+                        var urlModule = "././module/" + ModuleName + "/data.php";
+//                        var datapost = SetDataPostElement(postval);
+//                        console.log(datapost)
+                        $.ajax({
+                            type: 'GET',
+                            url: urlModule,
+                            dataType: 'json',
+                            data: {
+                                load: "ajax",
+                                txtFromDate: $("#txtFromDate").val(),
+                                txtToDate: $("#txtToDate").val(),
+                                txtItem: $("#txtItem").val(),
+                                txtref_num: $("#txtref_num").val(),
+                                txtw_c: $("#txtw_c").val()
+                            },
+                            success: function (data) {
+                                console.log(data)
+                                console.log(tablecolumsArr2)
+                                console.log(data)
+                                let total_bundle = 0;
+                                let total_pcs = 0;
+                                for (i = 0; i < data.length; i++) {
+
+                                    let pcs_qty = data[i]["pcs_qty"].split(";");
+                                    let resuult_pcs_qty = "";
+                                    for (j = 0; j < pcs_qty.length; j++) {
+                                        resuult_pcs_qty = pcs_qty[j]
+                                        if (j > 0) {
+                                            var pcs_qty2 = pcs_qty[j - 1];
+                                            resuult_pcs_qty = resuult_pcs_qty + "<hr>" + pcs_qty[j - 1];
+                                        }
+                                    }
+
+                                    let bundle = data[i]["bundle"].split(";");
+                                    let resuult_bundle = "";
+                                    for (k = 0; k < bundle.length; k++) {
+                                        resuult_bundle = bundle[k]
+
+                                        let bundle2 = 0;
+                                        if (k > 0) {
+
+                                            if (pcs_qty2 < 0) {
+                                                bundle2 = bundle[k - 1] * (-1)
+                                            } else {
+                                                bundle2 = bundle[k - 1]
+                                            }
+                                            resuult_bundle = resuult_bundle + "<hr>" + bundle2;
+                                        }
+                                        console.log('total_bundle', total_bundle)
+                                        console.log('bundle[k]', parseInt(bundle[k]))
+                                        console.log('bundle2', bundle2)
+
+//                                        total_bundle = total_bundle + parseInt(bundle[k]) + parseInt(bundle2);
+                                        total_bundle = total_bundle + parseInt(bundle[k]);
+                                        console.log('total_bundle', total_bundle)
+                                    }
+
+                                    let qty = data[i]["qty"].split(";");
+                                    let resuult_qty = "";
+                                    for (k = 0; k < qty.length; k++) {
+                                        resuult_qty = qty[k]
+                                        total_pcs = total_pcs + parseInt(qty[k].replace(/,/g, ''), 10);
+                                        bundle2 = bundle[k - 1]
+                                        let qty2 = qty[k - 1];
+                                        if (bundle2 < 0) {
+                                            qty2 = qty2 * (-1)
+                                        }
+                                        if (k > 0) {
+                                            resuult_qty = resuult_qty + "<hr>" + qty2;
+                                        }
+                                    }
+
+                                    let LotNO = "";
+                                    var ret1 = data[i]["MinBundleNo"];
+                                    var ret2 = data[i]["MaxBundleNo"];
+                                    var ret3 = data[i]["PCSnoBundle"];
+                                    var nobundle = ""
+                                    if (ret3 > 0) {
+                                        nobundle = "<hr>" + data[i]["MaxBundleNo"];
+                                        ret2 = ret2 - 1
+                                    }
+                                    LotNO = ret1 + "-" + ret2 + nobundle;
+                                    let color;
+                                    if (resuult_pcs_qty < 0) {
+                                        resuult_bundle = resuult_bundle * (-1)
+                                        color = 'red'
+                                    }
+
+                                    $(tblReportId).append(`<tr>
+                                            <td style='text-align:center'> ${i + 1}</td>
+                                            <td style='text-align:center'> ${data[i]["Uf_NPS"]}</td>
+                                            <td style='text-align:center;font-size:9px'> ${data[i]["Uf_spec"]}</td>
+                                            <td style='text-align:center;'> ${data[i]["Uf_Grade"]}</td>
+                                            <td style='text-align:center;'> ${data[i]["Uf_Schedule"]}</td>
+                                            <td style='text-align:center'> ${data[i]["Uf_length"]}</td>
+                                            <td style='text-align:center'> ${data[i]["Uf_TypeEnd"]}</td>
+                                            <td style='text-align:center;font-size:7px'> ${data[i]["city"]} </td>
+                                            <td style='text-align:center;font-size:9px'> ${data[i]["ref_num"]}</td>
+                                            <td style='text-align:center;font-size:9px'> ${LotNO} </td>
+                                            <td style='text-align:right;color:${color}'> ${resuult_pcs_qty}</td>
+                                            <td style='text-align:right;color:${color}'> ${resuult_bundle}</td>
+                                            <td style='text-align:right;color:${color}'> ${resuult_qty}</td>
+                                        </tr>`)
+
+                                }
+                                $(tblReportId).append(`<tr>
+                                        <td colspan='11'></td>
+                                        <td style='text-align:right'>${total_bundle}</td>
+                                        <td style='text-align:right'>${total_pcs}</td>
+                                        
+                                    </tr>`)
+                            },
+                            error: function (e) {
+                                console.log("There was an error with your request...");
+                                console.log("error: " + JSON.stringify(e));
+                            }
+                        })
+
+
+                        setTimeout(() => {
+                            $('#printableArea').attr("style", "visibility: visible")
+                            var divToPrint = document.getElementById(tableId);
+                            var htmlToPrint = '' +
+                                    '<style type="text/css">' +
+                                    'table th, table td {' +
+                                    'border:1px solid #000;' +
+                                    'padding;0.5em;' +
+                                    '}' +
+                                    '</style>';
+                            htmlToPrint += divToPrint.outerHTML;
+                            newWin = window.open("");
+                            newWin.document.write(htmlToPrint);
+                            newWin.print();
+                            newWin.close();
+                            $('#printableArea').attr("style", "visibility: hidden")
+//                            location.reload();
+                        }, 1000)
+
+                    }
+
+
+
+                    function PrintPanelGetJobPackingDialy(tableId) {
+//                        SearchDataFnPackingReport('#tblReport2', '#btnQuickSearch', tablecolumsArr2, "Packing Report", "ajax");
+
+                        var tblReportId = '#tblReport2';
+                        var ModuleName = $("#CurrentPage").val();
+                        var urlModule = "././module/" + ModuleName + "/data.php";
+//                        var datapost = SetDataPostElement(postval);
+//                        console.log(datapost)
+                        $.ajax({
+                            type: 'GET',
+                            url: urlModule,
+                            dataType: 'json',
+                            data: {
+                                load: "GetJobPackingDialy",
+                                txtFromDate: $("#txtFromDate").val(),
+                                txtToDate: $("#txtToDate").val(),
+                                txtItem: $("#txtItem").val(),
+                                txtref_num: $("#txtref_num").val(),
+                                txtw_c: $("#txtw_c").val()
+                            },
+                            success: function (data) {
+                                console.log(data)
+                                $(".txtFromDateRPT").text($("#txtFromDate").val())
+                                $(".txtToDateRPT").text($("#txtToDate").val())
+                                console.log($("#txtToDate").val())
+
+                                let start = ""
+                                let newdata = []
+                                start = data[0].ref_num
+                                for (i = 0; i < data.length; i++) {
+                                    if (i == 0) {
+                                        console.log(1)
+                                        $("#tblReportDialy").append(`
+                                        
+                                            <tr >
+                                                <td colspan='6'>
+                                                    <p><b>item : </b>${data[0].item}</b> <b>Description :</b> ${data[0].description}  </p>
+                                                    <p><b>STS PO :</b>${data[0].ref_num} <b>City:</b>${data[0].city} </p>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>no</td>
+                                                <td>uf_pack</td>
+                                                <td>lot</td>
+                                                <td>uf_act_weight</td>
+                                                <td>sts_no</td>
+                                                <td>remark</td>
+                                            </tr>
+                                            `)
+
+                                        console.log(data[0].Uf_refno)
+                                    }
+
+                                    if (start == data[i].ref_num) {
+                                        $("#tblReportDialy").append(`
+                                           
+                                            <tr>
+                                                <td>${data[i].no}</td>
+                                                <td>${data[i].uf_pack}</td>
+                                                <td>${data[i].lot}</td>
+                                                <td>${data[i].uf_act_weight}</td>
+                                                <td>${data[i].sts_no}</td>
+                                                <td></td>
+                                            </tr>`)
+                                    } else {
+                                        $("#tblReportDialy").append(`
+                                            <tr>
+                                                <td colspan='6'>
+                                                    <p>item : ${data[i].item} Description : ${data[i].description}  </p>
+                                                    <p>STS PO :${data[i].ref_num} City:${data[i].city} </p>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>no</td>
+                                                <td>uf_pack</td>
+                                                <td>lot</td>
+                                                <td>uf_act_weight</td>
+                                                <td>sts_no</td>
+                                                <td>remark</td>
+                                            </tr>
+                                            `)
+                                        start = data[i].ref_num
+                                        console.log(data[i].no, data[i].ref_num, data[i].item)
+                                        $("#tblReportDialy").append(`
+                                            <tr>
+                                                <td>${data[i].no}</td>
+                                                <td>${data[i].uf_pack}</td>
+                                                <td>${data[i].lot}</td>
+                                                <td>${data[i].uf_act_weight}</td>
+                                                <td>${data[i].sts_no}</td>
+                                                <td></td>
+                                            </tr>
+                                           
+                                        
+                                            `)
+                                    }
+
+
+                                }
+
+
+
+                            },
+                            error: function (e) {
+                                console.log("There was an error with your request...");
+                                console.log("error: " + JSON.stringify(e));
+                            }
+                        })
+
+
+                        setTimeout(() => {
+                            $('#printableAreaJobPackingDialy').attr("style", "visibility: visible")
+                            var divToPrint = document.getElementById(tableId);
+                            var htmlToPrint = '' +
+                                    '<style type="text/css">' +
+                                    'table th, table td {' +
+                                    'border:1px solid #000;' +
+                                    'padding;0.5em;' +
+                                    '}' +
+                                    '</style>';
+                            htmlToPrint += divToPrint.outerHTML;
+                            newWin = window.open("");
+                            newWin.document.write(htmlToPrint);
+                            newWin.print();
+                            newWin.close();
+                            $('#printableAreaJobPackingDialy').attr("style", "visibility: hidden")
+//                            location.reload();
+                        }, 2000)
+
+
+
+                    }
+
+
+                    $(".txt-filter").on("keypress", function (e) {
+                        if (e.keyCode == 13) {
+                            ReportItemSearch();
+                            return false; // prevent the button click from happening
+                        }
+                    });
+                    var tablecolumsArr = [
+//                        {
+//                            "data": "trans_date",
+//                            "className": "text-right",
+//                            "render": function (data, type, row, meta) {
+//                                var ret = data.date.substring(0, 10);
+//                                return ret;
+//                            }
+//                        },
+                        {
+                            "data": "ref_num",
+                            "render": function (data, type, row) {
+                                //var ret = data.substring(0, 10);
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "item",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "ItemDesc",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "pcs_qty",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = data.split(";");
+                                let resuult = "";
+                                for (i = 0; i < ret.length; i++) {
+                                    resuult = ret[i]
+                                    if (i > 0) {
+                                        resuult = resuult + "<hr>" + ret[i - 1];
+                                    }
+                                }
+
+                                return resuult;
+                            }
+                        },
+                        {
+                            "data": "bundle",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = data.split(";");
+                                let resuult = "";
+                                for (i = 0; i < ret.length; i++) {
+                                    resuult = ret[i]
+                                    if (i > 0) {
+                                        resuult = resuult + "<hr>" + ret[i - 1];
+                                    }
+                                }
+                                return resuult;
+                            }
+                        },
+                        {
+                            "data": {MinBundleNo: "MinBundleNo", MaxBundleNo: "MaxBundleNo", PCSnoBundle: "PCSnoBundle"},
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                var ret1 = data.MinBundleNo;
+                                var ret2 = data.MaxBundleNo;
+                                var ret3 = data.PCSnoBundle;
+                                var nobundle = ""
+                                if (ret3 > 0) {
+                                    nobundle = "<hr>" + data.MaxBundleNo;
+                                    ret2 = ret2 - 1
+                                }
+                                return ret1 + "-" + ret2 + nobundle;
+                            }
+                        },
+                        {
+                            "data": "qty",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = data.split(";");
+                                let resuult = "";
+                                for (i = 0; i < ret.length; i++) {
+                                    resuult = ret[i]
+                                    if (i > 0) {
+                                        resuult = resuult + "<hr>" + ret[i - 1];
+                                    }
+
+                                }
+
+                                return resuult;
+                            }
+                        },
+                        {
+                            "data": "Total_PCS",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = data.split(";");
+                                let resuult = "";
+                                for (i = 0; i < ret.length; i++) {
+                                    resuult = ret[i]
+                                    if (i > 0) {
+                                        resuult = resuult + "<hr>" + ret[i - 1];
+                                    }
+
+                                }
+
+                                return resuult;
+                            }
+                        },
+                        {
+                            "data": "wc",
+                            "render": function (data, type, row) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "WCname",
+                            "render": function (data, type, row) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "cust_num",
+                            "render": function (data, type, row) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "custNAME",
+                            "render": function (data, type, row) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "sts",
+                            "render": function (data, type, row) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "ref",
+                            "render": function (data, type, row) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": {ref_num: "ref_num", remark: "remark"},
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                let job = data.ref_num;
+                                let ret = `<input id='${data.ref_num}' type='text'  onChange=updateRemark("${data.ref_num}") value="${data.remark}" />`;
+                                return ret;
+                            }
+                        },
+                    ];
+                    var tablecolumsArr2 = [
+                        {
+                            "data": "Uf_NPS",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "Uf_spec",
+                            "render": function (data, type, row) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "Uf_length",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "Uf_TypeEnd",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "pcs_qty",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = data.split(";");
+                                let resuult = "";
+                                for (i = 0; i < ret.length; i++) {
+                                    resuult = ret[i]
+                                    if (i > 0) {
+                                        resuult = resuult + "<hr>" + ret[i - 1];
+                                    }
+
+                                }
+
+                                return resuult;
+                            }
+                        },
+                        {
+                            "data": {MinBundleNo: "MinBundleNo", MaxBundleNo: "MaxBundleNo", PCSnoBundle: "PCSnoBundle"},
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                var ret1 = data.MinBundleNo;
+                                var ret2 = data.MaxBundleNo;
+                                var ret3 = data.PCSnoBundle;
+                                var nobundle = ""
+                                if (ret3 > 0) {
+                                    nobundle = "<hr>" + data.MaxBundleNo;
+                                    ret2 = ret2 - 1
+                                }
+                                return ret1 + "-" + ret2 + nobundle;
+                            }
+                        },
+                        {
+                            "data": "bundle",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = data.split(";");
+                                let resuult = "";
+                                for (i = 0; i < ret.length; i++) {
+                                    resuult = ret[i]
+                                    if (i > 0) {
+                                        resuult = resuult + "<hr>" + ret[i - 1];
+                                    }
+
+                                }
+
+                                return resuult;
+                            }
+                        },
+                    ];
+                    function updateRemark(job) {
+                        let remark = $("#" + job + "").val();
+                        $.ajax({
+                            type: 'POST',
+                            url: "././module/RPT_JOBPACKING/data.php",
+                            data: {
+                                load: "updateRemark",
+                                job: job,
+                                remark: remark,
+                            },
+                            success: function (data) {
+                                alert(data)
+                            }
+                        });
+                    }
+</script>-->

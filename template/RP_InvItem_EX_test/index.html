@@ -1,0 +1,162 @@
+
+
+<div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3" style="padding-left:0px;">   
+    <div class="input-group">
+        <div class="input-group-addon">From date</div>
+        <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtFromDate_start">
+    </div>
+</div>
+<div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3">   
+    <div class="input-group">
+        <div class="input-group-addon">To date</div>
+        <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtFromDate_end">
+    </div>
+</div>
+<div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3">   
+    <input type="text" id="search" >
+</div>
+<button id ="btn_search" />ค้นหา </button>
+
+<table class="table table-condensed table-bordered table-striped" id="tblCustReport" >
+    <thead>
+        <tr>
+            <th>inv_date</th>
+            <th>inv_num</th>
+            <th>cust_num</th>
+            <th>name</th>
+            <th>co_num</th>
+            <th>item</th>
+            <th>description</th>
+            <th>item_size</th>
+            <th>item_thick</th>
+            <th>item_width</th>
+            <th>item_length</th>
+            <th>unit_weight</th>
+        </tr>
+    </thead>
+</table>
+<script>
+    $("#txtFromDate_start , #txtFromDate_end").datepicker({
+        dateFormat: 'yy-mm-dd',
+    });
+
+
+    $("#btn_search").click(function () {
+        var keyword = $("#search").val();
+        var txtFromDate_start = $('#txtFromDate_start').val();
+        var txtFromDate_end = $('#txtFromDate_end').val();
+
+        getdata(keyword, txtFromDate_start, txtFromDate_end);
+    });
+
+    function getdata(keyword, txtFromDate_start, txtFromDate_end) {
+
+
+
+        var TableId = "#tblCustReport";
+        $.ajax({
+            type: 'POST',
+            url: "././module/RP_InvItem_EX_test/data.php",
+            dataType: 'json',
+            data: {
+                "load": "ajax",
+                "keyword": keyword,
+                "txtFromDate_start": txtFromDate_start,
+                "txtFromDate_end": txtFromDate_end,
+            },
+            success: function (data) {
+                console.log(data)
+                $(TableId).DataTable().clear();
+                var RowFooterBuild = "";
+                var ColBuild = "";
+                var ColCount = 12;
+                var i = 0;
+                for (i = 1; i <= ColCount; i++) {
+                    ColBuild += "<td></td>";
+                }
+                $(TableId).append(RowFooterBuild.replace("!!ColBuild!!", ColBuild));
+
+                $(TableId).dataTable({
+                    "aaData": data,
+                    "paging": false,
+                    "searching": false,
+                    "initComplete": function (settings, json) {
+                        // ReCalGridAmount();
+                    },
+                    fixedHeader: true,
+                    destroy: true,
+                    'processing': true,
+                    "columns": [
+                        {
+                            "data": "inv_date_conv",
+                        },
+                        {
+                            "data": "inv_num",
+                        },
+                        {
+                            "data": "cust_num",
+                        },
+                        {
+                            "data": "name",
+                        },
+                        {
+                            "data": "co_num",
+                        },
+                        {
+                            "data": "item",
+                        }
+                        ,
+                        {
+                            "data": "description",
+                        },
+                        {
+                            "data": "item_size",
+                        },
+                        {
+                            "data": "item_width",
+                        }
+                        ,
+                        {
+                            "data": "item_length",
+                        },
+                        {
+                            "data": "unit_weight",
+                            "className": "text-right",
+                        },
+                        {
+                            "data": "unit_weight",
+                            "className": "text-right",
+                        },
+                    ],
+                    'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                            "<'row'<'col-md-12'tr>>" +
+                            "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                    buttons: [{
+                            extend: 'print',
+                            text: "<i class='fa fa-print'></i>&nbsp;Print",
+                            title: ''
+                        },
+                        {
+                            extend: 'excel',
+                            footer: true,
+                            text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                            title: 'รายงาน inv item ' + GetCurrDateTime()
+                        },
+                    ],
+                });
+                $(TableId).loading("stop");
+
+
+                //  Pace.start();
+
+            },
+            error: function (e) {
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+
+    }
+</script>
+
+

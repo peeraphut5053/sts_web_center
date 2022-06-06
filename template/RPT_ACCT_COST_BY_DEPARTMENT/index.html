@@ -1,0 +1,242 @@
+<style>
+    .dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody>table>thead>tr>th, .dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody>table>thead>tr>td, .dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody>table>tbody>tr>th, .dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody>table>tbody>tr>td {
+        vertical-align: middle;
+        font-size: 12px;
+    }
+</style>
+
+<div class="row">
+    <div>
+        <h1>รายการค่าใช้จ่าย</h1>
+    </div> 
+    <div class="col-xs-2" >   
+        <div class="input-group">
+            <div class="input-group-addon">From Date</div>
+            <input type="text" autocomplete="off"  class="form-control txt-filter" value="2020-02-01" id="txtFromDate">
+        </div>
+    </div>
+    <div class="col-xs-2">   
+        <div class="input-group">
+            <div class="input-group-addon">To date</div>
+            <input type="text" autocomplete="off"  class="form-control txt-filter" value="2020-02-29" id="txtToDate">
+        </div>
+    </div>
+    <div class="col-xs-2">   
+        <button id="btnSearch" class="btn btn-info"><i class="fa fa-searh"></i>&nbsp;ค้นหา</button>
+    </div>
+</div>
+
+<div class="row" id="divReport" >
+    <table class="table table-condensed table-bordered table-striped" id="tblReport" style="width:100%;">
+        <thead>
+            <tr>
+                <th>รายการค่าใช้จ่าย</th>
+                <th>ตัดแบ่ง sts</th>
+                <th>ตัดแบ่ง wng</th>  
+                <th>ฟอร์มมิ่ง sts</th>
+                <th>ฟอร์มมิ่ง wng</th>
+                <th>ฟอร์มมิ่ง-JHP</th>
+                <th>เตาชุบ</th>
+                <th>ต๊าปเกลียว sts</th>
+                <th>ต๊าปเกลียว wng</th>
+                <th>พ่นสี sts</th>
+                <th>พ่นสี wng</th>
+                <th>พ่นสี-KRC</th>
+                 <th>มัดท่อ sts</th>
+                <th>มัดท่อ wng</th>
+                <th>รีดลดความหนา</th>
+                <th>แผนกเครื่องรีดหลังคา</th>
+                <th>Prefabrication</th>
+                <th>ผลรวม</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+<script type="text/javascript">    
+
+    //Add by Narit 
+    function NumberWithCommas(x) {
+
+        if (x == null || undefined) {
+            return x = 0;
+        } else {
+            x = Number(x).toFixed(2);
+            x = x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+            if (x == 0.00) x = 0;
+            
+            return x
+        }
+        
+    }
+
+
+    $("#txtFromDate,#txtToDate").datepicker({
+        dateFormat: 'yy-mm-dd',
+    });
+    //$("#txtFromDate,#txtToDate").val(GetToday());
+    $("#btnSearch").click(function () {
+        var tblReportId = '#tblReport';
+        var btnSearch = '#btnSearch';
+        SearchDataFn(tblReportId, btnSearch, tablecolumsArr, "RPT_ACCT_COST_BY_DEPARTMENT", "RPT_ACCT_COST_BY_DEPARTMENT");
+    });
+    var tablecolumsArr = [
+        {
+            "width": 450,
+            "data": {acct: "acct", description: "description"},
+            "className": "text-left",
+            "render": function (data, type, row, meta) {
+                //console.log(data.acct);
+                if(data.acct == '53999OH'){
+                    //console.log(data.acct);
+                    $('.tr').addClass("red");
+                }
+                var ret = data.acct + "  " + data.description;
+                return ret;
+            }
+        },
+        {
+            "data": "ตัดแบ่ง sts",
+            "className": "text-right",
+            "render": function (data, type, row) {
+                var ret = NumberWithCommas(data);
+                //var ret = formatMoney(data);
+                //console.log("ตัดแบ่ง:" + data);
+                return ret;
+            }
+        },
+        {
+            "data": "ตัดแบ่ง wng",
+            "className": "text-right",
+            "render": function (data, type, row, meta) {
+                var ret = NumberWithCommas(data);
+                return ret;
+            }
+        },
+        {
+            "data": "ฟอร์มมิ่ง sts",
+            "className": "text-right",
+            "render": function (data, type, row) {
+                var ret = NumberWithCommas(data);
+                return ret;
+            }
+        },
+        {
+            "data": "ฟอร์มมิ่ง wng",
+            "className": "text-right",
+            "render": function (data, type, row) {
+                var ret = NumberWithCommas(data);
+                return ret;
+            }
+        },
+        {
+            "data": "ฟอร์มมิ่ง-JHP",
+            "className": "text-right",
+            "render": function (data, type, row) {
+                var ret = NumberWithCommas(data);
+                return ret;
+            }
+        },
+        {
+            "data": "เตาชุบ",
+            "className": "text-right",
+            "render": function (data, type, row, meta) {
+                var ret = NumberWithCommas(data);
+                /*ret = "<span>" + formatMoney(data);
+                +"</span>";*/
+                return ret;
+            }
+        },
+        {
+            "data": "ต๊าปเกลียว sts",
+            "className": "text-right",
+            "render": function (data, type, row, meta) {
+                var ret = NumberWithCommas(data);
+                return ret;
+            }
+        },
+        {
+            "data": "ต๊าปเกลียว wng",
+            "className": "text-right",
+            "render": function (data, type, row, meta) {
+                //var ret = NumberWithCommas(data);
+                var ret = NumberWithCommas(data);
+                return ret;
+            }
+        },
+        {
+            "data": "พ่นสี sts",
+            "className": "text-right",
+            "render": function (data, type, row) {
+                var ret = NumberWithCommas(data);
+                return ret;
+            }
+        },
+        {
+            "data": "พ่นสี wng",
+            "className": "text-right",
+            "render": function (data, type, row) {
+                var ret = NumberWithCommas(data);
+                return ret;
+            }
+        },
+        {
+            "data": "พ่นสี-KRC",
+            "className": "text-right",
+            "render": function (data, type, row) {
+                var ret = NumberWithCommas(data);
+                return ret;
+            }
+        },
+         {
+            "data": "มัดท่อ sts",
+            "className": "text-right",
+            "render": function (data, type, row) {
+                var ret = NumberWithCommas(data);
+                return ret;
+            }
+        },
+        {
+            "data": "มัดท่อ wng",
+            "className": "text-right",
+            "render": function (data, type, row) {
+                var ret = NumberWithCommas(data);
+                return ret;
+            }
+        },
+        
+        
+        {
+            "data": "รีดลดความหนา",
+            "className": "text-right",
+            "render": function (data, type, row) {
+                var ret = NumberWithCommas(data);
+                return ret;
+            }
+        },
+        {
+            "data": "แผนกเครื่องรีดหลังคา",
+            "className": "text-right",
+            "render": function (data, type, row) {
+                var ret = NumberWithCommas(data);
+                return ret;
+            }
+        },
+        {
+            "data": " Prefabrication",
+            "className": "text-right",
+            "render": function (data, type, row) {
+                var ret = NumberWithCommas(data);               
+                return ret;
+            }
+        },
+        {
+            "data": "Total",
+            "className": "text-right",
+            "render": function (data, type, row) {
+                //var ret = formatMoney(data);toLocaleString()
+                var ret = NumberWithCommas(data);
+                return ret;
+            }
+        },
+    ];
+</script>

@@ -1,0 +1,44 @@
+
+<style>
+    .col-menu{
+        border:none;
+        color:#FFFFFF;
+        text-align:center;
+        padding-top:25px;
+        padding-bottom:25px;
+    }   
+    .col-menu:hover{
+        color:orange;
+    }
+</style>
+<div class="row">
+    <div class="col-4 col-xs-4 col-md-2 col-sm-2 col-lg-2 ">
+        <div class="col-menu" style="background-color:#3399ff;" id="mnList">
+            <h3><i class="fa fa-bars"></i></h3>
+            <h4>LISTS</h4>
+        </div>
+    </div>
+    <div class="col-4 col-xs-4 col-md-2 col-sm-2 col-lg-2 ">
+        <div class="col-menu" style="background-color:#5cd65c;" id="mnCreate">
+            <h3><i class="fa fa-plus-square"></i></h3>
+            <h4>CREATE</h4>
+        </div>
+    </div>
+    <div class="col-4 col-xs-4 col-md-2 col-sm-2 col-lg-2 ">
+        <div class="col-menu" style="background-color:#a366ff;" id="mnReport">
+            <h3><i class="fa fa-print"></i></h3>
+            <h4>REPORT</h4>
+        </div>
+    </div>
+    <div class="col-4 col-xs-4 col-md-2 col-sm-2 col-lg-2 ">
+        <div class="col-menu" style="background-color:#ff6666;" id="mnTrash">
+            <h3><i class="fa fa-trash"></i></h3>
+            <h4>TRASH</h4>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $("#mnList").click(function () {
+        location.href = "?SHP/lists";
+    });
+</script>

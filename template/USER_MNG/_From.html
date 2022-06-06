@@ -1,0 +1,266 @@
+
+<div style="overflow-y: 520px;padding-right: 5vw;" class="container-modal">
+    <div  class="row" >
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 text-right form-label-row">
+            <font color="red">*</font>&nbsp;User Id
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+            <input readonly="readonly" type="text" id="txtUserId" class="form-control" value="">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 text-right form-label-row">
+            <font color="red">*</font>&nbsp;Username 
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 text-right">
+            <input placeholder="Username (ชื่อผู้ใช้)" autocomplete="on" type="text" id="txtUserName" class="form-control" value="">
+            <span id="txtUserNameReq" class="text-danger" hidden>กรุณากรอกชื่อผู้ใช้ (Username)</span>
+            <span id="txtUserNameDup" class="text-danger" hidden>ขออภัย ชื่อนี้มีอยู่ในระบบแล้ว </span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 text-right form-label-row">
+            <font color="red">*</font>&nbsp;Password
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 text-right">
+            <input placeholder="Password (รหัสผ่าน)"  type="password" id="txtPassword" class="form-control" value="">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 text-right form-label-row">
+            <font color="red">*</font>&nbsp;Full Name
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 text-right">
+            <input  placeholder="Full (ชื่อจริง)" type="text" id="txtFullName" class="form-control" value="">
+            <span  id="txtFullNameReq" class="text-danger" hidden>กรุณากรอกชื่อจริง (Full name)</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 text-right form-label-row">
+            <font color="red">*</font>&nbsp;Department
+        </div>
+        <div class="dep col-xs-12 col-sm-12 col-md-8 col-lg-8 text-right">
+            <select id="selDep"  class="form-control">
+            </select>
+        </div>
+    </div>
+    <div class="row hidden">
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 text-right form-label-row">
+            <font color="red">*</font>&nbsp;Sel Type
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 text-right">
+            <select id="type"  class="form-control">
+                <option value="A">A</option>
+                <option value="U">U</option>
+                <option value="C">C</option>
+            </select>
+        </div>
+    </div>
+    <div class="row hidden">
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 text-right form-label-row">
+            <font color="red">*</font>&nbsp;Sys Level
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 text-right">
+            <select id="sys_level"  class="form-control">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+        </div>
+    </div>
+    <div class="row hidden">
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 text-right form-label-row">
+            <font color="red">*</font>&nbsp;State
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 text-right">
+            <select id="state"  class="form-control">
+                <option value="1">Allow</option>
+                <option value="0">Block</option>
+            </select>
+        </div>
+    </div>
+    <div class="row hidden">
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 text-right form-label-row">
+            Address 1
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 text-right">
+            <input type="text" id="txtAddr1" class="form-control" value="">
+        </div>
+    </div>
+    <div class="row hidden">
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 text-right form-label-row">
+            Address 2
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 text-right">
+            <input type="text" id="txtAddr2" class="form-control" value="">
+        </div>
+    </div>
+    <div class="row hidden">
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 text-right form-label-row">
+            Tel
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 text-right">
+            <input type="text" id="txtTel" class="form-control" value="">
+        </div>
+    </div>
+    <div class="row hidden">
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 text-right form-label-row">
+            Mobile
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 text-right">
+            <input type="text" id="txtMobile" class="form-control" value="">
+        </div>
+    </div>
+    <div class="row hidden">
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 text-right form-label-row">
+            Email
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 text-right">
+            <input type="text" id="txtEmail" class="form-control" value="">
+        </div>
+    </div>
+    <div class="row hidden">
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 text-right form-label-row">
+            Remark
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 text-right">
+            <input type="text" id="txtRemark" class="form-control" value="">
+        </div>
+    </div>
+    <div class="row ">
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 text-right form-label-row">
+            Follow User Department
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 text-center">
+            <input type="checkbox" id="chk_follow"  >
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    function SaveUser() {
+        if ($("#txtUserName").val() == "") {
+            $("#txtUserNameReq").show();
+        }
+        if ($("#txtFullName").val() == "") {
+            $("#txtFullNameReq").show();
+        }
+        if ($("#dep").val() == "") {
+            $("#depReq").show();
+        }
+        if ($("#txtUserName").val() == "" || $("#txtFullName").val() == "" || $("#dep").val() == "") {
+            return false;
+        } else {
+            var txtUserId = $("#txtUserId").val();
+            var saveStat = "";
+            if (txtUserId == "") {
+                saveStat = "I"
+            }
+            var txtFullName = $("#txtFullName").val();
+            var txtUserName = $("#txtUserName").val();
+            var txtPassword = $("#txtPassword").val();
+            var selDep = $("#selDep").val();
+            var sys_level = $("#sys_level").val();
+            var state = $("#state").val();
+            var type = $("#type").val();
+            var txtAddr1 = $("#txtAddr1").val();
+            var txtAddr2 = $("#txtAddr2").val();
+            var txtTel = $("#txtTel").val();
+            var txtMobile = $("#txtMobile").val();
+            var txtEmail = $("#txtEmail").val();
+            var txtRemark = $("#txtRemark").val();
+            var selCustomerLink = $("#selCustomerLink").val();
+            var chk_follow = $("#chk_follow").prop('checked');
+            $.ajax({
+                url: "./module/User.php",
+                type: 'post',
+                data: {
+                    action: 'SaveUser',
+                    saveStat: saveStat,
+                    txtUserId: txtUserId,
+                    txtUserName: txtUserName,
+                    txtFullName: txtFullName,
+                    txtPassword: txtPassword,
+                    selDep: selDep,
+                    state: state,
+                    sys_level: sys_level,
+                    selCustomerLink: selCustomerLink,
+                    type: type,
+                    txtAddr1: txtAddr1,
+                    txtAddr2: txtAddr2,
+                    txtTel: txtTel,
+                    txtMobile: txtMobile,
+                    txtEmail: txtEmail,
+                    txtRemark: txtRemark,
+                    chk_follow: chk_follow,
+                },
+                success: function (result) {
+                    $.confirm({
+                        title: 'บันทึกข้อมูลสำเร็จ ',
+                        theme: 'modern',
+                        content: 'Logout ออก เพื่อเข้าสู่ระบบด้วย  Username ของท่าน',
+                        buttons: {
+                            confirm: function () {
+                                Logout()
+                            },
+                            cancel: function () {
+
+                            },
+                        }
+                    });
+                }
+            });
+        }
+    }
+
+    $("#btn_save").one("click", function () {
+        SaveUser();
+    });
+
+//============ Start append options to select box ============
+    var IdSelectbox = "selDep";
+    var url = "././module/USER_MNG/data.php";
+    var load = "GetDepartmentAll";
+    var valueId = "dep_id";
+    var valueShow = "dep_name";
+    GetSelectOption(IdSelectbox, url, load, valueId, valueShow,"Department");
+//============ End append options to select box ============
+
+//============ Start Check Dupicate ==============================
+    $("#txtUserName").change(function () {
+        var txtUserName = $("#txtUserName").val();
+        CheckDupUserName(txtUserName)
+    });
+    function CheckDupUserName(txtUserName) {
+        $("#hdDupUserName").val("0");
+        $.ajax({
+            url: "./module/User.php",
+            type: 'post',
+            data: {
+                ajax: 'true',
+                action: "CheckUserNameDup",
+                username: txtUserName,
+            },
+            success: function (data) {
+                console.log(data);
+                $("#hdDupUserName").val(data);
+                if (data > 0) {
+                    $("#txtUserNameDup").show();
+                    $("#btn_save").prop("disabled", true);
+                } else {
+                    $("#txtUserNameDup").hide();
+                    $("#btn_save").prop("disabled", false);
+                }
+            },
+            error: function (xhr, status, error) {
+                var err = eval("(" + xhr.responseText + ")");
+                $("#debug").html(error);
+            }
+        });
+    }
+    //============ End Check Dupicate ==============================
+
+</script>

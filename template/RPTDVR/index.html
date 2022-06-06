@@ -1,0 +1,440 @@
+<style>
+    .col-search{
+        padding-left:3px;
+        padding-right:3px;
+    }
+
+    .table thead th{
+        text-align: center;
+    }
+
+    .col-label{
+        font-weight:bold;
+    }
+    table{
+
+        width:100%;
+    }
+    /*    table tr td {
+            background-color:#FFFFFF;
+        }*/
+    .bgcolor1 {
+
+        background-color: #FFFFFF;
+
+    }
+
+    .bgcolor2 {
+
+        background-color: #f5f5f5;
+
+    }
+    td{
+        border:solid 1px #666;
+    }
+
+    @media all {
+        .hideOnPrint	{ display: block; page-break-before: always;  }
+    }
+
+    @media print {
+        .hideOnPrint	{ display:none;}
+        table{
+            margin-left:0px;
+            margin-right:0px;
+        }
+    }
+    @page {
+        margin:0 ;
+        /*      margin-right: 0.1cm;
+            margin-left: 0.1cm;*/
+    }
+    #page {
+        width: 100%;
+        margin: 0; padding: 0;
+        background: none;
+    }
+
+    #page {
+        width: 100%;
+        margin: 0; padding: 0;
+        background: none;
+    }
+    #header, #menu-bar, #sidebar, h2#postcomment, form#commentform, #footer {
+        display: none;
+    }
+    .entry a:after {
+        content: " [" attr(href) "] ";
+    }
+    #printed-article {
+        border: 1px solid #666;
+        padding: 10px;
+    }
+
+
+
+</style>
+<div class="row hideOnPrint">
+    <h4> รายงาน Delivery Order</h4>
+</div>
+<div class='row rowFilter '>
+    <div class="col-md-2 text-right">
+
+    </div>
+
+    <div class="col-md-4 text-center">
+        STARTING
+
+    </div>
+    <div class="col-md-4 text-center">
+        ENDING
+
+    </div>
+</div>
+<div class='row rowFilter' >
+    <div class="col-md-2 text-right col-label">
+        DO No :
+    </div>
+    <div class="col-md-4">
+        <input type="text" class="form-control txt-filter" id="txtDoNumFrom">
+    </div>
+    <div class="col-md-4">
+        <input type="text" class="form-control txt-filter" id="txtDoNumTo">
+    </div>
+</div>
+<div class='row rowFilter'>
+    <div class="col-md-2 text-right col-label">
+        Customer :
+    </div>
+    <div class="col-md-4">
+        <input type="text" class="form-control txt-filter" id="txtCustFrom">
+    </div>
+    <div class="col-md-4">
+        <input type="text" class="form-control txt-filter" id="txtCustTo">
+    </div>
+</div>
+<div class='row rowFilter'>
+    <div class="col-md-2 text-right col-label">
+        DO Date :
+    </div>
+    <div class="col-md-4">
+        <div class="input-group">
+            <input type="text" class="form-control txt-filter" id="txtDoDateFrom">
+            <div class="input-group-addon" id="icon_txtPickFrom">
+                <i class="fa fa-calendar"></i>
+            </div>
+        </div>        
+
+
+    </div>
+    <div class="col-md-4">
+        <div class="input-group">
+            <input type="text" class="form-control txt-filter" id="txtDoDateTo">
+            <div class="input-group-addon" id="icon_txtPickFrom">
+                <i class="fa fa-calendar"></i>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class='row rowFilter'>
+    <div class="col-md-2 text-right col-label">
+        Pick Up Date :
+    </div>
+    <div class="col-md-4">
+        <div class="input-group">
+            <input type="text" class="form-control txt-filter" id="txtPickFrom">
+            <div class="input-group-addon" id="icon_txtPickFrom">
+                <i class="fa fa-calendar"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="input-group">
+            <input type="text" class="form-control txt-filter" id="txtPickTo">
+            <div class="input-group-addon" id="icon_txtPickTo">
+                <i class="fa fa-calendar"></i>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class='row rowFilter'>
+    <div class="col-md-2 text-right col-label">
+        CO No :
+    </div>
+    <div class="col-md-4">
+        <input type="text"  class="form-control txt-filter" id="txtCoFrom">
+    </div>
+    <div class="col-md-4">
+        <input type="text" class="form-control txt-filter" id="txtCoTo">
+    </div>
+</div>
+<div class='row rowFilter'>
+    <div class="col-md-2 text-right col-label">
+        Item :
+    </div>
+    <div class="col-md-4">
+        <input type="text"  class="form-control txt-filter" id="txtItemFrom">
+    </div>
+    <div class="col-md-4">
+        <input type="text"  class="form-control txt-filter" id="txtItemTo">
+    </div>
+</div>
+
+<div class="row text-center rowFilter hideOnPrint">
+    <a class="btn btn-default" id="btnSearch"><i class="fa fa-print"></i>&nbsp;Report</a>
+    <!--<a  id="btnSearch2" ><i class="fa fa-print"></i>&nbsp;SL template</a>-->
+</div>
+<div class="row text-left rowFilterAgain hideOnPrint" style="display:none;">
+    <a class="btn btn-default" id="btnFilterAgain"><i class="fa fa-reply"></i>&nbsp;ค้นหาอีกครั้ง</a>
+    <a class="btn btn-success" id="btnPrintDiv" OnClick="printDiv();"><i class="fa fa-print"></i>&nbsp;Print</a>
+    <font color='red'>  **กรุณาตั้งค่าหน้ากระดาษเป็น "แนวนอน" และจัดรูปแบบขอบกระดาษ+Scale **</font>
+</div>
+<div class="row rowData" id="printDiv">
+
+    <!--    <table class="table table-condensed table-bordered " id="tblReport">
+            <thead>
+                <tr>
+                    <th>เลขที่เอกสาร</th>
+                    <th>Do Seq.</th>
+                    <th>Item</th>
+                    <th>Co.Order</th>
+                    <th>Co.Line</th>
+                    <th>Po.No</th>
+                    <th>เส้น/มัด</th>
+                    <th>จ.น.มัด<br>เศษ</th>
+                    <th>รวมเส้น</th>
+                    <th>หน่วยนับ</th>
+                    <th>น.น./เส้น(KG.)</th>
+                    <th>น.น.รวม</th>
+                </tr>
+            </thead>
+            <tbody id="tbodyList">
+            </tbody>
+        </table>-->
+</div>
+<script type="text/javascript">
+    //    function ShowCalendarFrom() {
+    $("#txtPickFrom").datepicker({
+        dateFormat: 'yy-mm-dd',
+    });
+    //    }
+    //    function ShowCalendarTo() {
+    $("#txtPickTo").datepicker({
+        dateFormat: 'yy-mm-dd',
+    });
+    $("#txtDoDateFrom").datepicker({
+        dateFormat: 'yy-mm-dd',
+    });
+    $("#txtDoDateTo").datepicker({
+        dateFormat: 'yy-mm-dd',
+    });
+    //    }
+    //    $("#icon_txtPickFrom").click(function () {
+    //        ShowCalendarFrom();
+    //    });
+    //    $("#icon_txtPickTo").click(function () {
+    //        ShowCalendarTo();
+    //    });
+    $("#btnSearch2").click(function () {
+        var txtDoNumFrom = $("#txtDoNumFrom").val();
+        var txtDoNumTo = $("#txtDoNumTo").val();
+        var txtPickFrom = $("#txtPickFrom").val();
+        var txtPickTo = $("#txtPickTo").val();
+        var txtCoFrom = $("#txtCoFrom").val();
+        var txtCoTo = $("#txtCoTo").val();
+        var txtItemFrom = $("#txtItemFrom").val();
+        var txtItemTo = $("#txtItemTo").val();
+        var txtCustFrom = $("#txtCustFrom").val();
+        var txtCustTo = $("#txtCustTo").val();
+        var txtDoDateFrom = $("#txtDoDateFrom").val();
+        var txtDoDateTo = $("#txtDoDateTo").val();
+        $.ajax({
+            url: "./module/RPTDVR/data.php",
+            type: 'post',
+            data: {
+                load: 'xml_write',
+                txtDoNumFrom: txtDoNumFrom,
+                txtDoNumTo: txtDoNumTo,
+                txtPickFrom: txtPickFrom,
+                txtPickTo: txtPickTo,
+                txtCoFrom: txtCoFrom,
+                txtCoTo: txtCoTo,
+                txtItemFrom: txtItemFrom,
+                txtItemTo: txtItemTo,
+                txtCustFrom: txtCustFrom,
+                txtCustTo: txtCustTo,
+                txtDoDateTo : txtDoDateTo ,
+                txtDoDateFrom : txtDoDateFrom ,
+            },
+            success: function (data) {
+                console.log(data);
+//                alert(data);
+            },
+            error: function (xhr, status, error) {
+                $("#debug").html(xhr.responseText);
+            },
+//            dataType: "json"
+        });
+    });
+
+
+    $("#btnSearch").click(function () {
+
+        ReportItemSearch();
+    });
+    $(".txt-filter").on("keypress", function (e) {
+        if (e.keyCode == 13) {
+            ReportItemSearch();
+            return false; // prevent the button click from happening
+        }
+    });
+    $("#btnFilterAgain").click(function () {
+        location.reload();
+    });
+    function ReportItemSearch() {
+
+        var oldHtmlBtn = $("#btnSearch").html();
+        $("#btnSearch").html("<i class='fa fa-spinner fa-spin'></i>");
+        var txtDoDateFrom = $("#txtDoDateFrom").val();
+        var txtDoDateTo = $("#txtDoDateTo").val();
+        var txtDoNumFrom = $("#txtDoNumFrom").val();
+        var txtDoNumTo = $("#txtDoNumTo").val();
+        var txtPickFrom = $("#txtPickFrom").val();
+        var txtPickTo = $("#txtPickTo").val();
+        var txtCoFrom = $("#txtCoFrom").val();
+        var txtCoTo = $("#txtCoTo").val();
+        var txtItemFrom = $("#txtItemFrom").val();
+        var txtItemTo = $("#txtItemTo").val();
+        var txtCustFrom = $("#txtCustFrom").val();
+        var txtCustTo = $("#txtCustTo").val();
+        $("#printDiv").load("././module/RPTDVR/data.php", {
+            "load": "ajax_sp",
+            "txtDoNumFrom": txtDoNumFrom,
+            "txtDoNumTo": txtDoNumTo,
+            "txtPickFrom": txtPickFrom,
+            "txtPickTo": txtPickTo,
+            "txtCoFrom": txtCoFrom,
+            "txtCoTo": txtCoTo,
+            "txtItemFrom": txtItemFrom,
+            "txtItemTo": txtItemTo,
+            "txtCustFrom": txtCustFrom,
+            "txtCustTo": txtCustTo,
+            "txtDoDateTo": txtDoDateTo,
+            "txtDoDateFrom": txtDoDateFrom
+
+                    //            "txtThick": txtThick,
+                    //            "txtWidth": txtWidth,
+                    //            "stock": radioValue
+        }, function () {
+            $("#btnSearch").html(oldHtmlBtn);
+            ToggleFilter("OFF");
+//            $('#tblReport').DataTable({
+//                searching: false,
+//                "ordering": false,
+//                fixedHeader: true,
+//                retrieve: true,
+////                "pageLength": 25,
+//                'dom': "<'row'<'col-md-4'><'col-md-8 col-flt-page'>>" +
+//                        "<'row'<'col-md-12'tr>>" +
+//                        "<'row'<'col-md-5'i><'col-sm-7'>>",
+//                buttons: [
+//                    {
+//                        extend: 'print',
+//                        text: "<i class='fa fa-print'></i>&nbsp;Print",
+//                        title: ''
+//                    },
+//                    {
+//                        extend: 'excel',
+//                        text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+//                        title: ''
+//                    },
+////                    {
+////                        extend: 'pdf',
+////                        text: "<i class='fa fa-file-pdf'></i>&nbsp;PDF",
+////                        title: ''
+////                    },
+//                ]
+//            });
+//            Re_DrawTable();
+        });
+    }
+    $("#btnFilterAgain").click(function () {
+        ToggleFilter("ON");
+    });
+    function ToggleFilter(OnOrOff) {
+        if (OnOrOff == "OFF") {
+            $(".rowFilter").slideUp();
+            $(".rowFilterAgain").show();
+        } else {
+            $(".rowFilter").slideDown();
+            $(".rowFilterAgain").hide();
+            $(".rowData").hide();
+        }
+    }
+    function Re_DrawTable() {
+        var tmpDo = "";
+        var tmpSeq = "";
+        var KeepDo = "";
+        var KeepChange = 0;
+        var i = 0;
+        $("tr[id^='DO_']").each(function () {
+            tmpDo = $(this).attr("id").split("_")[1];
+            tmpSeq = $(this).attr("id").split("_")[2];
+            if (i == 0) {
+                KeepChange = 1;
+            } else {
+                if (tmpDo != KeepDo) {
+                    KeepChange = 1;
+                } else {
+                    KeepChange = 0;
+                }
+            }
+
+            KeepDo = tmpDo;
+            if (KeepChange == 1) {
+                $(this).css({"background-color": "blue"});
+            } else {
+                $(this).css({"background-color": "white"});
+            }
+            i
+        });
+    }
+
+    function printDiv()
+    {
+//        $.confirm({
+//            title: ":: คำแนะนำการพิมพ์ ",
+//            content: "<h4>เพื่อการพิมพ์ที่สมบูรณ์ <br>กรุณาเลือกหน้ากระดาษเป็น <b>'แนวนอน'</b> <br>และ ไม่มี <b>'ขอบกระดาษ'</b> </h4> ",
+//            buttons: {
+//                confirm: function () {
+        window.print();
+//                },
+//                cancel: function () {
+//
+//                },
+//            }
+//        });
+
+//        var divToPrint = document.getElementById('printDiv');
+//
+//        var newWin = window.open('', 'Print-Window');
+//
+//        newWin.document.open();
+//
+//        newWin.document.write('<html><body onload="window.print()">' + divToPrint.innerHTML + '</body></html>');
+//
+//        newWin.document.close();
+//
+//        setTimeout(function () {
+//            newWin.close();
+//        }, 10);
+
+    }
+
+
+</script>
+<!--    <div class="col-md-1 col-search">
+        <button id="btnSearch" class="btn btn-info"><i class="fa fa-search"></i>&nbsp;ค้นหา</button>
+    </div>-->

@@ -1,0 +1,252 @@
+<style>
+    .col-search {
+        padding-left: 3px;
+        padding-right: 3px;
+    }
+
+    .table thead th {
+        text-align: center;
+    }
+
+    .col-flt-page {
+        padding-top: 10px;
+        font-weight: bold;
+    }
+
+    #tblReport tbody tr td a {
+        cursor: pointer;
+    }
+
+    table.dataTable.fixedHeader-floating,
+    table.dataTable.fixedHeader-locked {
+        background-color: white;
+        margin-top: 50px !important;
+        margin-bottom: 0 !important;
+    }
+    .loading-overlay{
+        z-index: 9999999999;
+    }
+</style>
+<div class="row">
+    <h4> รายงานการขายสรุป ตามกลุ่มสินค้า</h4>
+</div>
+<div class='row text-center' style='font-size:11px;color:red;'>
+
+</div>
+<div class='row'>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12  col-search">
+        <div class="input-group">
+            <div class="input-group-addon">Start Date</div>
+            <input type="text" class="form-control txt-filter" id="txtStartDate">
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12  col-search">
+        <div class="input-group">
+            <div class="input-group-addon">End Date</div>
+            <input type="text" class="form-control txt-filter" id="txtEndDate">
+        </div>
+    </div>
+    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+        <button id="btnSearch" class="btn btn-info"><i class="fa fa-search"></i>&nbsp;ค้นหา</button>
+        <font color="red">*ใช้เวลาในการสรุปยอดประมาณ 1-2 นาที หรือมากกว่า  ขึ้นอยู่กับ ช่วงเวลาที่กำหนด*</font>
+    </div>
+</div>
+
+
+<div class="row">
+    <table class="table table-condensed table-bordered table-striped" id="tblReport">
+        <thead>
+            <tr>
+                <th>item group</th>
+                <th>group description</th>
+                <th>จำนวน (ตัน)</th>
+                <th>มูลค่า (บาท)</th>
+                <th>Detail</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+<div class="modal" id="modalDetail" >
+    <div class="modal-dialog" style="width:90%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <label id="lblModalHead"></label>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div id="modalDetailBody" class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $("#txtStartDate,#txtEndDate").val(GetToday());
+    $("#txtStartDate,#txtEndDate").datepicker({
+        dateFormat: 'yy-mm-dd',
+    });
+    $("#btnSearch").click(function () {
+        ReportItemSearch();
+    });
+    $(".txt-filter").on("keypress", function (e) {
+        if (e.keyCode == 13) {
+            ReportItemSearch();
+            return false; // prevent the button click from happening
+        }
+    });
+
+    function ReportItemSearch() {
+        var OldHtml = $("#btnSearch").html();
+        $("#btnSearch").html("<i class='fa fa-spinner fa-spin'></i>");
+        var txtStartDate = $("#txtStartDate").val();
+        var txtEndDate = $("#txtEndDate").val();
+        if ((txtStartDate == "") && (txtEndDate == "")) {
+            $.alert("กรุณาเลือกช่วงวันที่รายงาน");
+        } else {
+            $.ajax({
+                type: 'GET',
+                url: "././module/RPTITEM_RESULT/data.php",
+                // contentType: "text/plain",
+                dataType: 'json',
+                beforeSend: function () {
+                    $("#tblReport").loading();
+                    $("#btnSearch").html("<i class='fa fa-spinner fa-spin'>");
+                },
+                data: {
+                    "load": "ajax",
+                    "txtStartDate": txtStartDate,
+                    "txtEndDate": txtEndDate
+                },
+                success: function (data) {
+                    // console.log(data);
+                    $("#tblReport").DataTable().clear();
+                    $("#tblReport").append("<tfoot><tr><td></td><td></td><td></td><td></td><td></td></tr></tfoot>");
+                    $('#tblReport').dataTable({
+                        "aaData": data,
+                        "paging": false,
+                        fixedHeader: true,
+                        destroy: true,
+                        'processing': true,
+                        "columns": [
+                            {
+                                "data": "item_group",
+                                "className": "text-left"
+                            },
+                            {
+                                "data": "item_group_description",
+                                "className": "text-left"
+                            },
+                           
+                            {
+                                "data": "qty_ton",
+                                "className": "text-right",
+                                "render": function (data, type, row, meta) {
+                                    var ret = ""; 
+                                    !data ? ret = "0.00" : ret=data ;
+                                     ret = addCommas(parseFloat(data).toFixed(2));                                  
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "total_price",
+                                "className": "text-right",
+                                 "render": function (data, type, row, meta) {
+                                    var ret = "" ;
+                                    !data ? ret = "0.00" : ret=data ;
+                                     ret = addCommas(parseFloat(data).toFixed(2));                                  
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "item_group",
+                                "className": "text-center",
+                                "render": function (data, type, row, meta) {
+                                    return "<a OnClick=(ShowDetail(this.id)); id='det!!" + row["item_group"] + "'><i class='fa fa-eye'></i></a>";
+                                }
+                            },
+                        ],
+                        'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                                "<'row'<'col-md-12'tr>>" +
+                                "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                        buttons: [{
+                                extend: 'print',
+                                text: "<i class='fa fa-print'></i>&nbsp;Print",
+                                title: ''
+                            },
+                            {
+                                extend: 'excel',
+                                footer: true,
+                                text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                                title: ''
+                            },
+                        ],
+                        "footerCallback": function (row, data, start, end, display) {
+                            var api = this.api(),
+                                    data;
+                            var intVal = function (i) {
+                                return typeof i === 'string' ?
+                                        i.replace(/[\$,]/g, '') * 1 :
+                                        typeof i === 'number' ?
+                                        i : 0;
+                            };
+                           
+                            var ton_total = api
+                                    .column(2)
+                                    .data()
+                                    .reduce(function (a, b) {
+                                        return intVal(a) + intVal(b);
+                                    }, 0);
+                            var price_total = api
+                                    .column(3)
+                                    .data()
+                                    .reduce(function (a, b) {
+                                        return intVal(a) + intVal(b);
+                                    }, 0);
+                            $(api.column(1).footer()).html('Total');
+                            $(api.column(2).footer()).html(addCommas(ton_total.toFixed(2)));
+                            $(api.column(3).footer()).html(addCommas(price_total.toFixed(2)));
+                          
+                        },
+
+                    });
+                    $('#tblReport').loading("stop");
+                    $("#btnSearch").html(OldHtml);
+                },
+                error: function (e) {
+                    //                     console.log(JSON(e));
+                    console.log("There was an error with your request...");
+                    console.log("error: " + JSON.stringify(e));
+                }
+            });
+
+        }
+
+    }
+
+    function ShowDetail(thisid) {
+        var item_group = thisid.split("!!")[1];
+        var StartDate = $("#txtStartDate").val();
+        var EndDate = $("#txtEndDate").val();
+        var Url = "././module/RPTITEM_RESULT/load_form.php";
+        $("#lblModalHead").text(item_group + " Start Date : " + StartDate + " End Date : " + EndDate);
+        $("#modalDetail").modal("show");
+        $("#modalDetailBody").empty();
+        $("#modalDetailBody").loading();
+        $("#modalDetailBody").load(Url, {
+            "form": "Detail",
+            "item_group": item_group,
+            "StartDate": StartDate,
+            "EndDate": EndDate
+        }, function () {
+            $("#modalDetailBody").loading("stop");
+        });
+
+    }
+
+
+</script>

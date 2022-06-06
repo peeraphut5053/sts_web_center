@@ -1,0 +1,126 @@
+<style>
+    .col-label-a{
+        border-bottom: solid 1px #cdcdcd ;
+        padding-bottom: 10px;
+        margin-bottom:10px;
+        padding-top: 10px;
+        margin-top:10px;
+        color:  #000;
+        border-top:solid 1px #cdcdcd ;
+        /*padding:60%;*/
+        text-align: center;
+    }
+
+    .col-label{
+        text-align: right;
+        padding-top:5px;
+    }
+    .panel{
+        margin-bottom:5px;
+    }
+    .panel-body{
+        padding-bottom:5px;
+        padding-top:5px;
+    }
+    .missing-value{
+        border:solid 1px red;
+    }
+
+</style>
+
+<div id='rowDetails' class='rowDetails' >
+    <div class="row text-center">
+        Add Size To :  {Customer}
+        <hr style="border-top:solid 1px #cdcdcd;margin-left:20px;margin-right:20px;">
+    </div>
+    <div class="row">
+        <div class="col-md-6 text-right">
+           New Size
+        </div>
+        <div class="col-md-6 text-right">
+            <input type="text" class="form-control" id="txtNPS">
+        </div>
+    </div>
+    <div class='row text-center' id='flashMsg'></div>
+    <div class="row text-center">
+        <button class="btn btn-success" id="btnAddSize">Add Size</button>
+    </div>
+
+</div>
+<input type="hidden" id="isDup" value="0">
+<script type='text/javascript'>
+//     $(".ui-dialog-titlebar-close").css({top: 20, left: 350, position:'absolute'});
+    $("#txtNPS").keyup(function () {
+        CheckDup($(this).val());
+    });
+    var NpsDup = "";
+    $("#btnAddSize").click(function () {
+     
+        if (NpsDup == "true") {
+            $.alert({
+                title: "Size Exists" ,
+                content:'Please try new Schdule'
+            });
+        } else {
+            AddNew();
+        }
+
+    });
+    function CheckDup(nps) {
+        if (nps != "") {
+            $.ajax({
+                url: "./module/SOD/CustomerSaleOrder.php",
+                type: 'post',
+                data: {
+                    ajax: 'true',
+                    action: "CheckSizeDup",
+                    nps :  nps,
+                },
+                success: function (data) {
+                    if (data <= 1) {
+                        NpsDup = "false";
+                        $("#flashMsg").html("<font color='green'>" + nps + " Available . </font> ");
+                    } else {
+
+                        NpsDup = "true";
+                        $("#flashMsg").html("<font color='red'>" + nps + "  Exists . </font> ");
+                    }
+
+                },
+                error: function (xhr, status, error) {
+                    var err = eval("(" + xhr.responseText + ")");
+                    alert(err.Message);
+                    $("#debug").html(error);
+                }
+            });
+        } else {
+            $("#flashMsg").empty();
+        }
+
+    }
+    function AddNew() {
+        var nps = $("#txtNPS").val();
+        $.ajax({
+            url: "./module/SOD/CustomerSaleOrder.php",
+            type: 'post',
+            dataType: 'json',
+            data: {
+                ajax: 'true',
+                action: "AddNewSize",
+                nps : nps
+            },
+            success: function (data) {
+                console.log('add new Size result ' + data);
+                if (data != "") {
+                    GetCustomerFilterOption("NPS",data);
+                    $("#divRequest").dialog("close");
+                }
+            },
+            error: function (xhr, status, error) {
+                var err = eval("(" + xhr.responseText + ")");
+                alert(err.Message);
+                $("#debug").html(error);
+            }
+        });
+    }
+</script>

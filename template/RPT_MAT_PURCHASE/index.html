@@ -1,0 +1,240 @@
+
+<div class="row">
+    <h2>Material Purchase Report</h2>
+</div>
+<div class='row'>
+
+    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4 " >
+        <div class='row' style="margin-top:0px;">
+            <div class="input-group">
+                <div class="input-group-addon">Saleside</div>
+                <select class="form-control" id="Saleside">
+                    <option value='ALL' >ALL</option>
+                    <option value='EX' >EX</option>
+                    <option value='IN' >IN</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4 " >
+        <div class='row' style="margin-top:0px;">
+            <div class="input-group">
+                <div class="input-group-addon">Month</div>
+                <select class="form-control" id="Month">
+
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4 " >
+        <div class='row' style="margin-top:0px;">
+            <div class="input-group">
+                <div class="input-group-addon">Year</div>
+                <select class="form-control" id="Year">
+
+                </select>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4 " >
+        <div class='row' style="margin-top:0px;">
+            <div class="col-lg-1 col-md-1 col-sm-6 col-xs-6 text-left">
+                <button class="btn btn-info" id="btnSearch"><i class="fa fa-search"></i>&nbsp;Search </button>
+            </div>
+        </div>
+    </div>
+    <table class="table table-condensed table-striped " width="100%" id="tblReport">
+        <thead>
+            <tr>
+                <th>vend_num</th>
+                <th>vend_name</th>
+                <th>item_group</th>
+                <th>total_amount</th>
+                <!--<th>total_kg</th>-->
+                <th>Detail</th>
+            </tr>
+        </thead>
+    </table>
+
+
+
+    <div class="modal" id="DetailModal" >
+        <div class="modal-dialog" style="width: 50%">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <label id="lblModalHead">
+                        <h1>Material Purchase Report Detail</h1>
+                    </label>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div id="modalBody" class="modal-body">
+
+                </div>
+                <div class="modal-footer">
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+    <script type="text/javascript">
+
+        function openModal(thisid, vend_name, item_group, total_amount) {
+            var Year = $("#Year").val();
+            var Month = $("#Month").val();
+            var Saleside = $("#Saleside").val();
+            var Type = "Detail";
+            
+            var vend_num = thisid.split("_")[1];
+            var vend_name = vend_name;
+            var item_group = item_group;
+            var total_amount = total_amount;
+            var modalId = "#DetailModal";
+
+
+            var Url = "././module/RPT_MAT_PURCHASE/load_form.php";
+            //alert(UserId)
+
+            $(modalId).modal("show");
+
+            $("#modalBody").load(Url, {
+                "vend_num": vend_num,
+                "vend_name": vend_name,
+                "item_group": item_group,
+                "total_amount": total_amount,
+                "Year": Year,
+                "Month": Month,
+                "Saleside": Saleside,
+                "Type": Type,
+            }, function () {
+
+            });
+        }
+        //Init render page environment //
+        $(document).ready(function () {
+
+        });
+        GetYearMonth("Year","Month")
+        
+       
+
+        //  var firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+        //  var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+        //  var getMon = pad(lastDay.getMonth() + 1, 2);
+        //  var LastDayInThisMonth = (lastDay.getFullYear()) + '-' + getMon + '-' + lastDay.getDate();
+        //  var FirstDayInThisMonth = (lastDay.getFullYear()) + '-' + getMon + '-01';
+        //  $("#txtEndDate").val(LastDayInThisMonth);
+        //  $("#txtStartDate").val(FirstDayInThisMonth);
+
+        //Init render page environment //
+
+        $("#btnSearch").click(function () {
+            ReportItemSearch();
+        });
+        $("#txtStartDate,#txtEndDate").datepicker({
+            dateFormat: 'yy-mm-dd'
+        });
+        function ReportItemSearch() {
+            var OldHtml = $("#btnSearch").html();
+            var Year = $("#Year").val();
+            var Month = $("#Month").val();
+            var Saleside = $("#Saleside").val();
+            var Type = "Summary";
+
+            $.ajax({
+                type: 'POST',
+                url: "././module/RPT_MAT_PURCHASE/data.php",
+                dataType: 'json',
+                data: {
+                    "load": "ajax",
+                    "Year": Year,
+                    "Month": Month,
+                    "Saleside": Saleside,
+                    "Type": Type
+                },
+                success: function (data) {
+                    $("#tblReport").DataTable().clear();
+                    var RowFooterBuild = "";
+                    var ColBuild = "";
+                    var ColCount = 4;
+                    var i = 0;
+                    $('#tblReport').dataTable({
+                        "aaData": data,
+                        "aaSorting": [[2, 'asc'], [1, 'asc']],
+                        "paging": false,
+                        fixedHeader: true,
+                        destroy: true,
+                        'processing': true,
+                        "columns": [
+                            {
+                                "data": "vend_num",
+                                "className": "text-center",
+                            },
+                            {
+                                "data": "vend_name",
+                            },
+                            {
+                                "data": "item_group",
+                                "className": "text-center",
+                            },
+                            {
+                                "data": "total_amount",
+                                "className": "text-right",
+                            },
+//                            {
+//                                "data": "total_kg",
+//                                "className": "text-right",
+//                            },
+
+                            {
+                                "data": "", "className": "text-center",
+                                "render": function (data, type, row, meta) {
+                                    return "<a id='vendnum_" + row["vend_num"] + "' OnClick='openModal(this.id,`" + row["vend_name"] + "`,`" + row["item_group"] + "`,`" + row["total_amount"] + "`)'><i class='fa fa-search'></i></a>";
+                                }
+                            },
+                        ],
+                        'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                                "<'row'<'col-md-12'tr>>" +
+                                "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                        buttons: [{
+                                extend: 'print',
+                                text: "<i class='fa fa-print'></i>&nbsp;Print",
+                                title: 'LedgerReport'
+                            },
+                            {
+                                extend: 'excel',
+                                footer: true,
+                                text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                                title: 'RPT Mat Purchase'
+                            },
+                        ],
+                    });
+                    $('#tblReport').loading("stop");
+                    $("#btnSearch").html(OldHtml);
+                },
+                error: function (e) {
+
+                    console.log("There was an error with your request...");
+                    console.log("error: " + JSON.stringify(e));
+                }
+            });
+
+
+        }
+
+        $("#btnExportExcel").click(function () {
+            //        onclick="javascript:
+
+            //       xport.toCSV('tblReport');
+        });
+        //    $("#Loc").select2();
+
+
+        $("#StartDate,#EndDate").datepicker({
+            dateFormat: 'yy-mm-dd'
+        });
+    </script>

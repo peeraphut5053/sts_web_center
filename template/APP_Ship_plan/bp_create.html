@@ -1,0 +1,468 @@
+<style>
+    .col-head {
+        vertical-align: bottom;
+        border: 1px solid #17a2b8;
+        background-color: #17a2b8;
+        color: #ffffff;
+    }
+
+    .btn-default {
+        border: solid 1px #666;
+    }
+
+
+    .btn-round{
+        border-radius: 15px;
+    }
+    select.form-control {
+        z-index: 1;
+    }
+    .addon-barcode{
+        background-color: #003399;
+        color:#ffffff;
+        font-size:20px;
+        padding:5px 5px 5px 5px;
+
+    }
+    .fa-barcode-icon{
+        font-size:20px;
+    }
+    .fa-barcode-stack{
+        text-shadow: .5px .5px #fff;
+        font-size:14px;
+        margin-left:-10px;
+        margin-top:8px;
+        color: orange;
+    }
+    .input-group .input-tag{
+        z-index: 1;
+    }
+
+
+    .col-back{
+        padding-left:0px;
+    }
+    .row1{
+        margin-top:10px;
+    }
+    .addon-barcode{
+        width:30px;
+    }
+    /*    .rad{
+            width:20px;
+        }*/
+    .alert{
+        padding-left:0px;
+        margin-left:-15px;
+        margin-right:-15px;
+        margin-bottom:5px;
+    }
+    .clsNoItem{
+        height:100px;
+        border:dashed 1px orange;
+        text-align: center ;
+        padding-top: 30px;
+        margin-left:0px;
+        margin-right:0px;
+        color:#666;
+    } 
+    .clsNoItem::after{
+        content:"... No item ...";
+    }
+    .clsHasItem{
+        /*        height:100px;
+                border:dashed 1px orange;*/
+    }
+</style>
+
+<div class="container" style="overflow-x:hidden;">
+    <form name="form1" id="form1" method="post">
+        <div class="row rowheader">
+            <div class="col-xs-4 col-sm-4 col-md-8 col-lg-8 col-8 col-label col-back">
+                <a href="?bp_lists" id="btnBack" class="btn btn-success btn-small btn-back" ><i class="fa fa-mail-reply"></i></a> <strong>:: CREATE </strong>
+            </div>
+            <div class="col-1 text-right col-label">
+                Code
+            </div>
+            <div class="col-3 text-right">
+                <input style="text-align: right" type="text" class="form-control" name="txtHeadCode" readonly value="{docno}">
+            </div>
+        </div>
+        <div class="row row1">
+            <div class="col-xs-6 col-sm-6 col-md-2 col-lg-3 col-4 text-right col-label">
+                M.V.
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 col-4 text-left ">
+                <div class="input-group">
+                    <select class="form-control" name="selMV" id="selMV" style="z-index:1;">
+                        {MVLists}
+                    </select>
+                    <a href="?mt_boat_lists" class="input-group-addon">
+                        <i style=font-size:12px; class="fa fa-mail-forward"></i>
+                    </a>
+                </div>
+
+            </div>
+
+            <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 col-4 text-right col-label">
+                LIGHTER NO.
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 col-4 text-left">
+                <input readonly type="text" class="form-control" name="txtLighterNo" id="txtLighterNo" value="{LighterNo}">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-6 col-sm-6 col-md-2 col-lg-3 col-4 text-right col-label">
+                BERTHED AT
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 col-4 text-left ">
+                <div class="input-group">
+                    <select class="form-control" name="selBA" id="selBA" style="z-index:1;">
+                        {BALists}
+                    </select>
+                    <a href="?mt_harbor_lists" class="input-group-addon">
+                        <i style=font-size:12px; class="fa fa-mail-forward"></i></a>
+                </div>
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 col-4 text-right col-label">
+                Start Date
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 col-3 text-left ">
+                <input style="padding-right:2px;" type='text' class="form-control" name="txtStartDate" id="StartDate" />
+            </div>
+        </div>
+        <div class="alert alert-warning" >
+            <div class="row text-right" >
+                <div class="col-xs-6 col-sm-6 col-md-2 col-lg-2 col-4 text-right col-label" style="padding-right:0px;">
+                    <h6 style="font-size:12px;margin-top:5px;">Customer Order</h6>
+                </div>
+                <div class="col-xs-6 col-sm-6 col-md-2 col-lg-2 col-3 text-left ">
+                    <select class="form-control" id="coNum">
+
+                    </select>
+                </div>
+
+                <!--                <div class="col-xs-6 col-sm-6 col-md-1 col-lg-1 col-4 text-right col-label">
+                                    Position
+                                </div>-->
+                <div class="col-xs-6 col-sm-6 col-md-5 col-lg-4 col-3 text-left " style="padding-top:5px;">
+                    <input type="Radio" class="rad"  name="radPosition" value="1" checked>ท้ายเรือ 
+                    <input type="Radio" class="rad"  name="radPosition" value="2" >กลางท้าย
+                    <input type="Radio" class="rad"  name="radPosition" value="3" >กลางหัว
+                    <input type="Radio" class="rad"  name="radPosition" value="4" >หัวเรือ
+                </div>
+                <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 col-3 text-center">
+
+
+
+
+
+                    <div class="input-group">
+                        <a href="#" class="input-group-addon addon-barcode"  id="ManualSelect">
+                            <i  class="fa fa-barcode fa-barcode-icon"></i>
+                            <i  class="fa fa-search fa-barcode-stack"></i>
+                        </a>
+                        <input class="form-control input-tag" name="inputTag" id="inputTag">
+                        <a href="#" class="input-group-addon" id="AutoAdd">
+                            <i  class="fa fa-chevron-circle-down"></i>
+
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="row " >
+            <div class="col-2 text-center col-head">
+                Item Position
+            </div>
+            <div class="col-3 text-center col-head">
+                Item Tag 
+            </div>
+            <div class="col-3 text-center col-head">
+                Customer Order
+            </div>
+
+            <div class="col-2 text-center col-head">
+                Item DESCRIPTION
+            </div>
+            <div class="col-1 text-center col-head">
+                Item QTY
+            </div>
+            <div class="col-1 text-center col-head">
+                <i class="fa fa-edit"></i>
+            </div>
+        </div>
+        <div id="fieldLists" class="clsNoItem">
+
+        </div>
+        <div class="row" id="rowTotal">
+            <div class="col-2 text-center col-head">
+
+            </div>
+            <div class="col-3 text-center col-head">
+
+            </div>
+            <div class="col-3 text-center col-head">
+
+            </div>
+
+            <div class="col-2 text-center col-head">
+                Total
+            </div>
+            <div class="col-1 text-center col-head">
+                <input type="text" readonly  id="txtTotal" style="background-color:#17a2b8;border:none;">
+            </div>
+            <div class="col-1 text-center col-head">
+
+            </div>
+        </div>
+        <div class="row text-right">
+            <div class="col-12 text-right">
+                <a href="#" id="btnSubmit" class="btn btn-success btn-small" style="width:120px;"><i class="fa fa-save"></i> &nbsp;Save</a>
+            </div>
+
+        </div>
+    </form>
+</div>
+
+<input type="hidden" id="tmpAdd" value="1">
+<div id="ManualS">
+
+</div>
+<!--   <script src="js/jquery.js"></script> -->
+<script type="text/javascript">
+    //=============== Dynamic add textbox ==============//
+    $(document).ready(function () {
+
+        $('#inputTag').keyup(function (e) {
+            if (e.keyCode == 13) {
+                AddItemToGrid($(this).val());
+            }
+
+
+        });
+
+        $("#fieldLists").on('click', '#remCF', function () {
+            $(this).parent().parent().remove();
+            removeItem();
+        });
+//}
+    });
+    //=============== Dynamic add textbox ==============//
+
+
+
+    ////============ Save ================= ///
+    $("#btnSubmit").click(function () {
+
+//        var nLotNo = $("input[name='txtLotNo[]']").length;
+        var nTag = $("input[name='txtItemTag[]']").length;
+        var nPos = $("input[name='selPosition[]']").length;
+        var nQty = $("input[name='txtQTY[]']").length;
+        var nDesc = $("input[name='txtDescription[]']").length;
+
+        var nAll = nTag + nPos;
+        var tagBlank = 0;
+        var posBlank = 0;
+        var tagBlank = 0;
+        var posBlank = 0;
+//        var gwBlank = 0;
+        var countBlank = 0;
+        var msgValid = "";
+//        alert($("#selMV").val());
+        if ($("#selMV").val() == 0) {
+            countBlank++;
+            msgValid += "- M.V. box is blank \n";
+        }
+        if ($("#selBA").val() == 0) {
+            countBlank++;
+            msgValid += "- Berthed At  box is blank \n";
+        }
+        if ($("#StartDate").val() == "") {
+            countBlank++;
+            msgValid += "- Start Date   box is blank \n";
+        }
+        if (countBlank > 0) {
+            alert(msgValid);
+        } else {
+            $.post("./module/bp_create_save.php", $('#form1').serialize(), function (data) {
+//                alert(data);
+                if (data.substr(0, 5) == "Error") {
+                    alert(data);
+                    return false;
+                } else {
+                    location.href = "?bp_view&HeadCode=" + data;
+                }
+
+
+            }, 'html');
+        }
+    });
+</script>
+<script type="text/javascript">
+    $(function () {
+        $("#StartDate").datetimepicker({
+            dateFormat: 'yy-mm-dd',
+            timeFormat: "HH:mm:ss"
+        });
+        $("#EndDate").datetimepicker({
+            dateFormat: 'yy-mm-dd',
+            timeFormat: "HH:mm:ss"
+        });
+    });
+
+    $('#selMV').on('change', function () {
+
+        var idRun = $(this).val();
+        if (idRun != "0") {
+            $.post("module/ajax/data_boat.php", {
+                "idRun": idRun,
+                "field": "ln"
+            }, function (data) {
+                $("#txtLighterNo").val(data);
+            }, 'html');
+        } else {
+            $("#txtLighterNo").val("");
+        }
+
+    });
+
+
+///*************  GET CO_Num By Ajax **************////
+    $(document).ready(function () {
+        CoList = new Array();
+        $.ajax({
+            url: "./module/ajax/data_co.php",
+            type: "POST",
+            success: function (msg) {
+                $("#coNum").select2({
+                    data: msg
+                });
+            },
+            dataType: "json"
+        });
+
+    });
+///*************  GET CO_Num By Ajax **************////
+
+    function addItem() {
+        var total = 0;
+        $('input#txtQTY').each(function (index, element) {
+            total = total + parseFloat($(element).val());
+        });
+        $('#txtTotal').val(total);
+        $('#fieldLists').removeClass("clsNoItem").addClass("clsHasItem");
+    }
+
+
+    function removeItem() {
+        var total = 0;
+        var CountItem = $('input#txtQTY').length;
+        $('input#txtQTY').each(function (index, element) {
+            total = total + parseFloat($(element).val());
+        });
+
+        $('#txtTotal').val(total);
+        if (CountItem == 0) {
+            $('#fieldLists').removeClass("clsHasItem").addClass("clsNoItem");
+        }
+//      
+    }
+    $("#AutoAdd").click(function () {
+        var GetVal = $("#inputTag").val();
+        AddItemToGrid(GetVal);
+//        var e = $.Event('keyup');
+//        e.which = 13; // Character 'A'
+//        $('input#inputTag').trigger(e);
+    });
+
+    function AddItemToGrid(val) {
+        if (val != "") {
+            if ($("#coNum").val() == "") {
+                alert("Please select Customer Order ");
+                $("#coNum").focus();
+                return false;
+            } else {
+                //Get value 
+                var getRadio = $('input[name=radPosition]:checked').val();
+                var pos = "";
+                var err = 0;
+                var tag = val;
+                if (getRadio == 1) {
+                    pos = "ท้ายเรือ";
+                } else if (getRadio == 2) {
+                    pos = "กลางท้าย";
+                } else if (getRadio == 3) {
+                    pos = "กลางหัว";
+                } else if (getRadio == 4) {
+                    pos = "หัวเรือ";
+                }
+                //check duplicate in list 
+                if ($('#txtItemTag').length > 0) {
+                    $('#txtItemTag').each(function () {
+                        if ($(this).val() == tag) {
+                            alert("มี Item [ " + tag + " ] ในรายการแล้ว ");
+                            err++;
+                        } else {
+
+                        }
+                    });
+                }
+                var desc = "";
+                var qty = "";
+                $.post("./module/bp_tag_input.php", {"id": tag}, function (data) {
+
+                    if (data.substring(0, 5) == "Error") {
+//                        alert(data);
+                        err++;
+                        alert("err : ไม่พบ tag " + tag);
+                    } else {
+                        console.log(data);
+                        if (err == 0) {
+                            var arrData = data.split("_");
+                            desc = arrData[0];
+                            qty = arrData[1];
+                            var coNum = $("#coNum").val();
+                            var CurVal = parseInt($("#tmpAdd").val());
+                            $("#tmpAdd").val(CurVal + 1);
+                            var index = $("#tmpAdd").val();
+                            $("#fieldLists").append(
+                                    ' \n\
+    <div class="row" id="rowitems">  \n\
+<div class="col-2 text-center col-in "><input type="hidden" name="hdItemPos[]" value="' + getRadio + '"> \n\
+<input class="form-control input-tag" name="txtItemPos[]" id="txtItemPos" value="' + pos + '" readonly> </div> \n\
+\n\  <div class="col-3 text-center col-in"><input class="form-control input-tag" name="txtItemTag[]" id="txtItemTag"  value="' + tag + '"  readonly> </div> \n\
+  <div class="col-3 text-center col-in"><input class="form-control input-tag" name="txtCoNum[]" id="txtCoNum"  value="' + coNum + '"  readonly> </div> \n\
+<div class="col-2 text-center col-in"><input class="form-control" name="txtDescription[]" readonly value="' + desc + '" > </div> \n\
+<div class="col-1 text-center col-in"><input class="form-control" name="txtQTY[]" id="txtQTY" readonly value="' + qty + '" > </div>  \n\
+<div class="col-1 text-center col-in"><a href="javascript:void(0);" id="remCF" class="btn btn-danger btn-del-mini btn-round"><i class="fa fa-close"></i></a> </div> \n\
+</div>'
+                                    );
+                            addItem();
+                        }
+                    }
+                }, 'html');
+            }
+        } else {
+            alert("Please Enter Tag");
+        }
+    }
+
+    $("#ManualSelect").click(function () {
+        $('#ManualS').dialog({
+            modal: true,
+            autoOpen: true,
+            position: ['center', 20],
+            show: 'fade',
+            width: 800,
+            height: 400,
+            title: ":: Select Item "
+        })
+                .load("./module/mt_load_tag.php", {
+                    "form": "create"
+                });
+    });
+    $("#coNum").html('<option value="">').append(options);
+    $("#coNum").text("");
+</script>

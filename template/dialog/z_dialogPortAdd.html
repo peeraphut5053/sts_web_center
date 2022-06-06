@@ -1,0 +1,127 @@
+<style>
+    .col-label-a{
+        border-bottom: solid 1px #cdcdcd ;
+        padding-bottom: 10px;
+        margin-bottom:10px;
+        padding-top: 10px;
+        margin-top:10px;
+        color:  #000;
+        border-top:solid 1px #cdcdcd ;
+        /*padding:60%;*/
+        text-align: center;
+    }
+
+    .col-label{
+        text-align: right;
+        padding-top:5px;
+    }
+    .panel{
+        margin-bottom:5px;
+    }
+    .panel-body{
+        padding-bottom:5px;
+        padding-top:5px;
+    }
+    .missing-value{
+        border:solid 1px red;
+    }
+
+</style>
+
+<div id='rowDetails' class='rowDetails' >
+    <div class="row text-center">
+        Add Port To :  {Customer}
+        <hr style="border-top:solid 1px #cdcdcd;margin-left:20px;margin-right:20px;">
+    </div>
+    <div class="row">
+        <div class="col-md-6 text-right">
+            New Port : 
+        </div>
+        <div class="col-md-6 text-right">
+            <input type="text" class="form-control" id="txtPort">
+        </div>
+    </div>
+    <div class='row text-center' id='flashMsg'></div>
+    <div class="row text-center">
+        <button class="btn btn-success" id="btnAdd">Add Port</button>
+    </div>
+
+</div>
+<input type="hidden" id="isDup" value="0">
+<script type='text/javascript'>
+    $(".ui-dialog-titlebar-close").css({top: 20, left: 350, position: 'absolute'});
+    $("#txtPort").keyup(function () {
+        CheckDup($(this).val());
+    });
+    var PortDup = "";
+    $("#btnAdd").click(function () {
+
+        if (PortDup == "true") {
+            $.alert({
+                title: "Port Exists",
+                content: 'Please try new port'
+            });
+        } else {
+            AddNew();
+        }
+
+    });
+    function CheckDup(Port) {
+        if (Port != "") {
+            $.ajax({
+                url: "./module/SOD/CustomerSaleOrder.php",
+                type: 'post',
+                data: {
+                    ajax: 'true',
+                    action: "CheckPortDup",
+                    Port: Port,
+                },
+                success: function (data) {
+//                console.log(data);
+                    if (data <= 1) {
+                        PortDup = "false";
+                        $("#flashMsg").html("<font color='green'>" + Port + " Available . </font> ");
+                    } else {
+
+                        PortDup = "true";
+                        $("#flashMsg").html("<font color='red'>" + Port + "  Exists . </font> ");
+                    }
+
+                },
+                error: function (xhr, status, error) {
+                    var err = eval("(" + xhr.responseText + ")");
+                    alert(err.Message);
+                    $("#debug").html(error);
+                }
+            });
+        } else {
+            $("#flashMsg").empty();
+        }
+
+    }
+    function AddNew() {
+        var Port = $("#txtPort").val();
+        $.ajax({
+            url: "./module/SOD/CustomerSaleOrder.php",
+            type: 'post',
+            dataType: 'json',
+            data: {
+                ajax: 'true',
+                action: "AddNewPort",
+                Port: Port
+            },
+            success: function (data) {
+                console.log('add new port result ' + data);
+                if (data != "") {
+                    GetShipPort(data);
+                    $("#divAddPort").dialog("close");
+                }
+            },
+            error: function (xhr, status, error) {
+                var err = eval("(" + xhr.responseText + ")");
+                alert(err.Message);
+                $("#debug").html(error);
+            }
+        });
+    }
+</script>

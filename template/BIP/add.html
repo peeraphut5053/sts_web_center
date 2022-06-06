@@ -1,0 +1,163 @@
+<div class="row" style="border-bottom:solid 1px #e6e4e4;">
+    <div class="col-md-3 text-left" >
+        <h4>BOM Import&nbsp;&nbsp;>&nbsp;&nbsp;<a href="?BOMImport&get_action=index">List</a>&nbsp;&nbsp;>&nbsp;&nbsp;Add</h4>
+    </div>
+    <div class="col-md-6 text-right" >
+    </div>
+    <div class="col-md-3 text-right">
+        <div class="input-group">
+            <div class="input-group-addon">
+                Trans No
+            </div>
+            <input readonly type="text" class="form-control" id="trans_no" value="{trans_no}">
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-1 text-right" style="padding-top:15px;">
+        Excel file : 
+    </div>
+    <div class="col-md-2" style="padding-top:15px;">
+        <input type="file" id="files" accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+    </div>
+    <div class="col-md-2 text-right" style="padding-top:15px;">
+        Sheet : 
+    </div>
+    <div class="col-md-3 text-right" style="padding-top:15px;">
+        <select class='form-control' onchange="SelectExcel();" id='sheet_name'>
+            <option value="">... Please select ...</option>
+        </select>
+    </div>
+    <div class="col-md-3 text-right" style="padding-top:15px;">
+        To 
+        <input type="radio" id="radType" name="radType" value="jobroute" checked> JobRoute
+        <input type="radio" id="radType" name="radType" value="jobmatl"> JobMatl
+        <a id="btnImport" class="btn btn-info ">IMPORT</a>
+    </div>
+    <!--    <div class="col-md-1 text-right" style="padding-top:15px;">
+            <a id="btnImport" class="btn btn-info form-control">IMPORT</a>
+        </div>-->
+</div>
+<div  id="ReaderExcel" style="height:400px;overflow-y:auto;">
+</div>
+<script type="text/javascript">
+    $('#files').change(function (e) {
+        $('#ReaderExcel').empty();
+        var sheet_name = $("#sheet_name").val();
+        $('#ReaderExcel').empty();
+        var reader = new FileReader();
+        reader.readAsArrayBuffer(e.target.files[0]);
+        reader.onload = function (e) {
+            var data = new Uint8Array(reader.result);
+            var wb = XLSX.read(data, {type: 'array'});
+            var sheetcount = wb.SheetNames.length;
+            var i = 0;
+            $("#sheet_name").empty();
+            $("#sheet_name").append('<option value="">... Please select ...</option>');
+            for (i = 0; i < sheetcount; i++) {
+                $("#sheet_name").append('<option value="' + wb.SheetNames[i] + '">' + wb.SheetNames[i] + '</option>');
+            }
+        }
+    });
+    function SelectExcel() {
+        var getPoNum = "";
+        var files_input = document.getElementById("files");
+        var file = files_input.files[0];
+        if (!file) {
+            $.alert({
+                title: 'Can not import excel file !',
+                content: "Please select excel file"
+            });
+            return false;
+        }
+        var sheet_name = $("#sheet_name").val();
+        var file_name = $('#files').val().replace(/C:\\fakepath\\/i, '');
+        var radioValue = $("input[name='radType']:checked").val();
+        $("#tmpXlsSheet").val(sheet_name);
+        $("#tmpXlsFile").val(file_name);
+        var reader = new FileReader();
+//        alert(radioValue);
+        reader.readAsArrayBuffer(file);
+        reader.onload = function (e) {
+            var data = new Uint8Array(reader.result);
+            try {
+                var wb = XLSX.read(data, {type: 'array'});
+                var htmlstr = XLSX.write(wb, {sheet: sheet_name, type: 'binary', bookType: 'html'});
+                $('#ReaderExcel').empty();
+                $('#ReaderExcel')[0].innerHTML += htmlstr;
+                $('#ReaderExcel table').addClass('table table-striped table-bordered table-condensed');
+                var import_form = $("#use_form").val();
+                var headCount = 0;
+                var flagRemoveFooterFrom = 0;
+                var flagRemoveFooterFrom2 = 0;
+                var flagRemoveFooterFrom3 = 0;
+                var flagRemoveNameCol1 = [];
+                var flagRemoveBlankRow = [];
+                var flagTotalRow = [];
+            } catch (err) {
+                $.alert({
+                    title: 'Can not import excel file !',
+                    content: err,
+                });
+            }
+//            ImportExcel()
+        }
+    }
+    $("#btnImport").click(function () {
+        var sheet_name = $("#sheet_name").val();
+        var file_name = $('#files').val().replace(/C:\\fakepath\\/i, '');
+        var i = 0;
+        var Item = [];
+        var OP = [];
+        var WC = [];
+        var std_time = [];
+        var trans_no = $("#trans_no").val();
+
+        $("#ReaderExcel tr ").each(function () {
+            if (i > 0) {
+                Item.push($(this).find('td:eq(0)').text().trim());
+                OP.push($(this).find('td:eq(1)').text().trim());
+                WC.push($(this).find('td:eq(2)').text().trim());
+                std_time.push($(this).find('td:eq(3)').text().trim());
+            }
+            i++;
+        });
+        if (Item.length == 0) {
+            $.alert("No item found");
+        } else {
+//            console.log(trans_no);
+//            console.log(sheet_name);
+//            console.log(file_name);
+//            console.log(Item);
+//            console.log(OP);
+//            console.log(WC);
+//            console.log(std_time);
+            $.ajax({
+                url: "././module/BOMImport.php",
+                type: 'post',
+                data: {
+                    ajax: 'true',
+                    action: "SaveJobRoute",
+                    trans_no: trans_no,
+                    xls_file: sheet_name,
+                    xls_sheet: file_name,
+                    Item: Item,
+                    OP: OP,
+                    WC: WC,
+                    std_time: std_time
+                },
+                befireSend: function () {
+                    $("#btnImport").html("<i class='fa fa-spinner fa-spin'></i>&nbsp;Loading");
+                },
+                success: function (data) {
+                    $("#btnImport").html("IMPORT");
+                    console.log(data);
+                },
+                error: function (xhr, status, error) {
+                    $("#debug").html(xhr.responseText);
+                },
+                dataType: "json"
+            });
+        }
+    });
+</script>

@@ -1,0 +1,40 @@
+<?php
+
+while (list($key, $data) = each($_GET) OR list($key, $data) = each($_POST)) {
+    ${$key} = trim($data);
+}
+include "./initial.php";
+//
+
+
+$Model = new CallModel();
+$Model->SyteLine_Models();
+$Model->MGT_Models();
+
+$po_QC = new PO_QC();
+$po_QC->setConn($var);
+$ret = "";
+//$action = $_POST["action"];
+
+if ($action == "Search") {
+    $GetTable = $po_QC->Ajax_GetRowsWithDate($startDate, $endDate, $status, $filterRefNo, $filterStsNo, $searchType);
+    $arrReturn = array();
+    $btnPrintTag = "";
+    echo json_encode($GetTable);
+} else if ($action == "SearchLine") {
+
+    $GetTable = $po_QC->SearchLine($sno);
+    $arrReturn = array();
+    $btnPrintTag = "";
+    echo json_encode($GetTable);
+} else if ($action == "ClearGrn") {
+    $GetTable = $po_QC->ClearGrn($sno);
+
+    $query = "INSERT INTO Log_Clear_MatchGrn (date_clear , grn_num , po_num , po_line , item , sno) VALUES (GETDATE(), '$grn_num' , '$po_num' , '$po_line' , '$item' , '$sno') ";
+    $cSql = new SqlSrv();
+    $rs0 = $cSql->IsUpDel($conn_webapp, $query);
+    return $rs0 ;
+    
+    
+}
+?>

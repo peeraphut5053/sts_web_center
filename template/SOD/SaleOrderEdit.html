@@ -1,0 +1,597 @@
+<link href="./css/ind/SaleOrder.css" rel="stylesheet" type="text/css">
+<style>
+    .well{
+        margin-left:-15px;
+        margin-right:-15px;
+    }
+    td[id*=rowLine_]{
+        vertical-align: middle;
+        text-align: center;
+    }
+    >tbody>tr>td{
+        vertical-align: middle;
+    }
+    .select2-container .select2-selection--single {
+        border-radius:0px;
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+        height:30px;
+        border:solid 1px #cdcdcd;
+
+    }
+    .tabledark th{
+        background-color: #666;
+        color:#ffffff;
+        text-align: center;
+        vertical-align: middle;
+    }
+    .table tr th{
+        font-size: 12px;
+    }
+    .table tr td{
+        font-size: 12px;
+    }
+    .btnLink {
+        height: 30px;
+        margin-left: 5px;
+    }
+
+    a[id*='btnRemove'] {
+        height: 30px;
+        width: 30px;
+        padding-left: 8px;
+        padding-top: 2px;
+    }
+
+    .tableview thead th {
+        background-color: #3b8aff;
+        vertical-align: middle;
+        color: #ffffff;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        text-align: center;
+        font-size:10px;
+    }
+
+    .col-Customer {
+        min-height: 70px;
+        border: solid 1px #dcdcdc;
+        margin-left: 3%;
+    }
+
+    .col-po {
+        min-height: 70px;
+        border: solid 1px #dcdcdc;
+    }
+
+    .col-info {
+        padding-left: 0px;
+    }
+
+
+
+    #divCustomerInfo {
+        font-size: 14px;
+        border: solid 1px #e4e4e4;
+        min-height: 65px;
+        margin-left: 20px;
+        margin-right: 0px;
+        border-radius: 10px;
+    }
+
+    #btnCollapse {
+        margin-right: 25px;
+        font-size: 14px;
+        float: right;
+        color: #ffffff;
+        /*        padding-right: 8px;
+                padding-left: 8px;
+                margin-top: -5px;*/
+    }
+
+    label {
+        font-size: 12px;
+    }
+
+    .input-group {
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+
+    .form-input {
+        height: 32px;
+    }
+
+    .row-item {
+        margin-left: -15px;
+        margin-right: -15px;
+        margin-top: 10px;
+        padding-left: 10px;
+        border: solid 1px #cdcdcd;
+        background-color: #bdd8f5;
+    }
+    .panel-heading{
+        /*padding-top:2px;*/
+        padding-bottom:2px;
+        font-size:12px;
+    }
+    .col-md-4{
+        color:#666;
+    }
+    .col-md-8{
+
+        color:#000;
+    }
+    .form-control{
+        padding-left:2px;padding-right:2px;
+    }
+</style>
+<div class="row rowheader" {fixDialogStyle1}>
+    <div class="col-6 col-xs-6 col-sm-6 col-md-6 col-lg-6 text-left" style="padding-top:10px;">
+        <a style="margin-left:-15px;" href="?SOD/SOD/SaleOrderIndex&fltStartDate={fltStartDate}&fltEndDate={fltEndDate}&fltStatus={fltStatus}" id="btnBack"  class="btn btn-default"><i class="fas fa-chevron-circle-left"></i></a>
+        <a href="index.php" > <i class="fas fa-home"></i> Home </a> / <a href="?SOD/SOD/SaleOrderIndex&fltStartDate={fltStartDate}&fltEndDate={fltEndDate}&fltStatus={fltStatus}"> Lists </a> / Edit [ {head_doc_no} ]
+        <input type="hidden" id="doc_no" value="{head_doc_no}">
+        <input type="hidden" id="firstSelected" value="{firstSelected}">
+    </div>
+    <div class="col-6 col-xs-6 col-sm-6 col-md-6 col-lg-6 text-right" style="padding-right:0px;padding-bottom:3px;">
+        <a href="#" id="btnRefresh" OnClick="location.reload();" class="btn btn-default"><i class="fas fa-sync"></i></a>
+        <!--<a href="#" id="btnSaveEdit" class="btn btn-success"><i class="fas fa-save"></i> &nbsp; Save</a>-->
+    </div>
+</div>
+<div >
+    <input type="hidden" id="hdCustNum" value="{cust_num}">
+    <div class="well" {fixDialogStyle1}>
+        <div class="row row-Customer-info">
+            <div class="col-md-2">
+                Customer    <b> {head_cust_name}</b>
+            </div>
+            <div class="col-md-6">
+                <b>  {head_cust_addr}</b>
+            </div>
+            <div class="col-md-4 text-right" style="color:green;" id="divAutoSaveMsg">
+
+            </div>
+        </div>
+        <div class='row'>
+            <div class="col-md-6">
+
+
+                <div class="row">
+                    <div class="col-md-4 text-right">
+                        Ship By
+                    </div>
+                    <div class="col-md-8 text-left">
+                        <b>  {head_ship_to}</b>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 text-right">
+                        Ship To
+                    </div>
+                    <div class="input-group">
+                        <select style="width:100%;" class="form-control" id="selShipTo"> </select>
+                        <span class="input-group-addon  btn-info" OnClick="OpenModalAddPort();"><i class="fa fa-plus"></i></span>
+                    </div>
+                    <!--                    <div class="col-md-8 text-left">
+                                            <b>{head_ship_to}</b>
+                                        </div>-->
+                </div>
+                <div class="row">
+                    <div class="col-md-4 text-right">
+                        Shipment date Ex-Mill
+                    </div>
+                    <div class="col-md-4 text-left" style="padding-left:0px;">
+                        <input type="text" class="form-control" id="txtShipMentFrom" value="{ExDateFrom}" placeholder="select from">
+                    </div>
+                    <div class="col-md-4 text-left" style="padding-right:10px;">
+                        <input type="text" class="form-control" id="txtShipMentTo" value="{ExDateTo}" placeholder="select to">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 text-right">
+                        Attn
+                    </div>
+                    <div class="col-md-8 text-left" style="padding-left:0px;padding-right:8px;">
+                        <input class="form-control" type="text" id="edtAttn" value="{head_attn}">
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-4 text-right">
+                        Doc No
+                    </div>
+                    <div class="col-md-4 text-left">
+                        <b> {head_doc_no} </b>
+                    </div>
+                    <div class="col-md-4 text-left">
+                        Date    <b>  {head_doc_date}</b>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 text-right">
+                        Po No
+                    </div>
+                    <div class="col-md-4 text-left">
+                        <input class="form-control" type="text" id="edtPoNo" value="{head_po_num}">
+
+                    </div>
+                    <div class="col-md-4 text-left">
+                        <input class="form-control" type="text" id="edtPoDate" value="{head_po_date}">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 text-right">
+                        Spec
+                    </div>
+                    <div class="col-md-8 text-left">
+                        <input class="form-control" type="text" id="edtSpec" value="{head_spec}">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4 text-right">
+                        Terms of purchase
+                    </div>
+                    <div class="col-md-8 text-left">
+                        <input class="form-control" type="text" id="edtPurchase" value="{head_terms}">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 text-right">
+                        Remark
+                    </div>
+                    <div class="col-md-8 text-left">
+                        <input class="form-control" type="text" id="edtRemark" value="{head_remark}">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row text-left">
+    <a type="button" class="btn btn-info btn-sm"  id="btnShowFilterEdit"><i class="fas fa-plus-circle"></i>&nbsp;Add item</a>
+</div>
+<div class="row text-center" style="margin-top:0px;" align="center" id='DivDetailTable'>  
+
+</div>
+
+<div id="divCssDynamic">
+    <!--    <style>
+        .ui-datepicker-calendar {display: none; }​
+        </style>-->
+</div>
+<div id="divAddPort"></div>
+<!--<button id="btnTempCal" class="btn btn-success">calculate</button>-->
+<div id="divprint">
+
+</div>
+<div id="divSearchItemEdit"></div>
+<script >
+
+</script>
+<script >
+
+    $("#loading").hide();
+    GetTableDetail();
+    GetShipPort();
+
+    $('#txtShipMentFrom,#txtShipMentTo,#selShipTo,#edtAttn,#edtPoNo,#edtPoDate,#edtSpec,#edtPurchase,#edtRemark').blur(function () {
+        //===assign auto save to textbox =======//
+//        alert('auto save');
+        AutoSaveHead();
+
+    });
+
+
+    $('#txtShipMentFrom,#txtShipMentTo').click(function () {
+        $('#divCssDynamic').append('<style>.ui-datepicker-calendar {display: none; }​</style>');
+    });
+    $("#edtPoDate").click(function () {
+        $('#divCssDynamic').empty();
+    });
+    $('#txtShipMentFrom,#txtShipMentTo').datepicker({
+        changeMonth: true,
+        changeYear: true,
+        dateFormat: 'mm/yy',
+        showButtonPanel: true,
+        onClose: function () {
+            var iMonth = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
+            var iYear = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+            $(this).datepicker('setDate', new Date(iYear, iMonth, 1));
+        },
+        beforeShow: function () {
+            if ((selDate = $(this).val()).length > 0)
+            {
+                iYear = selDate.substring(selDate.length - 4, selDate.length);
+                iMonth = jQuery.inArray(selDate.substring(0, selDate.length - 5), $(this).datepicker('option', 'monthNames'));
+                $(this).datepicker('option', 'defaultDate', new Date(iYear, iMonth, 1));
+                $(this).datepicker('setDate', new Date(iYear, iMonth, 1));
+            }
+        }
+    });
+    $("#edtPoDate").datepicker({
+        dateFormat: 'yy-mm-dd',
+    });
+    function GetShipPort() {
+        var firstSelected = $("#firstSelected").val();
+        $("#loading").show();
+        $("#selShipTo").empty();
+        $.ajax({
+            url: "./module/SOD/CustomerSaleOrder.php",
+            type: 'post',
+            data: {
+                ajax: 'true',
+                action: "GetPortToDropDown",
+            },
+            success: function (data) {
+                var items = [];
+                var GetArray = new Array(data);
+                items.push({
+                    "id": "",
+                    "text": ""
+                });
+                $.each(data, function (key, value) {
+                    items.push({
+                        "id": key,
+                        "text": value
+                    });
+                });
+                $('#selShipTo').select2({
+                    data: items
+                });
+                $('#selShipTo').val(firstSelected).trigger('change');
+                $("#loading").hide();
+            },
+            error: function (xhr, status, error) {
+                $("#debug").html(xhr.responseText);
+            },
+            dataType: "json"
+        });
+    }
+
+
+    function GetTableDetail() {
+        $("#loading").show();
+        var doc_no = '{head_doc_no}';
+        $("#DivDetailTable").load("./module/_RenderPartial.php", {
+            "loadPage": "SaleOrder",
+            "loadDiv": "DetailEdit",
+            "doc_no": doc_no,
+            "LoadTo": "edit"
+        });
+        $("#loading").hide();
+    }
+    $("#btnTempCal").click(function () {
+        CalSummary();
+    });
+    function InputValue(thisid) {
+        var GetIds = thisid.split("_");
+        var RowIndex = GetIds[1];
+        var GetVal = $("#" + thisid).val();
+        var ttlen = 0;
+        var ttbndl = 0;
+        var ttlen_conv = 0;
+        var ttbndl_conv = 0;
+        var unit_weight = $("#UnitWeight_" + RowIndex).val();
+        var edtCFRFT = $("#edtCFRFT_" + RowIndex).val();
+
+        if (thisid.indexOf("edtLEN") >= 0) {
+            ttlen = parseFloat($("#edtPcsPerBndl_" + RowIndex).val()) * GetVal;
+            ttlen_conv = addCommas(ttlen);
+            $("#rowTTLEN_" + RowIndex).text(ttlen_conv);
+        }
+        if ((thisid.indexOf("edtBNDL_") >= 0) || (thisid.indexOf("edtPcsPerBndl_") >= 0)) {
+            var cBndl = parseFloat($("#edtBNDL_" + RowIndex).val());
+            var cPcsPer = parseFloat($("#edtPcsPerBndl_" + RowIndex).val());
+            ttbndl = cBndl * cPcsPer;
+            ttbndl_conv = addCommas(ttbndl);
+            console.log("cBndl : " + cBndl);
+            console.log("cPcsPer : " + cPcsPer);
+            console.log("ttbndl : " + ttbndl);
+            console.log("ttbndl_conv : " + ttbndl_conv);
+            $("#rowPCS_" + RowIndex).text(ttbndl_conv);
+        }
+        $("#rowPCS_" + RowIndex).text();
+        var get_ttlen = $("#rowTTLEN_" + RowIndex).text().replace(",", "");
+        var tw = ttbndl / 1000;
+        var tw_conv = addCommas(tw.toFixed(2));
+        $("#rowTW_" + RowIndex).text(tw_conv);
+        if (!unit_weight) {
+            unit_weight = 0;
+        }
+        var mtons = parseFloat(unit_weight) * parseFloat(ttbndl);
+        console.log("unit_weight : " + unit_weight);
+        console.log("ttbndl : " + ttbndl);
+        console.log("mtons : " + mtons);
+        var mtons_conv = addCommas(mtons.toFixed(2));
+        var extprice = parseFloat(get_ttlen) * parseFloat(edtCFRFT);
+        var extprice_conv = addCommas(extprice.toFixed(2));
+        $("#rowMTONS_" + RowIndex).text(mtons_conv);
+        $("#rowEXTPRICE_" + RowIndex).text(extprice_conv);
+        CalSummary();
+    }
+
+    function AutoSaveHead() {
+
+
+        $.ajax({
+            url: "./module/SaleOrder.php",
+            type: 'post',
+            beforeSend: function () {
+                $("#divAutoSaveMsg").text("saving")
+            },
+            complete: function () {
+                $("#divAutoSaveMsg").text("Auto save complete")
+            },
+            data: {
+                ajax: 'true',
+                action: "UpdateHeader",
+                doc_no: '{head_doc_no}',
+                po_num: $("#edtPoNo").val(),
+                po_date: $("#edtPoDate").val(),
+                ShipExFrom: $("#txtShipMentFrom").val(),
+                ShipExTo: $("#txtShipMentTo").val(),
+                ship_to: $("#selShipTo").val(),
+                ship_to_text: $("#selShipTo option:selected").text(),
+                spec: $("#edtSpec").val(),
+                terms: $("#edtPurchase").val(),
+                remark: $("#edtRemark").val(),
+                attn: $("#edtAttn").val()
+            },
+            success: function (data) {
+                console.log('auto save header : ' + data);
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+                $("#debug").html(xhr.responseText);
+            },
+            dataType: "json"
+        });
+
+    }
+
+    function AutoSaveDetail(thisId) {
+        var RowIndex = thisId.split("_")[1];
+        console.log($("#edtItem_" + RowIndex).val());
+        $.ajax({
+            url: "./module/SaleOrder.php",
+            type: 'post',
+            beforeSend: function () {
+                $("#divAutoSaveMsg").text("saving");
+            },
+            complete: function () {
+                $("#divAutoSaveMsg").text("Auto save complete");
+            },
+            data: {
+                ajax: 'true',
+                action: "UpdateDetail",
+                doc_no: '{head_doc_no}',
+                item: $("#edtItem_" + RowIndex).val(),
+                item_desc: $("#edtItemDesc_" + RowIndex).val(),
+                lot: $("#edtLot_" + RowIndex).val(),
+                category: $("#edtCate_" + RowIndex).val(),
+                size: $("#edtSize_" + RowIndex).val(),
+                theo_weight: $("#rowTW_" + RowIndex).text().trim(),
+                length: $("#edtLEN_" + RowIndex).val(),
+                length_total: $("#rowTTLEN_" + RowIndex).text().trim(),
+                sched: $("#edtSched_" + RowIndex).val(),
+                pcs_per_bundle: $("#edtPcsPerBndl_" + RowIndex).val(),
+                bundles: $("#edtBNDL_" + RowIndex).val(),
+                pieces: $("#rowPCS_" + RowIndex).text().trim(),
+                m_tons: $("#rowMTONS_" + RowIndex).text().trim(),
+                cfr_lo_ft: $("#edtCFRFT_" + RowIndex).val(),
+                cfr_lo_mt: $("#edtCFRMT_" + RowIndex).val(),
+//                unit_weights: $("#UnitWeight_" + RowIndex).val(),
+                ext_price: $("#rowEXTPRICE_" + RowIndex).text().trim(),
+                line: $("#rowLine_" + RowIndex).text().trim(),
+            },
+            success: function (data) {
+                console.log('auto save detail : ' + data);
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+                $("#debug").html(xhr.responseText);
+            },
+            dataType: "json"
+        });
+
+    }
+    function removeEditRow(id) {
+  
+       $.ajax({
+            url: "./module/SaleOrder.php",
+            type: 'post',
+            data: {
+                ajax: 'true',
+                action: "DeleteRowDetail",
+                id : id
+            },
+            success: function (data) {
+              location.reload();
+            },
+            error: function (xhr, status, error) {
+                     location.reload();
+//                $("#debug").html(xhr.responseText);
+            },
+            dataType: "json"
+        });
+    }
+
+    function CalSummary() {
+        $("#rowMainSummary").remove();
+        var SumBNDL = 0;
+        var SumPCS = 0;
+        var SumLEN = 0;
+        var SumMTONS = 0;
+        var SumCFRMT = 0;
+        var SumCFRFT = 0;
+        var SumEXT = 0;
+        $("input[id^='edtBNDL_']").each(function () {
+            SumBNDL = parseFloat(SumBNDL) + parseFloat($(this).val().trim().replace(',', ''));
+        });
+        $("td[id^='rowPCS_']").each(function () {
+            SumPCS = parseFloat(SumPCS) + parseFloat($(this).text().trim().replace(',', ''));
+        });
+        $("td[id^='rowTTLEN_']").each(function () {
+            SumLEN = parseFloat(SumLEN) + parseFloat($(this).text().trim().replace(',', ''));
+        });
+        $("td[id^='rowMTONS_']").each(function () {
+            SumMTONS = parseFloat(SumMTONS) + parseFloat($(this).text().trim().replace(',', ''));
+        });
+        $("input[id^='edtCFRMT_']").each(function () {
+            SumCFRMT = parseFloat(SumCFRMT) + parseFloat($(this).val().trim().replace(',', ''));
+        });
+        $("input[id^='edtCFRFT_']").each(function () {
+            SumCFRFT = parseFloat(SumCFRFT) + parseFloat($(this).val().trim().replace(',', ''));
+        });
+        $("td[id^='rowEXTPRICE_']").each(function () {
+            SumEXT = parseFloat(SumEXT) + parseFloat($(this).text().trim().replace(',', ''));
+        });
+        var row = "<tr id='rowMainSummary'>";
+        row += "<td colspan='7' class='text-right'>Total : </td>";
+        row += "<td class='text-right' id='SumBNDL' style='font-weight:bold;'>" + addCommas(SumBNDL.toFixed(2)) + "</td>";
+        row += "<td class='text-right' id='SumPCS' style='font-weight:bold;'>" + addCommas(SumPCS.toFixed(2)) + "</td>";
+        row += "<td class='text-right' id='SumLEN' style='font-weight:bold;'>" + addCommas(SumLEN.toFixed(2)) + "</td>";
+        row += "<td class='text-right' id='SumMTONS' style='font-weight:bold;'>" + addCommas(SumMTONS.toFixed(2)) + "</td>";
+        row += "<td class='text-right' id='SumCFRMT' st style='font-weight:bold;'>" + addCommas(SumCFRMT.toFixed(2)) + "</td>";
+        row += "<td class='text-right' id='SumCFRFT' style='font-weight:bold;'>" + addCommas(SumCFRFT.toFixed(2)) + "</td>";
+        row += "<td class='text-right' id='SumEXT'  colspan='2' class='text-right' style='font-weight:bold;'>" + addCommas(SumEXT.toFixed(2)) + "</td>";
+        row += "</tr>";
+        $("#tableItems").append(row);
+    }
+    function OpenModalAddPort() {
+        var cust_name = $("#hdCustNum").val();
+        $('#divAddPort').dialog({
+            modal: true,
+            autoOpen: true,
+            show: 'fade',
+            width: 400,
+            height: 300,
+            title: ":: Add Port "
+        })
+                .load("././module/SOD/z_dialogPortAdd.php", {
+                    "cust_name": cust_name
+                });
+    }
+
+    $("#btnShowFilterEdit").click(function () {
+//        alert();
+        $('#divSearchItemEdit').dialog({
+            modal: true,
+            autoOpen: true,
+            show: 'fade',
+            width: screen.width - 100,
+            height: screen.height - 100,
+            top: 0,
+            title: ":: Select Item "
+        })
+                .load("././module/SOD/z_dialogSelectItemSyteLineEdit.php"
+                        );
+
+    });
+</script>
+
+

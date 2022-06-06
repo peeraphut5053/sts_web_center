@@ -1,0 +1,557 @@
+<style>
+    .head-name{
+        padding-bottom: 5px;margin-bottom:5px;
+        padding-top:10px;
+        border-bottom: solid 1px #cdcdcd;
+        color:orange;
+        /*wisth:80%;*/
+        font-weight: bold;
+    }
+    .col-label-a{
+        border-bottom: solid 1px #cdcdcd ;
+        padding-bottom: 10px;
+        margin-bottom:10px;
+        padding-top: 10px;
+        margin-top:10px;
+        color:  #000;
+        border-top:solid 1px #cdcdcd ;
+        /*padding:60%;*/
+        text-align: center;
+    }
+    .col-label{
+        text-align: right;
+        padding-top:5px;
+    }
+    .panel{
+        margin-bottom:5px;
+    }
+    .panel-body{
+        padding-bottom:5px;
+        padding-top:5px;
+    }
+    .missing-value{
+        border:solid 1px red;
+    }
+    li{
+        color:#666;
+    }
+    .select2-selection__rendered{
+        text-align: left;
+    }
+</style>
+
+<div id='rowDetails' class='rowDetails' >
+
+    <div  class="row head-name" >
+        
+        <i class="fas fa-lock"></i> &nbsp;User Login
+    </div>
+    <div class='row'>
+          <div class='col-3 col-xs-3 col-sm-3 col-md-3 col-lg-3 col-label'>
+            <font color="red">*</font>Login Name :
+        </div>
+         
+        <div class='col-3 col-xs-3 col-sm-3 col-md-3 col-lg-3 col-label'>
+            <input  OnBlur="CheckDupUserName();" id="txtUserName" type='text' class='form-control' value=''>
+             <label style="color:red; text-align: left;display:none;" id="validUsername"></label>
+        </div>
+        <div class='col-3 col-xs-3 col-sm-3 col-md-3 col-lg-3 col-label'>
+            <font color="red">*</font>Full Name :
+        </div>
+        <div class='col-3 col-xs-3 col-sm-3 col-md-3 col-lg-3 col-label'>
+            <input type='text' id="txtFullName" class='form-control' value=''>
+        </div>
+        
+        
+    </div>
+    <div class='row'>
+      
+      
+    </div>
+    <div class='row'>
+        <div class='col-3 col-xs-3 col-sm-3 col-md- col-lg-3 col-label'>
+           Password :
+        </div>
+        <div class='col-3 col-xs-3 col-sm-3 col-md- col-lg-3 col-label'>
+            <input  id="txtPass1" type='password' maxlength="16" class='form-control' value=''>
+        </div>
+        <div class='col-3 col-xs-3 col-sm-3 col-md- col-lg-3 col-label'>
+         Confirm Password :
+        </div>
+        <div class='col-3 col-xs-3 col-sm-3 col-md- col-lg-3 col-label'>
+            <input id="txtPass2" type='password' maxlength="16" class='form-control' value=''>
+        </div>
+    </div>
+    <div class='row'>
+        <div class='col-3 col-xs-3 col-sm-3 col-md- col-lg-3 col-label'>
+            <font color="red">*</font>Sys Level :
+        </div>
+        <div class='col-3 col-xs-3 col-sm-3 col-md- col-lg-3 col-label'>
+            <select  id="selLevel" class='form-control'>
+                <option value="0">..Select..</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+        </div>
+        <div class='col-3 col-xs-3 col-sm-3 col-md- col-lg-3 col-label'>
+            <font color="red">*</font> User Type :
+        </div>
+        <div class='col-3 col-xs-3 col-sm-3 col-md- col-lg-3 col-label'>
+            <select  id="selType" class='form-control'>
+                <option value="0">..Select..</option>
+                <option value="A">Admin</option>
+                <option selected value="U">User</option>
+                <option value="C">Customer</option>
+            </select>
+        </div>
+    </div>
+    <div class='row'>
+        <div class='col-3 col-xs-3 col-sm-3 col-md- col-lg-3 col-label'>
+            Customer Link  :
+        </div>
+        <div class='col-9 col-xs-9 col-sm-9 col-md- col-lg-9 col-label'>
+            <select  disabled id="selCustomerLink" class='form-control'>
+            </select>
+        </div>
+    </div>
+    <div  class="row head-name">
+        <i class="fas fa-info-circle"></i>&nbsp; User Info
+    </div>
+
+    <div class='row'>
+        <div class='col-3 col-xs-3 col-sm-3 col-md- col-lg-3 col-label'>
+            <font color="red">*</font>Department :
+        </div>
+        <div class='col-3 col-xs-3 col-sm-3 col-md- col-lg-3 col-label'>
+            <select  id="selDep" class='form-control'>
+
+            </select>
+        </div>
+        <div class='col-3 col-xs-3 col-sm-3 col-md- col-lg-3 col-label'>
+            Position :
+        </div>
+        <div class='col-3 col-xs-3 col-sm-3 col-md- col-lg-3 col-label'>
+            <select  id="selDepPos" disabled class='form-control'>
+
+            </select>
+        </div>
+    </div>
+
+
+    <div class='row'>
+        <div class='col-3 col-xs-3 col-sm-3 col-md- col-lg-3 col-label'>
+            Address  :
+        </div>
+        <div class='col-9 col-xs-9 col-sm-9 col-md- col-lg-9 col-label'>
+            <input  id="txtAddr1" type='text' class='form-control' value=''>
+            <input  id="txtAddr2" type='text' class='form-control' value=''>
+        </div>
+    </div>
+    <div class='row'>
+        <div class='col-3 col-xs-3 col-sm-3 col-md- col-lg-3 col-label'>
+            Tel(Work)  :
+        </div>
+        <div class='col-3 col-xs-3 col-sm-3 col-md- col-lg-3 col-label'>
+            <input  id="txtTel" type='text' class='form-control' value=''>
+        </div>
+        <div class='col-3 col-xs-3 col-sm-3 col-md- col-lg-3 col-label'>
+            Tel(Mobile)  :
+        </div>
+        <div class='col-3 col-xs-3 col-sm-3 col-md- col-lg-3 col-label'>
+            <input  id="txtMobile" type='text' class='form-control' value=''>
+        </div>
+    </div>
+    <div class='row'>
+        <div class='col-3 col-xs-3 col-sm-3 col-md- col-lg-3 col-label'>
+            Email :
+        </div>
+        <div class='col-3 col-xs-3 col-sm-3 col-md- col-lg-3 col-label'>
+            <input  id="txtEmail" type='text' class='form-control' value=''>
+        </div>
+        <div class='col-3 col-xs-3 col-sm-3 col-md- col-lg-3 col-label'>
+            Remark / Etc.  :
+        </div>
+        <div class='col-3 col-xs-3 col-sm-3 col-md- col-lg-3 col-label'>
+            <input  id="txtRemark" type='text' class='form-control' value=''>
+        </div>
+    </div>
+    <div  class="head-name row" style="display:none;">  
+        <i class="fas fa-cog"></i>&nbsp;User Authorize
+    </div>
+
+
+    <div class='row'>
+        <div class='col-12 text-center'><a href='#'  id='btnCreate' class='btn btn-info'>Create</a>
+        </div>
+    </div>
+    <div class='row' id='flashMsg'> </div>
+    <input type="hidden" id="hdDupUserName" value="0">
+</div>
+
+<script type='text/javascript'>
+    GetDepartment();
+    $('#selDep').on('change', function () {
+        GetDepartmentPosition();
+    });
+
+    $('#selType').on('change', function () {
+
+        if ($(this).val() == "3") {
+            GetCustomer();
+        }
+
+    });
+
+    $("#btnCreate").click(function () {
+        var ErrCount = 0;
+        var ErrHead = "Can not save because ...";
+        var ErrTxt = "";
+
+
+        var hdDupUserName = $("#hdDupUserName").val();
+        var txtFullName = $("#txtFullName").val();
+        var txtUserName = $("#txtUserName").val();
+        var txtPass1 = $("#txtPass1").val();
+        var txtPass2 = $("#txtPass2").val();
+        var selDep = $("#selDep").val();
+        var selDepPos = $("#selDepPos").val();
+        var selLevel = $("#selLevel").val();
+        var txtAddr1 = $("#txtAddr1").val();
+        var txtAddr2 = $("#txtAddr2").val();
+        var txtTel = $("#txtTel").val();
+        var txtMobile = $("#txtMobile").val();
+        var txtEmail = $("#txtEmail").val();
+        var txtRemark = $("#txtRemark").val();
+        var selSO = $("#selSO").val();
+        var selSOA = $("#selSOA").val();
+        var selBN = $("#selBN").val();
+        var selBP = $("#selBP").val();
+        var selGRN = $("#selGRN").val();
+        var selCustomerLink = $("#selCustomerLink").val();
+        var selType = $("#selType").val();
+
+
+        var Marker = [];
+
+        if (txtUserName != "") {
+            var str = $('#txtUserName').val();
+            if (/^[a-zA-Z0-9-]*$/.test(str) == false) {
+                ErrCount++;
+                ErrTxt += "<br>- Login Name not allow SPACE and  SPECIAL CHARACTER ";
+                Marker.push("txtUserName");
+            } else if (txtUserName.length < 4) {
+                ErrCount++;
+                ErrTxt += "<br>- Input Login Name 4-16 character ";
+                Marker.push("txtUserName");
+            } else if ($("#hdDupUserName").val() == "1") {
+                ErrCount++;
+                ErrTxt += "<br>- Username is exists .";
+                Marker.push("txtUserName");
+            }
+        } else {
+            ErrCount++;
+            ErrTxt += "<br>- Login Name is empty ";
+            Marker.push("txtUserName");
+        }
+        if (txtFullName == "") {
+            ErrCount++;
+            ErrTxt += "<br>- Full Name is empty ";
+            Marker.push("txtFullName");
+        }
+//        if (txtPass1.length < 4) {
+//            ErrCount++;
+//            ErrTxt += "<br>- Input password 4-16 character ";
+//            Marker.push("txtPass1");
+//        } else {
+//            if (txtPass1 != txtPass2) {
+//                ErrCount++;
+//                ErrTxt += "<br>- Confirm password not match ";
+//                Marker.push("txtPass2");
+//            }
+//        }
+
+        if (selDep == "0") {
+            ErrCount++;
+            ErrTxt += "<br>- Not select department .";
+            Marker.push("selDep");
+        }
+        if (selLevel == "0") {
+            ErrCount++;
+            ErrTxt += "<br>- Not select System level .";
+            Marker.push("selLevel");
+        }
+        if (selType == "0") {
+            ErrCount++;
+            ErrTxt += "<br>- Not select User Type .";
+            Marker.push("selType");
+        }
+        if (hdDupUserName > 0) {
+            ErrCount++;
+            ErrTxt += "<br>- Username Exists  .";
+
+        }
+//        else{
+//              if ((selType == "3")&&(selCustomerLink=="")) {
+//                    ErrCount++;
+//            ErrTxt += "<br>- Please Select Customer Link.";
+//            Marker.push("selCustomerLink");
+//              }
+//        }
+        if (ErrCount > 0) {
+            $.alert({
+                title: ErrHead,
+                content: ErrTxt,
+                theme: 'modern'
+            });
+//            $.each(Marker, function (key, value) {
+//                if (!$("#" + value).hasClass("missing-value")) {
+//                    $("#" + value).addClass("missing-value")
+//                }
+//            });
+        } else {
+            //SAVE
+//            alert("save");
+            $.ajax({
+                url: "./module/User.php",
+                type: 'post',
+                data: {
+                    ajax: 'true',
+                    action: "SaveUser",
+                    saveStat : "I",
+                    txtUserName: txtUserName,
+                    txtFullName: txtFullName,
+                    txtPass1: txtPass1,
+                    txtPass2: txtPass2,
+                    selDep: selDep,
+                    selDepPos: selDepPos,
+                    selLevel: selLevel,
+                    selType: selType,
+                    selCustomerLink: selCustomerLink,
+                    txtAddr1: txtAddr1,
+                    txtAddr2: txtAddr2,
+                    txtTel: txtTel,
+                    txtMobile: txtMobile,
+                    txtEmail: txtEmail,
+                    txtRemark: txtRemark,
+                    selSO: selSO,
+                    selSOA: selSOA,
+                    selBN: selBN,
+                    selBP: selBP,
+                    selGRN: selGRN,
+                },
+                success: function (data) {
+//                      console.log(data);
+                    $.confirm({
+                        title: "SAVE COMPLETE",
+                        content: "",
+                        theme: 'modern',
+                        buttons: {
+                            confirm: function () {
+                                location.reload();
+                            }
+                        }
+                    });
+
+                },
+                error: function (xhr, status, error) {
+                    var err = eval("(" + xhr.responseText + ")");
+                    $("#debug").html(error);
+                }
+            });
+
+        }
+    });
+    function GetDepartmentPosition() {
+        if (($("#selDep").val() == "0") || ($("#selDep").val() == "")) {
+//            $.alert({
+//                title: "Please select department ",
+//                content: "",
+//                theme: 'modern'
+//            });
+            $("#selDepPos").empty();
+            $("#selDepPos").attr("disabled", "disabled");
+        } else {
+//            alert();
+            $("#selDepPos").removeAttr("disabled");
+            $("#selDepPos").empty();
+            $.ajax({
+                url: "./module/MasterData.php",
+                type: 'post',
+                data: {
+                    ajax: 'true',
+                    action: "GetDepPosRows",
+                    dep_id: $("#selDep").val(),
+                },
+                success: function (data) {
+                    console.log(data);
+                    $("#selDepPos").empty();
+                    $("#selDepPos").append("<option value='0'>..Select..</option>");
+                    $.each(data, function (index, row) {
+                        $("#selDepPos").append("<option value='" + row["dep_pos_id"] + "'>" + row["dep_pos_name"] + "</option>");
+                    });
+                },
+                error: function (xhr, status, error) {
+                    var err = eval("(" + xhr.responseText + ")");
+                    $("#debug").html(error);
+                },
+                dataType: "JSON"
+            });
+        }
+    }
+    function CheckDupUserName() {
+        var txtUserName = $("#txtUserName").val();
+        $("#hdDupUserName").val("0");
+        $.ajax({
+            url: "./module/User.php",
+            type: 'post',
+            data: {
+                ajax: 'true',
+                action: "CheckUserNameDup",
+                username: txtUserName,
+            },
+            success: function (data) {
+                $("#hdDupUserName").val(data);
+
+                if (data > 0) {
+                    $("#txtUserName").addClass("missing-value");
+                     $("#validUsername").show();
+                    $("#validUsername").text("*Username duplicate");
+
+                } else {
+                     $("#validUsername").hide();
+                    $("#validUsername").text("");
+                    $("#txtUserName").removeClass("missing-value");
+
+                }
+            },
+            error: function (xhr, status, error) {
+                var err = eval("(" + xhr.responseText + ")");
+                $("#debug").html(error);
+            }
+        });
+    }
+    function GetDepartment() {
+        $.ajax({
+            url: "./module/MasterData.php",
+            type: 'post',
+            data: {
+                ajax: 'true',
+                action: "GetDepRows",
+            },
+            success: function (data) {
+                $("#selDep").empty();
+                $("#selDep").append("<option value='0'>..Select..</option>");
+                $.each(data, function (index, row) {
+                    $("#selDep").append("<option value='" + row["dep_id"] + "'>" + row["dep_name"] + "</option>");
+                });
+            },
+            error: function (xhr, status, error) {
+                var err = eval("(" + xhr.responseText + ")");
+                $("#debug").html(error);
+            },
+            dataType: "JSON"
+        });
+    }
+    function UpdateAuth(tId) {
+        var Ids = tId.split("_");
+        var getId = Ids[1];
+        var user_id = $("#tdUserId_" + getId).text().trim();
+        var SO = $("#selSO_" + getId).val();
+        var SOA = $("#selSOA_" + getId).val();
+        var BN = $("#selBN_" + getId).val();
+        var BP = $("#sel" + getId).val();
+        var GRN = $("#selGRN_" + getId).val();
+//        console.log(SO+' '+SOA+' ' + BN + ' ' + BP + ' ' + GRN );
+        $.ajax({
+            url: "./module/MasterData.php",
+            type: 'post',
+            data: {
+                ajax: 'true',
+                action: "UpdateUserAuthorize",
+                A_SO: SO,
+                A_SOA: SOA,
+                A_BN: BN,
+                A_BP: BP,
+                A_GRN: GRN,
+                user_id: user_id,
+            },
+            success: function (data) {
+//                console.log(data);
+                if (data.result == "1") {
+                    var msg = "<div class='alert alert-success'><i class='fas fa-check-circle'></i>&nbsp;Update successful</div>";
+                    $('#flashMsg_' + getId).html(msg);
+                    setTimeout(function () {
+                        $('#flashMsg_' + getId).html("");
+                    }, 3000);
+                } else {
+                    var msg = "<div class='alert alert-danger'><i class='fas fa-times'></i>&nbsp;Update Fail</div>";
+                    $('#flashMsg_' + getId).html(msg);
+                    setTimeout(function () {
+                        $('#flashMsg_' + getId).html("");
+                    }, 3000);
+                }
+            },
+            error: function (xhr, status, error) {
+//                alert(error);
+                var err = eval("(" + xhr.responseText + ")");
+                alert(err.Message);
+                $("#debug").html(error);
+            },
+            dataType: "JSON"
+        });
+
+    }
+    function GetCustomer() {
+        if (($("#selType").val() == "0") || ($("#selType").val() == "")) {
+            $("#selCustomerLink").empty();
+            $("#selCustomerLink").attr("disabled", "disabled");
+        } else {
+
+            $("#selCustomerLink").removeAttr("disabled");
+            $("#selCustomerLink").empty();
+            $.ajax({
+                url: "./module/SOD/CustomerSaleOrder.php",
+                type: 'post',
+                data: {
+                    ajax: 'true',
+                    action: "GetItemToDropdown",
+                },
+                success: function (data) {
+//                    $("#selCustomerLink").empty();
+//                    $("#selCustomerLink").append("<option value='0'>..Select..</option>");
+//                    $.each(data, function (index, row) {
+//                        $("#selCustomerLink").append("<option value='" + row["dep_pos_id"] + "'>" + row["dep_pos_name"] + "</option>");
+//                    });
+
+                    var items = [];
+                    var GetArray = new Array(data);
+                    items.push({
+                        "id": "",
+                        "text": ""
+                    });
+                    $.each(data, function (key, value) {
+                        items.push({
+                            "id": key,
+                            "text": value
+                        });
+                    });
+
+                    $('#selCustomerLink').select2({
+                        data: items
+                    });
+//                    if (selectId == "selItemCategory") {
+//                        $("#selItemCategory").removeAttr("disabled");
+//                    }
+                },
+                error: function (xhr, status, error) {
+                    var err = eval("(" + xhr.responseText + ")");
+                    $("#debug").html(error);
+                },
+                dataType: "JSON"
+            });
+        }
+    }
+</script>

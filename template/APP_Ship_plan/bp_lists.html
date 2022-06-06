@@ -1,0 +1,188 @@
+<style>
+    .btn {
+        height: 38px;
+        padding-top: 9px;
+
+        border-radius: 3px;
+    }
+
+    .table thead th {
+        vertical-align: bottom;
+        border-bottom: 2px solid #17a2b8;
+        background-color: #17a2b8;
+        color: #ffffff;
+    }
+
+    .btn-default {
+        border: solid 1px #666;
+    }
+
+    .btn-last,
+    .btn-page,
+    .btn-first {
+
+        border: solid 1px #666;
+        border-radius: 2px;
+        width: 25px;
+        height: 25px;
+        padding-top: 2px;
+        padding-left: 1px;
+        padding-right: 0px;
+    }
+
+    .modal-dialog {
+        min-width: 60%;
+        margin: 30px auto;
+    }
+
+    .btn-default {
+        border: solid 1px #666;
+    }
+
+    .btn-round {
+        border: solid 1px #666;
+        border-radius: 20px;
+        width: 25px;
+        height: 25px;
+        padding-top: 2px;
+        padding-left: 1px;
+        padding-right: 0px;
+    }
+</style>
+<!-- The Modal -->
+<div id="popupFilter" class="modal fade" role="dialog">
+    <div class="modal-dialog" style="width:500px;">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 style="margin-bottom:0px;"> :: Advance Search</h6>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+            </div>
+            <div class="modal-body">
+                <form name="formAdv" method="post" action="?bp_lists&advancesearch=true">
+                    <div class="row">
+                        <div class="col-4 text-right col-label">
+                            Select Field
+                        </div>
+                        <div class="col-8 text-left">
+                            <select class="form-control" name="advSelect">
+                                <option {selected1} value="ALL">ALL</option>
+                                <option {selected2} value="MV">M.V.</option>
+                                <option {selected3} value="LN">Lighter No.</option>
+                                <option {selected4} value="BA">Berthed AT</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-4 text-right col-label">
+                            Keyword
+                        </div>
+                        <div class="col-8 text-left">
+                            <input type="text" name="advKeyword" class="form-control" value="{advKeyword}">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-4 text-right col-label">
+                            Start Date
+                        </div>
+                        <div class="col-8 text-left">
+                            <input style="padding-right:2px;" type='text' class="form-control" name="advStartDate" id="StartDate" value="{advStartDate}" />
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-4 text-right col-label">
+                            End Date
+                        </div>
+                        <div class="col-8 text-left">
+                            <input style="padding-right:2px;" type='text' class="form-control" name="advEndDate" id="EndDate" value="{advEndDate}" />
+                        </div>
+
+                    </div>
+                    <div class="row ">
+                        <div class="col-12 text-center">
+                            <button type="submit" name="btnAdv" class="btn btn-info btn-small"><i class="fa fa-search-plus"></i> Advance Search</button>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<!-- {test} -->
+<div class="row rowheader" style="padding-bottom:10px;">
+
+    <div class="col-6 col-label col-">
+        <strong> :: BoatPlan Lists </strong> 
+    </div>
+
+    <div class="col-5" style="padding-right:0px;">
+        <form id="form1" name="form1" method="post" action="?bp_lists">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Quick search with (MV,LighterNo,BerthedAt)" name="txtKeyword" aria-label="Search" aria-describedby="basic-addon1" value="{keyword}">
+                <button type="submit" class="input-group-addon"><i class="fa fa-search"></i></button>
+                <button type="button" data-toggle="modal" data-target="#popupFilter" class="input-group-addon"><i class="fa fa-ellipsis-v"></i></button>
+            </div>
+        </form>
+    </div>
+
+    <div class="col-1" style="padding-left:0px;">
+        <a href="?bp_create" class="btn btn-default form-control text-center" style="border-color:#e9ecef;"><i class="fa fa-plus"></i></a>
+    </div>
+</div>
+<table class="table table-striped">
+    <thead>
+    <th>#</th>
+    <th>M.V.</th>
+    <th>LIGHTER NO.</th>
+    <th>BREATHED AT</th>
+    <th>START DATE</th>
+    <!--<th>END DATE</th>-->
+    <th>LIST</th>
+    <th>EDIT</th>
+</thead>
+<tbody>
+    {lists}
+</tbody>
+</table>
+<div class="row">
+    {paging}
+</div>
+<script>
+    $(function () {
+        $("#StartDate").datetimepicker({
+            dateFormat: 'yy-mm-dd',
+            timeFormat: "HH:mm:ss"
+        });
+        $("#EndDate").datetimepicker({
+            dateFormat: 'yy-mm-dd',
+            timeFormat: "HH:mm:ss"
+        });
+    });
+    function Cancel(ids) {
+        var parts = ids.split("-");
+        // alert(parts[1]);
+        var Conf = confirm("Want to cancel [" + parts[1] + "] data ? ");
+        if (Conf == false) {
+            return false;
+        } else {
+            $.post("./module/bp_doc_cancel.php", {
+                "HeadCode": parts[1],
+                "Cancel": 1,
+                "Type": "Cancel"
+            }, function (data) {
+                location.reload();
+
+            }, 'html');
+        }
+    }
+</script>

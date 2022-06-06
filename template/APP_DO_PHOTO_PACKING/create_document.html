@@ -1,0 +1,208 @@
+<?
+require_once __DIR__ . DIRECTORY_SEPARATOR . 'Rundiz' . DIRECTORY_SEPARATOR . 'Upload' . DIRECTORY_SEPARATOR . 'Upload.php';
+?>
+<link href="template/APP_DO_PHOTO_PACKING/photo_gallery.css" rel="stylesheet" type="text/css"/>
+<!------ Include the above in your HEAD tag ---------->
+
+<script>
+    $(document).ready(function () {
+        $(document).on('change', '.btn-file :file', function () {
+            var input = $(this),
+                    label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+            input.trigger('fileselect', [label]);
+        });
+        $('.btn-file :file').on('fileselect', function (event, label) {
+
+            var input = $(this).parents('.input-group').find(':text'),
+                    log = label;
+            if (input.length) {
+                input.val(log);
+            } else {
+                if (log)
+                    alert(log);
+            }
+
+        });
+        function readURL(input) {
+            console.log(input.files[0])
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#img-upload').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        function readURL2(input) {
+            console.log(input.files[0])
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#img-upload2').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        $("#imgInp").change(function () {
+            readURL(this);
+        });
+        $("#imgInp2").change(function () {
+            readURL2(this);
+        });
+    });</script>
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Test file upload.</title>
+    </head>
+    <body>
+        <form >
+            <div class="row">
+
+
+            </div>
+            <div class="row">
+                <div class="col-xs-6">
+                    <div class="row">
+                        <div class="offset-sm-1 col-sm-10">
+                            <div class="form-group">
+                                <label>รูปก่อนปิดตู้</label>
+                                <div class="input-group">
+                                    <input id="imgInp" type="file" name="filename[]" multiple>
+                                </div>
+                                <div>
+                                    <label for="imgInp">
+                                        <img  id='img-upload' class="square" />
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="offset-sm-1 col-sm-10">
+                            <div class="form-group">
+                                <label>รูปหลังปิดตู้</label>
+                                <div class="input-group">
+                                    <input id="imgInp2" type="file" name="filename[]" multiple>
+                                </div>
+                                <div>
+                                    <label for="imgInp2">
+                                        <img  id='img-upload2' class="square" />
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label for="DoHeader_id">Do Number</label>
+                        <input type="text"  name="DoHeader_id" class="form-control" id="DoHeader_id" aria-describedby="BarcodeHelp" placeholder="Delivery Order Number">
+                        <small id="BarcodeHelp" class="form-text text-muted">Delivery Order Number </small>
+                    </div>
+                    <div class="row" style="border-style: dashed;padding:10px;border-color: #3c8dbc;">
+                        <div>
+                            <div class="input-group">
+                                <div class="input-group-addon">xxx1 :</div>
+                                <input type="text" autocomplete="off"  class="form-control txt-filter" id="STS_POtxt">
+                            </div>
+                        </div>
+                        <div>
+                            <div class="input-group">
+                                <div class="input-group-addon">xxx2</div>
+                                <input type="text" autocomplete="off"  class="form-control txt-filter" id="TYPEtxt">
+                            </div>
+                        </div>
+
+                    </div>
+                    <div>
+                        <button style="width:100%" type="button" class="btn btn-primary" onclick="chkSubmit()">สร้างเอกสารส่งลูกค้า</button>
+                    </div>
+                </div>
+
+            </div>
+        </form>
+    </body>
+</html>
+<script>
+    function yyyymmdd() {
+        var x = new Date();
+        var y = x.getFullYear().toString();
+        var m = (x.getMonth() + 1).toString();
+        var d = x.getDate().toString();
+        (d.length == 1) && (d = '0' + d);
+        (m.length == 1) && (m = '0' + m);
+        var yyyymmdd = y + m + d;
+        return yyyymmdd;
+    }
+
+    function chkSubmit() {
+        if ($("#DoHeader_id").val() == "") {
+            alert("กรุณากรอกเลข Do ");
+            event.preventDefault()
+            return false;
+        } else if ($("#imgInp").val() == "") {
+            alert("Please enter Image 1");
+            event.preventDefault()
+            return false;
+        } else if ($("#imgInp2").val() == "") {
+            alert("Please enter Image 2");
+            event.preventDefault()
+            return false;
+        } else
+        {
+            var DoHeader_id = $("#DoHeader_id").val();
+            var filename_imgInp = "sts_" + yyyymmdd() + "_" + DoHeader_id + ".jpg";
+            var filename_imgInp2 = "sts_" + yyyymmdd() + "_" + DoHeader_id + "_1.jpg";
+            $.ajax({
+                type: 'POST',
+                url: "././module/APP_DO_PHOTO_PACKING/data.php",
+                beforeSend: function () {
+                },
+                data: {
+                    load: 'uploadImgDoHeader',
+                    DoHeader_id: DoHeader_id,
+                    file_name_1: filename_imgInp,
+                    file_name_2: filename_imgInp2,
+                },
+                success: function (data) {
+
+                },
+                error: function (e) {
+                    console.log("There was an error with your request...");
+                    console.log("error: " + JSON.stringify(e));
+                }
+            });
+            return false;
+//            return true;
+        }
+    }
+
+
+
+
+    function SearchTagDetail() {
+        var DoHeader_id = $("#DoHeader_id").val();
+        var ajaxUrl = "././module/APP_DO_PHOTO_PACKING/data.php";
+        $.ajax({
+            type: 'POST',
+            url: ajaxUrl,
+            dataType: 'json',
+            data: {
+                "load": "SearchTagDetail",
+                "DoHeader_id": DoHeader_id,
+            },
+            success: function (data) {
+                console.log(data)
+            },
+            error: function (e) {
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+    }
+
+</script>
+

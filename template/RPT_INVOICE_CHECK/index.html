@@ -1,0 +1,167 @@
+<style>
+    .col-border{
+        border: outset;
+        padding: 10px;
+        height: 77vh;
+        border-radius: 10px;
+    }
+</style>
+<div class="row">
+    <div>
+        <h1> INVOICE CHECKER REPORT </h1>
+    </div> 
+    <!--    <div class="col-lg-2" >   
+            <div class="input-group">
+                <div class="input-group-addon">From Date</div>
+                <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtFromDate">
+            </div>
+        </div>
+        <div class="col-lg-2">   
+            <div class="input-group">
+                <div class="input-group-addon">To date</div>
+                <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtToDate">
+            </div>
+        </div>
+        <div class="col-lg-2">   
+            <div class="input-group">
+                <div class="input-group-addon">Item</div>
+                <input type="text" class="form-control txt-filter" id="txtItem">
+            </div>
+        </div>-->
+
+
+    <div class="col-lg-2">   
+        <button id="btnSearch" class="btn btn-info"><i class="fa fa-searh"></i>&nbsp;ค้นหา</button>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-6 col-border" >
+        <table class="table table-condensed table-bordered table-striped" id="tblReportIN" style="width:100%;">
+            <thead>
+                <tr>
+                    <th>Transaction</th>
+                    <th>Ref</th>
+                    <th>Item</th>  
+                    <th>Description</th>
+                    <th>Coil</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <div class="col-xs-6 col-border" style="">
+        <table class="table table-condensed table-bordered table-striped" id="tblReportEX" style="width:100%;">
+            <thead>
+                <tr>
+                    <th>Transaction</th>
+                    <th>Ref</th>
+                    <th>Item</th>  
+                    <th>Description</th>
+                    <th>Coil</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+<script type="text/javascript">
+//    $("#txtFromDate,#txtToDate").datepicker({
+//        dateFormat: 'yy-mm-dd',
+//    });
+//    $("#txtFromDate,#txtToDate").val(GetToday());
+    $("#btnSearch").click(function () {
+        var tblReportIdIN = '#tblReportIN';
+        var tblReportIdEX = '#tblReportIN';
+        var btnSearch = '#btnSearch';
+        SearchDataFn(tblReportIdIN, btnSearch, tablecolumsArrIN, "INVOICE CHECKER REPORT ", "ajax");
+        SearchDataFn(tblReportIdEX, btnSearch, tablecolumsArrEX, "INVOICE CHECKER REPORT ", "ajax");
+    });
+    var tablecolumsArrIN = [
+        {
+            "data": "trans_date",
+            "className": "text-right",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "ref_num",
+            "render": function (data, type, row) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "width": 100,
+            "data": "item",
+            "className": "text-center",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "itemDesc",
+            "className": "text-center",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "sts_no",
+            "className": "text-right",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                ret = "<span>" + Number(data).toFixed(0);
+                +"</span>";
+                return ret;
+            }
+        },
+    ];
+    
+    var tablecolumsArrEX = [
+        {
+            "data": "trans_date",
+            "className": "text-right",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "ref_num",
+            "render": function (data, type, row) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "width": 250,
+            "data": "item",
+            "className": "text-center",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "itemDesc",
+            "className": "text-center",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "sts_no",
+            "className": "text-right",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                ret = "<span>" + Number(data).toFixed(0);
+                +"</span>";
+                return ret;
+            }
+        },
+    ];
+</script>

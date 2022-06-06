@@ -1,0 +1,425 @@
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/js/select2.min.js"></script>
+
+
+<style>
+    .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-xs-1, .col-xs-10, .col-xs-11, .col-xs-12, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9 {
+        padding-right: 1px;
+        padding-left: 1px;
+    }
+    ::-webkit-scrollbar {
+        width: 5px;
+    }
+    ::-webkit-scrollbar-thumb {
+        background: #3c8dbc; 
+        border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: #3c8dbc; 
+    }
+    .wrapperpage {
+        background-color: #fff;
+        /* Use flexbox */
+        display: flex;
+    }
+    .box {
+        background-color: #FFF;
+        color: #fff;
+        border-radius: 5px;
+        padding: 3px;
+        /* Use box-sizing so that element's outerwidth will match width property */
+        box-sizing: border-box;
+        box-shadow: 0 3px 3px rgba(0,0,0,0.1);
+    }
+    .handler {
+        width: 10px;
+        padding: 0;
+        cursor: ew-resize;
+        flex: 0 0 auto;
+
+    }
+    .handler::before {
+        content: '';
+        display: block;
+        width: 4px;
+        height: 100%;
+        background: ghostwhite;
+        margin: 0 auto;
+    }
+    .boxa{
+        width:30%;
+        height: 70vh;
+    }
+    .select2-container {
+        width: 137.2px !important;
+    }
+
+</style>
+<body>
+    <div class="wrapperpage" style="background: ghostwhite;">
+        <div id="selectitem" class="col-lg-4 card-body box boxa" style="min-height: 87vh;" >
+            <div style='background-color: #f2f8fa;'>
+                <div class='row' >
+                    <div class="col-lg-12">
+                        <div class="input-group" style="width: 100%;">
+                            <input type="text" placeholder="ค้นหา Item,Location" autocomplete="off"  class="form-control txt-filter" id="txtItemSearch">
+                            <div class="input-group-addon btn-info" style="cursor: pointer;background: #3c8dbc;color: #FFFFFF"  id="btnSearch" ><i class="fa fa-search"></i></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style='height:80vh;min-height:80vh; overflow-y: scroll'>
+                <table class="table table-condensed table-striped" id="tblItem">
+                    <thead>
+                        <tr>
+                            <th>item</th>
+                            <th>location</th>
+                            <th>Quantity on hand</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbodytblItem" style="cursor: pointer">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="handler"></div>
+
+        <div class="col-lg-8  container box" >
+            <div>
+                <div id="hdrline1" class='row' >
+                    <div class="col-lg-4">
+                        <div class="input-group">
+                            <div class="input-group-addon">Doc no.</div>
+                            <input value="000xxx" type="text" autocomplete="off"  class="form-control txt-filter" id="txtdoc_no">
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">   
+                        <div class="input-group">
+                            <div class="input-group-addon">Create Date</div>
+                            <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtCreateDate">
+                        </div>
+                    </div>
+                    <div class="col-lg-4">   
+                        <div class="input-group">
+                            <div class="input-group-addon">Create by</div>
+                            <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtCreateby">
+                        </div>
+                    </div>
+                </div>
+                <div id="hdrline2" class='row' >
+                    <div class="col-lg-4">
+                        <div class="input-group">
+                            <div class="input-group-addon">Location Default </div>
+                            <select style="width:105%;"  class="form-control" id="LocOptionSelected"></select>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">   
+                        <div class="input-group">
+                            <div class="input-group-addon">xxx</div>
+                            <input type="text" autocomplete="off"  class="form-control txt-filter" id="Location">
+                        </div>
+                    </div>
+                    <div class="col-lg-4">   
+                        <div class="input-group">
+                            <div class="input-group-addon">xxx</div>
+                            <input type="text" autocomplete="off"  class="form-control txt-filter" id="Location">
+                        </div>
+                    </div>
+                </div>
+                <div id="products_wrapper" class="dataTables_wrapper" style="overflow-y: scroll;height: 65vh;box-shadow: 1px 1px 1px rgba(0.1,0.1,0.1,0.1);">
+                    <table id="tblQtymove" class="table table-striped" style="width: 100%" >
+                        <thead style="background: #3c8dbc;color:white;text-align-last:center">
+                            <tr role="row">
+                                <th>Item</th>
+                                <th>FROM Location</th>
+                                <th>TO Location</th>
+                                <th>Quantity on hand</th>
+                                <th>Quantity Move</th>
+                                <th id="delcol"></th>
+                            </tr>
+                        </thead>
+                        <tbody style="overflow-y: scroll;height: 300px;font-size: 14px">
+                            <tr role="row" class="even">
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div id="footer" style="text-align:right;height: 10vh;padding: 20px">
+                    <input id="save" class="btn btn-success" type="button" value="save" />
+                    <input id="clear" class="btn btn-danger" type="button" value="clear" />
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    $("#txtCreateby").val(GetUserProp("login_username"));
+    var btnSearch = "#btnSearch";
+    var tblReport = "#tblItem";
+    $("#btnSearch").click(function () {
+        SearchItem(txtItemSearch);
+    });
+    function SearchItem() {
+        var txtItemSearch = $("#txtItemSearch").val();
+        var url = "module/STS_QTY_MOVE/data.php";
+        $.ajax({
+            type: 'POST',
+            url: url,
+            dataType: 'json',
+            beforeSend: function () {
+                //$(btnSearch).html("<i class='fa fa-spinner fa-spin'></i>");
+            },
+            data: {
+                "load": "itemList",
+                "ItemSearch": txtItemSearch,
+            },
+            success: function (data) {
+                $(tblReport).DataTable().clear();
+                $(tblReport).dataTable({
+                    "aaData": data,
+                    "paging": false,
+                    "searching": false,
+                    "bInfo": false,
+                    fixedHeader: true,
+                    destroy: true,
+                    'processing': true,
+                    "columns": [
+                        {
+                            "data": "item",
+                            "className": "text-center item selecthide",
+                            "render": function (data, type, row) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "loc",
+                            "className": "text-center loc selecthide",
+                            "render": function (data, type, row) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "qty_on_hand",
+                            "className": "text-right qty_on_hand selecthide",
+                            "render": function (data, type, row, meta) {
+                                var ret = Number(data).toFixed(0);
+                                return ret;
+                            }
+                        },
+                    ],
+                });
+            },
+            error: function (e) {
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+    }
+
+//================ Start Click move item from itemlist to QTYMOVE =====================
+    $(tblReport).on('click', '#tbodytblItem tr', function () {
+        var eventsClickItem = $(this).find(".selecthide")
+        var itemtxt = $(this).find(".item").text();
+        var qty_on_handtxt = $(this).find(".qty_on_hand").text();
+        var fromloctxt = $(this).find(".loc").text();
+        eventsClickItem.remove();
+        $("#tblQtymove").find('tbody')
+                .append($('<tr id=' + itemtxt + ' class="selecthide" >')
+                        .append($('<td>')
+                                .text(itemtxt)
+                                .append($("<input hidden type='text' class='itemArr' value=" + itemtxt + " />  "))
+                                )
+                        .append($('<td class="text-center">')
+                                .text(fromloctxt)
+                                .append($("<input hidden type='text' class='FromLoc' value=" + fromloctxt + " />  "))
+                                )
+                        .append($('<td class="text-center">')
+                                .append($("<select class='ToLoc'></select>"))
+                                )
+                        .append($('<td class="text-right">')
+                                .text(qty_on_handtxt)
+                                )
+                        .append($('<td class="text-center">')
+                                .append($("<input type='text' style='text-align:right' value='0' class='qty' />"))
+                                )
+                        .append($('<td class="text-center">')
+                                .append($("<i style='cursor: pointer;' class='fa fa-trash btn-del' id='del_" + itemtxt + "' >  "))
+                                )
+                        );
+
+//        $(".ToLoc").select2(
+//                {
+//                    tags: true,
+//                    dropdownParent: $("#ProductModal")
+//                });
+        GetLocation();
+
+    });
+//================ End Click move item from itemlist to QTYMOVE =====================
+
+//=========== Start Remove data list when click fa-trash =======================    
+    $("#tblQtymove").on('click', '.btn-del', function () {
+        var trid = this.id;
+        splitid = trid.split("_");
+        $("#" + splitid[1]).remove();
+    });
+//=========== End Remove data list when click fa-trash =======================    
+//
+//======================= Start Save Data ===============================
+    $("#save").click(function () {
+        var qty = [];
+        $(".qty").each(function () {
+            qty.push($(this).val());
+        });
+        var itemArr = [];
+        $(".itemArr").each(function () {
+            itemArr.push($(this).val());
+        });
+        var FromLoc = [];
+        $(".FromLoc").each(function () {
+            FromLoc.push($(this).val());
+        });
+        var ToLoc = [];
+        $(".ToLoc").each(function () {
+            ToLoc.push($(this).val());
+        });
+        if (itemArr == "") {
+            $.alert("กรุณาเลือก Item ที่ต้องการย้าย");
+            return false;
+        }
+        if (ToLoc[0] == "") {
+            $.alert("กรุณาเลือก To Location ที่ต้องการย้าย");
+            return false;
+        }
+        if (qty == "") {
+            $.alert("กรุณาเลือกระบุจำนวนที่ต้องการย้าย");
+            return false;
+        }
+        var doc_no = $("#txtdoc_no").val();
+        var create_date = $("#txtCreateDate").val();
+        var create_by = $("#txtCreateby").val();
+        var url = "module/STS_QTY_MOVE/data.php";
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: {
+                load: "savedata",
+                doc_no: doc_no,
+                create_date: create_date,
+                create_by: create_by,
+                qty: qty,
+                itemArr: itemArr,
+                FromLoc: FromLoc,
+                ToLoc: ToLoc,
+            },
+            success: function (result) {
+                var modalId = "#ProductModal";
+                $(modalId).modal("hide");
+                $.alert("บันทึกสำเร็จ");
+                SearchDocMove();
+            }
+        });
+
+    });
+//======================= End Save Data ===============================
+
+//=============== Start txt date box ==================
+    $("#txtCreateDate").val(GetToday());
+    $("#txtCreateDate").datepicker({
+        dateFormat: 'yy-mm-dd',
+    });
+//=============== End txt date box ====================
+
+//======================= Start Drag bar ========================================
+    var handler = document.querySelector('.handler');
+    var wrapper = handler.closest('.wrapperpage');
+    var boxA = wrapper.querySelector('.box');
+    var isHandlerDragging = false;
+    document.addEventListener('mousedown', function (e) {
+        // If mousedown event is fired from .handler, toggle flag to true
+        if (e.target === handler) {
+            isHandlerDragging = true;
+        }
+    });
+    document.addEventListener('mousemove', function (e) {
+        // Don't do anything if dragging flag is false
+        if (!isHandlerDragging) {
+            return false;
+        }
+        // Get offset
+        var containerOffsetLeft = wrapper.offsetLeft;
+        // Get x-coordinate of pointer relative to container
+        var pointerRelativeXpos = e.clientX - containerOffsetLeft;
+        // Arbitrary minimum width set on box A, otherwise its inner content will collapse to width of 0
+        var boxAminWidth = 60;
+        // Resize box A
+        // * 8px is the left/right spacing between .handler and its inner pseudo-element
+        // * Set flex-grow to 0 to prevent it from growing
+        boxA.style.width = (Math.max(boxAminWidth, pointerRelativeXpos - 8)) + 'px';
+        boxA.style.flexGrow = 0;
+    });
+    document.addEventListener('mouseup', function (e) {
+        // Turn off dragging flag when user mouse is up
+        isHandlerDragging = false;
+    });
+    //======================= End Drag bar ========================================
+
+//===================== Start Get location ============================================
+    function GetLocation() {
+        var LocOptionSelected = $("#LocOptionSelected").val();
+
+        $.ajax({
+            type: 'GET',
+            url: "././module/STS_QTY_MOVE/data.php",
+            dataType: 'json',
+            beforeSend: function () {
+            },
+            data: {
+                load: 'GetLocation',
+            },
+            success: function (data) {
+                $(".ToLoc").empty();
+                $(".ToLoc").append("<option selected value=''>---- SELECT ----</option>");
+                var selected = "";
+                $.each(data, function (index, row) {
+                    if (row["loc"] == LocOptionSelected) {
+                        selected = "selected";
+                    } else {
+                        selected = "";
+                    }
+                    $(".ToLoc").append("<option " + selected + "  value='" + row["loc"] + "'>" + row["loc"] + "</option>");
+                });
+            },
+        });
+    }
+    GetLocOptionSelected();
+    function GetLocOptionSelected() {
+        $.ajax({
+            type: 'GET',
+            url: "././module/STS_QTY_MOVE/data.php",
+            dataType: 'json',
+            beforeSend: function () {
+            },
+            data: {
+                load: 'GetLocation',
+            },
+            success: function (data) {
+                $("#LocOptionSelected").empty();
+                $("#LocOptionSelected").append("<option selected value=''>---- SELECT ----</option>");
+                var selected = "";
+                $.each(data, function (index, row) {
+                    $("#LocOptionSelected").append("<option " + selected + "  value='" + row["loc"] + "'>" + row["loc"] + "</option>");
+                });
+            },
+        });
+    }
+//===================== End Get location ============================================
+
+</script>

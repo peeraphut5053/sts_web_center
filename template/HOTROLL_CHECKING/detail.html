@@ -1,0 +1,337 @@
+<style>
+    .input-text-value{
+        border: unset;
+        width:50px;
+        border-radius: 3px;
+    }
+    .input-text-value-success{
+        border: 2px solid green;
+    }
+</style>
+<div>
+    <table id='tblReportDetail_product_test' class='table table-condensed table-bordered' style='text-align-last: center;width:100%'>
+        <thead>        
+            <tr class="bg-gray">
+                <th>Size</th>
+                <th>Standard</th>
+                <th>Thick</th>
+                <th>Length</th>
+                <th colspan='2'>Production</th>
+                <th colspan='6'>Mechanical Testing</th>
+                <th colspan='4'>Charpy V-notch Testing</th>
+                <th>Testing</th>
+                <th>ไม่ส่งผลทดสอบ</th>
+                <th></th>
+            </tr>
+            <tr  class="bg-gray">
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th>FM no.</th>
+                <th>Date</th>
+                <th>TS</th>
+                <th>YS</th>
+                <th>EL</th>
+                <th colspan='3'>El</th>
+                <th colspan='4'>Absorbed Energy(Joules)</th>
+                <th>date</th>
+                <th></th>
+                <th></th>
+            </tr>
+            <tr  class="bg-gray">
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th>≤15</th>
+                <th>>15≤30</th>
+                <th>>30</th>
+                <th>Mean</th>
+                <th>1</th>
+                <th>2</th>
+                <th>3</th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead> 
+        <tbody>
+        </tbody>
+
+    </table>
+</div>
+
+
+<table id='tblReportDetail_sup_chemical' class='table table-condensed table-bordered' style='text-align-last: center;width:100%'>
+    <thead>        
+        <tr>
+            <th colspan="20" class="bg-gray">
+                Chemical analysis from supplier
+            </th>
+        </tr>
+        <tr>
+            <th>C</th>
+            <th>Si</th>
+            <th>Mn</th>
+            <th>P</th>
+            <th>S</th>
+            <th>Cu</th>
+            <th>V</th>
+            <th>Ni</th>
+            <th>Cr</th>
+            <th>Mo</th>
+            <th>Ti</th>
+            <th>Nb</th>
+            <th>Al</th>
+            <th>B</th>
+            <th>Co</th>
+            <th>Pb</th>
+            <th>Fe</th>
+            <th>Ts</th>
+            <th>Ys</th>
+            <th>El</th>
+        </tr>
+    </thead> 
+    <tbody>
+    </tbody>
+
+</table>
+<table id='tblReportDetail_sts_chemical' class='table table-condensed table-bordered' style='text-align-last: center;width:100%'>
+    <thead>
+        <tr>
+            <th colspan="20" class="bg-gray">
+                Chemical analysis from Lab.'STS
+            </th>
+        </tr>        
+        <tr>
+            <th>C</th>
+            <th>Si</th>
+            <th>Mn</th>
+            <th>P</th>
+            <th>S</th>
+            <th>Cu</th>
+            <th>V</th>
+            <th>Ni</th>
+            <th>Cr</th>
+            <th>Mo</th>
+            <th>Ti</th>
+            <th>Nb</th>
+            <th>Al</th>
+            <th>B</th>
+            <th>Co</th>
+            <th>Pb</th>
+            <th>Fe</th>
+            <th>Ts</th>
+            <th>Ys</th>
+            <th>El</th>
+        </tr>
+    </thead> 
+    <tbody>
+    </tbody>
+</table>
+
+
+<script>
+
+
+    function insert_product_test(sno) {
+        $.ajax({
+            type: 'GET',
+            url: "././module/HOTROLL_CHECKING/data.php",
+            dataType: 'json',
+            beforeSend: function () {
+            },
+            data: {
+                load: "insert_product_test",
+                sno: sno,
+            },
+            success: function (data) {
+                product_test(data)
+            },
+        });
+    }
+    function delete_product_test(thisId, sno) {
+        let Split = thisId.split("_");
+        let id = Split[Split.length - 1];
+        $.ajax({
+            type: 'GET',
+            url: "././module/HOTROLL_CHECKING/data.php",
+            dataType: 'json',
+            beforeSend: function () {
+            },
+            data: {
+                load: "delete_product_test",
+                id: id,
+                sno: sno
+            },
+            success: function (data) {
+                product_test(data)
+            },
+        });
+    }
+    function update_product_test(thisId, col_name) {
+        $(`#${thisId}`).addClass("input-text-value-success");
+        setTimeout(function () {
+            $(`#${thisId}`).removeClass("input-text-value-success");
+        }, 2500)
+        let Split = thisId.split("_");
+        let id = Split[Split.length - 1];
+        let valdata = $(`#${thisId}`).val();
+        $.ajax({
+            type: 'POST',
+            url: "././module/HOTROLL_CHECKING/data.php",
+            beforeSend: function () {
+            },
+            data: {
+                load: 'update_product_test',
+                id: id,
+                col_name: col_name,
+                valdata: valdata
+            },
+            success: function (data) {
+                console.log(data);
+            },
+            error: function (e) {
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+    }
+    function UpdateQcTestLab(thisId, col_name) {
+        $(`#${thisId}`).addClass("input-text-value-success");
+        setTimeout(function () {
+            $(`#${thisId}`).removeClass("input-text-value-success");
+        }, 2500)
+        let Split = thisId.split("_");
+        let sno = Split[2];
+        let valdata = $(`#${thisId}`).val();
+        $.ajax({
+            type: 'POST',
+            url: "././module/HOTROLL_CHECKING/data.php",
+            beforeSend: function () {
+            },
+            data: {
+                load: 'UpdateQcTestLab',
+                sno: sno,
+                col_name: col_name,
+                valdata: valdata
+            },
+            success: function (data) {
+                console.log(data);
+            },
+            error: function (e) {
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+    }
+    function import_excel_sts_chemical(sno) {
+        var url = `template/HOTROLL_CHECKING/qc_test_import_excel/sts_chemical/${sno}.csv`;
+
+        $.ajax({
+            url: url,
+            type: 'HEAD',
+            error: function ()
+            {
+                alert("ไม่พบ File");
+                //file not exists
+            },
+            success: function ()
+            {
+                var req = new XMLHttpRequest();
+                req.open("GET", url, true);
+                req.responseType = "arraybuffer";
+                req.onload = function (e) {
+                    var data = new Uint8Array(req.response);
+                    var arr = new Array();
+                    for (var i = 0; i != data.length; ++i)
+                        arr[i] = String.fromCharCode(data[i]);
+                    var bstr = arr.join("");
+                    var workbook = XLSX.read(bstr, {type: "binary"});
+                    var first_sheet_name = workbook.SheetNames[0];
+                    var worksheet = workbook.Sheets[first_sheet_name];
+                    console.log(worksheet)
+                    $(`#sts_c_${sno}`).val(worksheet.G1.v);
+                    UpdateQcTestLab(`sts_c_${sno}`, `sts_c`)
+                    $(`#sts_si_${sno}`).val(worksheet.I1.v);
+                    UpdateQcTestLab(`sts_si_${sno}`, `sts_si`)
+                    $(`#sts_mn_${sno}`).val(worksheet.K1.v);
+                    UpdateQcTestLab(`sts_mn_${sno}`, `sts_mn`)
+                    $(`#sts_p_${sno}`).val(worksheet.M1.v);
+                    UpdateQcTestLab(`sts_p_${sno}`, `sts_p`)
+                    $(`#sts_s_${sno}`).val(worksheet.O1.v);
+                    UpdateQcTestLab(`sts_s_${sno}`, `sts_s`)
+                    $(`#sts_ni_${sno}`).val(worksheet.Q1.v);
+                    UpdateQcTestLab(`sts_ni_${sno}`, `sts_ni`)
+                    $(`#sts_cr_${sno}`).val(worksheet.S1.v);
+                    UpdateQcTestLab(`sts_cr_${sno}`, `sts_cr`)
+                    $(`#sts_mo_${sno}`).val(worksheet.U1.v);
+                    UpdateQcTestLab(`sts_mo_${sno}`, `sts_mo`)
+                    $(`#sts_cu_${sno}`).val(worksheet.W1.v);
+                    UpdateQcTestLab(`sts_cu_${sno}`, `sts_cu`)
+                    $(`#sts_co_${sno}`).val(worksheet.Y1.v);
+                    UpdateQcTestLab(`sts_co_${sno}`, `sts_co`)
+                    $(`#sts_al_${sno}`).val(worksheet.AA1.v);
+                    UpdateQcTestLab(`sts_al_${sno}`, `sts_al`)
+                    $(`#sts_v_${sno}`).val(worksheet.AC1.v);
+                    UpdateQcTestLab(`sts_v_${sno}`, `sts_v`)
+                    $(`#sts_pb_${sno}`).val(worksheet.AE1.v);
+                    UpdateQcTestLab(`sts_pb_${sno}`, `sts_pb`)
+                    $(`#sts_fe_${sno}`).val(worksheet.AG1.v);
+                    UpdateQcTestLab(`sts_fe_${sno}`, `sts_fe`)
+                    $(`#sts_ti_${sno}`).val(worksheet.AI1.v);
+                    UpdateQcTestLab(`sts_ti_${sno}`, `sts_ti`)
+                    $(`#sts_nb_${sno}`).val(worksheet.AK1.v);
+                    UpdateQcTestLab(`sts_nb_${sno}`, `sts_nb`)
+                    $(`#sts_b_${sno}`).val(worksheet.AM1.v);
+                    UpdateQcTestLab(`sts_b_${sno}`, `sts_b`)
+                }
+                req.send();
+            }
+        });
+    }
+
+    function import_excel_tensile() {
+var url = `template/HOTROLL_CHECKING/qc_test_import_excel/sts_chemical/${sno}.csv`;
+
+        $.ajax({
+            url: url,
+            type: 'HEAD',
+            error: function ()
+            {
+                alert("ไม่พบ File");
+                //file not exists
+            },
+            success: function ()
+            {
+                var req = new XMLHttpRequest();
+                req.open("GET", url, true);
+                req.responseType = "arraybuffer";
+                req.onload = function (e) {
+                    var data = new Uint8Array(req.response);
+                    var arr = new Array();
+                    for (var i = 0; i != data.length; ++i)
+                        arr[i] = String.fromCharCode(data[i]);
+                    var bstr = arr.join("");
+                    var workbook = XLSX.read(bstr, {type: "binary"});
+                    var first_sheet_name = workbook.SheetNames[0];
+                    var worksheet = workbook.Sheets[first_sheet_name];
+                    console.log(worksheet)
+                    $(`#sts_c_${sno}`).val(worksheet.G1.v);
+                    UpdateQcTestLab(`sts_c_${sno}`, `sts_c`)
+                    $(`#sts_si_${sno}`).val(worksheet.I1.v);
+                    UpdateQcTestLab(`sts_si_${sno}`, `sts_si`)
+                    
+                }
+                req.send();
+            }
+        });
+    }
+
+</script>

@@ -1,0 +1,464 @@
+<style>
+
+
+
+    #ReaderExcel table tr:first-child td {
+        background-color: #cccccc;
+        text-align: center;
+        vertical-align: middle;
+    }
+    #ReaderExcel table  {
+        border-bottom: solid 1px #cdcdcd;
+    }
+    /*item*/
+    #ReaderExcel table  td:nth-child(1){
+        width:25%;
+        text-align: left;
+        vertical-align: middle;
+    }
+    /*nps*/
+    #ReaderExcel table  td:nth-child(2){
+        width:5%;
+        text-align: right;
+        vertical-align: middle;
+    }
+    /*od*/
+    #ReaderExcel table  td:nth-child(3){
+        width:5%;
+        text-align: right;
+        vertical-align: middle;
+    }
+    /*tw*/
+    #ReaderExcel table  td:nth-child(4){
+        width:5%;
+        text-align: right;
+        vertical-align: middle;
+    }
+    /*len*/
+    #ReaderExcel table  td:nth-child(5){
+        width:5%;
+        text-align: right;
+        vertical-align: middle;
+    }
+    /*type / cate*/
+    #ReaderExcel table  td:nth-child(6){
+        width:5%;
+        text-align: center;
+        vertical-align: middle;
+    }
+    /*sched*/
+    #ReaderExcel table  td:nth-child(7){
+        width:7%;
+        text-align: right;
+        vertical-align: middle;
+    }
+    /*bndl*/
+    #ReaderExcel table  td:nth-child(8){
+        width:5%;
+        text-align: right;
+        vertical-align: middle;
+    }
+    #ReaderExcel table  td:nth-child(9), 
+    #ReaderExcel table  td:nth-child(10),
+    #ReaderExcel table  td:nth-child(11), 
+    #ReaderExcel table  td:nth-child(12),
+    #ReaderExcel table  td:nth-child(13),
+    #ReaderExcel table  td:nth-child(14),
+    #ReaderExcel table  td:nth-child(15),
+    #ReaderExcel table  td:nth-child(16)
+    {
+        text-align: right;
+        vertical-align: middle;
+    }
+    .divloading{
+        color:red;
+    }
+</style>
+
+<div class="row" style='color:orange ;border-bottom: solid 1px #cdcdcd;margin-bottom:15px;'>
+    <h2 ><b>Cohen'd test</b></h2>
+</div>
+<div class="row ">
+    <div class="col-md-1 text-right">
+        <!--FORM :--> 
+    </div>
+    <div class="col-md-1 text-right">
+        <input type="hidden" id="import_form" value="{form}"  >
+    </div>
+    <div class="col-md-4 text-right">
+        Select Excel file : 
+    </div>
+    <div class="col-md-5">
+        <input type="file" id="files" accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+    </div>
+    <div class="col-md-1 divloading" id='loadingSelectFile'>
+
+    </div>
+</div>
+<div class="row ">
+    <div class="col-md-2 text-right">
+    </div>
+    <div class="col-md-4 text-right">
+        Select Sheet : 
+    </div>
+    <div class="col-md-4">
+        <select class='form-control' onchange="SelectExcel();" id='sheet_name'>
+            <option value="">... Please select ...</option>
+        </select>
+        <!--<input type="text" id="sheet_name" class="form-control" value="Sheet1"  />-->
+    </div>
+    <div class="col-md-1 divloading"  id='loadingSelectSheet'>
+
+    </div>
+    <div class="col-md-2 text-left">
+        <!--<a id='selectExcel' OnClick='SelectExcel();' class='btn btn-info'><i class='fa fa-chevron-circle-down'></i>&nbsp; Select Excel</a>-->
+    </div>
+</div>
+<div  id="ReaderExcel" style="height:400px;overflow-y:auto;">
+
+</div>
+<div class="row text-center">
+    <button class="btn btn-warning" id="clearExcelImport">Clear</button>
+    <button class="btn btn-success" id="importToMainTable">Import to table</button>
+</div>
+<!--<script defer type="text/javascript" src="js/jquery.js"></script>-->
+<!--<script defer type="text/javascript" src="js/Export_XLS.js"></script>-->
+<script type="text/javascript">
+    $('#files').change(function (e) {
+        $("#loadingSelectFile").html("<i class='fa fa-spinner fa-spin'></i>&nbsp;loading");
+        var sheet_name = $("#sheet_name").val();
+        $('#ReaderExcel').empty();
+        var reader = new FileReader();
+        reader.readAsArrayBuffer(e.target.files[0]);
+        reader.onload = function (e) {
+            var data = new Uint8Array(reader.result);
+            var wb = XLSX.read(data, {type: 'array'});
+            var sheetcount = wb.SheetNames.length;
+            var i = 0;
+            $("#sheet_name").empty();
+            $("#sheet_name").append('<option value="">... Please select ...</option>');
+            for (i = 0; i < sheetcount; i++) {
+                $("#sheet_name").append('<option value="' + wb.SheetNames[i] + '">' + wb.SheetNames[i] + '</option>');
+            }
+            $("#loadingSelectFile").html("");
+        }
+
+    });
+    function SelectExcel() {
+         $("#loadingSelectSheet").html("<i class='fa fa-spinner fa-spin'></i>&nbsp;loading");
+
+        var files_input = document.getElementById("files");
+        var file = files_input.files[0];
+        if (!file) {
+            $.alert({
+                title: 'Can not import excel file !',
+                content: "Please select excel file"
+            });
+            return false;
+        }
+        var sheet_name = $("#sheet_name").val();
+        var reader = new FileReader();
+
+        reader.readAsArrayBuffer(file);
+        reader.onload = function (e) {
+            var data = new Uint8Array(reader.result);
+            try {
+                var wb = XLSX.read(data, {type: 'array'});
+                var htmlstr = XLSX.write(wb, {sheet: sheet_name, type: 'binary', bookType: 'html'});
+                $('#ReaderExcel')[0].innerHTML += htmlstr;
+                $('#ReaderExcel table').addClass('table table-striped table-bordered table-condensed');
+
+//                var import_form = $("#import_form").val();
+//                var headCount = 0;
+//                console.log(import_form);
+//                if (import_form == 1) {
+//                    headCount = 9;
+//                    var i = 0;
+//                    //remove head content 
+//                    $("#ReaderExcel .table tr").each(function () {
+//                        if (i <= headCount) {
+//                            $(this).remove();
+//                        }
+//                        // color bg  head table 
+//                        if ((i == 10) || (i == 11) || (i == 12)) {
+//                            $(this).css({"background-color": "#cccccc;"});
+//                        }
+//                        i++;
+//                    });
+//
+//                } else if (import_form == 2) {
+//                    headCount = 15;
+//                    var i = 0;
+//                    //remove head content 
+//                    $("#ReaderExcel .table tr").each(function () {
+//                        if (i <= headCount) {
+//                            $(this).remove();
+//                        }
+//                        // color bg  head table 
+//                        if (i == 17) {
+//                            $(this).css({"background-color": "#cccccc;"});
+//                        }
+//                        i++;
+//                    });
+//                }
+
+
+       $("#loadingSelectSheet").html("");
+            } catch (err) {
+                $.alert({
+                    title: 'Can not import excel file !',
+                    content: err,
+                });
+            }
+
+        }
+
+
+    }
+    $("#importToMainTable").click(function () {
+        ImportExcel();
+    });
+    $.fn.digits = function () {
+        return this.each(function () {
+            $(this).text($(this).text().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"));
+        })
+    }
+    function numberWithCommas(number) {
+        var parts = number.toString().split(".");
+        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        return parts.join(".");
+    }
+    function ImportExcel() {
+        var import_form = $("#import_form").val();
+        var i = 0;
+        var tblLines = "";
+        var Lot = "";
+        var CountRows = $('#ReaderExcel table').find('tr').length;
+        if (CountRows == 0) {
+            $.alert({
+                title: 'Can not import excel file !',
+                content: "not found data",
+            });
+        } else {
+            var ITEM, ITEM_DESC, SIZE, TW, LEN, CATE, SCHED, PCSPERBNDL, WEIGHT, BNDL, PIECES, TTLEN, M_TONS, FOBMT, FOBFT, extPrice = "";
+            var tdStyle = "style='border-top:none;border-bottom:none;'";
+//        console.log('count rows = ' + CountRows);
+            var tempItemName = "";
+            var tmpItemDesc = "";
+            var tmpItemFullName = "";
+            var form1counter = 0;
+            var Lot = "";
+            var tLot = "";
+            for (i = 1; i <= CountRows; i++) {
+                if (import_form == 1) {
+                    form1counter = 0;
+                    if (i >= 1) {
+                        tmpItemFullName = $('#ReaderExcel table tr:eq(' + i + ') td:eq(0)').text();
+                        //track  lot
+                        console.log("tmpItemFullName : " + tmpItemFullName);
+                        if (tmpItemFullName.indexOf("LOT") != -1) {
+
+                            Lot = tmpItemFullName.replace("LOT: ", "");
+                            console.log("found lot : " + Lot);
+                        } else {
+                            // track name 
+                            if (tmpItemFullName.length > 20) {
+                                form1counter = 1;
+                                tempItemName = tmpItemFullName.split("/")[0];
+                                tmpItemDesc = tmpItemFullName.split("/")[1];
+                            } else {
+                            }
+                        }
+
+//                    console.log("row  " + i + " " + tmpItemFullName + " tempItemName : " + tempItemName + " tmpItemDesc " + tmpItemDesc);
+                        ITEM = tempItemName;
+                        ITEM_DESC = tmpItemDesc;
+                        SIZE = $('#ReaderExcel table tr:eq(' + i + ') td:eq(2)').text();
+                        WEIGHT = $('#ReaderExcel table tr:eq(' + i + ') td:eq(4)').text();
+                        TW = $('#ReaderExcel table tr:eq(' + i + ') td:eq(5)').text();
+                        LEN = $('#ReaderExcel table tr:eq(' + i + ') td:eq(6)').text();
+                        CATE = $('#ReaderExcel table tr:eq(' + i + ') td:eq(7)').text();
+                        SCHED = $('#ReaderExcel table tr:eq(' + i + ') td:eq(8)').text();
+                        PCSPERBNDL = $('#ReaderExcel table tr:eq(' + i + ') td:eq(9)').text();
+                        BNDL = $('#ReaderExcel table tr:eq(' + i + ') td:eq(10)').text();
+                        PIECES = $('#ReaderExcel table tr:eq(' + i + ') td:eq(11)').text();
+                        TTLEN = $('#ReaderExcel table tr:eq(' + i + ') td:eq(12)').text();
+                        M_TONS = $('#ReaderExcel table tr:eq(' + i + ') td:eq(14)').text();
+                        FOBMT = $('#ReaderExcel table tr:eq(' + i + ') td:eq(15)').text();
+                        FOBFT = $('#ReaderExcel table tr:eq(' + i + ') td:eq(16)').text();
+                        extPrice = $('#ReaderExcel table tr:eq(' + i + ') td:eq(14)').text();
+                        if (Lot != "") {
+                            tLot = "<i>Lot : " + Lot + "</i><br>";
+                        }
+                        if ((ITEM != "") && (SIZE != "") && (WEIGHT != "") && (LEN != "")) {
+                            tblLines = "";
+                            tblLines = "<tr id='rowIndex_" + i + "'>";
+                            tblLines += "<td colspan='2' style='border-top:none;border-bottom:none;width:20%;' data-lot='" + Lot + "'  id='rowItem_" + i + "'>\n\
+            <input type='hidden' id='rowLot_" + Lot + "' value='" + Lot + "'><input type='hidden' id='UnitWeight_" + i + "' value='" + WEIGHT + "'>\n\
+<input type='hidden' id='rowDesc_" + i + "' value='" + ITEM_DESC + "'>\n\
+<h5 id='txtItem_" + i + "'>" + tLot + ITEM + "</h5><h6 id='txtDesc_" + i + "'>" + ITEM_DESC + "</h6></td>";
+
+                            tblLines += "<td width='3%' " + tdStyle + " id='rowSIZE_" + i + "' align='right'>" + SIZE + "</td>";
+                            tblLines += "<td width='3%' " + tdStyle + " id='rowTW_" + i + "'align='right'>" + TW + "</td>";
+                            tblLines += "<td width='3%' " + tdStyle + " id='rowUL_" + i + "'align='right'>" + LEN + "</td>";
+                            tblLines += "<td width='3%' " + tdStyle + " id='rowCATE_" + i + "'align='center'>" + CATE + "</td>";
+                            tblLines += "<td width='3%' " + tdStyle + " id='rowSCHED_" + i + "'align='right'>" + SCHED + "</td>";
+                            tblLines += "<td width='3%' " + tdStyle + " id='rowPCSPERBNDL_" + i + "'align='right'>" + PCSPERBNDL + "</td>";
+                            tblLines += "<td width='3%' " + tdStyle + " id='rowBNDL_" + i + "'align='right'>" + BNDL + "</td>";
+                            tblLines += "<td width='3%' " + tdStyle + " id='rowPCS_" + i + "'align='right'>" + PIECES + "</td>";
+                            tblLines += "<td width='3%' " + tdStyle + " id='rowTTLEN_" + i + "' align='right'>" + TTLEN + "</td>";
+                            tblLines += "<td width='3%' " + tdStyle + " id='rowMTONS_" + i + "'align='right'>" + M_TONS + "</td>";
+                            tblLines += "<td width='3%' " + tdStyle + " id='rowCFRMT_" + i + "'align='right'>" + FOBMT + "</td>";
+                            tblLines += "<td width='3%' " + tdStyle + " id='rowCFRFT_" + i + "' align='right'>" + FOBFT + "</td>";
+                            tblLines += "<td width='7%' " + tdStyle + " id='rowEXTPRICE_" + i + "'  align='right'>" + extPrice + "</td>";
+                            tblLines += "<td width='2%' style='border-top:none;border-bottom:none;' align='center'><a id='btnRemoveGridLines_" + i + "' OnClick='RemoveThis(" + i + ");'  href='#' style='color:red;'><i class='fas fa-times'></i></a></td>";
+                            tblLines += "</tr>";
+                            $("#tableItems").append(tblLines);
+                        }
+                    }
+
+                } else if (import_form == 2) {
+                    //start at row17 
+//                    console.log($('#ReaderExcel table tr:eq(1) td:eq(0)').text());
+                    if (i >= 1) {
+                        tmpItemFullName = $('#ReaderExcel table tr:eq(0) td:eq(2)').text();
+                        tempItemName = tmpItemFullName.split("/")[0];
+                        tmpItemDesc = tmpItemFullName.split("/")[1];
+                    }
+                    if (i >= 2) {
+                        if (ITEM != "") {
+                            ITEM = tempItemName.replace(",", " ");
+                        }
+                        if (ITEM_DESC != "") {
+                            ITEM_DESC = tmpItemDesc.replace(",", " ");
+                        }
+
+                        ITEM = ITEM.replace("'", "_");
+                        ITEM_DESC = ITEM_DESC.replace("'", "_");
+                        SIZE = $('#ReaderExcel table tr:eq(' + i + ') td:eq(1)').text().trim();
+                        WEIGHT = $('#ReaderExcel table tr:eq(' + i + ') td:eq(6)').text();
+                        TW = $('#ReaderExcel table tr:eq(' + i + ') td:eq(6)').text();
+                        LEN = $('#ReaderExcel table tr:eq(' + i + ') td:eq(5)').text();
+                        CATE = $('#ReaderExcel table tr:eq(' + i + ') td:eq(7)').text();
+                        SCHED = $('#ReaderExcel table tr:eq(' + i + ') td:eq(3)').text().trim();
+                        PCSPERBNDL = ConvertPiecesToBundle(SCHED, SIZE);
+
+                        PIECES = $('#ReaderExcel table tr:eq(' + i + ') td:eq(10)').text();
+                        BNDL = parseFloat(PIECES) / parseFloat(PCSPERBNDL);
+                        TTLEN = parseInt(LEN) * parseFloat($('#ReaderExcel table tr:eq(' + i + ') td:eq(10)').text().replace(",", ""));
+                        M_TONS = $('#ReaderExcel table tr:eq(' + i + ') td:eq(11)').text();
+                        FOBMT = 0;
+                        FOBFT = 0;
+                        extPrice = 0;
+                        if ((ITEM != "") && (SIZE != "") && (WEIGHT != "") && (TW != "")) {
+
+                            tblLines = "";
+                            tblLines = "<tr id='rowIndex_" + i + "'>";
+                            tblLines += "<td colspan='2' width='18%'style='border-top:none;border-bottom:none;' data-lot='" + Lot + "'  id='rowItem_" + i + "'>\n\
+            <input type='hidden' id='rowLot_" + Lot + "' value='" + Lot + "'><input type='hidden' id='UnitWeight_" + i + "' value='" + WEIGHT + "'>\n\
+<input type='hidden' id='rowDesc_" + i + "' value='" + ITEM_DESC + "'>\n\
+<h5 id='txtItem_" + i + "'>" + ITEM + "</h5><h6 id='txtDesc_" + i + "'>" + ITEM_DESC + "</h6></td>";
+                            tblLines += "<td width='3%' " + tdStyle + " id='rowSIZE_" + i + "' align='right'>" + SIZE + "</td>";
+                            tblLines += "<td width='5%' " + tdStyle + " id='rowTW_" + i + "'align='right'>" + TW + "</td>";
+                            tblLines += "<td width='5%' " + tdStyle + " id='rowUL_" + i + "'align='right'>" + LEN + "</td>";
+                            tblLines += "<td width='5%' " + tdStyle + " id='rowCATE_" + i + "'align='center'>" + CATE + "</td>";
+                            tblLines += "<td width='5%' " + tdStyle + " id='rowSCHED_" + i + "'align='right'>" + SCHED + "</td>";
+                            tblLines += "<td width='5%' " + tdStyle + " id='rowPCSPERBNDL_" + i + "'align='right'>" + numberWithCommas(PCSPERBNDL) + "</td>";
+                            tblLines += "<td width='5%' " + tdStyle + " id='rowBNDL_" + i + "'align='right'>" + numberWithCommas(Math.ceil(BNDL)) + "</td>";
+                            tblLines += "<td width='5%' " + tdStyle + " id='rowPCS_" + i + "'align='right'>" + numberWithCommas(PIECES) + "</td>";
+                            tblLines += "<td width='5%' " + tdStyle + " id='rowTTLEN_" + i + "' align='right'>" + numberWithCommas(TTLEN) + "</td>";
+                            tblLines += "<td width='7%' " + tdStyle + " id='rowMTONS_" + i + "'align='right'>" + numberWithCommas(M_TONS) + "</td>";
+                            tblLines += "<td width='7%' " + tdStyle + " id='rowCFRMT_" + i + "'align='right'>" + FOBMT + "</td>";
+                            tblLines += "<td width='5%' " + tdStyle + " id='rowCFRFT_" + i + "' align='right'>" + FOBFT + "</td>";
+                            tblLines += "<td width='5%' " + tdStyle + " id='rowEXTPRICE_" + i + "'  align='right'>" + extPrice + "</td>";
+                            tblLines += "<td width='2%' style='border-top:none;border-bottom:none;' align='center'><a id='btnRemoveGridLines_" + i + "' OnClick='RemoveThis(" + i + ");'  href='#' style='color:red;'><i class='fas fa-times'></i></a></td>";
+                            tblLines += "</tr>";
+                            $("#tableItems").append(tblLines);
+
+
+                        }
+                    }
+                }
+
+
+
+
+            }
+            $("#btnShowFilter").attr("disabled", 'disabled');
+
+            $(".ui-dialog-titlebar-close").trigger('click');
+            CalSummary();
+//            SetWrapTable();
+        }
+    }
+
+    function ConvertPiecesToBundle(sched, size) {
+        //need size and sched
+        var result = 0;
+        if (sched == 10) {
+            if (size == "1/2") {
+                result = 169;
+            } else if (size == "3/4") {
+                result = 127;
+            } else if (size == "1") {
+                result = 91;
+            } else if (size == "1 1/4") {
+                result = 61;
+            } else if (size == "1 1/2") {
+                result = 44;
+            } else if (size == "2") {
+                result = 37;
+            } else if (size == "2 1/2") {
+                result = 29;
+            } else if (size == "3") {
+                result = 24;
+            } else if (size == "3 1/2") {
+                result = 19;
+            } else if (size == "4") {
+                result = 19;
+            } else if (size == "5") {
+                result = 10;
+            } else if (size == "6") {
+                result = 10;
+            } else if (size == "8") {
+                result = 5;
+            }
+
+        } else if ((sched == 40) || (sched == 80)) {
+            if (size == "1/2") {
+                result = 120;
+            } else if (size == "3/4") {
+                result = 84;
+            } else if (size == "1") {
+                result = 60;
+            } else if (size == "1 1/4") {
+                result = 42;
+            } else if (size == "1 1/2") {
+                result = 36;
+            } else if (size == "2") {
+                result = 26;
+            } else if (size == "2 1/2") {
+                result = 18;
+            } else if (size == "3") {
+                result = 14;
+            } else if (size == "3 1/2") {
+                result = 12;
+            } else if (size == "4") {
+                result = 10;
+            } else if (size == "5") {
+                result = 7;
+            } else if (size == "6") {
+                result = 7;
+            } else if (size == "8") {
+                result = 5;
+            }
+        }
+        console.log("sched : " + sched + " size : " + size + " pieces per bndl : " + result);
+        return result;
+    }
+//    $("#ImportExcelToTable").click(function () {
+//        ImportExcel();
+//
+//    });
+
+</script>

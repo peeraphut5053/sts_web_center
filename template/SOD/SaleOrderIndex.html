@@ -1,0 +1,184 @@
+<link href="./css/ind/SaleOrder.css" rel="stylesheet" type="text/css">
+<div class="row "> 
+    
+    <div class="col-6 col-xs-6 col-sm-6 col-md-6 col-lg-6 text-left" style="padding-top:10px;">
+        <h6><a href="index.php" > <i class="fas fa-home"></i> Home </a> / Order Lists</h6>
+    </div> 
+    <div class="col-6 col-xs-6 col-sm-6 col-md-6 col-lg-6 text-right" style="padding-top:0px;">
+      
+    </div>
+</div>
+<div class='well' >
+    <div class="row" >
+      <div class='col-2 col-xs-2 col-sm-2 col-md-2 col-lg-2 '>
+        <div class='row text-left'>
+            Start Date
+        </div>
+           <div class='row'>
+            <input type="text" class="form-control" id="fltStartDate"  value='{fltStartDate}'>
+        </div>
+    </div>
+    <div class='col-2 col-xs-2 col-sm-2 col-md-2 col-lg-2 '>
+        <div class='row text-left'>
+               End Date
+        </div>
+           <div class='row'>
+               <input type="text" class="form-control" id="fltEndDate" value='{fltEndDate}'>
+        </div>
+    </div> 
+    <div class='col-2 col-xs-2 col-sm-2 col-md-2 col-lg-2 '>
+        <div class='row text-left'>
+            Status
+        </div>
+           <div class='row'>
+            <select class="form-control" id="fltStatus" >
+                <option value='0'>ALL</option>
+                <option value='P'>PENDING</option>
+                <option value='A'>APPROVED</option>
+            </select>
+        </div>
+    </div> 
+  <div class='col-2 col-xs-2 col-sm-2 col-md-2 col-lg-2 '>
+        <div class='row text-left'>
+            Keyword
+        </div>
+           <div class='row'>
+              <input type="text" class="form-control" id="fltKeyword" value='{fltKeyword}'>
+        </div>
+    </div>
+    <div class='col-1 col-xs-1 col-sm-1 col-md-1 col-lg-1 '>
+             <div class='row text-left'>
+               <a href="#"  id="btnFilterAll"> <i class="fas fa-search"></i> Search All</a>
+        </div>
+             <div class='row text-left'>
+              <a href="#" class="btn btn-info" id="btnFilter"><i class="fas fa-search"></i> Search</a>
+        </div>
+    </div>
+     
+ 
+        <div class="col-3 col-xs-3 col-sm-3 col-md-3 col-lg-3 text-right ">
+              <a href="?SOD/SaleOrder" id="btnCreateNew" class="btn btn-success {btnCreateNormal}" style="font-size:14px;height: 70px;width:150px;padding-top:25px;"><i class="fas fa-plus"></i> CREATE</a>
+              <a href="?SOD/SOD/SaleOrder_Admin" id="btnCreateNewAdmin" class="btn btn-info {btnCreateAdmin}" style="font-size:14px;height: 70px;width:150px;padding-top:25px;"><i class="fas fa-plus"></i> CREATE</a>
+        </div>
+</div>
+</div>
+
+<div class="row" id="SaleOrderHeadDiv">
+</div>
+<div class="row" id="SaleOrderHeadDivAdmin">
+</div>
+<script type="text/javascript" >
+    $("#SaleOrderHeadDiv").loading();
+    $("#loading").hide();
+    $("#divLists").empty();
+    $("#fltStartDate").datepicker({
+        dateFormat: 'yy-mm-dd',
+    });
+    $("#fltEndDate").datepicker({
+        dateFormat: 'yy-mm-dd',
+    });
+    $("#btnFilter").click(function () {
+        GetSOList(0);
+    });
+      $("#btnFilterAll").click(function () {
+        GetSOList(1);
+    });
+    GetSOList(0);
+    function GetSOList(type) {
+       
+        var fltStartDate = $("#fltStartDate").val();
+        var fltEndDate = $("#fltEndDate").val();
+        var fltStatus = $("#fltStatus").val();
+        var fltKeyword = $("#fltKeyword").val();
+        $("#SaleOrderHeadDiv").load("./module/_RenderPartial.php", {
+            "loadPage": "SaleOrder",
+            "loadDiv": "Head",
+            "fltStartDate": fltStartDate,
+            "fltEndDate": fltEndDate,
+            "fltStatus": fltStatus,
+            "fltKeyword":fltKeyword,
+            "type" : type
+        });
+       $("#SaleOrderHeadDiv").loading("stop");
+    }
+    function SelectList(ids) {
+//        $("#loading").show();
+        ChangeRowColor(ids);      
+//            if (ids.indexOf("viewData") >= 0) {
+//                alert('click view');
+//                return false ;
+//            }
+//        var ArrId = ids.split("_");
+//        var SplitId = ArrId[1];
+//        var rowDetails = $("#rowSelectSub_" + SplitId);
+//        var po_num = $("#" + ids).attr("data-po-num");
+//        var doc_no = $("#" + ids).attr("data-doc-no");
+//        $("#lblPONUM").text(po_num);
+//        $("#lblDOCNO").text(doc_no);
+//
+//        $("#SOHeadClose_" + doc_no).show();
+//        if (rowDetails.css("display") == "none") {         
+//            rowDetails.load("./module/_RenderPartial.php", {
+//                "loadPage": "SaleOrder",
+//                "loadDiv": "Detail",
+//                "doc_no": doc_no,
+//                "LoadTo":'index'
+//            });
+//            rowDetails.css({'height':150 ,'overflow-y':'auto'});
+//            rowDetails.toggle();
+//        }else{              
+//            rowDetails.toggle();
+//        }
+//        $("#loading").hide();
+    }
+    function CloseDetail(thisid) {
+        var doc_no_a = thisid.split("_");
+        var doc_no = doc_no_a[1];
+        $("#SOHeadClose_" + doc_no).find("i").removeClass('fa-chevron-down').addClass('fa-chevron-up');
+        $("#rowSelectSub_" + doc_no).toggle("fast");
+    }
+
+    function ChangeRowColor(ids) {
+        var OriColor = $("#" + ids).attr("row-state");
+        var RowFam = $("#" + ids).attr("row-family");
+        var CurrBg = "";
+        var tmpId = "";
+        var tmpArrId = [];
+        var tmpGetId = "";
+        if ($("#" + ids).hasClass("row-active") == true) {
+        } else if ($("#" + ids).hasClass("row-odd") == true) {
+            $("#" + ids).removeClass("row-odd");
+            $("#" + ids).addClass("row-active");
+        } else if ($("#" + ids).hasClass("row-even") == true) {
+            $("#" + ids).removeClass("row-even");
+            $("#" + ids).addClass("row-active");
+        }
+        var notClicked = $('tr[id^=rowSelect]').not($("#" + ids));
+        notClicked.each(function () {
+            CurrBg = $(this).attr("row-state");
+            tmpId = $(this).attr("id");
+            tmpArrId = tmpId.split("_");
+            tmpGetId = tmpArrId[1];
+            if ($("#rowSelectSub_" + tmpGetId).css("display") != "none") {
+                $("#rowSelectSub_" + tmpGetId).empty();
+                $("#rowSelectSub_" + tmpGetId).toggle("fast");
+            }
+            if ($(this).hasClass("row-active") == true) {
+                $(this).removeClass("row-active");
+                $(this).addClass(CurrBg);
+            }
+        });
+    }
+
+    function CloseDetailRow(ids) {
+        var GetId = ids.split("_");
+        var po_num = GetId[1];
+        if ($("#rowSelectSub_" + po_num).css("display") != "none") {
+            $("#rowSelectSub_" + po_num).empty();
+            $("#rowSelectSub_" + po_num).toggle("fast");
+        }
+    }
+//    $("#btnCreateNewAdmin").click(function(){
+//        
+//    });
+</script>

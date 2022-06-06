@@ -1,0 +1,41 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Feb 10, 2020, 7:46:04 AM
+    Author     : ppeer
+*/
+::-webkit-scrollbar {
+    width: 0.3vw !important;
+    height: 8px;
+}
+.grid-container{
+    display: grid;
+    grid-template-columns:9vw 1.7vw 9vw 1.7vw 9vw 1.7vw 9vw 1.7vw 9vw 1.7vw 9vw 1.7vw 9vw 1.7vw 9vw 1.7vw 9vw;
+
+}
+
+.grid-items{
+    border: 0.0px solid #ff0000;
+}
+
+.grid-container-card{
+    display: grid;
+    grid-template-columns:100%;
+    
+}
+.grid-items-card{
+    border-radius: 5px;
+}
+.card-link{
+}
+.card-desc{
+    border: 1px solid #3c8dbc ;
+    width:99%;
+    height: 3.5vw;
+    overflow-y: scroll;
+    position: absolute;
+    bottom: 2;
+}

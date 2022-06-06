@@ -1,0 +1,307 @@
+<head>
+
+    <!-- datepicker Carlendar -->
+    <!--        <script src="bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>-->
+    <!--    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">-->
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+    <style>
+        .panel-heading{
+            margin-bottom:0px;
+        }
+        .ow {
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            hyphens: auto;
+        }
+        .treeview-menu>li>a>.active {
+            color:orange;
+        }
+        .input-group-btn:last-child>.btn, .input-group-btn:last-child>.btn-group {
+            z-index: 2;
+            height: 30px;
+            margin-left: -1px;
+        }
+        .dataTables_paginate .paginate_button {
+            box-sizing: border-box;
+            display: inline-block;
+            min-width: 1.5em;
+            padding: 0.5em 1em;
+            margin-left: 2px;
+            text-align: center;
+            text-decoration: none !important;
+            cursor: pointer;
+            *cursor: hand;
+            color: #333 !important;
+            border: 1px solid transparent;
+            border-radius: 2px;
+        }
+        .quick-menu{
+            height: 40px;width: 92%;padding: 0px;
+        }
+        .quick-menu-edit{
+            height: 40px;width: 8%;padding: 0px;
+        }
+        .modal-body{
+            height: 600px;
+            padding: 0px;
+        }
+        .content {
+            min-height: 250px;
+            padding: 0px !important;
+            margin-right: auto;
+            margin-left: auto;
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+        .h4, h4 {
+            font-size: inherit !important;
+        }
+        .small-box h3 {
+            font-size: initial;
+            font-weight: bold;
+            margin: 0 0 10px 0;
+            white-space: nowrap;
+            padding: 0;
+        }
+
+        .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-xs-1, .col-xs-10, .col-xs-11, .col-xs-12, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9 {
+            position: relative;
+            min-height: 1px;
+            padding-right: 1px;
+            padding-left: 1px;
+        }
+
+        .small-box {
+            border-radius: 2px;
+            position: relative;
+            display: block;
+            margin-bottom: 10px;
+            box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+        }
+    </style>
+
+
+</head>
+
+<section class="content-header">
+    <h1>
+        <!--<small>Control panel</small>-->
+    </h1>
+</section>
+
+<!-- Main content -->
+<section class="content" style="min-height: 0px">
+    <!--    {quick_menu}-->
+    <!-- Small boxes (Stat box) -->
+    <!--    <div class="row ">
+            <div class="col-lg-3 col-xs-6">
+                 small box 
+                <div class="small-box bg-aqua">
+                    <div class="inner">
+                        <h3>{job_order_procressing}</h3>
+                        <p>List of Jobs Orders Processing</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-gear-b"></i>
+                    </div>
+                    <a onclick="QuickMenuClick(this.id);" id="LeftMainBtn_44" href="#" link="?RPT_JOBORDERPROCESSING/index" class="small-box-footer">More info <i id="LeftCircle_44" class="fa fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+             ./col 
+            <div class="col-lg-3 col-xs-6">
+                 small box 
+                <div class="small-box bg-green">
+                    <div class="inner">
+                        <h3>STS Tags</h3>
+    
+                        <p>พิมพ์ Tag ท่อ, Tag items, Tags slit</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-stats-bars"></i>
+                    </div>
+                    <a onclick="LeftMenuClick(this.id);" id="LeftMainBtn_54" href="#" link="?STS_TAG/index" class="small-box-footer">More info <i id="LeftCircle_54" class="fa fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+             ./col 
+            <div class="col-lg-3 col-xs-6">
+                 small box 
+                <div class="small-box bg-yellow">
+                    <div class="inner">
+                        <h3>PO & QC</h3>
+    
+                        <p>Report Material Hot roll</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-person-add"></i>
+                    </div>
+                    <a onclick="LeftMenuClick(this.id);" id="LeftMainBtn_58" href="#" link="?STS_po_qc/index" class="small-box-footer">More info <i id="LeftCircle_54" class="fa fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+             ./col 
+            <div class="col-lg-3 col-xs-6">
+                 small box 
+                <div class="small-box bg-red">
+                    <div class="inner">
+                        <h3>sts grn to sl</h3>
+                        <p>Check grn to syteline</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-pie-graph"></i>
+                    </div>
+                    <a onclick="LeftMenuClick(this.id);" id="LeftMainBtn_59" href="#" link="?STS_grn_to_sl/index" class="small-box-footer">More info <i id="LeftCircle_54" class="fa fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+             ./col 
+        </div>-->
+
+
+    <div style="margin: 200">
+        <a onclick="openInNewTab()">
+        <h1 >
+            <button type="button" 
+                   class="btn-primary"
+                   style="padding:50px"
+                   >
+                ลิงค์สำหรับโปรแกรมแสดงผลหรือรายงาน ที่ต้องการเรียกข้อมูลผ่านเว็บไซต์  <br> ที่มีการ Update หรือ สร้างขึ้นใหม่ หลังจาก วันที่ 01-01-2021 <br> คลิกที่นี่ 
+            </button>
+        </h1>
+    </a>
+    </div>
+    
+
+
+    <!-- /.row -->
+    <!-- Main row -->
+    <div class="row" hidden>
+        <!-- Left col -->
+        <!-- ถ้าเอา Map ให้ปรับสัดส่วนกราฟต่อ map เป็น col-lg-7 / col-lg-5 -->
+        <section class="col-lg-6 connectedSortable">
+            <!-- Custom tabs (Charts with tabs)-->
+            <div class="nav-tabs-custom">
+                <!-- Tabs within a box -->
+                <ul id="tab_garph" class="nav nav-tabs ">
+
+
+                    <li class="pull-right header ">
+                        <div>
+                            <select id="graph_list" onchange="selectGarphGroup()"></select>
+                        </div>
+                    </li>
+                </ul>
+                <div class="tab-content no-padding" id="Chart_graph">
+                    <!-- Morris chart - Sales -->
+                    <div class="chart tab-pane active" id="revenue-chart" style="position: relative; height: 300px;"></div>
+                    <div class="chart tab-pane" id="sales-chart" style="position: relative; height: 300px;"></div>
+                </div>
+            </div>
+            <!-- /.nav-tabs-custom -->
+        </section>
+        <!-- /.Left col -->
+        <!-- right col (We are only adding the ID to make the widgets sortable)-->
+        <section class="col-lg-6 connectedSortable">
+            <div class="nav-tabs-custom">
+
+            </div>
+        </section>
+        <div>
+
+
+        </div>
+        <!-- right col -->
+    </div>
+    <!-- /.row (main row) -->
+
+</section>
+<!-- /.content -->
+<!-- daterangepicker -->
+
+
+<div class="modal" id="QuickMenuModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <label id="lblModalHead"></label>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div id="modalBody" class="modal-body" style="overflow-y: scroll">
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="bower_components/moment/min/moment.min.js"></script>
+<script src="bower_components/bootstrap-daterangepicker/daterangepicker.js"></script>
+<!--<script src="template/DASHBOARD/dashboard.js"></script>-->
+<script src="template/DASHBOARD/garph.js"></script>
+<script>
+
+                                function openInNewTab() {
+                                    window.open('http://172.18.1.194:5000/', '_blank').focus();
+                                }
+
+                                function SetQuickMenu(thisId) {
+                                    var quick_menu_split = thisId.split("-");
+                                    var quick_id = quick_menu_split[1];
+                                    var modalBodyId = "#modalBody";
+                                    var modalId = "#QuickMenuModal";
+                                    var Url = "././module/DASHBOARD/load_form.php";
+                                    var UserId = $("#user_prop").attr("login_user_id");
+
+                                    $("#lblModalHead").text("Custom menu");
+                                    $(modalId).modal("show");
+                                    $(modalBodyId).empty();
+                                    $(modalBodyId).loading();
+                                    $(modalBodyId).load(Url, {
+                                        "form": "SetQuickMenu",
+                                        "id": UserId,
+                                        "quick_id": quick_id,
+                                        "method": "quickMenu",
+                                    }, function () {
+                                        $(modalBodyId).loading("stop");
+                                    });
+                                }
+
+                                function QuickMenuClick(ThisId) {
+                                    console.log(ThisId);
+                                    $("i[id^='LeftCircle_']").removeClass("active");
+                                    var prj_id = ThisId.split("_")[1];
+                                    console.log(prj_id);
+
+                                    var prj_link = $("#" + ThisId).attr("link");
+                                    var Module1 = prj_link.split("/")[0];
+                                    var ModuleName = Module1.split("?")[1];
+                                    var LinkLoad = "././module/" + ModuleName + "/index.php";
+                                    //==========Remember Control ========
+                                    $.ajax({
+                                        type: 'POST',
+                                        url: "./module/PageController.php",
+                                        data: {
+                                            "CurrentPageLiving": ModuleName,
+                                            "CurrentPageUrl": LinkLoad,
+                                            "CurrentPageLeftMenuId": ThisId,
+                                        },
+                                        beforeSend: function () {
+                                            $("#MainContent").loading();
+                                        },
+                                        success: function (data) {
+                                            // console.log(data);
+                                            $("#MainContent").load(LinkLoad
+                                                    , function () {
+                                                        //                                    $("#" + ThisId).addClass("active");
+                                                        $("#LeftCircle_" + prj_id).addClass("active");
+                                                        $("#MainContent").loading("stop");
+                                                    });
+                                        },
+                                        error: function (e) {
+                                            console.log("There was an error with your request...");
+                                            console.log("error: " + JSON.stringify(e));
+                                        }
+                                    });
+                                }
+
+
+
+</script>

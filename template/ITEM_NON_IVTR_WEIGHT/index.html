@@ -1,0 +1,326 @@
+<style>
+    .col-search {
+        padding-left: 3px;
+        padding-right: 3px;
+    }
+
+    .table thead th {
+        text-align: center;
+    }
+
+    .col-flt-page {
+        padding-top: 10px;
+        font-weight: bold;
+    }
+
+    #tblReport tbody tr td a {
+        cursor: pointer;
+    }
+
+    table.dataTable.fixedHeader-floating,
+    table.dataTable.fixedHeader-locked {
+        background-color: white;
+        margin-top: 50px !important;
+        margin-bottom: 0 !important;
+    }
+
+    .tr-row-cn td {
+        color: red;
+    }
+    .selectize-input{
+        min-height: 80px;
+    }
+    .panel-body{
+        padding-top:5px;
+        padding-bottom:5px;
+    }
+
+    .box-in-table {
+        width:100px;
+        padding-left : 1px; 
+        padding-right:1px;
+        padding-top:1px ;
+        padding-bottom:1px;
+        border-radius: 3px;
+        border:   solid 1px #000080;
+        /*border-color: #000080;*/
+    }
+</style>
+<div class="container-fluid">
+
+    <input type="hidden" id="SwitchSale" value="{SwitchSale}">
+    <div class='row'>
+        <div class="panel panel-primary">
+            <div class="panel panel-heading" style="padding-bottom:15px;">บันทึกน้ำหนักสินค้าซื้อมาขายไป <a id="btnToggleFilter" class="pull-right" style="color:red;">(ซ่อน / แสดง  filter)</a></div>
+            <div class="panel panel-body" style="padding-left:20px;">
+                <div class="row">
+                    <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3">   
+                        <div class="input-group">
+                            <div class="input-group-addon">Item</div>
+                            <input type="text" class="form-control txt-filter" id="txtItem">
+                        </div>
+                    </div>
+                    <!--                        <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3">   
+                                                <div class="input-group">
+                                                    <div class="input-group-addon">END INV</div>
+                                                    <input type="text" class="form-control txt-filter" id="txtEndInv" >
+                                                </div>
+                                            </div>-->
+                    <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3">   
+                        <button id="btnSearch" class="btn btn-info"><i class="fa fa-search"></i>&nbsp;ค้นหา</button>
+                    </div>
+                </div>  
+            </div>
+        </div>
+    </div>
+    <div class="row" >
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 text-left">
+            <h6 style="color:red;">** น้ำหนักนี้ไม่ใช่ unit_weight ที่ใช้ในการคำนวนใน Infor Syteline **</h6>
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 text-right">
+            <a id="btnSaveAll" href="#"  class="btn btn-success"><i class="fa fa-save"></i>&nbsp;SAVE</a>
+        </div>
+    </div>
+
+    <div class="row" id="divReport">
+        <table class="table table-condensed table-bordered table-striped" id="tblReport">
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Description</th>
+                    <th>Uf_Unit_Weight</th>      
+                    <!--<th>Save</th>-->
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+<script type="text/javascript" src="js/main.js"></script>
+<script type="text/javascript">
+
+    $("#btnSearch").click(function () {
+        ReportItemSearch();
+    });
+
+    $(".txt-filter").on("keypress", function (e) {
+        if (e.keyCode == 13) {
+            ReportItemSearch();
+            return false; // prevent the button click from happening
+        }
+    });
+    $(document).ready(function () {
+
+        // MULTIPLE "ID's" ARE SEPARATED BY COMMAS.
+        $(".allow_decimal").keypress(function (event) {
+            return isNumber(event, this);
+        });
+    });
+    // THE SCRIPT THAT CHECKS IF THE KEY PRESSED IS A NUMERIC OR DECIMAL VALUE.
+    function isNumber(evt, element) {
+        alert();
+        var charCode = (evt.which) ? evt.which : event.keyCode
+
+        if (
+                (charCode != 45 || $(element).val().indexOf('-') != -1) && // “-” CHECK MINUS, AND ONLY ONE.
+                (charCode != 46 || $(element).val().indexOf('.') != -1) && // “.” CHECK DOT, AND ONLY ONE.
+                (charCode < 48 || charCode > 57))
+            return false;
+
+        return true;
+    }
+    function ReportItemSearch() {
+
+        var OldHtml = $("#btnSearch").html();
+        var SwitchSale = $("#SwitchSale").val();
+        $('#tblReport').loading();
+        $("#btnSearch").html("<i class='fa fa-spinner fa-spin'></i>");
+        var txtItem = $("#txtItem").val();
+
+        if (txtItem == "") {
+            $.alert("Please Input keyword item for search ");
+        } else {
+            $.ajax({
+                type: 'POST',
+                url: "././module/ITEM_NON_IVTR_WEIGHT/data.php",
+//                contentType: "text/plain",
+                dataType: 'json',
+                beforeSend: function () {
+                    $("#btnSearch").html("<i class='fa fa-spinner fa-spin'>");
+                },
+                data: {
+
+                    "load": "ajax",
+                    "txtItem": txtItem,
+
+                },
+                success: function (data) {
+//      console.log(data);
+                    $("#tblReport").DataTable().clear();
+                    var RowFooterBuild = "";
+                    var ColBuild = "";
+                    var ColCount = 4;
+                    var i = 0;
+//                    RowFooterBuild = "<tfoot><tr>__ColBuild__</tr></tfoot>";
+//                    for (i = 1; i <= ColCount; i++) {
+//                        ColBuild += "<td></td>";
+//                    }
+//                    $("#tblReport").append(RowFooterBuild.replace("__ColBuild__", ColBuild));
+                    $('#tblReport').dataTable({
+                        "aaData": data,
+                        "paging": false,
+                        fixedHeader: true,
+                        destroy: true,
+                        'processing': true,
+                        "columns": [
+                            {
+                                "data": "item",
+                                "className": "text-left",
+//                                "render": function (data, type, row) {
+//                                    var ret = data;
+//                                    if (row["inv_num"].substring(0, 2) == "CN") {
+//                                        ret = "<span style='color:red;'>" + data + "</span>";
+//                                    }
+//                                    return ret;
+//                                }
+                            },
+                            {
+                                "data": "description",
+                                "className": "text-left",
+//                                "render": function (data, type, row) {
+//                                    var ret = data + "<h6>" + row["name"] + "</h6>";
+//                                    if (row["inv_num"].substring(0, 2) == "CN") {
+//                                        ret = "<span style='color:red;'>" + data + "<h6>" + row["name"] + "</h6>" + "</span>";
+//                                    }
+//                                    return ret;
+//                                }
+                            },
+                            {
+                                "data": "Uf_Unit_Weight",
+                                "className": "text-left",
+                                "render": function (data, type, row) {
+                                    var inputbox = "";
+                                    var val = "";
+                                    if ((row["Uf_Unit_Weight"] != null) || (row["Uf_Unit_Weight"])) {
+                                        val = row["Uf_Unit_Weight"];
+
+                                    }
+                                    inputbox = "<input type='text' onkeyup='allow_decimal(this);'   class='form-control allow_decimal' id='Weight_" + row["item"] + "' value='" + val + "' placeholder='ระบุน้ำหนัก'>";
+                                    return inputbox;
+                                }
+                            },
+                        ],
+                        'dom': "<'row'<'col-md-5'><'col-md-7 text-right col-flt-page'>>" +
+                                "<'row'<'col-md-12'tr>>" +
+                                "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                        buttons: [{
+                                extend: 'print',
+                                text: "<i class='fa fa-print'></i>&nbsp;Print",
+                                title: ''
+                            },
+                            {
+
+                                extend: 'excel',
+                                footer: true,
+                                text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                                title: ''
+                            },
+                        ],
+//                        "footerCallback": function (row, data, start, end, display) {
+//                            var api = this.api(),
+//                                    data;
+//
+//                            // converting to interger to find total
+//                            var intVal = function (i) {
+//                                return typeof i === 'string' ?
+//                                        i.replace(/[\$,]/g, '') * 1 :
+//                                        typeof i === 'number' ?
+//                                        i : 0;
+//                            };
+//
+//                            // computing column Total of the complete result
+//                            var discount = api
+//                                    .column(8)
+//                                    .data()
+//                                    .reduce(function (a, b) {
+//                                        return intVal(a) + intVal(b);
+//                                    }, 0);
+//                            var amount = api
+//                                    .column(9)
+//                                    .data()
+//                                    .reduce(function (a, b) {
+//                                        return intVal(a) + intVal(b);
+//                                    }, 0);
+//
+//                            var tax = api
+//                                    .column(10)
+//                                    .data()
+//                                    .reduce(function (a, b) {
+//                                        return intVal(a) + intVal(b);
+//                                    }, 0);
+//                            var total_amount = api
+//                                    .column(11)
+//                                    .data()
+//                                    .reduce(function (a, b) {
+//                                        return intVal(a) + intVal(b);
+//                                    }, 0);
+//                            $(api.column(7).footer()).html('Total');
+//                            $(api.column(8).footer()).html(addCommas(discount.toFixed(2)));
+//                            $(api.column(9).footer()).html(addCommas(amount.toFixed(2)));
+//                            $(api.column(10).footer()).html(addCommas(tax.toFixed(2)));
+//                            $(api.column(11).footer()).html(addCommas(total_amount.toFixed(2)));
+//                        },
+
+                    });
+                    $('#tblReport').loading("stop");
+                    $("#btnSearch").html(OldHtml);
+                    // $(".panel-body").slideToggle("slow");
+                },
+                error: function (e) {
+                    console.log("There was an error with your request...");
+                    console.log("error: " + JSON.stringify(e));
+                }
+            });
+        }
+    }
+
+    $(".panel-heading").click(function () {
+        $(".panel-body").slideToggle("slow");
+    });
+
+    $("#btnSaveAll").click(function () {
+        var items = [];
+        $("input[id^='Weight']").each(function () {
+            if ($(this).val() != "") {
+                items.push([$(this).attr("id").split("_")[1], $(this).val()]);
+            }
+        });
+
+        var oldHtml = '<i class="fa fa-save"></i>&nbsp;SAVE';
+        $.ajax({
+            type: 'POST',
+            url: "././module/ITEM_NON_IVTR_WEIGHT/data.php",
+            beforeSend: function () {
+                $("#btnSaveAll").html("<i class='fa fa-spinner fa-spin'>");
+
+            },
+            data: {
+                "load": "save",
+                "items": items,
+            },
+            success: function (data) {
+                console.log(data);
+                $.alert("Complete");
+                $("#btnSaveAll").html(oldHtml);
+            },
+            error: function (e) {
+                $.alert({
+                    title: "<i style='color:red;' class='fa fa-exclamation-triangle'></i> ... There was an error with your request...",
+                    content: "error: " + JSON.stringify(e),
+                });
+
+            }
+        });
+    });
+
+
+</script>

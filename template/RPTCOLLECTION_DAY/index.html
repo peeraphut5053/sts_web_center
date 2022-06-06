@@ -1,0 +1,623 @@
+<style>
+    .col-search {
+        padding-left: 3px;
+        padding-right: 3px;
+    }
+
+    /*    table.dataTable thead .sorting:after,
+          table.dataTable thead .sorting:before,
+          table.dataTable thead .sorting_asc:after,
+          table.dataTable thead .sorting_asc:before,
+          table.dataTable thead .sorting_asc_disabled:after,
+          table.dataTable thead .sorting_asc_disabled:before,
+          table.dataTable thead .sorting_desc:after,
+          table.dataTable thead .sorting_desc:before,
+          table.dataTable thead .sorting_desc_disabled:after,
+          table.dataTable thead .sorting_desc_disabled:before {
+              bottom: .5em;
+          }*/
+    .table thead th {
+        text-align: center;
+    }
+
+    .col-flt-page {
+        padding-top: 10px;
+        font-weight: bold;
+    }
+
+    #tblReport tbody tr td a {
+        cursor: pointer;
+    }
+
+    table.dataTable.fixedHeader-floating,
+    table.dataTable.fixedHeader-locked {
+        background-color: white;
+        margin-top: 50px !important;
+        margin-bottom: 0 !important;
+    }
+
+    @media print {
+        table th:nth-child(0) {
+            width: 200px;
+            word-break: break-all;
+            white-space: pre-line;
+        }
+
+        table td:nth-child(0) {
+            width: 200px;
+            word-break: break-all;
+            white-space: pre-line;
+        }
+
+    }
+
+    .text-wrap {
+        white-space: normal;
+    }
+
+    .width-200 {
+        width: 200px;
+    }
+
+    input[type=checkbox] {
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+
+    /*
+      .cb_lb{
+          margin-top:-5px;
+      }*/
+
+
+    .input-group-addon2 {
+        padding: 6px 12px;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 1;
+        color: #555;
+        height: 32px;
+        text-align: center;
+        background-color: #eee;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        border-top-right-radius: 0px;
+        border-bottom-right-radius: 0px;
+    }
+
+    .selectize-input {
+        padding-top: 5px;
+        padding-bottom: 5px;
+        height: 32px;
+        min-height: 64px;
+        border-top-left-radius: 0px;
+        border-bottom-left-radius: 0px;
+    }
+
+    .input-group .form-control {
+        padding-left: 1px;
+        padding-right: 1px;
+    }
+</style>
+<div class="row">
+    <h4><b>Collection Day Report</b></h4>
+</div>
+<div class='row'>
+    <div class="col-lg-2 col-md-2 col-sm-6 col-xs-2 text-left input-group-addon" style="width:100px;padding-top:7px;border-top-left-radius: 5px;border-bottom-left-radius: 5px;">
+        Customer
+    </div>
+    <div class="col-6 col-sm-6 col-xs-6 col-md-6 col-lg-6" style="padding-right:50px;">
+        <!--        <div class="input-group">
+                    <div class="input-group-addon">Account</div>
+                    <input type="text" class="form-control" id="txtAcct">
+                    <div class="input-group-addon"><a><i class="fa fa-eye"></i></a></div>
+                </div>-->
+        <div class="row" style="margin-top:0px;margin-bottom:0px;padding-top:0px;padding-bottom:0px;">
+            <select multiple class="form-control" id="SelCust" style="display:none;height:70px;">
+                {options_cust}
+            </select>
+        </div>
+    </div>
+    <div class="col-lg-2 col-md-2 col-sm-6 col-xs-6 " >
+        <div class='row' style="margin-top:0px;">
+            <div class="input-group">
+                <div class="input-group-addon">Start Date</div>
+                <input type="text" id="StartDate" class="form-control" value="2020-05-01" autocomplete="off">
+            </div>
+        </div>
+        <div class='row'>
+            <div class="input-group">
+                <div class="input-group-addon">End Date</div>
+                <input type="text" id="EndDate" class="form-control" value="2020-05-04" autocomplete="off">
+            </div>
+        </div>
+    </div>
+
+    <!--<div class="col-lg-7 col-md-7 col-sm-6 col-xs-6 ">-->
+    <!--<div class="row" style="margin-top:0px;margin-bottom:0px;padding-top:0px;padding-bottom:0px;">-->
+    <!--            <div class="col-6 col-sm-6 col-xs-6 col-md-3 col-lg-3 text-right input-group-addon2">
+                    Account
+                </div>-->
+
+
+
+    <div class="col-lg-1 col-md-1 col-sm-6 col-xs-6 text-left">
+        <button class="btn btn-info" id="btnSearch"><i class="fa fa-search"></i>&nbsp;Search </button>
+    </div>
+
+</div>
+<div class="row" id="rowResultTable">
+    <table class="table table-condensed table-striped " width="100%" id="tblReport">
+        <thead>
+            <tr>
+                <th>cust_num</th>
+                <th>name</th>
+                <th>inv_num</th>
+                <th>apply_to_inv</th>
+                <th>amount</th>
+                <th>sales_tax</th>
+                <th>due_date_day</br>(Credit term)</th>
+                <th>inv_date</th>
+                <th>due_date</th>
+                <th>receipt_date</th>
+                <th>inv_to_due</th>
+                <th>inv_to_recpt</br>(ระยะเวลาเก็บเงิน)</th>
+                <th>due_to_recpt</br>(จำนวนวันที่เกิน Due)</th>             
+            </tr>
+
+        </thead>
+    </table>
+</div>
+<script src="https://cdn.datatables.net/plug-ins/1.10.21/sorting/date-uk.js" />
+<script src="https://momentjs.com/downloads/moment.js" />
+<script type="text/javascript">
+    //Init render page environment //
+    $(document).ready(function () {
+        $('#SelCust').selectize({
+            plugins: ['remove_button'],
+            delimiter: ',',
+            persist: false,
+            create: function (input) {
+                return {
+                    value: input,
+                    text: input
+                }
+            }
+        });
+    });
+    $("#btnSearch").click(function () {
+        ReportItemSearch();
+    });
+    $("#StartDate,#EndDate").datepicker({
+        dateFormat: 'yy-mm-dd'
+    });
+    function ReportItemSearch() {
+        var OldHtml = $("#btnSearch").html();
+        var Cust = [];
+        Cust = $("#SelCust").val();
+        console.log(Cust);
+        var StartDate = $("#StartDate").val();
+        var EndDate = $("#EndDate").val();
+        if ((StartDate == "") || (EndDate == "")) {
+
+            $.alert("Please select StartDate - EndDate ");
+            return false;
+        } else {
+
+
+
+            var _customizeExcelOptions = function (xlsx) {
+                var sheet = xlsx.xl.worksheets['sheet1.xml'];
+                var numrows = 1;
+                var clR = $('row', sheet);
+
+                //update Row
+                clR.each(function () {
+                    var attr = $(this).attr('r');
+                    var ind = parseInt(attr);
+                    ind = ind + numrows;
+                    $(this).attr("r", ind);
+                });
+
+                // Create row before data
+                $('row c ', sheet).each(function () {
+                    var attr = $(this).attr('r');
+                    var pre = attr.substring(0, 1);
+                    var ind = parseInt(attr.substring(1, attr.length));
+                    ind = ind + numrows;
+                    $(this).attr("r", pre + ind);
+                });
+
+                function Addrow(index, data) {
+                    var msg = '<row r="' + index + '">'
+                    for (var i = 0; i < data.length; i++) {
+                        var key = data[i].key;
+                        var value = data[i].value;
+                        msg += '<c t="inlineStr" r="' + key + index + '">';
+                        msg += '<is>';
+                        msg += '<t>' + value + '</t>';
+                        msg += '</is>';
+                        msg += '</c>';
+                    }
+                    msg += '</row>';
+                    return msg;
+                }
+                var d = new Date();
+                let dateNow = `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`
+                var r1 = Addrow(1, [{key: 'A', value: `Collection Day Report ( เรียกรายงาน ณ วันที่ ${dateNow}) `}]);
+                //var r2 = Addrow(2, [{key: 'A', value: "222"}]);
+
+                sheet.childNodes[0].childNodes[1].innerHTML = r1 + sheet.childNodes[0].childNodes[1].innerHTML;
+
+
+
+            }
+
+
+            $("#btnSearch").html("<i class='fa fa-spinner fa-spin'></i>");
+            $("#tblReport").loading();
+            $.ajax({
+                type: 'POST',
+                url: "././module/RPTCOLLECTION_DAY/data.php",
+                //                contentType: "text/plain",
+                dataType: 'json',
+                beforeSend: function () {
+                    $("#btnSearch").html("<i class='fa fa-spinner fa-spin'>");
+                },
+                data: {
+                    "load": "ajax",
+                    "StartDate": StartDate,
+                    "EndDate": EndDate,
+                    "Cust": Cust
+                },
+                success: function (data) {
+
+//                    console.log(d)
+//                    console.log(dateNow);
+                    $("#tblReport").DataTable().clear();
+                    var RowFooterBuild = "";
+                    var ColBuild = "";
+                    var ColCount = 12;
+                    var i = 0;
+                    RowFooterBuild = "<tfoot><tr>!!ColBuild!!</tr></tfoot>";
+                    for (i = 1; i <= ColCount; i++) {
+                        ColBuild += "<td></td>";
+                    }
+                    $("#tblReport").append(RowFooterBuild.replace("!!ColBuild!!", ColBuild));
+                    $('#tblReport').dataTable({
+                        scrollY: 350,
+                        "scrollX": true,
+                        "aaData": data,
+//                        "aaSorting": [[2, 'asc'], [1, 'asc']],
+                        "paging": false,
+                        fixedHeader: false,
+                        destroy: true,
+                        'processing': true,
+
+                        "columns": [
+                            {
+                                "data": "cust_num",
+                                "className": "text-center",
+                                "width": "5%",
+                                "render": function (data, type, row, meta) {
+                                    var ret = data;
+                                    if (row["inv_num"].substring(0, 2) == "CN") {
+                                        ret = "<span style='color:red;'>" + ret + "</span>";
+                                    }
+                                    return ret;
+                                }
+
+                            },
+                            {
+                                "data": "name",
+                                "className": "text-center",
+                                "width": "10%",
+                                "render": function (data, type, row, meta) {
+                                    var ret = data;
+                                    if (row["inv_num"].substring(0, 2) == "CN") {
+                                        ret = "<span style='color:red;'>" + ret + "</span>";
+                                    }
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "inv_num",
+                                "className": "text-left",
+                                "width": "5%",
+                                "render": function (data, type, row, meta) {
+                                    var ret = data;
+                                    if (row["inv_num"].substring(0, 2) == "CN") {
+                                        ret = "<span style='color:red;'>" + ret + "</span>";
+                                    }
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "apply_to_inv",
+                                "className": "text-left",
+                                "render": function (data, type, row, meta) {
+                                    var ret = data;
+                                    if (row["inv_num"].substring(0, 2) == "CN") {
+                                        ret = "<span style='color:red;'>" + ret + "</span>";
+                                    }
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "amount",
+                                "className": "text-right",
+                                "width": "10%",
+                                "render": function (data, type, row, meta) {
+                                    var ret = addCommas(parseFloat(data).toFixed(2));
+                                    if (row["inv_num"].substring(0, 2) == "CN") {
+
+                                        ret = "<span style='color:red;'>" + addCommas(parseFloat(data).toFixed(2)) + "</span>";
+                                    }
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "sales_tax",
+                                "className": "text-right",
+                                "width": "10%",
+                                "render": function (data, type, row, meta) {
+                                    var ret = addCommas(parseFloat(data).toFixed(2));
+                                    if (row["inv_num"].substring(0, 2) == "CN") {
+
+                                        ret = "<span style='color:red;'>" + addCommas(parseFloat(data).toFixed(2)) + "</span>";
+                                    }
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "due_date_day",
+                                "className": "text-center",
+                                "width": "10%",
+                                "render": function (data, type, row, meta) {
+                                    var ret = addCommas(parseFloat(data).toFixed(2));
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "inv_date_conv",
+                                "className": "text-right",
+                                "width": "10%",
+                                "type": "date",
+                                "render": function (data, type, row, meta) {
+
+                                    var ret = data;
+                                    if (row["inv_num"].substring(0, 2) == "CN") {
+                                        ret = "<span style='color:red;'>" + ret + "</span>";
+                                    }
+                                    return  moment(ret).format('DD/MM/YYYY');
+                                    ;
+                                }
+                            },
+                            {
+                                "data": "due_date_conv",
+                                "className": "text-right",
+                                "width": "10%",
+                                "render": function (data, type, row, meta) {
+                                    type = "date";
+                                    var ret = data;
+                                    if (row["inv_num"].substring(0, 2) == "CN") {
+                                        ret = "<span style='color:red;'>" + ret + "</span>";
+                                    }
+                                    return  moment(ret).format('DD/MM/YYYY');
+                                    ;
+                                }
+                            },
+                            {
+                                "data": "receipt_date_conv",
+                                "className": "text-left",
+                                "width": "5%",
+                                "render": function (data, type, row, meta) {
+                                    var ret = data;
+                                    if (row["inv_num"].substring(0, 2) == "CN") {
+                                        ret = "<span style='color:red;'>" + ret + "</span>";
+                                    }
+                                    return  ret;
+                                    ;
+                                }
+                            },
+                            {
+                                "data": "inv_to_due",
+                                "className": "text-center",
+                                "width": "5%",
+                                "render": function (data, type, row, meta) {
+                                    var ret = data;
+                                    if (row["inv_num"].substring(0, 2) == "CN") {
+                                        ret = "<span style='color:red;'>" + ret + "</span>";
+                                    }
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "inv_to_receipt",
+                                "className": "text-center",
+                                "width": "5%",
+                                "render": function (data, type, row, meta) {
+                                    var ret = row["inv_to_receipt"];
+                                    if (row["inv_num"].substring(0, 2) == "CN") {
+                                        ret = "<span style='color:red;'>" + ret + "</span>";
+                                    }
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "due_to_receipt",
+                                "className": "text-left",
+                                "width": "5%",
+                                "render": function (data, type, row, meta) {
+                                    var ret = data;
+                                    if (row["inv_num"].substring(0, 2) == "CN") {
+                                        ret = "<span style='color:red;'>" + ret + "</span>";
+                                    }
+                                    return ret;
+                                }
+                            },
+                        ],
+                        'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                                "<'row'<'col-md-12'tr>>" +
+                                "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                        buttons: [{
+                                extend: 'print',
+                                text: "<i class='fa fa-print'></i>&nbsp;Print",
+                                title: 'LedgerReport'
+                            },
+                            {
+                                extend: 'excel',
+                                footer: true,
+                                text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                                title: `Period: ${StartDate} ถึง ${EndDate}`,
+                                "customize": _customizeExcelOptions
+                            },
+                        ],
+                        "footerCallback": function (row, data, start, end, display) {
+                            var api = this.api(),
+                                    data;
+                            var intVal = function (i) {
+                                return typeof i === 'string' ?
+                                        i.replace(/[\$,]/g, '') * 1 :
+                                        typeof i === 'number' ?
+                                        i : 0;
+                            };
+                            // computing column Total of the complete result
+                            var amount_total = api
+                                    .column(4)
+                                    .data()
+                                    .reduce(function (a, b) {
+                                        return intVal(a) + intVal(b);
+                                    }, 0);
+                            var tax_total = api
+                                    .column(5)
+                                    .data()
+                                    .reduce(function (a, b) {
+                                        return intVal(a) + intVal(b);
+                                    }, 0);
+                            $(api.column(2).footer()).html('Total');
+                            $(api.column(4).footer()).html(addCommas(amount_total.toFixed(2)));
+                            $(api.column(5).footer()).html(addCommas(tax_total.toFixed(2)));
+                        },
+                    });
+                    $('#tblReport').loading("stop");
+                    $("#btnSearch").html(OldHtml);
+                },
+                error: function (e) {
+
+                    console.log("There was an error with your request...");
+                    console.log("error: " + JSON.stringify(e));
+                }
+            });
+
+
+
+
+
+            //            $("#tblReportList").load("././module/RPTARTRAN/data.php", {
+            //                "load": "ajax",
+            //                "StartDate": StartDate,
+            //                "EndDate": EndDate,
+            //                "docs": docs
+            //            }, function () {
+            //                $('#tblReport').DataTable({
+            //                    ordering: false,
+            ////                    searching: false,
+            //                    fixedHeader: true,
+            //                    retrieve: true,
+            //                    scrollX: true,
+            //                    scrollY: 400,
+            //                    columnDefs: [
+            //                        {
+            //                            render: function (data, type, full, meta) {
+            //                                return "<div class='text-wrap width-200'>" + data + "</div>";
+            //                            },
+            //                            targets: 0
+            //                        }
+            //                    ],
+            //                    "pageLength": 999999999,
+            //                    'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'>>" +
+            //                            "<'row'<'col-md-12'tr>>" +
+            //                            "<'row'<'col-md-5'><'col-sm-7'>>",
+            //                    "columnDefs": [
+            //                        {"width": "5%", "className": "text-center", "targets": 0}, //#
+            //                        {"width": "10%", "className": "text-center", "targets": 1}, //inv_date
+            //                        {"width": "10%", "className": "text-left", "targets": 2}, //inv_num
+            //                        {"width": "10%", "className": "text-center", "targets": 3}, //cust_num
+            //                        {"width": "10%", "className": "text-left", "targets": 4}, //cust_name
+            //                        {"width": "10%", "className": "text-right", "targets": 5}, //amount
+            //                        {"width": "10%", "className": "text-right", "targets": 6}, //sales_tax
+            //                        {"width": "20%", "className": "text-left", "targets": 7}, //desc
+            //                        {"width": "10%", "className": "text-center", "targets": 8}, //apply to inv
+            //                        {"width": "5%", "className": "text-center", "targets": 9}, //post_from_cp
+            ////                        {"width": "5%","className": "text-right", "targets": 10},
+            //                    ],
+            //                    buttons: [
+            //                        {
+            //                            extend: 'print',
+            //                            text: "<i class='fa fa-print'></i>&nbsp;Print",
+            //                            title: ''
+            //                        },
+            //                        {
+            //                            extend: 'excel',
+            //                            text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+            //                            title: ''
+            //                        },
+            //                    ],
+            //                    "footerCallback": function (row, data, start, end, display) {
+            //                        var api = this.api(), data;
+            //
+            //                        // Remove the formatting to get integer data for summation
+            //                        var intVal = function (i) {
+            //                            return typeof i === 'string' ?
+            //                                    i.replace(/[\$,]/g, '') * 1 :
+            //                                    typeof i === 'number' ?
+            //                                    i : 0;
+            //                        };
+            //
+            //                        // Total over all pages
+            //                        total = api
+            //                                .column(4)
+            //                                .data()
+            //                                .reduce(function (a, b) {
+            //                                    return intVal(a) + intVal(b);
+            //                                }, 0);
+            //
+            //                        // Total over this page
+            //                        pageTotal = api
+            //                                .column(4, {page: 'current'})
+            //                                .data()
+            //                                .reduce(function (a, b) {
+            //                                    return intVal(a) + intVal(b);
+            //                                }, 0);
+            //
+            //                        // Update footer
+            //                        $(api.column(4).footer()).html(
+            //                                '$' + pageTotal + ' ( $' + total + ' total)'
+            //                                );
+            //                    }
+            //                });
+            //                var len = $(".table tbody tr").length - 1;
+            //                $("#btnSearch").html(oldHtmlBtn);
+            //                $("#rowResultTable").loading("stop");
+            ////                $(".col-flt-page").text("จำนวนทั้งหมด : " + len);
+            //            });
+        }
+    }
+    function Date_Conv(objDate) {
+        var dateObj = new Date(parseInt(objDate));
+        var formattedDate = (dateObj.getMonth() + 1) + "/" + (dateObj.getDate() + 1) + "/" + dateObj.getFullYear();
+        return(formattedDate);
+    }
+    $("#btnExportExcel").click(function () {
+        //        onclick="javascript:
+
+        //       xport.toCSV('tblReport');
+    });
+    //    $("#Loc").select2();
+
+
+    $("#StartDate,#EndDate").datepicker({
+        dateFormat: 'yy-mm-dd'
+    });
+</script>

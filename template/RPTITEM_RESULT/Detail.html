@@ -1,0 +1,277 @@
+<style>
+
+    .temploading_off{
+        display:none ;
+    }
+</style>
+<input type="hidden" id="lblItem_group" value="{item_group}">
+<input type="hidden" id="lblStartDate" value="{StartDate}">
+<input type="hidden" id="lblEndDate" value="{EndDate}">
+<div class="row text-center" style="">
+    <font color="red">** PCS : Total Weight = Qty x unit_weight |  KG : Total Weight = Qty ** </font>
+</div>
+<div id="TempLoadingIndicator" class="row text-center " style="color:#666;">
+    <h2><i class="fa fa-spinner fa-spin"></i></h2>
+    <h4>...Loading...</h4>
+</div>
+<div class="row" id="rowTable" style="display:none;">
+    <table class="display" id="tblDetail">
+        <thead>
+            <tr>
+                <th>Inv</th>
+                <th>Date</th>
+                <th>Customer</th>
+                <th>Item</th>
+                <th>unit_weight</th>
+                <th>U_M</th>
+                <th>Qty</th>
+                <th>Total Weight</th>
+                <th>Price</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+<script type="text/javascript">
+    var item_group = $("#lblItem_group").val().trim();
+    var StartDate = $("#lblStartDate").val().trim();
+    var EndDate = $("#lblEndDate").val().trim();
+    var tblName = "#tblDetail";
+    $.ajax({
+        type: 'GET',
+        url: "././module/RPTITEM_RESULT/data.php",
+        dataType: 'json',
+        beforeSend: function () {
+
+        },
+        data: {
+            "load": "detail",
+            "item_group": item_group,
+            "StartDate": StartDate,
+            "EndDate": EndDate
+        },
+        success: function (data) {
+            $(tblName).DataTable().clear();
+            $(tblName).append("<tfoot><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></tfoot>");
+            $(tblName).dataTable({
+                "aaData": data,
+                "paging": false,
+                fixedHeader: true,
+                destroy: true,
+                'processing': true,
+                "columns": [
+                    {
+                        "data": "inv_num",
+                        "className": "text-left",
+                        "render": function (data, type, row, meta) {
+                            var ret = data;
+                            if (row["inv_num"].substring(0, 2) == "CN") {
+                                ret = "<span style='color:red;'>" + data + "</span>";
+                            }
+                            return ret;
+                        }
+                    },
+                    {
+                        "data": "inv_date_conv",
+                        "className": "text-left",
+                        "render": function (data, type, row, meta) {
+                            var ret = data;
+                            if (row["inv_num"].substring(0, 2) == "CN") {
+                                ret = "<span style='color:red;'>" + data + "</span>";
+                            }
+                            return ret;
+                        }
+                    },
+                    {
+                        "data": "cust_name",
+                        "className": "text-left",
+                        "render": function (data, type, row, meta) {
+                            var ret = data;
+                            if (row["inv_num"].substring(0, 2) == "CN") {
+                                ret = "<span style='color:red;'>" + data + "</span>";
+                            }
+                            return ret;
+                        }
+                    },
+                    {
+                        "data": "item_desc",
+                        "className": "text-left",
+                        "render": function (data, type, row, meta) {
+                            var ret = data;
+                            if (row["inv_num"].substring(0, 2) == "CN") {
+                                ret = "<span style='color:red;'>" + data + "</span>";
+                            }
+                            return ret;
+                        }
+                    },
+                    {
+                        "data": "item_weight",
+                        "className": "text-right",
+                        "render": function (data, type, row, meta) {
+                            var ret = data;
+                            if (row["inv_num"].substring(0, 2) == "CN") {
+                                ret = "<span style='color:red;'>" + data + "</span>";
+                            }
+                            return ret;
+                        }
+                    },
+                    {
+                        "data": "sale_um",
+                        "className": "text-center",
+                        "render": function (data, type, row, meta) {
+                            var ret = data;
+                            if (row["inv_num"].substring(0, 2) == "CN") {
+                                ret = "<span style='color:red;'>" + ret + "</span>";
+                            }
+                            return ret;
+                        }
+                    },
+                    {
+                        "data": "sale_um",
+                        "className": "text-right",
+                        "render": function (data, type, row, meta) {
+                            var ret = "";
+                            if (row["sale_um"] == "PCS") {
+                                ret = row["QTY_PCS_Conv"];
+                            } else {
+                                ret = row["QTY_KG_Conv"];
+                            }
+                            if (row["inv_num"].substring(0, 2) == "CN") {
+                                ret = "<span style='color:red;'>" + ret + "</span>";
+                            }
+                            return ret;
+                        }
+                    },
+                    {
+                        "data": "sale_um",
+                        "className": "text-right",
+                        "render": function (data, type, row, meta) {
+                            var ret = "";
+                            if (row["sale_um"] == "PCS") {
+                                ret = row["PCS_Weight_Conv"];
+                            } else {
+                                ret = row["QTY_KG_Conv"];
+                            }
+                            if (row["inv_num"].substring(0, 2) == "CN") {
+                                ret = row["CN_QTY"];
+                                ret = "<span style='color:red;'>" + ret + "</span>";
+                            }
+                            return ret;
+                        }
+                    },
+                    {
+                        "data": "sale_um",
+                        "className": "text-right",
+                        "render": function (data, type, row, meta) {
+                            var ret = "";
+                            if (row["sale_um"] == "PCS") {
+                                ret = row["PricePerPCS_Conv"];
+                            } else {
+                                ret = row["PricePerKG_Conv"];
+                            }
+                            if (row["inv_num"].substring(0, 2) == "CN") {
+                                ret = row["Price_Conv"];
+                                ret = "<span style='color:red;'>" + ret + "</span>";
+                            }
+                            return ret;
+                        }
+                    },
+                    {
+                        "data": "sale_um",
+                        "className": "text-right",
+                        "render": function (data, type, row, meta) {
+                            var ret = "";
+                            if (row["sale_um"] == "PCS") {
+                                ret = row["PCS_Amt_Conv"];
+                            } else {
+                                ret = row["KG_Amt_Conv"];
+                            }
+                            if (row["inv_num"].substring(0, 2) == "CN") {
+                                ret = row["CN_Amt_Conv"];
+                                ret = "<span style='color:red;'>" + ret + "</span>";
+                            }
+                            return ret;
+                        }
+                    },
+                ],
+                'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                        "<'row'<'col-md-12'tr>>" +
+                        "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                buttons: [{
+                        extend: 'print',
+                        text: "<i class='fa fa-print'></i>&nbsp;Print",
+                        title: ''
+                    },
+                    {
+                        extend: 'excel',
+                        footer: true,
+                        text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                        title: ''
+                    },
+                ],
+                "footerCallback": function (row, data, start, end, display) {
+                    var api = this.api(),
+                            data;
+                    var intVal = function (i) {
+                        return typeof i === 'string' ?
+                                i.replace(/[\$,]/g, '') * 1 :
+                                typeof i === 'number' ?
+                                i : 0;
+                    };
+                    var sum_total_qty = api
+                            .column(6)
+                            .data()
+                            .reduce(function (a, b) {
+                                return intVal(a) + intVal(b);
+                            }, 0);
+
+                    var sum_total_weight = api
+                            .column(7)
+                            .data()
+                            .reduce(function (a, b) {
+                                return intVal(a) + intVal(b);
+                            }, 0);
+                    var sum_net_total_price = api
+                            .column(9)
+                            .data()
+                            .reduce(function (a, b) {
+                                return intVal(a) + intVal(b);
+                            }, 0);
+                    $(api.column(5).footer()).html('Total weight');
+                    $(api.column(6).footer()).html(addCommas(sum_total_qty.toFixed(2)));
+                    $(api.column(7).footer()).html(addCommas(sum_total_weight.toFixed(2)));
+                    $(api.column(8).footer()).html('Total price');
+                    $(api.column(9).footer()).html(addCommas(sum_net_total_price.toFixed(2)));
+                },
+
+            });
+            $("#TempLoadingIndicator").slideUp("slow");
+            $("#rowTable").show();
+            RecalTable();
+        },
+        error: function (e) {
+            //                     console.log(JSON(e));
+            console.log("There was an error with your request...");
+            console.log("error: " + JSON.stringify(e));
+        }
+    });
+    function RecalTable() {
+        var SumQty = 0;
+        var SumWeight = 0;
+        var SumNetPrice = 0;
+        $("#tblDetail tbody tr").each(function () {
+            var Qty = $(this).find("td:eq(6)").text().trim();
+            var Weight = $(this).find("td:eq(7)").text().trim();
+            var NetPrice = $(this).find("td:eq(9)").text().trim();
+            SumQty += parseFloat(Qty.replace(",", ""));
+            SumWeight += parseFloat(Weight.replace(",", ""));
+            SumNetPrice += parseFloat(NetPrice.replace(",", ""));            
+        });
+        $("tfoot").find("tr").find("td").css({"text-align": "right", "font-weight": "bold"});
+        $("tfoot").find("tr").find("td:eq(6)").text(addCommas(SumQty.toFixed(2)));
+        $("tfoot").find("tr").find("td:eq(7)").text(addCommas(SumWeight.toFixed(2)));
+        $("tfoot").find("tr").find("td:eq(9)").text(addCommas(SumNetPrice.toFixed(2)));
+    }
+
+</script>

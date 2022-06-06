@@ -1,0 +1,357 @@
+<style>
+  #ConnectionStatus {
+    margin-left: 20px;
+  }
+
+  #MilltestContent,
+  #GrnContent,
+  #LotContent {
+    font-size: 12px;
+  }
+
+  .textbox {
+    border-radius: 5px;
+    margin-left: 5px;
+    margin-right: 5px;
+    border: solid 1px #ccc;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  /*    .unresponsive thead tr th {
+      min-width: 100%;
+    }*/
+
+  .table td {
+    padding: 2px 2px 2px 2px;
+  }
+
+  .ShowContent {
+    width: 1000px;
+    height: 400px;
+    overflow: auto;
+  }
+
+  .jumbotron {
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+</style>
+
+<div id="loading" style="z-index:999 ; position: absolute;top:-10%; width: 100%; height: 100%; background: url('./image/STS_Loading_fade.gif') no-repeat center center;"></div>
+<div class="container">
+  <div class="alert alert-default">
+    <div class="row ">
+      <div class="col-3  text-center">
+        <a href="?MTG_frm_add_grn" id="btnAddNew" class="btn btn-default"><i class="fa fa-plus"></i> Add new</a>
+        <!-- <a href="#" id="btnSyncGrn" class="btn btn-default"><i class="fa fa-exchange"></i> Sync Lot</a> -->
+      </div>
+      <div class="col-3  text-center">
+        <a href="?MTG_index" id="btnSyncGrn2" class="btn btn-default"><i class="fa fa-download"></i> GRN to SYTELINE </a>
+        <!-- <a href="#" id="btnSyncGrn" class="btn btn-default"><i class="fa fa-exchange"></i> Sync Lot</a> -->
+      </div>
+
+    </div>
+  </div>
+
+  <div class="row ">
+    <div class="col-12 rowheader">
+      :: VIEW DATA
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 col-6">
+      <div class="row" style="overflow-y:hidden;">
+        <div class="col-4 text-right" style="padding-top:5px;">
+          <font color="orange"> WEIGHT LIST </font>
+        </div>
+        <div class="col-8">
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">Last</span>
+            <input id="txtnumRows" type="text" value="20" class="form-control" placeholder="records" aria-label="Username" aria-describedby="basic-addon1">
+            <a class="input-group-addon" id='btnSearch'><i class="fa fa-search"></i></a>
+          </div>
+        </div>
+      </div>
+      <div class="row ">
+        <div class='ShowContent'>
+          <table class="table  table-striped table-primary ">
+            <thead>
+              <tr>
+                <th align="center">sts_no</th>
+                <th align="center">sno</th>
+                <th align="center">reference</th>
+                <th align="center">qa</th>
+                <th align="center">u_date</th>
+                <th align="center">user</th>
+                <th align="center">po_date</th>
+                <th align="center">c_no</th>
+                <th align="center">i_date</th>
+              </tr>
+            </thead>
+            <tbody id="MilltestContent">
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 col-6" style='background-color:#cccccc;'>
+      <div class="row" style="overflow-y:hidden;">
+        <div class="col-4 text-right" style="padding-top:5px;">
+          <font color="orange"> SL </font>- grn_line
+        </div>
+        <div class="col-8">
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">Last</span>
+            <input id="txtnumRowsGrn" type="text" value="20" class="form-control" placeholder="records" aria-label="Username" aria-describedby="basic-addon1">
+            <a class="input-group-addon" id='btnSearchGrn'><i class="fa fa-search"></i></a>
+          </div>
+        </div>
+        <!--                <div class="col-4" style="padding-top:5px;">
+                                    <div id="ConnectionStatus"></div>
+                                </div>  -->
+      </div>
+      <div class="row ">
+        <div class='ShowContent'>
+          <table class="table  table-striped table-success ">
+            <thead>
+              <tr>
+                <th align="center">vend_num</th>
+                <th align="center">grn_num</th>
+                <th align="center">grn_line</th>
+                <th align="center">po_line</th>
+                <th align="center">po_realease</th>
+                <th align="center">container</th>
+                <th align="center">qty_shipped_conv</th>
+                <th align="center">u_m</th>
+                <th align="center">qty_rec</th>
+                <th align="center">qty_rej</th>
+                <th align="center">qty_vouchered</th>
+              </tr>
+            </thead>
+            <tbody id="GrnContent">
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 col-6">
+      <div class="row" style="overflow-y:hidden;">
+        <div class="col-4 text-right" style="padding-top:5px;">
+          <font color="orange"> SL </font> - lot
+        </div>
+        <div class="col-8">
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">Last</span>
+            <input id="txtnumRowsLot" type="text" value="20" class="form-control" placeholder="records" aria-label="Username" aria-describedby="basic-addon1">
+            <a class="input-group-addon" id='btnSearchLot'><i class="fa fa-search"></i></a>
+          </div>
+        </div>
+
+      </div>
+      <div class="row ">
+        <div class='ShowContent'>
+          <table class="table  table-striped table-info ">
+            <thead>
+              <tr>
+                <th align="center">item</th>
+                <th align="center">lot</th>
+                <th align="center">rcvd_qty</th>
+                <th align="center">create_date</th>
+                <th align="center">exp_date</th>
+                <th align="center">purge_date</th>
+              </tr>
+            </thead>
+            <tbody id="LotContent">
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script type="text/javascript">
+  function GetTable(limit) {
+    //===Get Table ===//
+    $("#loading").show();
+    $.ajax({
+      url: "./module/MGT/MGT_ajax/data_po_qc.php",
+      type: 'post',
+      data: {
+        limit: limit,
+        action: 'GetTable',
+      },
+      success: function(data) {
+        $("#MilltestContent").html(data);
+        $("#loading").hide();
+      },
+      error: function(xhr, status, error) {
+        var err = eval("(" + xhr.responseText + ")");
+        alert(err.Message);
+      }
+    });
+    //===End Get Table ===//
+  }
+
+  function GetTableGrn(limit) {
+
+    //===Get Table ===//
+    $("#loading").show();
+    $.ajax({
+      url: "././module/MGT/MGT_ajax/data_grn_line.php",
+      type: 'post',
+      data: {
+        limit: limit,
+        action: 'GetTable',
+      },
+      success: function(data) {
+        //  alert(data);
+        $("#GrnContent").html(data);
+        $("#loading").hide();
+      },
+      error: function(xhr, status, error) {
+        var err = eval("(" + xhr.responseText + ")");
+        alert(err.Message);
+      }
+    });
+    //===End Get Table ===//
+  }
+
+  function GetTableLot(limit) {
+
+    //===Get Table ===//
+    $("#loading").show();
+    $.ajax({
+      url: "././module/MGT/MGT_ajax/data_lot.php",
+      type: 'post',
+      data: {
+        limit: limit,
+        action: 'GetTable',
+      },
+      success: function(data) {
+        //  alert(data);
+        $("#LotContent").html(data);
+        $("#loading").hide();
+      },
+      error: function(xhr, status, error) {
+        var err = eval("(" + xhr.responseText + ")");
+        alert(err.Message);
+      }
+    });
+    //===End Get Table ===//
+  }
+
+
+  $("#btnSyncGrn").click(function() {
+    $("#loading").show();
+    $.ajax({
+      url: "././module/MGT/MGT_ajax/SL_GenerateGrnLineSp.php",
+      type: 'post',
+      data: {
+        action: 'GetTable',
+      },
+      success: function(data) {
+        alert(data);
+        // $("#GrnContent").html(data);
+        $("#loading").hide();
+      },
+      error: function(xhr, status, error) {
+        var err = eval("(" + xhr.responseText + ")");
+        alert(err.Message);
+      }
+    });
+
+  });
+  //===Get Conn status ===//
+  // $.ajax({
+  //   url: "./module/MGT/MGT_ajax/data_milltest.php",
+  //   type: 'post',
+  //   data: {
+  //     action: 'GetConnectionStatus',
+  //   },
+  //   success: function(data) {
+  //     $("#ConnectionStatus").html(data);
+  //
+  //   },
+  //   error: function(xhr, status, error) {
+  //     var err = eval("(" + xhr.responseText + ")");
+  //     alert(err.Message);
+  //   }
+  // });
+  //===End Get Conn status ===//
+  //==========Only 0-9 ===//
+  $("input[id^='txtnumRows'").keydown(function(e) {
+    if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== -1 ||
+      // Allow: Ctrl+A, Command+A
+      (e.keyCode === 65 && (e.ctrlKey === true || e.metaKey === true)) ||
+      // Allow: home, end, left, right, down, up
+      (e.keyCode >= 35 && e.keyCode <= 40)) {
+      // let it happen, don't do anything
+      return;
+    }
+    // Ensure that it is a number and stop the keypress
+    if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+      e.preventDefault();
+    }
+  });
+  //=========================
+  //================== to search with top rows
+  $("#btnSearch").click(function() {
+    var rows = 0;
+    if ($("#txtnumRows").val() != "") {
+      rows = $("#txtnumRows").val();
+    }
+    GetTable(rows);
+  });
+  $("#btnSearchGrn").click(function() {
+    var rows = 0;
+    if ($("#txtnumRowsGrn").val() != "") {
+      rows = $("#txtnumRowsGrn").val();
+    }
+    GetTableGrn(rows);
+  });
+  $("#btnSearchLot").click(function() {
+    var rows = 0;
+    if ($("#txtnumRowsLot").val() != "") {
+      rows = $("#txtnumRowsLot").val();
+    }
+    GetTableLot(rows);
+  });
+  //========================================
+
+  $('#txtnumRows').keyup(function(e) {
+    if (e.keyCode == 13) {
+      var rows = 0;
+      if ($("#txtnumRows").val() != "") {
+        rows = $("#txtnumRows").val();
+      }
+      GetTable(rows);
+    }
+  });
+  $('#txtnumRowsGrn').keyup(function(e) {
+    if (e.keyCode == 13) {
+      var rows = 0;
+      if ($("#txtnumRowsGrn").val() != "") {
+        rows = $("#txtnumRowsGrn").val();
+      }
+      GetTableGrn(rows);
+    }
+  });
+  $('#txtnumRowsLot').keyup(function(e) {
+    if (e.keyCode == 13) {
+      var rows = 0;
+      if ($("#txtnumRowsLot").val() != "") {
+        rows = $("#txtnumRowsLot").val();
+      }
+      GetTableLot(rows);
+    }
+  });
+  ///======================
+  GetTable(20);
+  GetTableGrn(20);
+  GetTableLot(20);
+
+  $("#loading").hide();
+</script>

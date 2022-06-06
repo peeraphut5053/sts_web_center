@@ -1,0 +1,300 @@
+<head>
+
+    <!-- datepicker Carlendar -->
+    <!--        <script src="bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>-->
+    <!--    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">-->
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+    <style>
+        .dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody>table>thead>tr>th, .dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody>table>thead>tr>td, .dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody>table>tbody>tr>th, .dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody>table>tbody>tr>td {
+            vertical-align: middle;
+            font-size: 11px;
+        }
+        .col-xs-3 {
+            position: relative;
+            min-height: 1px;
+            padding-right: 1px; 
+            padding-left: 1px; 
+        }
+    </style>
+
+
+</head>
+
+<div>
+    <div class='col-xs-12'>
+        <h3>Check Item BOM</h3>
+    </div>
+    <div class="col-xs-12">
+
+        <div class='row'>
+            <div class='col-xs-6'>
+                <div class='col-xs-5' style="text-align: right"><label>Item</label></div>
+                <div class='col-xs-6'>
+
+                    <input class='form-control' type="text" id="item" value="FC021N0003400-M2AS040F02100H" />
+                </div>
+                <div class='col-xs-1' style='margin-bottom: 0px; text-align: center'>
+                    <button onclick="calItem()" class="btn btn-info">Process</button> 
+                </div>
+            </div>
+
+
+        </div>
+
+        <div class='row'>
+            <div class="col-xs-3">
+                <h5>
+                </h5>
+                <table class="table table-condensed table-bordered table-striped" id="tblBOMJobItem" style="font-size: 12px" >
+                    <thead>
+                        <tr>
+                            <td>ITEM ที่ใช้ผลิต <p id='tblBOMJobItemhdr'></p></td>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="col-xs-3">
+                <h5>
+                </h5>
+                <table class="table table-condensed table-bordered table-striped" id="tblBOMJobItem2" style="font-size: 12px" >
+                    <thead>
+                        <tr>
+                            <td>ITEM ที่ใช้ผลิต<p id='tblBOMJobItem2hdr'></p></td>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="col-xs-3">
+                <h5>
+                </h5>
+                <table class="table table-condensed table-bordered table-striped" id="tblBOMJobItem3" style="font-size: 12px" >
+                    <thead>
+                        <tr>
+                            <td>ITEM ที่ใช้ผลิต<p id='tblBOMJobItem3hdr'></p></td>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="col-xs-3">
+                <h5>
+                </h5>
+                <table class="table table-condensed table-bordered table-striped" id="tblBOMJobItem4" style="font-size: 12px" >
+                    <thead>
+                        <tr>
+                            <td>ITEM ที่ใช้ผลิต<p id='tblBOMJobItem4hdr'></p></td>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    var url = '././module/RPT_JOB_ITEM_PRODUCT_BOM/data.php';
+    function calItem() {
+        let item = $('#item').val();
+        BOMJobItem(item);
+        //QtySumMattrans(item);
+        //QtyItemLocation(item);
+    }
+    function BOMJobItem(item) {
+        $("#tblBOMJobItemhdr").html(item)
+        BOMJobItem2('')
+        BOMJobItem3('')
+        BOMJobItem4('')
+        $.ajax({
+            type: 'GET',
+            url: url,
+            contentType: "text/plain",
+            dataType: 'json',
+            beforeSend: function () {
+            },
+            data: {
+                load: 'BOMJobItem',
+                item: item,
+            },
+
+            success: function (data) {
+                console.log(data)
+                $('#tblBOMJobItem').dataTable({
+                    scrollY: 200,
+                    "paging": false,
+                    "aaData": data,
+                    "searching": false,
+                    "bInfo": false,
+                    destroy: true,
+                    "columns": [
+
+                        {
+                            data: "item2",
+                            "className": "text-left selected",
+                            "render": function (data, type, row, meta) {
+                                var ret = `<a onclick=BOMJobItem2('${data}'); >${data}</a>`;
+                                return ret;
+                            }
+                        },
+                    ],
+                });
+            },
+
+            error: function (e) {
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+
+//        setTimeout(function () {
+//            $('#tblBOMJobItem tbody').on('click', 'tr', function () {
+//                if ($(this).hasClass('selected')) {
+//                    $(this).removeClass('selected');
+//                } else {
+//                    $('#tblBOMJobItem').DataTable().$('tr.selected').removeClass('selected');
+//                    $(this).addClass('selected');
+//                }
+//            });
+//        }, 400)
+
+
+
+    }
+
+
+    function BOMJobItem2(item) {
+        $("#tblBOMJobItem2hdr").html(item)
+        BOMJobItem3('')
+        BOMJobItem4('')
+        $.ajax({
+            type: 'GET',
+            url: url,
+            contentType: "text/plain",
+            dataType: 'json',
+            beforeSend: function () {
+            },
+            data: {
+                load: 'BOMJobItem2',
+                item: item,
+            },
+
+            success: function (data) {
+                console.log(data)
+                $('#tblBOMJobItem2').dataTable({
+                    scrollY: 200,
+                    "paging": false,
+                    "aaData": data,
+                    "searching": false,
+                    "bInfo": false,
+                    destroy: true,
+                    "columns": [
+
+                        {
+                            "data": "item4",
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                var ret = `<a onclick=BOMJobItem3('${data}'); >${data}</a>`;
+                                return ret;
+                            }
+                        },
+                    ],
+                });
+            },
+
+            error: function (e) {
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+    }
+
+    function BOMJobItem3(item) {
+        $("#tblBOMJobItem3hdr").html(item)
+        BOMJobItem4('')
+        $.ajax({
+            type: 'GET',
+            url: url,
+            contentType: "text/plain",
+            dataType: 'json',
+            beforeSend: function () {
+            },
+            data: {
+                load: 'BOMJobItem2',
+                item: item,
+            },
+
+            success: function (data) {
+                console.log(data)
+                $('#tblBOMJobItem3').dataTable({
+                    scrollY: 200,
+                    "paging": false,
+                    "aaData": data,
+                    "searching": false,
+                    "bInfo": false,
+                    destroy: true,
+                    "columns": [
+
+                        {
+                            "data": "item4",
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                var ret = `<a onclick=BOMJobItem4('${data}'); >${data}</a>`;
+                                return ret;
+                            }
+                        },
+                    ],
+                });
+            },
+
+            error: function (e) {
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+    }
+
+
+    function BOMJobItem4(item) {
+        $("#tblBOMJobItem4hdr").html(item)
+        $.ajax({
+            type: 'GET',
+            url: url,
+            contentType: "text/plain",
+            dataType: 'json',
+            beforeSend: function () {
+            },
+            data: {
+                load: 'BOMJobItem4',
+                item: item,
+            },
+
+            success: function (data) {
+                console.log(data)
+                $('#tblBOMJobItem4').dataTable({
+                    scrollY: 200,
+                    "paging": false,
+                    "aaData": data,
+                    "searching": false,
+                    "bInfo": false,
+                    destroy: true,
+                    "columns": [
+
+                        {
+                            "data": "item8",
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                    ],
+                });
+            },
+
+            error: function (e) {
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+    }
+</script>

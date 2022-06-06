@@ -1,0 +1,308 @@
+<div class="row">
+    <div>
+        <h1>Sales Total Report</h1>
+    </div> 
+    <div class="col-lg-2" >   
+        <div class="input-group">
+            <div class="input-group-addon">From Date</div>
+            <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtFromDate">
+        </div>
+    </div>
+    <div class="col-lg-2">   
+        <div class="input-group">
+            <div class="input-group-addon">To date</div>
+            <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtToDate">
+        </div>
+    </div>
+    <div class="col-lg-2">   
+        <div class="input-group">
+            <div class="input-group-addon">Item</div>
+            <input type="text" class="form-control txt-filter" id="txtItem">
+        </div>
+    </div>
+    <div class="col-lg-2">   
+        <button id="btnSearch" class="btn btn-info"><i class="fa fa-searh"></i>&nbsp;ค้นหา</button>
+    </div>
+</div>
+
+<div class="row" id="divReport" >
+    <table class="table table-condensed table-bordered table-striped" id="tblReport" style="width:100%;">
+        <thead>
+            <tr>
+                <th>inv date</th>
+                <th>inv num</th>
+                <th>cust num</th>
+                <th>name</th>  
+                <th>item</th>
+                <th>description</th>
+                <th>item size</th>
+                <th>item thick</th>
+                <th>item width</th>
+                <th>item length</th>
+                <th>unit weight</th>
+                <th>group code</th>
+                <th>group final</th>
+                <th>um</th>
+                <th>SUM qty PCS</th>
+                <th>price per pcs</th>
+                <th>SUM qty KG</th>
+                <th>priceperkg</th>
+                <th>priceperton</th>
+                <th>SUM discount</th>
+                <th>SUMamt sd</th>
+                <th>exch rate</th>
+                <th>SUMamt thb</th>
+                <th>SUM vat</th>
+                <th>country</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+<script type="text/javascript">
+    $("#txtFromDate,#txtToDate").datepicker({
+        dateFormat: 'yy-mm-dd',
+    });
+    $("#txtFromDate,#txtToDate").val(GetToday());
+    $("#btnSearch").click(function () {
+        var tblReportId = '#tblReport';
+        var btnSearch = '#btnSearch';
+        SearchDataFn(tblReportId, btnSearch, tablecolumsArr, "Slit Report", "ajax");
+    });
+    var tablecolumsArr = [
+        {
+            width: 150,
+            "data": "inv_date",
+            "className": "text-right",
+            "render": function (data, type, row, meta) {
+                var data = data.date;
+                var res = data.replace("00:00:00.000000", "");
+                var ret = res;
+                return ret;
+            }
+        },
+        {
+            "data": "inv_num",
+            "render": function (data, type, row) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "cust_num",
+            "className": "text-center",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "name",
+            "className": "text-center",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "item",
+            "className": "text-right",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "description",
+            "className": "text-right",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "item_size",
+            "render": function (data, type, row) {
+                var ret = addCommas(parseFloat(data).toFixed(2));
+                if (ret == 'NaN') {
+                    ret = 0
+                }
+                return ret;
+            }
+        },
+        {
+            "data": "item_thick",
+            "render": function (data, type, row) {
+                var ret = addCommas(parseFloat(data).toFixed(2));
+                if (ret == 'NaN') {
+                    ret = 0
+                }
+                return ret;
+            }
+        },
+        {
+            "data": "item_width",
+            "render": function (data, type, row) {
+                var ret = addCommas(parseFloat(data).toFixed(2));
+                if (ret == 'NaN') {
+                    ret = 0
+                }
+                return ret;
+            }
+        },
+        {
+            "data": "item_length",
+            "render": function (data, type, row) {
+                var ret = addCommas(parseFloat(data).toFixed(2));
+                if (ret == 'NaN') {
+                    ret = 0
+                }
+                return ret;
+            }
+        },
+        {
+            "data": "unit_weight",
+            "render": function (data, type, row) {
+                var ret = addCommas(parseFloat(data).toFixed(2));
+                if (ret == 'NaN') {
+                    ret = 0
+                }
+                return ret;
+            }
+        },
+        {
+            "data": "group_code",
+            "render": function (data, type, row) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "group_final",
+            "render": function (data, type, row) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "um",
+            "render": function (data, type, row) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "SUMqtyPCS",
+            "render": function (data, type, row) {
+                var ret = addCommas(parseFloat(data).toFixed(2));
+                if (ret == 'NaN') {
+                    ret = 0
+                }
+                return ret;
+            }
+        },
+        {
+            "className": "text-right",
+            "data": "priceperpcs",
+            "render": function (data, type, row) {
+                var ret = addCommas(parseFloat(data).toFixed(2));
+                if (ret == 'NaN') {
+                    ret = 0
+                }
+                return ret;
+            }
+        },
+        {
+            "className": "text-right",
+            "data": "SUMqtyKG",
+            "render": function (data, type, row) {
+                var ret = addCommas(parseFloat(data).toFixed(2));
+                if (ret == 'NaN') {
+                    ret = 0
+                }
+                return ret;
+            }
+        }, {
+            "className": "text-right",
+            "data": "priceperkg",
+            "render": function (data, type, row) {
+                var ret = addCommas(parseFloat(data).toFixed(2));
+                if (ret == 'NaN') {
+                    ret = 0
+                }
+                return ret;
+            }
+        }, {
+            "className": "text-right",
+            "data": "priceperton",
+            "render": function (data, type, row) {
+                var ret = addCommas(parseFloat(data).toFixed(2));
+                if (ret == 'NaN') {
+                    ret = 0
+                }
+                return ret;
+            }
+        },
+        {
+            "className": "text-right",
+            "data": "SUMdiscount",
+            "render": function (data, type, row) {
+                var ret = addCommas(parseFloat(data).toFixed(2));
+                if (ret == 'NaN') {
+                    ret = 0
+                }
+                return ret;
+            }
+        },
+        {
+            "className": "text-right",
+            "data": "SUMamt_sd",
+            "render": function (data, type, row) {
+                var ret = addCommas(parseFloat(data).toFixed(2));
+                if (ret == 'NaN') {
+                    ret = 0
+                }
+                return ret;
+            }
+        }, {
+            "className": "text-right",
+            "data": "exch_rate",
+            "render": function (data, type, row) {
+                var ret = addCommas(parseFloat(data).toFixed(2));
+                if (ret == 'NaN') {
+                    ret = 0
+                }
+
+
+                return ret;
+            }
+        }, {
+            "className": "text-right",
+            "data": "SUMamt_thb",
+            "render": function (data, type, row) {
+                var ret = addCommas(parseFloat(data).toFixed(2));
+                if (ret == 'NaN') {
+                    ret = 0
+                }
+                return ret;
+            }
+        },
+        {
+            "className": "text-right",
+            "data": "SUMvat",
+            "render": function (data, type, row) {
+                var ret = addCommas(parseFloat(data).toFixed(2));
+                if (ret == 'NaN') {
+                    ret = 0
+                }
+                return ret;
+            }
+        },
+        {
+            "data": "country",
+            "render": function (data, type, row) {
+                var ret = data;
+                return ret;
+            }
+        },
+    ];
+</script>

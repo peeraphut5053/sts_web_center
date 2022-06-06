@@ -1,0 +1,723 @@
+<style>
+    .not-show-content{
+        display:none;
+    }
+    .footer{
+        color: blue ;
+        font-weight: bold;
+    }
+    .col-flt-page {
+        padding-top: 10px;
+        font-weight: bold;
+    }
+    table.dataTable.fixedHeader-floating,
+    table.dataTable.fixedHeader-locked {
+        background-color: white;
+        margin-top: 50px !important;
+        margin-bottom: 0 !important;
+    }
+    .tr-row-cn td {
+        color: red;
+    }
+    .selectize-input{
+        min-height: 80px;
+    }
+    .panel-body{
+        padding-top:5px;
+        padding-bottom:5px;
+    }
+    h2{
+        margin:0px;
+        text-transform: uppercase;
+    }
+    h6{
+        margin:0px;
+        color:#777;
+    }
+    .tabs{
+        position: fixed;
+        margin-top:10px;
+        font-size:15px;
+        padding:0px;
+        list-style:none;
+        background:#fff;
+        box-shadow:0px 5px 20px rgba(0,0,0,0.1);
+        display:inline-block;
+        border-radius:50px;
+        position:relative;
+    }
+    .tabs a{
+        text-decoration:none;
+        color: #777;
+        text-transform:uppercase;
+        padding:10px 20px;
+        display:inline-block;
+        position:relative;
+        z-index:1;
+        transition-duration:0.6s;
+    }
+    .tabs a.active{
+        color:#fff;
+    }
+    .tabs a i{
+        margin-right:5px;
+    }
+    .tabs .selector{
+        height:100%;
+        display:inline-block;
+        position:absolute;
+        top:0px;
+        z-index:1;
+        border-radius:50px;
+        transition-duration:0.6s;
+        transition-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        background: #05abe0;
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#05abe0', endColorstr='#8200f4',GradientType=1 );
+    }
+    .footer {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        text-align: center;
+    }
+    h3{
+        margin-top: 0px !important;
+        margin-bottom: 0px !important;
+    }
+    .misc-panel{
+
+        margin-top:20px;
+        margin-left: 20px;
+        margin-right : 20px;
+        margin-bottom: 20px;
+        border : solid 1px #cdcdcd;
+        padding:10px 10px 10px 10px ;
+    }
+    .misc-all{
+        padding-left:10%;
+        padding-right:10%;
+    }
+    input[class*="require"]{
+        background-color:#ffffcc;
+    }
+    @media screen and (max-width: 1024px) {
+        .misc-all{
+            padding-left:1%;
+            padding-right:1%;
+        }
+    }
+
+    input[type*=text]{
+        height:30px;
+
+    }
+    #txtAcct1 , #txtAcct2,#txtAcct3,#txtAcct4
+    {
+        margin-top:5px;
+    }
+
+    .selectize-input{
+        height:30px;
+        min-height: 30px;
+        padding-left : 0px ;
+        padding-right  : 0px ;
+        padding-top  : 0px ;
+        padding-bottom : 0px ;
+
+    }
+</style>
+
+<div style="text-align: center">
+    <h3>MISC ISSUE</h3>
+</div>
+<div id="content_upload" ></div>
+<div class="misc-all">
+    <div class="misc-panel " id="miscpanel1">
+
+        <div class="row">
+            <div class="col-4 col-xs-4 col-sm-4 col-md-2 col-lg-2 text-right">
+                <font color="red">*</font>Warehouse :
+            </div>
+            <div class="col-6 col-xs-8 col-sm-8 col-md-2 col-lg-2 ">
+                <select id="txtWhse" class="form-control require" validate_text="WareHouse"   >
+                    {options_whse}
+                </select>
+            </div>
+            <div class="col-4 col-xs-4 col-sm-4 col-md-2 col-lg-2 text-right ">
+                <font color="red">*</font>Transaction Date :
+            </div>
+            <div class="col-6 col-xs-8 col-sm-8 col-md-2 col-lg-2  ">
+                <input value="" type="text" autocomplete="off"  class="form-control txt-filter txt-filter require" validate_text="Transaction Date"  id="txtTransDate">
+            </div>
+            <div class="col-4 col-xs-4 col-sm-4 col-md-2 col-lg-2 text-right">
+                <font color="red">*</font>Document Number :
+            </div>
+            <div class="col-6 col-xs-8 col-sm-8 col-md-2 col-lg-2 ">
+                <input type="text" id="txtDocNum" class="form-control require"  validate_text="Document Number"  >
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4 col-xs-4 col-sm-4 col-md-2 col-lg-2 text-right">
+                เบิก General :    
+            </div>
+            <div class="col-8 col-xs-8 col-sm-8 col-md-1 col-lg-1 text-left " >
+                &nbsp;<input type="checkbox" id="cbGeneral"   >
+            </div>
+
+            <div class="col-4 col-xs-4 col-sm-4 col-md-1 col-lg-1 text-right " >
+                <font color="blue"> <b>Scan Tag</b></font> :
+            </div>
+            <div class="col-8 col-xs-8 col-sm-8 col-md-4 col-lg-4 " >
+                <input value="" type="text"  id="txtTag" class="form-control" >
+            </div>
+
+            <div class="col-4 col-xs-4 col-sm-4 col-md-2 col-lg-2 text-right ">
+                Scan บัตรพนักงาน :
+            </div>
+            <div class="col-8 col-xs-8 col-sm-8 col-md-2 col-lg-2 ">
+                <input value="" type="text"    id="txtEmpCard" disabled class="form-control"   >
+            </div>
+        </div>
+
+    </div>
+    <div class="misc-panel "  id="miscpanel2">
+        <div class="row">
+            <div class="col-4 col-xs-4 col-sm-4 col-md-2 col-lg-2 text-right">
+                <font color="red">*</font>Item :
+
+            </div>
+            <div class="col-8 col-xs-8 col-sm-8 col-md-4 col-lg-4 ">
+                <div class="input-group" style="width: 100%;">
+
+                    <input column-return="Item" class="form-control require global-search" type="text" id="txtItem"  validate_text="Item Code" disabled  >
+                    <span   class="input-group-addon " style="padding-left:0px;padding-right:0px;width:30px;border:none;">
+                        <button id="btnItemClear" class="btn btn-default" style='border-radius: 0px;' ><span class="fa fa-times"></span></button>
+                        <button id="btnItemFilter" class="btn btn-default" style=' border-radius: 0px;' ><span class="fa fa-search"></span></button>
+                    </span>
+
+                </div>
+
+            </div>
+            <div class="col-4 col-xs-4 col-sm-4 hidden-lg hidden-md">&nbsp;</div>
+            <div class="col-8 col-xs-8 col-sm-8 col-md-6 col-lg-6  ">
+                <input column-return="Description" class="form-control global-search" value="" type="text"   id="txtItemDesc" disabled >
+            </div>
+
+        </div>
+        <div class="row">        
+            <div class="col-4 col-xs-4 col-sm-4 col-md-2 col-lg-2 text-right">
+                Qty OnHand :
+            </div>
+            <div class="col-3 col-xs-3 col-sm-3 col-md-2 col-lg-2 ">
+                <input column-return="Qty" class="form-control global-search" type="text" id="txtQtyOnhand"  disabled >
+            </div>
+            <div class="col-3 col-xs-3 col-sm-3 col-md-2 col-lg-2 ">
+                <input column-return="Um" class="form-control global-search" type="text" id="txtUm"  disabled   >
+            </div>
+        </div>
+    </div>
+    <div class="misc-panel " id="miscpanel3">
+        <div class="row">        
+            <div class="col-4 col-xs-4 col-sm-4 col-md-2 col-lg-2 text-right">
+                <font color="red">*</font>Quantity :
+            </div>
+            <div class="col-3 col-xs-3 col-sm-3 col-md-2 col-lg-2 ">
+                <input type="text" id="txtQty" class="form-control require"   validate_text="Quantity" >
+            </div>
+            <div class="col-3 col-xs-3 col-sm-3 col-md-2 col-lg-2 ">
+                <select id="selUm" class="form-control require global-search"column-return="Um"    validate_text="U_M"  >
+                    {options_um}
+                </select>
+            </div>
+        </div>
+        <div class="row">        
+            <div class="col-4 col-xs-4 col-sm-4 col-md-2 col-lg-2 text-right">
+                <font color="red">*</font>Reason :
+            </div>
+            <div class="col-8  col-xs-8 col-sm-8 col-md-10 col-lg-10 ">
+                <select id="selReason" class="form-control require"   validate_text="Reason" >
+                    {options_reason}
+                </select>
+            </div>
+
+        </div>
+        <div class="row">        
+            <div class="col-4 col-xs-4 col-sm-4 col-md-2 col-lg-2 text-right">
+                <font color="red">*</font>Account :
+            </div>
+            <div class="col-8 col-xs-8 col-sm-8 col-md-10 col-lg-10 ">
+                <select id="selAcct" class="form-control require"   validate_text="Account" >
+                    {options_chart}
+                </select>
+            </div>
+            <!--<div class="col-4 col-xs-4 col-sm-4 hidden-lg hidden-md">&nbsp;</div>-->
+
+            <div class="col-4 col-xs-4 col-sm-4 col-md-2 col-lg-2">&nbsp;</div>
+            <div class="col-2 col-xs-2 col-sm-2 col-md-2 col-lg-2 ">
+                <input type="text" id="txtAcct1" class="form-control" disabled  >
+            </div>
+            <div class="col-2 col-xs-2 col-sm-2 col-md-2 col-lg-2 ">
+                <input type="text" id="txtAcct2" class="form-control"  disabled>
+            </div>
+            <div class="col-2 col-xs-2 col-sm-2 col-md-2 col-lg-2 ">
+                <input type="text" id="txtAcct3" class="form-control" disabled >
+            </div>
+            <div class="col-2 col-xs-2 col-sm-2 col-md-2 col-lg-2 ">
+                <input type="text" id="txtAcct4" class="form-control"  disabled>
+            </div>
+        </div>
+
+        <div class="row">  
+            <div class="col-4 col-xs-4 col-sm-4 col-md-2 col-lg-2 text-right">
+                <font color="red">*</font>Location :
+            </div>
+            <div class="col-8 col-xs-8 col-sm-8 col-md-4 col-lg-4 ">
+                <select id="selloc" class="form-control require"   validate_text="Location" >
+
+                </select>
+            </div>
+            <div class="col-4 col-xs-4 col-sm-4 col-md-2 col-lg-2 text-right">
+                <font color="red">*</font> Lot :
+            </div>
+            <div class="col-8 col-xs-8 col-sm-8 col-md-4 col-lg-4 ">
+                <select id="sellot" class="form-control require"   validate_text="Lot">
+
+                </select>
+            </div>
+        </div>
+        <div class="row text-center">
+            <button class="btn btn-warning" id="btnReset">RESET</button>
+            <button class="btn btn-success" id="btnProcess">PROCESS</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div id="GlobalSearchModalItem"  class="modal fade" role="dialog">
+    <div class="modal-dialog" style="width:100%;margin-left:10%;margin-right:10%;">
+
+        <!-- Modal content-->
+        <div class="modal-content" >
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Item Search</h4>
+            </div>
+            <div class="modal-body" id="GlobalSearchModalItemContent" >
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<script type="text/javascript" src="js/main.js"></script>
+<script type="text/javascript">
+    $("#txtTransDate ").datepicker({
+        dateFormat: 'yy-mm-dd',
+    });
+    $('#txtTag').keypress(function (event) {
+        var keycode = (event.keyCode ? event.keyCode : event.which);
+        if (keycode == '13') {
+            GetTag($(this).val());
+        } else {
+            var ThisLen = $(this).val().length;
+
+            ClearAll();
+        }
+    });
+    $('#txtTag').change(function () {
+
+        if ($(this).val().length != 13) {
+            ClearAll();
+        }
+    });
+    $("#cbGeneral").click(function () {
+
+        if ($(this).is(":checked")) {
+            $("#txtEmpCard").removeAttr("disabled");
+            $("#txtTag").attr("disabled", "disabled");
+        } else {
+            $("#txtTag").removeAttr("disabled");
+            $("#txtEmpCard").attr("disabled", "disabled");
+        }
+    });
+    $("#selReason").select2();
+    $("#selAcct").change(function () {
+        var Acct = $(this).val();
+        $("#miscpanel3").LoadingOverlay("show", {
+            image: "",
+            fontawesome: "fa fa-circle-o-notch fa-spin"
+        });
+        if (Acct != "") {
+            $.ajax({
+                type: 'POST',
+                url: "././module/APP_MISC/data.php",
+                dataType: 'json',
+                beforeSend: function () {
+                },
+                data: {
+                    "load": "ajax_account",
+                    "Acct": Acct,
+                },
+                success: function (data) {
+//                    console.log(data);
+                    $("#txtAcct1").val(data[0]["acct_unit1"]);
+                    $("#txtAcct2").val(data[0]["acct_unit2"]);
+                    $("#txtAcct3").val(data[0]["acct_unit3"]);
+                    $("#txtAcct4").val(data[0]["acct_unit4"]);
+                    $('#miscpanel3').LoadingOverlay("hide", true);
+                },
+                error: function (e) {
+
+                    console.log("There was an error with your request...");
+                    console.log("error: " + JSON.stringify(e));
+                }
+            });
+        }
+    });
+    $("#selReason").change(function () {
+        $("#miscpanel3").LoadingOverlay("show", {
+            image: "",
+            fontawesome: "fa fa-circle-o-notch fa-spin"
+        });
+        var ReasonCode = $(this).val();
+        if (ReasonCode != "") {
+            $.ajax({
+                type: 'POST',
+                url: "././module/APP_MISC/data.php",
+                dataType: 'json',
+                beforeSend: function () {
+                },
+                data: {
+                    "load": "ajax_account_by_reason",
+                    "ReasonCode": ReasonCode,
+                    "SwitchClass" : "MISC ISSUE"
+                },
+                success: function (data) {
+                    $("#selAcct").val(data[0]["acct"]);
+                    $("#txtAcct1").val(data[0]["acct_unit1"]);
+                    $("#txtAcct2").val(data[0]["acct_unit2"]);
+                    $("#txtAcct3").val(data[0]["acct_unit3"]);
+                    $("#txtAcct4").val(data[0]["acct_unit4"]);
+                    $('#miscpanel3').LoadingOverlay("hide", true);
+                },
+                error: function (e) {
+
+                    console.log("There was an error with your request...");
+                    console.log("error: " + JSON.stringify(e));
+                }
+            });
+        }
+    });
+    $("#btnItemFilter").click(function () {
+        var arrMapElement = [];
+        var arrMapColumn = [];
+        $(".global-search").each(function () {
+            //====== element in this page ======
+            arrMapElement.push($(this).attr("id"));
+            //====== Column match with query in Models ====//
+            arrMapColumn.push($(this).attr("column-return"));
+        });
+
+        $("#GlobalSearchModalItem").modal("show");
+        $("#GlobalSearchModalItemContent").load(
+                "././module/_GLOBAL_SEARCH/search.php",
+                {
+                    "arrMapElement": arrMapElement,
+                    "arrMapColumn": arrMapColumn
+                });
+    });
+    $("#btnItemClear").click(function () {
+        $("#txtItem").val("");
+        $("#txtItemDesc").val("");
+
+    });
+
+
+    $("#selloc").click(function () {
+        if ($("#txtItem").val() == "") {
+            $.alert("กรุณาเลือก Item ก่อน");
+        }
+    });
+    $("#sellot").click(function () {
+        var err = 0;
+        var msg = "<b>ไม่ได้เลือกข้อมูลต่อไปนี้</b><br>";
+        if ($("#txtItem").val() == "") {
+            err++;
+            msg += "-Item<br>";
+
+        }
+        if ($("#selloc").val() == "") {
+            err++;
+            msg += "-Loc<br>";
+
+        }
+        if (err > 0) {
+            $.alert(msg);
+        }
+    });
+
+
+    $("#btnReset").click(function () {
+        $.confirm({
+            title: 'Confirm',
+            content: 'ต้องการ Reset การกรอกข้อมูลทั้งหมดใช่หรือไม่',
+            buttons: {
+                confirm: function () {
+                    location.reload();
+                },
+                cancel: function () {
+
+                },
+
+            }
+        });
+
+    });
+    $("#btnProcess").click(function () {
+        var BlankCount = 0;
+        var Msg = "<b>กรุณากรอกข้อมูล(<font color='red'>*</font>)ให้ครบ</b><br>";
+        var thisId = "";
+        var thisVal = "";
+        $(".require").each(function () {
+            thisId = $(this).attr("id");
+            thisVal = $(this).val();
+//            if ((thisId == "txtTag") || (thisId == "txtEmpCard")) {
+//                if ((thisId == "txtEmpCard") && ($("cbGeneral").is(":checked") == true) && (thisVal == "")) {
+//                    BlankCount++;
+//                    Msg += "- " + $(this).attr("validate_text") + "<br>";
+//                }
+//                if ((thisId == "txtTag") && ($("cbGeneral").is(":checked") == false) && (thisVal == "")) {
+//                    BlankCount++;
+//                    Msg += "- " + $(this).attr("validate_text") + "<br>";
+//                }
+//            } else {
+
+            if ($(this).val() == "") {
+                BlankCount++;
+                Msg += "- " + $(this).attr("validate_text") + "<br>";
+
+
+            }
+
+//            }
+
+
+        });
+
+        if (BlankCount > 0) {
+            $.alert(Msg);
+        } else {
+            $.confirm({
+                title: 'Confirm',
+                content: 'Process misc issue ?',
+                buttons: {
+                    confirm: function () {
+                        StartProcessMiscIsssue();
+                    },
+                    cancel: function () {
+
+                    },
+
+                }
+            });
+        }
+
+
+    });
+    $("#selloc").change(function () {
+        $("#miscpanel3 ").LoadingOverlay("show", {
+            image: "",
+            fontawesome: "fa fa-circle-o-notch fa-spin"
+        });
+        var thisVal = $(this).val();
+        var txtItem = $("#txtItem").val();
+        if ((thisVal != "") && (txtItem != "")) {
+            $.ajax({
+                type: 'POST',
+                url: "././module/APP_MISC/data.php",
+                dataType: 'json',
+                beforeSend: function () {
+                },
+                data: {
+                    "load": "ajax_get_lot_by_loc_item",
+                    "item": txtItem,
+                    "loc": thisVal,
+                },
+                success: function (data) {
+                    // console.log(data);
+                    var i = 0;
+                    $("#sellot").empty();
+                    $("#sellot").append("<option value=''></option>");
+                    for (i = 0; i <= data.length - 1; i++) {
+                        
+                        $("#sellot").append("<option value='" + data[0]["lot"] + "'>" + data[0]["lot"] + " : " + data[0]["qty"] + "</option>");
+                    }
+                    $('#miscpanel3').LoadingOverlay("hide", true);
+                },
+                error: function (e) {
+
+                    console.log("There was an error with your request...");
+                    console.log("error: " + JSON.stringify(e));
+                }
+            });
+        }
+    });
+    function StartProcessMiscIsssue() {
+        $("#miscpanel3").LoadingOverlay("show", {
+            image: "",
+            fontawesome: "fa fa-circle-o-notch fa-spin"
+        });
+        var spTransDate = $("#txtTransDate").val();
+        var spItem = $("#txtItem").val();
+        var spItem_UM = $("#txtUm").val();
+        var spWhse = $("#txtWhse").val();
+        var spLoc = $("#selloc").val();
+        var spLot = $("#sellot").val();
+        var spDocNum = $("#txtDocNum").val();
+        var spQtyIssuse = $("#txtQty").val();
+        var spAcct = $("#selAcct").val();
+        var spReasonCode = $("#selReason").val();
+
+        $.ajax({
+            type: 'POST',
+            url: "././module/APP_MISC/data.php",
+//            dataType: 'json',
+            beforeSend: function () {
+            },
+            data: {
+                "load": "ajax_process_misc_issue",
+                "spTransDate": spTransDate,
+                "spItem": spItem,
+                "spItem_UM": spItem_UM,
+                "spWhse": spWhse,
+                "spLoc": spLoc,
+                "spLot": spLot,
+                "spDocNum": spDocNum,
+                "spQtyIssuse": spQtyIssuse,
+                "spAcct": spAcct,
+                "spReasonCode": spReasonCode,
+
+            },
+            success: function (data) {
+                console.log(data);
+                $('#miscpanel3').LoadingOverlay("hide", true);
+                $.confirm({
+                    title:"Result",
+                    content :"<div class='row text-center'><h2><font color='green'><i class='fa fa-check-circle'></i></font></h2> <h4>Process is done</h4></div> ",
+                    buttons : {
+                        confirm : function(){
+                            location.reload();
+                        }
+                    }
+                });
+              // $.alert("Process done.");
+              //  location.reload();
+            },
+            error: function (e) {
+
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+
+    }
+    function SearchLocLotByItem(SwitchSearch, defaultSelected) {
+        var txtItem = $("#txtItem").val();
+        $("#sel" + SwitchSearch).empty();
+        if (txtItem != "") {
+            $("#miscpanel3").LoadingOverlay("show", {
+                image: "",
+                fontawesome: "fa fa-circle-o-notch fa-spin"
+            });
+
+            $.ajax({
+                type: 'POST',
+                url: "././module/APP_MISC/data.php",
+                dataType: 'json',
+                beforeSend: function () {
+                },
+                data: {
+                    "load": "ajax_loc_lot_by_item",
+                    "item": txtItem,
+                    "SwitchSearch": SwitchSearch
+                },
+                success: function (data) {
+                    var i = 0;
+                    var qty = 0;
+                    var selected = "";
+                     $("#sel" + SwitchSearch).append("<option value=''></option>");
+                    for (i = 0; i <= data.length - 1; i++) {
+                        qty = parseFloat(data[i]["qty"]).toFixed(2);
+                        // console.log(data[i][SwitchSearch] + " : " + defaultSelected);
+                        data[i][SwitchSearch] == defaultSelected ? selected = "selected" : selected = "";
+                       
+                        $("#sel" + SwitchSearch).append("<option " + selected + " value='" + data[i][SwitchSearch] + "'>" + data[i][SwitchSearch] + " : " + qty.toString() + "</option>");
+                    }
+
+                    $('#miscpanel3').LoadingOverlay("hide", true);
+                },
+                error: function (e) {
+
+                    console.log("There was an error with your request...");
+                    console.log("error: " + JSON.stringify(e));
+                }
+            });
+
+
+        }
+//        $("#sel" + SwitchSearch).select2();
+    }
+    function GetTag(tag_id) {
+        $("#miscpanel1").LoadingOverlay("show", {
+            image: "",
+            fontawesome: "fa fa-circle-o-notch fa-spin"
+        });
+        $.ajax({
+            type: 'POST',
+            url: "././module/APP_MISC/data.php",
+            dataType: 'json',
+            beforeSend: function () {
+            },
+            data: {
+                "load": "ajax_get_tag",
+                "tag_id": tag_id,
+
+            },
+            success: function (data) {
+                if (data.length > 0) {
+                    $("#txtItem").val(data[0]["item"]);
+                    $("#txtItemDesc").val(data[0]["description"]);
+                    $("#txtQtyOnhand").val(data[0]["Qty"]);
+                    $("#txtUm").val(data[0]["Um"]);
+                    SearchLocLotByItem("loc", data[0]["loc"]);
+                    SearchLocLotByItem("lot", data[0]["lot"]);
+                } else {
+                    $.alert("ไม่พบ tag id");
+                }
+
+
+                $('#miscpanel1').LoadingOverlay("hide", true);
+            },
+            error: function (e) {
+
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+    }
+    function ClearAll() {
+        $("#txtItem").val("");
+        $("#txtItemDesc").val("");
+        $("#txtQtyOnhand").val("");
+        $("#txtUm").val("");
+        $("#selloc").val("");
+        $("#sellot").val("");
+    }
+
+</script>

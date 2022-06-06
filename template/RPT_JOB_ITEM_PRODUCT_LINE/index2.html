@@ -1,0 +1,430 @@
+<div class="col-xs-12">
+    <div class='row'>
+        <div class='col-xs-6'>
+            <div class='col-xs-5' style="text-align: right"><label>Item</label></div>
+            <div class='col-xs-6'>
+
+                <input class='form-control' type="text" id="item_detail" value="" />
+            </div>
+            <div class='col-xs-1' style='margin-bottom: 0px; text-align: center'>
+                <button onclick="calItem()" class="btn btn-info">Process</button> 
+            </div>
+        </div>
+    </div>
+    <div class='row'>
+        <div class='col-xs-6'>
+            <div class='col-xs-5' style="text-align: right"><label>Qty Item Warehouse</label></div>
+            <div class='col-xs-6'>
+                <input class='form-control' disabled type="text" id="QtyItemWarehouse" value="" />
+            </div>
+        </div>
+        <div class='col-xs-6'>
+            <div class='col-xs-5' style="text-align: right"><label>Qty Sum All Mattrans</label></div>
+            <div class='col-xs-6'>
+                <input class='form-control' disabled type="text" id="QtySumMattrans" value="" />
+            </div>
+        </div>
+    </div>
+    <div class='row'>
+        <div class="col-xs-3">
+            <h5>
+                QTY ON HAND Location 
+            </h5>
+            <table class="table table-condensed table-bordered table-striped" id="tblQtyItemLocation" >
+                <thead>
+                    <tr>
+                        <td>Location</td>
+                        <td>Qty on hand</td>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <div class="col-xs-4">
+            <h5>
+                QTY Lot Location 
+            </h5>
+            <table class="table table-condensed table-bordered table-striped" id="tblQtyLotLoc" >
+                <thead>
+                    <tr>
+                        <td>Location </td>
+                        <td>Lot </td>
+                        <td>Qty</td>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <div class="col-xs-5">
+            <h5>
+                Material transaction 
+            </h5>
+            <table class="table table-condensed table-bordered table-striped" id="tblQtySumMattransByLoc" >
+                <thead>
+                    <tr>
+                        <td>Lot </td>
+                        <td>trans_type</td>
+                        <td>Qty</td>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+.
+<script>
+    var url = '././module/RPT_JOB_ITEM_PRODUCT_LINE/data.php';
+    function calItem() {
+        let item = $('#item_detail').val();
+        QtyItemWarehouse(item);
+        QtySumMattrans(item);
+        QtyItemLocation(item);
+        QtyLotLoc('', '')
+        QtySumMattransByLoc('', '')
+    }
+    function QtyItemWarehouse(item) {
+        $.ajax({
+            type: 'GET',
+            url: url,
+            contentType: "text/plain",
+            dataType: 'json',
+            beforeSend: function () {
+            },
+            data: {
+                load: 'QtyItemWarehouse',
+                item: item,
+            },
+
+            success: function (data) {
+                console.log(data)
+                $("#QtyItemWarehouse").val(data[0].qty_on_hand);
+            },
+
+            error: function (e) {
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+    }
+    function QtySumMattrans(item) {
+        $.ajax({
+            type: 'GET',
+            url: url,
+            contentType: "text/plain",
+            dataType: 'json',
+            beforeSend: function () {
+            },
+            data: {
+                load: 'QtySumMattrans',
+                item: item,
+            },
+
+            success: function (data) {
+                $("#QtySumMattrans").val(data[0].qty_on_hand);
+            },
+
+            error: function (e) {
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+    }
+    function QtyItemLocation(item) {
+        $.ajax({
+            type: 'GET',
+            url: url,
+            contentType: "text/plain",
+            dataType: 'json',
+            beforeSend: function () {
+            },
+            data: {
+                load: 'QtyItemLocation',
+                item: item,
+            },
+
+            success: function (data) {
+
+
+
+
+                console.log(data)
+                var RowFooterBuild = "";
+                var ColBuild = "";
+                var ColCount = 2;
+                var i = 0;
+                RowFooterBuild = "<tfoot><tr>!!ColBuild!!</tr></tfoot>";
+                for (i = 1; i <= ColCount; i++) {
+                    ColBuild += "<td></td>";
+                }
+                $('#tblQtyItemLocation').append(RowFooterBuild.replace("!!ColBuild!!", ColBuild));
+                $('#tblQtyItemLocation').dataTable({
+                    scrollY: 200,
+                    "paging": false,
+                    "aaData": data,
+                    "searching": false,
+                    "bInfo": false,
+                    destroy: true,
+                    "columns": [
+                        {
+                            data: {loc: "loc", item: "item"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                var ret = `<a onclick=QtyLotLoc('${data.item}','${data.loc}'); >${data.loc}</a>`;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "qty_on_hand",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = formatMoney(data);
+                                return ret;
+                            }
+                        },
+                    ],
+                    'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                            "<'row'<'col-md-12'tr>>" +
+                            "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                    buttons: [
+                        {
+                            extend: 'excel',
+                            footer: true,
+                            text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                            title: 'รายงาน inv item ' + GetCurrDateTime()
+                        },
+                    ],
+                    "footerCallback": function (row, data, start, end, display) {
+                        var api = this.api(),
+                                data;
+                        var intVal = function (i) {
+                            return typeof i === 'string' ?
+                                    i.replace(/[\$,]/g, '') * 1 :
+                                    typeof i === 'number' ?
+                                    i : 0;
+                        };
+                        console.log(api);
+                        var totalKG = api
+                                .column(1)
+                                .data()
+                                .reduce(function (a, b) {
+                                    return intVal(a) + intVal(b);
+                                }, 0);
+                        $(api.column(0).footer()).html("<b>TOTAL</b>");
+                        $(api.column(1).footer()).html(addCommas(totalKG.toFixed(2)));
+                    },
+
+                });
+            },
+
+            error: function (e) {
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+    }
+    function QtyLotLoc(item, loc) {
+        $.ajax({
+            type: 'GET',
+            url: url,
+            contentType: "text/plain",
+            dataType: 'json',
+            beforeSend: function () {
+            },
+            data: {
+                load: 'QtyLotLoc',
+                item: item,
+                loc: loc
+            },
+
+            success: function (data) {
+                QtySumMattransByLoc(item, loc)
+                console.log(data)
+                var RowFooterBuild = "";
+                var ColBuild = "";
+                var ColCount = 3;
+                var i = 0;
+                RowFooterBuild = "<tfoot><tr>!!ColBuild!!</tr></tfoot>";
+                for (i = 1; i <= ColCount; i++) {
+                    ColBuild += "<td></td>";
+                }
+                $('#tblQtyLotLoc').append(RowFooterBuild.replace("!!ColBuild!!", ColBuild));
+                $('#tblQtyLotLoc').dataTable({
+                    scrollY: 200,
+                    "paging": false,
+                    "aaData": data,
+                    "searching": false,
+                    "bInfo": false,
+                    destroy: true,
+                    "columns": [
+                        {
+                            "data": "loc",
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "lot",
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "qty_on_hand",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = formatMoney(data);
+                                return ret;
+                            }
+                        },
+                    ],
+                    'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                            "<'row'<'col-md-12'tr>>" +
+                            "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                    buttons: [
+                        {
+                            extend: 'excel',
+                            footer: true,
+                            text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                            title: 'รายงาน inv item ' + GetCurrDateTime()
+                        },
+                    ],
+                    "footerCallback": function (row, data, start, end, display) {
+                        var api = this.api(),
+                                data;
+                        var intVal = function (i) {
+                            return typeof i === 'string' ?
+                                    i.replace(/[\$,]/g, '') * 1 :
+                                    typeof i === 'number' ?
+                                    i : 0;
+                        };
+                        console.log(api);
+                        var totalKG = api
+                                .column(2)
+                                .data()
+                                .reduce(function (a, b) {
+                                    return intVal(a) + intVal(b);
+                                }, 0);
+                        $(api.column(0).footer()).html("<b></b>");
+                        $(api.column(1).footer()).html("<b>TOTAL</b>");
+                        $(api.column(2).footer()).html(addCommas(totalKG.toFixed(2)));
+                    },
+
+                });
+            },
+
+            error: function (e) {
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+    }
+    function QtySumMattransByLoc(item, loc) {
+        $.ajax({
+            type: 'GET',
+            url: url,
+            contentType: "text/plain",
+            dataType: 'json',
+            beforeSend: function () {
+            },
+            data: {
+                load: 'QtySumMattransByLoc',
+                item: item,
+                loc: loc
+            },
+
+            success: function (data) {
+
+
+
+
+
+                console.log(data)
+                var RowFooterBuild = "";
+                var ColBuild = "";
+                var ColCount = 3;
+                var i = 0;
+                RowFooterBuild = "<tfoot><tr>!!ColBuild!!</tr></tfoot>";
+                for (i = 1; i <= ColCount; i++) {
+                    ColBuild += "<td></td>";
+                }
+                $('#tblQtySumMattransByLoc').append(RowFooterBuild.replace("!!ColBuild!!", ColBuild));
+                var table = $('#tblQtySumMattransByLoc').dataTable({
+                    scrollY: 200,
+                    "paging": false,
+                    "aaData": data,
+                    "bInfo": false,
+                    destroy: true,
+                    fixedHeader: true,
+                    "order": [[0, "desc"]],
+                    "columns": [
+                        
+                        {
+                            "data": "lot",
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "trans_type",
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "qty",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = formatMoney(data);
+                                return ret;
+                            }
+                        },
+                    ],
+                    'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                            "<'row'<'col-md-12'tr>>" +
+                            "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                    buttons: [
+                        {
+                            extend: 'excel',
+                            footer: true,
+                            text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                            title: 'รายงาน inv item ' + GetCurrDateTime()
+                        },
+                    ],
+                    "footerCallback": function (row, data, start, end, display) {
+                        var api = this.api(),
+                                data;
+                        var intVal = function (i) {
+                            return typeof i === 'string' ?
+                                    i.replace(/[\$,]/g, '') * 1 :
+                                    typeof i === 'number' ?
+                                    i : 0;
+                        };
+                        console.log(api);
+                        var totalKG = api
+                                .column(2)
+                                .data()
+                                .reduce(function (a, b) {
+                                    return intVal(a) + intVal(b);
+                                }, 0);
+                        $(api.column(0).footer()).html("<b></b>");
+                        $(api.column(1).footer()).html("<b>TOTAL</b>");
+                        $(api.column(2).footer()).html(addCommas(totalKG.toFixed(2)));
+                    },
+
+                });
+            },
+
+            error: function (e) {
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+    }
+
+</script>

@@ -1,0 +1,60 @@
+<style>
+    .heading{
+        /*height:50px;*/
+        background-color:#949494 ;
+        color:#FFFFFF;
+        font-weight: bold;
+        padding-top:10px;
+        margin-top:0px;
+        
+        padding-bottom:0px;
+         margin-bottom:0px;
+    }
+    th{
+        text-align: center;
+        
+    }
+    condensed>tbody>tr>td{
+        text-align: left;
+        padding-top:10px;
+    }
+    .btn-default .btn1{
+        width:28px;
+        height:28px;
+        padding : 5px 5px 5px 5px ;
+    }
+</style>
+
+<div class="row text-center heading" >
+    <font color="black" ><b> SEARCH ROW <font color="orange">[{row}]</font> WITH</b> &nbsp;|&nbsp; </font>  
+    SPEC : {SPEC} | CATEGORY : {CATE} | NPS : {NPS} | SCHEDULE : {SCHED} 
+    <h5 style="color:orange;">  FOUND : {itemCount}</h5>
+</div>
+
+<div class="row text-center " >
+    <table class="table table-condensed table-striped">
+        <thead>
+            <tr>
+                <th class="colSelect">SELECT</th>
+                <th>ITEM</th>
+                <th>DESCRIPTION</th>
+                <th>SPEC / CLASS</th>
+                <th>GRADE</th>
+                <th>NPS</th>
+                <th>SCHEDULE</th>        
+                <th>WEIGHT</th>
+            </tr>
+        </thead>
+        <tbody>
+            {itemList}
+        </tbody>
+    </table>
+
+</div>
+<script type="text/javascript">
+    var itemCount = {itemCount} ;
+   
+    if(itemCount <=1 ){
+        $(".colSelect").css({"display":"none"});
+    }
+</script>

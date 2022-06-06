@@ -1,0 +1,105 @@
+<div class='row' >
+    <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12" style="font-size:18px;">
+        <b>Log User</b> 
+    </div>
+</div>
+<div class="row" id="divReport">
+    <table class="table table-condensed table-bordered table-striped" id="tblReport">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>date</th>
+                <th>time</th>
+                <th>project</th>
+                <th>User id</th>
+                <th>username</th>
+                <th>Full name</th>
+                <th>action</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+
+<script type="text/javascript">
+    var InitLoading = "<div class='row text-center'><h1><i class='fa fa-spinner fa-spin'></i><h1><h3>loading</h3></div>";
+    var modalBodyId = "#modalBody";
+    var modalId = "#UserModal";
+    var modalHeadId = "#lblModalHead";
+    loadData();
+    function loadData() {
+
+        $.ajax({
+            type: 'GET',
+            url: "././module/RPT_LogUser/data.php",
+            contentType: "text/plain",
+            dataType: 'json',
+            beforeSend: function () {
+                $("#btnSearch").html("<i class='fa fa-spinner fa-spin'>");
+            },
+            data: {
+                load: 'GetUserAll',
+//                txtCerDate: txtCerDate,
+            },
+            success: function (data) {
+                console.log(data)
+                $("#tblReportList").DataTable().clear();
+                $('#tblReport').dataTable({
+                    "order": [[ 0, "desc" ]],
+                    fixedHeader: true,
+                    "aaData": data,
+//                    "pageLength": 25,
+                    "columns": [
+                        {"data": "id"},
+                        {
+                            "data": function (data, type, dataToSet) {
+                                var date_format = data.date_time.date.toString().substring(0, 10);
+                                return date_format;
+                            }
+                        },
+                        {
+                            "data": function (data, type, dataToSet) {
+                                var date_format = data.date_time.date.toString().substring(11, 19);
+                                return date_format;
+                            }
+                        },
+                        {
+                            "data": function (data, type, dataToSet) {
+
+                                return data.prj_name + "[" + data.prj_description + "]";
+                            }
+                        },
+                        {"data": "user_id"},
+                        {"data": "username"},
+                        {"data": "fullname"},
+                        {"data": "log_action"},
+                    ],
+                    'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                            "<'row'<'col-md-12'tr>>" +
+                            "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                    buttons: [
+                        {
+                            extend: 'print',
+                            text: "<i class='fa fa-print'></i>&nbsp;Print",
+                            title: ''
+                        },
+                        {
+                            extend: 'excel',
+                            text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                            title: ''
+                        },
+                    ]
+                });
+
+                $('#tblReport').loading("stop");
+
+            },
+            error: function (e) {
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+    }
+
+
+</script>

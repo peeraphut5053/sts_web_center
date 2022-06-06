@@ -1,0 +1,396 @@
+<style>
+    .col-data {
+        padding-top:15px;
+        border-top:solid 2px orange ;
+        height: 500px;
+        overflow-y: auto ;
+    }
+    td{
+        font-size:14px;
+    }
+    .col-topic{
+
+        margin-top:0px;
+        /* border-bottom:solid 1px #666 ; */
+    }
+    .col-md-6{
+        margin-top : 0px;
+        margin-bottom:0px;
+    }
+    .col-data{
+        margin-top : 0px;
+        margin-bottom:0px;
+    }
+    .col-content-po{
+        /* background-color: #d6e9fc; */
+        /* margin-left:10px;
+        margin-right:10px; */
+        /* border-radius: 10px; */
+    }
+    .btn-select{
+        border-radius:20px;
+        background-color : #11c684;
+        color:#FFFFFF;
+    }
+    #getGrn_hdr{
+        overflow-y: scroll;
+    }
+    #getPO{
+        overflow-y: scroll;
+    }
+    .btn-select{
+        padding:2px 2px 2px 2px ;
+    }
+    table #getPO td{
+        background-color: 4a4a4a;
+    }
+</style>
+<!--<div id="loading" style="z-index:999 ; position: absolute;top:-10%; width: 100%; height: 100%; background: url('./image/STS_Loading_fade.gif') no-repeat center center;"></div>-->
+<div class="row">
+    <input type='text' id='hdfGrnNum' value='' >
+    <input type='text' id='hdfPO' value='' >
+    <input type='text' id='hdfVendNum' value='' >
+    <input type='hidden' name='hdStsNo' id='hdStsNo' value = '{sts_no}'>  
+</div>
+
+<div class="row" style="padding-left:1%;padding-right:1%;">
+    <!--<div class="well">-->
+    <div class="row" style="border-bottom:solid 1px #cdcdcd;margin-bottom:5px;padding-bottom:5px;">
+
+        <div class="row" style="margin-left:10px;margin-right: 10px;">
+            <div class="col-md-3 text-center">
+                Reference ID
+                <!--                <div class="input-group">
+                                    <span class="input-group-addon"> Reference ID</span>-->
+                <input readonly type="text" class="form-control" value="{sno}" id="refStsNo">
+
+                <!--</div>-->
+            </div>
+            <div class="col-md-9">
+                <!--no use-->
+                <div class="col-md-6 text-center" style="display:none;">
+                    <div class="input-group">
+                        <span class="input-group-addon">Vendor_Barcode</span>
+                        <input type="text" class="form-control" id="fltVendor">
+                    </div>
+                </div>  
+                <!--no use-->
+                <div class="row" style="margin-top:0px;">
+
+                    <div class="col-md-4 text-center">
+                        GRN Barcode
+                        <!--                        <div class="input-group">
+                                                    <span class="input-group-addon">GRN_Barcode</span>-->
+                        <input type="text" class="form-control" id="fltGrnBarcode">
+                        <!--</div>-->
+
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <!--                        <div class="input-group">
+                                                    <span class="input-group-addon">PO_Barcode</span>-->
+                        PO Barcode                            
+                        <input type="text" id="fltPO" class="form-control">
+                        <!--</div>-->
+                    </div>
+                    <div class="col-md-4 text-center"> 
+                        <!--                        <div class="input-group">
+                                                    <span class="input-group-addon">Item</span>-->
+                        Item Barcode
+                        <input type="text" id="barcodeItem" class="form-control">
+                        <!--</div>-->
+                    </div>
+                </div>
+                <div class="row">
+
+
+                </div>
+            </div>
+        </div>
+
+
+
+        <!--</div>-->
+
+        <div class="row" style="overflow:auto;padding-left:20px;padding-right:20px;padding-top:10px;padding-bottom: 10px;">
+            <div class="col-md-4 text-center " >
+                <div class="row" style="display:none;">
+                    <label style="color:#666;">Select grn_hdr </label>
+                </div>
+
+                <div class="row" style="overflow-y:auto;">
+                    <table class='table table-striped  table-condensed' style="border:solid 1px #cdcdcd;">
+                        <thead>
+                            <tr>
+                                <th >Date</th>
+                                <th>grn_num</th>
+                                <th>vendor</th>
+                                <th>whse</th>
+                                <th>Show PO</th>
+                            </tr>
+                        </thead>
+                        <tbody id='getGrn_hdr'>
+
+                        </tbody>
+                    </table>
+                </div>
+
+
+            </div>
+            <div class="col-md-8 text-center " >
+                <div class="row" style="display:none;">
+                    <div class="col-md-6 ">
+                        <label style="color:#666;font-size:14px;" id='lblPO'>  Select  PO </label>
+                    </div>
+                    <div class="col-md-6 ">
+                        <div class="row">
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row" id="divPO2" style="overflow-y:auto;">
+
+                    <table class='table table-striped  table-condensed' style="border:solid 1px #cdcdcd;width:99%;">
+                        <thead>
+                            <tr>
+                                <th style="width:10%;border:none;background-color:#cdcdcd;">po_date</th>
+                                <th style="width:15%;border:none;background-color:#cdcdcd;">po_num</th>
+                                <th style="width:5%;border:none;background-color:#cdcdcd;">line</th>
+                                <th style="width:35%;border:none;background-color:#cdcdcd;">item</th>
+                                <!--<th style="width:25%;">description</th>-->
+                                <th style="width:15%;border:none;background-color:#cdcdcd;">qty</th>
+                                <th style="width:10%;border:none;background-color:#cdcdcd;">cost</th>
+                                <th style="width:5%;border:none;background-color:#cdcdcd;"><i class='fas fa-edit'></th>
+                            </tr>
+                        </thead>
+                        <tbody id='getPO'>
+
+                        </tbody>
+                    </table>
+                </div>
+
+
+
+            </div>
+        </div>
+
+
+
+    </div>
+
+
+    <script type="text/javascript">
+        //    $("#divPO2").hide();
+        // $("#lblPO").css({"margin-top":"200px;"});
+        $("#lblPO").text("Please Select Available grn_hdr From Syteline ");
+
+        //    GetAvailableGrn_hdr();
+        //    $("#btnFilter").click(function(){
+        //         GetAvailableGrn_hdr();
+        //    });
+        $('#fltVendor').on('keypress, keydown', function (event) {
+            var val = $('#fltVendor').val();
+            GetAvailableGrn_hdr(val);
+        });
+        //    $('#fltGrnBarcode').on('keyup', function (event) {
+        //
+        //   
+        //
+        //    });
+        $("#barcodeItem").keyup(function (e) {
+            if (e.keyCode == 13)
+            {
+                var ven_num = $("#hdfVendNum").val();
+                var po_num = $("#fltGrnBarcode").val();
+                var item = $(this).val();
+                if (ven_num == "") {
+                    $.alert({
+                        title: ":: ผิดพลาด",
+                        content: "กรุณาเลือก Vendor "
+                    });
+                } else {
+//                    console.log(ven_num + '-' + item);
+                    GetAvailablePO(ven_num,po_num, item);
+                }
+
+                //            GetAvailablePO();
+            }
+        });
+        $('#fltGrnBarcode').keyup(function (e) {
+            if (e.keyCode == 13)
+            {
+                GetAvailableGrn_barcode();
+            }
+        });
+        $('#fltPO').keyup(function (e) {
+            if (e.keyCode == 13)
+            {
+                var grn_num = $("#fltGrnBarcode").val();
+                var ven_num = $("#hdfVendNum").val();
+                var item = $("#barcodeItem").val();
+                var po_num = $(this).val();
+                if (grn_num == "") {
+                    $.alert({
+                        title: ":: ผิดพลาด",
+                        content: "Please input GRN "
+                    });
+                } else {
+                    GetAvailablePO(ven_num, po_num, item);
+                }
+            }
+        });
+        function SelectHdr(ids) {
+            var Arr = ids.split("_");
+            var Vend_num = Arr[1];
+            var Grn_num = Arr[0];
+            $("#lblPO").text("Available PO For " + Grn_num);
+            $("#hdfGrnNum").val(Grn_num);
+            $("#hdfVendNum").val(Vend_num);
+            GetAvailablePO(Vend_num, '', '');
+
+        }
+        function GetAvailablePO(vend_num, po_num, item) {
+            var trimVendNum = vend_num.trim();
+            var trimItem = item.trim();
+            var trimPo = po_num.trim();
+            //        $("#divPO2").show();
+            $("#getPO").empty();
+
+            $.ajax({
+                url: "././module/MGT/MGT_ajax/data_sl_po.php",
+                type: "POST",
+                data: {
+                    type: "po",
+                    vend_num: trimVendNum,
+                    po_num: po_num,
+                    item: trimItem
+                },
+                success: function (data) {
+
+                    $("#getPO").html(data);
+                },
+                error: function (xhr, status, error) {
+
+                    alert(xhr.responseText);
+                },
+                dataType: "json"
+            });
+        }
+
+        function GetAvailableGrn_hdr() {
+            $("#loading").show();
+            var vend_name = $("#fltVendor").val();
+
+            $.ajax({
+                url: "././module/MGT/MGT_ajax/data_sl_po.php",
+                type: "POST",
+                data: {
+                    type: "grn_hdr",
+                    vend_name: vend_name,
+                },
+                success: function (data) {
+
+                    $("#getGrn_hdr").html(data);
+                    $("#loading").hide();
+                },
+                error: function (xhr, status, error) {
+
+                    alert(xhr.responseText);
+                },
+                dataType: "json"
+            });
+        }
+        function GetAvailableGrn_barcode() {
+//            $("#loading").show();
+            var grn_barcode = $("#fltGrnBarcode").val().trim();
+
+            $("#hdfGrnNum").val(grn_barcode);
+            //         console.log(grn_barcode);
+            //        var triggeridClick = grn_barcode.split("_")[0];
+            //        console.log(triggeridClick);
+            if (grn_barcode != "") {
+                $.ajax({
+                    url: "././MGT/MGT_ajax/data_sl_po.php",
+                    type: "POST",
+                    data: {
+                        type: "grn_barcode",
+                        grn_barcode: grn_barcode,
+                        po_barcode: "",
+                    },
+                    success: function (data) {
+
+                        $("#getGrn_hdr").html(data);
+                        $("#loading").hide();
+                        var getSelector = $("a[id^='" + grn_barcode + "']");
+                        var explodeId = getSelector.attr("id");
+                        var splitVend = explodeId.split("_")[1];
+                        $("#hdfVendNum").val(splitVend);
+                        GetAvailablePO(splitVend, '', '');
+                        //                  $("#"+triggeridClick).trigger("click");;
+                        $("#fltGrnBarcode").select();
+                    },
+                    error: function (xhr, status, error) {
+
+                        alert(xhr.responseText);
+                    },
+                    dataType: "json"
+                });
+            }
+        }
+        function GetAvailablePO_barcode() {
+            var grn_barcode = $("#fltGrnBarcode").val().trim();
+            var po_barcode = $("#fltPO").val().trim();
+            $("#hdfGrnNum").val(grn_barcode);
+            if (grn_barcode != "") {
+                $.ajax({
+                    url: "././module/MGT/MGT_ajax/data_sl_po.php",
+                    type: "POST",
+                    data: {
+                        type: "grn_barcode",
+                        grn_barcode: grn_barcode,
+                        po_barcode: po_barcode,
+                    },
+                    success: function (data) {
+                        $("#getGrn_hdr").html(data);
+                        $("#loading").hide();
+                        var getSelector = $("a[id^='" + grn_barcode + "']");
+                        var explodeId = getSelector.attr("id");
+                        var splitVend = explodeId.split("_")[1];
+                        $("#hdfVendNum").val(splitVend);
+                        GetAvailablePO(splitVend, '', '');
+                        //                  $("#"+triggeridClick).trigger("click");;
+                        $("#fltGrnBarcode").select();
+                    },
+                    error: function (xhr, status, error) {
+
+                        alert(xhr.responseText);
+                    },
+                    dataType: "json"
+                });
+            }
+        }
+        // GetAvailablePO();
+        function SelectPO(ids) {
+
+            var getId = $('#' + ids).attr('id');
+            var GrnNum = $('#hdfGrnNum').val();
+            var PoNum = $('#' + ids).attr('data-po-num');
+            var PoLine = $('#' + ids).attr('data-po-line');
+            var VendNum = $('#' + ids).attr('data-vend-num').trim();
+            var sts_no = $('#hdStsNo').val();
+            //alert(GrnNum)
+            $("#txtGrnNum_" + sts_no).val(GrnNum);
+            $("#txtPoNum_" + sts_no).val(PoNum);
+            $("#txtPoLine_" + sts_no).val(PoLine);
+            // =============== Dummy element to store temp value for upload to SP ================//
+            $("#hdfTemp_" + sts_no).attr("data-grn-num", GrnNum);
+            $("#hdfTemp_" + sts_no).attr("data-po-num", PoNum);
+            $("#hdfTemp_" + sts_no).attr("data-po-line", PoLine);
+            $("#hdfTemp_" + sts_no).attr("data-vend-num", VendNum.trim());
+
+            // $("#txt_"+sts_no).attr("data-po-num",PoNum) ;
+            $("#divPO").dialog('close');
+        }
+
+    </script>

@@ -1,0 +1,203 @@
+<div class="row">
+    <div>
+        <h1>INV ITEM ALL Report</h1>
+    </div> 
+    <div class="col-lg-2" >   
+        <div class="input-group">
+            <div class="input-group-addon">From Date</div>
+            <input type="text" autocomplete="off"  class="form-control txt-filter" id="FromDate">
+        </div>
+    </div>
+    <div class="col-lg-2">   
+        <div class="input-group">
+            <div class="input-group-addon">To date</div>
+            <input type="text" autocomplete="off"  class="form-control txt-filter" id="ToDate">
+        </div>
+    </div>
+    <div class="col-lg-2">   
+        <button id="btnSearch" class="btn btn-info"><i class="fa fa-searh"></i>&nbsp;ค้นหา</button>
+    </div>
+</div>
+
+<div class="row" id="divReport" >
+    <table class="table table-condensed table-bordered table-striped" id="tblReport" style="width:100%;">
+        <thead>
+            <tr>
+                <th>Type Sale</th>
+                <th>inv date</th>
+                <th>inv num</th>  
+                <th>customer num</th>
+                <th>name</th>
+                <th>item</th>
+                <th>description</th>
+                <th>unit weight</th>
+                <th>group final</th>
+                <th>um</th>
+                <th>qty pcs</th>
+                <th>price/pcs</th>
+                <th>amt</th>
+                <th>vat</th>
+                <th>amt total</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+<script type="text/javascript" src="./template/RPTINV_ITEM_ALL_NEW/pdfmake.min.js"></script>
+<script type="text/javascript" src="./template/RPTINV_ITEM_ALL_NEW/vfs_fonts.js"></script>
+<script type="text/javascript">
+
+    pdfMake.createPdf(docDefinition).download();
+
+
+
+    $("#FromDate,#ToDate").datepicker({
+        dateFormat: 'yy-mm-dd',
+    });
+    $("#FromDate,#ToDate").val(GetToday());
+    $("#btnSearch").click(function () {
+        var tblReportId = '#tblReport';
+        var btnSearch = '#btnSearch';
+        $.ajax({
+            type: 'GET',
+            url: 'http://localhost:88/sts_web_center_new/module/RPT_JOBPACKING/data.php?load=GetJobPackingDialy&txtFromDate=2020-09-23%2000%3A00%3A00&txtToDate=2020-09-23%2011%3A00%3A00&txtItem=&txtref_num=&txtw_c=',
+            dataType: 'json',
+            success: function (data) {
+                console.log(data)
+
+            },
+            error: function (e) {
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+    });
+
+    function footerCallback(api) {
+        $(api.column(8).footer()).html("<b>TOTAL</b>");
+        ColumnSumVal(9, api)
+        ColumnSumVal(10, api)
+        ColumnSumVal(11, api)
+        ColumnSumVal(12, api)
+        ColumnSumVal(13, api)
+        ColumnSumVal(14, api)
+    }
+    var tablecolumsArr = [
+        {
+            "data": "type_sale",
+            "className": "text-right",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "inv_date",
+            "render": function (data, type, row) {
+                var ret = data.date.substring(0, 10);
+                return ret;
+            }
+        },
+        {
+            "data": "inv_num",
+            "className": "text-center",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "cust_num",
+            "className": "text-center",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "name",
+            "className": "text-right",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "item",
+            "className": "text-right",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "description",
+            "render": function (data, type, row) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "group_final",
+            "render": function (data, type, row) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "um",
+            "render": function (data, type, row) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "qtypcs",
+            "className": "text-right",
+            "render": function (data, type, row) {
+                var ret = formatMoney(data);
+                return ret;
+            }
+        },
+        {
+            "data": "qtykg",
+            "className": "text-right",
+            "render": function (data, type, row) {
+                var ret = formatMoney(data);
+                return ret;
+            }
+        },
+        {
+            "data": "PricePerKG",
+            "className": "text-right",
+            "render": function (data, type, row) {
+                var ret = formatMoney(data);
+                return ret;
+            }
+        },
+        {
+            "data": "amt",
+            "className": "text-right",
+            "render": function (data, type, row) {
+                var ret = formatMoney(data);
+                return ret;
+            }
+        },
+        {
+            "data": "vat",
+            "className": "text-right",
+            "render": function (data, type, row) {
+                var ret = formatMoney(data);
+                return ret;
+            }
+        },
+        {
+
+            "data": "amt_total",
+            "className": "text-right",
+            "render": function (data, type, row) {
+                var ret = formatMoney(data);
+                return ret;
+            }
+        },
+    ];
+</script>

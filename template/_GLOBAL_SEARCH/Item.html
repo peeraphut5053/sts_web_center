@@ -1,0 +1,179 @@
+<style>
+    #rowTable {
+
+        height : 400px;
+        overflow-y: auto;
+    }
+
+</style>
+<div class="row">
+
+    <div class="col-6 col-xs-6 col-sm-6 col-md-4 col-lg-4 text-right">
+        Item , Description
+    </div>
+    <div class="col-6 col-xs-6 col-sm-6 col-md-4 col-lg-4">
+        <input type="text" id="txtItemFilter"  class="form-control" value='' placeholder="enter name or description" >
+    </div>
+    <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3 text-right">
+        <input type="checkbox" id="cbQty" value="1" checked> มีใน Stock
+    </div>
+    <div class="col-6 col-xs-6 col-sm-6 col-md-1 col-lg-1 text-right">
+        <button id="btnSearch" class="btn btn-info"><i class="fa fa-search"></i> Search </button>
+    </div>
+</div>
+
+<hr>
+<div class="row" id="rowTable">
+    <table class="table table-condensed table-striped" id='tblItems' style="height:400px;overflow-y:auto;">
+        <thead>
+            <tr>
+                <th>Select</th>
+                <th>Item Code</th>
+                <th>Item Description</th>
+                <th>U_M</th>
+                <th>Qty</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+
+<script type='text/javascript'>
+    var GetArrElement = "{arrMapElement}";
+    var GetArrColumn = "{arrMapColumn}";
+    var ArrEle = [];
+    var ArrCol = [];
+    ArrEle = GetArrElement.split(",");
+    ArrCol = GetArrColumn.split(",");
+ $('#txtItemFilter').focus();
+
+    //   alert(GetArrColumn);
+
+    function SelectItem(thisId) {
+        var i = 0;
+        var tmpVal = "";
+        for (i = 0; i <= ArrEle.length - 1; i++) {
+            tmpVal = $("#" + thisId).attr(ArrCol[i]);
+            $("#" + ArrEle[i]).val(tmpVal);
+        }
+        SearchLocLotByItem("loc", "");
+        SearchLocLotByItem("lot", "");
+        $("button[class='close']").click();
+    }
+    $('#txtItemFilter').keypress(function (event) {
+        var keycode = (event.keyCode ? event.keyCode : event.which);
+        if (keycode == '13') {
+            GlobalSearchItemStart();
+        }
+    });
+    $("#btnSearch").click(function () {
+        GlobalSearchItemStart();
+    });
+    function GlobalSearchItemStart() {
+        var OldHtml = $("#btnSearch").html();
+
+        $("#btnSearch").html("<i class='fa fa-spinner fa-spin'></i>");
+        var txtItemFilter = $("#txtItemFilter").val();
+        var cbQty = 0;
+        $("#cbQty").is(":checked") ? cbQty = 1 : cbQty = 0;
+
+        $("#rowTable").LoadingOverlay("show", {
+            image: "",
+            fontawesome: "fa fa-circle-o-notch fa-spin",
+            //  text        : "<h6>กำลังโหลดข้อมูล...</h6>"
+        });
+
+        $.ajax({
+            type: 'POST',
+            url: "././module/_GLOBAL_SEARCH/data.php",
+            //                contentType: "text/plain",
+            dataType: 'json',
+            beforeSend: function () {
+//                $("#btnSearch").html("<i class='fa fa-spinner fa-spin'>");
+            },
+            data: {
+                "load": "ajax",
+                "txtItemFilter": txtItemFilter,
+                "cbQty": cbQty
+            },
+            success: function (data) {
+
+                $("#tblItems").DataTable().clear();
+
+
+
+                $('#tblItems').dataTable({
+                    "aaData": data,
+//                        "aaSorting": [[2, 'asc'], [1, 'asc']],
+
+                    "paging": false,
+                    fixedHeader: true,
+                    destroy: true,
+                    'processing': true,
+                    "columns": [
+                        {
+                            "data": "Item",
+                            "className": "text-center",
+                            "width": "10%", "render": function (data, type, row, meta) {
+
+                                var pItem = row["Item"];
+                                var pDesc = row["Description"];
+                                var pQty = row["Qty"];
+                                var pUM = row["Um"];
+                                var ret = "<a class='btn btn-info' \n\  \n\
+                                    id='a_" + pItem + "' \n\
+                                     Item='" + pItem + "' \n\
+                                     Description='" + pDesc + "' \n\
+                                     Um='" + pUM + "' \n\ \n\
+                                     Qty='" + pQty + "' \n\
+                                    OnClick='SelectItem(this.id);' ><i class='fa fa-check-circle'></i></a>";
+
+
+                                return ret;
+//                                return "";
+                            }
+
+
+                        },
+                        {
+                            "data": "Item",
+                            "className": "text-left",
+                            "width": "30%",
+                        },
+                        {
+                            "data": "Description",
+                            "className": "text-center",
+                            "width": "45%"
+                        },
+                        {
+                            "data": "Um",
+                            "className": "text-center",
+                            "width": "5%"
+                        },
+
+                        {
+                            "data": "Qty",
+                            "className": "text-right",
+                            "width": "10%",
+                            "render": function (data, type, row, meta) {
+                                var ret = addCommas(parseFloat(data).toFixed(2));
+                                return ret;
+                            }
+                        },
+                    ],
+                    "dom": '<"top"if>rt<"bottom"flp><"clear">'
+                });
+                $('#rowTable').LoadingOverlay("hide", true);
+                $("#btnSearch").html(OldHtml);
+            },
+            error: function (e) {
+
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+    }
+
+
+
+</script>

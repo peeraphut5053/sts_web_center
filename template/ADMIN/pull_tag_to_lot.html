@@ -1,0 +1,31 @@
+<div class='row text-center'>
+    <a href='index.php'><h3>Back to menu</h3></a>
+    <hr>
+    <h2>PULL STS_TAG FROM TAG TO LOT</h2>
+    <h4>ระบบจะทำการดึงข้อมูลทั้งหมดมาอัตโนมัติ โดยเลือกเฉพาะข้อมูล lot ที่ยังไม่มี tag </h4>
+    <br>
+    <button class='btn btn-info' id='btnGO'>PROCESS</button>
+</div>
+<script type='text/javascript'>
+    $("#btnGO").click(function () {
+        $.ajax({
+            url: "././module/ADMIN/data.php",
+            type: 'post',
+            data: {
+                load: 'pull_tag_to_lot',
+
+            },
+            success: function (data) {
+                $.alert({
+                    title: "Run Result" ,
+                    content : data
+                });
+             
+            },
+            error: function (xhr, status, error) {
+                $("#debug").html(xhr.responseText);
+            },
+            //            dataType: "json"
+        });
+    });
+</script>

@@ -1,0 +1,134 @@
+<div class="row">
+    <div>
+        <h1>Slit Report</h1>
+    </div> 
+    <div class="col-lg-2" >   
+        <div class="input-group">
+            <div class="input-group-addon">From Date</div>
+            <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtFromDate">
+        </div>
+    </div>
+    <div class="col-lg-2">   
+        <div class="input-group">
+            <div class="input-group-addon">To date</div>
+            <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtToDate">
+        </div>
+    </div>
+    <div class="col-lg-2">   
+        <div class="input-group">
+            <div class="input-group-addon">Item</div>
+            <input type="text" class="form-control txt-filter" id="txtItem">
+        </div>
+    </div>
+    <div class="col-lg-2">   
+        <div class="input-group">
+            <div class="input-group-addon">Ref num</div>
+            <input type="text" class="form-control txt-filter" id="txtref_num">
+        </div>
+    </div>     
+    <div class="col-lg-2">   
+        <div class="input-group">
+            <div class="input-group-addon">Work center</div>
+            <input type="text" class="form-control txt-filter" id="txtw_c">
+        </div>
+    </div>   
+    <div class="col-lg-2">   
+        <button id="btnSearch" class="btn btn-info"><i class="fa fa-searh"></i>&nbsp;ค้นหา</button>
+    </div>
+</div>
+
+<div class="row" id="divReport" >
+    <table class="table table-condensed table-bordered table-striped" id="tblReport" style="width:100%;">
+        <thead>
+            <tr>
+                <th>Transaction Date</th>
+                <th>Ref Number</th>
+                <th>Item</th>  
+                <th>Description</th>
+                <th>Coil No.</th>
+                <th>Qty</th>
+                <th>Work center</th>
+                <th>Work center name</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+<script type="text/javascript">
+    $("#txtFromDate,#txtToDate").datepicker({
+        dateFormat: 'yy-mm-dd',
+    });
+    $("#txtFromDate,#txtToDate").val(GetToday());
+    $("#btnSearch").click(function () {
+        var tblReportId = '#tblReport';
+        var btnSearch = '#btnSearch';
+        SearchDataFn(tblReportId, btnSearch, tablecolumsArr, "Slit Report", "RPT_JOBSLIT_table");
+    });
+    var tablecolumsArr = [
+        {
+            "data": "trans_date",
+            "className": "text-right",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "ref_num",
+            "render": function (data, type, row) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "width": 250,
+            "data": "item",
+            "className": "text-center",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "itemDesc",
+            "className": "text-center",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "sts_no",
+            "className": "text-right",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                ret = "<span>" + Number(data).toFixed(0);
+                +"</span>";
+                return ret;
+            }
+        },
+        {
+            "data": "KG",
+            "className": "text-right",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                ret = "<span>" + formatMoney(data);
+                +"</span>";
+                return ret;
+            }
+        },
+        {
+            "data": "wc",
+            "render": function (data, type, row) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "wc_name",
+            "render": function (data, type, row) {
+                var ret = data;
+                return ret;
+            }
+        },
+    ];
+</script>

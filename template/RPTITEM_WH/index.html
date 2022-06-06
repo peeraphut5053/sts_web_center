@@ -1,0 +1,425 @@
+<style>
+    .col-search{
+        padding-left:3px;
+        padding-right:3px;
+    }
+    .table thead th{
+        text-align: center;
+    }
+
+    .col-flt-page{
+        padding-top:10px;
+        font-weight: bold;
+    }
+
+    #tblReport tbody tr td a {
+        cursor: pointer ;
+    }
+    table.dataTable.fixedHeader-floating, table.dataTable.fixedHeader-locked {
+        background-color: white;
+        margin-top: 50px !important;
+        margin-bottom: 0 !important;
+    }
+</style>
+<div class="row">
+    <h4> รายงาน Item</h4>
+</div>
+<div class='row text-center' style='font-size:11px;color:red;'>
+
+</div>
+<div class='row'>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12  col-search">
+        <div class="input-group">
+            <div class="input-group-addon">Item</div>
+            <input type="text" class="form-control txt-filter" id="txtItem">
+        </div>
+    </div>
+    <!--    <div class="col-md-2 col-search">
+            <div class="input-group">
+                <div class="input-group-addon">Description</div>
+                <input type="text" class="form-control txt-filter" id="txtItemDesc">
+            </div>
+        </div>-->
+    <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12 col-search">
+        <div class="input-group">
+            <div class="input-group-addon">ขนาด</div>
+            <input type="text" class="form-control txt-filter" id="txtSize">
+        </div>
+    </div>
+    <div class="col-lg-2  col-md-2 col-sm-6 col-xs-12 col-search">
+        <div class="input-group">
+            <div class="input-group-addon">หนา</div>
+            <input type="text" class="form-control txt-filter" id="txtThick">          
+        </div>
+    </div>
+    <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12  col-search">
+        <div class="input-group">
+            <div class="input-group-addon">ยาว</div>
+            <input type="text" class="form-control txt-filter" id="txtWidth">
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6 col-xs-12  col-search" style="font-size:10px;color:red;">
+        *เลือกความ หนา-ยาว ตามช่วงให้ใช้ '-' เช่น เลือกตั้งแต่ 1 ถึง 6 ให้ใส่ '1-6' แต่ถ้าหากระบุ 6 ตัวเดียวระบบจะหาข้อมูลที่เป็น 6 เท่านั้น*  
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-md-3 col-sm-6 col-xs-12  col-search">
+        <input type="radio" style="width:25px;" checked name="radSearch" id="radSearch" value="0">&nbsp;ทั้งหมด
+        <input type="radio"  name="radSearch" id="radSearch" value="1">&nbsp;มีในสต็อค
+        <input type="radio" name="radSearch" id="radSearch" value="2">&nbsp;ไม่มีในสต็อค
+        <!--        <div class="input-group">
+                    <div class="input-group-addon">ยาว</div>
+                    <input type="text" class="form-control" id="txtWidth">
+                </div>-->
+    </div>
+    <!--    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 text-right"> 
+    
+            เลือกคลัง (เลือกได้มากกว่า 1 คลัง)
+    
+        </div>-->
+    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+
+        <input type='checkbox' id='cb_PC' checked value='1' style='margin-right:10px;'>ปู่เจ้า
+        <input type='checkbox' id='cb_WN' checked value='1' style='margin-right:10px;'>วังน้อย
+        <input type='checkbox' id='cb_TP' checked value='1' style='margin-right:10px;'>เทพารักษ์
+        <input type='checkbox' id='cb_6R' checked value='1' style='margin-right:10px;'>6 ไร่
+
+
+
+    </div>
+    <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+        <button id="btnSearch" class="btn btn-info"><i class="fa fa-search"></i>&nbsp;ค้นหา</button>
+    </div>
+</div>
+
+
+<!--<div class="alert alert-warning text-center">
+    <h5>กำลังดำเนินการแก้ไข เพื่อให้จำนวนสินค้าระหว่างขาย , ระหว่างส่ง , ส่งแล้ว  แยกจำนวนตามคลังได้ </h5>
+    <h5 style="color:green;font-weight: bold;">สถานะการแก้ไข : รอเช็คความถูกต้อง</h5>
+</div>-->
+<div class="row">
+    <table class="table table-condensed table-bordered table-striped" id="tblReport">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th >Item/Description</th>
+                <th >ขนาด</th>
+                <th >หนา</th>
+                <th >ยาว</th>
+                <th >เส้น/มัด</th>
+                <th >น.น.ผลิต (ก.ก.)</th>
+                <th >ที่เก็บ</th>
+                <th >สต็อคคงเหลือ(เส้น)</th>
+                <th>สินค้าระหว่างขาย(เส้น)</th>
+                <th>สินค้าระหว่างส่ง(เส้น)</th>
+                <th>ส่งเรียบร้อย(เส้น)</th>
+            </tr>
+
+        </thead>
+        <tbody id="tblReportList">
+            <!--<tr><td align="center" colspan="12">.... No item search ....</td></tr>-->
+        </tbody>
+    </table>
+</div>
+
+
+<div class="modal" tabindex="-1" role="dialog" id="modalDetail" >
+    <div class="modal-dialog" role="document" style="width:900px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="row text-left">                    
+                    <div class="col-md-10 col-lg-10 col-xs-10 col-sm-10 col-10">
+                        <h4 class="modal-title" id="modalDetailHead">Modal Header</h4>
+                    </div> 
+                    <div class="col-md-2 col-lg-2 col-xs-2 col-sm-2 col-2">
+                        <button type="button" style="width:25px;border-radius: 2px;color:white;background-color:red;" class="close" data-dismiss="modal">&times;</button>
+                    </div>  
+                </div>
+            </div>
+            <div class="modal-body" id="modalDetailBody">
+                <table  id="tblModal" class='table table-striped table-condensed'>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>date</th>
+                            <th>cust_name</th>
+                            <th>co_num</th>
+                            <th>co_line</th>
+                            <th class="ShowDO">do_num</th>
+                            <th class="ShowDO">do_line</th>
+                            <th>qty(เส้น)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbodyModal">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+//     $("#selWH").select2();
+//    $(document).ready(function () {
+//
+//        $('#selWH').selectize({
+//            plugins: ['remove_button'],
+//            delimiter: ',',
+//            persist: false,
+//            create: function (input) {
+//                return {
+//                    value: input,
+//                    text: input
+//                }
+//            }
+//        });
+//    });
+    $("#btnSearch").click(function () {
+        ReportItemSearch();
+    });
+    $(".txt-filter").on("keypress", function (e) {
+        if (e.keyCode == 13) {
+            ReportItemSearch();
+            return false; // prevent the button click from happening
+        }
+    });
+    function ReportItemSearch() {
+        var oldHtmlBtn = $("#btnSearch").html();
+        $("#btnSearch").html("<i class='fa fa-spinner fa-spin'></i>");
+        var radioValue = $("input[name='radSearch']:checked").val();
+        var txtItem = $("#txtItem").val();
+        var txtSize = $("#txtSize").val();
+        var txtThick = $("#txtThick").val();
+        var txtWidth = $("#txtWidth").val();
+
+        var Locs = [];
+        if ($("#cb_PC:checked").val() == 1) {
+            Locs.push("PC");
+        }
+        if ($("#cb_WN:checked").val() == 1) {
+            Locs.push("WN");
+        }
+        if ($("#cb_6R:checked").val() == 1) {
+            Locs.push("6R");
+        }
+        if ($("#cb_TP:checked").val() == 1) {
+            Locs.push("TP");
+        }
+
+
+        $("#tblReportList").load("././module/RPTITEM_WH/data.php", {
+            "load": "ajax",
+            "txtItem": txtItem,
+            "Locs": Locs,
+            "txtSize": txtSize,
+            "txtThick": txtThick,
+            "txtWidth": txtWidth,
+            "stock": radioValue
+        }, function () {
+            $("#btnSearch").html(oldHtmlBtn);
+            $('#tblReport').DataTable({
+                searching: false,
+                fixedHeader: true,
+                retrieve: true,
+                "pageLength": 999999999,
+                'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'>>" +
+                        "<'row'<'col-md-12'tr>>" +
+                        "<'row'<'col-md-5'><'col-sm-7'>>",
+                buttons: [
+                    {
+                        extend: 'print',
+                        text: "<i class='fa fa-print'></i>&nbsp;Print",
+                        title: ''
+                    },
+                    {
+                        extend: 'excel',
+                        text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                        title: ''
+                    },
+                ]
+            });
+            var getAllRows = $(".table tbody tr").length;
+            $(".col-flt-page").text("จำนวนทั้งหมด : " + getAllRows.toString());
+        });
+    }
+    $("#btnExportExcel").click(function () {
+        //        onclick="javascript:
+
+        //       xport.toCSV('tblReport');
+    });
+
+
+
+    function ExportExcel() {
+        var dt = new Date();
+        var day = dt.getDate();
+        var month = dt.getMonth() + 1;
+        var year = dt.getFullYear();
+        var hour = dt.getHours();
+        var mins = dt.getMinutes();
+        var postfix = day + "-" + month + "-" + year + "_" + hour + "-" + mins;
+        var filename = 'SyteLine_Item_Report_' + postfix + '.xls';
+        //        tablesToExcel(ArrId, ArrName, filename);
+        tablesToExcel("tblReport", "text", filename);
+    }
+
+
+
+
+
+    function BetweenSale(thisid) {
+        var datarow = thisid.split("!!")[1];
+        var item = thisid.split("!!")[2];
+        var loc = thisid.split("!!")[3];
+//        console.log(loc);
+        $("#modalDetail").modal("show");
+        $("#modalDetailHead").html("<div class='row text-center'><h4><i class='fa fa-spinner fa-spin'></i></h4></div>");
+
+        $.ajax({
+            url: "./module/RPTITEM/data.php",
+            type: 'post',
+            data: {
+                load: 'BetweenSale',
+                item: item,
+                loc: loc
+            },
+            success: function (data) {
+                $("#modalDetailHead").text("ข้อมูล [" + item + "] ระหว่างขาย ");
+                $("#tbodyModal").html(data);
+                $('#tblModal').DataTable({
+                    searching: false,
+                    fixedHeader: true,
+                    retrieve: true,
+                    "pageLength": 999999999,
+                    'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'>>" +
+                            "<'row'<'col-md-12'tr>>" +
+                            "<'row'<'col-md-5'><'col-sm-7'>>",
+                    buttons: [
+                        {
+                            extend: 'print',
+                            text: "<i class='fa fa-print'></i>&nbsp;Print",
+                            title: ''
+                        },
+                        {
+                            extend: 'excel',
+                            text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                            title: ''
+                        },
+                    ]
+                });
+            },
+            error: function (xhr, status, error) {
+                $("#debug").html(xhr.responseText);
+            },
+            //            dataType: "json"
+        });
+
+        //        }
+
+
+
+    }
+
+    function Shipping(thisid) {
+        var datarow = thisid.split("!!")[1];
+        var item = thisid.split("!!")[2];
+        var loc = thisid.split("!!")[3];
+        $("#modalDetail").modal("show");
+        $("#modalDetailHead").html("<div class='row text-center'><h4><i class='fa fa-spinner fa-spin'></i></h4></div>");
+
+        $.ajax({
+            url: "./module/RPTITEM/data.php",
+            type: 'post',
+            data: {
+                load: 'GetRowsShipping',
+                item: item,
+                loc: loc
+            },
+            success: function (data) {
+                $("#modalDetailHead").text("ข้อมูล [" + item + "] ระหว่างส่ง ");
+                $("#tbodyModal").html(data);
+                $('#tblModal').DataTable({
+                    searching: false,
+                    fixedHeader: true,
+                    retrieve: true,
+                    "pageLength": 999999999,
+                    'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'>>" +
+                            "<'row'<'col-md-12'tr>>" +
+                            "<'row'<'col-md-5'><'col-sm-7'>>",
+                    buttons: [
+                        {
+                            extend: 'print',
+                            text: "<i class='fa fa-print'></i>&nbsp;Print",
+                            title: ''
+                        },
+                        {
+                            extend: 'excel',
+                            text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                            title: ''
+                        },
+                    ]
+                });
+            },
+            error: function (xhr, status, error) {
+                $("#debug").html(xhr.responseText);
+            },
+            //            dataType: "json"
+        });
+
+
+    }
+    function Shipped(thisid) {
+        var datarow = thisid.split("!!")[1];
+        var item = thisid.split("!!")[2];
+        var loc = thisid.split("!!")[3];
+        $("#modalDetail").modal("show");
+        $("#modalDetailHead").html("<div class='row text-center'><h4><i class='fa fa-spinner fa-spin'></i></h4></div>");
+
+        $.ajax({
+            url: "./module/RPTITEM/data.php",
+            type: 'post',
+            data: {
+                load: 'GetRowsShipped',
+                item: item,
+                loc: loc
+            },
+            success: function (data) {
+                $("#modalDetailHead").text("ข้อมูล [" + item + "] ส่งแล้ว ");
+                $("#tbodyModal").html(data);
+                $('#tblModal').DataTable({
+                    searching: false,
+                    fixedHeader: true,
+                    retrieve: true,
+                    "pageLength": 999999999,
+                    'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'>>" +
+                            "<'row'<'col-md-12'tr>>" +
+                            "<'row'<'col-md-5'><'col-sm-7'>>",
+                    buttons: [
+                        {
+                            extend: 'print',
+                            text: "<i class='fa fa-print'></i>&nbsp;Print",
+                            title: ''
+                        },
+                        {
+                            extend: 'excel',
+                            text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                            title: ''
+                        },
+                    ]
+                });
+            },
+            error: function (xhr, status, error) {
+                $("#debug").html(xhr.responseText);
+            },
+            //            dataType: "json"
+        });
+
+
+    }
+
+
+</script>

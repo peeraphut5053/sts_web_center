@@ -1,0 +1,549 @@
+<style>
+    .buttons-colvis {
+        transform: translate(100px,-120px);
+        margin-bottom: 0px;
+        margin-left: 1200px;
+        margin-top: -31px;
+        border: none;
+        border-radius: 5px;
+        height: 32px;
+        background-color: #FFFFFF !important;
+        color: black !important;
+    }
+    .col-search {
+        padding-left: 3px;
+        padding-right: 3px;
+    }
+    .table thead th {
+        text-align: center;
+    }
+
+    .col-flt-page {
+        padding-top: 10px;
+        font-weight: bold;
+    }
+
+    #tblReport tbody tr td a {
+        cursor: pointer;
+    }
+
+    table.dataTable.fixedHeader-floating,
+    table.dataTable.fixedHeader-locked {
+        background-color: white;
+        margin-top: 50px !important;
+        margin-bottom: 0 !important;
+    }
+
+    @media print {
+        table th:nth-child(0) {
+            width: 200px;
+            word-break: break-all;
+            white-space: pre-line;
+        }
+
+        table td:nth-child(0) {
+            width: 200px;
+            word-break: break-all;
+            white-space: pre-line;
+        }
+
+    }
+    .text-wrap {
+        white-space: normal;
+    }
+
+    .width-200 {
+        width: 200px;
+    }
+
+    input[type=checkbox] {
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+    .input-group-addon2 {
+        padding: 6px 12px;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 1;
+        color: #555;
+        height: 32px;
+        text-align: center;
+        background-color: #eee;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        border-top-right-radius: 0px;
+        border-bottom-right-radius: 0px;
+    }
+
+    .selectize-input {
+        padding-top: 5px;
+        padding-bottom: 5px;
+        height: 32px;
+        min-height: 64px;
+        border-top-left-radius: 0px;
+        border-bottom-left-radius: 0px;
+    }
+
+    .input-group .form-control {
+        padding-left: 1px;
+        padding-right: 1px;
+    }
+    .modal-body{
+        position: relative;
+        padding: 15px;
+        min-height: 550px;
+    }
+
+    ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+    ::-webkit-scrollbar-thumb {
+        background: #3c8dbc; 
+        border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: #3c8dbc; 
+    }
+</style>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+<div class="row">
+    <h2> Inventory balance summary report </h2>
+</div>
+<div class='row'>
+
+    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 " >
+
+        <div class="input-group">
+            <div class="input-group-addon">ITEM</div>
+            <input type="text" id="txtItemStart" class="form-control" name="txtItemStart">
+        </div>
+
+    </div>
+    <div hidden class="col-lg-3 col-md-3 col-sm-3 col-xs-3 " >
+
+        <div class="input-group">
+            <div class="input-group-addon">ITEM Ending</div>
+            <input type="text" id="txtItemEnd" class="form-control" name="txtItemEnd">
+        </div>
+    </div>
+    <div class="col-lg-2 col-md-2 col-sm-6 col-xs-6 " >
+        <div class="input-group">
+            <div class="input-group-addon">START DATE</div>
+            <input type="text" value="2018-12-31" id="txtStartDate" class="form-control" name="txtStartDate" autocomplete="off">
+        </div>
+    </div>
+    <div class="col-lg-2 col-md-2 col-sm-6 col-xs-6 " >
+        <div class="input-group">
+            <div class="input-group-addon">End DATE</div>
+            <input type="text" id="txtEndDate" class="form-control" name="txtEndDate" autocomplete="off">
+        </div>
+    </div>
+    <div hidden class="col-lg-2 col-md-2 col-sm-6 col-xs-6 " >
+        <input type="checkbox" id="chkIncludeMoveTrn" checked disabled>&nbsp;Include Move Transactions
+        <br>
+        <input type="checkbox" id="chkIncludeNonNetStk" checked disabled>&nbsp;Include Non-nettable Stock
+    </div>
+    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 " >
+        <button class="btn btn-info" id="btnSearch"><i class="fa fa-search"></i>&nbsp;Search </button>
+    </div>
+
+</div>
+<div class="row" id="rowResultTable">
+    <table class="table table-condensed table-striped " width="100%" id="tblReport">
+        <thead>
+            <tr>
+                <th>Item </th>
+                <th>Item Name</th>
+                <th>Unit Weight</th>
+                <th>Balance Quantity</th>
+                <th>Balance Amount</th>
+                <th>Balance Unit</th>
+                <th>Detail</th>
+            </tr>
+        </thead>
+
+    </table>
+</div>
+
+<div class="modal" id="DetailModal" style="margin-left: -150px;margin-right: -180px;" >
+    <div class="modal-dialog" style="width: 100%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <label id="lblModalHead">
+                    <h1>Inventory Balance Detail Report </h1>
+                </label>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div id="modalBody" class="modal-body">
+                <table id="tblReportDetail" class="table table-striped" style="overflow-x:auto;font-size: 12px;">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Item Number</th>
+                            <th>Item Name</th>
+                            <th>Unit Weight</th>
+                            <th>Ref. Type</th>
+                            <th>Tran. Type</th>
+                            <th>Ref. No.</th>
+                            <th>Doc. No. 1</th>
+                            <th>Doc. No. 2</th>
+                            <th>Quantity</th>
+                            <th>Amount</th>
+                            <th>Unit</th>
+                            <th>Balance Quantity</th>
+                            <th>Balance Amount</th>
+                            <th>Balance Unit</th>
+<!--                            <th>Reason Code</th>
+                            <th>Reason Description</th>
+                            <th>Work center</th>
+                            <th>Work center Description</th>-->
+
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $("#btnSearch").click(function () {
+        ReportItemSearch();
+    });
+    $("#txtStartDate,#txtEndDate").datepicker({
+        dateFormat: 'yy-mm-dd'
+    });
+    $("#txtEndDate").val(GetToday());
+
+
+
+    function ReportItemSearch() {
+        var datapost = SetDataPostElement("ajax");
+        var OldHtml = $("#btnSearch").html();
+
+        $("#tblReport").DataTable().clear();
+        $("#btnSearch").html("<i class='fa fa-spinner fa-spin'></i>");
+        $("#tblReport").loading();
+        $.ajax({
+            type: 'POST',
+            url: "././module/RPT_NEW_INVENTORY_BALANCE_REPORT/data.php",
+            //                contentType: "text/plain",
+            dataType: 'json',
+            beforeSend: function () {
+                //$("#btnSearch").html("<i class='fa fa-spinner fa-spin'> </i>");
+                $("#tblReport").DataTable().clear();
+            },
+            data: datapost,
+            success: function (data) {
+
+                $("#tr-spinner").hide()
+                console.log(data);
+                $("#tblReport").DataTable().clear();
+                $('#tblReport').dataTable({
+                    scrollY: 400,
+                    "order": false,
+                    "aaData": data,
+                    "paging": false,
+                    fixedHeader: true,
+                    destroy: true,
+                    'processing': true,
+                    "columns": [
+                        {
+                            "data": "Item",
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "ItemDescription",
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "UnitWeight",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = addCommas(parseFloat(data).toFixed(5));
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "BalQty",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = addCommas(parseFloat(data).toFixed(2));
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "BalAmt",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = addCommas(parseFloat(data).toFixed(2));
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "BalUnit",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = addCommas(parseFloat(data).toFixed(2));
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "", "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                return "<a id='item_" + row["Item"] + "' OnClick='openModal(`" + row["Item"] + "`)'><i class='fa fa-search'></i></a>";
+                            }
+                        },
+                    ],
+                    'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                            "<'row'<'col-md-12'tr>>" +
+                            "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                    buttons: [{
+                            extend: 'print',
+                            text: "<i class='fa fa-print'></i>&nbsp;Print",
+                            title: 'Inventory Balance Summary Report'
+                        },
+                        {
+                            extend: 'excel',
+                            footer: true,
+                            text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                            title: 'Inventory Balance Summary Report'
+                        },
+                    ],
+                });
+                $('#tblReport').loading("stop");
+                $("#btnSearch").html(OldHtml);
+
+            },
+            error: function (e) {
+
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+
+
+    }
+
+    function openModal(items2) {
+        var modalId = "#DetailModal";
+        var items = items2;
+        var txtStartDate = $("#txtStartDate").val();
+        var txtEndDate = $("#txtEndDate").val();
+        $(modalId).modal("show");
+        $.ajax({
+            type: 'POST',
+            url: "././module/RPT_NEW_INVENTORY_BALANCE_REPORT/load_form.php",
+            dataType: 'json',
+            beforeSend: function () {
+                //$("#modalBody").empty();
+            },
+            data: {
+                "item": items,
+                "txtStartDate": txtStartDate,
+                "txtEndDate": txtEndDate,
+            },
+            success: function (data) {
+                console.log(data);
+                $('#tblReportDetail').dataTable({
+                    "aaData": data,
+                    "paging": false,
+                    fixedHeader: true,
+                    destroy: true,
+                    'processing': true,
+                    "order": false,
+                    scrollY: 400,
+                    "columns": [
+                        {
+                            "data": "TransDate",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "item",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "itemDescription",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "UnitWeight",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = addCommas(parseFloat(data).toFixed(2));
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "RefDescription",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "TransDescription",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "RefNum",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "DocumentNum",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "ThVendInvNum",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "NewQty",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = addCommas(parseFloat(data).toFixed(2));
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "NewAmt",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = addCommas(parseFloat(data).toFixed(2));
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "NewUnit",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = addCommas(parseFloat(data).toFixed(2));
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "BalQty",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = addCommas(parseFloat(data).toFixed(2));
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "BalAmt",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = addCommas(parseFloat(data).toFixed(2));
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "BalUnit",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = addCommas(parseFloat(data).toFixed(2));
+                                return ret;
+                            }
+                        },
+//                        {
+//                            "data": "reason_code",
+//                            "className": "text-center",
+//                            "render": function (data, type, row, meta) {
+//                                var ret = data;
+//                                return ret;
+//                            }
+//                        },
+//                        {
+//                            "data": "reason_description",
+//                            "className": "text-center",
+//                            "render": function (data, type, row, meta) {
+//                                var ret = data;
+//                                return ret;
+//                            }
+//                        },
+//                        {
+//                            "data": "wc",
+//                            "className": "text-center",
+//                            "render": function (data, type, row, meta) {
+//                                var ret = data;
+//                                return ret;
+//                            }
+//                        },
+//                        {
+//                            "data": "wc_description",
+//                            "className": "text-center",
+//                            "render": function (data, type, row, meta) {
+//                                var ret = data;
+//                                return ret;
+//                            }
+//                        },
+                    ],
+                    'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                            "<'row'<'col-md-12'tr>>" +
+                            "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                    buttons: [{
+                            extend: 'print',
+                            text: "<i class='fa fa-print'></i>&nbsp;Print",
+                            title: 'Inventory Balance Summary Report  '
+                        },
+                        {
+                            extend: 'excelHtml5',
+                            footer: true,
+                            text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                            title: ' Inventory Balance Summary Report '
+                        },
+                    ],
+                });
+            },
+            error: function (e) {
+
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        })
+    }
+</script>

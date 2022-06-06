@@ -1,0 +1,725 @@
+<style>
+    r{
+        color:red; 
+    }
+
+    #tbodyFilter tr  {
+        border-bottom:solid 1px #cdcdcd;
+    }
+    #tbodyFilter tr td:first-child {
+        width: 13%;
+    }
+    #tbodyFilter tr td:nth-child(2) {
+        width: 13%;
+    }
+    #tbodyFilter tr td:nth-child(3) {
+        width: 7%;
+    }
+    /*grade*/
+    #tbodyFilter tr td:nth-child(4) {
+        width: 5%;
+    }
+    /*size*/
+    #tbodyFilter tr td:nth-child(5) {
+        width: 5%;
+        padding-right:10px;
+    }
+    /*sched*/
+    #tbodyFilter tr td:nth-child(6) {
+        width: 5%;
+        padding-right:10px;
+    }
+    /*len*/
+    #tbodyFilter tr td:nth-child(7) {
+        width: 7%;
+        padding-right:10px;
+    }
+    /*weight*/
+    #tbodyFilter tr td:nth-child(8) {
+        width: 8%;
+    }
+    /*pcs per bndl////////*/
+    #tbodyFilter tr td:nth-child(9) {
+        width: 8%;
+        padding-right:10px;
+    }
+    /*bndl*/
+    #tbodyFilter tr td:nth-child(10) {
+        width: 5%;
+    }
+    /*fob mt*/
+    #tbodyFilter tr td:nth-child(11) {
+        width: 10%;
+    }
+    /*fob ft*/
+    #tbodyFilter tr td:nth-child(12) {
+        width: 10%;
+    }
+    .btnRemoveTableLine{
+        font-size: 14px;
+        width:25px;
+        height:25px;
+    }
+    .txtNumuric{
+        padding-left:1px;
+        padding-right: 1px;
+    }
+</style>
+<div class="row" id="divCoverOverlay" style="height:600px;"></div>
+<div class="row">
+    <div class="col-md-4">
+        <div class="row">
+            CATEGORY
+        </div>
+        <div class="row">
+            <select id="selItemCategory" class="form-control" style="width:100%;text-align: left;">
+                <!--                {options_category}-->
+            </select>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="row">
+            GRADE
+        </div>
+        <div class="row">
+            <select id="selGrade" class="form-control" style="width:100%;text-align: left;" ></select>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="row">
+            SCHEDULE
+        </div>
+        <div class="row">
+            <div class="input-group">
+                <select id="selSCHED" class="form-control" style="width:100%;text-align: left;"></select>
+                <span class="input-group-addon  btn-info" OnClick="OpenModalAttr('SCHED');"><i class="fa fa-plus"></i></span>
+            </div>
+
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="row">
+            SIZE
+        </div>
+        <div class="row">
+            <div class="input-group">
+                <select id="selNPS" class="form-control" style="width:100%;text-align: left;"></select>
+                <span class="input-group-addon  btn-info" OnClick="OpenModalAttr('SIZE');"><i class="fa fa-plus"></i></span>
+            </div>
+
+        </div>
+    </div>
+
+    <!--    <div class="col-md-1">
+            <div class="row">
+                LENGTH
+            </div>
+            <div class="row">
+                            <select id="selLength" class="form-control" style="width:100%;text-align: left;"></select>
+                <input type="text" class="form-control txtNumuric" id="txtLength">
+            </div>
+        </div>-->
+
+    <div class="col-md-2">
+        <div class="row">
+            &nbsp;
+        </div>
+        <div class="row text-right" id="searchResult">
+
+            <!--            <a style="height:30px;padding-top:2px;margin-left:10px;" href ="#" id="btnFilterItem" class="btn btn-info">
+                            <i class="fa fa-search"></i> Search Item
+                        </a>-->
+        </div>
+    </div>
+</div>
+
+<div class="row row-filter-item"  id = "filterResult" style="overflow-y:hidden;">
+
+    <table class="table table-bordered table-fixed-head" id="tableDialogItem" style="margin-bottom:0px;">
+        <thead>
+            <tr>
+                <th  width="30%">ITEM</th>
+                <th width="7%">CATEGORY</th>
+                <th width="5%">GRADE</th>
+                <th width="5%">SIZE</th>
+                <th width="5%">SCHED</th>
+                <th width="7%">LENGTH</th>
+                <th width="8%">UNIT WEIGHT</th>
+                <th width="8%">PCS PER BNDL</th>
+                <th width="5%">BUNDLE</th>
+                <th width="10%">FOB LO/CY($/MT)</th>
+                <th width="10%">FOB LO/CY($/FT)</th>
+            </tr>
+        </thead>
+    </table>
+    <div id="tableDialogBody" style="height:350px;overflow-y: auto;">
+        <!--<table>-->
+        <!--            <thead style="visibility:hidden;height:1px;" >-->
+        <!--                <tr style="visibility:hidden;height:1px;" >
+                            <th colspan="2" width="30%">ITEM</th>
+                            <th width="7%">CATEGORY</th>
+                            <th width="5%">GRADE</th>
+                            <th width="5%">SIZE</th>
+                            <th width="5%">SCHED</th>
+                            <th width="7%">LENGTH</th>
+                            <th width="8%">UNIT WEIGHT</th>
+                            <th width="8%">PCS PER BNDL</th>
+                            <th width="5%">BUNDLE</th>
+                            <th width="10%">FOB LO/CY($/MT)</th>
+                            <th width="10%">FOB LO/CY($/FT)</th>
+                        </tr>-->
+        <!--</thead>-->
+        <table  class="table" id="tbodyFilter" style="margin-top:0px;">
+            <!--<tr><td align='center' colspan='7'>.. No data ..</td></tr>-->
+        </table>
+        <!--        </table>-->
+    </div>
+    <div class="row">
+        <div class="col-md-5 text-right" style="padding-top:10px;">
+            Lot :
+        </div>
+        <div class="col-md-4 text-center">
+            <input type="text" id="txtLot"  class= "form-control" placeholder="Input lot number">
+        </div>
+        <div class="col-md-3 text-center">
+            <a href="#" class="btn btn-info" id="btnToGrid"><i class="fas fa-chevron-circle-down"></i> SELECT TO TABLE </a>
+        </div>
+    </div>
+    <div id="divRequest"></div>
+    <script type="text/javascript">
+        $("#divCoverOverlay").hide();
+        $(".ui-dialog-titlebar-close").css({top: 20, left: 1150, position: 'absolute'});
+        $("#selNPS").attr("disabled", "true");
+        $("#selGrade").attr("disabled", "true");
+        $("#selSCHED").attr("disabled", "true");
+        $("#selItemCategory").attr("disabled", "true");
+        $("#tbodyFilter").empty();
+        $("#tbodyFilter").append("<tr><td style='width:100%;' align='center' colspan='12'>.. No data ..</td></tr>");
+        $("#selItemCategory").change(function () {
+            var cate = $(this).val();
+            GetCustomerFilterOption("NPS", 0);
+            GetCustomerFilterOption("SCHED", 0);
+            GetItemPropertyToDropdown('selGrade', "Uf_grade", cate);
+            $("#selNPS").removeAttr("disabled");
+            $("#selGrade").removeAttr("disabled");
+            $("#selSCHED").removeAttr("disabled");
+            FindItem();
+        });
+        $("#selGrade").change(function () {
+            FindItem();
+        });
+        $("#selSCHED").change(function () {
+            FindItem();
+        });
+        $("#selNPS").change(function () {
+            FindItem();
+        });
+        $("#btnFilterItem").click(function () {
+            FindItem();
+        });
+        GetItemSyteLine();
+        function OpenModalAttr(req) {
+            var moduleFile = "";
+            var title = "";
+            var cust_name = $("#divCustomerName").text();
+            if (req == "SCHED") {
+                moduleFile = "/SOD/z_dialogSchedAdd";
+                title = "Schedule";
+            } else if (req == "SIZE") {
+                moduleFile = "/SOD/z_dialogSizeAdd";
+                title = "Size";
+            }
+            $('#divRequest').dialog({
+                modal: true,
+                autoOpen: true,
+                show: 'fade',
+                width: 400,
+                height: 300,
+                title: ":: Add  " + title
+            })
+                    .load("././module/" + moduleFile + ".php", {
+                        "cust_name": cust_name
+                    });
+        }
+        function GetItemSyteLine() {
+            $.ajax({
+                url: "./module/MasterData.php",
+                type: 'post',
+                data: {
+                    ajax: "true",
+                    action: "GetUFOptionFromSyteline"
+                },
+                success: function (data) {
+                    var items = [];
+                    var GetArray = new Array(data);
+                    items.push({
+                        "id": "",
+                        "text": ""
+                    });
+                    $.each(data, function (key, value) {
+                        items.push({
+                            "id": key,
+                            "text": value
+                        });
+                    });
+                    $('#selItemCategory').select2({
+                        data: items
+                    });
+                    $('#selItemCategory').removeAttr("disabled");
+                },
+                error: function (xhr, status, error) {
+                    console.log(xhr.responseText);
+                    $("#debug").html(xhr.responseText);
+                },
+                dataType: "json"
+            });
+        }
+        function GetCustomerFilterOption(Type, firstSelected) {
+            var AjaxAction = "";
+            var SelectObjId = "";
+            if (Type == "SCHED") {
+                AjaxAction = "GetCustomerSCHED";
+                SelectObjId = "selSCHED";
+            } else if (Type == "NPS") {
+                AjaxAction = "GetCustomerNPS";
+                SelectObjId = "selNPS";
+            }
+            //        $("#loading").show();
+            $.ajax({
+                url: "./module/MasterData.php",
+                type: 'post',
+                data: {
+                    ajax: "true",
+                    action: AjaxAction
+                },
+                success: function (data) {
+                    //                console.log(data);
+                    var items = [];
+                    var GetArray = new Array(data);
+                    items.push({
+                        "id": "",
+                        "text": ""
+                    });
+                    $.each(data, function (key, value) {
+                        items.push({
+                            "id": key,
+                            "text": value
+                        });
+                    });
+                    $('#' + SelectObjId).select2({
+                        data: items
+                    });
+                    $('#' + SelectObjId).val(firstSelected).trigger('change');
+                    $('#' + SelectObjId).removeAttr("disabled");
+//                    $("#loading").hide();
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    console.log(xhr.responseText);
+                },
+                dataType: "json"
+            });
+        }
+        function GetItemPropertyToDropdown(idDropdown, prop, cate) {
+            var AjaxPage = "MasterData";
+            var AjaxAction = "GetItemPropertyForFilter";
+            $.ajax({
+                url: "./module/MasterData.php",
+                type: 'post',
+                data: {
+                    ajax: 'true',
+                    action: AjaxAction,
+                    prop: prop,
+                    cate: cate
+                },
+                success: function (data) {
+                    //                            console.log(data);
+                    var items = [];
+                    var GetArray = new Array(data);
+                    items.push({
+                        "id": "",
+                        "text": ""
+                    });
+                    $.each(data, function (key, value) {
+                        items.push({
+                            "id": key,
+                            "text": value
+                        });
+                    });
+                    $('#' + idDropdown).select2({
+                        data: items
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.log(xhr.responseText);
+                    $("#debug").html(xhr.responseText);
+                },
+                dataType: "json"
+            });
+        }
+        function AddItemSyteLineToTarget(selectId, Cate) {
+            var AjaxPage = "MasterData";
+            var AjaxAction = "GetItemToDropdown";
+            $.ajax({
+                url: "./module/" + AjaxPage + ".php",
+                type: 'post',
+                data: {
+                    ajax: 'true',
+                    action: AjaxAction,
+                    Cate: Cate,
+                },
+                success: function (data) {
+                    // alert(data);
+                    var items = [];
+                    var GetArray = new Array(data);
+                    var $select = $('#' + selectId);
+                    items.push({
+                        "id": "",
+                        "text": ""
+                    });
+                    $.each(data, function (key, value) {
+                        items.push({
+                            "id": key,
+                            "text": value
+                        });
+                    });
+                    $select.select2({
+                        data: items,
+                        width: "100%",
+                    });
+                },
+                error: function (xhr, status, error) {
+                    $("#debug").html(xhr.responseText);
+                },
+                dataType: "json"
+            });
+        }
+        function FindItem() {
+            //        console.log('start find item from sl');
+            $("#tbodyFilter").empty();
+            $(".ui-widget").loading();
+            var grade = $("#selGrade").val();
+            var cate = $("#selItemCategory").val();
+            var nps = $("#selNPS").val();
+            var sched = $("#selSCHED").val();
+            //        console.log('filter : sched = ' + sched + " , nps = " + nps + " , grade " + grade);
+            $.ajax({
+                url: "./module/MasterData.php",
+                type: 'post',
+                data: {
+                    ajax: 'true',
+                    action: "GetItemFromSyteline",
+                    cate: cate,
+                    nps: nps,
+                    sched: sched,
+                    grade: grade,
+                },
+                success: function (data) {
+                    //                                console.log(data);
+                    var i = 0;
+                    var TmpLine = "";
+                    var BgColor = "";
+                    $.each(data, function (index, value) {
+                        i++;
+                        if (i % 2 == 0) {
+                            BgColor = "#FFFFFF;";
+                        } else {
+                            BgColor = "#f5f3f3;";
+                        }
+                        TmpLine = "";
+                        TmpLine = "<tr style='background-color:" + BgColor + "' >\n\
+                                <td align='center' id='filterITEM_" + i + "'>" + value["item"] + "</td>\n\
+    <td align='center' id='filterDESC" + i + "'>" + value["item_desc"] + "</td>\n\
+    <td align='center' id='filterCATE_" + i + "'>" + value["Uf_TypeEnd"] + "</td>\n\
+    <td align='center' id='filterGRADE_" + i + "'>" + value["Uf_Grade"] + "</td>\n\
+    <td align='right' id='filterSIZE_" + i + "'>" + value["Uf_od"] + "</td>\n\
+    <td align='right' id='filterSCHED_" + i + "'>" + value["Uf_Schedule"] + "</td>\n\
+    <td align='right' id='filterLEN_" + i + "'><input  onkeypress='return number_check(event);' type='text' id='inputLEN_" + i + "' class='form-control txtNumuric'></td>\n\
+    <td align='right' id='filterWEIGHT_" + i + "'>" + value["unit_weight"] + "</td>\n\
+    <td align='right' id='filterPCSPERBNDL_" + i + "'>" + value["Uf_pack"] + "</td>\n\
+    <td><input onkeypress='return number_check(event);' type='text' id='inputBNDL_" + i + "' class='form-control txtNumuric'></td>\n\
+    <td><input onkeypress='return number_check(event);' type='text' id='inputFOBMT_" + i + "' class='form-control txtNumuric'></td>\n\
+    <td><input onkeypress='return number_check(event);' type='text' id='inputFOBFT_" + i + "' class='form-control txtNumuric'></td>\n\
+    </tr>";
+                        $("#tbodyFilter").append(TmpLine);
+                        //                    $("#tbodyFilter").refresh();
+                        $("#searchResult").html("found " + i + " items");
+                        //                      $("#searchResult").refresh();
+                    });
+                    if (i == 0) {
+                        $("#tbodyFilter").append("<tr><td align='center' colspan='12'>.. No data ..</td></tr>");
+                    }
+                    $(".ui-widget").loading('stop');
+                },
+                error: function (xhr, status, error) {
+                    console.log(xhr.responseText);
+                    //                    $("#debug").html(xhr.responseText);
+                },
+                dataType: "json"
+                        //  });
+            });
+        }
+
+
+        $("#btnToGrid").click(function () {
+//            $.confirm({
+//                title: 'Processing...',
+//                content: 'Calculating table ..  please  wait while dialog is close ..',
+//                autoClose: 'Agree|5000',
+//                buttons: {
+//                    Agree: {
+////                        text: 'delete user',
+////                        action: function () {
+////                            $.alert('Deleted the user!');
+////                        }
+//                    },
+//                }
+//            });
+            $("#divCoverOverlay").show();
+            $("#divCoverOverlay").loading();
+            AddToMainGrid();
+        });
+        function AddToMainGrid() {
+
+            var CountGridRow = $("#tableItemsFromFilter tr").length - 2;
+            var Lot = $("#txtLot").val();
+            var ITEM = [];
+            var ITEM_DESC = [];
+            var CATE = [];
+            var GRADE = [];
+            var SIZE = [];
+            var SCHED = [];
+            var LEN = [];
+            var WEIGHT = [];
+            var PCSPERBNDL = [];
+            var BNDL = [];
+            var FOBMT = [];
+            var tLOT = [];
+            var FOBFT = [];
+            $("td[id^='filterITEM']").each(function () {
+                ITEM.push($(this).text().trim());
+                tLOT.push($(this).attr("data-lot"));
+            });
+            $("td[id^='filterDESC']").each(function () {
+                ITEM_DESC.push($(this).text().trim());
+            });
+            $("td[id^='filterCATE']").each(function () {
+                CATE.push($(this).text().trim());
+            });
+            $("td[id^='filterGRADE']").each(function () {
+                GRADE.push($(this).text().trim());
+            });
+            $("td[id^='filterSIZE']").each(function () {
+                SIZE.push($(this).text().trim());
+            });
+            $("td[id^='filterSCHED']").each(function () {
+                SCHED.push($(this).text().trim());
+            });
+            //        $("td[id^='filterLEN']").each(function () {
+            //            LEN.push($(this).text().trim());
+            //        });
+            $("td[id^='filterWEIGHT']").each(function () {
+                WEIGHT.push($(this).text().trim());
+            });
+            $("td[id^='filterPCSPERBNDL']").each(function () {
+                PCSPERBNDL.push($(this).text().trim());
+            });
+            $("input[id^='inputBNDL']").each(function () {
+                BNDL.push($(this).val());
+            });
+            $("input[id^='inputLEN']").each(function () {
+                if ($(this).val() == "") {
+                    LEN.push(0);
+                } else {
+                    LEN.push($(this).val());
+                }
+
+            });
+            $("input[id^='inputFOBMT']").each(function () {
+                if ($(this).val() == "") {
+                    FOBMT.push(0);
+                } else {
+                    FOBMT.push($(this).val());
+                }
+
+            });
+            $("input[id^='inputFOBFT']").each(function () {
+                if ($(this).val() == "") {
+                    FOBFT.push(0);
+                } else {
+                    FOBFT.push($(this).val());
+                }
+            });
+            var tblLines = "";
+            var x = CATE.length;
+            var PIECES = 0;
+            var TW = 0;
+            var TWCONV = 0;
+            var TTLEN = 0;
+            var flagDup = 0;
+            var TargetLot = "";
+            var TargetItem = "";
+//            for (var t = 1; t <= x; t++) {
+//              
+//                $("td[id^='rowItem'").each(function () {   
+//
+//                    TargetLot = $(this).attr("data-lot") ;  
+//                    TargetItem = $(this).text().trim() ;
+//                    console.log("target " + TargetLot +" " + TargetItem + "  Current " + Lot +" " + ITEM[t] );
+//                    if (TargetItem == ITEM[t]) {
+//                        alert('dup item   target lot = '+TargetLot + ' Curr lot = ' + Lot );
+//                        
+//                        flagDup++;
+//                    }
+//                });
+//
+//            }
+            if (flagDup > 0) {
+
+                $.alert({
+                    title: 'Warning!',
+                    content: 'ITEM ' + ITEM[t] + ' Duplicate in table ',
+                });
+            } else {
+                var MTONS = 0;
+                var M_TONS = 0;
+                var extPrice = 0;
+                var flagDupInLot = 0;
+                var CountTargetRow = $("tr[id^='rowTrLot_']").length;
+
+                //=====Create Inside Table Lot
+                var LotTable = "<tr id='rowTrLot_" + Lot + "'>";
+                LotTable += "<td colspan='19'>";
+                LotTable += "<table style='width:100%;margin-bottom:5px;' class='table' id='tbLot_" + Lot + "' >";
+                LotTable += "<tr>";
+                LotTable += "<td style='border-top:none;border-bottom:none;' colspan='19'>Lot : " + Lot + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a id='rowLotRemove_" + Lot + "' class='float-right' OnClick='RemoveLot(this.id);' style='color:red' ><i class='fas fa-times'></i>&nbsp;remove lot</a>";
+                LotTable += "</td>";
+                LotTable += "</tr>";
+                LotTable += "</table>";
+                LotTable += "</td>";
+                LotTable += "</tr>";
+                //===============================
+                //=====check no add new lot on dup
+                if (CountTargetRow == 0) {
+                    $("#tableItems").append(LotTable);
+                } else {
+                    $("tr[id^='rowTrLot_']").each(function () {
+                        CountTargetRow++;
+                        var tId = $(this).attr("id");
+                        var SplitId = tId.split("_");
+                        var tLot = SplitId[1];
+                        if (tLot != Lot) {
+                            $("#tableItems").append(LotTable);
+                        }
+                    });
+                }
+
+                //======
+
+                for (var t = 0; t < x; t++) {
+                    if (BNDL[t] > 0) {
+                        CountGridRow++;
+                        PIECES = PCSPERBNDL[t] * BNDL[t];
+                        TW = PIECES / 1000;
+                        TWCONV = TW.toFixed(2);
+                        TTLEN = PIECES * LEN[t];
+                        MTONS = 0;
+                        M_TONS = 0;
+                        MTONS = parseFloat(WEIGHT[t]) * parseFloat(PIECES);
+                        M_TONS = MTONS.toFixed(2);
+                        extPrice = TTLEN * FOBFT[t];
+                        extPrice = extPrice.toFixed(2);
+                        $("td[id^='rowItem']").each(function () {
+                            // ======== Dup item in same lot ==========
+                            if (($(this).attr("data-lot") == Lot) && (ITEM[t] == $(this).text().trim())) {
+                                flagDupInLot = 1;
+
+                                var thisId = $(this).attr("id");
+                                var SplitId = thisId.split("_");
+                                var sId = SplitId[1];
+                                var oldBNDL = $("#rowBNDL_" + sId).text();
+                                var oldPCS = $("#rowPCS_" + sId).text();
+                                var oldTW = $("#rowTW_" + sId).text();
+                                var oldLEN = $("#rowTTLEN_" + sId).text();
+                                var oldMTON = $("#rowMTONS_" + sId).text();
+                                var oldCFRMT = $("#rowCFRMT_" + sId).text();
+                                var oldCFRFT = $("#rowCFRFT_" + sId).text();
+                                var oldEXTPRICE = $("#rowEXTPRICE_" + sId).text();
+                                var oMTONS = parseFloat(oldMTON) + parseFloat(MTONS);
+                                var oLEN = parseFloat(oldLEN) + parseFloat(TTLEN);
+                                var oCFRMT = parseFloat(oldCFRMT) + parseFloat(FOBMT[t]);
+                                var oCFRFT = parseFloat(oldCFRFT) + parseFloat(FOBFT[t]);
+                                var oEXTPRICE = parseFloat(oldEXTPRICE) + parseFloat(extPrice);
+                                $("#rowBNDL_" + sId).text(parseFloat(oldBNDL) + parseFloat(BNDL[t]));
+                                $("#rowPCS_ " + sId).text(parseFloat(oldPCS) + parseFloat(PIECES));
+                                $("#rowTTLEN_ " + sId).text(oLEN.toFixed(2));
+                                $("#rowMTONS_ " + sId).text(oMTONS.toFixed(2));
+                                $("#rowCFRMT_ " + sId).text(oCFRMT.toFixed(2));
+                                $("#rowCFRFT_ " + sId).text(oCFRFT.toFixed(2));
+                                $("#rowEXTPRICE_ " + sId).text(oLEN.toFixed(2));
+                                console.log('duplicate data row' + sId);
+                                console.log('rowBNDL_ ' + oldBNDL + ' + ' + BNDL[t]);
+                                console.log('rowPCS_ ' + oldPCS + ' + ' + PIECES);
+                                console.log('rowTTLEN_ ' + oldLEN + ' + ' + TTLEN);
+                                console.log('rowMTONS_  ' + oldMTON + ' + ' + MTONS);
+                                console.log('rowCFRMT_  ' + oldCFRMT + ' + ' + FOBMT[t]);
+                                console.log('rowCFRFT_  ' + oldCFRFT + ' + ' + FOBFT[t]);
+                                console.log('rowEXTPRICE_  ' + oldEXTPRICE + ' + ' + extPrice);
+                                // ======== Dup item in same lot ==========
+                            }
+                        });
+                        //Check dup 
+                        if (flagDupInLot == 0) {
+                            tblLines = "";
+                            tblLines = "<tr id='rowIndex_" + CountGridRow + "'>";
+//                        tblLines += "<td id='rowLine_" + CountGridRow + "'>" + CountGridRow + "</td>";
+//                        tblLines += "<td style='width:0px;border-top:none;border-bottom:none;' id='rowLot_" + Lot + "'>" + Lot + "</td>";
+                            tblLines += "<td width='18%'style='border-top:none;border-bottom:none;' data-lot='" + Lot + "'  id='rowItem_" + CountGridRow + "'>\n\
+            <input type='hidden' id='rowLot_" + Lot + "' value='" + Lot + "'>\n\
+<input type='hidden' id='rowDesc_" + CountGridRow + "' value='" + ITEM_DESC[t] + "'>\n\
+<input type='hidden' id='UnitWeight_" + CountGridRow + "' value='"+WEIGHT[t]+"'>\n\
+<h5 id='txtItem_"+CountGridRow+"'>" + ITEM[t] + "</h5><h6 id='txtDesc_"+CountGridRow+"'>"+ITEM_DESC[t]+"</h6></td>";
+//                        tblLines += "<td style='width:0px;' id='rowDesc_" + CountGridRow + "'>" + ITEM_DESC[t] + "</td>";
+                            tblLines += "<td width='3%' style='border-top:none;border-bottom:none;' id='rowSIZE_" + CountGridRow + "' align='right'>" + addCommas(SIZE[t]) + "</td>";
+                            tblLines += "<td width='5%' style='border-top:none;border-bottom:none;' id='rowTW_" + CountGridRow + "'align='right'>" + addCommas(String(TWCONV)) + "</td>";
+                            tblLines += "<td width='5%' style='border-top:none;border-bottom:none;' id='rowUL_" + CountGridRow + "'align='right'>" + addCommas(String(LEN[t])) + "</td>";
+                            tblLines += "<td width='5%' style='border-top:none;border-bottom:none;' id='rowCATE_" + CountGridRow + "'align='center'>" + CATE[t] + "</td>";
+                            tblLines += "<td width='5%' style='border-top:none;border-bottom:none;' id='rowSCHED_" + CountGridRow + "'align='right'>" + addCommas(String(SCHED[t])) + "</td>";
+                            tblLines += "<td width='5%' style='border-top:none;border-bottom:none;' id='rowPCSPERBNDL_" + CountGridRow + "'align='right'>" + addCommas(String(PCSPERBNDL[t])) + "</td>";
+                            tblLines += "<td width='5%' style='border-top:none;border-bottom:none;' id='rowBNDL_" + CountGridRow + "'align='right'>" + addCommas(String(BNDL[t])) + "</td>";
+                            tblLines += "<td width='5%' style='border-top:none;border-bottom:none;' id='rowPCS_" + CountGridRow + "'align='right'>" + addCommas(String(PIECES)) + "</td>";
+                            tblLines += "<td width='5%' style='border-top:none;border-bottom:none;' id='rowTTLEN_" + CountGridRow + "' align='right'>" + addCommas(String(TTLEN)) + "</td>";
+                            tblLines += "<td width='7%' style='border-top:none;border-bottom:none;' id='rowMTONS_" + CountGridRow + "'align='right'>" + addCommas(parseFloat(M_TONS).toFixed(2)) + "</td>";
+                            tblLines += "<td width='7%' style='border-top:none;border-bottom:none;' id='rowCFRMT_" + CountGridRow + "'align='right'>" + addCommas(parseFloat(FOBMT[t]).toFixed(2)) + "</td>";
+                            tblLines += "<td width='5%' style='border-top:none;border-bottom:none;' id='rowCFRFT_" + CountGridRow + "' align='right'>" + addCommas(parseFloat(FOBFT[t]).toFixed(2)) + "</td>";
+                            tblLines += "<td width='5%' style='border-top:none;border-bottom:none;' id='rowEXTPRICE_" + CountGridRow + "'  align='right'>" + addCommas(extPrice) + "</td>";
+                            tblLines += "<td width='2%' style='border-top:none;border-bottom:none;' align='center'><a id='btnRemoveGridLines_" + CountGridRow + "' OnClick='RemoveThis(" + CountGridRow + ");'  href='#' style='color:red;'><i class='fas fa-times'></i></a></td>";
+                            tblLines += "</tr>";
+                            $("#tbLot_" + Lot + "").append(tblLines);
+                        }
+
+                    }
+                }
+                        $("#btnImportEcel").attr("disabled",'disabled');
+//                $("#hdFlagInputType").val("normal");
+            }
+            $("tr[id^='rowTrLot_']").each(function () {
+                var tId = $(this).attr("id");
+                var SplitId = tId.split("_");
+                var tLot = SplitId[1];
+                if (tLot == "") {
+                    var COuntItem = $(this).find('td').find('table').find('tr').length;
+                    if (COuntItem <= 1) {
+                        $(this).remove();
+                    }
+//            console.log('ci ' + COuntItem);
+                }
+
+            });
+
+            $(".ui-dialog-titlebar-close").trigger('click');
+            $("#divCoverOverlay").loading('stop');
+            CalSummary();
+        }
+
+
+    </script>

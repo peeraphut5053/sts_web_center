@@ -1,0 +1,65 @@
+<div class='row text-center'>
+    <a href='index.php'><h3>Back to menu</h3></a>
+    <hr>
+    <div class="row">
+        <div class="col-md-4 col-lg-4 col-sm-4 col-xs-4">
+
+        </div>
+        <div class="col-md-4 col-lg-4 col-sm-4 col-xs-4">
+            <input type="text" class="form-control" id="txtSearch">
+        </div>
+        <div class="col-md-4 col-lg-4 col-sm-4 col-xs-4 text-left">
+            <button class="btn btn-info" id="btnSearch"> Search </button>
+        </div>
+
+    </div>
+    
+    <div class="row" id="rowResult" style="padding-left:20%;padding-right:20%;">
+        <table class="table table-condensed table-striped" >
+            <thead>
+                <tr>
+                    <th style="text-align: center;">ColumnName</th>
+                    <th style="text-align: center;">ColumnValue</th>
+                </tr>
+            </thead>
+            <tbody id="tbody" >
+                
+            </tbody>
+        </table>
+    </div>
+
+</div>
+<script type='text/javascript'>
+    $("#btnSearch").click(function () {
+        var param_str = $("#txtSearch").val();
+        if (param_str == "") {
+            $.alert({
+                title: "!!",
+                content: "Search what ?? "
+            });
+        } else {
+            console.log(param_str);
+            $.ajax({
+                url: "././module/ADMIN/data.php",
+                type: 'post',
+                beforeSend: function () {
+                    $("#btnSearch").html("<i class='fa fa-spinner fa-spin'>");
+                },
+                data: {
+                    load: 'eagleeyes',
+                    param_str: param_str,
+                },
+                success: function (data) {
+                    $("#tbody").html(data);
+                    $("#btnSearch").html("Search");
+                },
+                error: function (xhr, status, error) {
+                    $("#debug").html(xhr.responseText);
+                },
+                //            dataType: "json"
+            });
+
+        }
+
+    });
+</script>

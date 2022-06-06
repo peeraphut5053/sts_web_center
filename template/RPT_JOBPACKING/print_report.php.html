@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    </head>
+    <body>
+        <script>
+            var url_string = window.location.href; //window.location.href
+            console.log(url_string.split("/")[2])
+
+            var url = new URL(url_string);
+            var txtFromDate = url.searchParams.get("txtFromDate");
+            var txtToDate = url.searchParams.get("txtToDate");
+            var txtItem = url.searchParams.get("txtItem");
+            var txtref_num = url.searchParams.get("txtref_num");
+            var txtw_c = url.searchParams.get("txtw_c");
+
+            setTimeout(() => {
+                $.ajax({
+                    
+                    type: 'GET',
+                    url: `${url_string.split("/")[2]}/${url_string.split("/")[3]}/module/RPT_JOBPACKING/data.php`,
+                    dataType: 'json',
+                    data: {
+                        load : "ajax",
+                        txtFromDate: txtFromDate,
+                        txtToDate: txtToDate,
+                        txtItem: txtItem,
+                        txtref_num: txtref_num,
+                        txtw_c: txtw_c,
+                    },
+                    success: function (data) {
+                        console.log(data)
+                        $(tblReportId).DataTable().clear();
+                        $(tblReportId).dataTable({
+                            scrollY: 400,
+                            "scrollX": true,
+                            "aaData": data,
+                            "paging": false,
+                            "searching": false,
+                            "initComplete": function (settings, json) {
+                            },
+                            fixedHeader: true,
+                            destroy: true,
+                            'processing': true,
+                            "columns": tablecolumsArr,
+                            'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                                    "<'row'<'col-md-12'tr>>" +
+                                    "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                            buttons: [
+                                {
+                                    extend: 'print',
+                                    text: "<i class='fa fa-print'></i>&nbsp;Print",
+                                    title: '',
+                                },
+                                {
+                                    extend: 'excel',
+                                    text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                                    title: 'รายงาน ' + excelName + ' ' + GetCurrDateTime()
+                                },
+                            ],
+                        });
+                        $(tblReportId).loading("stop");
+                        $(btnSearch).html(OldHtml);
+                    },
+                    error: function (e) {
+                        console.log("There was an error with your request...");
+                        console.log("error: " + JSON.stringify(e));
+                    }
+                });
+            }, 1000)
+
+        </script>
+        <div class="row" id="divReport" >
+            <table class="table table-condensed table-bordered table-striped" id="tblReport" style="width:100%;">
+                <thead>
+                    <tr align="center">
+                        <th>Transaction Date</th>
+                        <th>Ref Number</th>
+                        <th>Item</th>  
+                        <th>Description</th>
+                        <th>PCS/Bundle</th>
+                        <th>Bundle</th>
+                        <!--                <th>PCS no Bundle</th>-->
+                        <th>Bundle Tag No- No.</th>
+                        <th>Total PCS</th>
+                        <th>Total PCS2</th>
+                        <th>Work center</th>
+                        <th>Work center name</th>
+                        <th>cust num</th>
+                        <th>cust name</th>
+                        <th>sts</th> 
+                        <th>ref</th> 
+                        <th>remark</th> 
+                </thead>
+            </table>
+        </div>
+
+    </body>
+</html>

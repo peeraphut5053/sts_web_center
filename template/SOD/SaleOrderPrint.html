@@ -1,0 +1,154 @@
+
+<div class="row">
+    <div class="col-12 text-left">
+        <a style="color:#FFFFFF;" id="btnPrintPreview" href="#" class="btn btn-info"><i class="fas fa-print"></i>&nbsp;PRINT</a>
+        <a style="color:#FFFFFF;" id="btnExportToExcel" href="#" class="btn btn-success"><i class="fas fa-file-excel"></i>&nbsp;EXPORT EXCEL</a>
+    </div>
+</div>
+<div id="tablePrint">
+    <style>
+        @media print {
+            tr.table-head {
+                background-color: #cdcdcd !important;
+                -webkit-print-color-adjust: exact; 
+            }}
+
+        @media print {
+            .table-head th {
+                
+                font-size:12px;
+                color: #000 !important;
+            }}
+        h6{
+            font-size:14px;
+        }
+        th{
+            font-weight: bold;
+            font-size:12px;
+            border:solid .5px #cdcdcd;
+        }
+        td{
+            font-size:12px;
+            border:solid .5px #cdcdcd;
+        }
+        .header-no-bor{
+            border:none; 
+        }
+        .table-head{
+            font-weight: bold; 
+        }
+        .table   .table-head  th,.table   .table-head  td  {
+            background-color: #cdcdcd;
+            color:#000;
+        }
+    </style>
+
+    <table width="100%" id='exp_1'>
+        <tr class="header-no-bor">
+            <td class="header-no-bor" colspan="17" align="center">
+                <h2>{cust_name}</h2>
+            </td> 
+        </tr>
+        <tr>
+            <td class="header-no-bor" colspan="17" align="center">
+                {cust_addr1}<br>
+                {cust_addr2}<br>
+                {cust_email}
+            </td> 
+        </tr>
+        <tr>
+            <td width="60%"  colspan="9" class="header-no-bor" align="left" >
+                Date : {po_date}<br>
+                To: {sts_info}<br>
+                Attn: {ship_attn}A
+            </td> 
+            <td width="40%"  colspan="8" class="header-no-bor" align="left" >
+                STS Doc No : {doc_no}<br>
+                P.O.Nbr : {po_num}<br>
+                Port: {port_from}<br>
+                Shipment: {shipment}
+            </td> 
+        </tr>
+    </table>
+    <table id='exp_2' style='margin-top:15px;' width="100%" class="table  table-condensed table-bordered" cellpadding="0" border="0" cellspacing="0"  style="width:100%;"  id="tableItemsFromFilter">
+
+        <thead>
+            <tr class="table-head" >
+                <!--<th rowspan="2"  align="center" width="3%">#</th>-->
+                <!--                <th rowspan="2"   align="center" width='20%'>Item</th>-->
+                <th   rowspan="2"  align="center" width="5%">SIZE</th>
+                <th   rowspan="2"  align="center" width="5%">THEO <br>WEIGHT<br>(LBS/FT)</th>
+                <th   rowspan="2"  align="center" width="5%">LENGTH<br>(FT)</th>
+                <th   rowspan="2"  align="center" width="5%">CATEGORY</th>     
+                <th   rowspan="2"  align="center" width="5%">SCHEDULE</th>
+                <th   rowspan="2"  align="center" width="5%">PCS PER BNDL</th>
+                <th   colspan="5" >ORDER QUANTITY</th>
+                <th   rowspan="2" align="center" width="5%">CFR LO ($/MT)</th>
+                <th   rowspan="2" align="center" width="5%">CFR LO ($/FT)</th>
+                <th   rowspan="2" align="center" width="5%">Ext.Price</th>
+            </tr>
+            <tr class="table-head">
+                <th   width="5%">BNDLS</th>
+                <th   width="5%">PIECES</th>
+                <th   width="5%" class="text-center">{cust_measure}</th>
+                <th   width="5%">NET TONS</th>
+                <th    width="5%">M. TONS</th>
+            </tr>
+        </thead>
+
+
+        <tbody id="tableItems">
+            {table_list}
+        </tbody>
+    </table>
+</div>
+<input type='hidden' id='hdDocNo' value='{doc_no}'>
+<input type='hidden' id='hdcustNum' value='{cust_num}'>
+<script type="text/javascript">
+      $(".ui-dialog-titlebar-close").css({top: 20, left: 950, position:'absolute'});
+    $("#btnPrintPreview").click(function () {
+        PrintElem("tablePrint");
+    });
+    $("#btnExportToExcel").click(function () {
+        var doc_no = $("#hdDocNo").val();
+        var cust_num = $("#hdcustNum").val();
+        var dt = new Date();
+        var day = dt.getDate();
+        var month = dt.getMonth() + 1;
+        var year = dt.getFullYear();
+        var hour = dt.getHours();
+        var mins = dt.getMinutes();
+        var postfix = day + "-" + month + "-" + year + "_" + hour + "-" + mins;
+        var filename = 'STS_SaleOrder_' + cust_num + '_' + postfix + '.xls';
+        var ArrId = [];
+        var ArrName = [];
+        var i = 0;
+        $("table[id^='exp']").each(function () {
+            var ThisId = $(this).attr("id");
+            i++;
+            ArrId.push(ThisId);
+            ArrName.push(i);
+        });
+        tablesToExcel(ArrId, ArrName, filename);
+    });
+    function PrintElem(elem)
+    {
+        var mywindow = window.open('', 'PRINT', 'height=600,width=1000');
+
+        mywindow.document.write('<html><head><title>' + document.title + '</title>');
+//        mywindow.document.write('<link href="../css/bootstrap.css" rel="stylesheet" type="text/css" />');
+        mywindow.document.write('</head><body >');
+//        mywindow.document.write('<h1>' + document.title + '</h1>');
+        mywindow.document.write(document.getElementById(elem).innerHTML);
+        mywindow.document.write('</body></html>');
+
+        mywindow.document.close(); // necessary for IE >= 10
+        mywindow.focus(); // necessary for IE >= 10*/
+
+        mywindow.print();
+        mywindow.close();
+
+        return true;
+    }
+
+</script>

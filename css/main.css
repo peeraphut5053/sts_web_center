@@ -1,0 +1,146 @@
+
+.addon-btn{
+    color:blue;
+    cursor: pointer;
+}
+.pagination{
+    margin-top:0px;
+    margin-bottom:0px;
+}
+.dataTables_wrapper .dataTables_paginate .paginate_button.disabled ,.dataTables_wrapper .dataTables_paginate .paginate_button {
+    padding:0px 0px 0px 0px;
+}
+.row-head {
+    color: #333333;
+    font-weight: bold;
+    border-bottom: solid 2px orange;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+.buttons-print{
+    margin-top:5px;
+    border:none;
+    border-radius:5px;
+    height:32px;
+    background-color: #5bc0de;
+    color:#FFFFFF;
+    padding-left:10px;
+    padding-right:10px;
+}
+.buttons-excel{
+    margin-top:5px;
+    border:none;
+    border-radius:5px;
+    height:32px;
+    background-color: #5cb85c;
+    color:#FFFFFF;
+    padding-left:10px;
+    padding-right:10px;
+}
+.buttons-pdf{
+    margin-top:5px;
+    border:none;
+    border-radius:5px;
+    height:32px;
+    background-color: #f79240;
+    color:#FFFFFF;
+    padding-left:10px;
+    padding-right:10px;
+}
+
+
+
+
+/*.buttons-print:before{
+    font-family: FontAwesome;
+    content : "\f02f" ;
+     display: inline-block;
+   padding-right: 3px;
+   vertical-align: middle;
+   font-weight: 900;
+}*/
+.buttons-print:hover{
+    color:orange;
+}
+.dataTables_length{
+    margin-top:5px;
+}
+.textbox {
+    border-radius: 5px;
+    margin-left: 5px;
+    margin-right: 5px;
+    border: solid 1px #ccc;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+/*    .unresponsive thead tr th {
+      min-width: 100%;
+    }*/
+
+.table td {
+    padding: 2px 2px 2px 2px;
+}
+
+.ShowContent {
+    width: 1000px;
+    height: 400px;
+    overflow: auto;
+}
+
+.jumbotron {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    margin-left: 20%;
+    margin-right: 20%;
+}
+
+.col-label {
+    padding-top: 5px;
+}
+
+@font-face {
+    font-family: "code39";
+    src: url('fonts/Code39Barcode.ttf') format('truetype');
+}
+.panel-heading {
+    margin-bottom: 0px;
+}
+.ow {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    hyphens: auto;
+}
+.treeview-menu>li>a>.active {
+    color: orange;
+}
+.dataTables_paginate .paginate_button {
+    box-sizing: border-box;
+    display: inline-block;
+    min-width: 1.5em;
+    padding: 0.5em 1em;
+    margin-left: 2px;
+    text-align: center;
+    text-decoration: none !important;
+    cursor: pointer;
+    *cursor: hand;
+    color: #333 !important;
+    border: 1px solid transparent;
+    border-radius: 2px;
+}
+.navbar-nav{
+    margin: -6;
+}
+
+.input-group .input-group-addon {
+    width: 100px;
+}
+h1{
+    margin-top: 0px !important;
+}
+#ui-datepicker-div{
+    z-index: 99999!important;
+}
+.table.dataTable {
+    margin: unset !important;
+}

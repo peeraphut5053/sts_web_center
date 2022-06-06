@@ -1,0 +1,221 @@
+<style>
+    a{
+        color:#FFFFFF;
+    }
+    .panel-body{
+        padding-left:30px;
+        padding-right:30px;
+    }
+    .divSql{
+        border:solid 1px orange;
+        padding-left:10px; 
+        padding-top:10px;
+        padding-bottom: 10px;
+        padding-right:10px;
+        border-radius:10px;
+    }
+    .divSqlCover{
+        padding-top:20px;
+        padding-left:20px;
+        padding-right:20px;
+    }
+    tr td{
+        height:35px;
+        cursor: pointer;
+    }
+    .hilightrow_on{
+        /*background-color: orange;*/
+        color:orange;
+        font-weight: bold;
+
+    }
+    .hilightrow_off{
+        /*background-color: orange;*/
+        color:#666;
+    }
+
+    .arrow-left:after {
+        content: "";
+        position: absolute;
+        right: 0;
+        width: 0;
+        height: 0;
+        border-top: 10px solid transparent;
+        border-bottom: 10px solid transparent;
+        border-right: 10px solid orange;
+    }
+</style>
+<div class="panel panel-primary">
+    <div class="panel panel-heading">Customer</div>
+    <div class="panel panel-body">
+
+        <div class='row text-center'>
+            <div class="col-md-6">
+                <div class="row">
+                    <table class="table table-striped table-condensed">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Cust Num</th>
+                                <th>Cust Name</th>
+                                <th>Form</th>                               
+                                <th>Cust Num(SyteLine)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbodyCust">
+
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+            <div class="col-md-6">
+
+                <div class="row divSqlCover" >
+                    <div class="row divSql text-left" id="rowSeq">
+                        No customer select
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+ 
+    SearchCustomer();
+ 
+    var Loading = "<i class='fa fa-circle-notch fa-spin'>&nbsp;</i>";
+
+    function SearchCustomer() {
+         
+        var name = "";
+        $.ajax({
+            url: "./module/SOD/CustomerSaleOrder.php",
+            type: 'post',
+            data: {
+                ajax: 'true',
+                action: "SearchCustomer",
+                name: name,
+            },
+            success: function (data) {
+//                alert();
+                console.log(data);
+                var line = "";
+                var idx = 0;
+                $("#tbodyCust").empty();
+                $.each(data, function (key, val) {
+                    idx++;
+                    line = "<tr OnClick='ClickRow(" + idx + ");' id='tr_" + idx + "'>\n\
+            <td>" + idx + "</td><td id='custnum_" + idx + "'>" + val["cust_num"] + "</td>\n\
+            <td id='custname_" + idx + "'>" + val["name"] + "</td>\n\
+            <td id='custform_" + idx + "'>" + val["import_form"] + "</td>\n\
+           <td id='custnumsl_" + idx + "'>" + val["cust_num_sl"] + "</td></tr>";
+                    $("#tbodyCust").append(line);
+                });
+
+            },
+            error: function (xhr, status, error) {
+                
+                $("#debug").html(xhr.responseText);
+            },
+            dataType: "json"
+        });
+    }
+    function GetCustSeq(idx) {
+        var cust_num_sl = $("#custnumsl_" + idx).text().trim();
+        var custname = $("#custname_" + idx).text().trim();
+        var custnum = $("#custnum_" + idx).text().trim();
+        var forceform = $("#custform_" + idx).text().trim();
+        if ((cust_num_sl == "") || (cust_num_sl == null) || (cust_num_sl == "null")) {
+            $("#rowSeq").html("<h4><b>" + custname + "</b></h4><h4 style='color:red;'>This customer not link to SyteLine</h4>");
+        } else {
+            $.ajax({
+                url: "./module/SOD/CustomerSyteline.php",
+                type: 'post',
+                data: {
+                    ajax: 'true',
+                    action: "GetCustomerSyteline",
+                    cust_num_sl: cust_num_sl,
+                },
+                beforeSend: function () {
+                    $("#rowSeq").empty();
+                    $("#rowSeq").html(Loading + " ..Loading");
+                },
+                success: function (data) {
+                    $("#rowSeq").empty();
+                    $("#rowSeq").html("<h4><b>" + custname + "</b></h4>");
+                    var line = "";
+                    var x = 0;
+                    var bgColor = "";
+                    $.each(data, function (idx, val) {
+                        x++;
+                        x % 2 == 0 ? bgColor = "#fff8eb" : bgColor = "#FFFFFF";
+                        line = "<div class='row' style='margin-left:10px;margin-right:10px;background-color:" + bgColor + ";'>\n\
+                <div class='col-md-1'>" + val["cust_seq"] + "</div>\n\
+                    <div class='col-md-5' style='padding-top:5px;'>" + val["name"] + "</div>\n\
+                    <div class='col-md-5' style='padding-top:5px;'>" + val["addr1"] + "</div>\n\
+                    <div class='col-md-1' style='padding-right:10px;'>\n\
+                        <button id='btnGo_" + idx + "' \n\
+                                data-custname='"+custname+"' \n\
+                                data-custnum='" + custnum + "' \n\
+                                data-custseq='" + val["cust_seq"] + "' \n\
+                                data-custaddr1='" + val["addr1"] + "' \n\
+                                data-custform='" + forceform + "' \n\
+                                OnClick='SelectCustomerGo(this.id);' class='btn btn-info'>\n\
+                                <i class='fa fa-chevron-right'></i>\n\
+                        </button>\n\
+                   </div>\n\
+                </div>";
+                        $("#rowSeq").append(line);
+                    });
+                },
+                error: function (xhr, status, error) {
+                    $("#debug").html(xhr.responseText);
+                },
+                dataType: "json"
+            });
+        }
+
+    }
+    function SelectCustomerGo(thisId) {
+        var custseq = $("#" + thisId).attr("data-custseq");
+        var custname = $("#" + thisId).attr("data-custname");
+        var custaddr1 = $("#" + thisId).attr("data-custaddr1");
+        var forceform = $("#" + thisId).attr("data-custform");
+        var forcecust = $("#" + thisId).attr("data-custnum");
+        if ((forceform == "") || (forceform == null) || (forceform == "undefined")) {
+            $.alert({
+                title: "OOpps !!",
+                content: "No import form data , Please contact administrator ! ",
+            });
+        } else {
+            var Url = "?SOD/SaleOrder&cust_seq=" + custseq + "&cust_addr1=" + custaddr1 + "&force_form=" + forceform + "&force_cust=" + forcecust+"&cust_name="+custname;
+            location.href = Url;
+        }
+    }
+    function ClickRow(idx) {
+        if ($("#tr_" + idx).hasClass("hilightrow_off")) {
+            $("#tr_" + idx).removeClass("hilightrow_off");
+            $("#tr_" + idx).addClass("hilightrow_on");
+        } else {
+            $("#tr_" + idx).addClass("hilightrow_on");
+        }
+        if ($("#custnumsl_" + idx).hasClass("arrow-left")) {
+            $("#custnumsl_" + idx).removeClass("arrow-left");
+            $("#custnumsl_" + idx).addClass("arrow-left");
+        } else {
+            $("#custnumsl_" + idx).addClass("arrow-left");
+        }
+//        $("td[id^='custnumsl_']").not("#custnumsl_" + idx).addClass("arrow-left");
+        $("td[id^='custnumsl_']").not("#custnumsl_" + idx).removeClass("arrow-left");
+        $("tr[id^='tr_']").not("#tr_" + idx).addClass("hilightrow_off");
+        $("tr[id^='tr_']").not("#tr_" + idx).removeClass("hilightrow_on");
+        GetCustSeq(idx);
+    }
+
+
+</script>

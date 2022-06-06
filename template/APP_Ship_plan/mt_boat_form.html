@@ -1,0 +1,62 @@
+<form name="form1" id="formCreate" method="post">
+  <input type="hidden" class="form-control" id="IdRun" name="IdRun" value="{IdRun}">
+  <div class="row">
+    <div class="col-4 text-right col-label">
+      ชื่อเรือ (M.V.)
+    </div>
+    <div class="col-6 text-right">
+      <input type="text" class="form-control" id="txtMV" name="txtMV" value="{MV}">
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-4 text-right  col-label">
+      ทะเบียนเรือ (Lighter No.)
+    </div>
+    <div class="col-6 text-right">
+      <input type="text" class="form-control" id="txtLighterNo" name="txtLighterNo" value="{LN}">
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12 text-center">
+      <button type="button" id="btnSubmit" class="btn btn-success">Save</button>
+    </div>
+
+  </div>
+</form>
+
+<script>
+  $("#btnSubmit").click(function() {
+    if ($("#txtMV").val() == "") {
+      alert("ไม่ได้ระบุ ชื่อเรือ ");
+      $("#txtMV").focus();
+      return false;
+    }
+    if ($("#txtLighterNo").val() == "") {
+      alert("ไม่ได้ระบุ ทะเบียนเรือ ");
+      $("#txtLighterNo").focus();
+      return false;
+    }
+    var act = "";
+    //  alert($("IdRun").val());
+    // if ($("IdRun").val() == "undefined") {
+    //   act = "createsave";
+    // } else {
+    //   act = "editsave";
+    // }
+    //alert(act);
+    $.post("./module/mt_boat_save.php", $('#formCreate').serialize(),
+      function(data) {
+        //alert(data);
+
+        if (data.substr(0, 5) == "Error") {
+          alert(data);
+          return false;
+        } else {
+          location.reload();
+        }
+      }, 'html');
+
+  });
+</script>

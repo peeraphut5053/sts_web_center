@@ -1,0 +1,178 @@
+<div class="row">
+    <div>
+        <h1>รายงาน รับ -​ เบิก ผลิต</h1>
+    </div>
+    <div class="col-xs-11">
+
+
+        <div class="row">
+            <div class="col-xs-4" >   
+                <div class="input-group">
+                    <div class="input-group-addon">From Date</div>
+                    <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtFromDate">
+                </div>
+            </div>
+            <div class="col-xs-4">   
+                <div class="input-group">
+                    <div class="input-group-addon">To date</div>
+                    <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtToDate">
+                </div>
+            </div>
+            <div class="col-xs-4">   
+                <div class="input-group">
+                    <div class="input-group-addon">Item</div>
+                    <input type="text" class="form-control txt-filter" id="txtItem">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-4">   
+                <div class="input-group">
+                    <div class="input-group-addon">Ref num</div>
+                    <input type="text" class="form-control txt-filter" id="txtref_num">
+                </div>
+            </div>     
+            <div class="col-xs-4">   
+                <div class="input-group">
+                    <div class="input-group-addon">Work center</div>
+                    <input type="text" class="form-control txt-filter" id="txtw_c">
+                </div>
+            </div>   
+            <div class="col-xs-4">   
+                <div class="input-group">
+                    <div class="input-group-addon">ทุก Item พิมพ์ 1</div>
+                    <input type="text" class="form-control txt-filter" id="flagAllItem"  value="0">
+                </div>
+            </div>   
+
+        </div>
+        <div hidden="hidden" class="row">
+            <div class="col-xs-4">   
+                <div class="input-group">
+                    <div class="input-group-addon">Finish มากกว่า</div>
+                    <input type="text" class="form-control txt-filter" id="FinishQty" value="0">
+                </div>
+            </div>     
+            <div class="col-xs-4">   
+                <div class="input-group">
+                    <div class="input-group-addon">Issue มากกว่า</div>
+                    <input type="text" class="form-control txt-filter" id="IssueQty" value="0">
+                </div>
+            </div>   
+            <div class="col-xs-4">   
+            </div>   
+        </div>
+
+
+    </div>
+    <div class="col-xs-1">
+        <div class="col-xs-4">   
+            <button id="btnSearch" class="btn btn-info"><i class="fa fa-searh"></i>&nbsp;ค้นหา</button>
+        </div>
+    </div>
+</div>
+
+<div class="row" id="divReport" >
+    <table class="table table-condensed table-bordered table-striped" id="tblReport" style="width:100%;">
+        <thead>
+            <tr>
+                <th>Transaction Date</th>
+                <th>Work center</th>
+                <th>Work center name</th>
+                <th>Ref Number</th>
+                <th>Item</th>  
+                <th>Description</th>
+                <th>unit weight</th>
+                <th>Finish</th>
+                <th>Issue / Withdraw</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+<script type="text/javascript">
+    $("#txtFromDate,#txtToDate").datepicker({
+        dateFormat: 'yy-mm-dd',
+    });
+    $("#txtFromDate,#txtToDate").val(GetToday());
+    $("#btnSearch").click(function () {
+        var tblReportId = '#tblReport';
+        var btnSearch = '#btnSearch';
+        SearchDataFn(tblReportId, btnSearch, tablecolumsArr, "รายงาน รับ -​ เบิก ผลิต", "RPT_NEW_INVENTORY_GROUP_BY_TRANS_TYPE");
+    });
+    var tablecolumsArr = [
+        {
+            "data": "trans_date",
+            "className": "text-right",
+            "render": function (data, type, row, meta) {
+                var ret = (data.date).substring(10,0);
+                return ret;
+            }
+        },
+        {
+            "data": "wc",
+            "render": function (data, type, row) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "wc_name",
+            "render": function (data, type, row) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "width": 250,
+            "data": "ref_num",
+            "className": "text-center",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "item",
+            "className": "text-center",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "item_name",
+            "className": "text-right",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "unit_weight",
+            "className": "text-right",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                ret = formatMoney(data);
+                return ret;
+            }
+        },
+        {
+            "data": "Finish",
+            "className": "text-right",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                ret = formatMoney(data);
+                return ret;
+            }
+        },
+        {
+            "data": "Issue_Withdraw",
+            "className": "text-right",
+            "render": function (data, type, row) {
+                var ret = formatMoney(data);
+                return ret;
+            }
+        },
+    ];
+</script>

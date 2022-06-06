@@ -1,0 +1,143 @@
+<style>
+    .btn {
+        height: 38px;
+        padding-top: 9px;
+
+        border-radius: 3px;
+    }
+
+    .table thead th {
+        vertical-align: bottom;
+        border-bottom: 2px solid #17a2b8;
+        background-color: #17a2b8;
+        color: #ffffff;
+    }
+
+    .btn-default {
+        border: solid 1px #666;
+    }
+
+    .btn-last,
+    .btn-page,
+    .btn-first {
+
+        border: solid 1px #666;
+        border-radius: 2px;
+        width: 25px;
+        height: 25px;
+        padding-top: 2px;
+        padding-left: 1px;
+        padding-right: 0px;
+    }
+
+    .modal-dialog {
+        min-width: 60%;
+        margin: 30px auto;
+    }
+
+    .btn-default {
+        border: solid 1px #666;
+    }
+
+    .btn-round {
+        border: solid 1px #666;
+        border-radius: 20px;
+        width: 25px;
+        height: 25px;
+        padding-top: 2px;
+        padding-left: 1px;
+        padding-right: 0px;
+    }
+</style>
+<!-- The Modal -->
+<div class="row" style="padding-bottom:10px;">
+
+
+
+
+
+</div>
+
+<div class="row">
+    <div class="col-12 col-xs-12 col-sm-12 col-md-2" style="color:orange;padding-top:0px;font-size:20px;font-weight: bold;">
+        <i class="fa fa-ship"></i>&nbsp;ใบแปลนเรือ
+    </div>
+</div>
+<div class="row">    
+    <form name="formAdv" method="post" action="?lists&advancesearch=true">
+        <div class="col-6 col-xs-6 col-sm-6 col-md-4 col-lg-4">
+            <div class="input-group">
+                <div class="input-group-addon">Keyword</div>
+                <input type="text" name="advKeyword" class="form-control" placeholder="พิมพ์ เลขที่เอกสาร,M.V.,LighterNo,BearthAt," value="{advKeyword}">
+            </div>
+        </div>
+        <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3">
+            <div class="input-group">
+                <div class="input-group-addon">Start Date</div>
+                <input style="padding-right:2px;" type='text' class="form-control" name="advStartDate" id="StartDate" value="{advStartDate}" />
+            </div>
+        </div>
+        <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3">
+            <div class="input-group">
+                <div class="input-group-addon">End Date</div>
+                <input style="padding-right:2px;" type='text' class="form-control" name="advEndDate" id="EndDate" value="{advEndDate}" />
+            </div>
+        </div>
+        <div class="col-6 col-xs-6 col-sm-6 col-md-2 col-lg-2">
+            <button type="submit" name="btnAdv" class="btn btn-info btn-small"><i class="fa fa-search"></i></button>
+            <a href="?SHP/create" class="btn btn-success " style="border-color:#e9ecef;"><i class="fa fa-plus"></i></a>
+        </div>
+    </form>
+</div>
+
+<!--    <div class="col-md-1" >
+     
+    </div>-->
+
+<!-- {test} -->
+
+<table class="table table-striped">
+    <thead>
+    <th>#</th>
+    <th>M.V.</th>
+    <th>LIGHTER NO.</th>
+    <th>BREATHED AT</th>
+    <th>START DATE</th>
+    <!--<th>END DATE</th>-->
+    <th>LIST</th>
+    <th>EDIT</th>
+</thead>
+<tbody>
+    {lists}
+</tbody>
+</table>
+
+<script >
+    $(function () {
+        $("#StartDate").datetimepicker({
+            dateFormat: 'yy-mm-dd',
+            timeFormat: "HH:mm:ss"
+        });
+        $("#EndDate").datetimepicker({
+            dateFormat: 'yy-mm-dd',
+            timeFormat: "HH:mm:ss"
+        });
+    });
+    function Cancel(ids) {
+        var parts = ids.split("-");
+        // alert(parts[1]);
+        var Conf = confirm("Want to cancel [" + parts[1] + "] data ? ");
+        if (Conf == false) {
+            return false;
+        } else {
+            $.post("./module/SHP/SHP/doc_cancel.php", {
+                "HeadCode": parts[1],
+                "Cancel": 1,
+                "Type": "Cancel"
+            }, function (data) {
+                location.reload();
+
+            }, 'html');
+        }
+    }
+</script>

@@ -1,0 +1,428 @@
+<style>
+    .headingTable {
+        background-color: #cccccc;
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .col-step1{
+        background-color:#94e8c8;
+        color:#FFFFFF;
+    }
+    .col-step2{
+        background-color:#43e8ab;
+        color:#FFFFFF;
+    }
+    .col-step3{
+        background-color:#13af75;
+        color:#FFFFFF;
+    }
+    .col-step4{
+        background-color:#0b774f;
+        color:#FFFFFF;
+    }
+    .loading-overlay-content{
+        left: 30%;
+        top: 80px;
+        position: absolute;
+    }
+</style>
+<!--<div class="row" >
+    <div class="col-md-6 text-left" style='font-size: 18px;'>
+        <a href='?WL/index'> <i class='fa fa-chevron-left'></i>&nbsp; WeightList </a>&nbsp;|&nbsp;excel receive
+    </div>
+</div>-->
+
+
+<div class="row " style='margin-left:5px;margin-top:10px;'>
+    <div class="col-md-1 text-right col-step1">
+        <b>STEP 1</b><br>
+        เลือกไฟล์
+    </div>
+    <div class="col-md-3 text-right">
+        <div class='col-md-10 col-lg-10 col-sm-10 col-xs-10'>
+            <input type="file" id="files" accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+        </div>
+        <div class='col-md-2 col-lg-2 col-sm-2 col-xs-2 colResultBrowse'>
+
+        </div>
+
+
+    </div>
+    <div class="col-md-1 text-right col-step2">
+        <b>STEP 2</b><br>
+        เลือก Sheet
+    </div>
+    <div class="col-md-3">
+        <div class='col-md-10 col-lg-10 col-sm-10 col-xs-10'> 
+            <select class='form-control'  id='sheet_name' disabled>
+                <option value="">... Please select ...</option>
+            </select>
+        </div>
+        <div class='col-md-2 col-lg-2 col-sm-2 col-xs-2 colResultSheet'></div>
+    </div>
+    <div class="col-md-1 text-right col-step3">
+        <b>STEP 3</b><br>
+        Import
+    </div>
+    <div class="col-md-3">
+        <button class="btn btn-success" id="btnImport"  disabled><i class='fa fa-calculator'></i>&nbsp;Import</button>
+        <label id='colResultButton'></label> <label id='colResultButton2'></label>
+    </div> 
+</div>
+<div class="row">
+    <div class="col-md-3">
+        <div class="input-group">
+
+            <div class="input-group-addon">
+                First Gen Tag_id
+
+            </div>
+            <input type="text" class="form-control" id="txtGenTag" readonly>
+        </div>
+    </div>    
+    <div class="col-md-3">
+        <div class="input-group">
+
+            <div class="input-group-addon">
+                date
+
+            </div>
+            <input type="text" class="form-control" id="txtDate" readonly>
+        </div>
+    </div>    
+</div>
+
+<div id='DivResult' class='row text-center'></div>
+<div id="ReaderExcel" >
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Lot</th>
+                <th>Item</th>              
+                <th>On hand</th>
+                <th>u_m</th>
+                <th>u_m2</th>
+                <th>gen_tag</th>
+                <th>mfg_date</th>
+                <th>print_date</th>
+                <th>grade</th>           
+                <th>uf_thickness</th>
+                <th>uf_width</th>
+                <th>uf_spec</th>
+                <th>qty2</th>
+                <th>uf_pack</th>
+            </tr></thead>
+        <tbody>
+            <tr>
+                <td colspan="12" class="text-center" style="color:red;"><br><h3>Please apply this template to excel before import </h3><br></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="row text-center" >
+
+    <script type='text/javascript' src='js/xlsx.core.min.js'></script>
+    <script type='text/javascript' src='js/xlsx.full.min.js'></script>
+    <script type="text/javascript">
+        var loadingDiv = "<i class='fa fa-spinner fa-spin'></i>";
+        function RemoveColumns() {
+            $('#ReaderExcel tr').find('td:eq(18),th:eq(18)').remove();
+            $('#ReaderExcel tr').find('td:eq(19),th:eq(19)').remove();
+            var i = 0;
+            for (i = 22; i <= 47; i++) {
+                $('#ReaderExcel tr').find('td:eq(' + i + '),th:eq(' + i + ')').remove();
+            }
+        }
+        $('#files').change(function (e) {
+            $('#ReaderExcel').empty();
+            $(".colResultBrowse").html(loadingDiv);
+            var sheet_name = $("#sheet_name").val();
+            $('#ReaderExcel').empty();
+//            alert(this.files[0].mozFullPath);
+            $("#FilePath").html();
+            var reader = new FileReader();
+            reader.readAsArrayBuffer(e.target.files[0]);
+            reader.onload = function (e) {
+                var data = new Uint8Array(reader.result);
+                var wb = XLSX.read(data, {type: 'array'});
+                var sheetcount = wb.SheetNames.length;
+                var i = 0;
+                $("#sheet_name").empty();
+                $("#sheet_name").append('<option value="">... Please select ...</option>');
+                for (i = 0; i < sheetcount; i++) {
+                    $("#sheet_name").append('<option value="' + wb.SheetNames[i] + '">' + wb.SheetNames[i] + '</option>');
+                }
+                $(".colResultBrowse").html("");
+                $("#sheet_name").removeAttr("disabled");
+            }
+        });
+
+        $("#sheet_name").change(function () {
+            $(".colResultSheet").html(loadingDiv);
+            var files_input = document.getElementById("files");
+            var file = files_input.files[0];
+
+            if (!file) {
+                $.alert({
+                    title: 'Can not import excel file !',
+                    content: "Please select excel file"
+                });
+                return false;
+            }
+            var sheet_name = $("#sheet_name").val();
+            var file_name = $('#files').val().replace(/C:\\fakepath\\/i, '');
+            $("#tmpXlsSheet").val(sheet_name);
+            $("#tmpXlsFile").val(file_name);
+            console.log();
+            var reader = new FileReader();
+            reader.readAsArrayBuffer(file);
+            reader.onload = function (e) {
+                var data = new Uint8Array(reader.result);
+                try {
+                    var wb = XLSX.read(data, {type: 'array'});
+                    var htmlstr = XLSX.write(wb, {sheet: sheet_name, type: 'binary', bookType: 'html'});
+                    $('#ReaderExcel').empty();
+                    $('#ReaderExcel')[0].innerHTML += htmlstr;
+                    $('#ReaderExcel table').addClass('table table-striped table-bordered table-condensed');
+
+                    $('table').prepend("<thead><tr> <th>Lot</th><th>Item</th><th>On hand</th><th>u_m</th><th>u_m2</th><th>gen_tag</th> <th>mfg_date</th><th>print_date</th><th>grade</th><th>uf_thickness</th><th>uf_width</th><th>uf_spec</th><th>qty2</th><th>uf_pack</th></tr></thead>");
+                    //========render datatable========//
+                    $('table').DataTable({
+                        ordering: false,
+                        fixedHeader: true,
+                        retrieve: true,
+                        "pageLength": 999999999,
+                        'dom': "<'row'<'col-md-5'><'col-md-7 text-right col-flt-page'f>>" +
+                                "<'row'<'col-md-12'tr>>" +
+                                "<'row'<'col-md-5'><'col-sm-7'>>",
+                        buttons: [
+                            {
+                                extend: 'print',
+                                text: "<i class='fa fa-print'></i>&nbsp;Print",
+                                title: ''
+                            },
+                            {
+                                extend: 'excel',
+                                text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                                title: ''
+                            },
+                        ]
+                    });
+
+                    $(".colResultSheet").html("");
+                    var CountTr = $("tbody tr").length;
+                    $("#colResultButton").html(CountTr + ' Rows');
+                    $("#btnCal").removeAttr("disabled");
+                    //=================================//
+                    $('tbody').find('tr:eq(0)').remove();
+                    CheckData();
+
+                } catch (err) {
+                    console.log(err);
+//                    $.alert({
+//                        title: 'Can not import excel file !',
+//                        content: err,
+//                    });
+                    $(".colResultSheet").html("");
+                }
+            }
+        });
+        $("#btnCal").click(function () {
+
+        });
+        GenSelfTag();
+        function GenSelfTag() {
+            var today = new Date();
+            var dd = today.getDate();
+            var mm = today.getMonth() + 1; //January is 0!
+            var yyyy = today.getFullYear().toString();
+
+            if (dd < 10) {
+                dd = '0' + dd
+            }
+
+            if (mm < 10) {
+                mm = '0' + mm
+            }
+
+            today = yyyy.substring(2, 4) + mm + dd + 'ZZZ0001';
+            $("#txtGenTag").val(today);
+            $("#txtDate").val(yyyy + "-" + mm + "-" + dd);
+        }
+        function Cal(item, lot) {
+            var item = "";
+            var lot = "";
+            var get_last_tag_id = "";
+            item = $("tbody tr:eq(0)").find("td:eq(0)").text();
+            lot = $("tbody tr:eq(0)").find("td:eq(1)").text();
+
+            $.ajax({
+                url: "././module/ADMIN/data.php",
+                type: 'post',
+//                    dataType: 'JSON',
+                data: {
+                    load: "GenTagOldBC",
+                    item: item,
+                    lot: lot,
+                },
+                success: function (data) {
+                    $("#txtGenTag").val(data);
+//                    $(this).find('td:eq(2)').text(data);
+                },
+                error: function (xhr, status, error) {
+                    var err = eval("(" + xhr.responseText + ")");
+                    $("#colResultButton").html("Error!");
+                    $("#btnImport").attr("disabled", true);
+
+                },
+            });
+
+            item = "";
+            lot = "";
+            $("table").loading();
+
+            $("table").loading("stop");
+
+            $("#btnImport").removeAttr("disabled");
+        }
+        function pad(str, max) {
+            str = str.toString();
+            return str.length < max ? pad("0" + str, max) : str;
+        }
+
+        function CheckData() {
+            var item = [];
+            var lot = [];
+            var GetTagId = $("#txtGenTag").val().trim();
+            var TagPrefix = GetTagId.substring(0, 9);
+            var Runn = parseInt(GetTagId.substring(9, 13));
+            var i = 0;
+
+            $("tbody tr").each(function () {
+                lot.push($(this).find('td:eq(0)').text().trim());
+                item.push($(this).find('td:eq(1)').text().trim());
+                $(this).find('td:eq(5)').text(TagPrefix + '' + pad(Runn.toString(), 4));
+                $(this).find('td:eq(6)').text($("#txtDate").val());
+                $(this).find('td:eq(7)').text($("#txtDate").val());
+                Runn++;
+
+            });
+//            console.log(item);
+            //send array to process in php
+            $.ajax({
+                url: "././module/ADMIN/data.php",
+                type: 'post',
+                datatype: "JSON",
+                beforeSend: function () {
+                    $("table").loading({message: GenLoadingMessage("Checking   data   in    Infor Syteline")});
+                },
+                data: {
+                    load: "check_item_old_bc",
+                    item: item,
+                    lot: lot,
+                },
+                success: function (data) {
+                    var GetData = $.parseJSON(data);
+                    var i = 0;
+                    var x = GetData.length;
+                    console.log(GetData[0]);
+                    for (i = 0; i < x; i++) {
+                        $("tbody tr:eq(" + i + ")").find('td:eq(3)').text(GetData[i][0]);
+                        $("tbody tr:eq(" + i + ")").find('td:eq(4)').text(GetData[i][1]);
+                        $("tbody tr:eq(" + i + ")").find('td:eq(8)').text(GetData[i][2]);
+                        $("tbody tr:eq(" + i + ")").find('td:eq(9)').text(GetData[i][3]);
+                        $("tbody tr:eq(" + i + ")").find('td:eq(10)').text(GetData[i][4]);
+                        $("tbody tr:eq(" + i + ")").find('td:eq(11)').text(GetData[i][5]);
+                        $("tbody tr:eq(" + i + ")").find('td:eq(12)').text(GetData[i][6]);
+                        $("tbody tr:eq(" + i + ")").find('td:eq(13)').text(GetData[i][7]);
+                    }
+                    $("table").loading("stop");
+                    $("#btnImport").removeAttr("disabled");
+                },
+                error: function (xhr, status, error) {
+                    var err = eval("(" + xhr.responseText + ")");
+                    console.log(err);
+                    $("#colResultButton").html("Error!");
+                    $("#btnImport").attr("disabled", true);
+                },
+            });
+
+
+
+        }
+        $("#btnImport").click(function () {
+            $.confirm({
+                title: "!! ยืนยัน ",
+                content: "ยืนยันการนำข้อมูลเข้าสู่ระบบ ?",
+                buttons: {
+                    confirm: function () {
+//                        $("#colResultButton").html(loadingDiv);
+                        PackDataToArrayAndSave();
+                    },
+                    cancel: function () {
+
+                    }
+                }
+            });
+        });
+        function PackDataToArrayAndSave() {
+            var DataInsert = [];
+            var z = 0;
+            var ColCount = 12;
+            $("tbody tr").each(function () {
+                var DataInsertLoop = [];
+                for (z = 0; z <= ColCount; z++) {
+                    DataInsertLoop.push($(this).find('td:eq(' + z + ')').text().trim());
+                }
+                DataInsert.push(DataInsertLoop);
+                z = 0;
+            });
+
+            $.ajax({
+                url: "././module/ADMIN/data.php",
+                type: 'post',
+//                dataType: 'JSON',
+                data: {
+                    load: "old_item_bc_save",
+                    DataInsert: DataInsert
+                },
+                success: function (data) {
+                    console.log(data);
+//                   $.alert(data) ;
+//                   location.reload();
+                },
+                error: function (xhr, status, error) {
+                    var err = eval("(" + xhr.responseText + ")");
+                    $("#colResultButton").html("Error!");
+                    $("#btnImport").attr("disabled", true);
+
+                },
+            });
+        }
+
+        function PHP_Excel_Reader() {
+            $.ajax({
+                url: "././module/WL/data.php",
+                type: 'post',
+                dataType: 'JSON',
+                data: {
+                    load: "ajax_savedata",
+                    xls_file: grade,
+
+                },
+                success: function (data) {
+//                    $("#colResultButton").html("Upload " + CountItem + " completed");
+                    $("#btnImport").attr("disabled", true);
+
+                },
+                error: function (xhr, status, error) {
+                    var err = eval("(" + xhr.responseText + ")");
+//                    $("#colResultButton").html("Error!");
+                    $("#btnImport").attr("disabled", true);
+
+                },
+            });
+        }
+    </script>

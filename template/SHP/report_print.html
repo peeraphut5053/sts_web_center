@@ -1,0 +1,136 @@
+<style>
+    .ui-widget.ui-widget-content {
+        border: 1px solid #aed0ea;
+    }
+    .table-heading tr td{
+        border-top:none;
+    }
+
+    .row-head{
+        margin-bottom: 0px;
+    }
+    h5{
+        margin-bottom: 0px; 
+    }
+    .alert-info{
+        border:solid 1px #17a2b8 ;
+        border-radius: 0px;
+    }
+    .table-heading tr td{
+        color:black;
+
+    }
+    .td-label{
+        text-align: right;          
+        color:black;
+    }
+    .td-centent{
+        text-align: center;
+        color:black;
+    }
+/*    .table-content thead tr th{
+        text-align: center;
+        padding-top:2px;
+        padding-bottom:2px;
+        background-color: #FFFFFF;
+        color:black;
+        border:solid 1px #666;
+    }*/
+    .btn-filter{
+        height:32px;
+        border-radius: 0px;
+    }
+    .col-filter{
+        padding-right: 0px;
+    }
+    .tab-sub-head-item{
+        width:15%;
+    }
+    .tab-sub-head-qty{
+        width:10%;
+        text-align: center;
+    }
+    th{
+        margin: 0px 0px 0px 0px;
+    }
+    .table-content  tbody td {
+        padding-left: 10px;
+        border:solid .5px black;
+          font-size: 14px;
+    }
+    .table-content  thead th {
+        font-size: 14px;
+        border:solid .5px black;
+    }
+</style>
+<!-- Trigger the modal with a button -->
+
+
+<!-- Modal -->
+
+<div class="container" >
+   
+    <div class="row">
+        <table class="table table-heading" width="100%">
+            <tr style="height:50px;padding-top:2px;">
+                <td colspan="4" style="text-align: center;">
+                    <h3><strong> :: รายงานใบแปลนเรือ :: </strong></h3>
+                </td>
+            </tr>
+            <tr>
+                <td width="20%" class="td-label" > วันที่เริ่ม : </td>
+                <td width="30%" class="td-content">{tableFromDate} </td>
+                <td width="20%" class="td-label">  วันที่สิ้นสุด : </td>
+                <td width="30%" class="td-content"> {tableToDate} </td>
+            </tr>
+            <tr>
+                <td width="20%" class="td-label"> ชื่อเรือ : </td>
+                <td width="30%" class="td-content">{tableBoatMV} </td>
+                <td width="20%" class="td-label">ทะเบียนเรือ : </td>
+                <td width="30%" class="td-content"> {tableBoatLighterNo} </td>
+            </tr>
+        </table>
+        <table class="table table-content table-bordered" style="margin-top:10px;" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th colspan="2">ท้ายเรือ</th>
+                    <th colspan="2">กลางท้าย</th>
+                    <th colspan="2">กลางหัว</th>
+                    <th colspan="2">หัวเรือ</th>
+                </tr>
+                <tr>
+                    <th class="tab-sub-head-item">Item</th>
+                    <th class="tab-sub-head-qty">QTY.Bundles</th>
+                    <th class="tab-sub-head-item">Item</th>
+                    <th class="tab-sub-head-qty">QTY.Bundles</th>
+                    <th class="tab-sub-head-item">Item</th>
+                    <th class="tab-sub-head-qty">QTY.Bundles</th>
+                    <th class="tab-sub-head-item">Item</th>
+                    <th class="tab-sub-head-qty">QTY.Bundles</th>
+                </tr>
+            </thead>
+            <tbody>
+                {reportContent}
+            </tbody>
+             <tr>
+                <td align="right">Total Qty.Bundles</td>
+                  <td align="right">{TotalPos1}</td>
+                   <td align="right">Total Qty.Bundles</td>
+                  <td align="right">{TotalPos2}</td>
+                   <td align="right">Total Qty.Bundles</td>
+                  <td align="right">{TotalPos3}</td>
+                   <td align="right">Total Qty.Bundles</td>
+                  <td align="right">{TotalPos4}</td>
+            </tr>
+            <tr>
+                <td colspan="7" align="right">Total</td>
+                 <td align="right">{TotalAll}</td>
+            </tr>
+        </table>
+
+    </div>
+</div>
+
+<script>
+    window.onload = function() { window.print(); }
+</script>

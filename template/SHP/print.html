@@ -1,0 +1,201 @@
+<style>
+    .col-data{
+        color:#0056b3;
+    }
+    .table thead th {
+        height:30px;
+        vertical-align: bottom;
+        border: 1px solid black;
+        background-color: white;
+        color:black;
+        padding-top:0px;
+    }
+    .table tbody td {
+           height:30px;
+        vertical-align: bottom;
+        border: 1px solid black;
+        background-color: white;
+        color:black;
+           padding-top:0px;
+           text-align: center;
+    }
+    .btn-default{
+        border:solid 1px #666;
+    }
+    .btn-round {
+        border:solid 1px #666;
+        border-radius: 20px;
+        width:25px;
+        height:25px;
+        padding-top:2px;
+        padding-left:1px;
+        padding-right:0px;
+    }
+    td{
+        height:32px;
+    }
+    .td-label{
+        padding-right:15px;
+    }
+    .td-data{
+        border-bottom:solid 1px black;
+    }
+   
+</style>
+
+<div class="container">
+    <div class="row text-center" >
+        <table width="100%">
+            <tr>
+                <td align="center">
+                     <strong>BOAT PLAN</strong>
+            <br><br>
+            <strong>SAHA THAI STEEL PIPE CO.,LTD.</strong>
+                </td>
+            </tr>
+        </table>
+           
+   <br>
+
+
+    </div>
+    <div class="row">
+        <table width="100%;">
+            <tr>
+                <td width="17%" align="right" class="td-label">
+                     M.V.
+                </td>
+                <td width="23%" class="td-data">
+                     {MV}
+                </td>
+                 <td width="17%" align="right" class="td-label">
+                      LIGHTER NO.
+                </td>
+                <td width="23%" class="td-data">
+                    {LighterNo}
+                </td>
+            </tr>             
+             <tr>
+                <td width="17%" align="right" class="td-label">
+                      BERTHED AT
+                </td>
+                <td  width="23%" class="td-data">
+                    {BerthedAt}
+                </td>
+            </tr>
+               <tr>
+                <td width="17%" align="right" class="td-label">
+                     Start Date
+                </td>
+                <td  width="23%" class="td-data">
+                    {StartDate}
+                </td>
+            </tr>
+<!--               <tr >
+                <td width="17%" align="right" class="td-label">
+                     COMPLETED ON
+                </td>
+                <td  width="23%" class="td-data">
+                   {CPDate}
+                </td>
+            </tr>-->
+        </table>
+        
+    </div>
+
+ 
+<br>
+    <div class="row " >
+        <table class="table table-striped" width="100%" cellpadding="0" cellspacing="0">
+            <thead>
+                <tr>
+                    <th> Item Position</th>
+                    <th> Item Tag </th>
+                    <th> Customer Order </th>
+                    <th> Item Description </th>
+                    <th> Item QTY </th>
+                    <!--<th> GROSS WEIGHT (MT) </th>-->
+                </tr>
+            </thead>
+            <tbody>
+                {lists}
+<!--                   <tr>
+                        <td  colspan="4" style="text-align:right;margin-right:25px;"> TOTAL &nbsp;&nbsp;&nbsp;&nbsp;</td>
+                          <td  colspan="1" style="text-align:center;"> {Total} BUNDLES</td>
+                    </tr>-->
+            </tbody>
+              <tr>
+                    <td colspan="4" align="right"> Total </td>
+                    <td align="center" >{TotalQty}</td>
+                </tr>
+        </table>
+    </div>  
+<br>
+<br>
+<div class="row " >
+    <table width="100%">
+        <tr>
+            <td width="30%">
+                
+                ..............................................................
+            </td>
+            <td width="30%">
+                
+               
+            </td>
+            <td width="30%">
+                
+               ..............................................................
+            </td>
+        </tr>
+         <tr>
+            <td width="40%">
+                
+                   <strong>SAHA THAI STEEL PIPE CO.,LTD.</strong>
+            </td>
+            <td width="30%">
+                
+               
+            </td>
+            <td width="30%">
+                
+                  <strong>TAIKONG RECEIVER</strong>
+            </td>
+        </tr>
+       
+            <tr>
+            <td width="30%">
+                
+                  
+            </td>
+            <td width="30%">
+                
+               
+            </td>
+            <td width="30%">
+                <br>
+               
+                   ..............................................................
+            </td>
+        </tr>
+        
+            <tr>
+            <td width="30%">
+                
+                 <strong>DATE : </strong> .......................................... 
+            </td>
+            <td width="30%">
+                
+               
+            </td>
+            <td width="30%">
+                
+                  <strong>CHECKER RECEIVER</strong>
+            </td>
+        </tr>
+    </table>
+</div>
+</div>
+<script>
+    window.onload = function() { window.print(); }
+</script>

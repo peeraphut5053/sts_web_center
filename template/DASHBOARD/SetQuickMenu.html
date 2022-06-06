@@ -1,0 +1,108 @@
+<style>
+    .form-label-row {
+        padding-top: 5px;
+    }
+
+    .hideRow {
+        display: none;
+    }
+
+    .showRow {
+        display: initial;
+    }
+
+    .loading-overlay-content {
+        z-index: 999999999;
+    }
+</style>
+
+<div id="render">
+    <table class="table table-condensed table-striped" id="tblAuth">
+        <thead>
+            <tr>
+                <th>id</th>
+                <th>project</th>
+                <th>department</th>
+                <th>type</th>
+                <th>action</th>
+            </tr>
+        </thead>
+        <tbody id="tbodyAuth">
+        </tbody>
+    </table>
+</div>
+
+<input type="hidden" id="hdfId" value="{id}">
+<input type="hidden" id="hdfMethod" value="{method}">
+<script type="text/javascript">
+    GetDepToDropdown();
+    function GetDepToDropdown() {
+        var Dep = [];
+        var DepNoDup = [];
+        $('#tblAuth tbody tr ').each(function (row, tr) {
+            Dep.push($(this).find('td:eq(2)').text().trim());
+        });
+        //DepNoDup = removeDumplicateValue(Dep);
+        $("#selDep").append("<option value=''>--ALL--</option>");
+        $(DepNoDup).each(function (ii, rr) {
+            $("#selDep").append("<option value='" + rr + "'>" + rr + "</option>");
+        });
+    }
+    function SelectDep() {
+        var Val = $("#selDep").val();
+        var TmpDep = "";
+        $('#tblAuth tbody tr ').removeClass("hideRow");
+        if (Val != "") {
+
+            $('#tblAuth tbody tr').each(function (row, tr) {
+                TmpDep = $(this).find('td:eq(2)').text().trim();
+                if (TmpDep != Val) {
+                    $(this).addClass("hideRow");
+                }
+            });
+        }
+    }
+    function SetQuickMenuAction(thisId) {
+        var Split = thisId.split("!!");
+        var UserId = Split[1];
+        var PrjId = Split[2];
+        var quick_id = Split[3];
+        var CurrAction = Split[4];
+        $.ajax({
+            type: 'POST',
+            url: "././module/DASHBOARD/data.php",
+            //            dataType: 'json',
+            beforeSend: function () {
+                //                $("#btnSearch").html("<i class='fa fa-spinner fa-spin'>");
+            },
+            data: {
+                load: 'SetQuickMenuAction',
+                UserId: UserId,
+                PrjId: PrjId,
+                CurrAction: CurrAction,
+                quick_id: quick_id
+            },
+            success: function (data) {
+                //data = quick_id-PrjId
+                dataSplit = data.split("-");
+                SetquickId = dataSplit[0];
+                SetPrjId = dataSplit[1];
+                SetPrjLink = dataSplit[2];
+                SetPrjDescription = dataSplit[3];
+                SetId = "LeftMainBtn_"+SetPrjId;
+
+                //$(".quicklink-" + SetquickId).val(data);
+                $(".quicklink-" + SetquickId).attr('link', SetPrjLink);
+                $(".quicklink-" + SetquickId).attr('id', SetId);
+
+                //Set project id link to quick menu button at id of button 
+                $(".quicklink-" + SetquickId).html(SetPrjDescription);
+                $("#QuickMenuModal").modal("hide");
+            },
+            error: function (e) {
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+    }
+</script>

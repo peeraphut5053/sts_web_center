@@ -1,0 +1,328 @@
+<?
+require_once __DIR__ . DIRECTORY_SEPARATOR . 'Rundiz' . DIRECTORY_SEPARATOR . 'Upload' . DIRECTORY_SEPARATOR . 'Upload.php';
+?>
+<link href="template/app_tag_photo_gallery/photo_gallery.css" rel="stylesheet" type="text/css"/>
+
+<!------ Include the above in your HEAD tag ---------->
+
+<style>
+    .loader {
+        border: 16px solid #f3f3f3;
+        border-radius: 50%;
+        border-top: 16px solid #3498db;
+        width: 150px;
+        height: 150px;
+        -webkit-animation: spin 2s linear infinite; /* Safari */
+        animation: spin 2s linear infinite;
+        position:absolute;
+        z-index: 1;
+        margin-left: 30%;
+        margin-top: -75%;
+    }
+
+    /* Safari */
+    @-webkit-keyframes spin {
+        0% { -webkit-transform: rotate(0deg); }
+        100% { -webkit-transform: rotate(360deg); }
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+</style>
+<script>
+    $(document).ready(function () {
+        $(document).on('change', '.btn-file :file', function () {
+            var input = $(this),
+                    label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+            input.trigger('fileselect', [label]);
+        });
+        $('.btn-file :file').on('fileselect', function (event, label) {
+
+            var input = $(this).parents('.input-group').find(':text'),
+                    log = label;
+            if (input.length) {
+                input.val(log);
+            } else {
+                if (log)
+                    alert(log);
+            }
+
+        });
+        function readURL(input) {
+            console.log(input.files[0])
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#img-upload').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        function readURL2(input) {
+            console.log(input.files[0])
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#img-upload2').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        $("#imgInp").change(function () {
+            readURL(this);
+        });
+        $("#imgInp2").change(function () {
+            readURL2(this);
+        });
+    });</script>
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Test file upload.</title>
+    </head>
+    <body>
+        <form id='upload_img_form' method="post" enctype="multipart/form-data" action="template/app_tag_photo_gallery/upload.php">
+            <div class="row">
+                <div class="col-xs-5" style="padding: 0px;">
+                    <div class="row">
+                        <div class="col-sm-10" style="padding: 0px;">
+                            <div class="form-group">
+                                <label>Upload Image 1</label>
+                                <div class="input-group">
+                                    <input id="imgInp" type="file" name="filename[]" multiple>
+                                </div>
+                                <div>
+                                    <label for="imgInp" >
+                                        <img  id='img-upload' class="square" />
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-10" style="padding: 0px;">
+                            <div class="form-group">
+                                <label>Upload Image 2</label>
+                                <div class="input-group">
+                                    <input id="imgInp2" type="file" name="filename[]" multiple>
+                                </div>
+                                <div>
+                                    <label for="imgInp2" >
+                                        <!--                                        <img  id='img-upload2' class="square" src="img/camera-upload.png"/>-->
+                                        <img  id='img-upload2' class="square" />
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xs-7">
+                    <div class="form-group">
+                        <label for="tag_id">Tag barcode</label>
+                        <input type="text"  name="tag_id" class="form-control" id="tag_id" aria-describedby="BarcodeHelp" placeholder="Enter barcode">
+                        <small id="BarcodeHelp" class="form-text text-muted">ใส่เลข Tag bar code</small>
+                    </div>
+                    <div class="row" style="border-style: dashed;padding:10px;border-color: #3c8dbc;">
+                        <div>
+                            <div class="input-group">
+                                <div class="input-group-addon">STS PO :</div>
+                                <input readonly type="text" autocomplete="off"  class="form-control txt-filter" id="STS_POtxt">
+                            </div>
+                        </div>
+                        <div>
+                            <div class="input-group">
+                                <div class="input-group-addon">Type</div>
+                                <input readonly type="text" autocomplete="off"  class="form-control txt-filter" id="TYPEtxt">
+                            </div>
+
+                        </div>
+                        <div>
+                            <div class="input-group">
+                                <div class="input-group-addon">SPEC</div>
+                                <input readonly type="text" autocomplete="off"  class="form-control txt-filter" id="SPECtxt">
+                            </div>
+                        </div>
+                        <div>
+                            <div class="input-group">
+                                <div class="input-group-addon">NPS</div>
+                                <input readonly type="text" autocomplete="off"  class="form-control txt-filter" id="NPStxt">
+                            </div>
+                        </div>
+                        <div>
+                            <div class="input-group">
+                                <div class="input-group-addon">PCS :</div>
+                                <input readonly type="text" autocomplete="off"  class="form-control txt-filter" id="PCStxt">
+                            </div>
+                        </div>
+                        <div>
+                            <div class="input-group">
+                                <div class="input-group-addon">WEIGHT :</div>
+                                <input readonly type="text" autocomplete="off"  class="form-control txt-filter" id="WEIGHTtxt">
+                            </div>
+                        </div>
+                        <div>
+                            <div class="input-group">
+                                <div class="input-group-addon">BUNDLE :</div>
+                                <input readonly type="text" autocomplete="off"  class="form-control txt-filter" id="BUNDLEtxt">
+                            </div>
+                        </div>
+                        <div>
+                            <div class="input-group">
+                                <div class="input-group-addon">HEAT NO :</div>
+                                <input readonly type="text" autocomplete="off"  class="form-control txt-filter" id="HEATNOtxt">
+                            </div>
+                        </div>
+                        <div>
+                            <div class="input-group">
+                                <div class="input-group-addon">CUST :</div>
+                                <input readonly type="text" autocomplete="off"  class="form-control txt-filter" id="CUSTtxt">
+                            </div>
+                        </div>
+                        <div hidden>
+                            <div class="input-group">
+                                <div class="input-group-addon">CUST PO</div>
+                                <input readonly type="text" autocomplete="off"  class="form-control txt-filter" id="CUSTPO_txt">
+                            </div>
+
+                        </div>
+                        <div>
+                            <div class="input-group">
+                                <div class="input-group-addon">PORT</div>
+                                <input readonly type="text" autocomplete="off"  class="form-control txt-filter" id="PORTtxt">
+                            </div>
+                        </div>
+                        <div>
+                            <div class="input-group">
+                                <div class="input-group-addon">LOT</div>
+                                <input readonly name="lot" type="text" autocomplete="off"  class="form-control txt-filter" id="LOTtxt">
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <input style="width:100%" onclick="chkSubmit()" type="button" class="btn btn-primary" id="btnSubmit" value="Upload">
+                        <!--                        <button style="width:100%" type="submit" class="btn btn-primary" onclick="chkSubmit()">Upload</button>-->
+                    </div>
+                </div>
+
+            </div>
+        </form>
+    </body>
+</html>
+<script>
+    function yyyymmdd() {
+        var x = new Date();
+        var y = x.getFullYear().toString();
+        var m = (x.getMonth() + 1).toString();
+        var d = x.getDate().toString();
+        (d.length == 1) && (d = '0' + d);
+        (m.length == 1) && (m = '0' + m);
+        var yyyymmdd = y + m + d;
+        return yyyymmdd;
+    }
+
+    function chkSubmit() {
+        if ($("#LOTtxt").val() == "") {
+            alert("กรุณาแสกน Tag เพื่อดึงค่า Lot");
+            event.preventDefault()
+            return false;
+        } else if ($("#imgInp").val() == "") {
+            alert("Please enter Image 1");
+            event.preventDefault()
+            return false;
+        } else if ($("#imgInp2").val() == "") {
+            alert("Please enter Image 2");
+            event.preventDefault()
+            return false;
+        } else
+        {
+            $("#content_upload").append(`<div class="loader"></div>`);
+            $("#btnSubmit").attr("disabled", true);
+            var tag_id = $("#tag_id").val();
+            var lot = $("#LOTtxt").val();
+//            var filename_imgInp = "sts_" + yyyymmdd() + "_" + tag_id + ".jpg";
+//            var filename_imgInp2 = "sts_" + yyyymmdd() + "_" + tag_id + "_1.jpg";
+            var filename_imgInp = "sts_" + tag_id + ".jpg";
+            var filename_imgInp2 = "sts_" + tag_id + "_1.jpg";
+            $.ajax({
+                type: 'POST',
+                url: "././module/app_tag_photo_gallery/data.php",
+                beforeSend: function () {
+                },
+                data: {
+                    load: 'uploadImg',
+                    tag_id: tag_id,
+                    lot: lot,
+                    file_name_1: filename_imgInp,
+                    file_name_2: filename_imgInp2,
+                },
+                success: function (data) {
+
+                    $(`#upload_img_form`).submit();
+                },
+                error: function (e) {
+                    console.log("There was an error with your request...");
+                    console.log("error: " + JSON.stringify(e));
+                }
+            });
+            return false;
+//            return true;
+        }
+    }
+
+    function SearchTagDetail() {
+        var tag_id = $("#tag_id").val();
+        var ajaxUrl = "././module/app_tag_photo_gallery/data.php";
+        $.ajax({
+            type: 'POST',
+            url: ajaxUrl,
+            dataType: 'json',
+            data: {
+                "load": "SearchTagDetail",
+                "tag_id": tag_id,
+            },
+            success: function (data) {
+                console.log(data)
+                $("#STS_POtxt").val(data[0].STSPO);
+                $("#TYPEtxt").val(data[0].Uf_TypeEnd);
+                $("#SPECtxt").val(data[0].Uf_spec);
+                $("#NPStxt").val(data[0].Uf_NPS);
+                $("#PCStxt").val(data[0].Uf_pack);
+                $("#WEIGHTtxt").val(data[0].unit_weight);
+                $("#BUNDLEtxt").val(data[0].uf_pack);
+                $("#HEATNOtxt").val(data[0].sts_no);
+                $("#CUSTtxt").val(data[0].name);
+                $("#CUST_POtxt").val(data[0].lot);
+                $("#PORTtxt").val(data[0].city);
+                $("#LOTtxt").val(data[0].lot);
+            },
+            error: function (e) {
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+    }
+
+
+    $('#tag_id').keypress(function (e) {
+        var key = e.which;
+        if (key == 13) // the enter key code
+        {
+            SearchTagDetail();
+            return false;
+        }
+    });
+    $('#tag_id').change(function () {
+        SearchTagDetail();
+        return false;
+        ;
+    });
+
+
+</script>
+

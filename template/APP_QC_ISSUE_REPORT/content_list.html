@@ -1,0 +1,320 @@
+<?
+require_once __DIR__ . DIRECTORY_SEPARATOR . 'Rundiz' . DIRECTORY_SEPARATOR . 'Upload' . DIRECTORY_SEPARATOR . 'Upload.php';
+?>
+<script src="js/jquery.loading.min.js" type="text/javascript"></script>
+
+<style>
+    .input-group-addon{
+        width: 20% !important;
+    }
+    .input-group{
+        width: 100%;
+    }
+    .img-size-table{
+        height: 80px;
+        width:  80px;
+    }
+</style>
+
+<div class="row">
+    <div class="col-xs-10">
+        <div class="col-xs-4">
+            <div class="input-group">
+                <div class="input-group-addon">Tag</div>
+                <input type="text" autocomplete="off"  class="form-control txt-filter" id="tag_id_list">
+            </div>
+        </div>
+        <div class="col-xs-4">
+            <div class="input-group">
+                <div class="input-group-addon">STS NO</div>
+                <input type="text" autocomplete="off"  class="form-control txt-filter" id="sts_no_list">
+            </div>
+        </div>
+        <div class="col-xs-4">
+            <div class="input-group">
+                <div class="input-group-addon">Size</div>
+                <input type="text" autocomplete="off"  class="form-control txt-filter" id="size_list">
+            </div>
+        </div>
+    </div> 
+    <div class="col-xs-2">
+        <button id="btnSearch" class="btn btn-info"><i class="fa fa-searh"></i>&nbsp;ค้นหา </button>
+        <!--        <button hidden id="btnPrint" onclick="printTagList()" class="btn btn-success"><i class="fa fa-searh"></i>&nbsp;พิมพ์รายการ Tag id </button>-->
+    </div>
+</div>
+
+
+<div class="row" id="divReport" >
+    <table class="table table-condensed table-bordered table-striped" id="tblReport" style="width:100%;">
+        <thead>
+            <tr>
+                <th>Detail</th>
+                <th>image 1</th>  
+                <th>image 2</th>
+                <th>image 3</th>
+                <th>image 4</th>
+                <th>image 5</th>
+                <th>x</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+<div class="modal" id="ProductModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document" style="width:95%;">
+        <div class="modal-content">
+            <div class="modal-header" style="padding:3px">
+                <h3 style="margin: 0;">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color:red;">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </h3>
+            </div>
+            <div class="modal-body" id="BodyModal" style=" overflow-y: scroll">
+                <div class='containner' style="text-align: center;">
+                    <image id="modal_img" style="height: 75%" />
+                </div>
+            </div>
+            <div class="modal-footer" id="FooterModal" >
+                <form id='upload_img_list_form' method="post" enctype="multipart/form-data" action="template/APP_QC_ISSUE_REPORT/upload.php">
+                    <div class="col-xs-10 bg-success">
+                        <input type="file" id="myfile" name="filename[]" multiple style="display: inline-table" > 
+                        <input hidden name='tag_id' type="text" value="" id='tagidupload'>
+                        <input hidden name='img_upload_file_name' type="text" value="" id='img_upload_all'>
+                        <input onclick="uploadImg()" type="button" class="btn btn-success" value="Upload" />
+                    </div>
+                    <div class="col-xs-2">
+                        <input hidden type="text" value="" id='file_name_x' />
+                        <input hidden id='file_name_modal' type="text" value="" >
+                        <input onclick="DeleteImg()" type="button" class="btn btn-danger" value="ลบ" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+    function DeleteTagId(tag_id) {
+        var r = confirm("คุณต้องการที่จะลบ Tag id นี้หรือไม่?");
+        if (r == true) {
+            $.ajax({
+                type: 'get',
+                url: '././module/APP_QC_ISSUE_REPORT/data.php',
+                data: {
+                    load: "DeleteTagId",
+                    tag_id: tag_id,
+                },
+                success: function (data) {
+                    console.log(data);
+                    SearchData();
+                },
+            });
+        } else {
+            
+        }
+
+
+    }
+    function DeleteImg() {
+        let file_name_modal = $("#file_name_modal").val();
+        let tag_id = $("#tagidupload").val();
+        let file_name_x = $("#file_name_x").val();
+        $.ajax({
+            type: 'get',
+            url: '././module/APP_QC_ISSUE_REPORT/data.php',
+            data: {
+                load: "DeleteImg",
+                tag_id: tag_id,
+                file_name_x: file_name_x,
+                file_name: file_name_modal,
+            },
+            success: function (data) {
+                console.log(data);
+            },
+        });
+        location.reload();
+    }
+
+    function uploadImg() {
+        let file_name_modal = $("#file_name_modal").val();
+        let tag_id = $("#tagidupload").val();
+        let file_name_x = $("#file_name_x").val();
+        if (file_name_modal == '') {
+            file_name_modal = 'qc_' + tag_id + '_' + file_name_x + '.jpg';
+        }
+        $.ajax({
+            type: 'get',
+            url: '././module/APP_QC_ISSUE_REPORT/data.php',
+            data: {
+                load: 'uploadImg',
+                tag_id: tag_id,
+                file_name: file_name_modal,
+                file_name_x: file_name_x,
+            },
+            success: function (data) {
+                console.log(data);
+                $(`#upload_img_list_form`).submit();
+            },
+        });
+        //location.reload();
+    }
+
+
+    $("#btnSearch").click(function () {
+        SearchData();
+    });
+
+
+
+    function SearchData() {
+        let tag_id = $('#tag_id_list').val();
+        let size_list = $('#size_list').val();
+        let sts_no_list = $('#sts_no_list').val();
+        $.ajax({
+            type: 'get',
+            url: '././module/APP_QC_ISSUE_REPORT/data.php',
+            dataType: 'json',
+            beforeSend: function () {
+            },
+            data: {
+                load: 'GetImgTagUpload',
+                tag_id: tag_id,
+                size_list: size_list,
+                sts_no: sts_no_list,
+            },
+            success: function (data) {
+                console.log(data);
+                let tblReportId = '#tblReport';
+                $(tblReportId).DataTable().clear();
+                $(tblReportId).dataTable({
+                    scrollY: 400,
+                    "scrollX": true,
+                    "aaData": data,
+                    "paging": false,
+                    "searching": false,
+                    "initComplete": function (settings, json) {
+                    },
+                    destroy: true,
+                    'processing': true,
+                    "columns": [
+                        {
+                            "width": 400,
+                            "data": {
+                                id: "id",
+                                create_by: "create_by",
+                                remark: "remark",
+                                lot: "lot",
+                            },
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+
+                                var ret = "tag id : <b>" + data.tag_id + "</b>" +
+                                        "<br>create_by :" + data.create_by + "</b>" +
+                                        "<br>remark :" + data.remark + "</b>" +
+                                        "<br>lot :<b>" + data.lot + "</b>" +
+                                        "<br>sts no :<b>" + data.sts_no + "</b>" +
+                                        "<br>size :<b>" + data.size + "</b>";
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": {tag_id: "tag_id", file_name_1: "file_name_1"},
+                            "className": "text-center",
+                            "render": function (data, type, row) {
+                                if (data.file_name_1) {
+                                    var ret = `<a onclick=openmodal_img("${data.file_name_1}","${data.tag_id}","file_name_1")><img class='img-size-table' src='template/APP_QC_ISSUE_REPORT/img_tag/${data.file_name_1}'/></a>`;
+                                } else {
+                                    var ret = `<a onclick=openmodal_img("${data.file_name_1}","${data.tag_id}","file_name_1")><img class='img-size-table' src='template/APP_QC_ISSUE_REPORT/add-image.png'/></a>`;
+                                }
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": {tag_id: "tag_id", file_name_2: "file_name_2"},
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                if (data.file_name_2) {
+                                    var ret = `<a onclick=openmodal_img("${data.file_name_2}","${data.tag_id}","file_name_2")><img class='img-size-table' src='template/APP_QC_ISSUE_REPORT/img_tag/${data.file_name_2}'/></a>`;
+                                } else {
+                                    var ret = `<a onclick=openmodal_img("${data.file_name_2}","${data.tag_id}","file_name_2")><img class='img-size-table' src='template/APP_QC_ISSUE_REPORT/add-image.png'/></a>`;
+                                }
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": {tag_id: "tag_id", file_name_3: "file_name_3"},
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                if (data.file_name_3) {
+                                    var ret = `<a onclick=openmodal_img("${data.file_name_3}","${data.tag_id}","file_name_3")><img class='img-size-table' src='template/APP_QC_ISSUE_REPORT/img_tag/${data.file_name_3}'/></a>`;
+                                } else {
+                                    var ret = `<a onclick=openmodal_img("${data.file_name_3}","${data.tag_id}","file_name_3")><img class='img-size-table' src='template/APP_QC_ISSUE_REPORT/add-image.png'/></a>`;
+                                }
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": {tag_id: "tag_id", file_name_4: "file_name_4"},
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                if (data.file_name_4) {
+                                    var ret = `<a onclick=openmodal_img("${data.file_name_4}","${data.tag_id}","file_name_4")><img class='img-size-table' src='template/APP_QC_ISSUE_REPORT/img_tag/${data.file_name_4}'/></a>`;
+                                } else {
+                                    var ret = `<a onclick=openmodal_img("${data.file_name_4}","${data.tag_id}","file_name_4")><img class='img-size-table' src='template/APP_QC_ISSUE_REPORT/add-image.png'/></a>`;
+                                }
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": {tag_id: "tag_id", file_name_5: "file_name_5"},
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                if (data.file_name_5) {
+                                    var ret = `<a onclick=openmodal_img("${data.file_name_5}","${data.tag_id}","file_name_5")><img class='img-size-table' src='template/APP_QC_ISSUE_REPORT/img_tag/${data.file_name_5}'/></a>`;
+                                } else {
+                                    var ret = `<a onclick=openmodal_img("${data.file_name_5}","${data.tag_id}","file_name_5")><img class='img-size-table' src='template/APP_QC_ISSUE_REPORT/add-image.png'/></a>`;
+                                }
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": {tag_id: "tag_id"},
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                var ret = `<a onclick=DeleteTagId("${data.tag_id}")>ลบ</a>`;
+                                return ret;
+                            }
+                        },
+                    ],
+                    'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                            "<'row'<'col-md-12'tr>>" +
+                            "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                    buttons: [
+                    ],
+                });
+            },
+        });
+    }
+
+
+    function openmodal_img(file_name, tag_id, file_name_x) {
+        console.log(file_name);
+        $("#file_name_x").val(file_name_x);
+        $('#img_upload_all').val(file_name_x);
+        $("#file_name_modal").val(file_name);
+        $("#ProductModal").modal("show");
+        console.log(tag_id);
+        $('#tagidupload').val(tag_id);
+        let url = '././template/APP_QC_ISSUE_REPORT/img_tag/' + file_name;
+        $('#modal_img').attr('src', url);
+        $("#BodyModal").load();
+    }
+
+
+
+
+
+</script>

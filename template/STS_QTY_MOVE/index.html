@@ -1,0 +1,269 @@
+<style>
+    .input-group-addon{
+        width: 100px;
+    }
+    .modal-body{
+        height: unset;
+    }
+</style>
+<div>
+    <h1 id="pagehader">Quantity Move</h1>
+</div>      
+
+<div class="row" >
+    <div class="col-lg-3">
+        <div class="input-group">
+            <div class="input-group-addon">From date</div>
+            <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtFromDate">
+        </div>
+    </div>
+    <div class="col-lg-3">
+        <div class="input-group">
+            <div class="input-group-addon">To date</div>
+            <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtToDate">
+        </div>
+    </div>
+    <div class="col-lg-3" >
+        <button class="btn btn-info" id="search" ><i class="fa fa-search"></i>&nbsp;Search</button>
+        <button class="btn btn-success" id="btnModal"><i class="fa fa-plus-circle"></i>&nbsp;Add new</button>
+        <button class="btn btn-primary" id="PrintAllDetail"><i class="fa fa-file"></i>&nbsp;Print all detail</button>
+    </div>
+
+</div>
+<div class='containner'>
+
+</div>
+<div class=" row" id="divReport" >
+    <table class="table table-hover " id="tblReport" >
+        <thead>
+            <tr>
+                <th>Doc no</th>
+                <th>create date</th>
+                <th>create by </th>  
+            </tr>
+        </thead>
+        <tbody id="tbodytblReport">
+
+        </tbody>
+    </table>
+
+</div>
+
+<div class="modal" id="ProductModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document" style="width:80%;">
+        <div class="modal-content">
+            <div class="modal-header" style="padding:3px">
+                <h3 style="margin: 0;">Create Quantity Move Document
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color:red;">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </h3>
+            </div>
+            <div class="modal-body" id="BodyModal" style="background-color: ghostwhite;">
+                <div class='containner'>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    $("#search").click(function () {
+        SearchDocMove()
+    });
+    $("#txtFromDate,#txtToDate").datepicker({
+        dateFormat: 'yy-mm-dd',
+    });
+    $(tblReport).on('click', '#tbodytblReport tr', function () {
+        var doc_no = $(this).find(".doc_no").text();
+        var create_by = $(this).find(".create_by").text();
+        ShowDetail("GetDocumentDetail", doc_no, create_by);
+    });
+    $("#PrintAllDetail").click(function () {
+        var doc_no = $(this).find(".doc_no").text();
+        var create_by = $(this).find(".create_by").text();
+        ShowDetail("GetAllDocumentDetail", doc_no, create_by);
+    });
+    function ShowDetail(load, doc_no, create_by) {
+        $.ajax({
+            type: 'GET',
+            url: "././module/STS_QTY_MOVE/data.php",
+            dataType: 'json',
+            beforeSend: function () {
+            },
+            data: {
+                load: load,
+                doc_no: doc_no,
+            },
+            success: function (data) {
+                var Url = "template/STS_QTY_MOVE/index1.html";
+                var modalBodyId = "#BodyModal";
+                var modalId = "#ProductModal";
+                $(modalId).modal("show");
+                $(modalBodyId).empty();
+                $(modalBodyId).load(Url, function () {
+                    $("#hdrline2").hide();
+                    $("#footer").hide();
+                    $("#selectitem").hide();
+                    $("#delcol").hide
+                    $("#txtdoc_no").val(doc_no);
+                    $("#txtCreateby").val(create_by);
+                    $("#tblQtymove").dataTable({
+                        "aaData": data,
+                        "paging": false,
+                        fixedHeader: true,
+                        destroy: true,
+                        'processing': true,
+                        "columns": [
+                            {
+                                "data": "item",
+                                "className": "text-center item selecthide",
+                                "render": function (data, type, row) {
+                                    var ret = data;
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "FromLoc",
+                                "className": "text-center loc selecthide",
+                                "render": function (data, type, row) {
+                                    var ret = data;
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "ToLoc",
+                                "className": "text-right qty_on_hand selecthide",
+                                "render": function (data, type, row, meta) {
+                                    var ret = data;
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "qty",
+                                "className": "text-right qty_on_hand selecthide",
+                                "render": function (data, type, row, meta) {
+                                    var ret = Number(data).toFixed(0);
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "qty",
+                                "className": "text-right qty_on_hand selecthide",
+                                "render": function (data, type, row, meta) {
+                                    var ret = Number(data).toFixed(0);
+                                    return ret;
+                                }
+                            },
+                        ],
+                        dom: 'Bfrtip',
+                        buttons: [{
+                                extend: 'print',
+                                text: "<i class='fa fa-print'></i>&nbsp;Print",
+                                title: '',
+                                messageTop: function () {
+                                    return "Doc no: " + $("#pagehader").text();
+                                }},
+                            {
+                                extend: 'excel',
+                                footer: true,
+                                text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                                title: 'รายงาน Tag item ' + GetCurrDateTime()
+                            },
+                            {
+                                extend: 'pdfHtml5',
+                                text: 'Custom PDF',
+                                extend: 'pdfHtml5',
+                                        filename: 'dt_custom_pdf',
+                                orientation: 'portrait', //landscape
+                                pageSize: 'A4', //A3 , A5 , A6 , legal , letter
+                                messageTop: function () {
+                                    return "Page name: " + $("#pagehader").text();
+                                },
+                            }
+                        ],
+                    });
+                });
+            },
+        });
+    }
+
+
+
+
+    $("#btnModal").click(function () {
+        var Url = "template/STS_QTY_MOVE/index1.html";
+        var modalBodyId = "#BodyModal";
+        var modalId = "#ProductModal";
+        $(modalId).modal("show");
+        $(modalBodyId).empty();
+        $(modalBodyId).load(Url);
+    });
+    SearchDocMove()
+    function SearchDocMove() {
+        var tblReport = "#tblReport";
+        var txtFromDate = $("#txtFromDate").val();
+        var txtToDate = $("#txtToDate").val();
+        var url = "module/STS_QTY_MOVE/data.php";
+        $.ajax({
+            type: 'GET',
+            url: url,
+            dataType: 'json',
+            beforeSend: function () {
+                //$(btnSearch).html("<i class='fa fa-spinner fa-spin'></i>");
+            },
+            data: {
+                "FromDate": txtFromDate,
+                "ToDate": txtToDate,
+                "load": "DocList",
+            },
+            success: function (data) {
+                console.log(data);
+                $(tblReport).DataTable().clear();
+                $(tblReport).dataTable({
+                    "aaData": data,
+                    "paging": false,
+                    "searching": false,
+                    "bInfo": false,
+                    fixedHeader: true,
+                    destroy: true,
+                    'processing': true,
+                    "columns": [
+                        {
+                            "data": "doc_no",
+                            "className": "text-center doc_no",
+                            "render": function (data, type, row) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "create_date",
+                            "className": "text-center",
+                            "render": function (data, type, row) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "create_by",
+                            "className": "text-right create_by",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                    ],
+                });
+            },
+            error: function (e) {
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+    }
+
+</script>
+

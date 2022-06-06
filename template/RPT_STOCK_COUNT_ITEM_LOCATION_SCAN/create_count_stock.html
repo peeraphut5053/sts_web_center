@@ -1,0 +1,436 @@
+<style>
+    .align-middle{
+        vertical-align: middle !important;
+    }
+    .col-xs-8,.col-xs-4{
+        padding-right: 0px; 
+        padding-left: 0px; 
+    }
+</style>
+<div  class="modal fade" id="modal-alert" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style='margin-top: 40vh'>
+            <div hidden class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class='text-center'>
+                    <h2> บันทึกสำเร็จ </h2>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id='count_stock_list'>
+    <div class="row">
+        <div class="col-xs-12" >   
+
+        </div>
+    </div>
+    <div class="row">
+        <div class='col-xs-8'>
+            <label>Location</label>
+            <select class='form-control' onchange="chkStockApprove()" id ='loc' >
+                <option value="{location}">---- Select location {location} -----</option>
+            </select>
+        </div>
+        <div class='col-xs-4'>
+            <label>ID Header</label>
+            <input readonly class='form-control' type="text" value="{id_hdr}" id="id_hdr">
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class='col-xs-8'>
+            <div class="input-group" style="width: 100%;padding:5px">
+                <input  type="text" placeholder="ค้นหา Item,Location,Sts Tag" autocomplete="off"  class="form-control txt-filter" id="item_code">
+                <div onclick='SearchDetail()'  class="input-group-addon btn-info" style="cursor: pointer;background: #3c8dbc;color: #FFFFFF"  id="btnSearch" ><i class="fa fa-search"></i>
+                </div>
+                <div onclick='modal_checklocation()'  class="input-group-addon btn-success" style="cursor: pointer;background: #3c8dbc;color: #FFFFFF"  id="modal_checklocation" >Check location
+                </div>
+            </div>
+        </div>
+        <div class='col-xs-4'>
+            <div class="row">
+                <div class='col-xs-8'>
+                    <input onclick="confirmCheckStock()" id="confirmCheckStock" type="button" class="btn btn-primary" value="ส่งรายงานการนับ">
+                </div>
+                <div class='col-xs-4'>
+                    <button onclick="gotoPage()" class="btn btn-default">&nbsp;หน้าหลัก</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <table class="table table-condensed table-bordered table-striped" id="tblReportDetail" >
+        <thead>
+            <tr>
+                <th>item code</th>
+                <th>เส้น/มัด</th>
+                <th>มัด</th>
+                <th>เศษ</th>
+                <th>total</th>
+                <th>remark</th>
+                <th>Save</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+<div class="modal" id="CheckLocationModal">
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 88vw">
+            <div class="modal-header">
+                <label id="lblModalHead"></label>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div id="modalBody" class="modal-body" >
+            </div>
+            <div class="modal-footer">
+            </div>
+
+        </div>
+    </div>
+</div>
+<script>
+    function modal_checklocation() {
+        $("#CheckLocationModal").modal("show");
+        var Url = "././template/WH_CHK_ITEMLOC/index.html";
+        $("#modalBody").load(Url, {
+
+        }, function () {
+
+        });
+    }
+
+
+    var loc = $("#loc").val();
+    var item_code = $("#item_code").val();
+    var id_hdr = $("#id_hdr").val();
+    SearchDetail(loc, item_code, id_hdr)
+
+    function chkStockApprove() {
+        var loc = $("#loc").val();
+        var ajaxUrl = "././module/RPT_STOCK_COUNT_ITEM_LOCATION_SCAN/data.php";
+        $.ajax({
+            type: 'POST',
+            url: ajaxUrl,
+            dataType: 'json',
+            data: {
+                "load": "chkStockApprove",
+                "loc": loc,
+            },
+            success: function (data) {
+                if (data != 0) {
+                    $("#id_hdr").val(data);
+                    SearchDetail(loc, item_code)
+                } else {
+                    if (confirm("คุณต้องการสร้างใบนับสต๊อคใหม่ ใช่หรือไม่ ?")) {
+                        CreateCountStock();
+                    } else {
+                        return false;
+                    }
+                }
+            },
+            error: function (e) {
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+    }
+
+    function confirmCheckStock() {
+        if (confirm("คุณต้องส่งรายงานยอดการนับสินค้า ใช่หรือไม่ ?")) {
+            var ajaxUrl = "././module/RPT_STOCK_COUNT_ITEM_LOCATION_SCAN/data.php";
+            var id_hdr = $("#id_hdr").val();
+            $.ajax({
+                type: 'POST',
+                url: ajaxUrl,
+                dataType: 'json',
+                data: {
+                    "load": "confirmCheckStock",
+                    "id_hdr": id_hdr,
+                },
+                success: function (data) {
+                    alert("บันทึกสำเร็จ")
+                    gotoPage();
+                },
+                error: function (e) {
+                    console.log("There was an error with your request...");
+                    console.log("error: " + JSON.stringify(e));
+                }
+            });
+        } else {
+            return false;
+        }
+    }
+
+
+
+    function gotoPage() {
+        $("#create_count_stock").empty();
+        Url = "././module/RPT_STOCK_COUNT_ITEM_LOCATION_SCAN/render.php"
+        pageHtml = "index";
+        $("#count_stock_list").load(Url, {"pageHtml": pageHtml}, function (response, status, xhr) {
+        });
+    }
+
+    $("#loc").select2({
+    });
+    var url = "././module/RPT_STOCK_COUNT_ITEM_LOCATION/data.php";
+    var load = "GetLocationAll";
+    var valueId = "loc";
+    var valueShow = "loc_description";
+    GetSelectOption("loc", url, load, valueId, valueShow, "Location");
+    async    function CreateCountStock() {
+        var loc = $("#loc").val();
+        var id_hdr = $("#id_hdr").val();
+        var url = '././module/RPT_STOCK_COUNT_ITEM_LOCATION_SCAN/data.php?' + $.param({load: "GetItemListInLocation", loc: loc});
+        var result = await(await fetch(url)).json(); // or .json()
+        console.log(result);
+        var ajaxUrl = "././module/RPT_STOCK_COUNT_ITEM_LOCATION_SCAN/data.php";
+        var item_code = [];
+        var Uf_pack = [];
+        var sum_pcs = [];
+        var qty_bundle = [];
+        var qty_pcs = [];
+        for (var i = 0; i < result.length; i++) {
+            item_code.push(result[i].item_code);
+            Uf_pack.push(result[i].Uf_pack);
+            sum_pcs.push(result[i].sum_pcs);
+            if (result[i].Uf_pack == 0) {
+                result[i].Uf_pack = 1;
+            }
+            qty_bundle.push(Math.floor(result[i].sum_pcs / result[i].Uf_pack));
+            qty_pcs.push(result[i].sum_pcs % result[i].Uf_pack);
+        }
+        console.log(item_code)
+        $.ajax({
+            type: 'POST',
+            url: ajaxUrl,
+            dataType: 'json',
+            data: {
+                "load": "CreateCountStockList",
+                "loc": loc,
+                "item_code": item_code,
+                "Uf_pack": Uf_pack,
+                "sum_pcs": sum_pcs,
+                "qty_bundle": qty_bundle,
+                "qty_pcs": qty_pcs,
+            },
+            success: function (data) {
+                $("#id_hdr").val(data);
+                SearchDetail(loc, '', data);
+            },
+            error: function (e) {
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+        return result;
+    }
+
+
+
+    $('#item_code').keypress(function (e) {
+        var key = e.which;
+        if (key == 13) // the enter key code
+        {
+            SearchDetail();
+            $("#item_code").val("");
+            return false;
+        }
+    });
+
+    function SearchDetail(loc, item_code, id_hdr) {
+        var loc = $("#loc").val();
+        var item_code = $("#item_code").val();
+        var id_hdr = $("#id_hdr").val();
+        var ajaxUrl = "././module/RPT_STOCK_COUNT_ITEM_LOCATION_SCAN/data.php";
+        $.ajax({
+            type: 'POST',
+            url: ajaxUrl,
+            dataType: 'json',
+            beforeSend: function () {
+            },
+            data: {
+                "load": "GetCountStockDetail",
+                "loc": loc,
+                "item_code": item_code,
+                "id_hdr": id_hdr
+            },
+            success: function (data) {
+                console.log(data);
+                $("#tblReportDetail").DataTable().clear();
+                $('#tblReportDetail').dataTable({
+                    "createdRow": function (row, data, dataIndex) {
+                        if (data.sum_qty_count_pcs > 0) {
+                            $(row).addClass("info");
+                        }
+                    },
+                    "searching": false,
+                    "scrollX": true,
+                    "aaData": data,
+                    "paging": false,
+                    fixedHeader: true,
+                    destroy: true,
+                    'processing': true,
+                    "columns": [
+                        {
+                            width: 80,
+                            "data": {item_code: "item_code", description: "description"},
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = data.description;
+                                return ret;
+                            }
+                        },
+                        {
+                            width: 20,
+                            "data": "uf_pack",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": {qty_bundle: "qty_bundle", qty_count_bundle: "qty_count_bundle", item_code: "item_code", qty_pcs: "qty_pcs", uf_pack: "uf_pack"},
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = data.qty_bundle;
+                                var ret2 = "<input onclick='$(this).val(``)' onkeyup='calSumQty(`" + data.item_code + "`,`" + data.uf_pack + "`)' style='width:50px' type='number' class='qtycountbundle_" + data.item_code + " text-right' id='qty_count_bundle' value=" + data.qty_count_bundle + " />";
+                                return ret + "<hr>" + ret2;
+                            }
+                        },
+                        {
+                            "data": {qty_count_pcs: "qty_count_pcs", item_code: "item_code", qty_pcs: "qty_pcs", uf_pack: "uf_pack"},
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = data.qty_pcs;
+                                var ret2 = "<input onclick='$(this).val(``)' onkeyup='calSumQty(`" + data.item_code + "`,`" + data.uf_pack + "`)' style='width:50px' type='number' class='qtycountpcs_" + data.item_code + " text-right' id='qty_count_pcs' value=" + data.qty_count_pcs + " />";
+                                return ret + "<hr>" + ret2;
+                            }
+                        },
+                        {
+                            "data": {"sum_qty_pcs": "sum_qty_pcs", item_code: "item_code", sum_qty_count_pcs: "sum_qty_count_pcs"},
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = data.sum_qty_pcs;
+                                var ret2 = "<input class='sumqtycountpcs_" + data.item_code + " text-right' readonly style='width:50px' type='number' id='sum_qty_count_pcs' value=" + data.sum_qty_count_pcs + " >";
+                                return ret + "<hr>" + ret2;
+                            }
+                        },
+                        {
+                            "data": {conv_create_date: "conv_create_date", item_code: "item_code", remark: "remark"},
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = "<input placeholder='note:' class='remark_" + data.item_code + "' style='width:90px' type='text' id='remark' value='" + data.remark + "' >";
+                                var ret2 = "<span style='font-size:9px'>" + data.conv_create_date + "</span>";
+                                return ret2 + "<hr>" + ret;
+                            }
+                        },
+                        {
+                            "data": {id_hdr: "id_hdr", item_code: "item_code", approve_status: "approve_status"},
+                            "className": "text-center align-middle",
+                            "render": function (data, type, row, meta) {
+                                var ret = "";
+                                if (data.approve_status == 0) {
+                                    ret = " <i style='font-size:4vh' class='fa fa-save text-info' onclick='saveCount(`" + data.id_hdr + "`,`" + data.item_code + "`)'></i>";
+                                } else {
+                                    ret = "-";
+                                }
+                                return ret;
+                            }
+                        },
+                    ],
+                    'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                            "<'row'<'col-md-12'tr>>" +
+                            "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                    buttons: [{
+                            extend: 'print',
+                            text: "<i class='fa fa-print'></i>&nbsp;Print",
+                            title: ''
+                        },
+                        {
+                            extend: 'excel',
+                            footer: true,
+                            text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                            title: 'ใบรับมัดจำ detail ' + GetCurrDateTime()
+                        },
+                    ],
+                });
+                $(".panel-body").slideToggle("slow");
+                // ReCalGridAmount();
+            },
+            error: function (e) {
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+    }
+
+    function calSumQty(item_code, uf_pack) {
+        var qtycountbundle = $(".qtycountbundle_" + item_code).val() * uf_pack;
+        var qtycountpcs = $(".qtycountpcs_" + item_code).val();
+        $(".sumqtycountpcs_" + item_code).val(parseInt(qtycountbundle) + parseInt(qtycountpcs));
+    }
+
+    function saveCount(id_hdr, item_code) {
+        var sum_qty_count_pcs = $(".sumqtycountpcs_" + item_code).val();
+        var qty_count_bundle = $(".qtycountbundle_" + item_code).val();
+        var qty_count_pcs = $(".qtycountpcs_" + item_code).val();
+        var remark = $(".remark_" + item_code).val();
+        var ajaxUrl = "././module/RPT_STOCK_COUNT_ITEM_LOCATION_SCAN/data.php";
+        $.ajax({
+            type: 'POST',
+            url: ajaxUrl,
+            dataType: 'json',
+            data: {
+                "load": "UpdateCountStockList",
+                "id_hdr": id_hdr,
+                "item_code": item_code,
+                "sum_qty_count_pcs": sum_qty_count_pcs,
+                "qty_count_bundle": qty_count_bundle,
+                "qty_count_pcs": qty_count_pcs,
+                "remark": remark,
+            },
+            success: function (data) {
+                var loc = $("#loc").val();
+                var item_code = $("#item_code").val();
+
+                window.setTimeout(function () {
+                    $("#modal-alert").fadeTo(0, 500).slideDown(500, function () {
+                        $(this).show();
+                    });
+                }, 100);
+                window.setTimeout(function () {
+                    $("#modal-alert").fadeTo(500, 0).slideUp(500, function () {
+                        $(this).hide();
+                    });
+                }, 1000);
+
+
+
+
+                SearchDetail(loc, item_code)
+            },
+            error: function (e) {
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+        var loc = $("#loc").val();
+        $("#item_code").val("");
+        SearchDetail(loc, "");
+        $("#item_code").focus();
+    }
+
+</script>
+
+

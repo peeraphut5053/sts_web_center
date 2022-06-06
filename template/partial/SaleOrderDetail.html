@@ -1,0 +1,30 @@
+
+<div class='row' {ShowDivStyle}>
+    <table class="table table-bordered table-condensed tabledark " id="tableItemsFromFilter" >
+        <thead>
+            <tr >
+                <th rowspan="2"  align="center" style="width:3%;">#</th>
+                <th  rowspan="2"  align="center" style="width:3%;">SIZE</th>
+                <th  rowspan="2"  align="center" style="width:3%;">THEO WEIGHT(LBS/FT)</th>
+                <th  rowspan="2"  align="center" style="width:3%;">LENGTH(FT)</th>
+                <th  rowspan="2"  align="center" style="width:3%;">CATEGORY</th>     
+                <th  rowspan="2"  align="center" style="width:3%;">SCHEDULE</th>
+                <th  rowspan="2"  align="center" width="5%">PCS PER BNDL</th>
+                <th  colspan="4" >ORDER QUANTITY</th>
+                <th  rowspan="2" align="center" style="width:3%;">{flag_duty} LO ($/MT)</th>
+                <th  rowspan="2" align="center" style="width:3%;">{flag_duty} LO ($/FT)</th>
+                <th  rowspan="2" align="center" style="width:3%;">Ext.Price</th>
+            </tr>
+            <tr>
+                <th  style="width:3%;">BNDLS</th>
+                <th  style="width:3%;">TOTAL PIECES</th>
+                <th  style="width:3%;">{cust_measure}</th>
+                <!--<th  style="width:3%;">NET TONS</th>-->
+                <th  style="width:3%;">M. TONS</th>
+            </tr>
+        </thead>
+        <tbody id="tableItems">
+            {table_list}
+        </tbody>
+    </table>
+</div>

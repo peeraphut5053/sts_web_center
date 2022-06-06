@@ -1,0 +1,212 @@
+<div class="row">
+    <div>
+        <h1>Order Processing</h1>
+    </div> 
+    <!--    <div class="col-lg-2" >   
+            <div class="input-group">
+                <div class="input-group-addon">From Date</div>
+                <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtFromDate">
+            </div>
+        </div>
+        <div class="col-lg-2">   
+            <div class="input-group">
+                <div class="input-group-addon">To date</div>
+                <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtToDate">
+            </div>
+        </div>-->
+    <div class="col-lg-2">   
+        <div class="input-group">
+            <div class="input-group-addon">cust_po</div>
+            <input type="text" class="form-control txt-filter" id="cust_po">
+        </div>
+    </div>
+    <div class="col-lg-2">   
+        <div class="input-group">
+            <div class="input-group-addon">name</div>
+            <input type="text" class="form-control txt-filter" id="name">
+        </div>
+    </div>     
+    <div class="col-lg-2">   
+        <div class="input-group">
+            <div class="input-group-addon">Port</div>
+            <input type="text" class="form-control txt-filter" id="Port">
+        </div>
+    </div>   
+    <div class="col-lg-2">   
+        <button id="btnSearch" class="btn btn-info"><i class="fa fa-searh"></i>&nbsp;ค้นหา</button>
+    </div>
+</div>
+
+<div class="row" id="divReport" >
+    <table class="table table-condensed table-bordered table-striped" id="tblReport" style="width:100%;">
+        <thead>
+            <tr>
+                <th>Customer</th>
+                <th>PO.No</th>  
+                <th>Port</th>
+                <th>Size</th>
+                <th>Spec</th>
+                <th>Grade</th>
+                <th>Schedule</th>
+                <th>Length</th>
+                <th>Type</th>
+                <th>PCS/B'dle</th>
+                <th>B'dle</th>
+                <th>Produced(bundle)</th>
+                <th>Short produced</th>
+                <th>Balance(bundle)</th>
+                <th>Due date</th>
+                <th>End customer</th>
+                <th>Process</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+<script type="text/javascript">
+    $("#txtFromDate,#txtToDate").datepicker({
+        dateFormat: 'yy-mm-dd',
+    });
+    $("#txtFromDate,#txtToDate").val(GetToday());
+    $("#btnSearch").click(function () {
+        var tblReportId = '#tblReport';
+        var btnSearch = '#btnSearch';
+        SearchDataFn(tblReportId, btnSearch, tablecolumsArr, "OrderProcessing Report", "V_WebApp_OrderProcessing");
+    });
+    var tablecolumsArr = [
+        {
+            "data": "cust_name",
+            "render": function (data, type, row) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "cust_po",
+            "className": "text-center",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                return ret;
+            }
+        },
+
+        {
+            "data": "Port",
+            "className": "text-right",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "Size",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "Spec",
+            "render": function (data, type, row) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "Grade",
+            "render": function (data, type, row) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "Schedule",
+            "render": function (data, type, row) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "Length",
+            "render": function (data, type, row) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "TypeEnd",
+            "render": function (data, type, row) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "PcsPerBndl",
+            "className": "text-right",
+            "render": function (data, type, row) {
+                var ret = formatMoney(data);
+                return ret;
+            }
+        },
+        {
+            "data": "BndlOrdered",
+            "render": function (data, type, row) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "BndlProduce",
+            "className": "text-right",
+            "render": function (data, type, row) {
+                var ret = formatMoney(data);
+                return ret;
+            }
+        },
+        {
+            "data": "BalanceBndl",
+            "className": "text-right",
+            "render": function (data, type, row) {
+                var ret = formatMoney(data);
+                return ret;
+            }
+        },
+        {
+            "data": "end_cust_name",
+            "className": "text-right",
+            "render": function (data, type, row) {
+                var ret = formatMoney(data);
+                return ret;
+            }
+        },
+        {
+            "data": "due_date",
+            "className": "text-right",
+            "render": function (data, type, row) {
+                if (data != null) {
+                    d = formatDate(data);
+                } else {
+                    d = '-';
+                }
+                ret = d;
+                return ret;
+
+            }
+        },
+
+        {
+            "data": "end_cust_name",
+            "className": "text-right",
+            "render": function (data, type, row) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "Process",
+            "render": function (data, type, row) {
+                var ret = data;
+                return ret;
+            }
+        },
+    ];
+</script>

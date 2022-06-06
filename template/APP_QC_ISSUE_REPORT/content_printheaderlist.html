@@ -1,0 +1,202 @@
+<script src="js/jquery.loading.min.js" type="text/javascript"></script>
+
+<style>
+    .input-group-addon{
+        width: 20% !important;
+    }
+</style>
+<div class="row">
+    <!--    <div class="col-xs-4" >   
+            <div class="input-group">
+                <div class="input-group-addon">From</div>
+                <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtFromDate">
+            </div>
+        </div>
+        <div class="col-xs-4">   
+            <div class="input-group">
+                <div class="input-group-addon">To</div>
+                <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtToDate">
+            </div>
+        </div>-->
+    <div class="row">
+        <div class="col-xs-6">   
+            <div class="input-group">
+                <div class="input-group-addon">Do No.</div>
+                <input type="text" class="form-control txt-filter" id="do_num">
+            </div>
+        </div>
+        <div class="col-xs-6">   
+            <button id="btnSearchDoHeader" class="btn btn-info"><i class="fa fa-searh"></i>&nbsp;ค้นหา </button>
+            <button id="btnModal" class="btn btn-Success"><i class="fa fa-searh"></i>&nbsp;สร้างเอกสาร</button>
+        </div>
+    </div>
+
+</div>
+
+<div class="row" id="divReport" >
+    <table class="table table-condensed table-bordered table-striped" id="tblReportDoHeader" style="width:100%;">
+        <thead>
+            <tr>
+                <th>Detail</th>
+                <th>image 1</th>  
+                <th>image 2</th>
+                <th></th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+
+<div class="modal" id="ProductModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document" style="width:80%;">
+        <div class="modal-content">
+            <div class="modal-header" style="padding:3px">
+                <h3 style="margin: 0;">Create Document
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color:red;">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </h3>
+            </div>
+            <div class="modal-body" id="BodyModal" >
+                <div class='containner'>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    $("#btnModal").click(function () {
+        var Url = "template/app_tag_photo_gallery/create_document.html";
+        var modalBodyId = "#BodyModal";
+        var modalId = "#ProductModal";
+        $(modalId).modal("show");
+        $(modalBodyId).empty();
+        $(modalBodyId).load(Url);
+    });
+
+    function printList(loc) {
+        window.open("template/app_tag_photo_gallery/print.html?loc=" + loc + " ", "_blank");
+    }
+
+    function loadFile(filePath) {
+        var result = null;
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.open("GET", filePath, false);
+        if (xmlhttp.status == 200) {
+            result = xmlhttp.responseText;
+        }
+        return result;
+    }
+
+
+    function printList(DoHeader_id) {
+        window.open("template/app_tag_photo_gallery/print.html?DoHeader_id=" + DoHeader_id + " ", "_blank");
+    }
+//    $("#txtFromDate,#txtToDate").datepicker({
+//        dateFormat: 'yy-mm-dd',
+//    });
+    $("#txtFromDate,#txtToDate").val(GetToday());
+    $("#btnSearchDoHeader").click(function () {
+        var tblReportId = '#tblReportDoHeader';
+        var btnSearch = '#btnSearchDoHeader';
+        SearchDataFnImgTagDoHeader(tblReportId, btnSearch, tablecolumsArr, "Gallery Report", "GetRowsImgUploadDoHeader");
+    });
+    var tablecolumsArr = [
+        {
+            "data": {DoHeader_id: "DoHeader_id", lot: "lot"},
+            "className": "text-left",
+            "render": function (data, type, row, meta) {
+                var ret = "tag id :" + data.DoHeader_id;
+                return ret;
+            }
+        },
+        {
+            "width": 125,
+            "data": "file_name_1",
+            "className": "text-center",
+            "render": function (data, type, row) {
+
+                var ret = "<img height='120' width='120' src='template/app_tag_photo_gallery/img_DoHeader/" + data + "'/>";
+                return ret;
+            }
+        },
+        {
+            "width": 125,
+            "data": "file_name_2",
+            "className": "text-center",
+            "render": function (data, type, row, meta) {
+
+                var ret = "<img height='120' width='120' src='template/app_tag_photo_gallery/img_DoHeader/" + data + "'/>";
+                return ret;
+            }
+        },
+        {
+            "data": {DoHeader_id: "DoHeader_id"},
+            "className": "text-center",
+            "render": function (data, type, row, meta) {
+                var ret = "<a onclick='printList(`"+data.DoHeader_id+"`)'>สร้างรายงาน</a>";
+                return ret;
+            }
+        }, 
+    ];
+
+
+
+    function SearchDataFnImgTagDoHeader(tblReportId, btnSearch, tablecolumsArr, excelName, postval) {
+        var btnSearch = this.btnSearch;
+        var ModuleName = $("#CurrentPage").val();
+        var urlModule = "././module/" + ModuleName + "/data.php";
+        var datapost = SetDataPostElement(postval);
+
+        var OldHtml = $(btnSearch).html();
+        $.ajax({
+            type: 'POST',
+            url: urlModule,
+            dataType: 'json',
+            beforeSend: function () {
+                $(btnSearch).html("<i class='fa fa-spinner fa-spin'></i>");
+            },
+            data: datapost,
+            success: function (data) {
+                console.log(data)
+                $(tblReportId).DataTable().clear();
+                $(tblReportId).dataTable({
+                    scrollY: 400,
+                    "scrollX": true,
+                    "aaData": data,
+                    "paging": false,
+                    "searching": false,
+                    "initComplete": function (settings, json) {
+                    },
+                    fixedHeader: true,
+                    destroy: true,
+                    'processing': true,
+                    "columns": tablecolumsArr,
+                    'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                            "<'row'<'col-md-12'tr>>" +
+                            "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                    buttons: [
+                        {
+                            extend: 'print',
+                            text: "<i class='fa fa-print'></i>&nbsp;Print",
+                            title: '',
+                        },
+                        {
+                            extend: 'excel',
+                            text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                            title: 'รายงาน ' + excelName + ' ' + GetCurrDateTime()
+                        },
+                    ],
+                });
+                $(btnSearch).html(OldHtml);
+            },
+            error: function (e) {
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+    }
+</script>

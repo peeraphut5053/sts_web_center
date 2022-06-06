@@ -1,0 +1,215 @@
+<div class="row">
+    <div class="row quicksearch col-xs-10" >
+        <div class="row" >
+            <div>
+                <h1> Payment Invoice Checking</h1>
+            </div> 
+        </div> 
+        <div class="row col-xs-12">
+            <div class="col-xs-3" >   
+                <div class="input-group">
+                    <div class="input-group-addon">From date</div>
+                    <input type="text" autocomplete="off"  class="form-control txt-filter" id="InvFromDate">
+                </div>
+            </div>
+            <div class="col-xs-3">   
+                <div class="input-group">
+                    <div class="input-group-addon">To date</div>
+                    <input type="text" autocomplete="off"  class="form-control txt-filter" id="InvToDate">
+                </div>
+            </div>
+            <div class="col-xs-3">   
+                <div class="input-group">
+                    <div class="input-group-addon">inv num</div>
+                    <input type="text" class="form-control txt-filter" id="inv_num">
+                </div>
+            </div>
+            <div class="col-xs-3" >   
+                <div class="input-group">
+                    <div class="input-group-addon">cust num</div>
+                    <input type="text" class="form-control txt-filter" id="cust_num">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+
+            <div class="col-xs-3" >
+                <div class="input-group">
+                    <div class="input-group-addon">date dif [มากกว่า]</div>
+                    <input type="text" class="form-control txt-filter" id="date_dif" value="0">
+                </div>
+            </div>
+
+            <div class="col-xs-3" >   
+                <select class="form-control txt-filter" id="credit_term">
+                    <option value="">---- Credit term ----</option>
+                    <option value="7">7</option>
+                    <option value="15">15</option>
+                    <option value="30">30</option>
+                    <option value="45">45</option>
+                    <option value="60">60</option>
+                    <option value="90">90</option>
+                </select>
+            </div>      
+            <div hidden="hidden" class="col-xs-3" >
+                <select class="form-control txt-filter" id="type">
+                    <option value="">---- Type ----</option>
+                    <option value="P">P</option>
+                    <option value="C">C</option>
+                </select>
+            </div>
+            <div class="col-xs-3" >
+                <button id="btnSearch" class="btn btn-info"><i class="fa fa-searh"></i>&nbsp;ค้นหา</button>
+            </div>
+        </div>
+    </div>
+    <!--    <div class="col-xs-2">
+            <div class="nav-tabs-custom">
+                 Tabs within a box 
+                <ul class="nav nav-tabs pull-right">
+                    <li class="pull-left header"><i class="fa fa-inbox"></i> Job transection</li>
+                </ul>
+                <div class="tab-content no-padding" id="Chart_graph">
+                     Morris chart - Sales 
+                    <div class="chart tab-pane active" id="chart_donut" style="position: relative; height: 120px;">
+    
+                    </div>
+                </div>
+            </div>
+        </div>-->
+</div>
+
+<div class="row" id="divReport" >
+    <table class="table table-condensed table-bordered table-striped" id="tblReport" style="width:100%;">
+        <thead>
+            <tr>
+                <th>inv date</th>
+                <th>inv num</th>
+                <th>cust num</th>
+                <th>name</th>  
+                <th>amount</th>
+                <th>RECEIVE date</th>    
+                <th>Due date</th>    
+                <th>date dif</th>
+                <th>credit_term</th>
+<!--                <th>type</th>-->
+            </tr>
+        </thead>
+    </table>
+</div>
+
+
+<script type="text/javascript" src="js/main.js"></script>
+<script type="text/javascript">
+
+
+    $("#InvFromDate , #InvToDate").datepicker({
+        dateFormat: 'yy-mm-dd',
+    });
+    $("#btnSearch").click(function () {
+        var tblReportId = '#tblReport';
+        var btnSearch = '#btnSearch';
+        SearchDataFooterFn(tblReportId, btnSearch, tablecolumsArr, "payment invoice checking", "ajax");
+        RowFooterBuild(tblReportId);
+    });
+    $("#txtFromDate,#txtToDate").val(GetToday());
+
+    $(".txt-filter").on("keypress", function (e) {
+        if (e.keyCode == 13) {
+            SearchItemNormal();
+            return false; // prevent the button click from happening
+        }
+    });
+
+  
+    function footerCallback(api) {
+        $(api.column(3).footer()).html("<b>TOTAL</b>");
+        ColumnSumVal(4, api)
+    }
+
+    tablecolumsArr = [
+        {
+            "data": "inv_date",
+            width: 120,
+            "className": "text-right",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "inv_num",
+            width: 100,
+            "render": function (data, type, row) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "cust_num",
+            width: 100,
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "name",
+            "className": "text-center",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "inv_amount",
+            "className": "text-right",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                ret = "<span>" + formatMoney(data) + "</span>";
+
+                return ret;
+            }
+        },
+        {
+            "data": "RECEIVEdate",
+            width: 120,
+            "className": "text-right",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "Due_date",
+            width: 120,
+            "className": "text-right",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "datedif",
+            width: 80,
+            "className": "text-right",
+            "render": function (data, type, row) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "credit_term",
+            width: 80,
+            "className": "text-right",
+            "render": function (data, type, row) {
+                var ret = data;
+                return ret;
+            }
+        },
+        
+    ];
+
+
+
+</script>

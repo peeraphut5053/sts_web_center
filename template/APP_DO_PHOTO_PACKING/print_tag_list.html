@@ -1,0 +1,172 @@
+<style>
+    @font-face {
+        font-family: "code39";
+        src: url('../../fonts/Code39Barcode.ttf') format('truetype');
+    }
+    .barcode-tag{
+        font-family: Code39;
+        height: 25px;
+        margin: 15px;
+        text-align: center;
+        padding-bottom: 20px;
+    }
+    /*    .odd{
+            background-color: red !important;
+        }*/
+    .row{
+        width:100%;
+    }
+    #tblReportHeaderDetail_info{
+        visibility: hidden;
+    }
+</style>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<script src="../../bower_components/jquery/dist/jquery.min.js"></script>
+<script defer type="text/javascript" src="../../datatable/DataTables-1.10.18/js/jquery.dataTables.min.js"></script>
+<script defer type="text/javascript" src="../../datatable/DataTables-1.10.18/js/dataTables.bootstrap.min.js"></script>
+<script defer type="text/javascript" src="../../datatable/Buttons-1.5.4/js/dataTables.buttons.min.js"></script>
+<script defer type="text/javascript" src="../../datatable/Buttons-1.5.4/js/buttons.print.min.js"></script>
+<script defer type="text/javascript" src="../../datatable/FixedHeader-3.1.4/js/dataTables.fixedHeader.min.js"></script>
+<script defer type="text/javascript" src="../../datatable/JSZip-2.5.0/jszip.min.js"></script>
+<script defer type="text/javascript" src="../../datatable/Buttons-1.5.4/js/buttons.html5.min.js"></script>
+<script defer type="text/javascript" src="../../datatable/pdfmake-0.1.36/pdfmake.min.js"></script>
+<script defer type="text/javascript" src="../../datatable/pdfmake-0.1.36/vfs_fonts.js"></script>
+<script src="../../js/jquery.loading.min.js" type="text/javascript"></script>
+<script src="../../js/jquery.mask.min.js" type="text/javascript"></script>
+
+
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<script>
+
+</script>
+<html>
+    <head>
+        <title>Print Stock</title>
+        <meta charset="UTF-8">
+        <!--        <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+    </head>
+    <body>
+        <div class="h1" style="text-align: center">Tag Image Report</div>
+        <label>
+            Report Tag Barcode Detail
+        </label>
+
+        <table class="table table-condensed table-bordered table-striped" id="tblReport" style="width:100% !important ;">
+            <thead>
+                <tr>
+                    <th>#id</th>
+                    <th>tag Detail</th>
+                    <th>image 1</th>  
+                    <th>image 2</th>
+                </tr>
+            </thead>
+        </table>
+    </body>
+
+
+
+
+    <script type="text/javascript">
+        var urlParams = new URLSearchParams(location.search);
+        var tag_id = urlParams.get('tag_id');
+        var sts_no = urlParams.get('sts_no');
+        var size = urlParams.get('size');
+        var job = urlParams.get('job');
+        var tblReportId = '#tblReport';
+        var btnSearch = '#btnSearch';
+        var urlModule = "../../module/APP_DO_PHOTO_PACKING/data.php";
+
+        $.ajax({
+            type: 'POST',
+            url: urlModule,
+            dataType: 'json',
+            beforeSend: function () {
+                $(btnSearch).html("<i class='fa fa-spinner fa-spin'></i>");
+            },
+            data: {
+                load: "GetImgTagUpload",
+                tag_id: tag_id,
+                sts_no: sts_no,
+                size_list: size,
+                job: job,
+            },
+            success: function (data) {
+                console.log(data)
+                $(tblReportId).DataTable().clear();
+                $(tblReportId).dataTable({
+                    "scrollX": false,
+                    "aaData": data,
+                    "paging": false,
+                    "searching": false,
+                    "initComplete": function (settings, json) {
+                    },
+                    destroy: true,
+                    'processing': true,
+                    "columns": tablecolumsArr,
+                });
+                $(tblReportId).loading("stop");
+                setTimeout(function () {
+                    window.print();
+                }, 1000);
+
+            },
+            error: function (e) {
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+
+        var tablecolumsArr = [
+            {
+                "width": 10,
+                "data": "id",
+                render: function (data, type, row, meta) {
+                    return meta.row + meta.settings._iDisplayStart + 1;
+                }
+            },
+            {
+                "data": {tag_id: "tag_id", lot: "lot"},
+                "className": "text-left",
+                "render": function (data, type, row, meta) {
+
+                    var ret = "tag id : <b>" + data.tag_id + "</b>" +
+                            "<br>STSPO :" + data.STSPO +
+                            "<br>Uf_TypeEnd :" + data.Uf_TypeEnd +
+                            "<br>Uf_spec :" + data.Uf_spec +
+                            "<br>Uf_NPS :" + data.Uf_NPS +
+                            "<br>Uf_TypeEnd :" + data.Uf_TypeEnd +
+                            "<br>Uf_pack :" + data.Uf_pack +
+                            "<br>sts_no :" + data.sts_no +
+                            "<br>name :" + data.name +
+                            "<br>cust_po :" + data.cust_po +
+                            "<br>city :" + data.city +
+                            "<br>lot :<b>" + data.lot + "</b>";
+                    return ret;
+                }
+            },
+            {
+                "width": 230,
+                "data": "file_name_1",
+                "className": "text-center",
+                "render": function (data, type, row) {
+                    var ret = "<img height='230' width='230' src='APP_DO_PHOTO_PACKING_img/" + data + "'/>";
+                    return ret;
+                }
+            },
+            {
+                "width": 230,
+                "data": "file_name_2",
+                "className": "text-center",
+                "render": function (data, type, row, meta) {
+                    var ret = "<img height='230' width='230' src='APP_DO_PHOTO_PACKING_img/" + data + "'/>";
+                    return ret;
+                }
+            },
+        ];
+    </script>
+</html>

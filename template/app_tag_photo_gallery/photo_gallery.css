@@ -1,0 +1,37 @@
+.btn-file {
+        position: relative;
+        overflow: hidden;
+    }
+    .btn-file input[type=file] {
+        position: absolute;
+        top: 0;
+        right: 0;
+        min-width: 100%;
+        min-height: 100%;
+        font-size: 100px;
+        text-align: right;
+        filter: alpha(opacity=0);
+        opacity: 0;
+        outline: none;
+        background: white;
+        cursor: inherit;
+        display: block;
+    }
+    .square {
+        height: 25vh;
+        width: 100%;
+        /*        opacity: 0.1;*/
+        padding: 10px;
+        border: dashed;
+        border-color: #3c8dbc;
+    }
+    input[type=file]{
+        display: none;
+    }
+    .input-group .input-group-addon{
+        width: 75px !important;
+        font-size: 12px !important;
+    }
+    label{
+        width :100%;
+    }

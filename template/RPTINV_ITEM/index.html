@@ -1,0 +1,1307 @@
+<style>
+    .footer{
+        color: blue ;
+        font-weight: bold;
+    }
+    .col-search {
+        padding-left: 3px;
+        padding-right: 3px;
+    }
+
+    .table thead th {
+        text-align: center;
+    }
+
+    .col-flt-page {
+        padding-top: 10px;
+        font-weight: bold;
+    }
+
+    #tblReport tbody tr td a {
+        cursor: pointer;
+    }
+
+    table.dataTable.fixedHeader-floating,
+    table.dataTable.fixedHeader-locked {
+        background-color: white;
+        margin-top: 50px !important;
+        margin-bottom: 0 !important;
+    }
+
+    .tr-row-cn td {
+        color: red;
+    }
+    .selectize-input{
+        min-height: 80px;
+    }
+    .panel-body{
+        padding-top:5px;
+        padding-bottom:5px;
+    }
+</style>
+
+<div class="row">
+    <h4>รายงานขาย invoice by item</h4>
+</div>
+<input type="hidden" id="SwitchSale" value="{SwitchSale}">
+<!--<div class="container_fluid" style="overflow-x:hidden;width:100%;">-->
+<div class='row'>
+    <div class="panel panel-primary">
+        <div class="panel panel-heading">Filter <a id="btnToggleFilter" class="pull-right" style="color:red;">(ซ่อน / แสดง  filter)</a></div>
+        <div class="panel panel-body" style="padding-left:20px;">
+            <div class="row">
+                <div class="col-12 col-xs-12 col-sm-12 col-md-4 col-lg-4" style="padding-left:30px;">
+                    <div class="row">
+                        Customer Select ( multiple selection )
+                    </div>
+                    <div class='row'>
+                        <select class="form-control" id="selCust" multiple="multiple" style="display:none;height:100px;">
+                            <!--<option value="" selected>ทั้งหมด</option>-->
+                            {customer_data}
+                        </select>
+                    </div>
+                </div>
+                <div class="col-12 col-xs-12 col-sm-12 col-md-8 col-lg-8" style="padding-top:25px;">
+                    <div class="row">
+                        <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3">                            
+                            <div class="input-group">
+                                <div class="input-group-addon">Item</div>
+                                <input type="text" class="form-control txt-filter" id="txtItem">
+                            </div>
+                        </div>
+                        <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3">    
+                            <div class="input-group">
+                                <div class="input-group-addon">ขนาด</div>
+                                <input type="text" class="form-control txt-filter" id="txtSize">
+                            </div>
+                        </div>
+                        <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3">      
+                            <div class="input-group">
+                                <div class="input-group-addon">หนา</div>
+                                <input type="text" class="form-control txt-filter" id="txtThick">
+                            </div>
+                        </div>
+                        <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3">    
+                            <div class="input-group">
+                                <div class="input-group-addon">ยาว</div>
+                                <input type="text" class="form-control txt-filter" id="txtWidth">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3">   
+                            <div class="input-group">
+                                <div class="input-group-addon">From date</div>
+                                <input type="text" class="form-control txt-filter" autocomplete="off"  id="txtFromDate">
+                            </div>
+                        </div>
+                        <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3">   
+                            <div class="input-group">
+                                <div class="input-group-addon">To date</div>
+                                <input type="text" class="form-control txt-filter" autocomplete="off"   id="txtToDate">
+                            </div>
+                        </div>
+                        <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3">   
+                            <div class="input-group">
+                                <div class="input-group-addon">From INV.</div>
+                                <input type="text" class="form-control txt-filter" id="txtFromInv">
+                            </div>
+                        </div>
+                        <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3">   
+                            <div class="input-group">
+                                <div class="input-group-addon">To INV.</div>
+                                <input type="text" class="form-control txt-filter" id="txtToInv">
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-6 col-xs-6 col-sm-6 col-md-10 col-lg-10">   
+                            <h6 style="color:red;">
+                                *เลือกความ หนา-ยาว ตามช่วงให้ใช้ '-' เช่น เลือกตั้งแต่ 1 ถึง 6 ให้ใส่ '1-6' แต่ถ้าหากระบุ 6 ตัวเดียวระบบจะหาข้อมูลที่เป็น 6 เท่านั้น*</h6>
+
+                        </div>
+                        <div class="col-6 col-xs-6 col-sm-6 col-md-2 col-lg-2 text-right">   
+                            <button id="btnSearch" class="btn btn-info"><i class="fa fa-search"></i>&nbsp;ค้นหา</button>  
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="row" id="divReport" style="height:450px;width:100%;overflow-x: auto;">
+    <table class="table table-condensed table-bordered table-striped" id="tblReport" style="width:150%;max-width: 150%;">
+        <thead>
+            <tr>
+                <th>Inv Date</th>
+                <th>Inv Num</th>
+                <th>Customer</th>
+                <th>Item</th>  
+                <th>Description</th>  
+                <th>Unit Weight</th>
+                <th>U_M</th>
+                <th>QTY(PCS)</th>
+                <th>Weight(KG)</th>
+                <th>Price/PCS</th>
+                <th>Price/KG</th>
+                <th>Discount</th>
+                <th>Amount</th>
+                <th>Vat</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <!--        <tbody id="tblReportList">
+                    </tbody>-->
+    </table>
+</div>
+
+<div class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document" style="width:60%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                Customer Search
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color:red;">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="BodyModal">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--</div>-->
+
+<script type="text/javascript" src="js/main.js"></script>
+<script type="text/javascript">
+
+
+
+
+    $(document).ready(function () {
+
+        $('#selCust').selectize({
+            plugins: ['remove_button'],
+            delimiter: ',',
+            persist: false,
+            create: function (input) {
+                return {
+                    value: input,
+                    text: input
+                }
+            }
+        });
+    });
+
+//    $("#txtFromDate,#txtToDate").val(GetToday());
+
+    $("#txtFromDate , #txtToDate").datepicker({
+        dateFormat: 'yy-mm-dd',
+    });
+    $("#btnSearch").click(function () {
+        ReportItemSearch();
+    });
+
+    $(".txt-filter").on("keypress", function (e) {
+        if (e.keyCode == 13) {
+            ReportItemSearch();
+            return false; // prevent the button click from happening
+        }
+    });
+
+    function ReportItemSearch() {
+        SearchItemNormal();
+        SearchItemDeposit();
+
+    }
+
+    function ReCalGridAmount() {
+        var GrandAmount = 0;
+        var GrandVat = 0;
+        var GrandTotal = 0;
+        var i = 0;
+        $("#tblReport tbody tr ").each(function () {
+            GrandAmount += parseFloat($(this).find("td:eq(12)").text().replace(",", "").replace(",", ""));
+            GrandVat += parseFloat($(this).find("td:eq(13)").text().replace(",", "").replace(",", ""));
+            GrandTotal += parseFloat($(this).find("td:eq(14)").text().replace(",", "").replace(",", ""));
+            i++;
+        });
+        var x = 0;
+//        var footline = "<tfoot><tr class='footer'>";
+//        footline += "<td colspan='12' class='text-right'>Total</td>";
+//        footline += "<td class='text-right'>" + addCommas(GrandAmount.toFixed(2)) + "</td>";
+//        footline += "<td class='text-right'>" + addCommas(GrandVat.toFixed(2)) + "</td>";
+//        footline += "<td class='text-right'>" + addCommas(GrandTotal.toFixed(2)) + "</td>";
+//        footline += "</tr></tfoot>";
+        $("#tblReport tfoot tr:eq(0)").find("td:eq(12)").text(addCommas(GrandAmount.toFixed(2)));
+        $("#tblReport tfoot tr:eq(0)").find("td:eq(13)").text(addCommas(GrandVat.toFixed(2)));
+        $("#tblReport tfoot tr:eq(0)").find("td:eq(14)").text(addCommas(GrandTotal.toFixed(2)));
+//        $("#tblReport tfoot tr:eq(0)").append(footline);
+    }
+    function getRootAppPath() {
+        var loc = window.location;
+        var pathName = loc.pathname.substring(0, loc.pathname.lastIndexOf('/') + 1);
+        var PathNames = loc.href.substring(0, loc.href.length - ((loc.pathname + loc.search + loc.hash).length - pathName.length));
+        var Path = PathNames;
+        var Paths = Path.split("/");
+        var Pathss = Path.replace(Paths[3] + '/', '');
+        return Pathss;
+    }
+    function SearchItemNormal() {
+        var Customers = [];
+        Customers = $("#selCust").val();
+
+        $("#tblReport tbody").empty();
+        $("#tblReport tfoot").remove();
+
+        var SwitchSale = $("#SwitchSale").val();
+
+        var OldHtml = $("#btnSearch").html();
+
+        var radioValue = $("input[name='radSearch']:checked").val();
+        var txtItem = $("#txtItem").val();
+        var txtSize = $("#txtSize").val();
+        var txtThick = $("#txtThick").val();
+        var txtWidth = $("#txtWidth").val();
+        var txtFromDate = $("#txtFromDate").val();
+        var txtToDate = $("#txtToDate").val();
+        var txtFromInv = $("#txtFromInv").val();
+        var txtToInv = $("#txtToInv").val();
+
+        if ((txtFromDate == "") && (txtToDate == "") && (txtFromInv == "") && (txtToInv == "")) {
+            $.alert({
+                title: "ไม่ได้ระบุ Filter ",
+                content: "กรุณาระบุ Filter อย่างใดอย่างหนึ่ง เช่น ช่วงวันที ่หรือ ช่วงใบ Inv"
+            });
+
+        } else {
+            if (((txtFromDate != "") && (txtToDate == "")) || ((txtFromDate == "") && (txtToDate != ""))) {
+                $.alert({
+                    title: "",
+                    content: "ระบุช่วงวันต้องระบุทั้งสองช่อง คือ Start date และ End Date"
+                });
+            } else if (((txtFromInv != "") && (txtToInv == "")) || ((txtFromInv == "") && (txtToInv != ""))) {
+                $.alert({
+                    title: "",
+                    content: "ระบุช่วง Inv ต้องระบุทั้งสองช่อง คือ Start Inv และ End Inv"
+                });
+            } else {
+                $.ajax({
+                    type: 'POST',
+                    url: "././module/RPTINV_ITEM/data.php",
+                    //                contentType: "text/plain",
+                    dataType: 'json',
+                    beforeSend: function () {
+                        $("#btnSearch").html("<i class='fa fa-spinner fa-spin'></i>");
+                        $('#tblReport').loading();
+                    },
+                    data: {
+                        "load": "ajax",
+                        "txtItem": txtItem,
+                        "Customers": Customers,
+                        "txtSize": txtSize,
+                        "txtThick": txtThick,
+                        "txtWidth": txtWidth,
+                        "txtFromDate": txtFromDate,
+                        "txtToDate": txtToDate,
+                        "txtFromInv": txtFromInv,
+                        "txtToInv": txtToInv,
+                        "SwitchSale": SwitchSale,
+                    },
+                    success: function (data) {
+
+                        $("#tblReport").DataTable().clear();
+                        var RowFooterBuild = "";
+                        var ColBuild = "";
+                        var ColCount = 15;
+                        var i = 0;
+                        RowFooterBuild = "<tfoot><tr>!!ColBuild!!</tr></tfoot>";
+                        for (i = 1; i <= ColCount; i++) {
+                            ColBuild += "<td></td>";
+                        }
+                        $("#tblReport").append(RowFooterBuild.replace("!!ColBuild!!", ColBuild));
+
+                        $('#tblReport').dataTable({
+                            "aaData": data,
+                            "paging": false,
+                            "searching": false,
+                            "initComplete": function (settings, json) {
+                                ReCalGridAmount();
+                            },
+                            fixedHeader: true,
+                            destroy: true,
+                            'processing': true,
+                            "columns": [
+                                {
+                                    "data": "inv_date_conv",
+                                    "className": "text-center",
+                                    "render": function (data, type, row) {
+                                        var ret = data;
+                                        if (row["inv_num"].substring(0, 2) == "CN") {
+                                            ret = "<span style='color:red;'>" + data + "</span>";
+                                        }
+                                        return ret;
+                                    }
+                                },
+                                {
+                                    "data": "inv_num",
+                                    "render": function (data, type, row) {
+                                        var ret = data;
+                                        if (data.substring(0, 2) == "CN") {
+                                            ret = "<span style='color:red;'>" + data + "</span>";
+                                        }
+                                        return ret;
+                                    }
+                                },
+                                {
+                                    "data": "name",
+                                    "render": function (data, type, row) {
+                                        var ret = data;
+                                        if (row["inv_num"].substring(0, 2) == "CN") {
+                                            ret = "<span style='color:red;'>" + data + "</span>";
+                                        }
+                                        return ret;
+                                    }
+                                },
+                                {
+                                    "data": "item",
+                                    "render": function (data, type, row) {
+                                        var ret = data;
+                                        if (row["inv_num"].substring(0, 2) == "CN") {
+                                            ret = "<span style='color:red;'>" + ret + "</span>";
+                                        }
+                                        return ret;
+                                    }
+                                }
+                                ,
+                                {
+                                    "data": "description",
+                                    "render": function (data, type, row) {
+                                        var ret = data;
+                                        if (data) {
+                                            if (row["inv_num"].substring(0, 2) == "CN") {
+                                                ret = "<span style='color:red;'>" + ret + "</span>";
+                                            }
+                                        } else {
+                                            if (row["inv_num"].substring(0, 2) == "CN") {
+                                                ret = "<span style='color:red;'>" + row["description_2"] + "</span>";
+                                            } else {
+                                                ret = row["description_2"];
+                                            }
+                                        }
+                                        //========= ถ้าเป็น CN ของเดือน 2 (ข้อมูล master ไม่มี )
+                                        if (row["inv_num"].substring(0, 6) == "CN1902") {
+                                            ret = "<span style='color:red;'>" + row["item"] + "</span>";
+                                        }
+                                        return ret;
+                                    }
+                                },
+                                {
+                                    "data": "item_weight",
+                                    "className": "text-right",
+                                    "render": function (data, type, row, meta) {
+                                        var ret = addCommas(parseFloat(data).toFixed(2));
+                                        if (row["inv_num"].substring(0, 2) == "CN") {
+                                            ret = "<span style='color:red;'>" + addCommas(parseFloat(data).toFixed(2)) + "</span>";
+                                        }
+                                        //========= ถ้าเป็น CN ของเดือน 2 (ข้อมูล master ไม่มี )
+                                        if (row["inv_num"].substring(0, 6) == "CN1902") {
+                                            ret = "<span style='color:red;'>0.00</span>";
+                                        }
+                                        //return ret;
+                                        return ret;
+                                    }
+                                }
+                                ,
+                                {
+                                    "data": "um2",
+                                    "className": "text-center",
+                                    "render": function (data, type, row, meta) {
+                                        var ret = data;
+
+                                        if (row["rma_num"]) {
+
+
+                                            if (row["rma_num"].substring(0, 2) == "CN") {//   
+
+                                                if (row["rma_num"]) {
+                                                    if (row["rma_num"].substring(0, 3) == "RMA") {
+                                                        ret = "<span style='color:red;'>" + row["rma_um"] + "</span>";
+                                                    } else {
+                                                        if ((!row["cn_um"]) || (row["cn_um"] == "") || (row["cn_um"] == null)) {
+                                                            ret = "<span style='color:red;'>" + row["um2"] + "</span>";
+
+                                                        } else {
+                                                            ret = "<span style='color:red;'>" + row["um3"] + "</span>";
+                                                        }
+                                                    }
+                                                }
+
+                                            }
+                                        }
+                                        return ret;
+                                    }
+                                },
+                                {
+                                    "data": "QtyPCS",
+                                    "className": "text-right",
+                                    "render": function (data, type, row, meta) {
+                                        var tempData = 0;
+                                        tempData = row["QtyPCS"];
+
+                                        /// ใบมัดจำ ลูก //
+                                        if (row["Uf_Ref_InvNum"]) {
+                                            if (row["um2"] == "KG") {
+                                                tempData = row["QtyKG"];
+                                            } else {
+                                                tempData = row["QtyPCS"];
+                                            }
+                                        }
+                                        var ret = addCommas(parseFloat(tempData).toFixed(2));
+                                        if (row["inv_num"].substring(0, 2) == "CN") {
+                                            var tDataVal = row["QtyPCS"];
+                                            ret = "<span style='color:red;'>" + addCommas(parseFloat(tDataVal).toFixed(2)) + "</span>";
+                                        }
+                                        return ret;
+                                    }
+                                },
+                                {
+                                    "data": "QtyKG",
+                                    "className": "text-right",
+                                    "render": function (data, type, row, meta) {
+                                        var TmpData = 0;//        
+                                        var tempData = 0;
+                                        var ret = "";
+                                        if (row["description_non"]) {
+                                            //======== item non =======//
+                                            if (row["um2"] == "KG") {
+                                                ret = addCommas(parseFloat(row["QtyPCS"]).toFixed(2));
+                                            } else {
+                                                ret = addCommas(parseFloat(data).toFixed(2));
+                                            }
+                                        } else {
+                                            if (row["um2"] == "PCS") {
+                                                ret = row["item_weight"] * row["QtyPCS"];
+                                                ret = addCommas(parseFloat(ret).toFixed(2));
+                                            } else {
+                                                ret = addCommas(parseFloat(row["QtyKG"]).toFixed(2));
+                                            }
+                                        }
+                                        if (row["inv_num"].substring(0, 2) == "CN") {
+                                            var tDataVal = row["QtyKG"];
+                                            if (row["rma_num"]) {
+                                                if (row["rma_num"].substring(0, 3) == "RMA") {
+                                                    tDataVal = row["rma_weight"];
+                                                } else {
+                                                    if (row["um3"] == "KG") {
+                                                        tDataVal = row["cn_qty_kg3"];
+                                                    } else {
+                                                        tDataVal = row["item_weight"] * row["QtyPCS"];
+                                                    }
+                                                    if (tDataVal > 0) {
+                                                        tDataVal = tDataVal * -1;
+                                                    }
+                                                }
+                                            }
+                                            ret = "<span style='color:red;'>" + addCommas(parseFloat(tDataVal).toFixed(2)) + "</span>";
+                                        }
+
+                                        //  ret = "<span style='color:red;'>" +row["rma_num"] + "</span>";
+                                        //========CN เดือน 2 ปี 2019 ไม่มี master data ===========
+//                                        if (row["inv_num"].substring(0, 6) == "CN1902") {
+//                                            if (row["um2"] == "KG") {
+//                                                ret = "<span style='color:red;'>" + addCommas(parseFloat(row["QtyKG"]).toFixed(2)) + "</span>";
+//                                            } else {
+//                                                ret = "<span style='color:red;'>0.00</span>";
+//                                            }
+//
+//                                        }
+                                        return ret;
+                                    }
+                                },
+                                {
+                                    "data": "Price_Um2",
+                                    "className": "text-right",
+                                    "render": function (data, type, row) {
+                                        var ret = addCommas(parseFloat(data).toFixed(2));
+                                        if (row["inv_num"].substring(0, 2) == "CN") {
+                                            if (row["cn_um"] == "KG") {
+                                                ret = "<span style='color:red;'>" + addCommas(parseFloat(row["cn_price_kg"]).toFixed(2)) + "</span>";
+                                            } else {
+                                                ret = "<span style='color:red;'>" + addCommas(parseFloat(row["cn_price_pcs"]).toFixed(2)) + "</span>";
+                                            }
+                                        }
+                                        //========CN เดือน 2 ปี 2019 ไม่มี master data ===========
+                                        if (row["inv_num"].substring(0, 6) == "CN1902") {
+//                                            if (row["um2"] == "KG") {
+//                                                ret = "<span style='color:red;'>" + row["PricePerKG"] + "</span>";
+//                                            } else {
+                                            ret = "<span style='color:red;'>" + addCommas(parseFloat(row["Price_Um2"]).toFixed(2)) + "</span>";
+//                                            }
+                                        }
+                                        return ret;
+                                    }
+                                },
+                                {
+                                    "data": "PricePerKG",
+                                    "className": "text-right",
+                                    "render": function (data, type, row) {
+                                        var ret = "";
+                                        var ttt = 0;
+                                        var TmpAmt = parseFloat(row["QtyPCS"]) * parseFloat(row["Price_Um2"]);
+                                        var TmpWeight = parseFloat(row["item_weight"]) * parseFloat(row["QtyPCS"]);
+                                        var TmpPricePerKG = parseFloat(TmpAmt) / parseFloat(TmpWeight);
+
+
+                                        if (row["description_non"]) {
+                                            //======== item non =======//
+                                            if (row["um2"] == "KG") {
+                                                ret = addCommas(parseFloat(row["Price_Um2"]).toFixed(2));
+                                            }
+                                        } else {
+                                            if (row["item_weight"] <= 0) {
+                                                ret = "0.00";
+                                            } else {
+                                                if (row["um2"] == "KG") {
+
+                                                    ret = addCommas(parseFloat(row["Price_Um2"]).toFixed(2));
+                                                } else {
+                                                    ret = addCommas(parseFloat(TmpPricePerKG).toFixed(2));
+                                                }
+                                            }
+                                        }
+                                        if (row["inv_num"].substring(0, 2) == "CN") {
+                                            ret = "<span style='color:red;'>" + addCommas(parseFloat(row["cn_price_kg"]).toFixed(2)) + "</span>";
+                                            if (row["rma_num"]) {
+                                                if (row["rma_num"].substring(0, 3) == "RMA") {
+                                                    ret = "<span style='color:red;'>" + addCommas(parseFloat(row["rma_priceperkg"]).toFixed(2)) + "</span>";
+                                                }
+                                            }
+//                                            if (row["item_weight"] > 0) {
+//                                                if (row["cn_um"] == "KG") {
+//                                                    ret = row["PricePerKG"];
+//                                                    ret = "<span style='color:red;'>" + addCommas(parseFloat(ret).toFixed(2)) + "</span>";
+//
+//                                                } else {
+//                                                    // console.log(parseFloat(row["unit_weight"]) * parseInt(row["QtyPCS"]));
+//
+//                                                    ttt = (parseFloat(row["QtyPCS"]) * parseFloat(row["cn_price_pcs"])) / (parseFloat(row["cn_qty_kg2"]));
+//
+//                                                    ret = "<span style='color:red;'>" + addCommas(parseFloat(ttt).toFixed(2)) + "</span>";
+//                                                }
+//                                            } else {
+//                                                ret = "<span style='color:red;'>0.00</span>";
+//                                            }
+
+                                        }
+                                        //========CN เดือน 2 ปี 2019 ไม่มี master data ===========
+                                        if (row["inv_num"].substring(0, 6) == "CN1902") {
+//                                            if (row["um2"] == "KG") {
+//                                                ret = "<span style='color:red;'>" + row["PricePerKG"] + "</span>";
+//                                            } else {
+                                            ret = "<span style='color:red;'>" + addCommas(parseFloat(row["Price_Um2"]).toFixed(2)) + "</span>";
+//                                            }
+                                        }
+                                        return ret;
+                                    }
+                                },
+                                {
+                                    "data": "Discount",
+                                    "className": "text-right",
+                                    "render": function (data, type, row, meta) {
+                                        var ret = addCommas(parseFloat(data).toFixed(2));
+                                        if (row["inv_num"].substring(0, 2) == "CN") {
+                                            ret = "<span style='color:red;'>" + addCommas(parseFloat(data).toFixed(2)) + "</span>";
+                                        }
+                                        return ret;
+                                    }
+                                },
+                                {
+                                    ///amt///
+                                    "data": "Discount",
+                                    "className": "text-right",
+                                    "render": function (data, type, row) {
+                                        var amt = 0;
+                                        var clr = "";
+                                        if (row["inv_num"].substring(0, 2) != "CN") {
+                                            clr = "#333";
+                                            if (row["um2"] == "PCS") {
+                                                amt = row["QtyPCS"] * row["Price_Um2"];
+                                            } else {
+                                                amt = row["QtyKG"] * row["PricePerKG"];
+                                            }
+                                        } else
+                                        {
+                                            clr = "#ff0000";
+                                            var cn_um = "";
+                                            if (row["rma_num"]) {
+                                                if ((row["rma_num"].substring(0, 3) == "RMA"))
+                                                {
+                                                    if (row["rma_um"] == "KG") {
+                                                        amt = row["rma_priceperkg"] * row["rma_weight"];
+                                                    } else {
+                                                        amt = row["rma_priceperpcs"] * row["rma_qty"];
+                                                    }
+                                                } else
+                                                {
+                                                    if (row["cn_um"] == "KG") {
+                                                        amt = row["cn_qty_kg2"] * row["cn_price_kg"];
+                                                    } else {
+                                                        amt = row["cn_price_pcs"] * row["QtyPCS"];
+                                                    }
+                                                }
+                                            }
+                                            if (amt > 0) {
+                                                amt = amt * -1;
+                                            }
+                                        }
+                                        /// ใบมัดจำ แม่ //
+                                        if (row["count_ref_inv"] > 0) {
+                                            amt = row["cn_price_pcs"];
+                                        }
+                                        var ret = "";
+
+                                        if (row["description"]) {
+                                            ret = addCommas(parseFloat(amt).toFixed(2));
+                                        } else {
+                                            ret = addCommas(parseFloat(row["Price_Um2"]).toFixed(2));
+                                        }
+
+                                        if (row["description_non"]) {
+                                            //======== item non =======//
+                                            if (row["inv_num"].substring(0, 2) != "CN") {
+                                                if (row["um2"] == "KG") {
+                                                    ret = addCommas(parseFloat(row["Price_Um2"] * row["QtyKG"]).toFixed(2));
+                                                } else {
+                                                    ret = addCommas(parseFloat(row["Price_Um2"] * row["QtyPCS"]).toFixed(2));
+
+                                                }
+                                            }
+                                        } else {
+//                                            if (row["inv_num"].substring(0, 2) != "CN") {
+//                                                if (row["um2"] == "KG") {
+//                                                    ret = addCommas(parseFloat(row["Price_Um2"] * row["QtyKG"]).toFixed(2));
+//                                                } else {
+//                                                    ret = addCommas(parseFloat(row["Price_Um2"] * row["QtyPCS"]).toFixed(2));
+//
+//                                                }
+//                                            }
+//                                            ret = addCommas(parseFloat(row["cn_qty_kg"] * row["cn_price_kg"]).toFixed(2));
+
+                                        }
+
+//                                        if ((row["cn_um"] != "KG") && (row["cn_um"] != "PCS") && (row["cn_um"] != "") && (row["cn_um"] != null)) {
+//                                            ret = addCommas(parseFloat(row["Price_Um2"] * row["QtyPCS"]).toFixed(2));
+//                                        }
+                                        // ============ item โดนลบ หรือ โดนเปลี่ยน ============ ////
+                                        if ((!row["description"]) && (!row["description_non"])) {
+                                            if (row["um2"] == "KG") {
+                                                ret = addCommas(parseFloat(row["Price_Um2"] * row["QtyKG"]).toFixed(2));
+                                            } else {
+                                                ret = addCommas(parseFloat(row["Price_Um2"] * row["QtyPCS"]).toFixed(2));
+
+                                            }
+
+                                        }
+
+                                        ///======================///
+                                        var retColor = "<span style='color:" + clr + ";'>" + ret + "</span>";
+                                        return retColor;
+//                                        if (row["inv_num"].substring(0, 2) == "CN") {
+//                                            var tAmount = 0;
+//                                            if (row["um_for_cn"] == "KG") {
+//                                                tAmount = row["QtyPCS"] * row["cn_price_kg"]
+//                                            } else {
+//                                                tAmount = row["QtyPCS"] * row["cn_price_kg"];
+//                                            }
+//
+//                                            ret = "<span style='color:red;'>" + addCommas(parseFloat(data).toFixed(2)) + "</span>";
+//
+//                                        }
+//                                        return ret;
+                                    }
+                                },
+                                //=========vat ===========
+                                {
+                                    "data": "Discount",
+                                    "className": "text-right",
+                                    "render": function (data, type, row) {
+                                        var amt = 0;
+                                        var vat = 0;
+                                        var clr = "";
+                                        if (row["inv_num"].substring(0, 2) != "CN") {
+                                            clr = "#333";
+                                            if (row["um2"] == "PCS") {
+                                                amt = row["QtyPCS"] * row["Price_Um2"];
+                                            } else {
+                                                amt = row["QtyKG"] * row["PricePerKG"];
+                                            }
+                                        } else {
+                                            clr = "#ff0000";
+//                                            if (row["cn_row_vat"]) {
+//                                                amt = row["cn_row_vat"];
+//                                            } else {
+//
+//                                                if (row["cn_um"] == "KG") {
+//                                                    amt = row["cn_qty_kg"] * row["PricePerKG"];
+//
+//
+//                                                } else {
+//                                                    amt = row["QtyPCS"] * row["cn_price_pcs"];
+//
+//                                                }
+                                            if (row["rma_num"]) {
+                                                if ((row["rma_num"].substring(0, 3) == "RMA")) {
+                                                    if (row["rma_um"] == "KG") {
+                                                        amt = row["rma_priceperkg"] * row["rma_weight"];
+                                                    } else {
+                                                        amt = row["rma_priceperpcs"] * row["rma_qty"];
+                                                    }
+
+                                                } else
+                                                {
+                                                    if (row["cn_um"] == "KG") {
+                                                        amt = row["cn_qty_kg2"] * row["cn_price_kg"];
+                                                    } else {
+                                                        amt = row["cn_price_pcs"] * row["QtyPCS"];
+                                                    }
+                                                }
+                                            }
+                                            if (amt > 0) {
+                                                amt = amt * -1;
+                                            }
+                                        }
+
+
+//                                        }
+
+
+
+                                        if (row["sales_tax"] == 0) {
+                                            vat = 0;
+                                        } else {
+                                            vat = amt * 7 / 100;
+                                        }
+
+                                        /// ใบมัดจำ (แม่) //
+                                        if (row["count_ref_inv"] > 0) {
+                                            amt = row["cn_price_pcs"];
+                                            vat = row["cn_price_pcs"] * 7 / 100;
+                                        }
+                                        /// ใบมัดจำ ลูก ต้องไม่มี vat //
+                                        if (row["Uf_Ref_InvNum"]) {
+                                            vat = 0;
+                                        }
+
+                                        var ret = "";
+                                        if (row["inv_num"].substring(0, 2) != "CN") {
+                                            if (row["description"]) {
+                                                ret = addCommas(parseFloat(vat).toFixed(2));
+                                            } else {
+                                                ret = addCommas(parseFloat("0.00").toFixed(2));
+                                            }
+                                        }
+                                        if (row["description_non"]) {
+                                            //======== item non =======//
+//                                            if (row["inv_num"].substring(0, 2) != "CN") {
+                                            if (row["um2"] == "KG") {
+
+                                                ret = addCommas(parseFloat((row["Price_Um2"] * row["QtyKG"] * 7) / 100).toFixed(2));
+                                            } else {
+                                                if (row["sales_tax"] > 0) {
+                                                    ret = addCommas(parseFloat((row["Price_Um2"] * row["QtyPCS"] * 7) / 100).toFixed(2));
+                                                } else {
+                                                    ret = "0.00";
+                                                }
+                                            }
+//                                            }
+                                        } else {
+                                            if (row["inv_num"].substring(0, 2) != "CN") {
+                                                var getvat = 0
+                                                if (row["um2"] == "KG") {
+//                                                ret = addCommas(parseFloat((row["cn_qty_kg"] * row["cn_price_kg"] * 7) / 100).toFixed(2));
+                                                    ret = addCommas(parseFloat(row["Price_Um2"] * row["QtyKG"] * 7 / 100).toFixed(2));
+                                                } else {
+//                                                ret = addCommas(parseFloat((row["cn_qty_kg"] * row["cn_price_kg"] * 7) / 100).toFixed(2));
+                                                    ret = addCommas(parseFloat(row["Price_Um2"] * row["QtyPCS"] * 7 / 100).toFixed(2));
+                                                }
+                                            }
+
+                                        }
+                                        //======== อย่างอื่น ที่ไม่ใช่ PCS // KG ========
+                                        if (row["inv_num"].substring(0, 2) != "CN") {
+                                            if ((row["cn_um"] != "KG") && (row["cn_um"] != "PCS") && (row["cn_um"] != "") && (row["cn_um"] != null)) {
+                                                ret = addCommas(parseFloat(row["Price_Um2"] * row["QtyPCS"] * 7 / 100).toFixed(2));
+                                            }
+                                        }
+                                        // ============ item โดนลบ หรือ โดนเปลี่ยน ============ ////
+                                        if ((!row["description"]) && (!row["description_non"])) {
+                                            if (row["um2"] == "KG") {
+                                                ret = addCommas(parseFloat((row["Price_Um2"] * row["QtyKG"]) * 7 / 100).toFixed(2));
+                                            } else {
+                                                ret = addCommas(parseFloat((row["Price_Um2"] * row["QtyPCS"]) * 7 / 100).toFixed(2));
+
+                                            }
+
+                                        }
+                                        if (ret == "") {
+                                            ret = addCommas(parseFloat(vat).toFixed(2));
+                                        }
+//                                        if ((row["inv_num"].substring(0, 2) == "CN") && (row["cn_row_vat"])) {
+//                                            ret = addCommas(parseFloat(row["cn_row_vat"]).toFixed(2));
+//                                        }
+//                                        var ret = addCommas(parseFloat(vat).toFixed(2));
+                                        var retColor = "<span style='color:" + clr + ";'>" + ret + "</span>";
+                                        return retColor;
+                                    }
+                                },
+                                //=========total=========//
+                                {
+                                    "data": "Discount",
+                                    "className": "text-right",
+                                    "render": function (data, type, row, meta) {
+                                        var amt = 0;
+                                        var vat = 0;
+                                        var total = 0;
+                                        var clr = "";
+                                        var ret = "";
+                                        if (row["inv_num"].substring(0, 2) != "CN") {
+                                            clr = "#333";
+                                            if (row["um2"] == "PCS") {
+                                                amt = row["QtyPCS"] * row["Price_Um2"];
+                                            } else {
+                                                amt = row["QtyKG"] * row["PricePerKG"];
+                                            }
+                                        } else {
+                                            clr = "#ff0000";
+//                                            if (row["cn_row_total"]) {
+//                                                amt = row["cn_row_total"];
+//                                            } else {
+//                                                if (row["cn_um"] == "KG") {
+//                                                    amt = row["cn_qty_kg"] * row["PricePerKG"];
+//
+//                                                } else {
+//
+//                                                    amt = row["QtyPCS"] * row["cn_price_pcs"];
+//                                                }
+                                            if (row["rma_num"]) {
+                                                if ((row["rma_num"].substring(0, 3) == "RMA")) {
+                                                    if (row["rma_um"] == "KG") {
+                                                        amt = row["rma_priceperkg"] * row["rma_weight"];
+                                                    } else {
+                                                        amt = row["rma_priceperpcs"] * row["rma_qty"];
+                                                    }
+
+                                                } else
+                                                {
+                                                    if (row["cn_um"] == "KG") {
+                                                        amt = row["cn_qty_kg2"] * row["cn_price_kg"];
+                                                    } else {
+                                                        amt = row["cn_price_pcs"] * row["QtyPCS"];
+                                                    }
+                                                }
+                                            }
+                                            if (amt > 0) {
+                                                amt = amt * -1;
+                                            }
+//                                            }
+
+
+                                        }
+                                        if (row["sales_tax"] == 0) {
+                                            vat = 0;
+                                        } else {
+                                            vat = amt * 7 / 100;
+                                        }
+
+
+
+
+                                        /// ใบมัดจำ (แม่) //
+
+                                        if (row["count_ref_inv"] > 0) {
+                                            amt = row["cn_price_pcs"];
+                                            vat = row["cn_price_pcs"] * 7 / 100;
+
+                                        }
+                                        /// ใบมัดจำ ลูก ต้องไม่มี vat //
+                                        if (row["Uf_Ref_InvNum"]) {
+                                            vat = 0;
+                                            amt = 0;
+                                        }
+                                        total = parseFloat(vat) + parseFloat(amt);
+                                        //var ret = addCommas(parseFloat(total).toFixed(2));
+                                        if (row["inv_num"].substring(0, 2) != "CN") {
+                                            if (row["description"]) {
+                                                ret = addCommas(parseFloat(total).toFixed(2));
+                                            } else {
+                                                ret = addCommas(parseFloat(row["Price_Um2"]).toFixed(2));
+                                            }
+                                        }
+                                        if (row["description_non"]) {
+                                            //======== item non =======//
+//                                            if (row["inv_num"].substring(0, 2) != "CN") {
+                                            if (row["um2"] == "KG") {
+                                                ret = addCommas(parseFloat(((row["Price_Um2"] * row["QtyKG"] * 7 / 100) + (row["Price_Um2"] * row["QtyKG"]))).toFixed(2));
+                                            } else {
+                                                if (row["sales_tax"] > 0) {
+                                                    ret = addCommas(parseFloat(((row["Price_Um2"] * row["QtyPCS"] * 7 / 100) + (row["Price_Um2"] * row["QtyPCS"]))).toFixed(2));
+                                                } else {
+                                                    ret = addCommas(parseFloat(row["Price_Um2"] * row["QtyPCS"]).toFixed(2));
+                                                }
+//                                                }
+                                            }
+                                        } else {
+                                            if (row["inv_num"].substring(0, 2) != "CN") {
+//                                            ret = addCommas(parseFloat(((row["cn_qty_kg"] * row["cn_price_kg"] * 7 / 100) + (row["cn_qty_kg"] * row["cn_price_kg"]))).toFixed(2));
+                                                if (row["um2"] == "KG") {
+//                                                ret = addCommas(parseFloat((row["cn_qty_kg"] * row["cn_price_kg"] * 7) / 100).toFixed(2));
+                                                    ret = addCommas(parseFloat((row["Price_Um2"] * row["QtyKG"]) + (row["Price_Um2"] * row["QtyKG"] * 7 / 100)).toFixed(2));
+                                                } else {
+//                                                ret = addCommas(parseFloat((row["cn_qty_kg"] * row["cn_price_kg"] * 7) / 100).toFixed(2));
+                                                    ret = addCommas(parseFloat((row["Price_Um2"] * row["QtyPCS"]) + (row["Price_Um2"] * row["QtyPCS"] * 7 / 100)).toFixed(2));
+                                                }
+                                            }
+                                        }
+
+                                        //======== อย่างอื่น ที่ไม่ใช่ PCS // KG ========
+                                        if (row["inv_num"].substring(0, 2) != "CN") {
+                                            if ((row["cn_um"] != "KG") && (row["cn_um"] != "PCS") && (row["cn_um"] != "") && (row["cn_um"] != null)) {
+                                                ret = addCommas(parseFloat((row["Price_Um2"] * row["QtyPCS"] * 7 / 100) + (row["Price_Um2"] * row["QtyPCS"])).toFixed(2));
+                                            }
+                                        }
+                                        // ============ item โดนลบ หรือ โดนเปลี่ยน ============ ////
+                                        if ((!row["description"]) && (!row["description_non"])) {
+                                            if (row["um2"] == "KG") {
+                                                ret = addCommas(parseFloat(((row["Price_Um2"] * row["QtyKG"]) * 7 / 100) + (row["Price_Um2"] * row["QtyKG"])).toFixed(2));
+                                            } else {
+                                                ret = addCommas(parseFloat(((row["Price_Um2"] * row["QtyPCS"]) * 7 / 100) + (row["Price_Um2"] * row["QtyPCS"])).toFixed(2));
+
+                                            }
+                                        }
+
+                                        if (ret == "") {
+                                            ret = addCommas(parseFloat(total).toFixed(2));
+                                        }
+//                                        if ((row["inv_num"].substring(0, 2) == "CN") && (row["cn_row_vat"])) {
+//                                            ret = addCommas(parseFloat(row["cn_row_total"]).toFixed(2));
+//                                        }
+                                        var retColor = "<span style='color:" + clr + ";'>" + ret + "</span>";
+                                        return retColor;
+                                    }
+                                }
+                            ],
+                            'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                                    "<'row'<'col-md-12'tr>>" +
+                                    "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                            buttons: [{
+                                    extend: 'print',
+                                    text: "<i class='fa fa-print'></i>&nbsp;Print",
+                                    title: ''
+                                },
+                                {
+                                    extend: 'excel',
+                                    footer: true,
+                                    text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                                    title: 'รายงาน inv item ' + GetCurrDateTime()
+                                },
+                            ],
+                            "footerCallback": function (row, data, start, end, display) {
+                                var api = this.api(),
+                                        data;
+                                console.log(data);
+                                // converting to interger to find total
+                                var intVal = function (i) {
+                                    return typeof i === 'string' ?
+                                            i.replace(/[\$,]/g, '') * 1 :
+                                            typeof i === 'number' ?
+                                            i : 0;
+                                };
+
+                                // computing column Total of the complete result
+                                var totalWeight = api
+                                        .column(8)
+                                        .data()
+                                        .reduce(function (a, b) {
+                                            return intVal(a) + intVal(b);
+                                        }, 0);
+                                var totalDisc = api
+                                        .column(11)
+                                        .data()
+                                        .reduce(function (a, b) {
+                                            return intVal(a) + intVal(b);
+                                        }, 0);
+                                var totalAmount = api
+                                        .column(12)
+                                        .data()
+                                        .reduce(function (a, b) {
+                                            return intVal(a) + intVal(b);
+                                        }, 0);
+
+                                var totalVat = api
+                                        .column(13)
+                                        .data()
+                                        .reduce(function (a, b) {
+                                            return intVal(a) + intVal(b);
+                                        }, 0);
+                                var totalNetAmount = api
+                                        .column(14)
+                                        .data()
+                                        .reduce(function (a, b) {
+                                            return intVal(a) + intVal(b);
+                                        }, 0);
+                                $(api.column(7).footer()).html('Total');
+                                $(api.column(8).footer()).html(addCommas(totalWeight.toFixed(2)));
+                                $(api.column(11).footer()).html(addCommas(totalDisc.toFixed(2)));
+                                $(api.column(12).footer()).html(addCommas(totalAmount.toFixed(2)));
+                                $(api.column(13).footer()).html(addCommas(totalVat.toFixed(2)));
+                                $(api.column(14).footer()).html(addCommas(totalNetAmount.toFixed(2)));
+                            },
+                        });
+                        $('#tblReport').loading("stop");
+                        $("#btnSearch").html(OldHtml);
+                        $(".panel-body").slideToggle("slow");
+                        // ReCalGridAmount();
+                    },
+                    error: function (e) {
+                        console.log("There was an error with your request...");
+                        console.log("error: " + JSON.stringify(e));
+                    }
+                });
+            }
+        }
+    }
+    function SearchItemDeposit() {
+        var Customers = [];
+        Customers = $("#selCust").val();
+        $("#tblReport2 tbody").empty();
+        $("#tblReport2 tfoot").remove();
+
+        var OldHtml = $("#btnSearch").html();
+        var txtItem = $("#txtItem").val();
+        var txtSize = $("#txtSize").val();
+        var txtThick = $("#txtThick").val();
+        var txtWidth = $("#txtWidth").val();
+        var txtFromDate = $("#txtFromDate").val();
+        var txtToDate = $("#txtToDate").val();
+        var txtFromInv = $("#txtFromInv").val();
+        var txtToInv = $("#txtToInv").val();
+
+
+        var ajaxUrl = "././module/RPTINV_DEPOSIT/data.php";
+
+        $.ajax({
+            type: 'POST',
+            url: ajaxUrl,
+            //                contentType: "text/plain",
+            dataType: 'json',
+            beforeSend: function () {
+                $("#btnSearch").html("<i class='fa fa-spinner fa-spin'></i>");
+                $('#tblReport').loading();
+            },
+            data: {
+                "load": "ajax",
+                "txtItem": txtItem,
+                "Customers": Customers,
+                "txtSize": txtSize,
+                "txtThick": txtThick,
+                "txtWidth": txtWidth,
+                "txtFromDate": txtFromDate,
+                "txtToDate": txtToDate,
+                "txtFromInv": txtFromInv,
+                "txtToInv": txtToInv,
+            },
+            success: function (data) {
+                $("#tblReport2").DataTable().clear();
+                var RowFooterBuild = "";
+                var ColBuild = "";
+                var ColCount = 16;
+                var i = 0;
+                RowFooterBuild = "<tfoot><tr>!!ColBuild!!</tr></tfoot>";
+                for (i = 1; i <= ColCount; i++) {
+                    ColBuild += "<td></td>";
+                }
+                $("#tblReport2").append(RowFooterBuild.replace("!!ColBuild!!", ColBuild));
+                $('#tblReport2').dataTable({
+                    "aaData": data,
+                    "paging": false,
+                    "initComplete": function (settings, json) {
+                        ReCalGridAmount();
+                    },
+                    fixedHeader: true,
+                    destroy: true,
+                    'processing': true,
+                    "columns": [
+                        {"data": "inv_date_conv", "className": "text-center"},
+                        {"data": "inv_num"},
+                        {"data": "Uf_Ref_InvNum",
+                            "render": function (data, type, row, meta) {
+                                var ret = "<font style='color:red;'>" + data + "</font>";
+                                return ret;
+                            }},
+                        {"data": "name"},
+                        {"data": "item"},
+                        {"data": "description"},
+                        {"data": "item_weight", "className": "text-right", "render": function (data, type, row, meta) {
+                                var ret = addCommas(parseFloat(data).toFixed(2));
+                                return ret;
+                            }},
+                        {"data": "Uf_Inv_Um", "className": "text-center"},
+                        {
+                            "data": "qty_invoiced",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = addCommas(parseFloat(1).toFixed(2));
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "qty_invoiced",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = addCommas(parseFloat(data).toFixed(2));
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "Uf_PricePerKG",
+                            "className": "text-right",
+                            "render": function (data, type, row) {
+                                var TmpAmt = row["amt"] / row["qty_invoiced"];
+                                var ret = addCommas(parseFloat(TmpAmt).toFixed(2));
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "Uf_PricePerKG",
+                            "className": "text-right",
+                            "render": function (data, type, row) {
+                                var TmpAmt = row["amt"] / row["qty_invoiced"];
+                                var ret = addCommas(parseFloat(TmpAmt).toFixed(2));
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "disc",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = addCommas(parseFloat(data).toFixed(2));
+                                return ret;
+                            }
+                        },
+                        {
+                            ///amt///
+                            "data": "amt",
+                            "className": "text-right",
+                            "render": function (data, type, row) {
+                                var ret = addCommas(parseFloat(data).toFixed(2));
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "vat",
+                            "className": "text-right",
+                            "render": function (data, type, row) {
+                                var ret = addCommas(parseFloat(data).toFixed(2));
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "amt_total",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = addCommas(parseFloat(data).toFixed(2));
+                                return ret;
+                            }
+                        }
+                    ],
+                    'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                            "<'row'<'col-md-12'tr>>" +
+                            "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                    buttons: [{
+                            extend: 'print',
+                            text: "<i class='fa fa-print'></i>&nbsp;Print",
+                            title: ''
+                        },
+                        {
+                            extend: 'excel',
+                            footer: true,
+                            text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                            title: 'ใบรับมัดจำ detail ' + GetCurrDateTime()
+                        },
+                    ],
+                    "footerCallback": function (row, data, start, end, display) {
+                        var api = this.api(),
+                                data;
+
+                        // converting to interger to find total
+                        var intVal = function (i) {
+                            return typeof i === 'string' ?
+                                    i.replace(/[\$,]/g, '') * 1 :
+                                    typeof i === 'number' ?
+                                    i : 0;
+                        };
+
+                        // computing column Total of the complete result
+//                                    var totalWeight = api
+//                                            .column(8)
+//                                            .data()
+//                                            .reduce(function (a, b) {
+//                                                return intVal(a) + intVal(b);
+//                                            }, 0);
+//                                    var totalDisc = api
+//                                            .column(11)
+//                                            .data()
+//                                            .reduce(function (a, b) {
+//                                                return intVal(a) + intVal(b);
+//                                            }, 0);
+                        var totalAmount = api
+                                .column(12)
+                                .data()
+                                .reduce(function (a, b) {
+                                    return intVal(a) + intVal(b);
+                                }, 0);
+
+                        var totalVat = api
+                                .column(13)
+                                .data()
+                                .reduce(function (a, b) {
+                                    return intVal(a) + intVal(b);
+                                }, 0);
+                        var totalNetAmount = api
+                                .column(14)
+                                .data()
+                                .reduce(function (a, b) {
+                                    b
+                                    return intVal(a) + intVal(b);
+                                }, 0);
+//                                    $(api.column(7).footer()).html('Total');
+//                                    $(api.column(8).footer()).html(addCommas(totalWeight.toFixed(2)));
+//                                    $(api.column(11).footer()).html(addCommas(totalDisc.toFixed(2)));
+                        $(api.column(13).footer()).html(addCommas(totalAmount.toFixed(2)));
+                        $(api.column(14).footer()).html(addCommas(totalVat.toFixed(2)));
+                        $(api.column(15).footer()).html(addCommas(totalNetAmount.toFixed(2)));
+                    },
+                });
+                $('#tblReport2').loading("stop");
+                $("#btnSearch").html(OldHtml);
+                $(".panel-body").slideToggle("slow");
+                // ReCalGridAmount();
+            },
+            error: function (e) {
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+    }
+    $(".panel-heading").click(function () {
+        $(".panel-body").slideToggle("slow");
+    });
+</script>

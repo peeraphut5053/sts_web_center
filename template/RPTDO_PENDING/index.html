@@ -1,0 +1,164 @@
+<style>
+    .col-search{
+        padding-left:3px;
+        padding-right:3px;
+    }
+    .table thead th{
+        text-align: center;
+    }
+
+    .col-flt-page{
+        padding-top:10px;
+        font-weight: bold;
+    }
+
+    #tblReport tbody tr td a {
+        cursor: pointer ;
+    }
+    table.dataTable.fixedHeader-floating, table.dataTable.fixedHeader-locked {
+        background-color: white;
+        margin-top: 50px !important;
+        margin-bottom: 0 !important;
+    }
+
+    .tr-row-cn td{
+        color :red;
+    }
+</style>
+<div class="row">
+    <h4>รายงาน DO ที่ยังไม่เปิด INV</h4>
+</div>
+<div class='row' >
+
+    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12  col-search">
+        <div class="input-group">
+            <div class="input-group-addon">ค้นหาจากวันที่</div>
+            <select class="form-control" id="selFromDate">
+                <option value="DO_Date" selected>DO Date</option>
+                <option value="INV_Date"  >Ship Date</option>
+            </select>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12  col-search">
+        <div class="input-group">
+            <div class="input-group-addon">From date</div>
+            <input type="text" class="form-control txt-filter" id="txtFromDate">
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12  col-search">
+        <div class="input-group">
+            <div class="input-group-addon">To date</div>
+            <input type="text" class="form-control txt-filter" id="txtToDate">
+        </div>
+    </div>
+    <div class="col-lg-1 col-md-2 col-sm-1 col-xs-6  col-search">
+        <button id="btnSearch" class="btn btn-info"><i class="fa fa-search"></i>&nbsp;ค้นหา</button>
+    </div>
+</div>
+
+<div class="row" id="divReport">
+    <table class="table table-condensed table-bordered table-striped" id="tblReport">
+        <thead>
+            <tr>
+                <th>DO/BOL</th>
+                <th>Customer</th>
+                <th>Name</th>
+                <th>Value</th>
+                <th>Status</th>
+                <th>Date</th>
+                <th>Order</th>                
+                <th>Order<br>Line</th>
+                <th>DateShipped</th>               
+                <th>Shipped<br> U/M</th>   
+                <th>Cust PO</th>   
+                <th>Price</th>  
+                <th>QTY<br>Shipped</th>  
+                <th>QTY<br>Invoiced</th> 
+                <th>Lot</th>  
+                <th>Location</th>         
+            </tr>
+        </thead>
+        <tbody id="tblReportList">
+        </tbody>
+    </table>
+</div>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#selCust').selectize({
+            plugins: ['remove_button'],
+            delimiter: ',',
+            persist: false,
+            create: function (input) {
+                return {
+                    value: input,
+                    text: input
+                }
+            }
+        });
+    });
+
+    $("#txtFromDate,#txtToDate").val(GetToday());
+    $("#txtFromDate , #txtToDate").datepicker({
+        dateFormat: 'yy-mm-dd',
+    });
+    $("#btnSearch").click(function () {
+        ReportItemSearch();
+    });
+
+    $(".txt-filter").on("keypress", function (e) {
+        if (e.keyCode == 13) {
+            ReportItemSearch();
+            return false; // prevent the button click from happening
+        }
+    });
+    function ReportItemSearch() {
+        var oldHtmlBtn = $("#btnSearch").html();
+        $('#tblReport').loading();
+        $("#btnSearch").html("<i class='fa fa-spinner fa-spin'></i>");
+
+        var txtFromDate = $("#txtFromDate").val();
+        var txtToDate = $("#txtToDate").val();
+        var selFromDate = $("#selFromDate").val();
+
+        if ((txtFromDate == "") || (txtToDate == "")) {
+            $.alert("Please select date");
+        } else {
+            $("#tblReportList").load("././module/RPTDO_PENDING/data.php", {
+                "load": "ajax",
+                "selFromDate": selFromDate,
+                "txtFromDate": txtFromDate,
+                "txtToDate": txtToDate,
+            }, function () {
+                $("#btnSearch").html(oldHtmlBtn);
+                $('#tblReport').DataTable({
+                    searching: false,
+                    fixedHeader: true,
+                    retrieve: true,
+                    "pageLength": 999999999,
+                    'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'>>" +
+                            "<'row'<'col-md-12'tr>>" +
+                            "<'row'<'col-md-5'><'col-sm-7'>>",
+                    buttons: [
+                        {
+                            extend: 'print',
+                            text: "<i class='fa fa-print'></i>&nbsp;Print",
+                            title: ''
+                        },
+                        {
+                            extend: 'excel',
+                            text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                            title: ''
+                        },
+                    ]
+                });
+                var getAllRows = $(".table tbody tr").length;
+                $(".col-flt-page").text("จำนวนทั้งหมด : " + getAllRows.toString());
+                $('#tblReport').loading("stop");
+            });
+        }
+
+    }
+
+</script>

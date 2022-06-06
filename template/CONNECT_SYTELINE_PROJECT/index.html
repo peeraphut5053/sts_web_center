@@ -1,0 +1,78 @@
+<style>
+    .col-search{
+        padding-left:3px;
+        padding-right:3px;
+    }
+    .table thead th{
+        text-align: center;
+    }
+
+    .col-flt-page{
+        padding-top:10px;
+        font-weight: bold;
+    }
+
+    #tblReport tbody tr td a {
+        cursor: pointer ;
+    }
+    table.dataTable.fixedHeader-floating, table.dataTable.fixedHeader-locked {
+        background-color: white;
+        margin-top: 50px !important;
+        margin-bottom: 0 !important;
+    }
+    .dataTables_paginate .paginate_button {
+        padding: 0.0em 0em !important;
+    }
+    .tr-row-cn td{
+        color :red;
+    }
+    .loading-overlay-content{
+        z-index: 999999999;
+    }
+    .modal-body{
+        height: 600px;
+    }
+</style>
+<div class="container">
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        var InitLoading = "<div class='row text-center'><h1><i class='fa fa-spinner fa-spin'></i><h1><h3>loading</h3></div>";
+        var modalBodyId = "#modalBody";
+        var modalId = "#UserModal";
+        var modalHeadId = "#lblModalHead";
+        loadData();
+        function loadData() {
+            $.ajax({
+                type: 'GET',
+                url: 'http://localhost:88/webservice/demo.php',
+                contentType: "text/plain",
+                dataType: 'json',
+                beforeSend: function () {
+                    // $("#btnSearch").html("<i class='fa fa-spinner fa-spin'>");
+                },
+                data: {
+                    //load: 'GetData',
+                    //                txtCerDate: txtCerDate,
+                },
+                success: function (data) {
+                    let jsonObject = JSON.parse(data);
+                    console.log(jsonObject);
+
+                },
+                error: function (e) {
+                    console.log("There was an error with your request...");
+                    console.log("error: " + JSON.stringify(e));
+                }
+            });
+        }
+
+//                url: 'http://localhost:88/sts_web_center_new/template/CONNECT_SYTELINE_PROJECT/newjson.json',
+//                //url: 'http://localhost:85/api/STS_User/',
+//                url: 'http://localhost:88/webservice/demo.php',
+
+
+
+
+    </script>

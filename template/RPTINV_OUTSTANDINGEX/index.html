@@ -1,0 +1,275 @@
+
+<div class="h1 center-block">รายงานค้างส่งต่างประเทศ</div>
+
+<div >
+    <div class="row">
+        <div class="col-lg-3" >   
+            <div class="input-group">
+                <div class="input-group-addon">From date</div>
+                <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtFromDate_start">
+            </div>
+        </div>
+        <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3">   
+            <div class="input-group">
+                <div class="input-group-addon">To date</div>
+                <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtFromDate_end">
+            </div>
+        </div>
+        <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-2">   
+            <div class="input-group">
+                <div class="input-group-addon">Co number start</div>
+                <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtFromCoNum_start" >
+            </div>
+        </div>
+        <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-2">   
+            <div class="input-group">
+                <div class="input-group-addon">Co number end</div>
+                <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtFromCoNum_end">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 col-xs-12 col-sm-12 col-md-6 col-lg-3">   
+            <div class="input-group">
+                <div class="input-group-addon">cus number/ Name</div>
+                <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtFromCusnumOrName">
+            </div>
+        </div>
+
+
+        <div class="col-12 col-xs-12 col-sm-12 col-md-6 col-lg-3">   
+            <div class="input-group">
+                <div class="input-group-addon">Item or description</div>
+                <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtFromItemOrDes">
+            </div>
+        </div>
+
+        <div class="col-12 col-xs-12 col-sm-12 col-md-6 col-lg-2">   
+            <div class="input-group">
+                <div class="input-group-addon">City</div>
+                <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtCity">
+            </div>
+        </div>
+
+        <div class="col-12 col-xs-12 col-sm-12 col-md-6 col-lg-2">   
+            <div class="input-group">
+                <div class="input-group-addon">customer po</div>
+                <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtcustomerpo">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 col-xs-12 col-sm-12 col-md-6 col-lg-2" >   
+                <div class="input-group">
+                    <button style="align:right" id="btn_search" class="btn btn-info"><i class="fa fa-search"></i>&nbsp;ค้นหา</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<table class="table table-condensed table-bordered table-striped" id="tblCustReport" >
+    <thead>
+        <tr>
+            <th>order date</th>
+            <th>due days</th>
+            <th>co number</th>
+            <th>co line</th>
+            <th>customer po</th>
+            <th>customer number</th>
+            <th>name</th>
+            <th>item</th>
+            <th>description</th>
+            <th>city</th>
+            <th>qty order</th>
+            <th>qty shipped</th>
+            <th>qty pending</th>
+            <th>due date</th>
+            <th>kg/pcs</th>
+            <th>PricePerKG</th>
+            <th>Uf_pack</th>
+        </tr>
+    </thead>
+</table>
+<script>
+    $("#txtFromDate_start , #txtFromDate_end").datepicker({
+        dateFormat: 'yy-mm-dd',
+    });
+
+
+    $("#btn_search").click(function () {
+        var keyword = $("#search").val();
+        var txtFromDate_start = $('#txtFromDate_start').val();
+        var txtFromDate_end = $('#txtFromDate_end').val();
+        var txtFromCoNum_start = $('#txtFromCoNum_start').val();
+        var txtFromCoNum_end = $('#txtFromCoNum_end').val();
+        var txtFromCusnumOrName = $('#txtFromCusnumOrName').val();
+        var txtFromItemOrDes = $('#txtFromItemOrDes').val();
+        var txtCity = $('#txtCity').val();
+        var txtcustomerpo = $('#txtcustomerpo').val();
+
+        getdata(keyword, txtFromDate_start, txtFromDate_end, txtFromCoNum_start, txtFromCoNum_end, txtFromCusnumOrName, txtFromItemOrDes, txtCity, txtcustomerpo);
+    });
+
+    function getdata(keyword, txtFromDate_start, txtFromDate_end, txtFromCoNum_start, txtFromCoNum_end, txtFromCusnumOrName, txtFromItemOrDes, txtCity, txtcustomerpo) {
+        var TableId = "#tblCustReport";
+        $.ajax({
+            type: 'POST',
+            url: "././module/RPTINV_OUTSTANDINGEX/data.php",
+            dataType: 'json',
+            data: {
+                "load": "ajax",
+                "keyword": keyword,
+                "txtFromDate_start": txtFromDate_start,
+                "txtFromDate_end": txtFromDate_end,
+                "txtFromCoNum_start": txtFromCoNum_start,
+                "txtFromCoNum_end": txtFromCoNum_end,
+                "txtFromCusnumOrName": txtFromCusnumOrName,
+                "txtFromItemOrDes": txtFromItemOrDes,
+                "txtCity": txtCity,
+                "txtcustomerpo": txtcustomerpo
+            },
+            success: function (data) {
+                console.log("data")
+                console.log(data)
+                $(TableId).DataTable().clear();
+                var RowFooterBuild = "";
+                var ColBuild = "";
+                var ColCount = 10;
+                var i = 0;
+                for (i = 1; i <= ColCount; i++) {
+                    ColBuild += "<td></td>";
+                }
+                $(TableId).append(RowFooterBuild.replace("!!ColBuild!!", ColBuild));
+
+                $(TableId).dataTable({
+                    "aaData": data,
+                    "paging": false,
+                    "searching": false,
+                    "initComplete": function (settings, json) {
+                        // ReCalGridAmount();
+                    },
+                    fixedHeader: true,
+                    destroy: true,
+                    'processing': true,
+                    "columns": [
+                        {
+                            "data": "order_date",
+                        },
+                        {
+                            "data": "dateDUE",
+                        },
+                        {
+                            "data": "co_num",
+                        },
+                        {
+                            "data": "co_line",
+                        },
+                        {
+                            "data": "cust_po",
+                        },
+                        {
+                            "data": "cust_num",
+                        },
+                        {
+                            "data": "name",
+                        },
+                        {
+                            "data": "item",
+                        },
+                        {
+                            "data": "description",
+                        },
+                        {
+                            "data": "city",
+                        },
+                        {
+                            "data": "qty_order",
+                            "className": "text-right doc_no",
+                            "render": function (data, type, row) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "qty_shipped",
+                            "className": "text-right doc_no",
+                            "render": function (data, type, row) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "qty_pending",
+                            "className": "text-right doc_no",
+                            "render": function (data, type, row) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+
+                        {
+                            "data": "due_date_conv",
+                            "className": "text-left doc_no",
+                            "render": function (data, type, row) {
+                                var ret = data.substring(0, 10);
+                                return ret;
+                            },
+                        },
+                        {
+                            "data": "unit_weight",
+                            "className": "text-right doc_no",
+                            "render": function (data, type, row) {
+                                var ret = data;
+                                return ret;
+                            },
+                        },
+                        {
+                            "data": "Uf_PricePerKG",
+                            "className": "text-right doc_no",
+                            "render": function (data, type, row) {
+                                var ret = data;
+                                return ret;
+                            },
+                        },
+                        {
+                            "data": "Uf_pack",
+                            "className": "text-right doc_no",
+                            "render": function (data, type, row) {
+                                var ret = data;
+                                return ret;
+                            },
+                        },
+                    ],
+                    'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                            "<'row'<'col-md-12'tr>>" +
+                            "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                    buttons: [{
+                            extend: 'print',
+                            text: "<i class='fa fa-print'></i>&nbsp;Print",
+                            title: ''
+                        },
+                        {
+                            extend: 'excel',
+                            footer: true,
+                            text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                            title: 'รายงาน inv item ' + GetCurrDateTime()
+                        },
+                    ],
+                });
+                $(TableId).loading("stop");
+
+
+                //  Pace.start();
+
+            },
+            error: function (e) {
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+
+    }
+</script>
+
+

@@ -1,0 +1,53 @@
+<div class="row">
+    <div class="col-md-4 col-sm-4 col-lg-4 col-4 text-right col-label">
+        Search
+    </div>
+    <div class="col-md-8 col-sm-8 col-lg-8 col-8">
+
+        <div class="input-group">
+            <input class="form-control input-tag" name="txtSearch" id="txtSearch">
+            <a href="#" class="input-group-addon" id="btnSearch">
+                <i  class="fa fa-search"></i>
+
+            </a>
+        </div>
+
+    </div>
+
+</div>
+<div class="row">
+    <table class="table" id="tableContent">
+        <thead>
+            <tr> <th> Select </th>
+                <th> # </th>
+                <th> Tag </th>
+                <th> Description </th>
+                <th> QTY  </th>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+</div>
+
+<script type="text/javascript">
+    $("a[id^= 'selectToMain']").click(function () {
+     
+        $("#inputTag").val($(this).attr("data-tag"));
+        $("#ManualS").dialog("close");
+    });
+
+    $("#btnSearch").click(function () {
+        var txtSearch = $("#txtSearch").val();
+//        alert(txtSearch);
+        $.post("./module/ajax/data_tag.php", {"txtSearch": txtSearch}, function (data) {
+            $("#tableContent tbody").empty();
+            $("#tableContent tbody").append(data);
+        }, 'html');
+    });
+    function Select(ids){
+          $("#inputTag").val(ids);
+        $("#ManualS").dialog("close");
+    }
+</script>

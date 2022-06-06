@@ -1,0 +1,216 @@
+<style>
+    table.dataTable thead th, table.dataTable tbody td {
+        padding-left:2px;
+        padding-right:2px;
+        text-align: center;
+    }
+    /* Tooltip container */
+    .tooltip {
+        position: relative;
+        display: inline-block;
+        opacity: 1; 
+        border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+    }
+
+    /* Tooltip text */
+    .tooltip .tooltiptext {
+        visibility: hidden;
+        width: 120px;
+        background-color: black;
+        color: #fff;
+        text-align: center;
+        padding: 5px 0;
+        border-radius: 6px;
+
+        /* Position the tooltip text - see examples below! */
+        position: absolute;
+        z-index: 1;
+    }
+
+    /* Show the tooltip text when you mouse over the tooltip container */
+    .tooltip:hover .tooltiptext {
+        visibility: visible;
+    }
+
+    .tooltip .tooltiptext {
+        top: -5px;
+        right: 105%; 
+    }
+    .tooltip .tooltiptext::after {
+        content: " ";
+        position: absolute;
+        top: 50%;
+        left: 100%; /* To the right of the tooltip */
+        margin-top: -5px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: transparent transparent transparent black;
+    }
+    .ResultBox1{
+        width:100px;
+        padding-left:10px;
+        border-radius:5px;
+        padding-top:5px;
+        padding-bottom:5px;
+        padding-right:10px;
+        background-color:#098e5c;
+        color:#FFFFFF;
+        border:none;
+    }
+    .ResultBox2{
+        width:100px;
+        border-radius:5px;
+        padding-top:5px;
+        padding-bottom:5px;
+        padding-left:10px;
+        padding-right:10px;
+        background-color:#e51515;
+        color:#FFFFFF;
+        border:none;
+    }
+</style>
+<div class="row" style="border-bottom:solid 1px #e8e8e8;">
+    <div class="col-md-6 text-left">
+        <h4 style="padding-left:20px;"> WeightList</h4>
+    </div>
+    <div class="col-md-6 text-right" >
+        <!--<a class="btn btn-info" href="?WL/transfer" id="btnTransfer">Data transfer</a>-->
+        <a class="btn btn-success" href="module/WL/excel_receive.php"  id="btnTransfer"><i class='fa fa-truck'></i>&nbsp;รับเหล็กม้วน (excel)</a>
+        <a class="btn btn-info" href="?WL/transfer"  id="btnTransfer"><i class='fa fa-upload'></i>&nbsp;Transfer To New DB</a>
+        <a class="btn btn-danger"  href="?WL/delete" id="btnTransfer"><i class='fa fa-trash'></i>&nbsp;ลบข้อมูล </a>
+        <!--<a id="btnTransfer">รับเหล็กม้วน (excel)</a>-->
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2">
+        <div class="input-group">
+            <div class="input-group-addon">Start</div>
+            <input type="text" class="form-control" id="StartDate">            
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="input-group">
+            <div class="input-group-addon">End</div>
+            <input type="text" class="form-control" id="EndDate">            
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="input-group">
+            <div class="input-group-addon">Date type</div>
+            <select class="form-control" id="selDateType">                
+                <option value="P">po_date</option>
+                <option value="I">i_date</option>
+                <option value="U">u_date</option>
+            </select>   
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="input-group">
+            <div class="input-group-addon">Transfer</div>
+            <select class="form-control" id="selTransfer">
+                <option value="A">All</option>
+                <option value="N">Not Transfer</option>
+                <option value="T">Transfer</option>
+            </select>   
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="input-group">
+            <div class="input-group-addon">Server</div>
+            <select class="form-control" id="selDB">
+                <option value="N">New(SqlServer)</option>
+                <option value="O">Old(MySql)</option>
+
+            </select>   
+        </div>
+    </div>
+    <div class="col-md-2">
+        <button OnClick="Search();" class="btn btn-info" id="btnSearch"><i class="fa fa-search"></i>&nbsp;</button>
+        <label id='TotalRows'></label>
+        <!--<a OnCLick="ClearData();" id="clearData"><i class='fa fa-trash'></i></a>-->
+
+    </div>
+</div>
+
+
+<table id="tableWL" class="table table-striped table-condensed">
+    <thead>
+        <tr>
+
+            <th>sts_no</th>
+            <th>sno</th>
+            <th>po_date</th>
+            <th>i_date</th>
+            <th>u_date</th>
+            <th>c_no</th>
+            <th>h_no</th>
+            <th>น.น.</th>
+            <th>น.น.จริง</th>
+            <th >กว้างxหนา</th>
+            <th>กว้างxหนา(วัดได้)</th>
+            <th>Pass</th>
+            <th><i class="fa fa-upload"></i></th>
+            <th><i class="fa fa-eye"></i></th>
+            <th><i class="fa fa-edit"></i></th>
+        </tr>
+    </thead>
+    <tbody id="tBody">
+    </tbody>
+</table>
+<script type="text/javascript">
+
+    function Search() {
+        var OldHtml = $("#btnSearch").html();
+        var Loading = "<i class='fa fa-spinner fa-spin'></i>";
+        var StartDate = $("#StartDate").val();
+        var EndDate = $("#EndDate").val();
+        var isTransfer = $("#selTransfer").val();
+        var selDateType = $("#selDateType").val();
+        var selDB = $("#selDB").val();
+        if ((StartDate == "") || (EndDate == "")) {
+            $.alert({
+                title: "!!",
+                content: "Please Select Start + End Date",
+            });
+        } else {
+            $("#btnSearch").html(Loading);
+            $("#tBody").load("././module/WL/data.php", {
+                'load': 'ajax',
+                'StartDate': StartDate,
+                'EndDate': EndDate,
+                'isTransfer': isTransfer,
+                'selDateType': selDateType,
+                'selDB': selDB
+            }, function () {
+
+                $('#tableWL').DataTable({
+                    searching: false,
+                    fixedHeader: true,
+                    retrieve: true,
+                    "pageLength": 999999999,
+                    'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'>>" +
+                            "<'row'<'col-md-12'tr>>" +
+                            "<'row'<'col-md-5'><'col-sm-7'>>",
+                    buttons: [
+                        {
+                            extend: 'print',
+                            text: "<i class='fa fa-print'></i>&nbsp;Print",
+                            title: ''
+                        },
+                        {
+                            extend: 'excel',
+                            text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                            title: ''
+                        },
+                    ]
+                });
+                $("#btnSearch").html(OldHtml);
+                $("#TotalRows").html($("td[id^='StsNo_']").length + " Rows found");
+            });
+        }
+    }
+
+    $("#StartDate,#EndDate").datepicker({
+        dateFormat: 'yy-mm-dd',
+    });
+</script>

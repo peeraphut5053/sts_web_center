@@ -1,0 +1,842 @@
+<style>
+    .headingTable {
+        background-color: #cccccc;
+        text-align: center;
+        vertical-align: middle;
+    }
+    #ReaderExcel table  {
+        border-bottom: solid 1px #cdcdcd;
+    }
+    /*item*/
+    #ReaderExcel table  td:nth-child(1){
+        width:25%;
+        text-align: left;
+        vertical-align: middle;
+    }
+    /*nps*/
+    #ReaderExcel table  td:nth-child(2){
+        width:5%;
+        text-align: right;
+        vertical-align: middle;
+    }
+    /*od*/
+    #ReaderExcel table  td:nth-child(3){
+        width:5%;
+        text-align: right;
+        vertical-align: middle;
+    }
+    /*tw*/
+    #ReaderExcel table  td:nth-child(4){
+        width:5%;
+        text-align: right;
+        vertical-align: middle;
+    }
+    /*len*/
+    #ReaderExcel table  td:nth-child(5){
+        width:5%;
+        text-align: right;
+        vertical-align: middle;
+    }
+    /*type / cate*/
+    #ReaderExcel table  td:nth-child(6){
+        width:5%;
+        text-align: center;
+        vertical-align: middle;
+    }
+    /*sched*/
+    #ReaderExcel table  td:nth-child(7){
+        width:7%;
+        text-align: right;
+        vertical-align: middle;
+    }
+    /*bndl*/
+    #ReaderExcel table  td:nth-child(8){
+        width:5%;
+        text-align: right;
+        vertical-align: middle;
+    }
+    #ReaderExcel table  td:nth-child(9), 
+    #ReaderExcel table  td:nth-child(10),
+    #ReaderExcel table  td:nth-child(11), 
+    #ReaderExcel table  td:nth-child(12),
+    #ReaderExcel table  td:nth-child(13),
+    #ReaderExcel table  td:nth-child(14),
+    #ReaderExcel table  td:nth-child(15),
+    #ReaderExcel table  td:nth-child(16)
+    {
+        text-align: right;
+        vertical-align: middle;
+    }
+    .hideEle{
+        display:none;
+    }
+</style>
+<div class="row ">
+
+    <div class="col-md-2 text-right">
+
+    </div>
+    <div class="col-md-4 text-right">
+        Mode Import : 
+    </div>
+    <div class="col-md-6">
+        <label id='lblImportMode'></label>
+        <input type="hidden" id='use_form' value=''  />
+    </div>
+</div>
+<div class="row ">
+    <div class="col-md-1 text-right">
+        <!--FORM :--> 
+    </div>
+    <div class="col-md-1 text-right">
+        <input type="hidden" id="import_form" value="{form}"  >
+
+    </div>
+    <div class="col-md-4 text-right">
+        Select Excel file : 
+    </div>
+    <div class="col-md-6">
+        <input type="file" id="files" accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+    </div>
+</div>
+<div class="row " id="rowSelectSheet">
+    <div class="col-md-2 text-right">
+    </div>
+    <div class="col-md-4 text-right">
+        Select Sheet : 
+    </div>
+    <div class="col-md-4">
+        <select class='form-control' onchange="SelectExcel();" id='sheet_name'>
+            <option value="">... Please select ...</option>
+        </select>
+        <!--<input type="text" id="sheet_name" class="form-control" value="Sheet1"  />-->
+    </div>
+    <div class="col-md-2 text-left">
+        <!--<a id='selectExcel' OnClick='SelectExcel();' class='btn btn-info'><i class='fa fa-chevron-circle-down'></i>&nbsp; Select Excel</a>-->
+    </div>
+</div>
+<div class="row " id="rowSelectPO">
+    <div class="col-md-2 text-right">
+    </div>
+    <div class="col-md-4 text-right">
+        Select PO : 
+    </div>
+    <div class="col-md-4">
+        <select class='form-control' onchange="SelectPO();" id='select_po'>
+            <option value="">... Please select ...</option>
+        </select>
+        <!--<input type="text" id="sheet_name" class="form-control" value="Sheet1"  />-->
+    </div>
+    <div class="col-md-2 text-left">
+        <!--<a id='selectExcel' OnClick='SelectExcel();' class='btn btn-info'><i class='fa fa-chevron-circle-down'></i>&nbsp; Select Excel</a>-->
+    </div>
+</div>
+<div  id="ReaderExcel" style="height:400px;overflow-y:auto;">
+</div>
+<div class="row text-center" >
+    <button class="btn btn-warning" id="clearExcelImport">Clear</button>
+    <button class="btn btn-success" id="importToMainTable">Import to table</button>
+</div>
+<input type="hidden" id="tmpXlsFile">
+<input type="hidden" id="tmpXlsSheet">
+<input type="hidden" id="tmpPoStart">
+<input type="hidden" id="tmpPoEnd">
+<script type="text/javascript">
+    var force_form = $("#hdfForceForm").val();
+    var cust_measure = $("#cust_measure").val();
+    var headingTable = "<tr >\n\
+                                <td class='headingTable'>Item / Size</td>\n\
+                                <td class='headingTable'>OD</td>\n\
+                                <td class='headingTable'>Weight</td>\n\
+                                <td class='headingTable'>Length</td>\n\
+                                <td class='headingTable'>Category</td>\n\
+                                <td class='headingTable'>SCHED</td>\n\
+                                <td class='headingTable'>PCS PER BNDL</td>\n\
+                                <td class='headingTable'>BNDLS</td>\n\
+                                <td class='headingTable'>PIECES</td>\n\
+                                <td class='headingTable'>" + cust_measure + "</td>\n\
+                                <td class='headingTable'>Net TONS</td>\n\
+                                <td class='headingTable'>M.TONS</td>\n\
+                                <td class='headingTable'>$/MT</td>\n\
+                                <td class='headingTable'>$/FT</td>\n\
+                                <td class='headingTable'>Ext.Price</td>\n\
+                                </tr>";
+    var headingTableRandR = "<tr >\n\
+                                <td class='headingTable' style='width:50px;'>NO</td>\n\
+                                <td class='headingTable'>SIZE</td>\n\
+                                <td class='headingTable'>TYPE</td>\n\
+                                <td class='headingTable'>SCH.</td>\n\
+                                <td class='headingTable'>SPEC</td>\n\
+                                <td class='headingTable'>GRADE</td>\n\
+                                <td class='headingTable'>PCS/BNDL</td>\n\
+                                <td class='headingTable'>LENGTH(ft.)</td>\n\
+                                <td class='headingTable'>BNDL</td>\n\
+                                <td class='headingTable'>TOTAL ft.</td>\n\
+                                <td class='headingTable'>TOTAL PCS</td>\n\
+                                <td class='headingTable'>MT</td>\n\
+                                <td class='headingTable'>$/MT</td>\n\
+                                <td class='headingTable'>TOTAL</td>\n\
+                                <td class='headingTable'>LBS/FT.</td>\n\
+                                <td class='headingTable'>WT/PC</td>\n\
+                              </tr>";
+    //====SELECT PO Use in R&R (Form4)Only ========//
+    if (force_form != 4) {
+        $("#rowSelectPO").addClass("hideEle");
+    }
+
+
+    if (force_form != "") {
+        $("#lblImportMode").text("Admin");
+        $("#use_form").val(force_form);
+    } else {
+        $("#lblImportMode").text("Customer");
+        $("#use_form").val($("#import_form").val());
+    }
+
+
+    $('#files').change(function (e) {
+        $('#ReaderExcel').empty();
+//        var workbook = XLSX.readFile('original.xlsx'); // parse the file
+//        var sheet = workbook.Sheets[workbook.SheetNames[0]]; // get the first worksheet
+
+        var sheet_name = $("#sheet_name").val();
+        $('#ReaderExcel').empty();
+        var reader = new FileReader();
+        reader.readAsArrayBuffer(e.target.files[0]);
+        reader.onload = function (e) {
+            var data = new Uint8Array(reader.result);
+            var wb = XLSX.read(data, {type: 'array'});
+            var sheetcount = wb.SheetNames.length;
+            var i = 0;
+            $("#sheet_name").empty();
+            $("#sheet_name").append('<option value="">... Please select ...</option>');
+            for (i = 0; i < sheetcount; i++) {
+                $("#sheet_name").append('<option value="' + wb.SheetNames[i] + '">' + wb.SheetNames[i] + '</option>');
+            }
+        }
+    });
+    function SelectExcel() {
+        var getPoNum = "";
+        var files_input = document.getElementById("files");
+        var file = files_input.files[0];
+
+
+        if (!file) {
+            $.alert({
+                title: 'Can not import excel file !',
+                content: "Please select excel file"
+            });
+            return false;
+        }
+        var sheet_name = $("#sheet_name").val();
+        var file_name = $('#files').val().replace(/C:\\fakepath\\/i, '')
+
+        $("#tmpXlsSheet").val(sheet_name);
+        $("#tmpXlsFile").val(file_name);
+        var reader = new FileReader();
+
+        reader.readAsArrayBuffer(file);
+        reader.onload = function (e) {
+            var data = new Uint8Array(reader.result);
+            try {
+                var wb = XLSX.read(data, {type: 'array'});
+                var htmlstr = XLSX.write(wb, {sheet: sheet_name, type: 'binary', bookType: 'html'});
+                $('#ReaderExcel').empty();
+                $('#ReaderExcel')[0].innerHTML += htmlstr;
+                $('#ReaderExcel table').addClass('table table-striped table-bordered table-condensed');
+
+                var import_form = $("#use_form").val();
+
+                var headCount = 0;
+                var flagRemoveFooterFrom = 0;
+                var flagRemoveFooterFrom2 = 0;
+                var flagRemoveFooterFrom3 = 0;
+                var flagRemoveNameCol1 = [];
+                var flagRemoveBlankRow = [];
+                var flagTotalRow = [];
+
+                if (import_form == 0) {
+                    headCount = 3;
+                    var PO_Date = 0;
+                    var PO_Nbr = "";
+                    var i = 0;
+                    var footerBegin = 0;
+                    $("#ReaderExcel .table tr").each(function () {
+                        //===== found item name 
+                        if ($(this).find('td:eq(0)').text().indexOf("PO_DATE") != -1) {
+                            PO_Date = $(this).find('td:eq(1)').text();
+                        }
+                        if ($(this).find('td:eq(0)').text().indexOf("CUST PO") != -1) {
+                            PO_Nbr = $(this).find('td:eq(1)').text();
+                        }
+                        if (($(this).find('td:eq(0)').text() == "")
+                                && ($(this).find('td:eq(1)').text() == "")
+                                && ($(this).find('td:eq(2)').text() == "")
+                                && ($(this).find('td:eq(3)').text() == "")
+                                && ($(this).find('td:eq(4)').text() == "")
+                                ) {
+                            footerBegin = i;
+                        }
+                        i++;
+                    });
+                    $("#txtPoNum").val(PO_Nbr);
+
+                    var ConvPoDate = PO_Date.substr(6, 4) + "-" + PO_Date.substr(3, 2) + "-" + PO_Date.substr(0, 2);
+                    $("#txtPoDate").val(ConvPoDate);
+
+                    i = 0;
+                    $("#ReaderExcel .table tr").each(function () {
+                        if (i < headCount) {
+                            $(this).remove();
+                        }
+                        if (i == 3) {
+                            $(this).css({"background-color": "#cccccc;"});
+                        }
+                        if (i >= footerBegin) {
+                            $(this).remove();
+                        }
+                        i++;
+                    });
+
+                } else if (import_form == 1) {
+                    headCount = 13;
+                    var i = 0;
+                    //===============  SCAN Sheet ================//
+
+                    $("#ReaderExcel .table tr").each(function () {
+                        if ($(this).find('td:eq(1)').text().length > 20) {
+                            flagRemoveNameCol1.push(i);
+                        }
+                        if (($(this).find('td:eq(0)').text() == "")
+                                && ($(this).find('td:eq(1)').text() == "")
+                                && ($(this).find('td:eq(2)').text() == "")
+                                && ($(this).find('td:eq(3)').text() == "")
+                                && ($(this).find('td:eq(4)').text() == "")
+                                && ($(this).find('td:eq(5)').text() == "")
+                                && ($(this).find('td:eq(6)').text() == "")
+                                && ($(this).find('td:eq(7)').text() == "")
+                                ) {
+                            flagRemoveBlankRow.push(i);
+                        }
+                        if (($(this).find('td:eq(0)').text() == "")
+                                && ($(this).find('td:eq(1)').text() == "")
+                                && ($(this).find('td:eq(3)').text() == "")
+                                && ($(this).find('td:eq(4)').text() == "")
+                                ) {
+                            flagRemoveBlankRow.push(i);
+                        }
+
+                        var x = 0;
+                        var xx = 0;
+                        var flagPoNumColIndex = 0;
+                        $(this).find('td').each(function () {
+                            if (x == flagPoNumColIndex) {
+                                getPoNum = $(this).text();
+                            }
+                            if ($(this).text().indexOf("P.O.Nbr") != -1) {
+                                flagPoNumColIndex = x + 1;
+                            }
+                            if ($(this).text().indexOf("LOT:") != -1) {
+                                flagRemoveBlankRow.push(i);
+                            }
+                            if ($(this).text().indexOf("SUBTOTAL") != -1) {
+                                flagRemoveFooterFrom = i;
+                            }
+                            if ($(this).text().indexOf("PROFORMA TOTAL") != -1) {
+                                flagRemoveFooterFrom2 = i;
+                            }
+
+                            if (($(this).text().indexOf("TOTALS") != -1) && ($(this).text().indexOf("INDENT") != -1)) {
+                                flagTotalRow.push(i);
+                            }
+                            if (flagRemoveFooterFrom == 0) {
+                                flagRemoveFooterFrom = flagRemoveFooterFrom2;
+                            }
+                            x++;
+                        });
+                        i++;
+                    });
+                    //================FILTER ONLY DETAIL =============//
+                    i = 0;
+                    $("#ReaderExcel .table tr").each(function () {
+                        if (i <= headCount) {
+                            $(this).remove();
+                        }
+                        if (jQuery.inArray(i, flagRemoveBlankRow) >= 1) {
+                            $(this).remove();
+                        }
+                        if (jQuery.inArray(i, flagRemoveNameCol1) >= 1) {
+                            $(this).remove();
+                        }
+                        if (jQuery.inArray(i, flagTotalRow) >= 1) {
+                            $(this).remove();
+                        }
+                        if (i >= flagRemoveFooterFrom) {
+                            $(this).remove();
+                        }
+                        $(this).find('td').each(function () {
+                            if (($(this).text() == "") || ($(this).text() == "0") || ($(this).text() == "0.00") || ($(this).text() == "0.000") || ($(this).text() == "0.0000")) {
+                                $(this).remove();
+                            }
+                        });
+                        i++;
+                    });
+                    //===============ADD HEAD TABLE===================//
+                    $(headingTable).prependTo("#ReaderExcel table");
+                } else if (import_form == 2) {
+
+                    headCount = 16;
+                    var FooterBegin = 0;
+                    var ConstItemName = "";
+                    var i = 0;
+                    $("#ReaderExcel .table tr").each(function () {
+                        //===== found item name 
+                        if ($(this).find('td:eq(0)').text().indexOf("Specification & Grade") != -1) {
+                            ConstItemName = $(this).find('td:eq(2)').text();
+                        }
+                        if ($(this).find('td:eq(0)').text().indexOf("Special Instructions") != -1) {
+                            FooterBegin = i - 3;
+                        }
+                        if (($(this).find('td:eq(0)').text() == "")
+                                && ($(this).find('td:eq(1)').text() == "")
+                                && ($(this).find('td:eq(2)').text() == "")
+                                && ($(this).find('td:eq(3)').text() == "")
+                                && ($(this).find('td:eq(4)').text() == "")
+
+                                ) {
+                            flagRemoveBlankRow.push(i);
+                        }
+                        i++;
+                    });
+
+                    i = 0;
+                    $("#ReaderExcel .table tr").each(function () {
+                        if (i <= headCount) {
+                            $(this).remove();
+                        }
+                        if (i == 17) {
+                            $(this).css({"background-color": "#cccccc;"});
+                        }
+                        if ((i > 17) && (i < FooterBegin)) {
+                            $(this).find('td:eq(0)').text(ConstItemName);
+                        }
+                        if (i >= FooterBegin) {
+                            $(this).remove();
+                        }
+
+                        i++;
+                    });
+                } else if (import_form == 3) {
+
+                    headCount = 16;
+                    var FooterBegin = 0;
+                    var ConstItemName = "";
+                    var i = 0;
+                    $("#ReaderExcel .table tr").each(function () {
+                        //===== found item name 
+                        if ($(this).find('td:eq(0)').text().indexOf("Specification & Grade") != -1) {
+                            ConstItemName = $(this).find('td:eq(2)').text();
+                        }
+                        if ($(this).find('td:eq(0)').text().indexOf("Specification") != -1) {
+                            FooterBegin = i - 9;
+                        }
+                        if (($(this).find('td:eq(0)').text() == "")
+                                && ($(this).find('td:eq(1)').text() == "")
+                                && ($(this).find('td:eq(2)').text() == "")
+                                && ($(this).find('td:eq(3)').text() == "")
+                                && ($(this).find('td:eq(4)').text() == "")
+
+                                ) {
+                            flagRemoveBlankRow.push(i);
+                        }
+                        i++;
+                    });
+
+                    i = 0;
+//                    alert(headCount);
+                    $("#ReaderExcel .table tr").each(function () {
+                        if (i <= headCount) {
+                            $(this).remove();
+                        }
+                        if (i == 17) {
+                            $(this).css({"background-color": "#cccccc;"});
+                        }
+                        if ((i > 17) && (i < FooterBegin)) {
+                            $(this).find('td:eq(0)').text(ConstItemName);
+                        }
+                        if (i >= FooterBegin) {
+                            $(this).remove();
+                        }
+
+                        i++;
+                    });
+                } else if (import_form == 4) {
+                    $("#ReaderExcel").addClass("hideEle");
+                    var Arr_PO = [];
+//                    var Arr_PO_Begin = [];
+//                    var Arr_PO_End = [];
+                    var tmpPOFound = "";
+                    $("#ReaderExcel .table tr").each(function () {
+                        //===== found item name 
+                        if ($(this).find('td:eq(0)').text().indexOf("P.O. NO.") != -1) {
+                            tmpPOFound = $(this).find('td:eq(0)').text().replace("P.O. NO.", "").trim();
+                            Arr_PO.push(tmpPOFound);
+                        }
+                        i++;
+                    });
+
+                    $("#select_po").empty();
+                    var x = 0;
+                    var Lines = "<option value=''>..SELECT PO ..</option>";
+                    for (x = 0; x < Arr_PO.length; x++) {
+                        Lines += "<option value='" + Arr_PO[x] + "'>" + Arr_PO[x] + "</option>";
+                    }
+                    $("#select_po").html(Lines);
+                }
+            } catch (err) {
+                $.alert({
+                    title: 'Can not import excel file !',
+                    content: err,
+                });
+            }
+//            ImportExcel()
+        }
+    }
+    $("#importToMainTable").click(function () {
+        $("#importToMainTable").html("<i class='fa fa-spinner fa-spin'></i>&nbsp;loading .. ");
+        ImportExcel();
+    });
+    $.fn.digits = function () {
+        return this.each(function () {
+            $(this).text($(this).text().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"));
+        })
+    }
+
+    function SelectPO() {
+        var PO = $("#select_po").val();
+        //find PO Row Begin - End 
+        var i = 0;
+        var PO_Begin = 0;
+        var PO_End = 0;
+        var item_idx = 0;
+        var item = "";
+        $("#ReaderExcel .table tr").each(function () {
+            if ($(this).find('td:eq(0)').text().indexOf("P.O. NO. " + PO) != -1) {
+                PO_Begin = i + 1;
+            }
+            if (i == PO_Begin) {
+                console.log(i + " - " + PO_Begin + " " + $(this).find('td:eq(0)').text());
+                if ($(this).find('td:eq(0)').text().length > 10) {
+                    PO_Begin = PO_Begin + 1;
+                }
+            }
+            if ($(this).find('td:eq(1)').text().indexOf("TOTAL PO NO. " + PO) != -1) {
+                PO_End = i;
+            }
+            i++;
+        });
+        $("#ReaderExcel .table tr").each(function () {
+            $(this).find('td').each(function () {
+                if ($(this).text() == "") {
+                    $(this).remove();
+                }
+            });
+//             var h = 0;
+//             for (h=16;h<=50;h++){
+////                 console.log(h);
+//                 $(this).find('td:eq('+h+')').remove();
+//             }
+//    
+
+        });
+
+//        console.log("PO Start at " + PO_Begin + " End " + PO_End);
+        i = 0;
+        var allRowsCount = $("#ReaderExcel .table tr").length;
+        var loopBegin = PO_Begin + 1;
+        var loopEnd = PO_Begin + (PO_End - PO_Begin);
+//        console.log("allRowsCount : " + allRowsCount + " loopBegin : " + loopBegin + " loopEnd : " + loopEnd);
+
+//        for (i = loopBegin; i <= loopEnd; i++) {
+//            console.log(i);
+//            $("#ReaderExcel .table tr:eq(" + i + ")").remove();
+//        }
+
+        $("#ReaderExcel .table tr").each(function () {
+            if ((i < PO_Begin) || (i >= PO_End)) {
+                console.log(i);
+                $(this).remove();
+            }
+            i++;
+        });
+        var j = 0;
+        for (j = 15; j == 21; j++) {
+            $('#ReaderExcel .table tr').find('td:eq(' + j + '),th:eq()').remove();
+        }
+
+
+        if ($("#ReaderExcel").hasClass("hideEle")) {
+            $("#ReaderExcel").removeClass("hideEle");
+        }
+        $(headingTableRandR).prependTo("#ReaderExcel table");
+    }
+    function ImportExcel() {
+
+        var import_form = $("#use_form").val();
+        var i = 0;
+        var tblLines = "";
+        var GuessLen = 20;
+        var Lot = "";
+        var CountRows = $('#ReaderExcel table').find('tr').length;
+        if (CountRows == 0) {
+            $.alert({
+                title: 'Can not import excel file !',
+                content: "not found data",
+            });
+        } else {
+            var ITEM = "";
+            var ITEM_DESC = "";
+            var ITEM_LOT = "";
+            var SIZE = "";
+            var TW = "";
+            var LEN = "";
+            var CATE = "";
+            var SCHED = "";
+            var PCSPERBNDL = "";
+            var WEIGHT = "";
+            var BNDL = "";
+            var PIECES = "";
+            var TTLEN = "";
+            var M_TONS = "";
+            var FOBMT = "";
+            var FOBFT = "";
+            var extPrice = "";
+
+
+            var aLOT = [];
+            var atLOT = [];
+            var tempItemName = "";
+            var tmpItemDesc = "";
+            var tmpItemFullName = "";
+            var form1counter = 0;
+            var Lot = "";
+            var tLot = "";
+            var isLotLine = 0;
+            var isItemLine = 0;
+            var isTotalLotLine = 0;
+
+            var tSIZE = "";
+
+            //==========1 = QT
+            //==========2 = MPST
+
+            var tmpSize = "";
+            for (i = 1; i <= CountRows; i++) {
+                if (import_form == 0) {
+                    if (i >= 1) {
+                        ITEM += "!!" + $('#ReaderExcel table tr:eq(' + i + ') td:eq(2)').text().trim();
+                        ITEM_DESC += "!!" + $('#ReaderExcel table tr:eq(' + i + ') td:eq(3)').text().trim();
+                        ITEM_LOT += "!!" + $('#ReaderExcel table tr:eq(' + i + ') td:eq(1)').text().trim();
+                        tmpSize = $('#ReaderExcel table tr:eq(' + i + ') td:eq(8)').text().trim();
+                        if (tmpSize.indexOf('"') != -1) {
+                            tmpSize = tmpSize.replace('"', '');
+                        }
+                        SIZE += "!!" + tmpSize;
+                        WEIGHT += "!!" + $('#ReaderExcel table tr:eq(' + i + ') td:eq(15)').text().trim();
+                        TW += "!!" + $('#ReaderExcel table tr:eq(' + i + ') td:eq(12)').text().trim();
+                        LEN += "!!" + $('#ReaderExcel table tr:eq(' + i + ') td:eq(11)').text().trim();
+                        CATE += "!!" + $('#ReaderExcel table tr:eq(' + i + ') td:eq(5)').text().trim();
+                        SCHED += "!!" + $('#ReaderExcel table tr:eq(' + i + ') td:eq(7)').text().trim();
+                        PCSPERBNDL += "!!" + 0;
+                        BNDL += "!!" + 0;
+                        PIECES += "!!" + $('#ReaderExcel table tr:eq(' + i + ') td:eq(14)').text().trim();
+                        TTLEN += "!!" + $('#ReaderExcel table tr:eq(' + i + ') td:eq(13)').text().trim();
+                        M_TONS += "!!" + $('#ReaderExcel table tr:eq(' + i + ') td:eq(15)').text().trim();
+                        FOBMT += "!!" + $('#ReaderExcel table tr:eq(' + i + ') td:eq(16)').text().trim();
+                        FOBFT += "!!" + $('#ReaderExcel table tr:eq(' + i + ') td:eq(17)').text().trim();
+                        extPrice += "!!" + $('#ReaderExcel table tr:eq(' + i + ') td:eq(18)').text().trim();
+                    }
+
+                } else if (import_form == 1) {
+                    if (i >= 1) {
+                        isLotLine = 0;
+                        isItemLine = 0;
+                        tmpItemFullName = $('#ReaderExcel table tr:eq(' + i + ') td:eq(0)').text().trim();
+                        if (tmpItemFullName.indexOf("LOT") != -1) {
+                            tLot = tmpItemFullName;
+                            isLotLine = 1;
+                        } else {
+                            if (tmpItemFullName.length > GuessLen) {
+                                tempItemName = tmpItemFullName;
+                                tSIZE = "";
+                                isItemLine = 1;
+                            } else {
+                                tSIZE = $('#ReaderExcel table tr:eq(' + i + ') td:eq(0)').text().trim();
+                            }
+                        }
+                        if ((isItemLine == 0) && (isLotLine == 0)) {
+                            ITEM += "!!" + tempItemName;
+                            ITEM_DESC += "!!" + tmpItemDesc;
+                            ITEM_LOT += "!!" + tLot;
+                            SIZE += "!!" + tSIZE;
+                            WEIGHT += "!!" + $('#ReaderExcel table tr:eq(' + i + ') td:eq(1)').text().trim();
+                            TW += "!!" + $('#ReaderExcel table tr:eq(' + i + ') td:eq(2)').text().trim();
+                            LEN += "!!" + $('#ReaderExcel table tr:eq(' + i + ') td:eq(3)').text().trim();
+                            CATE += "!!" + $('#ReaderExcel table tr:eq(' + i + ') td:eq(4)').text().trim();
+                            SCHED += "!!" + $('#ReaderExcel table tr:eq(' + i + ') td:eq(5)').text().trim();
+                            PCSPERBNDL += "!!" + $('#ReaderExcel table tr:eq(' + i + ') td:eq(6)').text().trim();
+                            BNDL += "!!" + $('#ReaderExcel table tr:eq(' + i + ') td:eq(7)').text().trim();
+                            PIECES += "!!" + $('#ReaderExcel table tr:eq(' + i + ') td:eq(8)').text().trim();
+                            TTLEN += "!!" + $('#ReaderExcel table tr:eq(' + i + ') td:eq(9)').text().trim();
+                            M_TONS += "!!" + $('#ReaderExcel table tr:eq(' + i + ') td:eq(11)').text().trim();
+                            FOBMT += "!!" + $('#ReaderExcel table tr:eq(' + i + ') td:eq(12)').text().trim();
+                            FOBFT += "!!" + $('#ReaderExcel table tr:eq(' + i + ') td:eq(13)').text().trim();
+                            extPrice += "!!" + $('#ReaderExcel table tr:eq(' + i + ') td:eq(14)').text().trim();
+
+                        }
+                    }
+                } else if ((import_form == 2) || (import_form == 3)) {
+                    if (i >= 1) {
+                        ITEM += "!!" + $('#ReaderExcel table tr:eq(' + i + ') td:eq(0)').text().trim();
+                        ITEM_DESC += "!!" + $('#ReaderExcel table tr:eq(' + i + ') td:eq(0)').text().trim();
+                        ITEM_LOT += "!!" + "-";
+                        SIZE += "!!" + $('#ReaderExcel table tr:eq(' + i + ') td:eq(1)').text().trim();
+                        WEIGHT += "!!" + $('#ReaderExcel table tr:eq(' + i + ') td:eq(6)').text().trim();
+                        TW += "!!" + $('#ReaderExcel table tr:eq(' + i + ') td:eq(6)').text().trim();
+                        LEN += "!!" + $('#ReaderExcel table tr:eq(' + i + ') td:eq(5)').text().trim();
+                        CATE += "!!" + $('#ReaderExcel table tr:eq(' + i + ') td:eq(7)').text().trim();
+                        SCHED += "!!" + $('#ReaderExcel table tr:eq(' + i + ') td:eq(3)').text().trim();
+                        PCSPERBNDL += "!!" + "0";
+                        BNDL += "!!" + "0";
+                        PIECES += "!!" + $('#ReaderExcel table tr:eq(' + i + ') td:eq(10)').text().trim();
+                        TTLEN += "!!" + $('#ReaderExcel table tr:eq(' + i + ') td:eq(9)').text().trim();
+                        M_TONS += "!!" + $('#ReaderExcel table tr:eq(' + i + ') td:eq(11)').text().trim();
+                        FOBMT += "!!" + $('#ReaderExcel table tr:eq(' + i + ') td:eq(13)').text().trim();
+                        FOBFT += "!!" + $('#ReaderExcel table tr:eq(' + i + ') td:eq(14)').text().trim();
+                        extPrice += "!!" + $('#ReaderExcel table tr:eq(' + i + ') td:eq(15)').text().trim();
+
+                    }
+                }
+//                }
+            }
+//            console.log(ITEM);
+            $.ajax({
+                url: "././module/Ajax_ExcelTableContent.php",
+                type: 'post',
+                beforeSend: function () {
+                    $("#lblMatchStatus").html("<font color='red'><i class='fa fa-spinner fa-spin'></i>&nbsp;loading .. </font>");
+                },
+                data: {
+                    import_form: import_form,
+                    ITEM: ITEM,
+                    ITEM_DESC: ITEM_DESC,
+                    ITEM_LOT: ITEM_LOT,
+                    SIZE: SIZE,
+                    WEIGHT: WEIGHT,
+                    TW: TW,
+                    LEN: LEN,
+                    CATE: CATE,
+                    SCHED: SCHED,
+                    PCSPERBNDL: PCSPERBNDL,
+                    BNDL: BNDL,
+                    PIECES: PIECES,
+                    TTLEN: TTLEN,
+                    M_TONS: M_TONS,
+                    FOBMT: FOBMT,
+                    FOBFT: FOBFT,
+                    extPrice: extPrice,
+                },
+                success: function (data) {
+                    $("#tableItems").html(data);
+                    $("#lblMatchStatus").html("");
+                },
+                error: function (xhr, status, error) {
+                    $("#debug").html(xhr.responseText);
+                },
+            });
+
+
+            $("#btnShowFilter").attr("disabled", 'disabled');
+            $("#rowXlsInfo").show();
+            $("#lblXlsFile").text($("#tmpXlsFile").val());
+            $("#lblXlsSheet").text($("#tmpXlsSheet").val());
+
+            $(".ui-dialog-titlebar-close").trigger('click');
+
+        }
+    }
+
+    function ConvertPiecesToBundle(sched, size) {
+        //need size and sched
+        var result = 0;
+        if (sched == 10) {
+            if (size == "1/2") {
+                result = 169;
+            } else if (size == "3/4") {
+                result = 127;
+            } else if (size == "1") {
+                result = 91;
+            } else if (size == "1 1/4") {
+                result = 61;
+            } else if (size == "1 1/2") {
+                result = 44;
+            } else if (size == "2") {
+                result = 37;
+            } else if (size == "2 1/2") {
+                result = 29;
+            } else if (size == "3") {
+                result = 24;
+            } else if (size == "3 1/2") {
+                result = 19;
+            } else if (size == "4") {
+                result = 19;
+            } else if (size == "5") {
+                result = 10;
+            } else if (size == "6") {
+                result = 10;
+            } else if (size == "8") {
+                result = 5;
+            }
+
+        } else if ((sched == 40) || (sched == 80)) {
+            if (size == "1/2") {
+                result = 120;
+            } else if (size == "3/4") {
+                result = 84;
+            } else if (size == "1") {
+                result = 60;
+            } else if (size == "1 1/4") {
+                result = 42;
+            } else if (size == "1 1/2") {
+                result = 36;
+            } else if (size == "2") {
+                result = 26;
+            } else if (size == "2 1/2") {
+                result = 18;
+            } else if (size == "3") {
+                result = 14;
+            } else if (size == "3 1/2") {
+                result = 12;
+            } else if (size == "4") {
+                result = 10;
+            } else if (size == "5") {
+                result = 7;
+            } else if (size == "6") {
+                result = 7;
+            } else if (size == "8") {
+                result = 5;
+            }
+        }
+//        console.log("sched : " + sched + " size : " + size + " pieces per bndl : " + result);
+        return result;
+    }
+//    $("#ImportExcelToTable").click(function () {
+//        ImportExcel();
+//
+//    });
+    function numberWithCommas(number) {
+        var parts = number.toString().split(".");
+        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        return parts.join(".");
+    }
+</script>

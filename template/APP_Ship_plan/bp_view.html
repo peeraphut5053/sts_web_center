@@ -1,0 +1,106 @@
+<div class="container" style="background-color:{bgcolor};">
+            <div class="row rowheader"  >
+            <div class="col-8  col-back">
+                 <a href="?bp_lists" id="btnBack" class="btn btn-success btn-small btn-back"  ><i class="fa fa-mail-reply"></i></a> <strong>:: VIEW </strong>
+
+            </div>
+            <div class="col-1 text-right ">
+                Code
+            </div>
+            <div class="col-3 text-right col-data">
+                {docno}
+               <input type="hidden" id="hdHeadCode" value="{docno}">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 col-4 text-right ">
+                M.V.
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 col-4 text-left col-data">
+                {MV}
+            </div>
+
+            <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 col-4 text-right ">
+                LIGHTER NO.
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 col-4 text-left col-data">
+               {LighterNo}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 col-4 text-right ">
+                BERTHED AT
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 col-4 text-left col-data">
+               {BerthedAt}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 col-4 text-right ">
+                Start Date 
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 col-4 text-left col-data">
+               {CMDate}
+            </div>
+<!--            <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 col-4 text-left  text-right">
+                COMPLETED ON
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 col-4 text-left col-data">
+               {CPDate}
+            </div>-->
+        </div>
+        <div class="row text-right" >
+           
+            <div class="col-12 text-right" style="visibility: {VisiblePrintEdit} ;">
+                <font size="2" color="red"> ** use [ Ctrl+P ]  after click print **</font>
+                 <a id="print" href="#" class="btn btn-default btn-small" style="width:120px;"><i class="fa fa-print"></i>&nbsp;Print</a>
+                 <a id="btnEdit" href="?bp_edit&HeadCode={docno}" class="btn btn-default btn-small" style="width:120px;"><i class="fa fa-edit"></i>&nbsp;Edit</a>
+            </div>
+
+        </div>
+        <div class="row " >
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th> Item Position </th>
+                        <th> Item Tag</th>
+                         <th> Customer Order</th>
+                        <th> Item Description</th>
+                        <th  align="center"> Item QTY</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    {lists}
+<!--                    <tr>
+                        <td  colspan="4" style="text-align:right;margin-right:25px;"> TOTAL </td>
+                          <td  colspan="1" style="text-align:center;"> {Total} BUNDLES</td>
+                    </tr>-->
+                </tbody>
+                <tr>
+                    <td colspan="4" align="right"> Total </td>
+                    <td align="center" >{TotalQty}</td>
+                </tr>
+            </table>
+
+
+        </div>
+
+
+
+
+       </div>
+<script type="text/javascript">
+           $("#btnRollBack").click(function(){
+              if( confirm("Do you want to roll back this data ? ")==false){
+                  return false ;
+              }
+           });
+           $("#print").click(function(){
+            var HeadCode = $('#hdHeadCode').val();
+
+           window.open("./module/bp_print.php?HeadCode="+HeadCode, "_blank", "toolbar=yes,scrollbars=yes,resizable=yes,width=1000,height=700") ;
+           });
+    </script>

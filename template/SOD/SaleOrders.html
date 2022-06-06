@@ -1,0 +1,191 @@
+<link href="./css/ind/SaleOrder.css" rel="stylesheet" type="text/css">
+<div class="container-fluid">
+  <div class="row rowheader">
+    <div class="col-6 text-left" style="padding-top:10px;">
+      <h6><a href="index.php" > <i class="fas fa-home"></i> Home </a> / <a href="?SOD/SOD/SaleOrderIndex"> Lists </a> / Create New</h6>
+    </div>
+    <div class="col-6 text-right" style="padding-right:0px;padding-bottom:3px;">
+      <a href="#" id="btnRefresh" OnClick="location.reload();" class="btn btn-default"><i class="fas fa-sync"></i></a>
+      <a href="#" id="btnSave" class="btn btn-default"><i class="fas fa-save" style="color:green;"></i></a>
+    </div>
+
+  </div>
+  <div class="row">
+    <div class="col-5 col-Customer">
+      <div class="row">
+        <div class="col-10 text-left " style="padding-left:20px;">
+           <div id="divCustomerName" style="font-weight: bolder;">
+          </div>
+        </div>
+<!--        <div class="col-8">
+          
+        </div>-->
+        <div class="col-1 text-left col-info">
+          <a href="" class="btnLink" id="btnCustomerInfo"><i class="fas fa-info-circle"></i></a>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-11" id="divCustomerInfo">
+          <div id="divCustomerAddr">
+          </div>
+          <div id="divCustomerTel">
+          </div>
+          <div id="divCustomerFax">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-2">
+
+    </div>
+
+    <div class="col-5 col-po">
+      <div class="row">
+        <div class="input-group" style="text-align: left;">
+          <span align="right" class="input-group-addon text-right " style="width:30%;">
+            <font color='red'>*</font>PO Number :
+            </span>
+          <input type="text" class="form-control" id="txtPoNum" readonly value="">
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="input-group" style="text-align: left;">
+          <span align="right" class="input-group-addon text-right" style="width:30%;">
+              <font color='red'>*</font>PO Date :
+            </span>
+          <input type="text" class="form-control" id="txtPoDate">
+          <span align="right" class="input-group-addon text-right" style="width:8%;">
+            <i class="fas fa-calendar-alt"></i>
+            </span>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="input-group" style="text-align: left;">
+          <span align="right" class="input-group-addon text-right" style="width:30%;">
+                <font color='red'>*</font>Ship From :
+            </span>
+          <select class="form-control" id="selShipFrom">
+
+            </select>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="input-group" style="text-align: left;">
+          <span align="right" class="input-group-addon text-right" style="width:30%;">
+                <font color='red'>*</font>Ship To :
+            </span>
+          <select class="form-control" id="selShipTo">
+
+            </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel panel-default">
+    <div class="panel panel-heading" id="rowHeadCollapse" data-toggle="collapse" data-target="#divPanDetail">
+      Details
+      <a href="#" id="btnCollapse" data-toggle="collapse" data-target="#divPanDetail"><i id="ClspSign" class="fas fa-chevron-down"></i></a>
+    </div>
+    <div class="panel panel-body accordion-body collapse out" id="divPanDetail">
+      <div class="row">
+        <div class="col-6 text-right ">
+          <div class="input-group" style="text-align: right;">
+            <span align="right" class="input-group-addon" style="width:20%;">
+                Spec :
+              </span>
+            <input type="text" class="form-control" id="txtSpec">
+          </div>
+        </div>
+        <div class="col-6 text-right ">
+          <div class="input-group" style="text-align: right;">
+            <span align="right" class="input-group-addon" style="width:30%;">
+                Terms of purchase :
+              </span>
+            <input type="text" class="form-control" id="txtTerms">
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-6 text-right ">
+          <div class="input-group" style="text-align: right;">
+            <span align="right" class="input-group-addon" style="width:20%;">
+                Attn :
+              </span>
+            <input type="text" class="form-control" id="txtAttn">
+          </div>
+        </div>
+
+        <div class="col-6 text-right ">
+          <div class="input-group" style="text-align: right;">
+            <span align="right" class="input-group-addon" style="width:30%;">
+                Shipment :
+              </span>
+            <input type="text" class="form-control" id="txtShipMent">
+          </div>
+        </div>
+      </div>
+        
+          <div class="row">
+        <div class="col-12 text-right ">
+          <div class="input-group" style="text-align: right;">
+            <span align="right" class="input-group-addon" style="width:9.7%;">
+                Remark :
+              </span>
+            <input  type="text" class="form-control" id="txtRemark">
+          </div>
+        </div>
+      </div>              
+    </div>
+  </div>
+  
+
+  <div class="row">
+    <table class="table">
+      <thead>
+        <tr>
+          <th align="center" width="12%">Item</th>
+          <th align="center" width="5%">NPS</th>
+          <th align="center" width="5%">WALL</th>
+          <th align="center" width="5%">LENGTH</th>
+          <th align="center" width="5%">#/FT</th>
+          <th align="center" width="5%">END</th>
+          <th align="center" width="5%">GRADE</th>
+          <th align="center" width="5%">QTY(ft)</th>
+          <th align="center" width="6%">QTY MT</th>
+          <th align="center" width="5%">US$/FT</th>
+          <th align="center" width="5%">US$/MT</th>
+          <th align="center" width="8%">Ext.Price</th>
+          <th align="center" width="3%"><a href="#" class="btn btn-success" id="btnAddItem"><i class="fas fa-plus"></i></a> </th>
+        </tr>
+      </thead>
+      <tbody id="tableItems">
+        <tr>
+          <td align="center"><select id="txtGridItem_1" class="form-control" name="txtGridItem_[]"></select></td>
+          <td align="center"><input type="text" class="form-control txtNumuric" id="txtGridNps_1" name='btnRemoveGridLines[]'></td>
+          <td align="center"><input type="text" class="form-control txtNumuric" id="txtGridWall_1" name='btnRemoveGridLines[]'></td>
+          <td align="center"><input type="text" class="form-control txtNumuric" id="txtGridLelgth_1" name='btnRemoveGridLines[]'></td>
+          <td align="center"><input type="text" class="form-control txtNumuric" id="txtGridPerFt_1" name='btnRemoveGridLines[]'></td>
+          <td align="center"><input type="text" class="form-control" id="txtGridEnd_1" name='btnRemoveGridLines[]'></td>
+          <td align="center"><input type="text" class="form-control" id="txtGridGrade_1" name='btnRemoveGridLines[]'></td>
+          <td align="center"><input type="text" class="form-control txtNumuric" id="txtGridQtyFt_1" name='btnRemoveGridLines[]'></td>
+          <td align="center"><input type="text" class="form-control txtNumuric" id="txtGridQtyMt_1" name='btnRemoveGridLines[]'></td>
+          <td align="center"><input type="text" class="form-control txtNumuric" id="txtGridUsFt_1" name='btnRemoveGridLines[]'></td>
+          <td align="center"><input type="text" class="form-control txtNumuric" id="txtGridUsMt_1" name='btnRemoveGridLines[]'></td>
+          <td align="center"><input type="text" class="form-control txtNumuric" id="txtGridExtPrice_1" name='btnRemoveGridLines[]'></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<!-- <script>
+  $("#loading").hide();
+</script> -->
+<script type="text/javascript" src="./js/ind/SaleOrder.js"></script>

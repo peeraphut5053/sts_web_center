@@ -1,0 +1,240 @@
+<style>
+    #ReaderExcel{
+        width: 100%;
+        height: 400px;
+        overflow-x: auto;
+        overflow-y: auto;
+    }
+
+    /*    tbody tr td:nth-child(1){
+            color:green;
+        }
+    
+    
+    
+        tbody tr:nth-child(1) td{
+            background-color:#4e73df;
+            color:#FFFFFF;
+            text-align: center;
+        }*/
+</style>
+
+<div class="panel panel-default">
+    <div class="panel panel-heading">
+        <h5 >:: ITEM BATCH UPDATE</h5>
+    </div>
+    <div class="panel panel-body">
+        <div class="row " style='margin-left:5px;margin-top:10px;'>
+            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3  text-center">
+                <div class="row text-center">
+                    เลือกไฟล์&nbsp;<span class="colResultBrowse"></span>
+                </div>
+                <div class="row">
+                    <input type="file" id="files" accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+                </div>
+            </div>
+            <!--            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3  text-center" style="padding-left:10px; padding-right:10px;">
+                            <div class="row text-center">ระบุ Table <span class="colResultSheet"></span></div>
+                            <div class="row text-center" style="padding-left:20px; padding-right:20px;">
+                                <input type="text" id="txtTable" class="form-control" >
+                            </div>
+            
+                        </div>-->
+            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3  text-center">
+                <div class="row text-center" id='colResultButton'>&nbsp;</div> 
+                <button class="btn btn-success" id="btnImport"  ><i class='fa fa-download'></i>&nbsp;Update</button>
+            </div>
+        </div>
+        <h6 style="color:red;">*คอลัมน์แรกคือ Primary Key และ คอลัมน์อื่นๆคือค่าที่ต้องการอัพเดท (ชื่อ คอลัมน์ ใน excel และ db ต้องตรงกัน)*</h6>
+
+        <div id='DivResult' class='row text-center'></div>
+        <div  id="ReaderExcel" >
+            <table class="table table-striped table-condensed" id="tblFromExcel">
+            </table>
+        </div>
+    </div>
+</div>
+<div class="row text-center" >
+
+    <script type='text/javascript' src='js/xlsx.core.min.js'></script>
+    <script type='text/javascript' src='js/xlsx.full.min.js'></script>
+    <script type="text/javascript">
+        var loadingDiv = "<i class='fa fa-spinner fa-spin'></i>";
+
+        function read_excel(file_name) {
+            $.ajax({
+                url: "././module/ITEM_BATCH_UPDATE/data.php",
+                type: 'post',
+                dataType: 'JSON',
+                data: {
+                    load: "read_excel",
+                    file_name: file_name,
+
+                },
+                beforesend: function () {
+                    $("#ReaderExcel").loading();
+                    // $("#btnImport").html("<i class='fa fa-spinner fa-spin'></i>");
+                },
+                success: function (data) {
+                    var KeepHeader = [];
+                    var head_table = "";
+                    $.each(data[0], function (val) {
+                        KeepHeader.push(val);
+                        head_table += "<th>" + val + "</th>";
+                    });
+                    var TableHead = "<thead><tr>" + head_table + "</tr></thead>";
+                    $("#tblFromExcel").append(TableHead);
+                    var LineTable = "<tbody>";
+                    $.each(data, function (idx, val) {
+                        LineTable += "<tr>";
+                        $.each(data[0], function (header) {
+                            LineTable += "<td>" + val[header] + "</td>";
+                        });
+
+
+                        LineTable += "</tr>";
+                    });
+                    LineTable += "</tbody>";
+                    $("#tblFromExcel").append(LineTable);
+                    $("#ReaderExcel").loading("stop");
+//=========SET DATATABLE==========
+                    $('#tblFromExcel').dataTable({
+//                        "aaData": data,
+                        "paging": false,
+                        "searching": false,
+                        fixedHeader: true,
+                        destroy: true,
+
+
+
+                    });
+                    $(".colResultBrowse").html("");
+                },
+                error: function (xhr, status, error) {
+                    var err = eval("(" + xhr.responseText + ")");
+                    //  $("#btnImport").attr("disabled", true);
+                },
+            });
+        }
+
+        $('#files').change(function () {
+            var fileName = this.files[0].name;
+
+            $(".colResultBrowse").html(loadingDiv);
+            $("#ReaderExcel").loading();
+            $("#tblFromExcel").empty();
+            var file_data = $('#files').prop('files')[0];
+            var form_data = new FormData();
+            form_data.append('file', file_data);
+
+
+            $.ajax({
+                url: "././module/upload.php",
+                dataType: 'text',
+                cache: false,
+                contentType: false,
+                processData: false,
+                data: form_data,
+                type: 'post',
+                success: function (data) {
+                    console.log(data);
+                    read_excel(fileName);
+
+                },
+                error: function (xhr, status, error) {
+                    var err = eval("(" + xhr.responseText + ")");
+                    // $("#btnImport").attr("disabled", true);
+                },
+            });
+
+        });
+
+
+        $("#btnImport").click(function () {
+            var tableName = $("#txtTable").val();
+//            if (!tableName) {
+//                $.confirm({
+//                    title: "!! ผิดพลาด ",
+//                    content: "ไม่ได้ระบุ ชื่อตาราง  ?"
+//                });
+//            } else {
+            $.confirm({
+                title: "!! ยืนยัน ",
+                content: "ยืนยันการนำข้อมูลเข้าสู่ระบบ ?",
+                buttons: {
+                    confirm: function () {
+                        // $("#colResultButton").html(loadingDiv);
+                        PackDataToArrayAndSave();
+                    },
+                    cancel: function () {
+
+                    }
+                }
+            });
+
+//            }
+
+        });
+        function PackDataToArrayAndSave() {
+            var CountCol = $("table tbody tr:eq(0) td").length;
+            var OldHtml = $("#btnImport").html();
+            var tableName = $("#txtTable").val();
+            var FieldList = [];
+            var ValList = [];
+            var Tmp1 = "";
+            var i = 0;
+            var x = 0;
+              $("#ReaderExcel").loading();
+            $("table thead tr th").each(function () {
+                FieldList.push($(this).text().trim());
+            });
+
+            $("table tr").each(function () {
+                if (i > 0) {
+                    var currentRow = $(this);
+                    Tmp1 = "";
+                    for (x = 0; x < FieldList.length; x++) {
+                        //     console.log(currentRow.find("td:eq(" + x + ")").text());
+                        Tmp1 += currentRow.find("td:eq(" + x + ")").text().trim() + "!!";
+                    }
+                    ValList.push(Tmp1.slice(0, -2));
+                }
+                i++;
+            });
+//            console.log(FieldList);
+//            console.log(ValList);
+//            console.log(tableName);
+            $.ajax({
+                url: "././module/ITEM_BATCH_UPDATE/data.php",
+                type: 'post',
+                dataType: 'JSON',
+                data: {
+                    load: "ajax_savedata",
+                    FieldList: FieldList,
+                    ValList: ValList,
+                    tableName: tableName
+                },
+                beforesend: function () {
+                  
+                    // $("#btnImport").html("<i class='fa fa-spinner fa-spin'></i>");
+                },
+                success: function (data) {
+//                    console.log(data);
+      
+  
+                
+                    $.alert({
+                        title: "Update Result ",
+                        content: data + " rows update complete"
+                    });
+                      $("#ReaderExcel").loading("stop");
+                },
+                error: function (xhr, status, error) {
+                    var err = eval("(" + xhr.responseText + ")");
+                    //$("#btnImport").attr("disabled", true);
+                },
+            });
+        }
+
+
+    </script>

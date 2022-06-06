@@ -1,0 +1,326 @@
+<style>
+    .col-head {
+        vertical-align: bottom;
+        border: 1px solid #17a2b8;
+        background-color: #17a2b8;
+        color: #ffffff;
+    }
+
+    .btn-default {
+        border: solid 1px #666;
+    }
+
+    
+    .btn-round{
+        border-radius: 15px;
+    }
+  select.form-control {
+    z-index: 1;
+}
+
+</style>
+
+<div class="container">
+    <form name="form1" id="form1" method="post">
+        <div class="row rowheader">
+            <div class="col-8 col-label col-back">
+                <a href="?bn_lists" id="btnBack" class="btn btn-success btn-small btn-back" ><i class="fa fa-mail-reply"></i></a> <strong>:: CREATE </strong>
+            </div>
+            <div class="col-1 text-right col-label">
+                Code
+            </div>
+            <div class="col-3 text-right">
+                <input style="text-align: right" type="text" class="form-control" name="txtHeadCode" readonly value="{docno}">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 col-4 text-right col-label">
+                M.V.
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 col-4 text-left ">
+                <div class="input-group">
+                    <select class="form-control" name="selMV" id="selMV" style="z-index:1;">
+                        {MVLists}
+                    </select>
+                    <a href="?mt_boat_lists" class="input-group-addon">
+                        <i style=font-size:12px; class="fa fa-mail-forward"></i></a>
+                </div>
+
+            </div>
+
+            <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 col-4 text-right col-label">
+                LIGHTER NO.
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 col-4 text-left">
+                <input readonly type="text" class="form-control" name="txtLighterNo" id="txtLighterNo" value="{LighterNo}">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 col-4 text-right col-label">
+                BERTHED AT
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 col-4 text-left ">
+                <div class="input-group">
+                    <select class="form-control" name="selBA" id="selBA" style="z-index:1;">
+                        {BALists}
+                    </select>
+                    <a href="?mt_harbor_lists" class="input-group-addon">
+                        <i style=font-size:12px; class="fa fa-mail-forward"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 col-4 text-right col-label">
+                COMMENCED ON
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 col-3 text-left ">
+
+                <input style="padding-right:2px;" type='text' class="form-control" name="CMDate" id="CMDate" />
+
+            </div>
+
+            <!--    </div>
+                           <div class="row"> -->
+            <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 col-4 text-left col-label text-right">
+                COMPLETED ON
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 col-3 text-left ">
+
+                <input style="padding-right:2px;" type='text' class="form-control" name="CPDate" id="CPDate" />
+
+                <!--    <span class="input-group-addon">
+                           <span class="glyphicon glyphicon-calendar"></span>
+                       </span> -->
+            </div>
+        </div>
+
+        <div class="row text-right">
+            <div class="col-12 text-right">
+
+            </div>
+
+        </div>
+        <div class="row ">
+            <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-2 text-center col-head">
+                LOT NO.
+            </div>
+            <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-2 text-center col-head">
+                TO
+            </div>
+            <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-2 text-center col-head">
+                BUNDLES
+            </div>
+            <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-2 text-center col-head">
+                DESCRIPTION
+            </div>
+            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 col-3 text-center col-head" style="padding-left:2px;">
+                GROSS WEIGHT (MT)
+            </div>
+            <div class="col-1 text-right" style="padding-right:35px;">
+                <a id="addCF" href="#" class="form-control btn btn-default  btn-del-mini btn-round"><i class="fa fa-plus"></i></a>
+            </div>
+        </div>
+        <div id="fieldLists">
+            <div class="row" id="rowitems">
+                <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-2 text-center col-in">
+                    <input class="form-control" name="txtLotNo[]" id="txtLotNo[]">
+                </div>
+                <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-2 text-center col-in" id="colclone1">
+                    <select class="form-control" name="selTO[]" id="selTO" style=" height:30px;">
+                        {BAListsTo}
+                    </select>
+                </div>
+                <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-2 text-center col-in">
+                    <input class="form-control number" name="txtBundles[]" onkeypress="return floatOnly(event);" id="txtBundles[]">
+                </div>
+                <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-2 text-center col-in">
+                    <input class="form-control" name="txtDescription[]" id="txtDescription[]">
+                </div>
+                <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 col-3 text-center col-in" style="padding-left:2px;">
+                    <input class="form-control number" name="GrossWeight[]" onkeypress="return floatOnly(event);" id="GrossWeight[]">
+                </div>
+
+            </div>
+        </div>
+
+        <div class="row text-right">
+            <div class="col-12 text-right">
+                <a href="#" id="btnSubmit" class="btn btn-success btn-small" style="width:120px;"><i class="fa fa-save"></i> &nbsp;Save</a>
+            </div>
+
+        </div>
+    </form>
+</div>
+
+<input type="hidden" id="tmpAdd" value="1">
+<!--   <script src="js/jquery.js"></script> -->
+<script type="text/javascript">
+    //=============== Dynamic add textbox ==============//
+    $(document).ready(function () {
+
+        $("#addCF").click(function () {
+            var CurVal = parseInt($("#tmpAdd").val());
+            $("#tmpAdd").val(CurVal+1);
+            var index = $("#tmpAdd").val();
+            $("#fieldLists").append(
+                    ' \n\
+    <div class="row" id="rowitems">  \n\
+<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-2 text-center col-in"><input class="form-control" name="txtLotNo[]"> </div>  \n\
+<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-2 text-center col-in " id="colclone'+index+'"></div>  \n\
+<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-2 text-center col-in"><input class="form-control number" name="txtBundles[]" onkeypress="return floatOnly(event);"> </div>  \n\
+<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-2 text-center col-in"><input class="form-control" name="txtDescription[]"> </div>  \n\
+<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 col-3 text-center col-in"><input class="form-control number" name="GrossWeight[]" onkeypress="return floatOnly(event);"> </div> \n\
+<div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 col-1 text-center col-in"><a href="javascript:void(0);" id="remCF" class="btn btn-danger btn-del-mini btn-round"><i class="fa fa-close"></i></a> </div> \n\
+</div>'
+                    );
+            
+            var ddl = $("#selTO").clone();
+            ddl.attr("name", "selTO[]");
+            ddl.css("height" , "30px");
+            var selectedValue = $("#selTO option:selected").val();
+            ddl.find("option[value = '" + selectedValue + "']").attr("selected", "selected");         
+            $("#colclone"+index).append(ddl);
+
+        });
+        $("#fieldLists").on('click', '#remCF', function () {
+            $(this).parent().parent().remove();
+        });
+    });
+    //=============== Dynamic add textbox ==============//
+
+
+
+    ////============ Save ================= ///
+    $("#btnSubmit").click(function () {
+
+        var nLotNo = $("input[name='txtLotNo[]']").length;
+        var nTo = $("input[name='txtTo[]']").length;
+        var nBD = $("input[name='txtBundles[]']").length;
+        var nDT = $("input[name='txtDescription[]']").length;
+        var nGW = $("input[name='GrossWeight[]']").length;
+        var nAll = nLotNo + nTo + nBD + nDT + nGW;
+        var lotBlank = 0;
+        var toBlank = 0;
+        var bdBlank = 0;
+        var dtBlank = 0;
+        var gwBlank = 0;
+        var countBlank = 0;
+        var msgValid = "";
+        if ($("#selMV").val() == 0) {
+            countBlank++;
+            msgValid += "- M.V. box is blank \n";
+        }
+//        if ($("#txtLighterNo").val() == "") {
+//            countBlank++;
+//            msgValid += "- Lighter No. box is blank \n";
+//        }
+        if ($("#selBA").val() == 0) {
+            countBlank++;
+            msgValid += "- Berthed At  box is blank \n";
+        }
+        if ($("#txtCmDate").val() == "") {
+            countBlank++;
+            msgValid += "- Commenced Date   box is blank \n";
+        }
+        if ($("#txtCpDate").val() == "") {
+            countBlank++;
+            msgValid += "- Cpmplete Date   box is blank \n";
+        }
+        $("select[name='selTO[]']").each(function () {
+            if ($(this).val() == 0) {
+                toBlank++;
+            }
+        });
+        $("input[name='txtLotNo[]']").each(function () {
+            if ($(this).val() == "") {
+                lotBlank++;
+            }
+        });
+        $("input[name='txtBundles[]']").each(function () {
+            if ($(this).val() == "") {
+                bdBlank++;
+            }
+        });
+        $("input[name='txtDescription[]']").each(function () {
+            if ($(this).val() == "") {
+                dtBlank++;
+            }
+        });
+        $("input[name='GrossWeight[]']").each(function () {
+            if ($(this).val() == "") {
+                gwBlank++;
+            }
+        });
+        var allBlank = gwBlank + dtBlank + bdBlank + toBlank + lotBlank;
+        //alert(nAll + ' ' + allBlank);
+        if (allBlank > 0) {
+            countBlank++;
+            msgValid += "- Has list box  blank \n";
+        }
+
+        if (countBlank > 0) {
+            // popup('<font size="18" color="#ff0000">'+msgValid+'/font>');
+            alert(msgValid);
+
+        } else {
+
+            // $.post("./module/break_down_save.php", $("#form1").serialize(), function(data2) {
+            //$('#txtError').val(data2);
+            //window.location.href = '?scan_jobOrder_end';
+            //	}, 'html');
+
+
+            $.post("./module/bn_create_save.php", $('#form1').serialize(), function (data) {
+                alert(data);
+                if (data.substr(0, 5) == "Error") {
+                    alert(data);
+                    return false;
+                } else {
+                    //alert("Save [ "+data + " ] Complete ");
+                    location.href = "?bn_view&HeadCode=" + data;
+                    //$('#content').load("./module/view2.php", {"HeadCode": data });
+                }
+
+
+            }, 'html');
+        }
+    });
+</script>
+<script type="text/javascript">
+    $(function () {
+        $("#CMDate").datetimepicker({
+            dateFormat: 'yy-mm-dd',
+            timeFormat: "HH:mm:ss"
+        });
+        $("#CPDate").datetimepicker({
+            dateFormat: 'yy-mm-dd',
+            timeFormat: "HH:mm:ss"
+        });
+    });
+    $('.number').keypress(function (event) {
+        if ((event.which != 46 || $(this).val().indexOf('.') != -1) && (event.which < 48 || event.which > 57)) {
+            event.preventDefault();
+        }
+    });
+
+    function floatOnly(e) {
+
+        if ((e.keyCode == 46 || e.keyCode >= 48) && (e.keyCode <= 57)) {
+        } else {
+            alert("กรุณากรอกเฉพาะตัวเลขและจุดทศนิยมเท่านั้น");
+            return false;
+        }
+
+    }
+
+    $('#selMV').on('change', function () {
+              var idRun = $(this).val();
+        $.post("module/ajax/data_boat.php", {"idRun": idRun, "field": "ln"}, function (data) {
+            $("#txtLighterNo").val(data);
+        }, 'html');
+        //  alert(this.value);
+//        location.href = "?bn_create&selMV=" + this.value + "&selBA=" + $("#selBA").val();
+    })
+</script>

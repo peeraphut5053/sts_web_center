@@ -1,0 +1,166 @@
+<style>
+    .not-show-content{
+        display:none;
+    }
+    .footer{
+        color: blue ;
+        font-weight: bold;
+    }
+    .col-flt-page {
+        padding-top: 10px;
+        font-weight: bold;
+    }
+    table.dataTable.fixedHeader-floating,
+    table.dataTable.fixedHeader-locked {
+        background-color: white;
+        margin-top: 50px !important;
+        margin-bottom: 0 !important;
+    }
+    .tr-row-cn td {
+        color: red;
+    }
+    .selectize-input{
+        min-height: 80px;
+    }
+    .panel-body{
+        padding-top:5px;
+        padding-bottom:5px;
+    }
+    h2{
+        margin:0px;
+        text-transform: uppercase;
+    }
+    h6{
+        margin:0px;
+        color:#777;
+    }
+    .tabs{
+        position: fixed;
+        margin-top:10px;
+        font-size:15px;
+        padding:0px;
+        list-style:none;
+        background:#fff;
+        box-shadow:0px 5px 20px rgba(0,0,0,0.1);
+        display:inline-block;
+        border-radius:50px;
+        position:relative;
+    }
+    .tabs a{
+        text-decoration:none;
+        color: #777;
+        text-transform:uppercase;
+        padding:10px 20px;
+        display:inline-block;
+        position:relative;
+        z-index:1;
+        transition-duration:0.6s;
+    }
+    .tabs a.active{
+        color:#fff;
+    }
+    .tabs a i{
+        margin-right:5px;
+    }
+    .tabs .selector{
+        height:100%;
+        display:inline-block;
+        position:absolute;
+        top:0px;
+        z-index:1;
+        border-radius:50px;
+        transition-duration:0.6s;
+        transition-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        background: #05abe0;
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#05abe0', endColorstr='#8200f4',GradientType=1 );
+    }
+    .footer {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        text-align: center;
+    }
+    h3{
+        margin-top: 0px !important;
+        margin-bottom: 0px !important;
+    }
+
+</style>
+
+<div style="text-align: center">
+    <h3>APP DO PHOTO PACKING</h3>
+</div>
+<div id="content_upload" ></div>
+<div id="content_list" class="not-show-content"></div>
+<div id="content_printheaderlist" class="not-show-content"></div>
+<!--
+<div id="content_list" class="not-show-content"></div>
+<div id="content_printheaderlist" class="not-show-content"></div>-->
+
+<footer>
+    <div class="footer">
+        <nav class="tabs" style="width:100%"  >
+            <div style="width:100%"   class="selector"></div>
+            <a style="width:30%" href="#" id ="tab_upload" class="active"><i class="fa fa-users"></i>&nbsp;Upload</a>
+            <a style="width:30%" href="#" id ="tab_list" ><i class="fa fa-object-group"></i>&nbsp;Tag list</a>
+            <a style="width:30%" href="#" id ="tab_printheaderlist" ><i class="fa fa-object-group"></i>&nbsp;&nbsp;เอกสาร</a>
+        </nav>
+    </div>
+</footer>
+
+<script type="text/javascript" src="js/main.js"></script>
+<script type="text/javascript">
+    $(".panel-heading").click(function () {
+        $(".panel-body").slideToggle("slow");
+    });
+    var tabs = $('.tabs');
+    var selector = $('.tabs').find('a').length;
+    var activeItem = tabs.find('.active');
+    var activeWidth = activeItem.innerWidth();
+    $(".selector").css({
+        "left": activeItem.position.left + "px",
+        "width": activeWidth + "px"
+    });
+
+    Url = "././module/APP_DO_PHOTO_PACKING/render.php"
+
+    $(document).ready(function () {
+        pageHtml = "content_upload";
+        $("#content_upload").load(Url, {"pageHtml": pageHtml}, function (response, status, xhr) {
+            if (status == "error") {
+                var msg = "Sorry, error: ";
+                $.alert(msg + xhr.status + " " + xhr.statusText);
+            } else {
+                $("#content_list").loading("stop");
+            }
+        });
+    });
+
+    $(".tabs").on("click", "a", function (e) {
+        e.preventDefault();
+        $('.tabs a').removeClass("active");
+        $(this).addClass('active');
+        var activeWidth = $(this).innerWidth();
+        var itemPos = $(this).position();
+        $(".selector").css({
+            "left": itemPos.left + "px",
+            "width": activeWidth + "px"
+        });
+        var thisId = $(this).attr("id");
+        var split_id_tab = thisId.split("_");
+        var tab_name = split_id_tab[1];
+        $("div[id^='content']").hide();
+        $("#content_" + tab_name).fadeToggle("slow", "linear");
+        pageHtml = "content_" + tab_name;
+        $("#content_" + tab_name).load(Url, {"pageHtml": pageHtml}, function (response, status, xhr) {
+            if (status == "error") {
+                var msg = "Sorry, error: ";
+                $.alert(msg + xhr.status + " " + xhr.statusText);
+            }
+        });
+    });
+
+    console.log(1);
+
+</script>

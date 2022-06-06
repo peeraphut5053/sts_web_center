@@ -1,0 +1,100 @@
+
+.addon-btn{
+    color:blue;
+    cursor: pointer;
+}
+.pagination{
+    margin-top:0px;
+    margin-bottom:0px;
+}
+.dataTables_wrapper .dataTables_paginate .paginate_button.disabled ,.dataTables_wrapper .dataTables_paginate .paginate_button {
+    padding:0px 0px 0px 0px;
+}
+.row-head {
+    color: #333333;
+    font-weight: bold;
+    border-bottom: solid 2px orange;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+.buttons-print{
+    margin-top:5px;
+    border:none;
+    border-radius:5px;
+    height:32px;
+    background-color: #5bc0de;
+    color:#FFFFFF;
+    padding-left:10px;
+    padding-right:10px;
+}
+.buttons-excel{
+    margin-top:5px;
+    border:none;
+    border-radius:5px;
+    height:32px;
+    background-color: #5cb85c;
+    color:#FFFFFF;
+    padding-left:10px;
+    padding-right:10px;
+}
+.buttons-pdf{
+    margin-top:5px;
+    border:none;
+    border-radius:5px;
+    height:32px;
+    background-color: #f79240;
+    color:#FFFFFF;
+    padding-left:10px;
+    padding-right:10px;
+}
+
+
+
+
+/*.buttons-print:before{
+    font-family: FontAwesome;
+    content : "\f02f" ;
+     display: inline-block;
+   padding-right: 3px;
+   vertical-align: middle;
+   font-weight: 900;
+}*/
+.buttons-print:hover{
+    color:orange;
+}
+.dataTables_length{
+    margin-top:5px;
+}
+.textbox {
+    border-radius: 5px;
+    margin-left: 5px;
+    margin-right: 5px;
+    border: solid 1px #ccc;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+/*    .unresponsive thead tr th {
+      min-width: 100%;
+    }*/
+
+.table td {
+    padding: 2px 2px 2px 2px;
+}
+
+.ShowContent {
+    width: 1000px;
+    height: 400px;
+    overflow: auto;
+}
+
+.jumbotron {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    margin-left: 20%;
+    margin-right: 20%;
+}
+
+.col-label {
+    padding-top: 5px;
+}

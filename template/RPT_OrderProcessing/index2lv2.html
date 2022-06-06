@@ -1,0 +1,156 @@
+<!--<link href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css" rel="stylesheet"/>
+<script src="//code.jquery.com/jquery-1.12.3.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>-->
+<style>
+    .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-xs-1, .col-xs-10, .col-xs-11, .col-xs-12, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9 {
+        padding-right: 1px;
+        padding-left: 1px;
+    }
+
+    .wrapperpage {
+        background-color: #fff;
+        /* Use flexbox */
+        display: flex;
+    }
+    .box {
+        background-color: #FFF;
+        color: #fff;
+        border-radius: 5px;
+        padding: 3px;
+        /* Use box-sizing so that element's outerwidth will match width property */
+        box-sizing: border-box;
+        box-shadow: 0 3px 3px rgba(0,0,0,0.1);
+    }
+    .handler {
+        width: 10px;
+        padding: 0;
+        cursor: ew-resize;
+        flex: 0 0 auto;
+
+    }
+
+
+
+</style>
+<body>
+    <div class="wrapperpage" style="background: ghostwhite;">
+        <div class="handler"></div>
+        <div class="col-lg-8  container box" >
+            <div>
+                <div id="products_wrapper" class="dataTables_wrapper" style="overflow-y: scroll;height: 65vh;box-shadow: 1px 1px 1px rgba(0.1,0.1,0.1,0.1);">
+                    <table id="tblColine" class="table table-striped" style="width: 100%" >
+                        <thead style="background: #3c8dbc;color:white;text-align-last:center">
+                            <tr role="row">
+                                <th>#</th>
+                                <th>ord line</th>
+                                <th>Job</th>
+                                <th>item</th>
+                                <th>qty_shipped</th>
+                                <th>QTY_INV</th>
+                                <th>PROCESS</th>
+                                <th>QTY</th>
+                                <th>order_date</th>
+                                <th>job_date</th>
+                                <th>due_date</th>
+                                <th>ship_date</th>
+                                <th>name</th>
+                                <th>city</th>
+                            </tr>
+                        </thead>
+                        <tbody style="overflow-y: scroll;height: 300px;font-size: 14px" id="tbodytblColine">
+
+                            <tr role="row" class="even">
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+
+    $("#tblColine").on('click', '#tbodytblColine tr', function () {
+        //ShowDetailLv3("EB18120035", "1");
+    });
+    function ShowDetailLv3(OrdNum, OrdLine) {
+        alert(OrdNum, OrdLine);
+    }
+
+
+
+
+
+
+
+
+
+
+//
+//
+//
+//    function format(d) {
+//        return 'Full name: <br>' +
+//                'Salary: <br>' +
+//                'The child row can contain any data you wish, including links, images, inner tables etc.';
+//    }
+
+
+
+
+//
+//
+//    var dt = $('#tblColine').DataTable({
+//        "processing": true,
+//        "serverSide": true,
+//        "ajax": "././module/RPT_OrderProcessing/data.php?load=OrderProcessing_Detail",
+//        "columns": [
+//            {
+//                "class": "details-control",
+//                "orderable": false,
+//                "data": null,
+//                "defaultContent": ""
+//            },
+//            {"data": "first_name"},
+//            {"data": "last_name"},
+//            {"data": "position"},
+//            {"data": "office"}
+//        ],
+//        "order": [[1, 'asc']]
+//    });
+
+    // Array to track the ids of the details displayed rows
+//    var detailRows = [];
+//
+//    $('#tblColine tbody').on('click', 'tr td.details-control', function () {
+//        var tr = $(this).closest('tr');
+//        var row = dt.row(tr);
+//        var idx = $.inArray(tr.attr('id'), detailRows);
+//
+//        if (row.child.isShown()) {
+//            tr.removeClass('details');
+//            row.child.hide();
+//
+//            // Remove from the 'open' array
+//            detailRows.splice(idx, 1);
+//        } else {
+//            tr.addClass('details');
+//            row.child(format(row.data())).show();
+//
+//            // Add to the 'open' array
+//            if (idx === -1) {
+//                detailRows.push(tr.attr('id'));
+//            }
+//        }
+//    });
+
+    // On each draw, loop over the `detailRows` array and show any child rows
+//    dt.on('draw', function () {
+//        $.each(detailRows, function (i, id) {
+//            $('#' + id + ' td.details-control').trigger('click');
+//        });
+//    });
+
+
+</script>

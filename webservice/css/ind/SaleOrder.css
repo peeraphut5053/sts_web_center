@@ -1,0 +1,72 @@
+ tr td{
+        padding-top:10px;
+        padding-bottom:10px;
+    }
+    .col-head-1{
+        padding-left:20px;padding-top:10px; color:orange;
+    }
+    #divLeftSide{
+        border:solid 1px #cdcdcd ; 
+        border-radius: 10px;     
+    }
+    .col-cover{
+        padding-right: 0px;
+    }
+    .col-content{
+        border:solid 1px #eae5e5;
+        padding-left:15px;
+        margin-top:5px;
+        padding-right: 15px;
+    }
+    tr th,tr td{
+        font-size : 12px;
+    }
+    .row-list-in{
+        margin-top:5px;
+        margin-bottom:5px;
+        margin-right:15px;        
+        border:solid 1px #cdcdcd;
+        padding-top:10px;
+        padding-bottom:10px;        
+    }
+    .row-odd{
+        background-color:#FFFFFF;
+        color:#666;
+        cursor: pointer;
+
+    }
+    .row-even{
+        background-color:#f3f1f1;
+        cursor: pointer;        
+        color:#666;
+    }
+    .row-active{
+        background-color:orange;
+        cursor: pointer;        
+        color:#ffffff;
+    }
+    #divDetails{
+        min-height:400px;
+        /*margin-top:-5px;*/
+        border:solid 1px #cdcdcd;
+    }
+/*    .btn{
+        width:100px;
+    }*/
+    #rowFilter{
+        border:solid 1px #cdcdcd;
+        padding-top:10px;
+        padding-bottom:10px;
+        padding-left:0px;
+    }
+    #btnFilter{
+
+/*        width:50px;
+        padding-top:2px;
+        padding-bottom:2px;*/
+    }
+    select.form-control:not([size]):not([multiple]) {
+        height: 34px;
+        padding-top:2px;
+        padding-left:2px;
+    }

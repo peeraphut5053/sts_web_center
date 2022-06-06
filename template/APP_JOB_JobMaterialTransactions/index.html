@@ -1,0 +1,452 @@
+<style>
+    .input-group-addon{
+        width: 150px;
+    }
+    .input-group{
+        width:100%;
+    }
+    .col-xs-5,.col-xs-6,.col-xs-7,.col-xs-8,.col-xs-4,.col-xs-2,.col-xs-1{
+        padding-right: 5px;
+        padding-left:  3px;
+    }
+    .border-col{
+        border: outset; padding: 5px;  border-radius: 10px;
+        overflow-y: scroll; height: 70vh;
+        padding-top: 20px;
+    }
+
+</style>
+<div>
+    <h1 id="pagehader">Job Material Transactions</h1>
+</div>    
+
+<div class="row">
+    <div class="row col-xs-7">
+        <div class='col-xs-8'>
+
+            <div class="input-group">
+                <div class="input-group-addon">Scan barcode</div>
+                <!--                PK20010002+0+10-->
+                <input value="" style="background-color: lightgreen" type="text" autocomplete="off"  class="form-control txt-filter"  id="txtBarcode">
+            </div>
+        </div>
+        <div class='col-xs-4'>
+            <div class="input-group">
+                <button onclick="" class="btn btn-primary" id="ProcessBtt" >Process</button> &nbsp;
+                <button onclick="location.reload();" class="btn btn-default" >Clear</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="row col-xs-6 border-col" >
+
+    <!-- Tab panes -->
+    <div class="row" >
+        <div class="col-xs-8">
+            <div class="input-group">
+                <div class="input-group-addon">Doc No:</div>
+                <input type="text" autocomplete="off"  class="form-control txt-filter" id ='txtDocNoEdit'  >
+            </div>
+        </div>
+        <div class="col-xs-4">
+            <div class="input-group">
+                <div class="input-group-addon">ยอดสั่งผลิต</div>
+                <input type="text" autocomplete="off" style="text-align: right"  class="form-control txt-filter" id ='txtQtyOrdEdit'  >
+            </div>
+        </div>
+    </div>
+    <div class="row" >
+        <div class="col-xs-8">
+            <div class="input-group">
+                <div class="input-group-addon">Date</div>
+                <input type="text" autocomplete="off"  class="form-control txt-filter" id ='txtDateEdit'  >
+            </div>
+        </div>
+        <div class="col-xs-4">
+            <div class="input-group">
+                <div class="input-group-addon">ยอดเบิกทั้งหมด</div>
+                <input type="text" autocomplete="off" style="text-align: right"  class="form-control txt-filter" id ='txtQtyRemEdit'  >
+            </div>
+        </div>
+    </div>
+
+    <div class="row" >
+        <div class="col-xs-6">
+            <div class="input-group">
+                <div class="input-group-addon">Job</div>
+                <input type="text" autocomplete="off"  class="form-control txt-filter" id ='txtJobEdit'  >
+            </div>
+        </div>
+        <div class="col-xs-2">
+            <div class="input-group">
+                <input type="text" autocomplete="off"  class="form-control txt-filter" id ='txtSuffixEdit'  >
+            </div>
+        </div>
+        <div class="col-xs-4">
+            <div class="input-group">
+                <div class="input-group-addon">เบิกไปแล้ว</div>
+                <input type="text" autocomplete="off" style="text-align: right"  class="form-control txt-filter" id ='txtQtyIssEdit'  >
+            </div>
+        </div>
+    </div>  
+    <div class="row" >
+        <div class="col-xs-6">
+            <div class="input-group">
+                <div class="input-group-addon">Work Center</div>
+                <input type="text" autocomplete="off"  class="form-control txt-filter" id ='txtWcEdit'  >
+            </div>
+        </div>
+        <div class="col-xs-1">
+            <div class="input-group">
+                <input type="text" autocomplete="off"  class="form-control txt-filter" id ='txtOpEdit'  >
+            </div>
+        </div>
+        <div class="col-xs-1">
+            <div class="input-group">
+                <input type="text" autocomplete="off"  class="form-control txt-filter" id ='stWc'  >
+            </div>
+        </div>
+        <div class="col-xs-4">
+            <div class="input-group">
+                <div class="input-group-addon">ผลิตไปแล้ว</div>
+                <input type="text" autocomplete="off" style="text-align: right"  class="form-control txt-filter" id ='txtQtyCompEdit'  >
+            </div>
+        </div>
+    </div>
+    <div class="row" >
+        <div class="col-xs-8">
+            <div class="input-group">
+                <div class="input-group-addon">Resource</div>
+                <input type="text" autocomplete="off"  class="form-control txt-filter" id ='txtWcDescEdit'  >
+            </div>
+        </div>
+    </div>
+
+    <div class="row" >
+        <div class="col-xs-8">
+            <div class="input-group">
+                <div class="input-group-addon">Tag</div>
+                <input type="text" autocomplete="off"  class="form-control txt-filter" id ='txtTagEdit'  >
+            </div>
+        </div>
+        <div class="col-xs-2">
+            <input type="hidden" autocomplete="off"  class="form-control txt-filter" id ='stTag'  >
+        </div>
+        <div class="col-xs-2">
+            <input type="hidden" autocomplete="off"  class="form-control txt-filter" id ='txtTag2Edit'  >
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-6">
+            <div class="input-group">
+                <div class="input-group-addon">Location</div>
+                <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtLocEdit">
+            </div>
+        </div>
+        <div class="col-xs-5">
+            <div class="input-group">
+                <div class="input-group-addon">Lot</div>
+                <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtLotEdit">
+            </div>
+        </div>
+        <div class="col-xs-1">
+            <input type="text" autocomplete="off"  class="form-control txt-filter" id="stLot">
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-xs-6">
+            <div class="input-group">
+                <div class="input-group-addon">Item</div>
+                <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtItemEdit" readonly>
+            </div>
+        </div>
+        <div class="col-xs-5">
+            <div class="input-group">
+                <div class="input-group-addon">Item Desc</div>
+                <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtDescEdit" readonly>
+            </div>
+        </div>
+        <div class="col-xs-1">
+            <input type="text" autocomplete="off"  class="form-control txt-filter" id="stMat" readonly>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-xs-8">
+            <div class="input-group">
+                <div class="input-group-addon">รหัสเหล็กม้วน</div>
+                <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtCodeEdit" readonly>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-5">
+            <div class="input-group">
+                <div class="input-group-addon">Qty</div>
+                <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtQtyEdit">
+            </div>
+        </div>
+        <div class="col-xs-1">
+            <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtUmEdit">
+        </div>
+        <div class="col-xs-5">
+            <div class="input-group">
+                <div class="input-group-addon">Qty 2</div>
+                <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtQty2Edit">
+            </div>
+        </div>
+        <div class="col-xs-1">
+            <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtUm2Edit">
+        </div>
+    </div>
+</div>
+<div class="row col-xs-5 border-col" style="overflow-x: scroll;margin-left: 4vw ;">
+    <table style="font-size: 12px;" class='table table-striped table-info' id="DataTagTable">
+        <tr style="background-color: #3c8dbc" class="bg-primary" >
+            <th>Select</th>
+            <th>Tag ID</th>
+            <th>Item</th>
+            <th>Description</th>
+            <th>Pack No</th>
+            <th>Lot</th>
+            <th>Location</th>
+            <th>Qty</th>
+            <th>UM</th>
+            <th>Qty2</th>
+            <th>UM2</th>
+            <th>Document Ref</th>
+        </tr>
+
+
+
+    </table>
+</div>
+
+
+<script>
+    $("#txtDateEdit").datepicker({
+        dateFormat: 'yy-mm-dd',
+        timeFormat: "HH:mm"
+    }).datepicker('setDate', new Date());
+
+    var url = "././module/APP_JOB_JobMaterialTransactions/data.php";
+    $("#txtBarcode").focus();
+    $('#txtBarcode').keypress(function (e) {
+        var key = e.which;
+        if (key == 13) // the enter key code
+        {
+            BarcodeScan();
+            return false;
+        }
+    });
+
+    async function BarcodeScan() {
+        var barcode = $('#txtBarcode').val();
+        var job = $('#txtJobEdit').val();
+        BarType = await GetBarType(barcode);
+        console.log(BarType);
+        if (BarType == "M") {
+            GetDataTag(barcode, job);
+        } else if (BarType == "J") {
+            GetDataJob(barcode)
+        } else if (BarType == "X") {
+            alert("Error! ข้อมูลไม่ถูกต้อง");
+        }
+    }
+
+
+    function GetDataJob(barcode) {
+        let jobSplit = barcode.split("+");
+        let job = jobSplit[0];
+        $.ajax({
+            type: 'GET',
+            url: url,
+            contentType: "text/plain",
+            dataType: 'json',
+            data: {
+                load: "GetDataJob",
+                job: job,
+            },
+            success: function (data) {
+                console.log(data);
+                let{suffix, oper_num, job, wc, qty_released, QtyRem, QtyIss, qty_complete, Uf_sts_job} = data[0];
+                if (data.length != 0) {
+                    $("#txtOpEdit").val(oper_num);
+                    $("#txtJobEdit").val(job)
+                    $("#txtWcEdit").val(wc);
+                    $("#txtWcDescEdit").val(oper_num);
+                    $("#txtQtyOrdEdit").val(formatMoney(qty_released));
+                    $("#txtQtyRemEdit").val(formatMoney(QtyRem));
+                    $("#txtQtyIssEdit").val(formatMoney(QtyIss));
+                    $("#txtQtyCompEdit").val(formatMoney(qty_complete));
+                    //$("#txtQtyRemEdit").val(data[0].qty_released);
+                    $("#txtDocNoEdit").val(Uf_sts_job);
+                    $("#txtBarcode").val("");
+                } else {
+                    alert("ไม่มี Job นี้ หรือ Tag ถูกแสกนไปแล้ว");
+                }
+            },
+        });
+    }
+
+    function Getmatltran_mst(job) {
+        $.ajax({
+            type: 'GET',
+            url: url,
+            contentType: "text/plain",
+            dataType: 'json',
+            data: {
+                load: "Getmatltran_mst",
+                job: job,
+            },
+            success: function (data) {
+                console.log();
+                if (data.length != 0) {
+                    $("#txtQtyIssEdit").val(formatMoney(data.qty_mat));
+                }
+            },
+        });
+    }
+
+    function GetDataTag(id, job) {
+        $.ajax({
+            type: 'GET',
+            url: url,
+            contentType: "text/plain",
+            dataType: 'json',
+            data: {
+                load: "GetDataTag",
+                id: id,
+                job: job
+            },
+            success: function (data) {
+
+                console.log(data);
+
+                if (data.length != 0) {
+                    let {id, item, lot, loc, qty1, um1, um2} = data[0];
+                    $("#txtTagEdit").val(id);
+                    $("#txtItemEdit").val(item);
+                    $("#txtLotEdit").val(lot);
+                    $("#txtLocEdit").val(loc);
+                    $("#txtQtyEdit").val(qty1);
+                    $("#txtUmEdit").val(um1);
+                    $("#txtUm2Edit").val(um2);
+                    appendDataTagTable(data);
+                    $("#txtBarcode").val("");
+                } else {
+                    alert('Tag ไม่ตรงกับ BOM หรือ Tag ถูกแสกนไปแล้ว');
+                    $("#txtBarcode").val("");
+                }
+
+            },
+        });
+    }
+
+    function appendDataTagTable(data) {
+        let chk_duplicate = 0;
+        $(".tIdGridCol").each(function () {
+            if (data[0].id == $(this).val()) {
+                chk_duplicate = chk_duplicate + 1;
+            }
+        });
+
+
+        if (chk_duplicate > 0) {
+            alert("Tag ซ้ำ");
+        } else {
+            let {id, suffix, item, lot, loc, qty1, um1, qty2, um2} = data[0];
+
+            $('#DataTagTable tr:last').after(`<tr class='tr-append'>
+            <td><input type="checkbox" checked> </td>
+            <td><input type='hidden' class='tIdGridCol' value='${id}'/> ${id}</td>
+            <td><input type='hidden' class='tItemGridCol' value='${item}'/> ${item}</td>
+            <td>${suffix}</td>
+            <td>${suffix}</td>
+            <td><input type='hidden' class='tLotGridCol' value='${lot}'/>${lot}</td>
+            <td><input type='hidden' class='tLocGridCol' value='${loc}'/>${loc}</td>
+            <td>${qty1}</td>
+            <td>${um1}</td>
+            <td>${qty2}</td>
+            <td>${um2}</td>
+            <td>${suffix}</td>
+    </tr>`);
+        }
+    }
+
+    function IssueProcess() {
+
+        $('#ProcessBtt').prop('disabled', true);
+        let tIdGridCol = [];
+        let tItemGridCol = [];
+        let tLotGridCol = [];
+        let tLocGridCol = [];
+        let Wc = $("#txtWcEdit").val();
+        let Job = $("#txtJobEdit").val();
+        $(".tIdGridCol").each(function () {
+            tIdGridCol.push($(this).val());
+        });
+        $(".tItemGridCol").each(function () {
+            tItemGridCol.push($(this).val());
+        });
+        $(".tLotGridCol").each(function () {
+            tLotGridCol.push($(this).val());
+        });
+        $(".tLocGridCol").each(function () {
+            tLocGridCol.push($(this).val());
+        });
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: {
+                load: "IssueProcess",
+                tIdGridCol: tIdGridCol,
+                tItemGridCol: tItemGridCol,
+                tLotGridCol: tLotGridCol,
+                tLocGridCol: tLocGridCol,
+                Wc: Wc,
+                Job: Job
+            },
+            success: function (data) {
+                console.log(data);
+                var modalId = "#ProductModal";
+                $(modalId).modal("hide");
+            }
+        });
+        setTimeout(function () {
+
+            $(".tr-append").remove();
+            $("#txtTagEdit").val("");
+            $("#txtLocEdit").val("");
+            $("#txtLotEdit").val("");
+            $("#txtItemEdit").val("");
+            $("#txtQtyEdit").val("");
+            $("#txtUmEdit").val("");
+            $("#txtQty2Edit").val("");
+            $("#txtUm2Edit").val("");
+            $.alert("บันทึกสำเร็จ");
+            $('#ProcessBtt').prop('disabled', false);
+        }, 3000)
+
+
+    }
+
+    $("#ProcessBtt").click(function () {
+        IssueProcess();
+    });
+
+    function clear() {
+        alert();
+        location.reload();
+
+    }
+
+//    let myfunc = (a, b) => a + b;
+//    console.log(myfunc(5, 6));
+</script>
+
+

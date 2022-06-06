@@ -1,0 +1,168 @@
+.col-header{
+    border-bottom:solid 2px orange; 
+    color:orange;
+}
+.modal-dialog {
+    max-width: 80%;
+    /*margin: 30px auto;*/
+}
+
+.headmast{
+    margin-bottom:15px;
+}
+
+.col-data{
+    color:#0056b3;
+}
+.table thead th {
+    vertical-align: bottom;
+    border-bottom: 2px solid #17a2b8;
+    background-color: #17a2b8;
+    color:#ffffff;
+}
+.btn-default{
+    border:solid 1px #666;
+}
+.dropdown-menu{
+    margin-top:0px;
+
+    background-color: #333333;
+} 
+.menu-item{
+    color:#fff;
+    margin-left: 20px;
+}
+.dropdown a:focus, a:hover {
+    color: orange;
+
+}
+.dropdown{
+    padding-top:8px;
+}
+.dropdown-toggle{
+    color:#fff;
+    font-size: 16px;
+}
+.navbar{
+    margin-bottom:20px;
+}
+.container-main{
+    margin-top:0px;
+}
+body{
+    /*overflow-x: hidden;*/
+}
+
+.row{
+    margin-top:5px;
+    margin-bottom:5px;
+}
+.col-head{
+    font-size: 12px;
+}
+.col-in{
+    padding-left:0px;
+    padding-right:0px;
+}
+.navbar-brand{
+    /*border-right:solid 1px orange;*/
+   padding-right: 20px;
+       /*border-top-right-radius:100%;*/
+}
+.col-in .form-control{
+    padding-left:5px;
+    padding-right:5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    height:30px;
+    font-size: 12px;
+
+}
+.col-label{
+    padding-top:5px;
+}
+.btn-del-mini{
+    width:20px;
+    height:20px;
+    padding-left:5px;
+    padding-top:2px;
+    font-size:12px;
+}
+.ui-widget.ui-widget-content {
+    margin-top: 1%;
+    margin-left: -5%;
+    border: 1px solid #aed0ea;
+}
+.ui-timepicker-div dl dd {
+    margin: 0 10px 10px 40%;
+}
+.ui-timepicker-div dl dt {
+    float: left;
+    clear: left;
+    padding: 0 0 0 5px;
+    font-size: 12px;
+}
+.rowheader2{
+    border-bottom: solid 1px #17a2b8;
+    padding-bottom: 0px;
+    margin-bottom: 10px;
+}
+.rowheader{
+    border-bottom: solid 2px orange;
+    padding-bottom: 0px;
+    margin-bottom: 10px;
+}
+@media screen and (max-width: 1024px){
+    .ui-widget.ui-widget-content {
+        margin-top: -13%;
+        margin-left: -5%;
+        border: 1px solid #aed0ea;
+    }
+    .ui-timepicker-div dl dd {
+        margin: 0 10px 30px 40%;
+    }
+    .ui_tpicker_hour_label{
+        margin-top:-25px;
+    }
+    .ui_tpicker_minute_label{
+        margin-top:-25px;
+    }
+    .ui_tpicker_second_label{
+        margin-top:-25px;
+    }
+    .modal-dialog {
+    max-width: 80%;
+    margin: 50px auto;
+    /*margin-left:20px;*/
+}
+}
+#fieldLists div.row{
+    margin-top:0px;
+    margin-bottom: 0px;
+}
+#fieldLists .row .form-control{
+    border-radius: 0px;
+}
+.btn-round {
+    border:solid 1px #666;
+    border-radius: 20px;
+    width:25px;
+    height:25px;
+    padding-top:2px;
+    padding-left:1px;
+    padding-right:0px;
+}
+.col-back{
+    padding-left:0px;
+}
+.btn-back{
+    border-radius: 0px;
+    background-color: #17a2b8;
+    border:none;
+    width:40px;
+    border-top-right-radius:100%;
+    padding-left:3px;
+}
+.table thead th {
+    font-size: 14px;
+}

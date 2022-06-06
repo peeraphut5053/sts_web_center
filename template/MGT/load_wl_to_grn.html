@@ -1,0 +1,1512 @@
+ <link rel="stylesheet" type="text/css" href="css/codepen_tab.css">
+<style>
+
+
+    #MilltestContent,
+    #GrnContent,
+    #LotContent {
+        font-size: 12px;
+    }
+
+    .divFilter {
+        border: solid 1px #b5b5b5;
+        /*border-radius: 10px;*/
+        padding-left: 10px;
+        padding-right: 10px;
+        margin-top: 0px;
+    }
+
+    input[type=checkbox],
+    input[type=radio] {
+        /*box-sizing: border-box;*/
+        margin-top: 5px;
+        margin-right: 10px;
+        margin-left: 10px;
+    }
+
+    label {
+        margin-top: 5px;
+    }
+
+    #tableContent {
+        width: 100%;
+    }
+
+    #divTable {
+        /*margin-top: 5px;*/
+        /*min-height: 400px;*/
+        /*height:100%;*/
+        overflow-y: auto;
+        overflow-x: auto;
+        /*padding-top:10px;*/
+    }
+
+    .table thead th {
+        vertical-align: middle;
+        text-align: center;
+        border: solid 1px #cdcdcd;
+    }
+
+    .table tbody td {
+        vertical-align: middle;
+        text-align: center;
+        /*border:solid 1px #bbdce2;*/
+    }
+
+    .fa-check {
+        color: green;
+
+    }
+
+    .fa-close {
+        color: red;
+    }
+
+    .col-po,
+    .col-vend {
+        background-color: #ffffcc;
+    }
+
+    th.col-po {
+        background-color: #ffffcc;
+    }
+
+    .txtNumuric {
+        width: 50px;
+
+    }
+    .ui-widget.ui-widget-content{
+        top:0px;
+    }
+    .table td{
+        padding:2px 2px 2px 2px;
+    }
+    .table th{
+        padding:2px 2px 2px 2px;
+    }
+    .input-group-addon{
+        height:25px;
+    }
+    .form-control{
+        height:25px;
+    }
+
+    .frmRad{
+        margin-top:2px;
+    }
+    .btn-info {
+        height:25px;
+        padding-top:0px;
+    }
+    .input-group label{
+        margin-top:0px;
+    }
+    h5{
+        font-size:16px;
+    }
+    .row-mini-detail{
+        margin-top:0px;
+        margin-bottom:0px;
+    }
+    select.form-control:not([size]):not([multiple]) {
+        padding-top:0px;
+        padding-left: 2px;
+        padding-right: 2px;
+        height: 25px;
+        font-size: 14px
+    }
+    #lblRecordCount{
+        padding-top:0px;
+        padding-bottom:0px;
+        font-size:12px;
+    }
+    .nav-tabs > li{
+        color:#666;
+    }
+    .rowresult{
+        /*margin-top:-15px;*/
+
+    }
+    input[type='checkbox']{
+        margin-left:0px;
+        margin-right:0px;
+        margin-top: 0px;
+        height:30px;
+        width:30px;
+    }
+
+    /*    tbodyData {
+            display:block;
+    
+            height:400px;
+    
+            overflow:auto;
+    
+        }*/
+
+    /*    thead, tbody tr {
+    
+            display:table;
+    
+            width:100%;
+    
+            table-layout:fixed;
+    
+        }*/
+
+    /*    theadData {
+    
+            width: calc( 100% – 1em )
+    
+        }
+        .tableMain th:nth-child(1){
+            width:4%;
+        }
+        .tableMain th:nth-child(2){
+            width:6%;
+        }
+        .tableMain th:nth-child(3){
+            width:6%;
+        }
+        .tableMain th:nth-child(4){
+            width:6%;
+        }
+        .tableMain th:nth-child(5){
+            width:6%;
+        }
+        .tableMain th:nth-child(6){
+            width:6%;
+        }
+        .tableMain th:nth-child(7){
+            width:6%;
+        }
+        .tableMain th:nth-child(8){
+            width:10%;
+        }
+        .tableMain th:nth-child(9){
+            width:4%;
+        }
+        .tableMain th:nth-child(10){
+            width:33%;
+        }
+    
+        td
+        .tableMain td:nth-child(1){
+            width:5%;
+        }
+        .tableMain td:nth-child(2){
+            width:7%;
+        }
+        .tableMain td:nth-child(3){
+            width:7%;
+        }
+        .tableMain td:nth-child(4){
+            width:7%;
+        }
+        .tableMain td:nth-child(5){
+            width:7%;
+        }
+        .tableMain td:nth-child(6){
+            width:6%;
+        }
+        .tableMain td:nth-child(7){
+            width:7%;
+        }
+        .tableMain td:nth-child(8){
+            width:6%;
+        }
+        .tableMain td:nth-child(9){
+            width:6%;
+        }
+        .tableMain td:nth-child(10){
+            width:5%;
+        }
+        .tableMain td:nth-child(11){
+            width:6.5%;
+            padding-left:0px;
+            padding-right:0px;
+            text-align: center;
+        }
+        .tableMain td:nth-child(12){
+            width:6.5%;
+            padding-left:0px;
+            padding-right:0px;
+    
+        }
+        .tableMain td:nth-child(13){
+            width:6.5%;
+            padding-left:0px;
+            padding-right:0px;
+        }
+        .tableMain td:nth-child(14){
+            width:6%;
+            padding-left:0px;
+            padding-right:0px;
+            text-align: center;
+        }*/
+    td .form-control {
+
+        padding-left:1px;padding-right:1px;
+        padding-top:1px;
+        padding-bottom:1px;
+        font-size:14px;
+        text-align: center;
+
+    }
+    td .btn {
+
+        padding-top:8px;
+
+    }
+    input[type='checkbox'] {
+        margin-left:auto;
+        margin-right:auto;
+    }
+    /*    thead{
+            position:fixed;
+        }*/
+    /*    @import url("https://fonts.googleapis.com/css?family=Open+Sans:400,600,700");
+    @import url("https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css");*/
+    section{
+        padding-top:5px;
+    }
+</style>
+
+<!--<div id="loading" style="z-index:999 ; position: absolute;top:-10%; width: 100%; height: 100%; background: url('./image/STS_Loading_fade.gif') no-repeat center center;"></div>-->
+
+<input style="margin-left:-15px;" id="tab1" type="radio" name="tabs" checked>
+<label for="tab1"><i class="fas fa-download"></i>&nbsp;Load Weight list to GRN</label>
+
+<input id="tab2" type="radio" name="tabs">
+<label for="tab2"><i class="fas fa-clock"></i>&nbsp;Print tag history</label>
+<input id="tab3" type="radio" name="tabs">
+<label for="tab3"><i class="fas fa-cogs"></i>&nbsp;Clear GRN and WeightList</label>
+<input id="tab4" type="radio" name="tabs">
+<label for="tab4"><i class="fas fa-cogs"></i>&nbsp;Pull Act.Weight From WeightList</label>
+
+<section id="content1">
+
+    <div class="well">
+        <div class='row'>
+            <div class='col-md-2'>
+                <div class='row'>
+                    Start Date
+                </div>
+                <div class='row'>
+                    <input type="text" class="form-control" id="startDate" value="{StartDate}">
+                </div>
+            </div>
+            <div class='col-md-2'>
+                <div class='row'>
+                    To Date
+                </div>
+                <div class='row'>
+                    <input type="text" class="form-control" id="endDate" value="{EndDate}">
+                </div>
+            </div>
+            <div class='col-md-2'>
+                <div class='row'>
+                    Status
+                </div>
+                <div class='row'>
+                    <select class="form-control" id="selStatus">
+                        <option value = "A">All</option>
+                        <option value = "Y">UP</option>
+                        <option value = "N">WAIT</option>
+                    </select>
+                </div>
+            </div>
+            <div class='col-md-2'>
+                <div class='row'>
+                    Ref No
+                </div>
+                <div class='row'>
+                    <input type="text" class="form-control" id="filterRefNo">
+                </div>
+            </div>
+            <div class='col-md-3'>
+                <div class='row'>
+                    Sts.No
+                </div>
+                <div class='row'>
+                    <input type="text" class="form-control" id="filterStsNo">
+                </div>
+            </div>
+            <div class='col-md-1'>
+                <div class='row'>
+                    &nbsp;
+                </div>
+                <div class='row'>
+                    <a href="#" class="btn btn-info" id="btnShowData" OnClick="FilterSearch('normal');" style="width:100%;color:#FFFFFF;margin-right:5px"><i class="fa fa-search"></i> Search</a>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+    <div class='row text-right rowresult' >
+        <div class="col-md-6 text-right">
+            <!--Auto Gen Lot Number-->
+        </div>
+        <div class="col-md-2 text-right">
+            Lot Number Start :
+        </div>
+        <div class="col-md-2">
+            <input type="text" readonly id="hdGenLot" value="" class="form-control" >
+        </div>
+        <div class="col-md-2">
+            <label id="lblRecordCount" class="pull-right">0 record(s) found</label>
+        </div>
+
+
+
+    </div>
+    <div id="divTable" align="center " class="row">
+        <!--       <table id="tableContent" class="table  table-striped table-condensed tableMain">
+                    <thead class="theadData">
+                        <tr style="border-top:solid 1px #ddd;">
+                            <th align="center" valign="middle" rowspan="2">#</th>
+                            <th align="center" valign="middle" rowspan="2">STS.No.</th>
+                            <th rowspan="2">RefNo.</th>
+                            <th rowspan="2">Coil No.</th>
+                            <th rowspan="2">Heat.No.</th>
+                            <th rowspan="2">น้ำหนัก</th>
+                            <th rowspan="2">ชั้นคุณภาพ</th>
+                            <th colspan="2">ความหนา x ความกว้าง (มม.)</th>
+                            <th rowspan="2">ผ่าน</th>
+                            <th colspan="6"  class="col-po" style="background-color:#ffffcc;color:#666;">SyteLine
+                            </th>
+                        </tr>
+                        <tr>
+                            <th>ระบุ</th>
+                            <th>วัดได้</th>
+                            <th align="center" style="width:5%;background-color:#ffffcc;color:#666;">grn_num</th>
+                            <th width="3%" align="center" style="background-color:#ffffcc;color:#666;">po_num</th>
+                            <th width="3%" align="center" style="background-color:#ffffcc;color:#666;">po_line</th>
+                            <th align="center" style="background-color:#ffffcc;color:#666;">Match Grn</th>
+                            <th align="center" style="background-color:#ffffcc;color:#666;">Copy</th>
+                            <th align="center" style="background-color:#ffffcc;color:#666;">Print Tag</th>
+                        </tr>
+                    </thead>
+                    <tbody id="showData" class="tbodyData">
+                     {content_table}
+                    </tbody>
+                </table>-->
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-lg-12 col-12 text-center" style="margin-top:25px;">
+            <a class="btn btn-info " id='btnProcess' style="color:#FFFFFF;">PROCESS</a>
+            <a class="btn btn-info " onClick='PrintTag(0);' id='btnPrintBarcode' style="color:#FFFFFF;">PRINT BARCODE</a>
+        </div>
+    </div>
+
+</section>
+
+<section id="content2" >
+    <div class="well" style="background-color:#ccffff;">
+        <div class='row'>
+            <div class='col-md-2'>
+                <div class='row'>
+                    Start Date
+                </div>
+                <div class='row'>
+                    <input type="text" class="form-control" id="startDate2" value="{StartDate}">
+                </div>
+            </div>
+            <div class='col-md-2'>
+                <div class='row'>
+                    To Date
+                </div>
+                <div class='row'>
+                    <input type="text" class="form-control" id="endDate2" value="{EndDate}">
+                </div>
+            </div>
+            <div class='col-md-2'>
+                <div class='row'>
+                    Status
+                </div>
+                <div class='row'>
+                    <select class="form-control" id="selStatus2">
+                        <option value = "A">All</option>
+                        <option value = "Y">UP</option>
+                        <option value = "N">WAIT</option>
+                    </select>
+                </div>
+            </div>
+            <div class='col-md-2'>
+                <div class='row'>
+                    Ref No
+                </div>
+                <div class='row'>
+                    <input type="text" class="form-control" id="filterRefNo2">
+                </div>
+            </div>
+            <div class='col-md-3'>
+                <div class='row'>
+                    Sts.No
+                </div>
+                <div class='row'>
+                    <input type="text" class="form-control" id="filterStsNo2">
+                </div>
+            </div>
+            <div class='col-md-1'>
+                <div class='row'>
+                    &nbsp;
+                </div>
+                <div class='row'>
+                    <a href="#" class="btn btn-info" OnClick="FilterSearch('history');" id="btnShowData2" style="width:100%;color:#FFFFFF;margin-right:5px"><i class="fa fa-search"></i> Search</a>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+    <div class='row text-right rowresult' >
+        <label id="lblRecordCount2" class="pull-right">0 record(s) found</label>
+        <!--  <input type="hidden" id="hdGenLot" value=""> -->
+    </div>
+    <div id="divTable2" align="center " class="row">
+
+        <!--        <table id="tableContent" class="table  table-striped table-condensed tableMain">
+                    <thead class="theadData">
+                        <tr style="border-top:solid 1px #ddd;">
+                            <th align="center" valign="middle" rowspan="2">#</th>
+                            <th align="center" valign="middle" rowspan="2">STS.No.</th>
+                            <th rowspan="2">RefNo.</th>
+                            <th rowspan="2">Coil No.</th>
+                            <th rowspan="2">Heat.No.</th>
+                            <th rowspan="2">น้ำหนัก</th>
+                            <th rowspan="2">ชั้นคุณภาพ</th>
+                            <th colspan="2">ความหนา x ความกว้าง (มม.)</th>
+                            <th rowspan="2">ผ่าน</th>
+                            <th colspan="5" width="30%"  class="col-po" style="background-color:#ffffcc;color:#666;">SyteLine
+                            </th>
+                        </tr>
+                        <tr>
+                            <th>ระบุ</th>
+                            <th>วัดได้</th>
+                            <th align="center" style="background-color:#ffffcc;color:#666;width:10%;">grn_num</th>
+                            <th align="center" style="background-color:#ffffcc;color:#666;width:10%;">po_num</th>
+                            <th align="center" style="background-color:#ffffcc;color:#666;width:3%;">po_line</th>
+                            <th align="center" style="background-color:#ffffcc;color:#666;width:5%;">tab/barcode</th>
+                                                <th align="center" style="background-color:#ffffcc;color:#666;width:3%;"><i class="fa fa-search"></i></th>
+                                                <th align="center" style="background-color:#ffffcc;color:#666;width:3%;"><i class="fa fa-copy"></i></th>
+                            <th align="center" style="background-color:#ffffcc;color:#666;width:3%;"><i class="fa fa-print"></i></th>
+                            <th align="center" style="background-color:#ffffcc;color:#666;width:3%;"><i class="fa fa-close"></i></th>
+                        </tr>
+        
+        
+                    </thead>
+                    <tbody id="showData2" class="tbodyData">
+                        <tr>
+                            <td colspan="16">
+                                <br>  <br>  <br>  <br>
+                                <h1 style="color:#cdcdcd;">.. To show any data use search filter ...</h1>
+                                <br>  <br>  <br>  <br>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>-->
+        <!--</div>-->
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-lg-12 col-12 text-center" style="margin-top:25px;">
+            <a class="btn btn-info " onClick='PrintTag(1);' id='btnPrintBarcode2' style="color:#FFFFFF;">PRINT BARCODE</a>
+        </div>
+    </div>
+</section>
+
+<section id="content3" >
+    <div class="row">
+        <div class="col-md-4 text-right">Enter STS No(5 digits)</div>
+        <div class="col-md-4">
+            <div class="input-group">
+                <input type="hidden" id="txtCheckValidSno" value="0">
+                <input type="hidden" id="txtHdGrnNum" value="">
+                <input type="hidden" id="txtHdPoNum" value="">
+                <input type="hidden" id="txtHdPoLine" value="">
+                <input type="hidden" id="txtHdItem" value="">
+                <input type="text" id="txtClearStsNo" class="form-control">
+                <div class="input-group-addon">
+                    <a href="#" id="btnClearStsShow" ><i class="fa fa-search"></i></a>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-3"></div>
+    </div>
+    <div class="row text-center" >
+        <div class="col-md-6">
+            <h4>WeightList</h4>
+            <div class="row" style="padding-top:15px;height:280px;margin:10px 10px 10px 10px;border:solid 1px #e4e4e4;border-radius: 10px;" id="rowResultSearchWeightList" >
+
+            </div>
+        </div>
+        <div class="col-md-6">
+            <h4>SyteLine GRN  , PO</h4>
+            <div class="row" id="rowResultSearchGrnLine" style="padding-top:15px;height:280px;margin:10px 10px 10px 10px;border:solid 1px #e4e4e4;border-radius: 10px;" >
+
+            </div>
+        </div>
+    </div>
+    <div class="row text-center" >
+        <a id="btnClearWeightPist"  class="btn btn-danger">Clear GRN From WeightList</a>
+    </div>
+</section>
+<section id="content4" >
+    <div class="row text-center">
+        <!--<div class="col-md-8">-->
+        <div class="row">
+            <div class="col-md-4 " style="padding-left:0px;">
+                <div class="input-group">
+                    <div class="input-group-addon" style="background-color:#cccccc;color:#666;">
+                        Start Date
+                    </div>
+                    <input type="text" class="form-control" id="actWeightStartDate"  >
+                </div>
+            </div>
+            <div class="col-md-4 " style="padding-left:0px;">
+                <div class="input-group">
+                    <div class="input-group-addon" style="background-color:#cccccc;color:#666;">
+                        End Date
+                    </div>
+                    <input type="text" class="form-control" id="actWeightEndDate"  >
+                </div>
+            </div>
+            <div class="col-md-4 " style="padding-left:0px;">
+                <a class="btn btn-default"   id="btnFindActWeight">
+                    <i class="fa fa-search"></i>&nbsp;Find Empty Act.Weight
+            
+                </a>
+                <a class="btn btn-default" style='color:#FFFFFF;background-color: #000080;'  id="btnPullActWeight">
+                    <i class="fa fa-download"></i>&nbsp;Pull Act.Weight
+                   
+                </a>
+            </div>
+        </div>
+        <div class="row">
+
+            <table class="table table-condensed table-striped">
+                <thead>
+                    <tr style="background-color:#31b0d5;color:#FFFFFF;">
+                        <th>LOT</th>
+                        <th>RCVD_QTY</th>
+                        <th>STS_NO</th>
+                        <th>Act.Weight( Lot )</th>
+                        <th style="color:orange;">Act.Weight( WeightList )</th>
+                    </tr>
+                </thead>
+                <tbody id="tableListPullActWeight">
+
+                </tbody>
+            </table>
+        </div>
+        <!--</div>-->
+        <!--        <div class="col-md-4">
+        
+                    <br>
+                    <br>
+                  
+                </div>-->
+
+    </div>
+</section>
+<div id="divPO" style="overflow:auto;"></div>
+<div id="printpopup"></div>
+<script type="text/javascript">
+    //\\\///\\\///\\\ Initial Page Data ///\\\////\\\////\\\
+
+    //============Gen New Lot =============///
+
+    $("#divTable").load("././module/MGT_partial_table.php");
+    function pad(num, size) {
+        var s = num + "";
+        while (s.length < size)
+            s = "0" + s;
+        return s;
+    }
+    GenLot();
+    function GenLot() {
+        $.ajax({
+            url: "././module/MGT/MGT_ajax/data_lot.php",
+            type: 'post',
+            data: {
+                action: "NewLot"
+            },
+            success: function (data) {
+
+                $("#hdGenLot").val(data);
+            },
+            error: function (xhr, status, error) {
+                var err = eval("(" + xhr.responseText + ")");
+                alert(err.Message);
+            },
+//            dataType: "json",
+        });
+    }
+
+    //================================///
+    $("#loading ").hide();
+    $("#divTable").css({
+        'min-height': 400,
+        'height': screen.height - 500
+    });
+    //\\\///\\\///\\\//\\\///\\\///\\\//\\\///\\\///\\\\///
+    //======== Every Search Button Click =============//
+    $('#btnVenSearch').click(function () {
+        $('#divVen').dialog({
+            modal: true,
+            autoOpen: true,
+            show: 'fade',
+            width: 1000,
+            height: 400,
+            title: ":: Select Vendor from SYTELINE "
+        })
+                .load("././module/MTG_dialog_vendor.php", {
+                    "form": "create"
+                });
+    });
+    //======== Every Search Button Click =============//
+
+    $(function () {
+        $("#actWeightStartDate").datepicker({
+            dateFormat: 'yy-mm-dd',
+        });
+        $("#actWeightEndDate").datepicker({
+            dateFormat: 'yy-mm-dd',
+        });
+
+
+        $("#endDate").datepicker({
+            dateFormat: 'yy-mm-dd',
+        });
+        $("#startDate").datepicker({
+            dateFormat: 'yy-mm-dd',
+        });
+        $("#endDate2").datepicker({
+            dateFormat: 'yy-mm-dd',
+        });
+        $("#startDate2").datepicker({
+            dateFormat: 'yy-mm-dd',
+        });
+        $(".txtNumuric2").keydown(function (e) {
+            // Allow: backspace, delete, tab, escape, enter and .
+            if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== -1 ||
+                    // Allow: Ctrl+A, Command+A
+                            (e.keyCode === 65 && (e.ctrlKey === true || e.metaKey === true)) ||
+                            // Allow: home, end, left, right, down, up
+                                    (e.keyCode >= 35 && e.keyCode <= 40)) {
+                        // let it happen, don't do anything
+                        return;
+                    }
+                    // Ensure that it is a number and stop the keypress
+                    if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+                        e.preventDefault();
+                    }
+                });
+    });
+    $("span[id^='spanSLPO_']").each(function () {
+        $(this).on("click", function () {
+            var ThisId = $(this).attr("id");
+            alert();
+        });
+    });
+    function FilterSearch(searchType) {
+        $("#showData").empty();
+        $("#showData2").empty();
+        $("#lblRecordCount").text("0 record(s) found");
+        $("#lblRecordCount2").text("0 record(s) found");
+        var Chk = "";
+        var startDate = "";
+        var endDate = "";
+        var filterRefNo = "";
+        var filterStsNo = "";
+        var errCount = 0;
+        var errText = "ผิดพลาด \n";
+        if (searchType == "normal") {
+            Chk = $('#selStatus').val();
+            startDate = $('#startDate').val();
+            endDate = $('#endDate').val();
+            filterRefNo = $("#filterRefNo").val();
+            filterStsNo = $("#filterStsNo").val();
+            $("#btnShowData").html("<i class='fa fa-spinner fa-spin'></i>&nbsp;loading");
+        } else {
+            Chk = $('#selStatus2').val();
+            startDate = $('#startDate2').val();
+            endDate = $('#endDate2').val();
+            filterRefNo = $("#filterRefNo2").val();
+            filterStsNo = $("#filterStsNo2").val();
+            $("#btnShowData2").html("<i class='fa fa-spinner fa-spin'></i>&nbsp;loading");
+        }
+
+        if (startDate == "") {
+            errCount++;
+            errText = errText + " - ไม่ได้เลือก Start Date \n";
+        }
+        if (endDate == "") {
+            errCount++;
+            errText = errText + " - ไม่ได้เลือก End Date \n";
+        }
+        if (errCount > 0) {
+            return false;
+        } else {
+            if (searchType == "normal") {
+                $("#divTable").load("././module/MGT_partial_table.php", {
+                    'status': Chk,
+                    'startDate': startDate,
+                    'endDate': endDate,
+                    'filterRefNo': filterRefNo,
+                    'filterStsNo': filterStsNo,
+                    'searchType': searchType,
+                }, function () {
+                    $("#btnShowData").html("<i class='fa fa-search'></i>&nbsp;Search");
+
+                });
+            } else {
+                $("#divTable2").load("././module/MGT_partial_table.php", {
+                    'status': Chk,
+                    'startDate': startDate,
+                    'endDate': endDate,
+                    'filterRefNo': filterRefNo,
+                    'filterStsNo': filterStsNo,
+                    'searchType': searchType,
+                }, function () {
+                    $("#btnShowData2").html("<i class='fa fa-search'></i>&nbsp;Search");
+
+                });
+            }
+
+
+//            $("#loading").show();
+//            $.ajax({
+//                url: "./module/ajax/dataPOQC.php",
+//                type: 'post',
+//                data: {
+//                    status: Chk,
+//                    startDate: startDate,
+//                    endDate: endDate,
+//                    filterRefNo: filterRefNo,
+//                    filterStsNo: filterStsNo,
+//                    searchType: searchType,
+//                    action: "Search",
+//                },
+//                success: function (data) {
+////                    console.log(data);
+//                    // accessing all the properties
+//                    
+//                   
+//                    var CountData = 0;
+//                    var x = 0;
+//                    var Tmp = "";
+//                    var tmpPass = "";
+//                    var tmpStsNo = "";
+//                    var tmpSno = "";
+//                    var tmpPoDate = "";
+//                    var tmpRef = "";
+//                    var tmpGrnNum = "";
+//                    var tmpPo = "";
+//                    var tmpPoLine = "";
+//                    var tmpCoilNo = "";
+//                    var tmpStatus = "";
+//                    var tmpWeight = "";
+//                    var tmpWeights = "";
+//                    var tmpGrade = "";
+//                    var tmpHNo = "";
+//                    var tmpThick = "";
+//                    var tmpWidth = "";
+//                    var tmpThicks = "";
+//                    var tmpWidths = "";
+//                    var transDate = "";
+//                    var FontColor = "";
+//                    var btnPrintTag = "";
+//                    var TagId = "";
+//                    var bgColor = "";
+//                    var line = "";
+//                    var tempLot = "";
+//                    var DisabledOnTagPrint = "";
+//                    var CheckBoxName = "";
+//                    var btnColSearch = "";
+//                    var btnColCopy = "";
+//                    var colBarcode = "";
+//                    $.each(data, function (key1, value1) {
+//                        tmpPo = "";
+//                        tmpGrnNum = "";
+//                        btnPrintTag = "";
+//                        TagId = "";
+//                        CheckBoxName = "";
+//                        colBarcode = "";
+//                        x++;
+//                        value1["pass"] == 1 ? tmpPass = "<i class='fas fa-check'></i>" : tmpPass = "<i class='fa fa-times'></i>";
+//                        tmpStsNo = value1["sts_no"];
+//                        tmpSno = value1["sno"];
+//                        tmpPoDate = value1["po_date"];
+//                        tmpRef = value1["reference"];
+//                        tmpGrnNum = value1["upload_grn_num"];
+//                        tempLot = value1["sl_lot"];
+//                        if (value1["upload_po"] != null) {
+//                            tmpPo = value1["upload_po"];
+//                        }
+//                        tmpPoLine = value1["upload_po_line"];
+//                        tmpCoilNo = value1["c_no"];
+//                        tmpStatus = value1["upload_status"];
+//                        tmpWeights = value1["realweight"];
+//                        tmpWeight = value1["weight"];
+//                        tmpGrade = value1["grade"];
+//                        tmpHNo = value1["h_no"];
+//                        tmpThick = value1["thick"];
+//                        tmpWidth = value1["width"];
+//                        tmpThicks = value1["thicks"];
+//                        tmpWidths = value1["widths"];
+//                        transDate = value1["i_date"];
+//                        TagId = value1["sl_tag_id"];
+//
+//                        FontColor = "";
+//                        bgColor = "";
+//                        searchType == "normal" ? CheckBoxName = "chTag_" + tmpStsNo : CheckBoxName = "chTag2_" + tmpStsNo;
+//                        if (tmpGrnNum) {
+//                            bgColor = "#efebeb";
+//                            FontColor = "red";
+//                        } else {
+//                            bgColor = "#FFFFFF";
+//                            FontColor = "#666";
+//                        }
+//                        btnColSearch = "<td><a class='btn btn-info form-control' href='#' OnClick= 'CallDialog(this.id)' id='" + tmpStsNo + "'><i class='fa fa-search'></i></a></td>";
+//                        btnColCopy = "<td><a class='btn btn-info form-control' style='color:#FFFFFF;' href='#' OnClick= 'CopyThisRowToAll(this.id)' id='Copy_" + tmpStsNo + "'><i class='fa fa-copy'></i></a></td>";
+//                        if (value1["upload_status"] == "Y") {
+//                            if (value1["sl_tag_id"] == null) {
+//
+//                                btnPrintTag = "<input type='checkbox' class='form-control' tag-id='" + value1["sl_tag_id"] + "' href='#' " + DisabledOnTagPrint + "  id='" + CheckBoxName + "' value='1'>";
+//                            } else {
+//                                btnPrintTag = "";
+//                            }
+//                        } else {
+//                            btnPrintTag = "";
+//                        }
+//                        var FixedStyle = "";
+//                        var FixedStyle2 = "";
+//                        var FixedStyle3 = "";
+//                        if (searchType != "normal") {
+//                            btnPrintTag = "<input type='checkbox' class='form-control' tag-id='" + value1["sl_tag_id"] + "' href='#' " + DisabledOnTagPrint + "  id='" + CheckBoxName + "' value='1'>";
+//                            btnColSearch = "";
+//                            btnColCopy = "";
+//                            FixedStyle = "style='width:8%;' ";
+//                            FixedStyle2 = "style='width:7%;' ";
+//                            FixedStyle3 = "style='width:10%;' ";
+//                            colBarcode = "<td align='left' width='12%' style='vertical-align:middle;color:green;'>" + value1["sl_tag_id"] + "</td>";
+//
+//                        }
+//                        line = "";
+//                        line = "<tr style='background-color:" + bgColor + ";'>\n\
+//                                    <td>" + x + "</td>\n\
+//                                    <td>" + tmpSno + "</td>\n\
+//                                    <td>" + tmpRef + "</td>\n\
+//                                    <td>" + tmpCoilNo + "</td>\n\
+//                                    <td>" + tmpHNo + "</td>\n\
+//                                    <td>" + tmpWeight + "</td>\n\
+//                                    <td>" + tmpGrade + "</td>\n\
+//                                    <td>" + tmpThick + " x " + tmpWidth + "</td>\n\
+//                                    <td>" + tmpThicks + " x " + tmpWidths + "</td>\n\
+//                                    <td>" + tmpPass + "</td>\n\
+//                                    <td " + FixedStyle + ">\n\
+//                                        <input  type='hidden' id='hdfTemp_" + tmpStsNo + "' data-grade='" + tmpGrade + "' \n\
+//                                        data-uf-manu='' data-widths='" + tmpWidths + "' data-width='" + tmpWidth + "' \n\
+//                                        data-thick='" + tmpThick + "' data-thicks='" + tmpThicks + "' data-lot='" + tempLot + "' \n\
+//                                        data-item='' data-vend-name = '' data-qty='' data-um='' data-trans-date='" + transDate + "' \n\
+//                                        data-weight='" + tmpWeight + "' data-weights='" + tmpWeights + "' data-grn-num='' data-po-num='' \n\
+//                                        data-po-line='' data-vend-num='' data-po-date='' data-coil-no = '" + tmpCoilNo + "' data-sno='" + tmpSno + "' \n\
+//                                        data-reference='" + tmpRef + "'  data-sts-no='" + tmpStsNo + "'  >\n\
+//                                    <input  readonly style='color:" + FontColor + ";' class='form-control'  type='text' id='txtGrnNum_" + tmpStsNo + "' value='" + tmpGrnNum + "'   ></td>\n\
+//                                    <td " + FixedStyle2 + "><input style='color:" + FontColor + ";' readonly class='form-control'  type='text' id='txtPoNum_" + tmpStsNo + "' value='" + tmpPo + "'  ></td>\n\
+//                                    <td " + FixedStyle + "><input style='color:" + FontColor + ";font-size:16px;font-weight:bold;' readonly class='form-control'  type='text' id='txtPoLine_" + tmpStsNo + "' value='" + tmpPoLine + "'    ></td>\n\
+//                                     " + btnColSearch + "\n\
+//                                     " + btnColCopy + "\n\
+//                                        " + colBarcode + "\n\
+//                                    <td> " + btnPrintTag + "</td>\n\
+//                                    </div></td>\n\
+//                                    </tr>";
+//                        if (searchType == "normal") {
+//                            $("#showData").append(line);
+//                        } else {
+//                            $("#showData2").append(line);
+//                        }
+//
+//    });
+
+//    if (searchType == "normal") {
+//    $("#lblRecordCount").text(x + " record(s) found");
+//    } else {
+//    $("#lblRecordCount2").text(x + " record(s) found");
+//    }
+//
+////                    $("#loading").hide();
+//    },
+//            error: function (xhr, status, error) {
+//            var err = eval("(" + xhr.responseText + ")");
+//            alert(err.Message);
+//            },
+//            dataType: "JSON",
+//    });
+        }
+    }
+    function CallDialog(sts_no) {
+        var GetScreenWidth = screen.width - 50;
+        var GetScreenHeight = 600;
+        var getAttr = $("#txtGrnNum_" + sts_no).val();
+        var sno = $("#hdfTemp_" + sts_no).attr("data-sno");
+        var ConFirm = "";
+        if (getAttr != "") {
+            if (confirm("ข้อมูลนี้ถูกอัพโหลดไปแล้ว ข้อมูลอาจเกิดการซ้ำซ้อน \n  ต้องการทำงานต่อหรือไม่  ? ") == true) {
+                ConFirm = "1";
+            } else {
+                ConFirm = "0";
+            }
+        } else {
+            ConFirm = "1";
+        }
+
+        if (ConFirm == "1") {
+            $('#divPO').dialog({
+                modal: true,
+                autoOpen: true,
+                show: 'fade',
+                width: GetScreenWidth,
+                height: GetScreenHeight,
+                top: 0,
+//                position: ['center', 0],
+                title: ":: Select PO from SYTELINE "
+            })
+                    .load("././module/MTG_dialog_po.php", {
+                        'sts_no': sts_no,
+                        'sno': sno
+                    }, {
+                        "form": "create"
+                    });
+        }
+
+    }
+
+    function ClearRowsTextBox(thisId) {
+        var Arr = [];
+        Arr = thisId.split('_');
+        alert(thisId);
+        $("#txtGrnNum_" + Arr[1]).val("");
+        $("#txtPoNum_" + Arr[1]).val("");
+        $("#txtPoLine_" + Arr[1]).val("");
+    }
+
+    function AddVendorToEveryRows() {
+
+        $.ajax({
+            url: "././module/MGT/MGT_ajax/data_sl_vendor.php",
+            type: "POST",
+            data: {
+                type: 1,
+            },
+            success: function (data) {
+                $("select[id^='selVend']").each(function () {
+                    $(this).select2({
+                        data: data
+                    });
+                });
+            },
+            error: function (xhr, status, error) {
+                alert(xhr.responseText);
+            },
+            dataType: "json"
+        });
+    }
+
+    $("#btnProcess").click(function () {
+        var COuntItem = $("input[id^=txtGrnNum_]").length;
+        if (COuntItem == 0) {
+            alert('No item upload ');
+        } else {
+            var conf = 0;
+            $.confirm({
+                title: ":: Confirm ",
+                content: "ต้องการ upload ข้อมูล สู่ SyteLine ใช่หรือไม่ ? ",
+                buttons: {
+                    confirm: function () {
+                        var ArrTempVend = [];
+                        var ArrTempPoNum = [];
+                        var ArrTempPoLine = [];
+                        var ArrTempPoDate = [];
+                        var ArrTempReference = [];
+                        var ArrTempSno = [];
+                        var ArrTempGrnNum = [];
+                        var ArrTempStsno = [];
+                        var ArrTempWeight = [];
+                        var ArrTempWeights = [];
+                        var ArrTempThicks = [];
+                        var ArrTempWidths = [];
+                        var ArrTempCoilNo = [];
+                        var ArrTempTransDate = [];
+                        var ArrLotNumber = [];
+                        var GenLotPart0 = "";
+                        var GenLotPart1 = "";
+                        var GenLotPart2 = "";
+                        var RunningVal = 0;
+                        var RunningValFormat = "";
+                        $("input[id^=hdfTemp_]").each(function () {
+                            if ($(this).attr("data-vend-num") != "") {
+                                GenLotPart0 = $("#hdGenLot").val().trim();
+                                ArrLotNumber.push(GenLotPart0);
+                                GenLotPart1 = $("#hdGenLot").val().substring(0, 6).trim();
+                                GenLotPart2 = $("#hdGenLot").val().substring(6, 15).trim();
+                                RunningVal = parseInt(GenLotPart2) + 1;
+                                RunningValFormat = pad(RunningVal, 9);
+                                ArrTempVend.push($(this).attr("data-vend-num"));
+                                ArrTempPoNum.push($(this).attr("data-po-num"));
+                                ArrTempPoLine.push($(this).attr("data-po-line"));
+                                ArrTempPoDate.push($(this).attr("data-po-date"));
+                                ArrTempReference.push($(this).attr("data-reference"));
+                                ArrTempSno.push($(this).attr("data-sno"));
+                                ArrTempStsno.push($(this).attr("data-sts-no"));
+                                ArrTempGrnNum.push($(this).attr("data-grn-num"));
+                                ArrTempWeight.push($(this).attr("data-weight"));
+                                ArrTempCoilNo.push($(this).attr("data-coil-no"));
+                                ArrTempTransDate.push($(this).attr("data-trans-date"));
+                                ArrTempWidths.push($(this).attr("data-widths"));
+                                ArrTempThicks.push($(this).attr("data-thicks"));
+                                ArrTempWeights.push($(this).attr("data-weights"));
+                            }
+                        });
+                        console.log('send : widths ' + ArrTempWidths);
+                        console.log('send : thicks ' + ArrTempThicks);
+                        console.log('send : weights ' + ArrTempWeights);
+                        $.ajax({
+                            url: "././module/MGT/MGT_ajax/SL_GenerateGrnLineSp.php",
+                            type: "POST",
+                            data: {
+                                ArrTempVend: ArrTempVend,
+                                ArrTempPoNum: ArrTempPoNum,
+                                ArrTempPoLine: ArrTempPoLine,
+                                ArrTempPoDate: ArrTempPoDate,
+                                ArrTempReference: ArrTempReference,
+                                ArrTempSno: ArrTempSno,
+                                ArrTempStsno: ArrTempStsno,
+                                ArrTempGrnNum: ArrTempGrnNum,
+                                ArrTempWeight: ArrTempWeight,
+                                ArrLotNumber: ArrLotNumber,
+                                ArrTempCoilNo: ArrTempCoilNo,
+                                ArrTempTransDate: ArrTempTransDate,
+                                ArrTempWeights: ArrTempWeights,
+                                ArrTempWidths: ArrTempWidths,
+                                ArrTempThicks: ArrTempThicks
+                            },
+                            success: function (data) {
+                                console.log(data);
+                                // $("#loading").hide();
+                                alert(data);
+                                GenLot();
+                                FilterSearch('normal');
+                            },
+                            error: function (xhr, status, error) {
+                                alert(xhr.responseText);
+                            },
+                            dataType: "json"
+                        });
+                    },
+                    cancel: function () {
+
+                    }
+                }
+            });
+        }
+
+    });
+    function CopyThisRowToAll(thisId) {
+        var ArrId = thisId.split("_");
+        var CountBlank = 0;
+        var CountAll = 0;
+        var ThisValPoNum = $("#txtPoNum_" + ArrId[1]).val();
+        var ThisValGrnNum = $("#txtGrnNum_" + ArrId[1]).val();
+        var ThisValpoLine = $("#txtPoLine_" + ArrId[1]).val();
+        var ThisValVendNum = $("#hdfTemp_" + ArrId[1]).attr("data-vend-num");
+        if (ThisValPoNum != "") {
+            $("input[id^=txtPoNum]").each(function () {
+                CountAll++;
+                if ($(this).val() == "") {
+                    $(this).val(ThisValPoNum);
+                    CountBlank++;
+                }
+            });
+            $("input[id^=txtGrnNum]").each(function () {
+                if ($(this).val() == "") {
+                    $(this).val(ThisValGrnNum);
+                }
+            });
+            $("input[id^=txtPoLine]").each(function () {
+                if ($(this).val() == "") {
+                    $(this).val(ThisValpoLine);
+                }
+            });
+            $("input[id^=hdfTemp]").each(function () {
+                if ($(this).attr("data-grn-num") == "") {
+                    $(this).attr("data-grn-num", ThisValGrnNum);
+                    $(this).attr("data-po-num", ThisValPoNum);
+                    $(this).attr("data-po-line", ThisValpoLine);
+                    $(this).attr("data-vend-num", ThisValVendNum);
+                }
+            });
+        } else {
+            alert('Can not copy blank value ! ');
+        }
+
+    }
+
+    function PrintTag(printType) {
+        var TarGetId = "";
+        printType == 0 ? TarGetId = "chTag" : TarGetId = "chTag2";
+        var CountCheck = $("input[id^='" + TarGetId + "']:checked").length;
+        if (CountCheck <= 0) {
+            alert("No rows select for print tag");
+        } else {
+            var grn_nums = [];
+            var po_nums = [];
+            var lots = [];
+            var po_lines = [];
+            var thickss = [];
+            var widths = [];
+            var coil_nos = [];
+            var uf_manus = [];
+            var sts_no = [];
+            var tag_id = [];
+            var grades = [];
+            var realweights = [];
+            var realwidths = [];
+            var realthicks = [];
+            var snos = [];
+            var thisIdArr = "";
+            var ExtId = "";
+            var GetThicks = "";
+            var po_num = "";
+            var po_line = "";
+            var hdfTemp = "";
+            var grn_num = "";
+            var lot = "";
+            var sno = "";
+            var thick = "";
+            var twidth = "";
+            var twidths = "";
+            var thicks = "";
+            var weight = "";
+            var coil_no = "";
+            var HisTagId = "";
+            var grade = "";
+            var realweight = "";
+            var realwidth = "";
+            var realthick = "";
+            $("input[id^='" + TarGetId + "']:checked").each(function () {
+
+                thisIdArr = $(this).attr("id").split("_");
+                ExtId = thisIdArr[1];
+                GetThicks = "";
+                HisTagId = "";
+                if (printType == 1) {
+                    HisTagId = $(this).attr("tag-id");
+                }
+                po_num = $("#txtPoNum_" + ExtId).val();
+                po_line = $("#txtPoLine_" + ExtId).val();
+                hdfTemp = $("#hdfTemp_" + ExtId);
+                grn_num = $("#txtGrnNum_" + ExtId).val();
+                lot = $("#hdfTemp_" + ExtId).attr("data-lot");
+                thick = $("#hdfTemp_" + ExtId).attr("data-thick");
+                twidth = $("#hdfTemp_" + ExtId).attr("data-width");
+                twidths = $("#hdfTemp_" + ExtId).attr("data-widths").replace(",", "");
+                thicks = $("#hdfTemp_" + ExtId).attr("data-thicks");
+                weight = $("#hdfTemp_" + ExtId).attr("data-weight");
+                realweight = $("#hdfTemp_" + ExtId).attr("data-weights");
+                realwidth = $("#hdfTemp_" + ExtId).attr("data-widths");
+                realthick = $("#hdfTemp_" + ExtId).attr("data-thicks");
+                coil_no = $("#hdfTemp_" + ExtId).attr("data-coil-no");
+                grade = $("#hdfTemp_" + ExtId).attr("data-grade");
+                sno = $("#hdfTemp_" + ExtId).attr("data-sno");
+                if ((thicks == "") || (thicks == 0)) {
+                    GetThicks = weight;
+                } else {
+                    GetThicks = thick;
+                }
+                var UF_manu = "-"
+                if (po_num != "") {
+                    widths.push(twidth);
+                    thickss.push(GetThicks);
+                    grn_nums.push(grn_num);
+                    po_nums.push(po_num);
+                    lots.push(lot);
+                    po_lines.push(po_line);
+                    uf_manus.push(UF_manu);
+                    coil_nos.push(coil_no);
+                    sts_no.push(ExtId);
+                    grades.push(grade);
+                    snos.push(sno);
+                    realweights.push(realweight);
+                    realwidths.push(realwidth);
+                    realthicks.push(realthick);
+                    if (printType == 1) {
+                        tag_id.push(HisTagId);
+                    }
+                }
+            });
+            $('#printpopup').dialog({
+                modal: true,
+                autoOpen: true,
+                show: 'fade',
+                width: 800,
+                height: 400,
+                title: "ตัวอย่างก่อนพิมพ์"
+            })
+                    .load("././module/MGT_print_tag_coil.php", {
+                        "coil_nos": coil_nos,
+                        "thickss": thickss,
+                        "grn_nums": grn_nums,
+                        "po_nums": po_nums,
+                        "po_lines": po_lines,
+                        "lots": lots,
+                        "uf_manu": uf_manus,
+                        "sts_no": sts_no,
+                        "printType": printType,
+                        "tag_id": tag_id,
+                        "widths": widths,
+                        "grades": grades,
+                        "snos": snos,
+                        "realweights": realweights,
+                        "realwidths": realwidths,
+                        "realthicks": realthicks
+                    });
+        }
+
+    }
+    $("#btnClearStsShow").click(function () {
+        $("#rowResultSearchWeightList").empty();
+        $("#rowResultSearchGrnLine").empty();
+        SearchWeightList();
+//        SearchGrnLine();
+    });
+    function SearchWeightList() {
+        var sts_no = $("#txtClearStsNo").val();
+        $("#SearchWeightList").html("<i class='fa fa-spinner fa-spin'></i>");
+        if (sts_no != "") {
+            $.ajax({
+                url: "././module/MGT/MGT_ajax/dataPOQC.php",
+                type: 'post',
+                data: {
+                    action: "SearchLine",
+                    sno: sts_no
+                },
+                success: function (data) {
+                    $("#SearchWeightList").html("<i class='fa fa-search'></i>");
+                    if ((data[1]["sts_no"] != "") || (data[1]["sts_no"] != null) || (data[1]["sts_no"] != "undefined")) {
+                        var lineTP = "<div class='row'><div class='col-md-5 text-right'>##label##</div><div style='font-weight:bold;'  class='col-md-7 text-left'>##data##</div></div>";
+                        var line1 = lineTP.replace("##label##", "sts_no").replace("##data##", data[1]["sts_no"]);
+                        var line2 = lineTP.replace("##label##", "po_date").replace("##data##", data[1]["po_date"]);
+                        var line3 = lineTP.replace("##label##", "น้ำหนัก ระบุ / น้ำหนักจริง").replace("##data##", data[1]["weight"] + " / " + data[1]["weight"]);
+                        var line4 = lineTP.replace("##label##", "หนา ระบุ / วัดได้").replace("##data##", data[1]["thick"] + " / " + data[1]["thicks"]);
+                        var line5 = lineTP.replace("##label##", "กว้าง ระบุ / นับได้").replace("##data##", data[1]["width"] + " / " + data[1]["widths"]);
+                        var line6 = lineTP.replace("##label##", "Uploaded GRN").replace("##data##", data[1]["upload_grn_num"]);
+                        var line7 = lineTP.replace("##label##", "Uploaded PO").replace("##data##", data[1]["upload_po"] + " Line " + data[1]["upload_po_line"]);
+                        var line8 = lineTP.replace("##label##", "Upload Lot").replace("##data##", data[1]["sl_lot"]);
+                        var line9 = lineTP.replace("##label##", "Tag Id").replace("##data##", data[1]["sl_tag_id"]);
+                        var line10 = lineTP.replace("##label##", "Upload date").replace("##data##", data[1]["sl_trans"]);
+                        $("#rowResultSearchWeightList").html(line1 + line2 + line3 + line4 + line5 + line6 + line7 + line8 + line9 + line10);
+                        SearchGrnLine(data[1]["upload_grn_num"], data[1]["upload_po"], data[1]["upload_po_line"]);
+                    } else {
+                        $("#rowResultSearchWeightList").html("Not found grn line with sts_no = " + sts_no);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    var err = eval("(" + xhr.responseText + ")");
+                    alert(err.Message);
+                },
+                dataType: "json",
+            });
+        }
+    }
+    function SearchGrnLine(grn, po, po_line) {
+        var sts_no = $("#txtClearStsNo").val();
+        $("#SearchWeightList").html("<i class='fa fa-spinner fa-spin'></i>");
+        if (sts_no != "") {
+            $.ajax({
+                url: "././module/MGT/MGT_ajax/data_sl_po.php",
+                type: 'post',
+                data: {
+                    type: "po_line",
+                    po: po,
+                    po_line: po_line,
+                },
+                success: function (data) {
+                    console.log(data);
+                    if ((data[0]["item"] != "") || (data[0]["item"] != null) || (data[0]["item"] != "undefined")) {
+                        var lineTP = "<div class='row'><div class='col-md-4 text-right'>##label##</div><div style='font-weight:bold;'  class='col-md-8 text-left'>##data##</div></div>";
+                        var line1 = lineTP.replace("##label##", "GRN").replace("##data##", grn);
+                        var line2 = lineTP.replace("##label##", "PO").replace("##data##", data.po_num + " Line " + data.po_line);
+                        var line3 = lineTP.replace("##label##", "vendor").replace("##data##", data.po_vend_num + " : " + data.name);
+                        var line4 = lineTP.replace("##label##", "req_num").replace("##data##", data.req_num);
+                        var line5 = lineTP.replace("##label##", "CreateDate").replace("##data##", data.CreateDate);
+                        var line6 = lineTP.replace("##label##", "Item").replace("##data##", data.item);
+                        var line7 = lineTP.replace("##label##", "item_cost").replace("##data##", data.item_cost);
+                        var line8 = lineTP.replace("##label##", "qty_ordered").replace("##data##", data.qty_ordered);
+                        var line9 = lineTP.replace("##label##", "qty_received").replace("##data##", data.qty_received);
+
+                        $("#rowResultSearchGrnLine").html(line1 + line2 + line3 + line4 + line5 + line6 + line7 + line8 + line9);
+                        $("#txtCheckValidSno").val("1");
+                        $("#txtHdGrnNum").val(grn);
+                        $("#txtHdPoNum").val(data.po_num);
+                        $("#txtHdPoLine").val(data.po_line);
+                        $("#txtHdItem").val(data.item);
+                    } else {
+                        $("#rowResultSearchGrnLine").html("Not found grn line with sts_no = " + sts_no);
+                    }
+
+
+
+                },
+                error: function (xhr, status, error) {
+                    var err = eval("(" + xhr.responseText + ")");
+                    alert(err.Message);
+                },
+                dataType: "json",
+            });
+        }
+    }
+    $("#btnClearWeightPist").click(function () {
+        var sno = $("#txtClearStsNo").val();
+        var checkValid = $("#txtCheckValidSno").val();
+        var grn_num = $("#txtHdGrnNum").val();
+        var po_num = $("#txtHdPoNum").val();
+        var po_line = $("#txtHdPoLine").val();
+        var item = $("#txtHdItem").val();
+
+
+        if (checkValid != "1") {
+            $.alert('Not found sts_no  ');
+        } else {
+            $.confirm({
+                title: '!! Authorize require !!',
+                content: '' +
+                        '<form action="" class="formName">' +
+                        '<div class="form-group">' +
+                        '<label>Enter password for clear data</label>' +
+                        '<input type="password" placeholder="password" class="password form-control" required />' +
+                        '</div>' +
+                        '</form>',
+                buttons: {
+                    formSubmit: {
+                        text: 'Submit',
+                        btnClass: 'btn-blue',
+                        action: function () {
+                            var password = this.$content.find('.password').val();
+                            if (!password) {
+                                $.alert('provide a password');
+                                return false;
+                            }
+                            if (password == "11223344") {//     
+                                $.ajax({
+                                    url: "././module/MGT/MGT_ajax/dataPOQC.php",
+                                    type: 'post',
+                                    data: {
+                                        action: "ClearGrn",
+                                        sno: sno,
+                                        grn_num: grn_num,
+                                        po_num: po_num,
+                                        po_line: po_line,
+                                        item: item,
+
+                                    },
+                                    success: function (data) {
+                                        console.log(data);
+//                                        location.reload();
+
+                                    },
+                                    error: function (xhr, status, error) {
+                                        var err = eval("(" + xhr.responseText + ")");
+                                        alert(err.Message);
+                                    },
+                                });
+                            } else {
+                                $.alert('Wrong password');
+                            }
+
+                        }
+                    },
+                    cancel: function () {
+                        //close
+                    },
+                },
+                onContentReady: function () {
+                    // bind to events
+                    var jc = this;
+                    this.$content.find('form').on('submit', function (e) {
+                        // if the user submits the form by pressing enter in the field.
+                        e.preventDefault();
+                        jc.$$formSubmit.trigger('click'); // reference the button and click it
+                    });
+                }
+            });
+        }
+    });
+
+    $("#btnFindActWeight").click(function () {
+        var start_date = $("#actWeightStartDate").val();
+        var end_date = $("#actWeightEndDate").val();
+        $.ajax({
+            url: "././module/MGT/MGT_ajax/data_lot.php",
+            type: 'post',
+            data: {
+                action: "FindBlankActWeight",
+                start_date: start_date,
+                end_date: end_date,
+            },
+            beforeSend: function () {
+                $("#btnFindActWeight").html('<i class="fa fa-spinner fa-spin"></i>&nbsp;Finding');
+            },
+            complete: function () {
+                $("#btnFindActWeight").html('<i class="fa fa-search"></i>&nbsp;Find Empty Act.Weight');
+            },
+            success: function (data) {
+                $("#tableListPullActWeight").html(data);
+
+            },
+            error: function (xhr, status, error) {
+                var err = eval("(" + xhr.responseText + ")");
+                alert(err.Message);
+            },
+        });
+    });
+    $("#btnPullActWeight").click(function () {
+        var Lots = [];
+        var ActWeights = [];
+        $("td[id^='ActWeight_']").each(function () {
+            ActWeights.push($(this).text().trim());
+        });
+        $("td[id^='Lot_']").each(function () {
+            Lots.push($(this).text().trim());
+        });
+        console.log(Lots);
+        $.ajax({
+            url: "././module/MGT/MGT_ajax/data_lot.php",
+            type: 'post',
+            data: {
+                action: "PullActWeight",
+                Lots: Lots,
+                ActWeights: ActWeights,
+            },
+             beforeSend: function () {
+                $("#btnPullActWeight").html('<i class="fa fa-spinner fa-spin"></i>&nbsp;Loading');
+            },
+            complete: function () {
+                $("#btnPullActWeight").html('  <i class="fa fa-download"></i>&nbsp;Pull Act.Weight');
+            },
+          
+            success: function (data) {
+                $.alert(data);
+
+            },
+            error: function (xhr, status, error) {
+                var err = eval("(" + xhr.responseText + ")");
+                alert(err.Message);
+            },
+        });
+    });
+</script>

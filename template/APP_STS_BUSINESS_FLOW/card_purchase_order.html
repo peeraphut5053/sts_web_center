@@ -1,0 +1,47 @@
+
+<style>
+    .modal-dialog {
+        width: 100%;
+        margin: 10px !important;
+        max-width: 99.9% !important;
+    }
+    .modal-body {
+        position: relative;
+        padding: 1px;
+        height: 93%;
+    }
+    .modal-header {
+        padding: 4px;
+        border-bottom: 1px solid #e5e5e5;
+    }
+</style>
+<script>
+    function openmodel(prj_code) {
+        let Url = `././template/${prj_code}/index.html`;
+        $("#AppModal").modal(
+                {
+                    backdrop: 'static',
+                    keyboard: false
+                }
+        );
+        $("#AppModalBody").load(Url, {
+            "form": "",
+            "method": "Insert",
+        }, function () {
+        });
+    }
+
+</script>
+
+<div>
+    <a onclick="openmodel('STS_po_qc');"><i class="fa fa-eye"></i></a>
+    <a>import excel รายการนำเข้าเหล็ก</a>
+</div>
+<div>
+    <a onclick="openmodel('STS_po_qc');"><i class="fa fa-eye"></i></a>
+    <a>โปรแกรมรับเหล็ก</a>
+</div>
+<div>
+    <a onclick="openmodel('STS_grn_to_sl');"><i class="fa fa-eye"></i></a>
+    <a>GEN to Syteline</a>
+</div> 

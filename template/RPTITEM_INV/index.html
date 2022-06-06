@@ -1,0 +1,572 @@
+<style>
+    .col-search {
+        padding-left: 3px;
+        padding-right: 3px;
+    }
+
+    .table thead th {
+        text-align: center;
+    }
+
+    .col-flt-page {
+        padding-top: 10px;
+        font-weight: bold;
+    }
+
+    #tblReport tbody tr td a {
+        cursor: pointer;
+    }
+
+    table.dataTable.fixedHeader-floating,
+    table.dataTable.fixedHeader-locked {
+        background-color: white;
+        margin-top: 50px !important;
+        margin-bottom: 0 !important;
+    }
+
+    .tr-row-cn td {
+        color: red;
+    }
+</style>
+<div class="row">
+    <h4>รายงานประวัติการขายสินค้า</h4>
+</div>
+<div class='row'>
+    <div class="col-md-1 col-lg-1 col-xs-3 col-sm-3 text-right ">
+        <div class='row' style="padding-right:10px;padding-top:5px;">
+            Customer
+        </div>
+    </div>
+    <div class="col-md-11 col-lg-11 col-xs-9 col-sm-9">
+        <div class='row'>
+            <select class="form-control" id="selCust" multiple="multiple" style="display:none;height:70px;">
+                <!--<option value="" selected>ทั้งหมด</option>-->
+                {customer_data}
+            </select>
+        </div>
+    </div>
+</div>
+<div class='row'>
+    <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12  col-search">
+        <div class="input-group">
+            <div class="input-group-addon">Item</div>
+            <input type="text" class="form-control txt-filter" id="txtItem">
+        </div>
+    </div>
+    <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12 col-search">
+        <div class="input-group">
+            <div class="input-group-addon">ขนาด</div>
+            <input type="text" class="form-control txt-filter" id="txtSize">
+        </div>
+    </div>
+    <div class="col-lg-2  col-md-2 col-sm-6 col-xs-12 col-search">
+        <div class="input-group">
+            <div class="input-group-addon">หนา</div>
+            <input type="text" class="form-control txt-filter" id="txtThick">
+        </div>
+    </div>
+    <div class="col-lg-1 col-md-2 col-sm-1 col-xs-12  col-search">
+        <div class="input-group">
+            <div class="input-group-addon">ยาว</div>
+            <input type="text" class="form-control txt-filter" id="txtWidth">
+        </div>
+    </div>
+    <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12  col-search">
+        <div class="input-group">
+            <div class="input-group-addon">From date</div>
+            <input type="text" class="form-control txt-filter" id="txtFromDate">
+        </div>
+    </div>
+    <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12  col-search">
+        <div class="input-group">
+            <div class="input-group-addon">To date</div>
+            <input type="text" class="form-control txt-filter" id="txtToDate">
+        </div>
+    </div>
+    <div class="col-lg-1 col-md-2 col-sm-1 col-xs-6  col-search">
+        <button id="btnSearch" class="btn btn-info"><i class="fa fa-search"></i>&nbsp;ค้นหา</button>
+    </div>
+</div>
+<div class="row">
+    <div class=" col-lg-12 col-md-12 col-sm-12 col-xs-12  text-center" style="font-size:10px;color:red;">
+        *เลือกความ หนา-ยาว ตามช่วงให้ใช้ '-' เช่น เลือกตั้งแต่ 1 ถึง 6 ให้ใส่ '1-6' แต่ถ้าหากระบุ 6 ตัวเดียวระบบจะหาข้อมูลที่เป็น 6 เท่านั้น*
+    </div>
+
+</div>
+
+
+<!--<div class="alert alert-warning text-center">
+    <h5>กำลังดำเนินการแก้ไข เพื่อให้จำนวนสินค้าระหว่างขาย , ระหว่างส่ง , ส่งแล้ว  แยกจำนวนตามคลังได้ </h5>
+    <h5 style="color:green;font-weight: bold;">สถานะการแก้ไข : รอเช็คความถูกต้อง</h5>
+</div>-->
+<div class="row" id="divReport">
+    <table class="table table-condensed table-bordered table-striped" id="tblReport">
+        <thead>
+            <tr>
+                <th>inv_date</th>
+                <th>inv_num</th>
+                <th>ลูกค้า</th>
+                <th>สินค้า</th>               
+                <th>นน./<br>เส้น</th>
+                <th>หน่วยขาย</th>
+                <th>จำนวน<br>(เส้น)</th>
+                <th>จำนวน<br>(KG)</th>
+                <th>ราคา/<br>หน่วย</th>
+                <th>ส่วนลดบิล</th>
+                <th>เงินก่อนภาษี</th>
+                <th>ภาษีขาย</th>
+                <th>ยอดสุทธิ</th>
+            </tr>
+        </thead>
+        <!--        <tbody id="tblReportList">
+                    </tbody>-->
+    </table>
+</div>
+<div class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document" style="width:60%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                Customer Search
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color:red;">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="BodyModal">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#selCust').selectize({
+            plugins: ['remove_button'],
+            delimiter: ',',
+            persist: false,
+            create: function (input) {
+                return {
+                    value: input,
+                    text: input
+                }
+            }
+        });
+    });
+
+    $("#txtFromDate,#txtToDate").val(GetToday());
+
+    $("#txtFromDate , #txtToDate").datepicker({
+        dateFormat: 'yy-mm-dd',
+    });
+    $("#btnSearch").click(function () {
+        ReportItemSearch();
+    });
+
+    $(".txt-filter").on("keypress", function (e) {
+        if (e.keyCode == 13) {
+            ReportItemSearch();
+            return false; // prevent the button click from happening
+        }
+    });
+
+    function ReportItemSearch() {
+        var Customers = [];
+        Customers = $("#selCust").val();
+        var OldHtml = $("#btnSearch").html();
+        $('#tblReport').loading();
+        $("#btnSearch").html("<i class='fa fa-spinner fa-spin'></i>");
+        var radioValue = $("input[name='radSearch']:checked").val();
+        var txtItem = $("#txtItem").val();
+        var txtSize = $("#txtSize").val();
+        var txtThick = $("#txtThick").val();
+        var txtWidth = $("#txtWidth").val();
+        var txtFromDate = $("#txtFromDate").val();
+        var txtToDate = $("#txtToDate").val();
+        //        var Customers = Customers ;
+
+        if ((txtFromDate == "") || (txtToDate == "")) {
+            $.alert("Please select date");
+        } else {
+            $.ajax({
+                type: 'POST',
+                url: "././module/RPTITEM_INV/data.php",
+                //                contentType: "text/plain",
+                dataType: 'json',
+                beforeSend: function () {
+                    $("#btnSearch").html("<i class='fa fa-spinner fa-spin'>");
+                },
+                data: {
+                    "load": "ajax",
+                    "txtItem": txtItem,
+                    "Customers": Customers,
+                    "txtSize": txtSize,
+                    "txtThick": txtThick,
+                    "txtWidth": txtWidth,
+                    "txtFromDate": txtFromDate,
+                    "txtToDate": txtToDate,
+                },
+                success: function (data) {
+//                    console.log(data);
+                    $("#tblReport").DataTable().clear();
+                    $("#tblReport").append("<tfoot><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></tfoot>");
+                    $('#tblReport').dataTable({
+                        "aaData": data,
+                        "paging": false,
+                        fixedHeader: true,
+                        destroy: true,
+                        'processing': true,
+                        "columns": [{
+                                "data": "inv_date_conv",
+                                "className": "text-center",
+                                "render": function (data, type, row) {
+                                    var ret = data;
+                                    if (row["inv_num"].substring(0, 2) == "CN") {
+                                        ret = "<span style='color:red;'>" + data + "</span>";
+                                    }
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "inv_num",
+                                "render": function (data, type, row) {
+                                    var ret = data;
+                                    if (data.substring(0, 2) == "CN") {
+                                        ret = "<span style='color:red;'>" + data + "</span>";
+                                    }
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "cust_name",
+                                "render": function (data, type, row) {
+                                    var ret = data;
+                                    if (row["inv_num"].substring(0, 2) == "CN") {
+                                        ret = "<span style='color:red;'>" + data + "</span>";
+                                    }
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "item_desc",
+                                "render": function (data, type, row) {
+                                    var tmpData = "";
+                                    !data ? tmpData = row["item_code"] : tmpData = data;
+                                    var ret = tmpData;
+                                    if (row["inv_num"].substring(0, 2) == "CN") {
+                                        ret = "<span style='color:red;'>" + tmpData + "</span>";
+                                    }
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "item_weight",
+                                "className": "text-right",
+                                "render": function (data, type, row) {
+                                    var ret = FormatNumber(data,2);
+                                    if (row["inv_num"].substring(0, 2) == "CN") {
+                                        ret = "<span style='color:red;'>" + FormatNumber(data,2) + "</span>";
+                                    }
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "sale_um",
+                                "className": "text-center",
+                                "render": function (data, type, row, meta) {
+                                    var ret = data;
+
+                                    if (row["inv_num"].substring(0, 2) == "CN") {
+
+                                        ret = "<span style='color:red;'>" + row["CN_UM"] + "</span>";
+
+                                    }
+                                    return ret;
+                                }
+                            },
+                            //จำนวนเส้น
+                            {
+                                "data": "PCS_QTY",
+                                "className": "text-right",
+                                "render": function (data, type, row) {
+                                    var ret = "";
+                                    var PCS_Val = "<span style='color:!!ReColor!!;'>" + addCommas(parseFloat(row["PCS_QTY"]).toFixed(2)) + "</span>";
+                                    var CN_Val = "<span style='color:!!ReColor!!;'>" + addCommas(parseFloat(row["CN_PCS_QTY"]).toFixed(2)) + "</span>";
+                                    var fColor = "#666;";
+
+                                    if ((row["sale_um"] == "PCS")) {
+                                        ret = PCS_Val;
+                                    } else {
+                                        //is KG
+                                        if (row["item_fcode"] != "F") {
+                                            ret = "<span style='color:!!ReColor!!;'>0.00</span>";
+                                        } else {
+                                            ret = PCS_Val;
+                                        }
+                                    }
+
+                                    if (row["inv_num"].substring(0, 2) == "CN") {
+                                        ret = CN_Val;
+                                        ret = ret.replace("!!ReColor!!", "red");
+                                    }
+
+                                    return  ret ;
+                                }
+                            },
+                            //จำนวน KG
+                            {
+                                "data": "KG_QTY",
+                                "className": "text-right",
+                                "render": function (data, type, row, meta) {
+                                    var ret = "";
+                                    var KG_Val = "<span style='color:!!ReColor!!;'>" + addCommas(parseFloat(row["KG_QTY"]).toFixed(2)) + "</span>";
+                                    var PCS_Val = "<span style='color:!!ReColor!!;'>" + addCommas(parseFloat(row["PCS_QTY"]).toFixed(2)) + "</span>";
+                                    var CN_Val = "<span style='color:!!ReColor!!;'>" + addCommas(parseFloat(row["CN_KG_QTY"]).toFixed(2)) + "</span>";
+
+                                    var fColor = "#666;";
+                                    if ((row["sale_um"] == "KG")) {
+                                        ret = KG_Val;
+                                    } else {
+                                        // is PCS ??
+                                        ret = "<span style='color:!!ReColor!!;'>0.00</span>";
+
+                                    }
+                                    if (row["inv_num"].substring(0, 2) == "CN") {
+                                        ret = CN_Val;
+                                        ret = ret.replace("!!ReColor!!", "red");
+                                    }
+                                    //ขายเป็นเส้น  product code F ออกทั้งเส้นและ กก.
+
+                                    return ret;
+                                }
+                            },
+                            //ราคาต่อหน่วย
+                            {
+                                "data": "PCS_Price",
+                                "className": "text-right",
+                                "render": function (data, type, row) {
+                                    var ret = "";
+                                    var PCS_Val = "<span style='color:!!ReColor!!;'>" + addCommas(parseFloat(row["PCS_Price"]).toFixed(2)) + "</span>";
+                                    var KG_Val = "<span style='color:!!ReColor!!;'>" + addCommas(parseFloat(row["KG_Price"]).toFixed(2)) + "</span>";
+                                    var fColor = "#666;";
+                                    if (row["sale_um"] == "PCS") { // is PCS
+                                        ret = PCS_Val;
+                                    } else {
+                                        ret = KG_Val;
+                                    }
+                                    if (row["inv_num"].substring(0, 2) == "CN") {
+                                        if (row["CN_UM"] == "KG") {
+                                            ret = "<span style='color:red;'>" + addCommas(parseFloat(row["CN_KG_Price"]).toFixed(2)) + "</span>";
+                                        } else {
+                                            ret = "<span style='color:red;'>" + addCommas(parseFloat(row["CN_PCS_Price"]).toFixed(2)) + "</span>";
+                                        }
+                                    }
+                                    return ret;
+                                }
+                            },
+                           
+                            {
+                                "data": "disc",
+                                "className": "text-right",
+                                "render": function (data, type, row) {
+                                    var ret = addCommas(parseFloat(data).toFixed(2));
+                                    if (row["inv_num"].substring(0, 2) == "CN") {
+                                        ret = "<span style='color:red;'>" + data + "</span>";
+                                    }
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "PCS_Amt",
+                                "className": "text-right",
+                                "render": function (data, type, row, meta) {
+                                    var ret = "";
+                                    var PCS_Val = "<span style='color:!!ReColor!!;'>" + addCommas(parseFloat(row["PCS_Amt"]).toFixed(2)) + "</span>";
+                                    var KG_Val = "<span style='color:!!ReColor!!;'>" + addCommas(parseFloat(row["KG_Amt"]).toFixed(2)) + "</span>";
+                                    var CN_PCS_Val = "<span style='color:!!ReColor!!;'>" + addCommas(parseFloat(row["CN_PCS_Amt"]).toFixed(2)) + "</span>";
+                                    var CN_KG_Val = "<span style='color:!!ReColor!!;'>" + addCommas(parseFloat(row["CN_KG_Amt"]).toFixed(2)) + "</span>";
+                                    var fColor = "#666;";
+                                    if (row["sale_um"] == "PCS") { // is PCS
+                                        ret = PCS_Val;
+                                    } else {
+                                        ret = KG_Val;
+                                    }
+                                    if (row["inv_num"].substring(0, 2) == "CN") {
+                                        if (row["CN_UM"] == "PCS") {
+                                            ret = CN_PCS_Val;
+                                        } else {
+                                            ret = CN_KG_Val;
+                                        }
+
+                                        ret = ret.replace("!!ReColor!!", "red");
+                                    }
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "PCS_Vat",
+                                "className": "text-right",
+                                "render": function (data, type, row, meta) {
+                                    var ret = "";
+                                    var PCS_Val = "<span style='color:!!ReColor!!;'>" + addCommas(parseFloat(row["PCS_Vat"]).toFixed(2)) + "</span>";
+                                    var KG_Val = "<span style='color:!!ReColor!!;'>" + addCommas(parseFloat(row["KG_Vat"]).toFixed(2)) + "</span>";
+                                    var CN_KG_Val = "<span style='color:!!ReColor!!;'>" + addCommas(parseFloat(row["CN_KG_Vat"]).toFixed(2)) + "</span>";
+                                    var CN_PCS_Val = "<span style='color:!!ReColor!!;'>" + addCommas(parseFloat(row["CN_PCS_Vat"]).toFixed(2)) + "</span>";
+                                    var fColor = "#666;";
+                                    if (row["sale_um"] == "PCS") { // is PCS
+                                        ret = PCS_Val;
+                                    } else {
+                                        ret = KG_Val;
+                                    }
+                                   if (row["inv_num"].substring(0, 2) == "CN") {
+                                        if (row["CN_UM"] == "PCS") {
+                                            ret = CN_PCS_Val;
+                                        } else {
+                                            ret = CN_KG_Val;
+                                        }
+
+                                        ret = ret.replace("!!ReColor!!", "red");
+                                    }
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "PCS_NetAmt",
+                                "className": "text-right",
+                                "render": function (data, type, row, meta) {
+                                    var ret = "";
+                                    var PCS_Val = "<span style='color:!!ReColor!!;'>" + addCommas(parseFloat(row["PCS_NetAmt"]).toFixed(2)) + "</span>";
+                                    var KG_Val = "<span style='color:!!ReColor!!;'>" + addCommas(parseFloat(row["KG_NetAmt"]).toFixed(2)) + "</span>";
+                                    var CN_PCS_Val = "<span style='color:!!ReColor!!;'>" + addCommas(parseFloat(row["CN_PCS_NetAmt"]).toFixed(2)) + "</span>";
+                                    var CN_KG_Val = "<span style='color:!!ReColor!!;'>" + addCommas(parseFloat(row["CN_KG_NetAmt"]).toFixed(2) )+ "</span>";
+                                    var fColor = "#666;";
+                                    if (row["sale_um"] == "PCS") { // is PCS
+                                        ret = PCS_Val;
+                                    } else {
+                                        ret = KG_Val;
+                                    }
+                                    if (row["inv_num"].substring(0, 2) == "CN") {
+                                        if (row["CN_UM"] == "PCS") {
+                                            ret = CN_PCS_Val;
+                                        } else {
+                                            ret = CN_KG_Val;
+                                        }
+
+                                        ret = ret.replace("!!ReColor!!", "red");
+                                    }
+                                    return ret;
+                                }
+                            }
+
+                        ],
+                        'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                                "<'row'<'col-md-12'tr>>" +
+                                "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                        buttons: [{
+                                extend: 'print',
+                                text: "<i class='fa fa-print'></i>&nbsp;Print",
+                                title: ''
+                            },
+                            {
+
+                                extend: 'excel',
+                                footer: true,
+                                text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                                title: ''
+                            },
+                        ],
+                        "footerCallback": function (row, data, start, end, display) {
+                            var api = this.api(),
+                                    data;
+
+                            // converting to interger to find total
+                            var intVal = function (i) {
+                                return typeof i === 'string' ?
+                                        i.replace(/[\$,]/g, '') * 1 :
+                                        typeof i === 'number' ?
+                                        i : 0;
+                            };
+
+                            // computing column Total of the complete result
+                            var amt_total = api
+                                    .column(10)
+                                    .data()
+                                    .reduce(function (a, b) {
+                                        return intVal(a) + intVal(b);
+                                    }, 0);
+
+                            var tax_total = api
+                                    .column(11)
+                                    .data()
+                                    .reduce(function (a, b) {
+                                        return intVal(a) + intVal(b);
+                                    }, 0);
+                            var net_total = api
+                                    .column(12)
+                                    .data()
+                                    .reduce(function (a, b) {
+                                        return intVal(a) + intVal(b);
+                                    }, 0);
+
+
+
+                            // Update footer by showing the total with the reference of the column index
+                            $(api.column(9).footer()).html('Total');
+                            //                            $(api.column(1).footer()).html(monTotal);
+                            //                            $(api.column(2).footer()).html(tueTotal);
+                            $(api.column(10).footer()).html(addCommas(amt_total.toFixed(2)));
+                            $(api.column(11).footer()).html(addCommas(tax_total.toFixed(2)));
+                            $(api.column(12).footer()).html(addCommas(net_total.toFixed(2)));
+                        },
+
+                    });
+                    $('#tblReport').loading("stop");
+                    $("#btnSearch").html(OldHtml);
+                },
+                error: function (e) {
+                    //                     console.log(JSON(e));
+                    console.log("There was an error with your request...");
+                    console.log("error: " + JSON.stringify(e));
+                }
+            });
+            //            $("#tblReportList").load("././module/RPTITEM_CUST/data.php", {
+            //                "load": "ajax",
+            //                "txtItem": txtItem,
+            //                "Customers": Customers,
+            //                "txtSize": txtSize,
+            //                "txtThick": txtThick,
+            //                "txtWidth": txtWidth,
+            //                "txtFromDate": txtFromDate,
+            //                "txtToDate": txtToDate,
+            //            }, function () {
+            //                $("#btnSearch").html(oldHtmlBtn);
+            //                $('#tblReport').DataTable({
+            //                    searching: false,
+            //                    fixedHeader: true,
+            //                    retrieve: true,
+            //                    "pageLength": 999999999,
+            //                    'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'>>" +
+            //                            "<'row'<'col-md-12'tr>>" +
+            //                            "<'row'<'col-md-5'><'col-sm-7'>>",
+            //                    buttons: [
+            //                        {
+            //                            extend: 'print',
+            //                            text: "<i class='fa fa-print'></i>&nbsp;Print",
+            //                            title: ''
+            //                        },
+            //                        {
+            //                            extend: 'excel',
+            //                            text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+            //                            title: ''
+            //                        },
+            //                    ]
+            //                });
+            //                var getAllRows = $(".table tbody tr").length;
+            //                $(".col-flt-page").text("จำนวนทั้งหมด : " + getAllRows.toString());
+            //                $('#tblReport').loading("stop");
+            //            });
+        }
+
+    }
+</script>

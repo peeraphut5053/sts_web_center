@@ -1,0 +1,101 @@
+<div class="row">
+    <div>
+        <h1>Trial Balance Report</h1>
+    </div> 
+    <div class="col-lg-2" >   
+        <div class="input-group">
+            <div class="input-group-addon">Start Date</div>
+            <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtFromDate" value="2010-06-08">
+        </div>
+    </div>
+    <div class="col-lg-2">   
+        <div class="input-group">
+            <div class="input-group-addon">End Date</div>
+            <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtToDate" value="2020-06-08">
+        </div>
+    </div>
+    <div class="col-lg-2">   
+        <div class="input-group">
+            <div class="input-group-addon">Start Account</div>
+            <input type="text" class="form-control txt-filter" id="txtStartAcc" value="10000">
+        </div>
+    </div>
+    <div class="col-lg-2">   
+        <div class="input-group">
+            <div class="input-group-addon">End Account</div>
+            <input type="text" class="form-control txt-filter" id="txtEndAcc" value="99999">
+        </div>
+    </div>     
+    <div class="col-lg-2">   
+        <button id="btnSearch" class="btn btn-info"><i class="fa fa-searh"></i>&nbsp;ค้นหา</button>
+    </div>
+</div>
+
+<div class="row" id="divReport" >
+    <table class="table table-condensed table-bordered table-striped" id="tblReport" style="width:100%;">
+        <thead>
+            <tr>
+                <th>Account</th>
+                <th>Description</th>
+                <th>Beginning Balance</th>
+                <th>Debit (Credit)</th>
+                <th>Ending Balance</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+<script type="text/javascript">
+    $("#txtFromDate,#txtToDate").datepicker({
+        dateFormat: 'yy-mm-dd',
+    });
+    $("#txtFromDate,#txtToDate").val(GetToday());
+    $("#btnSearch").click(function () {
+        var tblReportId = '#tblReport';
+        var btnSearch = '#btnSearch';
+        SearchDataFn(tblReportId, btnSearch, tablecolumsArr, "RPT_Trial_Balance", "RPT_Trial_Balance");
+    });
+    var tablecolumsArr = [
+        {
+            "data": "acct",
+            "className": "text-center",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "description",
+            "className": "text-left",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "Beginning Balance",
+            "className": "text-right",
+            "render": function (data, type, row, meta) {
+                var ret = addCommas(parseFloat(data).toFixed(2));
+
+                return ret;
+            }
+        },
+        {
+            "data": "Debit (Credit)",
+            "className": "text-right",
+            "render": function (data, type, row) {
+                var ret = addCommas(parseFloat(data).toFixed(2));
+                return ret;
+            }
+        },
+        {
+            "width": 250,
+            "data": "Ending Balance",
+            "className": "text-right",
+            "render": function (data, type, row, meta) {
+                var ret = addCommas(parseFloat(data).toFixed(2));
+                return ret;
+            }
+        },
+    ];
+</script>

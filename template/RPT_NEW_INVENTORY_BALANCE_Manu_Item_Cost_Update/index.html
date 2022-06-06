@@ -1,0 +1,189 @@
+
+<div class="row">
+    <div class="row quicksearch col-lg-12" >
+        <div class="row" >
+            <div>
+                <h1>Update Manufacturing Item Cost</h1>
+            </div> 
+        </div> 
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-3" >   
+                    <div class="input-group">
+                        <div class="input-group-addon">From Date</div>
+                        <input value="" type="text" autocomplete="off"  class="form-control txt-filter" id="txtFromDate">
+                    </div>
+                </div>
+                <div class="col-xs-3" >   
+                    <div class="input-group">
+                        <div class="input-group-addon">To date</div>
+                        <input value="" type="text" autocomplete="off"  class="form-control txt-filter" id="txtToDate">
+                    </div>
+                </div>
+                <div class="col-xs-5">   
+                    <button id="btnupdateItemCost" class="btn btn-Success"><i class="fa fa-searh"></i>&nbsp;Update item Cost</button>
+                    <button id="checkStat" class="btn btn-default" onclick="checkStat()"><i class="fa fa-searh"></i>&nbsp;Check Status</button>
+                    <!--                    <button hidden="hidden" id="btnQuickSearch" class="btn btn-Danger"><i class="fa fa-searh"></i>&nbsp;Clear</button>-->
+                </div>
+                <div class="col-xs-1">
+                    <button id="btnrecal" class="btn btn-danger" onclick="recal()"><i class="fa fa-searh"></i>&nbsp;Recal</button>
+                </div>
+            </div>
+            <div class="row">
+                <table class="table table-condensed table-bordered table-striped" id="tblReport" style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th>id</th>
+                            <th>Start</th>
+                            <th>Finish</th>
+                            <th>Type</th>  
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+    $("#txtFromDate,#txtToDate").val(GetToday());
+
+    $("#txtFromDate,#txtToDate").datepicker({
+        dateFormat: 'yy-mm-dd',
+    });
+    //$("#txtFromDate,#txtToDate").val(GetToday());
+    $("#btnupdateItemCost").click(function () {
+        updateItemCost();
+    });
+
+//    setInterval(function(){
+//       checkStat(); 
+//    },3000)
+
+
+    function checkStat() {
+            $.ajax({
+                type: 'POST',
+                url: "././module/RPT_NEW_INVENTORY_BALANCE_Manu_Item_Cost_Update/data.php",
+                dataType: 'json',
+                beforeSend: function () {
+                },
+                data: {
+                    load: "checkStat",
+                },
+                success: function (data) {
+                    console.log(data);
+                    $("#tblReport").dataTable({
+                        scrollY: 300,
+                        "aaData": data,
+                        "paging": false,
+                        "searching": false,
+                        "bDestroy": true,
+                        "order": [[0, "desc"]],
+                        "columns": [
+                            {
+                                "data": "id",
+                                "className": "text-center",
+                                "render": function (data, type, row) {
+                                    var ret = data;
+                                    return ret;
+                                }
+                            }, {
+                                "data": "click_start",
+                                "className": "text-center",
+                                "render": function (data, type, row) {
+                                    var ret = data.date;
+                                    return ret;
+                                }
+                            }, {
+                                "data": "click_finish",
+                                "className": "text-center",
+                                "render": function (data, type, row) {
+                                    var ret;
+                                    if (data) {
+                                        ret = data.date;
+                                    } else {
+                                        ret = "pending...";
+                                    }
+                                    return ret;
+                                }
+                            }, {
+                                "data": "click_type",
+                                "className": "text-center",
+                                "render": function (data, type, row) {
+                                    var ret = data;
+                                    return ret;
+                                }
+                            },
+                        ],
+                    });
+
+                },
+            });
+    }
+
+    function recal() {
+
+
+        var confirm = prompt(" พิมพ์คำว่า 'ยืนยัน' เพื่อดำเนินการต่อ ");
+        if (confirm == "ยืนยัน") {
+            checkStat()
+            var btnSearch = '#btnSearch';
+            var urlModule = "././module/" + ModuleName + "/data.php";
+            $.ajax({
+                type: 'POST',
+                url: urlModule,
+                dataType: 'json',
+                data: {
+                    load: "STS_Recal_Matltran",
+                },
+                error: function (e) {
+                    console.log("There was an error with your request...");
+                    console.log("error: " + JSON.stringify(e));
+                }
+            });
+        } else
+        {
+            console.log(0)
+        }
+
+
+    }
+    function updateItemCost() {
+        var confirm = prompt(" พิมพ์คำว่า 'ยืนยัน' เพื่อดำเนินการต่อ ");
+        if (confirm == "ยืนยัน") {
+            var btnSearch = '#btnSearch';
+            var urlModule = "././module/" + ModuleName + "/data.php";
+            var OldHtml = $(btnSearch).html();
+            let txtFromDate = $("#txtFromDate").val();
+            let txtToDate = $("#txtToDate").val();
+            $.ajax({
+                type: 'POST',
+                url: urlModule,
+                dataType: 'json',
+                beforeSend: function () {
+                },
+                data: {
+                    load: "Manu_Item_Cost_Update",
+                    txtFromDate: txtFromDate,
+                    txtToDate: txtToDate
+                },
+                success: function (data) {
+                    console.log(data);
+                    $("#btnSearch").html(OldHtml);
+                },
+                error: function (e) {
+                    console.log("There was an error with your request...");
+                    console.log("error: " + JSON.stringify(e));
+                }
+            });
+
+        } else
+        {
+            console.log(0)
+        }
+    }
+</script>

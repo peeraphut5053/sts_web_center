@@ -1,0 +1,62 @@
+<div class="row">
+    <div class="col-lg-2" >   
+        <div class="input-group">
+            <div class="input-group-addon">Date</div>
+            <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtFromDate">
+        </div>
+    </div>
+    <div class="col-lg-2">   
+        <div class="input-group">
+            <div class="input-group-addon">To date</div>
+            <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtToDate">
+        </div>
+    </div>
+    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4 " >
+        <button id="btnSearch" class="btn btn-info"><i class="fa fa-chart-bar"></i>&nbsp;Search </button>
+    </div>
+</div>
+<div class="row">
+    <table class="table table-condensed table-bordered table-striped" id="tblReport" >
+        <thead>
+            <tr>
+                <th>Cust Num</th>
+                <th>Cust Name</th>
+                <th>Summary Amount (bath)</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+<script type="text/javascript">
+    $("#txtFromDate,#txtToDate").datepicker({
+        dateFormat: 'yy-mm-dd',
+    });
+    $("#btnSearch").click(function () {
+        SearchDataFooterFn('#tblReport', '#btnSearch', tablecolumsArr, "Exports by Customer Report", "ajax_by_cust");
+        RowFooterBuild('#tblReport');
+    });
+    function footerCallback(api) {
+        $(api.column(1).footer()).html("<b>TOTAL</b>");
+        ColumnSumVal(2, api)
+    }
+    tablecolumsArr = [
+        {
+            "data": "cust_num",
+            "className": "text-center",
+        },
+        {
+            "data": "name",
+            "className": "text-left",
+        },
+        {
+            "data": "AmountTHB",
+            "className": "text-right",
+            "render": function (data, type, row) {
+                var ret = formatMoney(data) ;
+                return ret;
+            }
+        },
+        
+        
+    ]
+</script>
+

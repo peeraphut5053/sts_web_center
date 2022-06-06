@@ -1,0 +1,80 @@
+<div class="row">
+    <div>
+        <h1>Work center group</h1>
+    </div> 
+</div> 
+<div class="row" >
+
+</div>
+
+<div class="row" id="divReport" >
+    <div class="col-xs-6">
+        กลุ่มหลัก
+        <div class="row">
+            <div class="input-group">
+                <div class="input-group-addon">รหัส</div>
+                <input type="text" autocomplete="off"  class="form-control txt-filter" id="group_num">
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-group">
+                <div class="input-group-addon">Description</div>
+                <input type="text" autocomplete="off"  class="form-control txt-filter" id="group_desc">
+            </div>
+        </div>
+        <div class="row">
+            <button id="btnSave" class="btn btn-success"><i class="fa fa-searh"></i>&nbsp;save</button>
+        </div>
+    </div>
+    <div class="col-xs-6">
+        กำหนด Work center group code
+        <div class="col-lg-2">   
+            <button id="btnSearch" class="btn btn-info"><i class="fa fa-searh"></i>&nbsp;ค้นหา</button>
+        </div>
+        <table class="table table-condensed table-bordered table-striped" id="tblReport" style="width:100%;">
+            <thead>
+                <tr>
+                    <th>Transaction Date</th>
+                    <th>Ref Number</th>
+                    <th>Group</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+<script type="text/javascript">
+    $("#txtFromDate,#txtToDate").datepicker({
+        dateFormat: 'yy-mm-dd',
+    });
+    
+    $("#txtFromDate,#txtToDate").val(GetToday());
+    $("#btnSearch").click(function () {
+        var tblReportId = '#tblReport';
+        var btnSearch = '#btnSearch';
+        SearchDataFn(tblReportId, btnSearch, tablecolumsArr, "Slit Report", "wc_mst");
+    });
+    var tablecolumsArr = [
+        {
+            "data": "wc",
+            "className": "text-right",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "description",
+            "render": function (data, type, row) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "wc_group_num",
+            "render": function (data, type, row) {
+                var ret = data;
+                return ret;
+            }
+        },
+    ];
+</script>

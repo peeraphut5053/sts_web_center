@@ -1,0 +1,23 @@
+<style>
+    th{
+        text-align: center;
+    }
+</style>
+<table class="table table-bordered table-condensed tabledark " id="tableSaleOrderHeader" >
+    <thead>
+        <tr>
+            <th rowspan="2"  align="center" >#</th>
+            <th  rowspan="2"  align="center" >DOC_NO</th>
+            <th  rowspan="2"  align="center">PO NO.</th>     
+            <th  rowspan="2"  align="center" >DATE</th>
+            <th style='{hiding_for_Customer}'   rowspan="2"  align="center" >Customer</th>
+            <th  rowspan="2"  align="center" >LIST COUNT</th>  
+            <th  rowspan="2"  align="center" >LIST UPLOADED</th>  
+            <th style='{hiding_for_Customer}' rowspan="2"  align="center" >STATUS</th>
+            <th  colspan="2" rowspan="2"  align="center" >manage</th>  
+        </tr>      
+    </thead>
+    <tbody id="tableItems">
+        {head_datas}
+    </tbody>
+</table>

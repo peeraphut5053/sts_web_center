@@ -1,0 +1,279 @@
+<style>
+    .modal-body{
+        height: 520px;
+        padding: 0px;
+        overflow-y: auto;
+    }
+    .add-user{
+        margin-top: 6px;
+    }
+
+</style>
+
+<div class='row' >
+    <div id="UserHeader" class="col-lg-4 col-md-4 col-sm-12 col-xs-12" style="font-size:18px;">
+        <b>User Management</b> 
+    </div>
+
+</div>
+<div class="row" id="divReport">
+    <table class="table table-condensed table-bordered table-striped" id="tblReport">
+        <thead>
+            <tr>
+                <!--                <th>ID</th>-->
+                <th>FullName</th>
+                <th>UserName</th>
+                <th>Level</th>
+                <th>Department</th>
+                <th>Position</th>
+                <th>LastLogin</th>
+                <th>Detail</th>
+                <th>Edit</th>       
+                <th>Authorize</th>   
+            </tr>
+        </thead>
+    </table>
+</div>
+
+
+<div class="modal" id="UserModal">
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 700px">
+            <div class="modal-header">
+                <label id="lblModalHead"></label>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div id="modalBody" class="modal-body" >
+            </div>
+            <div class="modal-footer">
+                <button hidden type="button" class="btn btn-success" id="btn_save" >Save</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    loadData();
+    function loadData() {
+        $.ajax({
+            type: 'GET',
+            url: "././module/USER_MNG/data.php",
+            contentType: "text/plain",
+            dataType: 'json',
+            beforeSend: function () {
+                $("#tblReport").dataTable().fnDestroy();
+                $("#btnSearch").html("<i class='fa fa-spinner fa-spin'>");
+            },
+            data: {
+                load: 'GetUserAll',
+            },
+            success: function (data) {
+                $("#tblReport").dataTable().fnDestroy();
+                $("#tblReportList").DataTable().clear();
+                $('#tblReport').dataTable({
+                    "paging": false,
+                    fixedHeader: true,
+                    "aaData": data,
+                    "columns": [
+                        {"data": "fullname"},
+                        {"data": "username"},
+                        {"data": "sys_level"},
+                        {"data": "dep_name"},
+                        {"data": "dep_pos_name"},
+                        {"data": "last_login_conv"},
+                        {"data": "", "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                return "<a id='UserDetail!!" + row["id"] + "' OnClick='openmodal(`UserDetail`,this.id)'><i class='fa fa-eye'></i></a>";
+                            }},
+                        {"data": "", "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                return "<a id='UserEdit!!" + row["id"] + "' OnClick='openmodal(`Update`,this.id)'><i class='fa fa-edit'></i></a>";
+                            }},
+                        {"data": "", "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                return "<a id='UserAuth!!" + row["id"] + "' OnClick='UserAuth(this.id)'><i class='fa fa-check-circle'></i></a>";
+                            }},
+                    ],
+                    'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                            "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                    buttons: [
+                        {
+                            extend: 'print',
+                            text: "<i class='fa fa-print'></i>&nbsp;Print",
+                            className: "btn btn-primary",
+                            title: ''
+                        },
+                        {
+                            extend: 'excel',
+                            text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                            className: "btn btn-success",
+                            title: ''
+                        },
+                        {
+                            text: "&nbsp;Add New User",
+                            className: "btn btn-info add-user",
+                            action: function (e, dt, node, config) {
+                                openmodal("Insert", "");
+                            }
+                        }
+                    ]
+                });
+                $('#tblReport').loading("stop");
+            },
+            error: function (e) {
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+    }
+
+
+
+
+    function openmodal(form, userId) {
+        console.log("form :" + form);
+        console.log("userId :" + userId);
+        $("#UserModal").modal("show");
+        var UserId = userId.split("!!")[1];
+        var Url = "././template/USER_MNG/_From.html";
+        $("#lblModalHead").html(form);
+        $("#modalBody").load(Url, {
+            "form": form,
+            id: UserId,
+        }, function () {
+            if (form == "UserDetail" || form == "Update") {
+                GetUserDetail(UserId);
+            }
+        });
+    }
+
+
+
+    function GetUserDetail(UserId) {
+        var Url = "././module/USER_MNG/data.php";
+        $("#lblModalHead").text("User Detail");
+        $.ajax({
+            type: 'GET',
+            url: Url,
+            contentType: "text/plain",
+            dataType: 'json',
+            beforeSend: function () {
+            },
+            data: {
+                load: "GetUserProp",
+                id: UserId,
+            },
+            success: function (data) {
+                console.log(data);
+                $("#txtUserId").val(data[0].id);
+                $("#txtUserName").val(data[0].username);
+                $("#txtFullName").val(data[0].fullname);
+                $("#txtUserName").val(data[0].username);
+                $("div.dep select").val(data[0].dep);
+            },
+            error: function (e) {
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+    }
+
+
+    function UserAuth(thisid) {
+        var UserId = thisid.split("!!")[1];
+        var Url = "././module/USER_MNG/load_form.php";
+        var modalBodyId = "#modalBody";
+        var modalId = "#UserModal";
+        $(modalId).modal("show");
+        $(modalBodyId).empty();
+        $(modalBodyId).load('template/USER_MNG/Authorize.html');
+        $.ajax({
+            type: 'GET',
+            url: Url,
+            contentType: "text/plain",
+            dataType: 'json',
+            beforeSend: function () {
+            },
+            data: {
+                load: 'GetUserAll',
+                "form": "Authorize",
+                "method": "",
+                "id": UserId
+            },
+            success: function (data) {
+                console.log(data)
+                tmpAction = 0;
+                $('#tblAuth').dataTable({
+                    "paging": false,
+                    fixedHeader: true,
+                    "aaData": data,
+                    "columns": [
+                        {"data": "prj_id"},
+                        {"data": "prj_name"},
+                        {"data": "dep_name"},
+                        {"data": "prj_type"},
+                        {"data": {prj_id: "prj_id", action: "action"},
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                var tmpAction = data.action;
+                                if (tmpAction == 1) {
+                                    actionColor = "success";
+                                } else {
+                                    actionColor = "default";
+                                }
+                                return "<a id='Act!!" + UserId + "!!" + data.prj_id + "!!" + data.action + " ' class='btn btn-" + actionColor + "' OnClick='ToggleAction(this.id)'><i class='fa fa-check-circle'></i></a>";
+                            }},
+                    ],
+                });
+                $('#tblReport').loading("stop");
+            },
+            error: function (e) {
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+    }
+    function ToggleAction(thisId) {
+        var Split = thisId.split("!!");
+        var UserId = Split[1];
+        var PrjId = Split[2];
+        var CurrAction = Split[3];
+        $.ajax({
+            type: 'POST',
+            url: "././module/USER_MNG/data.php",
+            beforeSend: function () {
+            },
+            data: {
+                load: 'ToggleAction',
+                UserId: UserId,
+                PrjId: PrjId,
+                CurrAction: CurrAction
+            },
+            success: function (data) {
+                if (data.toLowerCase().indexOf("fail") >= 0) {
+                    $.alert({
+                        title: "<i style='color:blue;' class='fa fa-exclamation-circle'></i>&nbsp; Toggle result ",
+                        content: data
+                    });
+                } else {
+                    //======= toggle button color by status =========//
+                    var slt = $("a[id^='Act!!" + UserId + "!!" + PrjId + "!!']");
+                    if (slt.hasClass("btn btn-default")) {
+                        slt.removeClass("btn btn-default");
+                        slt.addClass("btn btn-success");
+                    } else {
+                        slt.removeClass("btn btn-success");
+                        slt.addClass("btn btn-default");
+                    }
+                }
+            },
+            error: function (e) {
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+    }
+</script>

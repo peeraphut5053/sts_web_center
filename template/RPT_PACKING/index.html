@@ -1,0 +1,573 @@
+<style>
+    .input-group-addon{
+        width: 100px;
+    }
+    .modal-body{
+        height: unset;
+    }
+
+    div.dt-button-collection button.dt-button, div.dt-button-collection div.dt-button, div.dt-button-collection a.dt-button{
+        width:100%;
+    }
+    .input-group-addon:first-child {
+        width:7vw;
+    }
+    
+    
+</style>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+<link href="https://cdn.datatables.net/buttons/1.2.4/css/buttons.dataTables.min.css" rel="stylesheet" /> 
+<script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.colVis.min.js"></script> 
+
+
+<div>
+    <h1>Report Packing...</h1>
+</div>      
+
+<div class="row quicksearch" >
+    <div class="col-12 col-xs-12 col-sm-12 col-md-9 col-lg-9"  style="padding-left:0px;">
+        <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3" style="padding-left:0px;">   
+            <div class="input-group">
+                <div class="input-group-addon">From date</div>
+                <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtFromDate_Q">
+            </div>
+        </div>
+        <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3">   
+            <div class="input-group">
+                <div class="input-group-addon">To date</div>
+                <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtToDate_Q">
+            </div>
+        </div>
+        <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3">   
+            <div class="input-group">
+                <div class="input-group-addon">From Tag.</div>
+                <input type="text" class="form-control txt-filter" id="txtFromTag_Q">
+            </div>
+        </div>
+        <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3">   
+            <div class="input-group">
+                <div class="input-group-addon">To Tag.</div>
+                <input type="text" class="form-control txt-filter" id="txtToTag_Q">
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-xs-12 col-sm-12 col-md-3 col-lg-3" >
+        <button id="btnQuickSearch" class="btn btn-info"><i class="fa fa-searh"></i>&nbsp;Quick Search</button>
+        <button class="btn btn-success" id="btnModalAdvSearch"><i class="fa fa-search-plus"></i>&nbsp;Advance Search</button>
+    </div>
+
+</div>
+<div class="row" id="divReport" >
+    <table class="table table-condensed table-bordered table-striped" id="tblReport" style="width:150%;max-width: 100%;">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Job</th>
+                <th>Document Number</th>  
+                <th>Name</th>
+                <th>ITEM</th>
+                <th>Size</th>    
+                <th>SPEC</th>
+                <th>Type</th>
+                <th>STS PO</th>
+                <th>CUST PO</th>
+                <th>PORT</th>                
+                <th>BUNDLE</th>
+                <th>HEAT NO</th>
+                <th>PcsPerBundle</th>  
+                <th>WEIGHT</th>  
+                <th>tag</th>
+                <th>LOCATION</th>
+            </tr>
+        </thead>
+
+    </table>
+</div>
+
+<div class="modal" id="modalAdvSearch" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document" style="width:50%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                Advance search
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color:red;">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="BodyModal">
+                <div class="row" hidden>
+                    Customer Select ( multiple selection )
+                </div>
+                <div class='row' hidden>
+                    <select class="form-control" id="selCust"  multiple="multiple" style="height:100px;">
+                        <!--<option value="" selected>ทั้งหมด</option>-->
+                        {customer_data}
+                    </select>
+                </div>
+
+                <div >
+                    <div class="row">
+                        <div class="col-6 col-xs-6 col-sm-6 col-md-6 col-lg-6">                            
+                            <div class="input-group">
+                                <div class="input-group-addon">JOB</div>
+                                <input type="text" class="form-control txt-filter" id="txtJOB">
+                            </div>
+                        </div>
+                        <div class="col-6 col-xs-6 col-sm-6 col-md-6 col-lg-6">                            
+                            <div class="input-group">
+                                <div class="input-group-addon">Doc Number</div>
+                                <input type="text" class="form-control txt-filter" id="txtLOT">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6 col-xs-6 col-sm-6 col-md-6 col-lg-6">                            
+                            <div class="input-group">
+                                <div class="input-group-addon">ITEM</div>
+                                <input type="text" class="form-control txt-filter" id="txtITEM">
+                            </div>
+                        </div>
+                        <div class="col-6 col-xs-6 col-sm-6 col-md-6 col-lg-6">                            
+                            <div class="input-group">
+                                <div class="input-group-addon">SIZE</div>
+                                <input type="text" class="form-control txt-filter" id="txtSIZE">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6 col-xs-6 col-sm-6 col-md-6 col-lg-6">                            
+                            <div class="input-group">
+                                <div class="input-group-addon">SPEC</div>
+                                <input type="text" class="form-control txt-filter" id="txtSPEC">
+                            </div>
+                        </div>
+                        <div class="col-6 col-xs-6 col-sm-6 col-md-6 col-lg-6">                            
+                            <div class="input-group">
+                                <div class="input-group-addon">TYPE</div>
+                                <input type="text" class="form-control txt-filter" id="txtTYPE">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6 col-xs-6 col-sm-6 col-md-6 col-lg-6">                            
+                            <div class="input-group">
+                                <div class="input-group-addon">STS PO</div>
+                                <input type="text" class="form-control txt-filter" id="txtSTSPO">
+                            </div>
+                        </div>
+                        <div class="col-6 col-xs-6 col-sm-6 col-md-6 col-lg-6">                            
+                            <div class="input-group">
+                                <div class="input-group-addon">PORT</div>
+                                <input type="text" class="form-control txt-filter" id="txtPORT">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-6 col-xs-6 col-sm-6 col-md-6 col-lg-6">                            
+                            <div class="input-group">
+                                <div class="input-group-addon">CUST PO</div>
+                                <input type="text" class="form-control txt-filter" id="txtCUSTPO">
+                            </div>
+                        </div>
+                        <div class="col-6 col-xs-6 col-sm-6 col-md-6 col-lg-6">                            
+                            <div class="input-group">
+                                <div class="input-group-addon">CUST</div>
+                                <input type="text" class="form-control txt-filter" id="txtCUST">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+
+                        <div hidden class="col-6 col-xs-6 col-sm-6 col-md-6 col-lg-6">                            
+                            <div class="input-group">
+                                <div class="input-group-addon">LOT</div>
+                                <input type="text" class="form-control txt-filter" id="txtLOT">
+                            </div>
+                        </div>
+
+                        <div class="col-6 col-xs-6 col-sm-6 col-md-6 col-lg-6">                            
+                            <div class="input-group">
+                                <div class="input-group-addon">BUNDLE</div>
+                                <input type="text" class="form-control txt-filter" id="txtBUNDLE">
+                            </div>
+                        </div>
+                        <div class="col-6 col-xs-6 col-sm-6 col-md-6 col-lg-6">                            
+                            <div class="input-group">
+                                <div class="input-group-addon">NPS</div>
+                                <input type="text" class="form-control txt-filter" id="txtNPS">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-xs-6 col-sm-6 col-md-6 col-lg-6">                            
+                        <div class="input-group">
+                            <div class="input-group-addon">HEAT NO</div>
+                            <input type="text" class="form-control txt-filter" id="txtHEATNO">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-6 col-xs-6 col-sm-6 col-md-6 col-lg-6">                            
+                            <div class="input-group">
+                                <div class="input-group-addon">WEIGHT</div>
+                                <input type="text" class="form-control txt-filter" id="txtWEIGHT">
+                            </div>
+                        </div>
+                        <div class="col-6 col-xs-6 col-sm-6 col-md-6 col-lg-6">                            
+                            <div class="input-group">
+                                <div class="input-group-addon">PCS</div>
+                                <input type="text" class="form-control txt-filter" id="txtPCS">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6 col-xs-6 col-sm-6 col-md-6 col-lg-6">                            
+                            <div class="input-group">
+                                <div class="input-group-addon">Location</div>
+                                <input type="text" class="form-control txt-filter" id="txtLOCATION">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--</div>-->
+            </div>
+            <div class="row">
+                <div class="modal-footer">
+                    <button id="btnSearch" class="btn btn-info"><i class="fa fa-search"></i>&nbsp;ค้นหา</button>  
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="js/main.js"></script>
+<script type="text/javascript">
+
+
+    $(document).ready(function () {
+
+
+    });
+    $("#txtFromDate_A , #txtToDate_A ,#txtFromDate_Q , #txtToDate_Q").datepicker({
+    dateFormat: 'yy-mm-dd',
+    });
+    $("#btnSearch").click(function () {
+    SearchItemNormal("A");
+    });
+    $("#btnQuickSearch").click(function () {
+    SearchItemNormal("Q");
+    });
+    $("#btnModalAdvSearch").click(function () {
+    $.ajax({
+    type: 'POST',
+            url: "././module/RPT_PACKING/data.php",
+            dataType: 'json',
+            beforeSend: function () {
+
+            },
+            data: {
+            "load": "GetListCustomer",
+            },
+            success: function (data) {
+            $.each(data, function (key, value) {
+            $('#selCust').append($("<option></option>")
+                    .attr("value", value["cust_num"])
+                    .text(value["cust_name"]));
+            });
+            $('#selCust').selectize({
+            plugins: ['remove_button'],
+                    delimiter: ',',
+                    persist: false,
+                    create: function (input) {
+                    return {
+                    value: input,
+                            text: input
+                    }
+                    }
+            });
+            $("#modalAdvSearch").modal("show");
+            },
+            error: function (e) {
+            console.log("There was an error with your request...");
+            console.log("error: " + JSON.stringify(e));
+            }
+    });
+    });
+    $(".txt-filter").on("keypress", function (e) {
+    if (e.keyCode == 13) {
+    ReportItemSearch();
+    return false; // prevent the button click from happening
+    }
+    });
+    function SearchItemNormal(typeSearch) {
+
+    $("#tblReport tbody").empty();
+    $("#tblReport tfoot").remove();
+    var OldHtml = $("#btnSearch").html();
+    var txtFromDate = $("#txtFromDate_Q").val();
+    var txtToDate = $("#txtToDate_Q").val();
+    var txtFromTag = $("#txtFromTag_Q").val();
+    var txtToTag = $("#txtToTag_Q").val();
+    var txtSTSPO = $("#txtSTSPO").val();
+    var txtJOB = $("#txtJOB").val();
+    var txtLOT = $("#txtLOT").val();
+    var txtTYPE = $("#txtTYPE").val();
+    var txtNPS = $("#txtNPS").val();
+    var txtPCS = $("#txtPCS").val();
+    var txtWEIGHT = $("#txtWEIGHT").val();
+    var txtBUNDLE = $("#txtBUNDLE").val();
+    var txtHEATNO = $("#txtHEATNO").val();
+    var txtCUST = $("#txtCUST").val();
+    var txtCUSTPO = $("#txtCUSTPO").val();
+    var txtPORT = $("#txtPORT").val();
+    var txtITEM = $("#txtITEM").val();
+    var txtSIZE = $("#txtSIZE").val();
+    var txtLOCATION = $("#txtLOCATION").val();
+    if (typeSearch == "A") {
+    $("#modalAdvSearch").modal("hide");
+    }
+
+
+
+    $.ajax({
+    type: 'POST',
+            url: "././module/RPT_PACKING/data.php",
+            //                contentType: "text/plain",
+            dataType: 'json',
+            beforeSend: function () {
+            // Pace.start();
+            $("#btnSearch").html("<i class='fa fa-spinner fa-spin'></i>");
+            $('#tblReport').loading();
+            },
+            data: {
+            "load": "ajax",
+                    "txtFromDate": txtFromDate,
+                    "txtToDate": txtToDate,
+                    "txtFromTag": txtFromTag,
+                    "txtToTag": txtToTag,
+                    "txtJOB": txtJOB,
+                    "txtLOT": txtLOT,
+                    "txtSTSPO": txtSTSPO,
+                    "txtTYPE": txtTYPE,
+                    "txtNPS": txtNPS,
+                    "txtPCS": txtPCS,
+                    "txtWEIGHT": txtWEIGHT,
+                    "txtBUNDLE": txtBUNDLE,
+                    "txtHEATNO": txtHEATNO,
+                    "txtCUST": txtCUST,
+                    "txtCUSTPO": txtCUSTPO,
+                    "txtPORT": txtPORT,
+                    "txtITEM": txtITEM,
+                    "txtSIZE": txtSIZE,
+                    "txtLOCATION": txtLOCATION
+
+            },
+            success: function (data) {
+            console.log(data);
+            $("#tblReport").DataTable().clear();
+            $('#tblReport').dataTable({
+            "scrollX": true,
+                    dom: 'Bfrtip',
+                    "aaData": data,
+                    "paging": false,
+                    "searching": false,
+                    "initComplete": function (settings, json) {
+                    // ReCalGridAmount();
+                    },
+                    fixedHeader: true,
+                    destroy: true,
+                    'processing': true,
+                    "columns": [
+                    {
+                    "data": "print_date_conv",
+                            "className": "text-center",
+                            "render": function (data, type, row) {
+                            var ret = data;
+                            return ret;
+                            }
+                    },
+                    {
+                    "data": "job",
+                            "render": function (data, type, row) {
+                            var ret = data;
+                            return ret;
+                            }
+                    },
+                    {
+                    "data": "lot",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                            var ret = data;
+                            return ret;
+                            }
+                    },
+                    {
+                    "data": "name",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                            var ret = data;
+                            if (row["tag"].substring(0, 2) == "CX") {
+                            ret = "<span style='color:red;'>" + data + "</span>";
+                            }
+                            return ret;
+                            }
+                    },
+                    {
+                    "data": "item",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                            var ret = data;
+                            return ret;
+                            }
+                    },
+                    {
+                    "data": "SIZE",
+                            "render": function (data, type, row) {
+                            var ret = data;
+                            return ret;
+                            }
+                    },
+                    {
+                    "data": "SPEC",
+                            "render": function (data, type, row) {
+                            var ret = data;
+                            return ret;
+                            }
+                    },
+                    {
+                    "data": "TYPE",
+                            "render": function (data, type, row) {
+                            var ret = data;
+                            return ret;
+                            }
+                    },
+                    {
+                    "data": "STS_PO",
+                            "render": function (data, type, row) {
+                            var ret = data;
+                            return ret;
+                            }
+                    },
+                    {
+                    "data": "cust_po",
+                            "className": "text-right",
+                            "render": function (data, type, row) {
+                            var ret = data;
+                            return ret;
+                            }
+                    },
+                    {
+                    "data": "PORT",
+                            "className": "text-right",
+                            "render": function (data, type, row) {
+                            var ret = data;
+                            return ret;
+                            }
+                    },
+                    {
+                    "data": "Bundle",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                            var ret = data;
+                            return ret;
+                            }
+                    },
+                    {
+                    "data": {HEAT_NO:"HEAT_NO", sts_no2:"sts_no2", sts_no3:"sts_no3", qty_sts_no:"qty_sts_no", qty_sts_no2:"qty_sts_no2", qty_sts_no3:"qty_sts_no3"},
+                            "className": "text-right",
+                            "render": function (data, type, row) {
+                            var ret = GetHeatNo(data.HEAT_NO, data.sts_no2, data.sts_no3, data.qty_sts_no, data.qty_sts_no2, data.qty_sts_no3);
+                            return ret;
+                            }
+                    },
+                    {
+                    "data": "PcsPerBundle",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                            var ret = data;
+                            return ret;
+                            }
+                    },
+                    {
+                    "data": "Weight",
+                            "className": "text-right",
+                            "render": function (data, type, row) {
+                            var ret = data;
+                            return ret;
+                            }
+                    },
+                    {
+                    "data": "tag",
+                            "className": "text-center",
+                            "render": function (data, type, row) {
+                            var ret = data;
+                            return ret;
+                            }
+                    },
+                    {
+                    "data": "loc",
+                            "className": "text-center",
+                            "render": function (data, type, row) {
+                            var ret = data;
+                            return ret;
+                            }
+                    },
+                    ],
+                    'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                    "<'row'<'col-md-12'tr>>" +
+                    "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                    buttons: [{
+                    extend: 'print',
+                            text: "<i class='fa fa-print'></i>&nbsp;Print",
+                            title: ''
+                    },
+                    {
+                    extend: 'excel',
+                            footer: true,
+                            text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                            title: 'รายงาน Tag item ' + GetCurrDateTime()
+                    },
+                    {
+                    extend: 'colvis',
+                            text: "<i class='fa fa-file-excel'></i>&nbsp; ซ่อน / แสดง Colum",
+                    },
+                    ],
+            });
+            $('#tblReport').loading("stop");
+            $("#btnSearch").html(OldHtml);
+            //  Pace.start();
+
+            },
+            error: function (e) {
+            console.log("There was an error with your request...");
+            console.log("error: " + JSON.stringify(e));
+            }
+    });
+    }
+
+    GetYearMonth("txtFromDate_Q", "txtToDate_Q");
+    
+    
+    function GetHeatNo(sts_no, sts_no2, sts_no3, qty_sts_no, qty_sts_no2, qty_sts_no3) {
+    var Heat_no1 = "";
+    Heat_no2 = "";
+    Heat_no3 = "";
+    if (sts_no != "") {
+    Heat_no1_1 = "";
+    if (qty_sts_no2 > 0) {
+    Heat_no1_1 = "("+qty_sts_no+")";
+    }
+    Heat_no1 = sts_no+Heat_no1_1;
+    }
+    if (sts_no2 != "") {
+    Heat_no2 = ","+sts_no2+"("+qty_sts_no2+")";
+    }
+    if (sts_no3 != "") {
+    Heat_no3 = ","+sts_no3+"("+qty_sts_no3+"),";
+    }
+    var Heat_no = Heat_no1+Heat_no2+Heat_no3;
+    return Heat_no;
+    }
+</script>

@@ -1,0 +1,56 @@
+<style>
+    .container-modal{
+        padding-left:20px;
+        padding-right:20px;
+    }
+</style>
+<div class="container-modal">
+    <div class="row">
+        <div class="input-group">
+            <input type="text" id="txtSearch" class="form-control" placeholder="Type search words..." >
+            <div class="input-group-addon"><a id="btnSearchInModal" onclick="CustSearch();"> <i class="fa fa-search"></i></a></div>
+        </div>
+    </div>
+    <div class="row">
+        <table class="table table-condensed " id="tblCust">
+            <thead>
+                <tr>
+                    <th>Select</th>
+                    <th>#</th>
+                    <th>cust_num</th>
+                    <th>cust_name</th>
+                    <th>cust_addr1</th>
+                    <th>cust_addr2</th>
+                </tr>
+            </thead>
+            <tbody id="tbodyAjaxCustTable">
+            </tbody>
+        </table>
+    </div>
+</div>
+<script type="text/javascript">
+    function CustSearch() {
+        var txtSearch = $("#txtSearch").val();
+        $.ajax({
+            url: "././module/_Main/load_dialog.php",
+            type: 'post',
+            beforeSend: function () {
+
+            },
+            data: {
+                load: 'CustomerSearch',
+                txtSearch: txtSearch
+            },
+            success: function (data) {
+                console.log(data);
+                $("#tbodyAjaxCustTable").html(data);
+//                $("#btnSearchInModal").html("<i class='fa fa-search'></i>");
+//                $("#tblCust").loading("stop");
+            },
+            error: function (xhr, status, error) {
+                $("#debug").html(xhr.responseText);
+            },
+            dataType: "json"
+        });
+    }
+</script>

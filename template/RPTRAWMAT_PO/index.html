@@ -1,0 +1,494 @@
+<style>
+    .not-show-content{
+        display:none;
+    }
+    .footer{
+        color: blue ;
+        font-weight: bold;
+    }
+    .col-search {
+        padding-left: 3px;
+        padding-right: 3px;
+    }
+
+    .table thead th {
+        text-align: center;
+    }
+
+    .col-flt-page {
+        padding-top: 10px;
+        font-weight: bold;
+    }
+
+    #tblReport tbody tr td a {
+        cursor: pointer;
+    }
+
+    table.dataTable.fixedHeader-floating,
+    table.dataTable.fixedHeader-locked {
+        background-color: white;
+        margin-top: 50px !important;
+        margin-bottom: 0 !important;
+    }
+
+    .tr-row-cn td {
+        color: red;
+    }
+    .selectize-input{
+        min-height: 80px;
+    }
+    .panel-body{
+        padding-top:5px;
+        padding-bottom:5px;
+    }
+
+    .wrapper{
+        text-align:center;
+        margin-top: 5px;
+        margin-bottom:5px;
+    }
+
+    .tabs{
+        margin-top:10px;
+        font-size:15px;
+        padding:0px;
+        list-style:none;
+        background:#fff;
+        box-shadow:0px 5px 20px rgba(0,0,0,0.1);
+        display:inline-block;
+        border-radius:50px;
+        position:relative;
+    }
+
+    .tabs a{
+        text-decoration:none;
+        color: #777;
+        text-transform:uppercase;
+        padding:10px 20px;
+        display:inline-block;
+        position:relative;
+        z-index:1;
+        transition-duration:0.6s;
+    }
+
+    .tabs a.active{
+        color:#fff;
+    }
+
+    .tabs a i{
+        margin-right:5px;
+    }
+
+    .tabs .selector{
+        height:100%;
+        display:inline-block;
+        position:absolute;
+        left:0px;
+        top:0px;
+        z-index:1;
+        border-radius:50px;
+        transition-duration:0.6s;
+        transition-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+        background: #05abe0;
+        background: -moz-linear-gradient(45deg, #05abe0 0%, #8200f4 100%);
+        background: -webkit-linear-gradient(45deg, #05abe0 0%,#8200f4 100%);
+        background: linear-gradient(45deg, #05abe0 0%,#8200f4 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#05abe0', endColorstr='#8200f4',GradientType=1 );
+    }
+    h2{
+        margin:0px;
+        text-transform: uppercase;
+    }
+
+    h6{
+        margin:0px;
+        color:#777;
+    }
+</style>
+
+<div class="wrapper">
+    <h3>รายงาน Raw Material Purchase</h3>
+
+</div>
+{Hello}
+<div id="content_group" >
+    <div class="row">
+        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4 " >
+            <div class="input-group">
+                <div class="input-group-addon">Year</div>
+                <select class="form-control" id="RepByGroupYear">
+
+                </select>
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4 " >
+            <div class="input-group">
+                <div class="input-group-addon">Month</div>
+                <select class="form-control" id="RepByGroupMonth">
+
+                </select>
+            </div>
+
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4 " >
+            <button id="btnProcess" class="btn btn-info"><i class="fa fa-chart-bar"></i>&nbsp;Process </button>
+        </div>
+    </div>
+    <div class="row">
+        <table class="table table-condensed table-bordered table-striped" id="tblGroupReport" >
+            <thead>
+                <tr>
+                    <th>Group Code</th>
+                    <th>Group Name</th>
+                    <th>Summary KG</th>
+                    <th>Summary Amount (bath)</th>                     
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+<!--</div>-->
+
+<script type="text/javascript" src="js/main.js"></script>
+<script type="text/javascript">
+
+
+
+    $(document).ready(function () {
+        $("#btnProcess").click(function () {
+            SearchItemNormal(typeSearch)
+        });
+
+    function SearchItemNormal(typeSearch) {
+        var Customers = [];
+        Customers = $("#selCust").val();
+        $("#tblReport tbody").empty();
+        $("#tblReport tfoot").remove();
+        var OldHtml = $("#btnSearch").html();
+        var txtFromDate = $("#txtFromDate_" + typeSearch).val();
+        var txtToDate = $("#txtToDate_" + typeSearch).val();
+        var txtFromInv = $("#txtFromInv_" + typeSearch).val();
+        var txtToInv = $("#txtToInv_" + typeSearch).val();
+        var txtItem = $("#txtItem").val();
+        var txtSize = $("#txtSize").val();
+        var txtThick = $("#txtThick").val();
+        var txtWidth = $("#txtWidth").val();
+        if (typeSearch == "A") {
+            $("#modalAdvSearch").modal("hide");
+        }
+
+
+
+        if ((txtFromDate == "") && (txtToDate == "") && (txtFromInv == "") && (txtToInv == "")) {
+            $.alert({
+                title: "ไม่ได้ระบุ Filter ",
+                content: "กรุณาระบุ Filter อย่างใดอย่างหนึ่ง เช่น ช่วงวันที่ หรือ ช่วงใบ Inv"
+            });
+        } else {
+            if (((txtFromDate != "") && (txtToDate == "")) || ((txtFromDate == "") && (txtToDate != ""))) {
+                $.alert({
+                    title: "",
+                    content: "ระบุช่วงวันต้องระบุทั้งสองช่อง คือ Start date และ End Date"
+                });
+            } else if (((txtFromInv != "") && (txtToInv == "")) || ((txtFromInv == "") && (txtToInv != ""))) {
+                $.alert({
+                    title: "",
+                    content: "ระบุช่วง Inv ต้องระบุทั้งสองช่อง คือ Start Inv และ End Inv"
+                });
+            } else {
+                $.ajax({
+                    type: 'POST',
+                    url: "././module/RPTINV_ITEM_EX/data.php",
+                    //                contentType: "text/plain",
+                    dataType: 'json',
+                    beforeSend: function () {
+                        // Pace.start();
+                        $("#btnSearch").html("<i class='fa fa-spinner fa-spin'></i>");
+                        $('#tblReport').loading();
+                    },
+                    data: {
+                        "load": "ajax",
+                        "txtItem": txtItem,
+                        "Customers": Customers,
+                        "txtSize": txtSize,
+                        "txtThick": txtThick,
+                        "txtWidth": txtWidth,
+                        "txtFromDate": txtFromDate,
+                        "txtToDate": txtToDate,
+                        "txtFromInv": txtFromInv,
+                        "txtToInv": txtToInv,
+                    },
+                    success: function (data) {
+
+                        $("#tblReport").DataTable().clear();
+                        var RowFooterBuild = "";
+                        var ColBuild = "";
+                        var ColCount = 14;
+                        var i = 0;
+                        RowFooterBuild = "<tfoot><tr>!!ColBuild!!</tr></tfoot>";
+                        for (i = 1; i <= ColCount; i++) {
+                            ColBuild += "<td></td>";
+                        }
+                        $("#tblReport").append(RowFooterBuild.replace("!!ColBuild!!", ColBuild));
+                        $('#tblReport').dataTable({
+                            "aaData": data,
+                            "paging": false,
+                            "searching": false,
+                            "initComplete": function (settings, json) {
+                                // ReCalGridAmount();
+                            },
+                            fixedHeader: true,
+                            destroy: true,
+                            'processing': true,
+                            "columns": [
+                                {
+                                    "data": "inv_date_conv",
+                                    "className": "text-center",
+                                    "render": function (data, type, row) {
+                                        var ret = data;
+                                        if (row["inv_num"].substring(0, 2) == "CX") {
+                                            ret = "<span style='color:red;'>" + data + "</span>";
+                                        }
+                                        return ret;
+                                    }
+                                },
+                                {
+                                    "data": "inv_num",
+                                    "render": function (data, type, row) {
+                                        var ret = data;
+                                        if (data.substring(0, 2) == "CX") {
+                                            ret = "<span style='color:red;'>" + data + "</span>";
+                                        }
+                                        return ret;
+                                    }
+                                },
+                                {
+                                    "data": "name",
+                                    "render": function (data, type, row) {
+                                        var ret = data;
+                                        if (row["inv_num"].substring(0, 2) == "CX") {
+                                            ret = "<span style='color:red;'>" + data + "</span>";
+                                        }
+                                        return ret;
+                                    }
+                                },
+                                {
+                                    "data": "item",
+                                    "render": function (data, type, row) {
+                                        var ret = data;
+                                        if (row["inv_num"].substring(0, 2) == "CX") {
+                                            ret = "<span style='color:red;'>" + ret + "</span>";
+                                        }
+                                        return ret;
+                                    }
+                                }
+                                ,
+                                {
+                                    "data": "description",
+                                    "render": function (data, type, row) {
+                                        var ret = data;
+                                        if (row["inv_num"].substring(0, 2) == "CX") {
+                                            ret = "<span style='color:red;'>" + data + "</span>";
+                                        }
+                                        return ret;
+                                    }
+                                },
+                                {
+                                    "data": "group_final",
+                                    "render": function (data, type, row) {
+                                        var ret = data;
+                                        if (row["inv_num"].substring(0, 2) == "CX") {
+                                            ret = "<span style='color:red;'>" + data + "</span>";
+                                        }
+                                        return ret;
+                                    }
+                                },
+                                {
+                                    "data": "unit_weight",
+                                    "className": "text-right",
+                                    "render": function (data, type, row, meta) {
+                                        var ret = data;
+                                        if (row["inv_num"].substring(0, 2) == "CX") {
+                                            ret = "<span style='color:red;'>" + data + "</span>";
+                                        }
+                                        return ret;
+                                    }
+                                }
+                                ,
+                                {
+                                    "data": "um",
+                                    "className": "text-center",
+                                    "render": function (data, type, row, meta) {
+                                        var ret = data;
+                                        if (row["inv_num"].substring(0, 2) == "CX") {
+                                            ret = "<span style='color:red;'>" + data + "</span>";
+                                        }
+                                        return ret;
+                                    }
+                                },
+                                {
+                                    "data": "QtyPCS",
+                                    "className": "text-right",
+                                    "render": function (data, type, row, meta) {
+                                        var ret = data;
+                                        if (row["inv_num"].substring(0, 2) == "CX") {
+                                            ret = "<span style='color:red;'>" + data + "</span>";
+                                        }
+                                        return ret;
+                                    }
+                                },
+                                {
+                                    "data": "PricePerPCS",
+                                    "className": "text-right",
+                                    "render": function (data, type, row) {
+                                        var ret = data;
+                                        if (row["inv_num"].substring(0, 2) == "CX") {
+                                            ret = "<span style='color:red;'>" + data + "</span>";
+                                        }
+                                        return ret;
+                                    }
+                                },
+                                {
+                                    "data": "QtyKG",
+                                    "className": "text-right",
+                                    "render": function (data, type, row, meta) {
+                                        var ret = data;
+                                        if (row["inv_num"].substring(0, 2) == "CX") {
+                                            ret = "<span style='color:red;'>" + data + "</span>";
+                                        }
+                                        return ret;
+                                    }
+                                },
+                                {
+                                    "data": "PricePerKG",
+                                    "className": "text-right",
+                                    "render": function (data, type, row) {
+                                        var ret = data;
+                                        if (row["inv_num"].substring(0, 2) == "CX") {
+                                            ret = "<span style='color:red;'>" + data + "</span>";
+                                        }
+                                        return ret;
+                                    }
+                                },
+                                {
+                                    "data": "Discount",
+                                    "className": "text-right",
+                                    "render": function (data, type, row, meta) {
+                                        var ret = data;
+                                        if (row["inv_num"].substring(0, 2) == "CX") {
+                                            ret = "<span style='color:red;'>" + data + "</span>";
+                                        }
+                                        return ret;
+                                    }
+                                },
+                                {
+                                    "data": "AMT_USD",
+                                    "className": "text-right",
+                                    "render": function (data, type, row) {
+                                        var ret = data;
+                                        if (row["inv_num"].substring(0, 2) == "CX") {
+                                            ret = "<span style='color:red;'>" + data + "</span>";
+                                        }
+                                        return ret;
+                                    }
+                                },
+                                {
+                                    "data": "AMT_THB",
+                                    "className": "text-right",
+                                    "render": function (data, type, row) {
+                                        var ret = data;
+                                        if (row["inv_num"].substring(0, 2) == "CX") {
+                                            ret = "<span style='color:red;'>" + data + "</span>";
+                                        }
+                                        return ret;
+                                    }
+                                }
+
+                            ],
+                            'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                                    "<'row'<'col-md-12'tr>>" +
+                                    "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                            buttons: [{
+                                    extend: 'print',
+                                    text: "<i class='fa fa-print'></i>&nbsp;Print",
+                                    title: ''
+                                },
+                                {
+                                    extend: 'excel',
+                                    footer: true,
+                                    text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                                    title: 'รายงาน inv item ' + GetCurrDateTime()
+                                },
+                            ],
+                            "footerCallback": function (row, data, start, end, display) {
+                                var api = this.api(),
+                                        data;
+                                var intVal = function (i) {
+                                    return typeof i === 'string' ?
+                                            i.replace(/[\$,]/g, '') * 1 :
+                                            typeof i === 'number' ?
+                                            i : 0;
+                                };
+                                // computing column Total of the complete result
+                                var totalPCS = api
+                                        .column(7)
+                                        .data()
+                                        .reduce(function (a, b) {
+                                            return intVal(a) + intVal(b);
+                                        }, 0);
+                                var totalWeight = api
+                                        .column(9)
+                                        .data()
+                                        .reduce(function (a, b) {
+                                            return intVal(a) + intVal(b);
+                                        }, 0);
+                                var totalDisc = api
+                                        .column(11)
+                                        .data()
+                                        .reduce(function (a, b) {
+                                            return intVal(a) + intVal(b);
+                                        }, 0);
+                                var totalUSD = api
+                                        .column(12)
+                                        .data()
+                                        .reduce(function (a, b) {
+                                            return intVal(a) + intVal(b);
+                                        }, 0);
+                                var totalAMT = api
+                                        .column(13)
+                                        .data()
+                                        .reduce(function (a, b) {
+                                            return intVal(a) + intVal(b);
+                                        }, 0);
+                                $(api.column(6).footer()).html("<b>TOTAL</b>");
+                                $(api.column(7).footer()).html(addCommas(totalPCS.toFixed(2)));
+                                $(api.column(9).footer()).html(addCommas(totalWeight.toFixed(2)));
+                                $(api.column(11).footer()).html(addCommas(totalDisc.toFixed(2)));
+                                $(api.column(12).footer()).html(addCommas(totalUSD.toFixed(2)));
+                                $(api.column(13).footer()).html(addCommas(totalAMT.toFixed(2)));
+                                //  $(api.column(14).footer()).html(addCommas(totalNetAmount.toFixed(2)));
+                            },
+                        });
+                        $('#tblReport').loading("stop");
+                        $("#btnSearch").html(OldHtml);
+                        //  Pace.start();
+
+                    },
+                    error: function (e) {
+                        console.log("There was an error with your request...");
+                        console.log("error: " + JSON.stringify(e));
+                    }
+                });
+            }
+        }
+    }
+
+    $(".panel-heading").click(function () {
+        $(".panel-body").slideToggle("slow");
+    });
+    GetYearMonth("RepByGroupYear", "RepByGroupMonth");
+    
+
+</script>

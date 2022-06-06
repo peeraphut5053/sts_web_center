@@ -1,0 +1,164 @@
+<div class="row">
+    <div>
+        <h1>RPT NEW INVENTORY Shipped Date Vs Invoiced Date</h1>
+    </div> 
+    <div class="col-lg-2" >   
+        <div class="input-group">
+            <div class="input-group-addon">From Date</div>
+            <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtFromDate">
+        </div>
+    </div>
+    <div class="col-lg-2">   
+        <div class="input-group">
+            <div class="input-group-addon">To date</div>
+            <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtToDate">
+        </div>
+    </div>
+    <div class="col-lg-2">   
+        <div class="input-group">
+            <div class="input-group-addon">Co Number</div>
+            <input type="text" class="form-control txt-filter" id="co_num">
+        </div>
+    </div>
+    <div class="col-lg-2">   
+        <div class="input-group">
+            <div class="input-group-addon">Do number</div>
+            <input type="text" class="form-control txt-filter" id="do_num">
+        </div>
+    </div>     
+    <div class="col-lg-2">   
+        <div class="input-group">
+            <div class="input-group-addon">Inv number</div>
+            <input type="text" class="form-control txt-filter" id="inv_num">
+        </div>
+    </div>  
+    <div class="col-lg-2">   
+        <button id="btnSearch" class="btn btn-info"><i class="fa fa-searh"></i>&nbsp;ค้นหา</button>
+    </div>
+</div>
+
+<div class="row" id="divReport" >
+    <table class="table table-condensed table-bordered table-striped" id="tblReport" style="width:100%;">
+        <thead>
+            <tr>
+                <th>Co Number</th>
+                <th>Co line</th>
+                <th>Do Number</th>
+                <th>Item</th>
+                <th>Unit Weight</th>
+                <th>Qty Invoiced</th>
+                <th>Qty shipped</th>
+                <th>Inv Number</th>
+                <th>Terms Code</th>
+                <th>Inv Date</th>
+                <th>Ship Date</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+<script type="text/javascript">
+    $("#txtFromDate,#txtToDate").datepicker({
+        dateFormat: 'yy-mm-dd',
+    });
+    $("#txtFromDate,#txtToDate").val(GetToday());
+    $("#btnSearch").click(function () {
+        var tblReportId = '#tblReport';
+        var btnSearch = '#btnSearch';
+        SearchDataFn(tblReportId, btnSearch, tablecolumsArr, "RPT_NEW_INVENTORY_Shipped_Date_Vs_Invoiced_Date", "RPT_NEW_INVENTORY_Shipped_Date_Vs_Invoiced_Date");
+    });
+    var tablecolumsArr = [
+        {
+            "data": "co_num",
+            "className": "text-right",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "co_line",
+            "className": "text-right",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "do_num",
+            "render": function (data, type, row) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "width": 250,
+            "data": "item",
+            "className": "text-center",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "unit_weight",
+            "className": "text-center",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "qty_invoiced",
+            "className": "text-center",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "qty_shipped",
+            "className": "text-center",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "inv_num",
+            "className": "text-center",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "terms_code",
+            "className": "text-right",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "inv_date",
+            "className": "text-right",
+            "render": function (data, type, row, meta) {
+                var ret = "";
+                if (data != null) {
+                    ret = data.date.substring(0, 10)
+                }
+                return ret;
+            }
+        },
+        {
+            "data": "ship_date",
+            "render": function (data, type, row) {
+                var ret = "";
+                if (data != null) {
+                    ret = data.date.substring(0, 10)
+                }
+                return ret;
+            }
+        },
+    ];
+</script>

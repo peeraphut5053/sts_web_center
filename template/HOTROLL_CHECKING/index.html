@@ -1,0 +1,1222 @@
+<style>
+    .col-search {
+        padding-left: 3px;
+        padding-right: 3px;
+    }
+
+    .table thead th {
+        text-align: center;
+    }
+
+    .col-flt-page {
+        padding-top: 10px;
+        font-weight: bold;
+    }
+
+
+    table.dataTable.fixedHeader-floating,
+    table.dataTable.fixedHeader-locked {
+        background-color: white;
+        margin-top: 50px !important;
+        margin-bottom: 0 !important;
+    }
+
+    .tr-row-cn td {
+        color: red;
+    }
+    .modal-dialog {
+        max-width: 95% !important;
+        /* margin: 30px auto; */
+    }
+    .modal-body {
+        position: relative;
+        padding: 0px;
+    }
+</style>
+
+<div class="row">
+    <h4>HOT ROLL CHECKING</h4>
+</div>
+<div class='row'>
+
+    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2  col-search">
+        <div class="input-group">
+            <div class="input-group-addon">ค้นหาจาก S_NO</div>
+            <input type="text" class="form-control txt-filter" id="sno">
+        </div>
+    </div>
+    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2  col-search">
+        <div class="input-group">
+            <div class="input-group-addon">ค้นหาจาก Coil No</div>
+            <input type="text" class="form-control txt-filter" id="c_no">
+        </div>
+    </div>
+    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2  col-search">
+        <div class="input-group">
+            <div class="input-group-addon">ค้นหาจาก Heat No</div>
+            <input type="text" class="form-control txt-filter" id="h_no">
+        </div>
+    </div>
+    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2  col-search">
+        <div class="input-group">
+            <div class="input-group-addon">From date</div>
+            <input type="text" class="form-control txt-filter" id="txtFromDate">
+        </div>
+    </div>
+    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2  col-search">
+        <div class="input-group">
+            <div class="input-group-addon">To date</div>
+            <input type="text" class="form-control txt-filter" id="txtToDate">
+        </div>
+    </div>
+    <div class="col-lg-1 col-md-2 col-sm-1 col-xs-6  col-search">
+        <button id="btnSearch" class="btn btn-info"><i class="fa fa-search"></i>&nbsp;ค้นหา</button>
+    </div>
+</div>
+
+
+
+<div class="row" id="divReport">
+    <table class="table table-condensed table-bordered table-striped" id="tblReport">
+        <thead>
+            <tr>
+                <th colspan="14" class="bg-gray">Hot Roll Detail</th>
+                <th colspan="20" class="bg-gray">Chemical analysis from supplier</th>
+                <th colspan="20" class="bg-gray">Chemical analysis from Lab.'STS</th>
+            </tr>
+            <tr>
+                <th>Checking</th>
+                <th>sno</th>
+                <th>PO Date</th>
+                <th>STS.No.</th>
+                <th>Coil No.</th>
+                <th>HEAT No.</th>
+                <th>Weight</th>
+                <th>Real weight</th>
+                <th>Grade</th>
+                <th>Thick</th>
+                <th>Thicks</th>
+                <th>Width</th>
+                <th>widths</th>
+                <th>reference</th>
+                <th>C</th>
+                <th>Si</th>
+                <th>Mn</th>
+                <th>P</th>
+                <th>S</th>
+                <th>Cu</th>
+                <th>V</th>
+                <th>Ni</th>
+                <th>Cr</th>
+                <th>Mo</th>
+                <th>Ti</th>
+                <th>Nb</th>
+                <th>Al</th>
+                <th>B</th>
+                <th>Co</th>
+                <th>Pb</th>
+                <th>Fe</th>
+                <th>Ts</th>
+                <th>Ys</th>
+                <th>El</th>
+                <th>C</th>
+                <th>Si</th>
+                <th>Mn</th>
+                <th>P</th>
+                <th>S</th>
+                <th>Cu</th>
+                <th>V</th>
+                <th>Ni</th>
+                <th>Cr</th>
+                <th>Mo</th>
+                <th>Ti</th>
+                <th>Nb</th>
+                <th>Al</th>
+                <th>B</th>
+                <th>Co</th>
+                <th>Pb</th>
+                <th>Fe</th>
+                <th>Ts</th>
+                <th>Ys</th>
+                <th>El</th>
+            </tr>
+        </thead>
+        <tbody  id="tbodytblReport">
+        </tbody>
+    </table>
+</div>
+
+
+
+<div class="modal" id="ProductModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document" style="width:95%;">
+        <div class="modal-content">
+            <div class="modal-header" style="padding:1px">
+                <h3 style="margin: 0;">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color:red;">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </h3>
+            </div>
+            <div class="modal-body" id="BodyModal">
+                <div class='containner'>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="template/HOTROLL_CHECKING/xlsx.full.min.js"></script>
+
+<script type="text/javascript">
+
+    $("#txtToDate").val(GetToday());
+    $("#txtFromDate").val('2020-02-09');
+
+    $("#txtFromDate , #txtToDate").datepicker({
+        dateFormat: 'yy-mm-dd',
+    });
+    $("#btnSearch").click(function () {
+        ReportItemSearch();
+    });
+    $(".txt-filter").on("keypress", function (e) {
+        if (e.keyCode == 13) {
+            ReportItemSearch();
+            return false; // prevent the button click from happening
+        }
+    });
+
+    function ReportItemSearch() {
+        var txtFromDate = $("#txtFromDate").val();
+        var txtToDate = $("#txtToDate").val();
+        var sno = $("#sno").val();
+        var c_no = $("#c_no").val();
+        var h_no = $("#h_no").val();
+        if ((txtFromDate == "") && (txtToDate == "") && ((sno == "") && ((h_no == "") && (c_no == "")))) {
+            $.alert("กรุณาเลือกช่วงวันที่หรือป้อนรายละเอียดเพื่อกรองข้อมูล");
+        } else {
+            $.ajax({
+                type: 'POST',
+                url: "././module/HOTROLL_CHECKING/data.php",
+                dataType: 'json',
+                beforeSend: function () {
+                    $("#btnSearch").html("<i class='fa fa-spinner fa-spin'>");
+                },
+                data: {
+                    "load": "ajax",
+                    "sno": sno,
+                    "c_no": c_no,
+                    "h_no": h_no,
+                    "txtToDate": txtToDate,
+                    "txtFromDate": txtFromDate,
+                },
+                success: function (data) {
+                    console.log(data)
+                    //$("#tblReport").DataTable().clear();
+                    $("#tblReport").dataTable().fnDestroy();
+                    $('#tblReport').DataTable({
+                        scrollY: "400px",
+                        "scrollX": true,
+                        "aaData": data,
+                        "paging": false,
+                        "searching": false,
+                        "bInfo": false,
+                        "columns": [
+                            {
+                                "data": {
+                                    sts_no: "sts_no",
+                                    h_no: "h_no",
+                                    thick: "thick",
+                                    width: "width",
+                                    check_heat_no: "check_heat_no",
+                                },
+                                "render": function (data, type, row, meta) {
+                                    var chk = "";
+                                    var chk_text = "";
+                                    var check_coil_no = data.check_coil_no;
+
+                                    if (data.check_coil_no == '1') {
+                                        check_coil_no_txt = "<font color='red' >**</font>";
+                                    } else {
+                                        check_coil_no_txt = "";
+                                    }
+                                    if (data.check_heat_no == '1') {
+                                        chk = "checked";
+                                        chk_text = "[ตรวจแล้ว]";
+                                    } else {
+                                        chk = ""
+                                    }
+                                    var ret = '<input  class=check_heat id=chk_' + data.sts_no + '_' + data.h_no + '_' + data.thick + '_' + data.width + '_' + data.check_heat_no + ' type=checkbox ' + chk + ' /> ' + chk_text + check_coil_no_txt + ' ';
+                                    return ret;
+                                },
+                                "className": "text-center",
+                            },
+                            {
+                                "orderable": false,
+                                "data": {
+                                    sno: "sts_no",
+                                    sts_no: "sts_no",
+                                    h_no: "h_no",
+                                    thick: "thick",
+                                    width: "width",
+                                    check_heat_no: "check_heat_no",
+                                },
+                                "defaultContent": '',
+                                "className": `details-control sno text-center`,
+                                "render": function (data, type, row, meta) {
+                                    var ret = '<input onclick= ShowDetail(' + data.sno + '); value="เพิ่มผล lab" class="btn btn-default" id=chk_' + data.sts_no + '_' + data.h_no + '_' + data.thick + '_' + data.width + '_' + data.check_heat_no + ' type=button  /> ' + data.sno + '';
+                                    return ret;
+                                }
+                            },
+                            {"data": "po_date",
+                                "className": "text-center",
+                            },
+                            {"data": "sts_no",
+                                "className": "text-center ",
+                            },
+                            {"data": "c_no"},
+                            {"data": "h_no",
+                                "className": "text-center",
+                            },
+                            {"data": "weight",
+                                "className": "text-right",
+                            },
+                            {"data": "realweight",
+                                "className": "text-right",
+                            },
+                            {"data": "grade",
+                                "className": "text-center",
+                            },
+                            {"data": "thick",
+                                "className": "text-right"},
+                            {"data": "thicks",
+                                "className": "text-right"},
+                            {"data": "width",
+                                "className": "text-right"},
+                            {"data": "widths",
+                                "className": "text-right"},
+                            {"data": "reference"},
+                            {"data": "sup_c"},
+                            {"data": "sup_si"},
+                            {"data": "sup_mn"},
+                            {"data": "sup_p"},
+                            {"data": "sup_s"},
+                            {"data": "sup_cu"},
+                            {"data": "sup_v"},
+                            {"data": "sup_ni"},
+                            {"data": "sup_cr"},
+                            {"data": "sup_mo"},
+                            {"data": "sup_ti"},
+                            {"data": "sup_nb"},
+                            {"data": "sup_al"},
+                            {"data": "sup_b"},
+                            {"data": "sup_co"},
+                            {"data": "sup_pb"},
+                            {"data": "sup_fe"},
+                            {"data": "sup_ts"},
+                            {"data": "sup_ys"},
+                            {"data": "sup_el"},
+                            {"data": "sts_c"},
+                            {"data": "sts_si"},
+                            {"data": "sts_mn"},
+                            {"data": "sts_p"},
+                            {"data": "sts_s"},
+                            {"data": "sts_cu"},
+                            {"data": "sts_v"},
+                            {"data": "sts_ni"},
+                            {"data": "sts_cr"},
+                            {"data": "sts_mo"},
+                            {"data": "sts_ti"},
+                            {"data": "sts_nb"},
+                            {"data": "sts_al"},
+                            {"data": "sts_b"},
+                            {"data": "sts_co"},
+                            {"data": "sts_pb"},
+                            {"data": "sts_fe"},
+                            {"data": "sts_ts"},
+                            {"data": "sts_ys"},
+                            {"data": "sts_el"},
+                            
+                            
+                        ],
+                        'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                                "<'row'<'col-md-12'tr>>" +
+                                "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                        buttons: [
+                            {
+                                extend: 'print',
+                                text: "<i class='fa fa-print'></i>&nbsp;Print",
+                                title: ''
+                            },
+                            {
+                                extend: 'excel',
+                                text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                                title: ''
+                            },
+                        ]
+                    }
+                    );
+                    $('#tblReport').loading("stop");
+                    $("#btnSearch").html("<i class='fa fa-search'></i>ค้นหา");
+                },
+                error: function (e) {
+                    console.log("There was an error with your request...");
+                    console.log("error: " + JSON.stringify(e));
+                }
+            });
+        }
+    }
+    $('#tblReport').on('click', '.check_heat', function () {
+        ToggleAction(this.id);
+    });
+
+    function ToggleAction(thisId) {
+        var Split = thisId.split("_");
+        var sts_no = Split[1];
+        var h_no = Split[2];
+        var thick = Split[3];
+        var width = Split[4];
+        var CurrAction = Split[5];
+        $.ajax({
+            type: 'POST',
+            url: "././module/HOTROLL_CHECKING/data.php",
+            beforeSend: function () {
+            },
+            data: {
+                load: 'ToggleAction',
+                sts_no: sts_no,
+                h_no: h_no,
+                thick: thick,
+                width: width,
+                CurrAction: CurrAction
+            },
+            success: function (data) {
+                var obj = JSON.parse(data);
+                console.log(data)
+                $newId = "chk_" + sts_no + "_" + h_no + "_" + thick + "_" + width + "_" + obj[0].check_heat_no;
+                $("#" + thisId).attr("id", $newId);
+                ReportItemSearch();
+
+            },
+            error: function (e) {
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+    }
+
+    function ShowDetail(sno) {
+        $(".btn-default").prop('disabled', true);
+
+        setTimeout(function () {
+            $(".btn-default").prop('disabled', false);
+        }, 1000)
+
+        let txtFromDate = '';
+        let c_no = '';
+        let h_no = '';
+        $.ajax({
+            type: 'GET',
+            url: "././module/HOTROLL_CHECKING/data.php",
+            dataType: 'json',
+            beforeSend: function () {
+            },
+            data: {
+                load: "ajax",
+                sno: sno,
+                txtFromDate: txtFromDate,
+                c_no: c_no,
+                h_no: h_no
+            },
+            success: function (data) {
+                console.log(data)
+                var Url = "template/HOTROLL_CHECKING/detail.html";
+                var modalBodyId = "#BodyModal";
+                var modalId = "#ProductModal";
+                $(modalId).modal("show");
+                $(modalBodyId).empty();
+                $(modalBodyId).load(Url, function () {
+                    sts_chemical(sno)
+                });
+            },
+        });
+    }
+
+    function sts_chemical(sno) {
+        let txtFromDate = '';
+        let c_no = '';
+        let h_no = '';
+        $.ajax({
+            type: 'GET',
+            url: "././module/HOTROLL_CHECKING/data.php",
+            dataType: 'json',
+            beforeSend: function () {
+            },
+            data: {
+                load: "ajax",
+                sno: sno,
+                txtFromDate: txtFromDate,
+                c_no: c_no,
+                h_no: h_no
+            },
+            success: function (data) {
+                console.log(data)
+
+                product_test(sno);
+
+                $('#tblReportDetail_sup_chemical').DataTable({
+                    scrollY: "400px",
+                    "scrollX": true,
+                    scrollCollapse: true,
+                    "aaData": data,
+                    "paging": false,
+                    bSort: false,
+                    "searching": false,
+                    "bInfo": false,
+
+                    "columns": [
+                        {"data": {sup_c: "sup_c", sno: "sno"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'sup_c';
+                                let valdata = data.sup_c;
+                                let iddata = `${col_name}_${data.sno}`;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                        {"data": {sup_si: "sup_si", sno: "sno"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'sup_si';
+                                let valdata = data.sup_si;
+                                let iddata = `${col_name}_${data.sno}`;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                        {"data": {sup_mn: "sup_mn", sno: "sno"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'sup_mn';
+                                let valdata = data.sup_mn;
+                                let iddata = `${col_name}_${data.sno}`;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                        {"data": {sup_p: "sup_p", sno: "sno"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'sup_p';
+                                let valdata = data.sup_p;
+                                let iddata = `${col_name}_${data.sno}`;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                        {"data": {sup_s: "sup_s", sno: "sno"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'sup_s';
+                                let valdata = data.sup_s;
+                                let iddata = `${col_name}_${data.sno}`;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                        {"data": {sup_cu: "sup_cu", sno: "sno"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'sup_cu';
+                                let valdata = data.sup_cu;
+                                let iddata = `${col_name}_${data.sno}`;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                        {"data": {sup_v: "sup_v", sno: "sno"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'sup_v';
+                                let valdata = data.sup_v;
+                                let iddata = `${col_name}_${data.sno}`;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                        {"data": {sup_ni: "sup_ni", sno: "sno"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'sup_ni';
+                                let valdata = data.sup_ni;
+                                let iddata = `${col_name}_${data.sno}`;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                        {"data": {sup_cr: "sup_cr", sno: "sno"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'sup_cr';
+                                let valdata = data.sup_cr;
+                                let iddata = `${col_name}_${data.sno}`;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                        {"data": {sup_cr: "sup_mo", sno: "sno"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'sup_mo';
+                                let valdata = data.sup_mo;
+                                let iddata = `${col_name}_${data.sno}`;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                        {"data": {sup_ti: "sup_ti", sno: "sno"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'sup_ti';
+                                let valdata = data.sup_ti;
+                                let iddata = `${col_name}_${data.sno}`;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                        {"data": {sup_nb: "sup_nb", sno: "sno"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'sup_nb';
+                                let valdata = data.sup_nb;
+                                let iddata = `${col_name}_${data.sno}`;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                        {"data": {sup_al: "sup_al", sno: "sno"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'sup_al';
+                                let valdata = data.sup_al;
+                                let iddata = `${col_name}_${data.sno}`;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                        {"data": {sup_b: "sup_b", sno: "sno"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'sup_b';
+                                let valdata = data.sup_b;
+                                let iddata = `${col_name}_${data.sno}`;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                        {"data": {sup_co: "sup_co", sno: "sno"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'sup_co';
+                                let valdata = data.sup_co;
+                                let iddata = `${col_name}_${data.sno}`;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                        {"data": {sup_pb: "sup_pb", sno: "sno"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'sup_pb';
+                                let valdata = data.sup_pb;
+                                let iddata = `${col_name}_${data.sno}`;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                        {"data": {sup_fe: "sup_fe", sno: "sno"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'sup_fe';
+                                let valdata = data.sup_fe;
+                                let iddata = `${col_name}_${data.sno}`;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                        {"data": {sup_ts: "sup_ts", sno: "sno"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'sup_ts';
+                                let valdata = data.sup_ts;
+                                let iddata = `${col_name}_${data.sno}`;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                        {"data": {sup_ts: "sup_ys", sno: "sno"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'sup_ys';
+                                let valdata = data.sup_ys;
+                                let iddata = `${col_name}_${data.sno}`;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                        {"data": {sup_el: "sup_el", sno: "sno"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'sup_el';
+                                let valdata = data.sup_el;
+                                let iddata = `${col_name}_${data.sno}`;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                    ],
+                    'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                            "<'row'<'col-md-12'tr>>" +
+                            "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                    buttons: [
+
+                    ],
+
+                });
+
+                $('#tblReportDetail_sts_chemical').DataTable({
+                    scrollY: "400px",
+                    "scrollX": true,
+                    scrollCollapse: true,
+                    "aaData": data,
+                    "paging": false,
+                    "searching": false,
+                    "bInfo": false,
+                    bSort: false,
+                    "columns": [
+                        {"data": {sts_c: "sts_c", sno: "sno"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'sts_c';
+                                let valdata = data.sts_c;
+                                let iddata = `${col_name}_${data.sno}`;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                        {"data": {sts_si: "sts_si", sno: "sno"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'sts_si';
+                                let valdata = data.sts_si;
+                                let iddata = `${col_name}_${data.sno}`;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                        {"data": {sts_mn: "sts_mn", sno: "sno"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'sts_mn';
+                                let valdata = data.sts_mn;
+                                let iddata = `${col_name}_${data.sno}`;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                        {"data": {sts_p: "sts_p", sno: "sno"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'sts_p';
+                                let valdata = data.sts_p;
+                                let iddata = `${col_name}_${data.sno}`;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                        {"data": {sts_s: "sts_s", sno: "sno"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'sts_s';
+                                let valdata = data.sts_s;
+                                let iddata = `${col_name}_${data.sno}`;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${valdata }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${valdata}' />`;
+                                return ret;
+                            }
+                        },
+                        {"data": {sts_cu: "sts_cu", sno: "sno"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'sts_cu';
+                                let valdata = data.sts_cu;
+                                let iddata = `${col_name}_${data.sno}`;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                        {"data": {sts_v: "sts_v", sno: "sno"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'sts_v';
+                                let valdata = data.sts_v;
+                                let iddata = `${col_name}_${data.sno}`;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                        {"data": {sts_ni: "sts_ni", sno: "sno"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'sts_ni';
+                                let valdata = data.sts_ni;
+                                let iddata = `${col_name}_${data.sno}`;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                        {"data": {sts_cr: "sts_cr", sno: "sno"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'sts_cr';
+                                let valdata = data.sts_cr;
+                                let iddata = `${col_name}_${data.sno}`;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                        {"data": {sts_cr: "sts_mo", sno: "sno"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'sts_mo';
+                                let valdata = data.sts_mo;
+                                let iddata = `${col_name}_${data.sno}`;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                        {"data": {sts_ti: "sts_ti", sno: "sno"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'sts_ti';
+                                let valdata = data.sts_ti;
+                                let iddata = `${col_name}_${data.sno}`;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                        {"data": {sts_nb: "sts_nb", sno: "sno"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'sts_nb';
+                                let valdata = data.sts_nb;
+                                let iddata = `${col_name}_${data.sno}`;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                        {"data": {sts_al: "sts_al", sno: "sno"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'sts_al';
+                                let valdata = data.sts_al;
+                                let iddata = `${col_name}_${data.sno}`;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                        {"data": {sts_b: "sts_b", sno: "sno"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'sts_b';
+                                let valdata = data.sts_b;
+                                let iddata = `${col_name}_${data.sno}`;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                        {"data": {sts_co: "sts_co", sno: "sno"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'sts_co';
+                                let valdata = data.sts_co;
+                                let iddata = `${col_name}_${data.sno}`;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                        {"data": {sts_pb: "sts_pb", sno: "sno"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'sts_pb';
+                                let valdata = data.sts_pb;
+                                let iddata = `${col_name}_${data.sno}`;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                        {"data": {sts_fe: "sts_fe", sno: "sno"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'sts_fe';
+                                let valdata = data.sts_fe;
+                                let iddata = `${col_name}_${data.sno}`;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                        {"data": {sts_ts: "sts_ts", sno: "sno"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'sts_ts';
+                                let valdata = data.sts_ts;
+                                let iddata = `${col_name}_${data.sno}`;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                        {"data": {sts_ts: "sts_ys", sno: "sno"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'sts_ys';
+                                let valdata = data.sts_ys;
+                                let iddata = `${col_name}_${data.sno}`;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                        {"data": {sts_el: "sts_el", sno: "sno"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'sts_el';
+                                let valdata = data.sts_el;
+                                let iddata = `${col_name}_${data.sno}`;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                    ],
+                    'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                            "<'row'<'col-md-12'tr>>" +
+                            "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                    buttons: [
+
+                    ],
+
+                });
+
+            },
+        });
+    }
+
+    function product_test(sno) {
+        setTimeout(function () {
+            $.ajax({
+                type: 'GET',
+                url: "././module/HOTROLL_CHECKING/data.php",
+                dataType: 'json',
+                beforeSend: function () {
+                },
+                data: {
+                    load: "tblReportDetail",
+                    sno: sno,
+                },
+                success: function (data) {
+
+                    let sno_val = sno;
+
+                    console.log(data);
+                    $("#tblReportDetail_product_test").dataTable().fnDestroy();
+                    $('#tblReportDetail_product_test').DataTable({
+                        scrollY: "150px",
+                        "scrollX": true,
+                        scrollCollapse: true,
+                        "aaData": data,
+                        "paging": false,
+                        "searching": false,
+                        "bInfo": false,
+                        bSort: false,
+                        "columns": [
+                            {"data": {size: "size", id: "id"},
+                                "className": "text-left",
+                                "render": function (data, type, row, meta) {
+                                    let col_name = 'size';
+                                    let valdata = data.size;
+                                    let iddata = `${col_name}_${data.id}`;
+                                    ((valdata == null) ? valdata = "" : valdata = valdata)
+                                    let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="update_product_test('${iddata}','${col_name}');" value='${valdata}' />`;
+                                    return ret;
+                                }
+                            },
+                            {"data": {stardard: "stardard", id: "id"},
+                                "className": "text-left",
+                                "render": function (data, type, row, meta) {
+                                    let col_name = 'stardard';
+                                    let valdata = data.stardard;
+                                    let iddata = `${col_name}_${data.id}`;
+                                    ((valdata == null) ? valdata = "" : valdata = valdata)
+                                    let ret = `<span hidden>${valdata }</span><input type='text' class='input-text-value' id='${iddata}' onchange="update_product_test('${iddata}','${col_name}');" value='${valdata}' />`;
+                                    return ret;
+                                }
+                            },
+
+                            {"data": {thick: "thick", id: "id"},
+                                "className": "text-left",
+                                "render": function (data, type, row, meta) {
+                                    let col_name = 'thick';
+                                    let valdata = data.thick;
+                                    let iddata = `${col_name}_${data.id}`;
+                                    ((valdata == null) ? valdata = "" : valdata = valdata)
+                                    let ret = `<span hidden>${valdata }</span><input type='text' class='input-text-value' id='${iddata}' onchange="update_product_test('${iddata}','${col_name}');" value='${valdata}' />`;
+                                    return ret;
+                                }
+                            },
+                            {"data": {length: "length", id: "id"},
+                                "className": "text-left",
+                                "render": function (data, type, row, meta) {
+                                    let col_name = 'length';
+                                    let valdata = data.length;
+                                    let iddata = `${col_name}_${data.id}`;
+                                    ((valdata == null) ? valdata = "" : valdata = valdata)
+                                    let ret = `<span hidden>${valdata }</span><input type='text' class='input-text-value' id='${iddata}' onchange="update_product_test('${iddata}','${col_name}');" value='${valdata}' />`;
+                                    return ret;
+                                }
+                            },
+                            {"data": {production_FM_no: "production_FM_no", id: "id"},
+                                "className": "text-left",
+                                "render": function (data, type, row, meta) {
+                                    let col_name = 'production_FM_no';
+                                    let valdata = data.production_FM_no;
+                                    let iddata = `${col_name}_${data.id}`;
+                                    ((valdata == null) ? valdata = "" : valdata = valdata)
+                                    let ret = `<span hidden>${valdata }</span><input type='text' class='input-text-value' id='${iddata}' onchange="update_product_test('${iddata}','${col_name}');" value='${valdata}' />`;
+                                    return ret;
+                                }
+                            },
+                            {"data": {production_date: "production_date", id: "id"},
+                                "className": "text-left",
+                                "render": function (data, type, row, meta) {
+                                    let col_name = 'production_date';
+                                    let valdata = data.production_date;
+                                    let iddata = `${col_name}_${data.id}`;
+                                    ((valdata == null) ? valdata = "" : valdata = valdata)
+                                    let ret = `<span hidden>${valdata }</span><input type='text' class='input-text-value' id='${iddata}' onchange="update_product_test('${iddata}','${col_name}');" value='${valdata}' />`;
+                                    return ret;
+                                }
+                            },
+                            {"data": {Mec_test_TS: "Mec_test_TS", id: "id"},
+                                "className": "text-left",
+                                "render": function (data, type, row, meta) {
+                                    let col_name = 'Mec_test_TS';
+                                    let valdata = data.Mec_test_TS;
+                                    let iddata = `${col_name}_${data.id}`;
+                                    ((valdata == null) ? valdata = "" : valdata = valdata)
+                                    let ret = `<span hidden>${valdata }</span><input type='text' class='input-text-value' id='${iddata}' onchange="update_product_test('${iddata}','${col_name}');" value='${valdata}' />`;
+                                    return ret;
+                                }
+                            },
+                            {"data": {Mec_test_YS: "Mec_test_YS", id: "id"},
+                                "className": "text-left",
+                                "render": function (data, type, row, meta) {
+                                    let col_name = 'Mec_test_YS';
+                                    let valdata = data.Mec_test_YS;
+                                    let iddata = `${col_name}_${data.id}`;
+                                    ((valdata == null) ? valdata = "" : valdata = valdata)
+                                    let ret = `<span hidden>${valdata }</span><input type='text' class='input-text-value' id='${iddata}' onchange="update_product_test('${iddata}','${col_name}');" value='${valdata}' />`;
+                                    return ret;
+                                }
+                            },
+                            {"data": {Mec_test_EI: "Mec_test_EI", id: "id"},
+                                "className": "text-left",
+                                "render": function (data, type, row, meta) {
+                                    let col_name = 'Mec_test_EI';
+                                    let valdata = data.Mec_test_EI;
+                                    let iddata = `${col_name}_${data.id}`;
+                                    ((valdata == null) ? valdata = "" : valdata = valdata)
+                                    let ret = `<span hidden>${valdata }</span><input type='text' class='input-text-value' id='${iddata}' onchange="update_product_test('${iddata}','${col_name}');" value='${valdata}' />`;
+                                    return ret;
+                                }
+                            },
+                            {"data": {Mec_test_EL_1: "Mec_test_EL_1", id: "id"},
+                                "className": "text-left",
+                                "render": function (data, type, row, meta) {
+                                    let col_name = 'Mec_test_EL_1';
+                                    let valdata = data.Mec_test_EL_1;
+                                    let iddata = `${col_name}_${data.id}`;
+                                    ((valdata == null) ? valdata = "" : valdata = valdata)
+                                    let ret = `<span hidden>${valdata }</span><input type='text' class='input-text-value' id='${iddata}' onchange="update_product_test('${iddata}','${col_name}');" value='${valdata}' />`;
+                                    return ret;
+                                }
+                            },
+                            {"data": {Mec_test_EL_2: "Mec_test_EL_2", id: "id"},
+                                "className": "text-left",
+                                "render": function (data, type, row, meta) {
+                                    let col_name = 'Mec_test_EL_2';
+                                    let valdata = data.Mec_test_EL_2;
+                                    let iddata = `${col_name}_${data.id}`;
+                                    ((valdata == null) ? valdata = "" : valdata = valdata)
+                                    let ret = `<span hidden>${valdata }</span><input type='text' class='input-text-value' id='${iddata}' onchange="update_product_test('${iddata}','${col_name}');" value='${valdata}' />`;
+                                    return ret;
+                                }
+                            },
+                            {"data": {Mec_test_EL_3: "Mec_test_EL_3", id: "id"},
+                                "className": "text-left",
+                                "render": function (data, type, row, meta) {
+                                    let col_name = 'Mec_test_EL_3';
+                                    let valdata = data.Mec_test_EL_3;
+                                    let iddata = `${col_name}_${data.id}`;
+                                    ((valdata == null) ? valdata = "" : valdata = valdata)
+                                    let ret = `<span hidden>${valdata }</span><input type='text' class='input-text-value' id='${iddata}' onchange="update_product_test('${iddata}','${col_name}');" value='${valdata}' />`;
+                                    return ret;
+                                }
+                            },
+                            {"data": {charpy_mean: "charpy_mean", id: "id"},
+                                "className": "text-left",
+                                "render": function (data, type, row, meta) {
+                                    let col_name = 'charpy_mean';
+                                    let valdata = data.charpy_mean;
+                                    let iddata = `${col_name}_${data.id}`;
+                                    ((valdata == null) ? valdata = "" : valdata = valdata)
+                                    let ret = `<span hidden>${valdata }</span><input type='text' class='input-text-value' id='${iddata}' onchange="update_product_test('${iddata}','${col_name}');" value='${valdata}' />`;
+                                    return ret;
+                                }
+                            },
+                            {"data": {charpy_1: "charpy_1", id: "id"},
+                                "className": "text-left",
+                                "render": function (data, type, row, meta) {
+                                    let col_name = 'charpy_1';
+                                    let valdata = data.charpy_1;
+                                    let iddata = `${col_name}_${data.id}`;
+                                    ((valdata == null) ? valdata = "" : valdata = valdata)
+                                    let ret = `<span hidden>${valdata }</span><input type='text' class='input-text-value' id='${iddata}' onchange="update_product_test('${iddata}','${col_name}');" value='${valdata}' />`;
+                                    return ret;
+                                }
+                            },
+                            {"data": {charpy_2: "charpy_2", id: "id"},
+                                "className": "text-left",
+                                "render": function (data, type, row, meta) {
+                                    let col_name = 'charpy_2';
+                                    let valdata = data.charpy_2;
+                                    let iddata = `${col_name}_${data.id}`;
+                                    ((valdata == null) ? valdata = "" : valdata = valdata)
+                                    let ret = `<span hidden>${valdata }</span><input type='text' class='input-text-value' id='${iddata}' onchange="update_product_test('${iddata}','${col_name}');" value='${valdata}' />`;
+                                    return ret;
+                                }
+                            },
+                            {"data": {charpy_3: "charpy_3", id: "id"},
+                                "className": "text-left",
+                                "render": function (data, type, row, meta) {
+                                    let col_name = 'charpy_3';
+                                    let valdata = data.charpy_3;
+                                    let iddata = `${col_name}_${data.id}`;
+                                    ((valdata == null) ? valdata = "" : valdata = valdata)
+                                    let ret = `<span hidden>${valdata }</span><input type='text' class='input-text-value' id='${iddata}' onchange="update_product_test('${iddata}','${col_name}');" value='${valdata}' />`;
+                                    return ret;
+                                }
+                            },
+                            {"data": {testing_date: "testing_date", id: "id"},
+                                "className": "text-left",
+                                "render": function (data, type, row, meta) {
+                                    let col_name = 'testing_date';
+                                    let valdata = data.testing_date;
+                                    let iddata = `${col_name}_${data.id}`;
+                                    ((valdata == null) ? valdata = "" : valdata = valdata)
+                                    let ret = `<span hidden>${valdata }</span><input type='text' class='input-text-value' id='${iddata}' onchange="update_product_test('${iddata}','${col_name}');" value='${valdata}' />`;
+                                    return ret;
+                                }
+                            },
+                            {"data": {check_result: "check_result", id: "id"},
+                                "className": "text-left",
+                                "render": function (data, type, row, meta) {
+                                    let col_name = 'check_result';
+                                    let valdata = data.check_result;
+                                    let iddata = `${col_name}_${data.id}`;
+                                    ((valdata == null) ? valdata = "" : valdata = valdata)
+                                    if (valdata == 1) {
+                                        check = 'checked';
+                                        valdata = 0;
+                                    } else {
+                                        valdata = 1;
+                                        check = "";
+                                    }
+                                    let ret = `<span hidden>${valdata }</span><input type='checkbox' ${check} class='input-text-value' id='${iddata}' onchange="update_product_test('${iddata}','${col_name}');" value='${valdata }' />`;
+                                    return ret;
+                                }
+                            },
+                            {"data": {sno: "sno", id: "id"},
+                                "className": "text-left",
+                                "render": function (data, type, row, meta) {
+                                    let col_name = 'sno';
+                                    let iddata = `${col_name}_${data.id}`;
+                                    let ret = `<i onclick=delete_product_test('${iddata}','${data.sno}') class="fa fa-times" aria-hidden="true"></i>`;
+                                    return ret;
+                                }
+                            },
+                        ],
+                        'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                                "<'row'<'col-md-12'tr>>" +
+                                "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                        buttons: [
+                            {
+
+                                text: `<input onclick='insert_product_test(${sno_val})' class='btn btn-success btn-sm' type='button' id ='insert_product_test'  value='เพิ่มข้อมูล' />`,
+                            }, {
+
+                                text: `<input onclick='import_excel_sts_chemical(${sno_val})' class='btn btn-success btn-sm' type='button' id ='insert_product_test'  value='Import excel STS Chemical' />`,
+                            },
+                        ],
+
+                    });
+                },
+            });
+        }, 1500)
+
+    }
+
+
+
+
+</script>
+

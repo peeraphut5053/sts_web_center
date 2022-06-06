@@ -1,0 +1,367 @@
+<style>
+    .input-group-addon{
+        width: 150px;
+    }
+    .input-group{
+        width:100%;
+    }
+</style>
+<div>
+    <h1 id="pagehader">Job Receipt</h1>
+</div>      
+<div class="row">
+
+    <div class="col-xs-12">
+        <div class="row">
+            <div class='col-xs-6'>
+                <div class="col-xs-12">
+                    <select class='form-control' id ='loc' >
+                        <option value=''> ---- Location ---</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class='col-xs-6'>
+                <div class="col-xs-12">
+                    <div class="input-group">
+                        <div class="input-group-addon">Scan barcode</div>
+                        <input style="background-color: lightgreen" type="text" onchange="tag_scan()" autocomplete="off"  class="form-control txt-filter"  id="tag_id">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" >
+            <div class='col-xs-6'>
+                <div class="col-xs-9">
+                    <div class="input-group">
+                        <div class="input-group-addon">Job</div>
+                        <!--                        <select class='form-control' onchange="fill_job()" id ='job' >
+                                                </select>-->
+                        <input type="text" autocomplete="off"  class="form-control txt-filter" id ='job'  >
+                    </div>
+                </div>
+                <div class="col-xs-3">
+                    <input class="form-control txt-filter" type="text" value="000" />
+                </div>
+            </div>
+            <div class='col-xs-3'>
+                <div class="input-group">
+                    <div class="input-group-addon">Warehouse</div>
+                    <input type="text" autocomplete="off"  class="form-control txt-filter" id="xxx1" readonly>
+                </div>
+            </div>
+        </div>   
+
+
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="col-xs-12">
+                    <div class="input-group">
+                        <div class="input-group-addon">Item</div>
+                        <input type="text" autocomplete="off"  class="form-control txt-filter" id="item" readonly>
+                    </div>   
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="col-xs-12">
+                    <div class="input-group">
+                        <div class="input-group-addon">Item Desc</div>
+                        <input type="text" autocomplete="off"  class="form-control txt-filter" id="item_desc" readonly>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="col-lg-3" >
+                    <button onclick="process_job_receipt()" class="btn btn-info" id="search" >Process</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<hr>
+
+<div class="row">
+    <div class="container mt-3">
+        <ul class="nav nav-tabs">
+            <li class="nav-item active">
+                <a class="nav-link active" href="#detail">detail</a>
+            </li>
+            <!--            <li class="nav-item">
+                            <a class="nav-link" href="#menu1">Menu 1</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#menu2">Menu 2</a>
+                        </li>-->
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div id="detail" class="container tab-pane active"><br>
+                <div>
+                    <div class="col-xs-8">
+                        <div class="row">
+                            <div class="input-group">
+                                <div class="input-group-addon">Operation</div>
+                                <input type="text" autocomplete="off"  class="form-control txt-filter" id="oper_num" readonly>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-group">
+                                <div class="input-group-addon">Suffix</div>
+                                <input type="text" autocomplete="off"  class="form-control txt-filter" id="suffix" readonly>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-group">
+                                <div class="input-group-addon">Transaction Date</div>
+                                <input type="text" autocomplete="off"  class="form-control txt-filter" id="Operation5" readonly>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-group">
+                                <div class="input-group-addon">Quantity</div>
+                                <input type="text" autocomplete="off"  class="form-control txt-filter" id="qty1" >
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-group">
+                                <div class="input-group-addon">Quantity 2</div>
+                                <input type="text" autocomplete="off"  class="form-control txt-filter" id="qty2">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-group" >
+                                <!--                                <div class="input-group-addon">Location</div>-->
+                                <!--                                <input type="text" autocomplete="off"  class="form-control txt-filter" id="loc">-->
+
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="input-group">
+                                <div class="input-group-addon">Container</div>
+                                <input type="text" autocomplete="off"  class="form-control txt-filter" id="Operation8" readonly>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-group">
+                                <div class="input-group-addon">Lot</div>
+                                <input type="text" autocomplete="off"  class="form-control txt-filter" id="lot">
+                            </div>
+                        </div>
+                        <label>Project</label>
+                        <div class="row">
+                            <span class='col-xs-4'>
+                                <input type="text" autocomplete="off"  class="form-control txt-filter" id="Operation10">
+                            </span>
+                            <span class='col-xs-4'>
+                                <input type="text" autocomplete="off"  class="form-control txt-filter" id="Operation11">
+                            </span>
+                            <span class='col-xs-4'>
+                                <input type="text" autocomplete="off"  class="form-control txt-filter" id="Operation12">
+                            </span>
+
+                        </div>
+                        <div class="row">
+                            <div class="input-group">
+                                <div class="input-group-addon">Import Document ID</div>
+                                <input type="text" autocomplete="off"  class="form-control txt-filter" id="sa13">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-group">
+                                <div class="input-group-addon">Document Number</div>
+                                <input type="text" autocomplete="off"  class="form-control txt-filter" id="Operation14">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="menu1" class="container tab-pane fade"><br>
+                <h3>Menu 1</h3>
+                <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+            </div>
+            <div id="menu2" class="container tab-pane fade"><br>
+                <h3>Menu 2</h3>
+                <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+    var url = "././module/APP_JOB_JobReceipt/data.php";
+    var load = "loc_list";
+    var valueId = "loc";
+    var valueShow = "description";
+
+    GetSelectOption("loc", url, load, valueId, valueShow, "location");
+    $("#tag_id").focus();
+    $("#loc").select2({
+    });
+
+    $('#tag_id').keypress(function (e) {
+        var key = e.which;
+        if (key == 13) // the enter key code
+        {
+            tag_scan();
+            return false;
+        }
+    });
+
+    function tag_scan() {
+        let tag_id = $("#tag_id").val();
+        $.ajax({
+            type: 'GET',
+            url: url,
+            contentType: "text/plain",
+            dataType: 'json',
+            beforeSend: function () {
+            },
+            data: {
+                load: "tag_scan",
+                tag_id: tag_id,
+            },
+            success: function (data) {
+                console.log(data);
+                if (data.length != 0) {
+                    let{job, item, description, lot, oper_num, suffix, qty1, qty2} = data[0];
+                    $("#job").val(job);
+                    $("#item").val(item);
+                    $("#item_desc").val(description)
+                    $("#lot").val(lot);
+                    $("#oper_num").val(oper_num);
+                    $("#suffix").val(suffix);
+                    $("#qty1").val(qty1);
+                    $("#qty2").val(qty2);
+                } else {
+                    alert("ไม่มี Barcode นี้ หรือ Tag ถูกแสกนไปแล้ว");
+                    $("#tag_id").val("");
+                    $("#tag_id").focus();
+                }
+
+            },
+            error: function (e) {
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+    }
+
+    function process_job_receipt() {
+        $('#search').prop('disabled', true);
+        let tag_id = $("#tag_id").val();
+        let job = $("#job").val();
+        let suffix = $("#suffix").val();
+        let item = $("#item").val();
+        let operNum = $("#oper_num").val();
+        let qty = $("#qty1").val();
+        let qty2 = $("#qty2").val();
+        let lot = $("#lot").val();
+        let loc = $("#loc").val();
+        let transDate = '21/1/2020 00:00:00';
+
+
+        setTimeout(function () {
+            if (loc == "") {
+                alert("กรุณากรอกเลข Location");
+                return false;
+            } else if (tag_id == "") {
+                alert("กรุณากรอกเลข Barcode");
+                return false;
+            } else {
+                $.ajax({
+                    type: 'GET',
+                    url: url,
+                    contentType: "text/plain",
+                    dataType: 'json',
+                    beforeSend: function () {
+                    },
+                    data: {
+                        load: "process_job_receipt",
+                        job: job,
+                        suffix: suffix,
+                        item: item,
+                        operNum: operNum,
+                        qty: qty,
+                        qty2: qty2,
+                        lot: lot,
+                        loc: loc,
+                        transDate: transDate,
+                        tag_id: tag_id,
+                    },
+                    success: function (data) {
+
+                    },
+                    error: function (e) {
+                        console.log("There was an error with your request...");
+                        console.log("error: " + JSON.stringify(e));
+                    }
+                });
+                setTimeout(function () {
+                    $('#search').prop('disabled', false);
+                    $("#oper_num").val("");
+                    $("#suffix").val("");
+                    $("#qty").val("");
+                    $("#qty2").val("");
+                    $("#Operation8").val("");
+                    $("#lot").val("");
+                    $("#tag_id").val("");
+                    $("#tag_id").focus();
+                    alert("รับ Tag เข้า สำเร็จ");
+                }, 2000);
+                check_process_job_receipt(lot);
+            }
+        }, 1500);
+
+
+
+
+    }
+
+    function check_process_job_receipt(lot) {
+        $.ajax({
+            type: 'GET',
+            url: url,
+            contentType: "text/plain",
+            dataType: 'json',
+            beforeSend: function () {
+            },
+            data: {
+                load: "check_process_job_receipt",
+                lot: lot,
+            },
+            success: function (data) {
+                if (data[0].lot != '') {
+                    console.log(1);
+                    $('#search').prop('disabled', false);
+                } else {
+                    alert("Error !!!!!!!!!");
+                }
+                $("#oper_num").val("");
+                $("#suffix").val("");
+                $("#qty").val("");
+                $("#qty2").val("");
+                $("#Operation8").val("");
+                $("#lot").val("");
+                $("#tag_id").val("");
+                $("#tag_id").focus();
+            },
+            error: function (e) {
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+    }
+    $(".nav-tabs a").click(function () {
+        $(this).tab('show');
+    });
+
+</script>
+
+

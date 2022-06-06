@@ -1,0 +1,457 @@
+<style>
+    .col-search {
+        padding-left: 3px;
+        padding-right: 3px;
+    }
+
+    .table thead th {
+        text-align: center;
+    }
+
+    .col-flt-page {
+        padding-top: 10px;
+        font-weight: bold;
+    }
+
+    #tblReport tbody tr td a {
+        cursor: pointer;
+    }
+
+    table.dataTable.fixedHeader-floating,
+    table.dataTable.fixedHeader-locked {
+        background-color: white;
+        margin-top: 50px !important;
+        margin-bottom: 0 !important;
+    }
+
+    .tr-row-cn td {
+        color: red;
+    }
+    .selectize-input{
+        min-height: 80px;
+    }
+    .panel-body{
+        padding-top:5px;
+        padding-bottom:5px;
+    }
+
+    .box-in-table {
+        width:100px;
+        padding-left : 1px; 
+        padding-right:1px;
+        padding-top:1px ;
+        padding-bottom:1px;
+        border-radius: 3px;
+        border:   solid 1px #000080;
+        /*border-color: #000080;*/
+    }
+</style>
+<div class="row">
+    <h4>{SaleDescription}</h4>
+</div>
+<input type="hidden" id="SwitchSale" value="{SwitchSale}">
+<div class='row'>
+    <div class="panel panel-primary">
+        <div class="panel panel-heading">Filter <a id="btnToggleFilter" class="pull-right" style="color:red;">(ซ่อน / แสดง  filter)</a></div>
+        <div class="panel panel-body" style="padding-left:20px;">
+                   <div class="row">
+                        <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3">   
+                            <div class="input-group">
+                                <div class="input-group-addon">START INV</div>
+                                <input type="text" class="form-control txt-filter" id="txtStartInv">
+                            </div>
+                        </div>
+                        <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3">   
+                            <div class="input-group">
+                                <div class="input-group-addon">END INV</div>
+                                <input type="text" class="form-control txt-filter" id="txtEndInv" >
+                            </div>
+                        </div>
+                        <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3">   
+                            <button id="btnSearch" class="btn btn-info"><i class="fa fa-search"></i>&nbsp;ค้นหา</button>
+                        </div>
+                    </div>  
+        </div>
+    </div>
+</div>
+
+<div class="row" id="divReport">
+    <table class="table table-condensed table-bordered table-striped" id="tblReport">
+        <thead>
+            <tr>
+                <th>วันที่ Inv</th>
+                <th>เลขที่ Inv</th>
+                <th>รายละเอียด</th>  
+                <th>น้ำหนัก/หน่วย</th>
+                <th>หน่วยขาย</th>
+                <th>จำนวน</th>
+                <th>ราคา/หน่วย</th>
+                <th>ส่วนลดบิล</th>
+                <th>เงินก่อนภาษี</th>
+                <th>ภาษีขาย</th>
+                <th>ยอดสุทธิ</th>
+                <th>Save</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+
+<script type="text/javascript">
+
+    $("#btnSearch").click(function () {
+        ReportItemSearch();
+    });
+
+    $(".txt-filter").on("keypress", function (e) {
+        if (e.keyCode == 13) {
+            ReportItemSearch();
+            return false; // prevent the button click from happening
+        }
+    });
+
+    function ReportItemSearch() {
+
+        var OldHtml = $("#btnSearch").html();
+        var SwitchSale = $("#SwitchSale").val();
+        $('#tblReport').loading();
+        $("#btnSearch").html("<i class='fa fa-spinner fa-spin'></i>");       
+        var txtStartInv = $("#txtStartInv").val();
+        var txtEndInv = $("#txtEndInv").val();
+        if ((txtStartInv == "") || (txtEndInv == "")) {
+            $.alert("Please select Inv");
+        } else {
+            $.ajax({
+                type: 'POST',
+                url: "././module/RPTINV_ITEM_EDIT/data.php",
+                //                contentType: "text/plain",
+                dataType: 'json',
+                beforeSend: function () {
+                    $("#btnSearch").html("<i class='fa fa-spinner fa-spin'>");
+                },
+                data: {
+                    "load": "ajax",
+                    "txtStartInv": txtStartInv,
+                    "txtEndInv": txtEndInv,                    
+                    "SwitchSale": SwitchSale,
+                },
+                success: function (data) {
+
+                    $("#tblReport").DataTable().clear();
+                    var RowFooterBuild = "";
+                    var ColBuild = "";
+                    var ColCount = 12;
+                    var i = 0;
+                    RowFooterBuild = "<tfoot><tr>__ColBuild__</tr></tfoot>";
+                    for (i = 1; i <= ColCount; i++) {
+                        ColBuild += "<td></td>";
+                    }
+                    $("#tblReport").append(RowFooterBuild.replace("__ColBuild__", ColBuild));
+                    $('#tblReport').dataTable({
+                        "aaData": data,
+                        "paging": false,
+                        fixedHeader: true,
+                        destroy: true,
+                        'processing': true,
+                        "columns": [
+                            {
+                                "data": "inv_date_conv",
+                                "className": "text-center",
+                                "render": function (data, type, row) {
+                                    var ret = data;
+                                    if (row["inv_num"].substring(0, 2) == "CN") {
+                                        ret = "<span style='color:red;'>" + data + "</span>";
+                                    }
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "inv_num",
+                                "render": function (data, type, row) {
+                                    var ret = data + "<h6>" + row["name"] + "</h6>";
+                                    if (row["inv_num"].substring(0, 2) == "CN") {
+                                        ret = "<span style='color:red;'>" + data + "<h6>" + row["name"] + "</h6>" + "</span>";
+                                    }
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "item",
+                                "render": function (data, type, row) {
+                                    var item_desc ="" ;
+                                    row["description"] ? item_desc=row["description"]  : item_desc="";
+                                    var tmpItem = row["item"] + "<h5>" + item_desc + "</h5>";
+                                    var ret = tmpItem;
+                                    if (row["inv_num"].substring(0, 2) == "CN") {
+                                        ret = "<span style='color:red;'>" + tmpItem + "</span>";
+                                    }
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "item_weight",
+                                "className": "text-center",
+                                "render": function (data, type, row, meta) {
+                                    var ret = addCommas(parseFloat(data).toFixed(2));
+
+                                    if (row["inv_num"].substring(0, 2) == "CN") {
+
+                                        ret = "<span style='color:red;'>" + addCommas(parseFloat(data).toFixed(2)) + "</span>";
+
+                                    }
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "um2",
+                                "className": "text-center",
+                                "render": function (data, type, row, meta) {
+                                    var ret = "";
+                                    var inv_num = row["inv_num"];
+                                    var co_line = row["co_line"];
+                                    var item = row["item"];
+                                    var SelectPcs = "";
+                                    var SelectKG = "";
+                                    data == "PCS" ? SelectPcs = "selected" : SelectPcs = "";
+                                    data == "KG" ? SelectKG = "selected" : SelectKG = "";
+                                    //   ret = "<input type='text' value='" + data + "' class='  box-in-table' id='txtUm__" + inv_num + "__" + co_line + "__" + item + "'>";
+                                    ret = "<select class='box-in-table' id='selUm__" + inv_num + "__" + co_line + "__" + item + "' ><option " + SelectPcs + " value='PCS'>PCS</option><option " + SelectKG + " value='KG'>KG</option></select>";
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "Qty",
+                                "className": "text-center",
+                                "render": function (data, type, row, meta) {
+                                    var ret = "";
+                                    var inv_num = row["inv_num"];
+                                    var co_line = row["co_line"];
+                                    var item = row["item"];
+//                                    var readonly ="readonly" ;
+                                    //row["um2"] == "KG" ?readonly="" :readonly ="readonly" ;
+                                    ret = "<input type='text'  value='" + parseFloat(data).toFixed(4) + "' class=' box-in-table' id='txtQty__" + inv_num + "__" + co_line + "__" + item + "'>";
+
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "Price_Um2",
+                                "className": "text-right",
+                                "render": function (data, type, row) {
+                                    var ret = "";
+                                    var inv_num = row["inv_num"];
+                                    var co_line = row["co_line"];
+                                    var item = row["item"];
+                                    ret = "<input type='text' value='" + parseFloat(data).toFixed(4) + "' class=' box-in-table' id='txtPrice__" + inv_num + "__" + co_line + "__" + item + "'>";
+
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "Discount",
+                                "className": "text-right",
+                                "render": function (data, type, row, meta) {
+                                    return parseFloat(data).toFixed(2);
+                                }
+                            },
+                            {
+                                "data": "row_amt",
+                                "className": "text-right",
+                                "render": function (data, type, row) {
+                                    var ret = addCommas(parseFloat(data).toFixed(2));
+
+                                    if (row["inv_num"].substring(0, 2) == "CN") {
+
+                                        ret = "<span style='color:red;'>" + addCommas(parseFloat(data).toFixed(2)) + "</span>";
+
+                                    }
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "row_vat",
+                                "className": "text-right",
+                                "render": function (data, type, row) {
+                                    var ret = addCommas(parseFloat(data).toFixed(2));
+
+                                    if (row["inv_num"].substring(0, 2) == "CN") {
+
+                                        ret = "<span style='color:red;'>" + addCommas(parseFloat(data).toFixed(2)) + "</span>";
+
+                                    }
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "row_amt_total",
+                                "className": "text-right",
+                                "render": function (data, type, row, meta) {
+                                    var ret = addCommas(parseFloat(data).toFixed(2));
+
+                                    if (row["inv_num"].substring(0, 2) == "CN") {
+
+                                        ret = "<span style='color:red;'>" + addCommas(parseFloat(data).toFixed(2)) + "</span>";
+
+                                    }
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "row_amt_total",
+                                "className": "text-center",
+                                "render": function (data, type, row, meta) {
+                                    var inv_num = row["inv_num"];
+                                    var co_line = row["co_line"];
+                                    var item = row["item"];
+                                    var ret = "<a href='#' OnClick='BtnSaveClick(this.id);' class='btn btn-success btn-save' id='btnSave__" + inv_num + "__" + co_line + "__" + item + "'><i class='fa fa-upload'></i></a>";
+
+
+                                    return ret;
+                                }
+                            }
+                        ],
+                        'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                                "<'row'<'col-md-12'tr>>" +
+                                "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                        buttons: [{
+                                extend: 'print',
+                                text: "<i class='fa fa-print'></i>&nbsp;Print",
+                                title: ''
+                            },
+                            {
+
+                                extend: 'excel',
+                                footer: true,
+                                text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                                title: ''
+                            },
+                        ],
+//                        "footerCallback": function (row, data, start, end, display) {
+//                            var api = this.api(),
+//                                    data;
+//
+//                            // converting to interger to find total
+//                            var intVal = function (i) {
+//                                return typeof i === 'string' ?
+//                                        i.replace(/[\$,]/g, '') * 1 :
+//                                        typeof i === 'number' ?
+//                                        i : 0;
+//                            };
+//
+//                            // computing column Total of the complete result
+//                            var discount = api
+//                                    .column(8)
+//                                    .data()
+//                                    .reduce(function (a, b) {
+//                                        return intVal(a) + intVal(b);
+//                                    }, 0);
+//                            var amount = api
+//                                    .column(9)
+//                                    .data()
+//                                    .reduce(function (a, b) {
+//                                        return intVal(a) + intVal(b);
+//                                    }, 0);
+//
+//                            var tax = api
+//                                    .column(10)
+//                                    .data()
+//                                    .reduce(function (a, b) {
+//                                        return intVal(a) + intVal(b);
+//                                    }, 0);
+//                            var total_amount = api
+//                                    .column(11)
+//                                    .data()
+//                                    .reduce(function (a, b) {
+//                                        return intVal(a) + intVal(b);
+//                                    }, 0);
+//                            $(api.column(7).footer()).html('Total');
+//                            $(api.column(8).footer()).html(addCommas(discount.toFixed(2)));
+//                            $(api.column(9).footer()).html(addCommas(amount.toFixed(2)));
+//                            $(api.column(10).footer()).html(addCommas(tax.toFixed(2)));
+//                            $(api.column(11).footer()).html(addCommas(total_amount.toFixed(2)));
+//                        },
+
+                    });
+                    $('#tblReport').loading("stop");
+                    $("#btnSearch").html(OldHtml);
+                   // $(".panel-body").slideToggle("slow");
+                },
+                error: function (e) {
+                    console.log("There was an error with your request...");
+                    console.log("error: " + JSON.stringify(e));
+                }
+            });
+        }
+    }
+
+    $(".panel-heading").click(function () {
+        $(".panel-body").slideToggle("slow");
+    });
+    function BtnSaveClick(thisId) {
+        var inv_num = thisId.split("__")[1];
+        var co_line = thisId.split("__")[2];
+        var item = thisId.split("__")[3];
+        var edit_um = $("#selUm__" + inv_num + "__" + co_line + "__" + item).val();
+        var edit_qty = $("#txtQty__" + inv_num + "__" + co_line + "__" + item).val();
+        var edit_price = $("#txtPrice__" + inv_num + "__" + co_line + "__" + item).val();
+        var edit_disc = $("#txtDisc__" + inv_num + "__" + co_line + "__" + item).val();
+        var ErrorCount = 0;
+        var ErrMsg = "";
+        if ((!inv_num || inv_num == "")) {
+            ErrorCount++;
+            ErrMsg += "<br>" + " Missing key inv_num ";
+        } else if ((!co_line) || (co_line == 0)) {
+            ErrorCount++;
+            ErrMsg += "<br>" + " Missing key co_line ";
+        } else if ((!item) || (item == "")) {
+            ErrorCount++;
+            ErrMsg += "<br>" + " Missing key item ";
+        }
+        if (ErrorCount > 0) {
+            $.alert({
+                title: "Save Data Failed !",
+                content: ErrMsg,
+            });
+        } else {
+            var oldHtml = $("#" + thisId).html();
+            $.ajax({
+                type: 'POST',
+                url: "././module/RPTINV_ITEM_EDIT/data.php",
+                beforeSend: function () {
+                    $("#" + thisId).html("<i class='fa fa-spinner fa-spin'>");
+                },
+                data: {
+                    "load": "save",
+                    "inv_num": inv_num,
+                    "co_line": co_line,
+                    "item": item,
+                    "edit_um": edit_um,
+                    "edit_qty": edit_qty,
+                    "edit_price": edit_price,
+                    "edit_disc": edit_disc,
+
+                },
+                success: function (data) {
+                    var result ="" ;
+                    if(data==1){
+                        result="Save complete" ;
+                    }else{
+                        result="Save Error !!" ;
+                    }
+             
+                    $.alert(result);
+                    $("#" + thisId).html(oldHtml);
+                },
+                error: function (e) {
+                    $.alert({
+                        title : "<i style='color:red;' class='fa fa-exclamation-triangle'></i> ... There was an error with your request..." , 
+                        content : "error: " + JSON.stringify(e) ,                        
+                    });
+                 
+                }
+            });
+
+        }
+    }
+
+</script>

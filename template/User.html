@@ -1,0 +1,585 @@
+<style>
+    #tableDepartment{
+        width:100%;
+    }
+    .headDepDet{
+        border-bottom: solid 1px #cdcdcd;
+        padding-bottom:10px;
+        margin-bottom: 10px;
+        font-size:14px;
+        font-weight: bold ;
+
+    }
+
+    .head-det{
+        padding-top:10px;
+        font-weight: bold;
+    }
+    .headUserDet{
+        border-bottom: solid 1px #cdcdcd;
+        padding-bottom:10px;
+        margin-bottom: 10px;
+        font-size:14px;
+        font-weight: bold ;
+
+    }
+    .highlighted:after {
+        content: "";
+        position: absolute;
+        right: 0;
+        width: 0;
+        height: 0;
+        border-top: 10px solid transparent;
+        border-bottom: 10px solid transparent;
+        border-right: 10px solid #cdcdcd;
+    }
+    #DepDetContent{
+
+    }
+    .divDepDet{
+        overflow-y:auto;
+        height:280px;
+        border:solid 1px #cdcdcd;
+        border-radius: 10px;
+    }
+    .divUserDet{
+        overflow-y:auto;
+        /*height:280px;*/
+        border:solid 1px #cdcdcd;
+        border-radius: 10px;
+        /*position: absolute;*/
+    }
+    .tr-strip-1{
+        background-color:#FFFFFF;
+
+    }
+    .tr-strip-2{
+        background-color:#f3f3f3;
+
+    }
+    .td-detail{
+        padding-left:20px;
+    }
+    .headline{
+        border-bottom: solid 1px #cdcdcd;
+        margin-bottom:5px;
+        padding-bottom:10px;
+        width:50%;
+    }
+    .close-btn{
+        /*top:0;*/
+        margin-top:-30px;
+        margin-right: 20px;
+        color:red;
+        /*        background-color: red ; 
+                border-radius: 100px;*/
+        /*position:absolute;*/
+    }
+    #DepDetContent{
+        padding-left:10px;
+        padding-right:10px;
+    }
+    .modal-backdrop {
+        z-index: 1040 !important;
+    }
+    .modal-dialog {
+        margin: 2px auto;
+        z-index: 1100 !important;
+    }
+    .row-detail-head{
+        padding-left:30px;
+        /*border-bottom: solid 1px orange;*/ 
+    }
+    .panel-body{
+        padding-top:3px;
+        padding-bottom: 3px;
+
+    }
+    .main-panel-body{
+        height:400px;
+        overflow-y: auto; 
+    }
+    .row{
+        padding-top:2px;
+        padding-bottom: 2px;
+        padding-left: 10px;
+        padding-right:10px;
+    }
+    .nav-tabs>li.active>a {
+        color:orange;
+    }
+    .head-tab {
+        font-size: 16px;
+        font-weight: bold;
+        text-transform: uppercase;
+        padding-left:5px;
+        padding-top:5px;
+        color:orange;
+    }
+    .container{
+        width:95%;
+    }
+    th{
+        text-align:center;
+    }
+    .tr-strip-1,.tr-strip-2{
+        cursor:pointer;
+    }
+</style>
+
+<div class="container">
+    <!--<div class="panel panel-dark">-->
+<!--        <div class="panel panel-dark panel-heading">
+            User Manage
+        </div>-->
+        <!--<div class="panel panel-dark panel-body main-panel-body">-->
+            <ul class="nav nav-tabs" style="text-align: left;">
+                <li id='liUserTab' class="active"><a href="#UserTab" data-toggle="tab" id="btnUserTab"><i class='fas fa-users'></i> &nbsp;USER</a></li>
+                <li  id='liDepTab'><a href="#DepTab" data-toggle="tab" id="btnDepTab"><i class='fas fa-object-group'></i>&nbsp;DEPARTMENT</a></li>
+            </ul>
+
+            <div class="tab-content">        
+                <div id="UserTab" class="tab-pane fade in active">
+                    <div class='row text-right'>
+                        <label class='head-tab pull-left'> <i class='fas fa-users'></i> User Management</label>
+                        <a href='#' id='btnAddNewUser' class='btn btn-info'><i class='fas fa-plus-circle'></i> &nbsp;Add New User</a>
+                    </div>
+                    <div class="row">
+                        <div id="t-user-left" class="col-8  col-xs-8 col-sm-8 col-md-8 col-lg-8">
+                            <table class="table table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>                                        
+                                        <th>ID</th>
+                                        <th>Online</th>
+                                        <th>UserName</th>
+                                        <th>FullName</th>
+                                        <th>Department</th>
+                                        <th>Position</th>
+                                        <th>Customer Link</th>
+                                        <th>Last Login</th>
+                                        <!--<th></th>-->
+                                    </tr>
+                                </thead>
+                                <tbody id="tableList">
+
+                                </tbody>
+                            </table>      
+                        </div>        
+                        <div style="display:none;" id="t-user-right" class="col-4 col-xs-4 col-sm-4 col-md-4 col-lg-4" >
+                            <div class="row divUserDet">
+                                <div class="row">
+                                    <div class="col-12 col-xs-12 col-sm-12 col-md-12 col-lg-12 text-left head-det">
+                                        User Authorize List <label style="color:orange;font-weight: bold;" id="usernameDetail"></label>
+                                    </div>
+                                    <div  id="headUserDetBtn" class="col-12 col-xs-12 col-sm-12 col-md-12 col-lg-12 text-right">
+                                    </div>
+                                </div>
+                                <table class="table table-condensed" id="tableUserDet">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Project</th>
+                                            <th>Authorize</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tableListUserAuth">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="DepTab" class="tab-pane fade in ">
+                    <div class='row text-right'>
+                        <label class='head-tab pull-left'> <i class='fas fa-object-group'></i> Department Management</label>
+                        <a href='#' id='btnAddNewDep' class='btn btn-info'><i class='fas fa-plus-circle'></i> &nbsp;Add New Department</a>
+                    </div>       
+                    <div class="row">
+                        <div id="t-dep-left" class="col-6  col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                            <table class="table table-condensed" id="tableDepartment">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>ID</th>
+                                        <th>Department</th>
+                                        <th>Section</th>
+                                        <th>Head</th>
+                                        <th>Tel</th>
+                                        <th>Fax</th>
+                                        <th>Email</th>
+                                        <!--<th></th>-->
+                                    </tr>
+                                </thead>
+                                <tbody id="tableListDep">
+
+                                </tbody>
+                            </table>      
+                        </div>
+                        <div style="display:none;" id="t-dep-right" class="col-6 col-xs-6 col-sm-6 col-md-6 col-lg-6" >
+                            <div class="row divDepDet">
+                                <div class="row">
+                                    <div class="col-8 col-xs-8 col-sm-8 col-md-8 col-lg-8 text-left head-det">
+                                        Department Details 
+                                    </div>
+                                    <div id="headDepDetBtn" class="col-4 col-xs-4 col-sm-4 col-md-4 col-lg-4 text-right">
+
+                                    </div>
+                                </div>
+                                <table class="table table-condensed" id="tableDepartmentPos">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Position</th>
+                                            <th>Level</th>                                           
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tableListDepPos">
+                                    </tbody>
+                                </table>  
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+
+
+        </div>
+    <!--</div>--> 
+
+<!--</div>--> 
+
+<div id='rowDetails'></div>
+<div id='divAddNewUser'></div>
+<div id='divAddNewDep'></div>
+<div id='divAddNewDepPos'></div>
+<script type="text/javascript">
+    $("#btnUserTab").click(function () {
+        if (!$("#liUserTab").hasClass("active")) {
+            $("#liUserTab").addClass("active");
+        }
+        if ($("#liDepTab").hasClass("active")) {
+            $("#liDepTab").removeClass("active");
+        }
+    });
+    $("#btnDepTab").click(function () {
+        if (!$("#liDepTab").hasClass("active")) {
+            $("#liDepTab").addClass("active");
+        }
+        if ($("#liUserTab").hasClass("active")) {
+            $("#liUserTab").removeClass("active");
+        }
+
+    });
+    GetUser();
+    GetDepartment();
+    $("#t-dep-right").show();
+    $("#t-user-right").show();
+    function GetDepartment() {
+        $.ajax({
+            url: "././module/MasterData.php",
+            type: 'post',
+            data: {
+                ajax: 'true',
+                action: "GetDepRows"
+            },
+            success: function (data) {
+                var BgCls = "";
+                var i = 0;
+                var TmpLine = "";
+                var Dept = "";
+                var Pos = "";
+                var fName = "";
+                var tId = "";
+                $.each(data, function (key, value) {
+                    i++;
+                    i % 2 == 0 ? BgCls = "tr-strip-1" : BgCls = "tr-strip-2";
+                    tId = value["dep_id"];
+                    value["fullname"] ? fName = value["fullname"] : fName = "-";
+                    TmpLine = "<tr class='" + BgCls + "' id = 'trDepId_" + tId + "' OnClick='ShowDepInfo(this.id);' >";
+                    TmpLine += "<td>" + i + "</td>";
+                    TmpLine += "<td id='tdDepId_" + tId + "'>" + tId + "</td>";
+                    TmpLine += "<td id='tdDepName_" + tId + "'>" + value["dep_name"] + "</td>";
+                    TmpLine += "<td id='tdSec_" + tId + "'>" + value["sec_name"] + "</td>";
+                    TmpLine += "<td id='tdHead_" + tId + "'>" + fName + "</td>";
+                    TmpLine += "<td id='tdTel_" + tId + "'>" + value["dep_tel"] + "</td>";
+                    TmpLine += "<td id='tdFax_" + tId + "'>" + value["dep_fax"] + "</td>";
+                    TmpLine += "<td id='tdEmail_" + tId + "'>" + value["dep_email"] + "</td>";
+//                    TmpLine += "<td id='tdControl_" + tId + "'>";
+
+//                    TmpLine += "<a OnClick='DepPosDet(this.id);' class='btn btn-default btn-sm' href='#'  id='btnDepPosDet_" + tId + "'><i class='fa fa-chevron-circle-down'></i> Details </a>";
+                    TmpLine += "</td>";
+                    TmpLine += "</tr>";
+                    $("#tableListDep").append(TmpLine);
+                });
+            },
+            error: function (xhr, status, error) {
+
+                $("#debug").html(xhr.responseText);
+            },
+            dataType: "json"
+        });
+    }
+    function GetUser() {
+        $.ajax({
+            url: "././module/User.php",
+            type: 'post',
+            data: {
+                ajax: 'true',
+                action: "GetRows"
+            },
+            success: function (data) {
+                var BgCls = "";
+                var i = 0;
+                var TmpLine = "";
+                var Dept = "";
+                var Pos = "";
+                var fName = "";
+                var tDep = "N/A";
+                var tDepPos = "N/A";
+                var tOnline = "";
+                var tId = "";
+                $.each(data, function (key, value) {
+                    i++;
+                    i % 2 == 0 ? BgCls = "tr-strip-1" : BgCls = "tr-strip-2";
+                    tId = value["user_id"];
+
+                    value["fullname"] ? fName = value["fullname"] : fName = "-";
+                    if (value["dep"] != 0) {
+                        tDep = value["dep_name"];
+                    }
+                    if ((value["dep_position"] != 0) || (value["dep_position"] != "")) {
+                        tDepPos = value["dep_pos_name"];
+                    }
+                    Dept = tDep + " - " + tDepPos;
+
+                    if (value["position"] == "1") {
+                        Pos = "Admin";
+                    } else if (value["position"] == "2") {
+                        Pos = "User";
+                    } else if (value["position"] == "2") {
+                        Pos = "Customer";
+                    }
+                    if (value["online"] == "ON") {
+                        tOnline = "<i style='color:green;' class='fas fa-circle'></i>";
+                    } else {
+                        tOnline = "<i style='color:gray;' class='fas fa-circle'></i>";
+                    }
+                    TmpLine = "<tr class='" + BgCls + "' id = 'trId_" + tId + "' OnClick='ShowUserInfo(this.id);' >";
+                    TmpLine += "<td>" + i + "</td>";
+                    TmpLine += "<td id='tdUserId_" + tId + "'>" + tId + "</td>";
+                    TmpLine += "<td align='center' id='tdUserOnline_" + tId + "'>" + tOnline + "</td>";
+                    TmpLine += "<td id='tdUserName_" + tId + "'>" + value["username"] + "</td>";
+                    TmpLine += "<td id='tdUserFName_" + tId + "'>" + fName + "</td>";
+                    TmpLine += "<td>" + Dept + "</td>";
+                    TmpLine += "<td>" + Pos + "</td>";
+                    TmpLine += "<td>" + value["ref_SO_custNum"] + "</td>";
+                    TmpLine += "<td id='tdControl_" + tId + "'>" + value["last_login"] + "</td>";
+                    TmpLine += "</tr>";
+
+                    $("#tableList").append(TmpLine);
+                });
+            },
+            error: function (xhr, status, error) {
+                $("#debug").html(xhr.responseText);
+            },
+            dataType: "json"
+        });
+    }
+    function ShowUserEdit(tid) {
+        var Ids = tid.split("_");
+        var rowId = Ids[1];
+        var user_id = $("#tdUserId_" + rowId).text().trim();
+        var user_name = $("#tdUserName_" + rowId).text().trim();
+        $('#rowDetails').dialog({
+            modal: true,
+            autoOpen: true,
+            show: 'fade',
+            width: 800,
+            height: 600,
+            title: ":: Edit User " + user_name
+        })
+                .load("././module/SOD/z_dialogUserEdit.php", {
+                    "user_id": user_id,
+                    "edit_type": "N"
+                });
+    }
+    function ShowUserEditAuthorize(tid) {
+        var Ids = tid.split("_");
+        var rowId = Ids[1];
+        var user_id = $("#tdUserId_" + rowId).text().trim();
+        var user_name = $("#tdUserName_" + rowId).text().trim();
+        $('#rowDetails').dialog({
+            modal: true,
+            autoOpen: true,
+            show: 'fade',
+            width: 800,
+            height: 400,
+            title: ":: Edit Authorize " + user_name
+        })
+                .load("./module/z_dialogUserEdit.php", {
+                    "user_id": user_id,
+                    "edit_type": "A"
+                });
+    }
+    function ShowUserInfo(tid) {
+        var Ids = tid.split("_");
+        var rowId = Ids[1];
+
+        $("td[id^=tdControl]").each(function () {
+            if ($(this).hasClass("highlighted")) {
+                $(this).removeClass("highlighted");
+            }
+        });
+        $("#tdControl_" + rowId).addClass("highlighted");
+        $("#t-user-right").show();
+        var getUserName = $("#tdUserName_"+rowId).text();
+        var trPos = $("#"+tid).position();
+       
+        var trTop = parseFloat(trPos.top.toFixed(2));
+        var trTopCal = 0;
+        if(trTop <= 50){
+            trTopCal =10 ;
+        }else{
+            trTopCal = trTop-100;
+        }
+        var setTrMargin = trTopCal+'px';
+        
+        $("#usernameDetail").text(getUserName);
+//        alert(trTop);
+        $.ajax({
+            url: "././module/User.php",
+            type: 'post',
+            data: {
+                ajax: 'true',
+                action: "GetUserAuthRows",
+                user_id: rowId,
+            },
+            dataType: "JSON",
+            success: function (data) {
+                $(".divUserDet").css({"margin-top":setTrMargin});
+                var line = "";
+                var i = 0;
+                $("#tableUserDet").empty();
+                var btnEdit = "<a OnClick='ShowUserEdit(this.id);' class='btn btn-default btn-sm' href='#'  id='btnUserEdit_" + rowId + "'><i class='fa fa-edit'></i> Edit</a>";
+                var btnAuth = "<a OnClick='ShowUserEditAuthorize(this.id);' class='btn btn-default btn-sm' href='#'  id='btnUserEditAuth_" + rowId + "'><i class='fa fa-edit'></i> Authorize</a>";
+                $("#headUserDetBtn").html(btnEdit + btnAuth);
+                var PrjName = "";
+                var PrjDesc = "";
+                var Action = "";
+                var okSign = "<i style='color:green;' class='fa fa-check-circle'></i>";
+                var noOkSign = "<i style='color:red;' class='fa fa-times-circle'></i>";
+
+                $.each(data, function (key, value) {
+                    i++;
+                    value["action"] == 1 ? Action = okSign : Action = noOkSign;
+                    PrjDesc = value["prj_description"];
+                    PrjName = value["prj_name"] + " ( " + PrjDesc + " ) ";
+                    line = "";
+                    line += "<tr ><td style='cursor:pointer;'>" + i + "</td><td style='cursor:pointer;'>" + PrjName + "</td><td>" + Action + "</td></div>";
+                    $("#tableUserDet").append(line);
+                });
+            },
+            error: function (xhr, status, error) {
+                var err = eval("(" + xhr.responseText + ")");
+                alert(err.Message);
+                $("#debug").html(error);
+            }
+        });
+
+    }
+    function ShowDepInfo(tid) {
+        var Ids = tid.split("_");
+        var rowId = Ids[1];
+        $("td[id^=tdEmail]").each(function () {
+            if ($(this).hasClass("highlighted")) {
+                $(this).removeClass("highlighted");
+            }
+        });
+        $("#tdEmail_" + rowId).addClass("highlighted");
+        $("#t-dep-right").show();
+        $.ajax({
+            url: "././module/MasterData.php",
+            type: 'post',
+            data: {
+                ajax: 'true',
+                action: "GetDepPosRows",
+                dep_id: rowId,
+            },
+            dataType: "JSON",
+            success: function (data) {
+
+                var line = "";
+                var i = 0;
+                $("#tableListDepPos").empty();
+                var btnAdd = "<a OnClick='DepPosAddClick(this.id);' class='btn btn-default btn-sm' href='#'  id='btnDepPos_" + rowId + "'><i class='fa fa-plus-circle'></i> Add</a>";
+                var btnEdit = "<a class='btn btn-default btn-sm'  href='#'  id='btnDepDet_" + rowId + "'><i class='fa fa-edit'></i>Edit</a>";
+                $("#headDepDetBtn").html(btnEdit + btnAdd);
+//        $("#headDepDetBtn").html(btnAdd);
+
+                $.each(data, function (key, value) {
+                    i++;
+                    line = "";
+                    line += "<tr><td>" + i + "</td><td>" + value["dep_pos_name"] + "</td><td>" + value["dep_pos_level"] + "</td></div>";
+                    $("#tableListDepPos").append(line);
+
+                });
+
+            },
+            error: function (xhr, status, error) {
+                var err = eval("(" + xhr.responseText + ")");
+                alert(err.Message);
+                $("#debug").html(error);
+            }
+        });
+
+    }
+    function CloseDetail(tid) {
+        var Ids = tid.split("_");
+        var rowId = Ids[1];
+        var RowDetail = $("#rowDet_" + rowId);
+        RowDetail.toggle("slow");
+    }
+    $("#btnAddNewUser").click(function () {
+        $('#divAddNewUser').dialog({
+            modal: true,
+            autoOpen: true,
+            show: 'fade',
+            width: 1000,
+            height: 600,
+            title: ":: Add New User "
+        })
+                .load("./module/z_dialogUserAdd.php");
+    });
+
+    $("#btnAddNewDep").click(function () {
+        $('#divAddNewDep').dialog({
+            modal: true,
+            autoOpen: true,
+            show: 'fade',
+            width: 800,
+            height: 550,
+            title: ":: Add New Department "
+        })
+                .load("././module/SOD/z_dialogDepartmentAdd.php");
+    });
+    function DepPosAddClick(getId) {
+        var ArrId = getId.split("_");
+        var tId = ArrId[1];
+        var dep_id = $("#tdDepId_" + tId).text().trim();
+        $('#divAddNewDepPos').dialog({
+            modal: true,
+            autoOpen: true,
+            show: 'fade',
+            width: 800,
+            height: 300,
+            title: ":: Add New Department Position "
+        })
+                .load("././module/SOD/z_dialogDepartmentPosAdd.php", {"dep_id": dep_id});
+    }
+
+
+
+</script>

@@ -1,0 +1,381 @@
+<?
+require_once __DIR__ . DIRECTORY_SEPARATOR . 'Rundiz' . DIRECTORY_SEPARATOR . 'Upload' . DIRECTORY_SEPARATOR . 'Upload.php';
+?>
+<link href="css/photo_gallery.css" rel="stylesheet" type="text/css"/>
+
+<!------ Include the above in your HEAD tag ---------->
+
+
+<style>
+    .loader {
+        border: 16px solid #f3f3f3;
+        border-radius: 50%;
+        border-top: 16px solid #3498db;
+        width: 150px;
+        height: 150px;
+        -webkit-animation: spin 2s linear infinite; /* Safari */
+        animation: spin 2s linear infinite;
+        position:absolute;
+        z-index: 1;
+        margin-left: 30%;
+        margin-top: -75%;
+    }
+
+    /* Safari */
+    @-webkit-keyframes spin {
+        0% { -webkit-transform: rotate(0deg); }
+        100% { -webkit-transform: rotate(360deg); }
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+</style>
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Test file upload.</title>
+    </head>
+    <body >
+
+
+
+        <form id='upload_img_form' method="post" enctype="multipart/form-data" action="template/APP_QC_ISSUE_REPORT/upload.php">
+            <div class="row ">
+
+                <div class="col-xs-5" style="padding: 0px; overflow-y: scroll;height: 65vh">
+                    <div class="row">
+                        <div class="col-sm-10" style="padding: 0px;">
+                            <div class="form-group">
+                                <label>Upload Image 1</label>
+                                <div class="input-group">
+                                    <input id="imgInp" type="file" name="filename[]" multiple>
+                                </div>
+                                <div>
+                                    <input hidden type='text' name='img_upload_file_name' id ='img_upload_file_name' >
+                                    <label for="imgInp" >
+                                        <img id='file_name_1' class="square" />
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-10" style="padding: 0px;">
+                            <div class="form-group">
+                                <label>Upload Image 2</label>
+                                <div class="input-group">
+                                    <input id="imgInp2" type="file" name="filename[]" multiple>
+                                </div>
+                                <div>
+                                    <label for="imgInp2" >
+                                        <img  id='file_name_2' class="square" />
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-10" style="padding: 0px;">
+                            <div class="form-group">
+                                <label>Upload Image 3</label>
+                                <div class="input-group">
+                                    <input id="imgInp3" type="file" name="filename[]" multiple>
+                                </div>
+                                <div>
+                                    <label for="imgInp3" >
+                                        <img  id='file_name_3' class="square" />
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-10" style="padding: 0px;">
+                            <div class="form-group">
+                                <label>Upload Image 4</label>
+                                <div class="input-group">
+                                    <input id="imgInp4" type="file" name="filename[]" multiple>
+                                </div>
+                                <div>
+                                    <label for="imgInp4" >
+                                        <img  id='file_name_4' class="square" />
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-10" style="padding: 0px;">
+                            <div class="form-group">
+                                <label>Upload Image 5</label>
+                                <div class="input-group">
+                                    <input id="imgInp5" type="file" name="filename[]" multiple>
+                                </div>
+                                <div>
+                                    <label for="imgInp5" >
+                                        <img  id='file_name_5' class="square" />
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xs-7">
+                    <div class="form-group">
+                        <label for="tag_id">Tag barcode</label>
+                        <input autocomplete="off" value="{tag_id}" type="text"  name="tag_id" class="form-control" id="tag_id" aria-describedby="BarcodeHelp" placeholder="Enter barcode">
+                        <input value='Clear Tag barcode' style="width:100%" type="button" class="btn btn-danger" onclick="clearTagBarcode()">
+                    </div>
+                    <div class="row" style="border-style: dashed;padding:10px;border-color: #3c8dbc;">
+                        <div>
+                            <label>Lot :</label>
+                            <input readonly type="text" autocomplete="off"  class="form-control txt-filter" id="LOTtxt">
+                        </div>
+                        <div>
+                            <label>User :</label>
+                            <input readonly type="text" autocomplete="off"  class="form-control txt-filter username_session" id="username">
+                        </div>
+                        <div>
+                            <label>หมายเหตุ</label>
+                            <input id='remark' list="select" name="select" style="width:100%">
+                            <datalist id="select">    
+                                <option value='เหล็กเป็นสนิม'>เหล็กเป็นสนิม</option>
+                                <option value='เหล็กไม่ตรง'>เหล็กไม่ตรง</option>
+                                <option value='ป้ายท่อผิด'>ป้ายท่อผิด</option>
+                            </datalist>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+    </body>
+</html>
+<script>
+    function doesFileExist(urlToFile) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('HEAD', urlToFile, false);
+        xhr.send();
+
+        if (xhr.status == "404") {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    var url = "././module/APP_QC_ISSUE_REPORT/data.php";
+
+    $("#tag_id").focus();
+    SearchTagDetail();
+    $('#tag_id').on('keypress', function (e) {
+        var key = e.which;
+        if (key == 13) // the enter key code
+        {
+            SearchTagDetail();
+            return false;
+        }
+    });
+    $('#tag_id').change(function () {
+        SearchTagDetail();
+        return false;
+    });
+
+
+    $('#remark').change(function () {
+        let tag_id = $("#tag_id").val();
+        let remark = $("#remark").val();
+        updateRemark(tag_id, remark);
+        return false;
+    });
+
+    function clearTagBarcode() {
+        $.ajax({
+            type: 'POST',
+            url: "module/APP_QC_ISSUE_REPORT/data.php",
+            dataType: 'json',
+            data: {
+                "load": "clearTagBarcode",
+            },
+            success: function (data) {
+
+            },
+        });
+
+        addimage = `template/APP_QC_ISSUE_REPORT/add-image.png`;
+        $("#file_name_1").attr('src', addimage)
+        $("#file_name_2").attr('src', addimage)
+        $("#file_name_3").attr('src', addimage)
+        $("#file_name_4").attr('src', addimage)
+        $("#file_name_5").attr('src', addimage)
+
+
+        $("#tag_id").val('');
+        $('#tag_id').prop('readonly', false);
+        $("#tag_id").focus();
+
+    }
+
+
+    function chkSubmit(img_upload) {
+        if ($("#tag_id").val() == "") {
+            alert("กรุณาแสกน Tag Barcode");
+            event.preventDefault()
+            return false;
+        } else {
+            $("#content_upload").append(`<div class="loader"></div>`);
+            let tag_id = $("#tag_id").val();
+            let filename_imgInp = "qc_" + tag_id + "_" + img_upload + ".jpg";
+            let create_by = $("#username").val();
+            $.ajax({
+                type: 'get',
+                url: url,
+                beforeSend: function () {
+                },
+                data: {
+                    load: 'uploadImg',
+                    tag_id: tag_id,
+                    file_name: filename_imgInp,
+                    file_name_x: img_upload,
+                    create_by: create_by,
+                },
+                success: function (data) {
+                    $("#btnSubmit").attr("disabled", true);
+                    $(`#upload_img_form`).submit();
+                },
+            });
+
+        }
+    }
+
+    function SearchTagDetail() {
+        $("#tag_id").focus();
+        let tag_id = $("#tag_id").val();
+        if (tag_id != '') {
+            $('#tag_id').prop('readonly', true);
+        } else {
+            $('#tag_id').prop('readonly', false);
+        }
+        let create_by = $("#username").val();
+        $.ajax({
+            type: 'POST',
+            url: url,
+            dataType: 'json',
+            data: {
+                "load": "SearchTagDetail",
+                "tag_id": tag_id,
+                "create_by": create_by,
+            },
+            success: function (data) {
+                let addimage = `template/APP_QC_ISSUE_REPORT/add-image.png`;
+                
+
+                if (data != 0) {
+                    $("#LOTtxt").val(data[0].lot);
+                    $("#remark").val(data[0].remark);
+                    let file_name_1, file_name_2, file_name_3, file_name_4, file_name_5;
+                    (data[0].file_name_1) ? (file_name_1 = `template/APP_QC_ISSUE_REPORT/img_tag/${data[0].file_name_1}`) : (file_name_1 = addimage);
+                    if (data[0].file_name_2) {
+                        file_name_2 = `template/APP_QC_ISSUE_REPORT/img_tag/${data[0].file_name_2}`;
+                    } else {
+                        file_name_2 = `template/APP_QC_ISSUE_REPORT/add-image.png`;
+                    }
+
+                    if (data[0].file_name_3) {
+                        file_name_3 = `template/APP_QC_ISSUE_REPORT/img_tag/${data[0].file_name_3}`;
+                    } else {
+                        file_name_3 = `template/APP_QC_ISSUE_REPORT/add-image.png`;
+                    }
+
+                    if (data[0].file_name_4) {
+                        file_name_4 = `template/APP_QC_ISSUE_REPORT/img_tag/${data[0].file_name_4}`;
+                    } else {
+                        file_name_4 = `template/APP_QC_ISSUE_REPORT/add-image.png`;
+                    }
+
+                    if (data[0].file_name_5) {
+                        file_name_5 = `template/APP_QC_ISSUE_REPORT/img_tag/${data[0].file_name_5}`;
+                    } else {
+                        file_name_5 = `template/APP_QC_ISSUE_REPORT/add-image.png`;
+                    }
+                    $("#file_name_1").attr('src', file_name_1)
+                    $("#file_name_2").attr('src', file_name_2)
+                    $("#file_name_3").attr('src', file_name_3)
+                    $("#file_name_4").attr('src', file_name_4)
+                    $("#file_name_5").attr('src', file_name_5)
+                } else {
+                    $("#file_name_1").attr('src', addimage)
+                    $("#file_name_2").attr('src', addimage)
+                    $("#file_name_3").attr('src', addimage)
+                    $("#file_name_4").attr('src', addimage)
+                    $("#file_name_5").attr('src', addimage)
+                }
+
+            },
+            error: function (e) {
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+    }
+
+    function updateRemark(tag_id, remark) {
+        $.ajax({
+            type: 'POST',
+            url: url,
+            dataType: 'json',
+            data: {
+                "load": "updateRemark",
+                "tag_id": tag_id,
+                "remark": remark,
+            },
+            success: function (data) {
+                console.log(data);
+            },
+        });
+    }
+    $(document).ready(function () {
+        let username_session = GetUserProp("login_username");
+        $(".username_session").val(username_session);
+        $(document).on('change', '.btn-file :file', function () {
+            var input = $(this),
+                    label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+            input.trigger('fileselect', [label]);
+        });
+        $('.btn-file :file').on('fileselect', function (event, label) {
+            var input = $(this).parents('.input-group').find(':text'),
+                    log = label;
+            console.log(log)
+            if (input.length) {
+                input.val(log);
+            }
+        });
+        img_change("imgInp", "file_name_1");
+        img_change("imgInp2", "file_name_2");
+        img_change("imgInp3", "file_name_3");
+        img_change("imgInp4", "file_name_4");
+        img_change("imgInp5", "file_name_5");
+
+        function img_change(imgInp, img_upload) {
+            $(`#${imgInp}`).change(function () {
+                if (this.files && this.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $(`#${img_upload}`).attr('src', e.target.result);
+                        $(`#${img_upload}`).attr('value', 1);
+                        $('#img_upload_file_name').val(img_upload);
+                        chkSubmit(img_upload);
+                    }
+                    reader.readAsDataURL(this.files[0]);
+                }
+            });
+        }
+
+    });
+</script>
+

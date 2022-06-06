@@ -1,0 +1,432 @@
+<style>
+    .col-search {
+        padding-left: 3px;
+        padding-right: 3px;
+    }
+
+    /*    table.dataTable thead .sorting:after,
+          table.dataTable thead .sorting:before,
+          table.dataTable thead .sorting_asc:after,
+          table.dataTable thead .sorting_asc:before,
+          table.dataTable thead .sorting_asc_disabled:after,
+          table.dataTable thead .sorting_asc_disabled:before,
+          table.dataTable thead .sorting_desc:after,
+          table.dataTable thead .sorting_desc:before,
+          table.dataTable thead .sorting_desc_disabled:after,
+          table.dataTable thead .sorting_desc_disabled:before {
+              bottom: .5em;
+          }*/
+    .table thead th {
+        text-align: center;
+    }
+
+    .col-flt-page {
+        padding-top: 10px;
+        font-weight: bold;
+    }
+
+    #tblReportDiary tbody tr td a {
+        cursor: pointer;
+    }
+
+    table.dataTable.fixedHeader-floating,
+    table.dataTable.fixedHeader-locked {
+        background-color: white;
+        margin-top: 50px !important;
+        margin-bottom: 0 !important;
+    }
+
+    @media print {
+        table th:nth-child(0) {
+            width: 200px;
+            word-break: break-all;
+            white-space: pre-line;
+        }
+
+        table td:nth-child(0) {
+            width: 200px;
+            word-break: break-all;
+            white-space: pre-line;
+        }
+
+    }
+
+    .text-wrap {
+        white-space: normal;
+    }
+
+    .width-200 {
+        width: 200px;
+    }
+
+    input[type=checkbox] {
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+
+    .input-group-addon2 {
+        padding: 6px 12px;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 1;
+        color: #555;
+        height: 32px;
+        text-align: center;
+        background-color: #eee;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        border-top-right-radius: 0px;
+        border-bottom-right-radius: 0px;
+    }
+
+    .selectize-input {
+        padding-top: 5px;
+        padding-bottom: 5px;
+        height: 32px;
+        min-height: 64px;
+        border-top-left-radius: 0px;
+        border-bottom-left-radius: 0px;
+    }
+
+    .input-group .form-control {
+        padding-left: 1px;
+        padding-right: 1px;
+    }
+</style>
+
+<div class="row">
+    <h4>General Ledger Report</h4>
+</div>
+<div class='row'>
+
+    <div class="col-3 col-sm-3 col-xs-3 col-md-3 col-lg-3" style="padding-right:50px;padding-left:0px;">
+        <div class="input-group">
+            <div class="input-group-addon">Account</div>
+            <select class="form-control" id='SelAcctDiary' onchange="changeAccount()">
+                <option value="">--- Select ---</option>
+                <option value="JV">JV</option>
+                <option value="APP">PV</option>
+                <option value="AR">AR</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3" style="padding-left:0px;">
+        <div class="input-group">
+            <div class="input-group-addon">From date</div>
+            <input type="text" autocomplete="off" class="form-control txt-filter" id="txtStartDate">
+        </div>
+    </div>
+    <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3">
+        <div class="input-group">
+            <div class="input-group-addon">To date</div>
+            <input type="text" autocomplete="off" class="form-control txt-filter" id="txtEndDate">
+        </div>
+    </div>
+
+
+
+    <div class="col-lg-1 col-md-1 col-sm-6 col-xs-6 text-left">
+        <button class="btn btn-info" id="btnSearch" onclick="ReportItemSearch()">
+            <i class="fa fa-search"></i>&nbsp;Search
+        </button>
+    </div>
+
+</div>
+
+<div class="row" id="rowResultTable">
+    <table hidden class="table table-condensed table-striped " width="100%" id="tblReportDiaryJV">
+        <thead>
+            <tr>
+                <th>Sequence</th>
+                <th>Account</th>
+                <th>Account Description</th>
+                <th>Date</th>
+                <th>Site</th>
+                <th>Debit(Domestic)</th>
+                <th>Credit(Domestic)</th>
+                <th>ref</th>
+                <th>Note Content</th>
+                <th>description</th>
+            </tr>
+        </thead>
+    </table>
+    <table class="table table-condensed table-striped " width="100%" id="tblReportDiary">
+        <thead>
+            <tr>
+                <th>Sequence</th>
+                <th>Account</th>
+                <th>Account Description</th>
+                <th>Date</th>
+                <th>Site</th>
+                <th>Debit(Domestic)</th>
+                <th>Credit(Domestic)</th>
+                <th>ref</th>
+                <th>Customer/Vendor</th>
+                <th>Name</th>
+                <th>Note Content</th>
+                <th>description</th>
+            </tr>
+        </thead>
+    </table>
+
+</div>
+
+
+<script type="text/javascript">
+    //Init render page environment //
+
+    $("#txtStartDate,#txtEndDate").datepicker({
+        dateFormat: 'yy-mm-dd'
+    });
+
+    function changeAccount() {
+        AcctDiary = $("#SelAcctDiary").val();
+        if (AcctDiary == 'JV') {
+            $("#tblReportDiary").hide();
+            $("#tblReportDiaryJV").show();
+        } else
+        {
+            $("#tblReportDiary").show();
+            $("#tblReportDiaryJV").hide();
+            $("#tblReportDiaryJV_wrapper").hide();
+            
+        }
+
+    }
+    function ReportItemSearch() {
+        var OldHtml = $("#btnSearch").html();
+        AcctDiary = $("#SelAcctDiary").val();
+        //        console.log(Acct);
+        var txtStartDate = $("#txtStartDate").val();
+        var txtEndDate = $("#txtEndDate").val();
+        if (AcctDiary == "") {
+            $.alert("Please select Account ");
+            return false;
+        } else {
+            AcctDiary = AcctDiary;
+            $("#btnSearch").html("<i class='fa fa-spinner fa-spin'></i>");
+            $("#tblReportDiary").loading();
+            $.ajax({
+                type: 'POST',
+                url: "././module/RPTGL/data.php",
+                //                contentType: "text/plain",
+                dataType: 'json',
+                beforeSend: function () {
+                    $("#btnSearch").html("<i class='fa fa-spinner fa-spin'>");
+                },
+                data: {
+                    "load": "diary",
+                    "txtStartDate": txtStartDate,
+                    "txtEndDate": txtEndDate,
+                    "AcctDiary": AcctDiary,
+                },
+                success: function (data) {
+                    console.log(data);
+
+
+                    $("#tblReportDiary").DataTable().clear();
+                    $("#tblReportDiaryJV").DataTable().clear();
+                    if (AcctDiary == 'JV') {
+                        $('#tblReportDiaryJV').dataTable({
+                            "aaData": data,
+                            "aaSorting": [[2, 'asc'], [1, 'asc']],
+                            "paging": false,
+                            fixedHeader: true,
+                            destroy: true,
+                            'processing': true,
+                            "columns": [
+                                {
+                                    "data": "trans_num",
+                                    "className": "text-center",
+                                },
+                                {
+                                    "data": "acct",
+                                    "className": "text-left",
+                                },
+                                {
+                                    "data": "description",
+                                    "className": "text-left",
+                                },
+                                {
+                                    "data": "trans_date",
+                                    "className": "text-center",
+                                },
+                                {
+                                    "data": "site_ref",
+                                    "className": "text-center",
+                                },
+                                {
+                                    "data": "Debit_Domestic",
+                                    "className": "text-right",
+                                    "render": function (data, type, row, meta) {
+                                        var ret = addCommas(parseFloat(data).toFixed(2));
+                                        return ret;
+                                    }
+                                },
+                                {
+                                    "data": "Credit_Domestic",
+                                    "className": "text-right",
+                                    "render": function (data, type, row, meta) {
+                                        var ret = addCommas(parseFloat(data).toFixed(2));
+                                        return ret;
+                                    }
+                                },
+                                {
+                                    "data": "ref",
+                                    "className": "text-right",
+                                    "render": function (data, type, row, meta) {
+                                        var ret = data;
+                                        return ret;
+                                    }
+                                },
+                                {
+                                    "data": "NoteContent",
+                                    "render": function (data, type, row, meta) {
+                                        var ret = data;
+                                        return ret;
+                                    }
+                                },
+                                {
+                                    "data": "description",
+                                    "className": "text-right",
+                                    "render": function (data, type, row, meta) {
+                                        var ret = data;
+                                        return ret;
+                                    }
+                                },
+                            ],
+                            'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                                    "<'row'<'col-md-12'tr>>" +
+                                    "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                            buttons: [{
+                                    extend: 'print',
+                                    text: "<i class='fa fa-print'></i>&nbsp;Print",
+                                    title: 'LedgerReport'
+                                },
+                                {
+                                    extend: 'excel',
+                                    footer: true,
+                                    text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                                    title: 'ListGL'
+                                },
+                            ],
+                        });
+                    } else {
+                        $('#tblReportDiary').dataTable({
+                            "aaData": data,
+                            "aaSorting": [[2, 'asc'], [1, 'asc']],
+                            "paging": false,
+                            fixedHeader: true,
+                            destroy: true,
+                            'processing': true,
+                            "columns": [
+                                {
+                                    "data": "trans_num",
+                                    "className": "text-center",
+                                },
+                                {
+                                    "data": "acct",
+                                    "className": "text-left",
+                                },
+                                {
+                                    "data": "description",
+                                    "className": "text-left",
+                                },
+                                {
+                                    "data": "trans_date",
+                                    "className": "text-center",
+                                },
+                                {
+                                    "data": "site_ref",
+                                    "className": "text-center",
+                                },
+                                {
+                                    "data": "Debit_Domestic",
+                                    "className": "text-right",
+                                    "render": function (data, type, row, meta) {
+                                        var ret = addCommas(parseFloat(data).toFixed(2));
+                                        return ret;
+                                    }
+                                },
+                                {
+                                    "data": "Credit_Domestic",
+                                    "className": "text-right",
+                                    "render": function (data, type, row, meta) {
+                                        var ret = addCommas(parseFloat(data).toFixed(2));
+                                        return ret;
+                                    }
+                                },
+                                {
+                                    "data": "ref",
+                                    "className": "text-right",
+                                    "render": function (data, type, row, meta) {
+                                        var ret = data;
+                                        return ret;
+                                    }
+                                },
+                                {
+                                    "data": "vend_num",
+                                    "render": function (data, type, row, meta) {
+                                        var ret = data;
+                                        return ret;
+                                    }
+                                },
+                                {
+                                    "data": "vend_cust_name",
+                                    "render": function (data, type, row, meta) {
+                                        var ret = data;
+                                        return ret;
+                                    }
+                                },
+                                {
+                                    "data": "NoteContent",
+                                    "render": function (data, type, row, meta) {
+                                        var ret = data;
+                                        return ret;
+                                    }
+                                },
+                                {
+                                    "data": "description",
+                                    "className": "text-right",
+                                    "render": function (data, type, row, meta) {
+                                        var ret = data;
+                                        return ret;
+                                    }
+                                },
+                            ],
+                            'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                                    "<'row'<'col-md-12'tr>>" +
+                                    "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                            buttons: [{
+                                    extend: 'print',
+                                    text: "<i class='fa fa-print'></i>&nbsp;Print",
+                                    title: 'LedgerReport'
+                                },
+                                {
+                                    extend: 'excel',
+                                    footer: true,
+                                    text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                                    title: 'ListGL'
+                                },
+                            ],
+                        });
+                    }
+
+                    $('#tblReportDiary').loading("stop");
+                    $("#btnSearch").html(OldHtml);
+                    changeAccount();
+                },
+                error: function (e) {
+
+                    console.log("There was an error with your request...");
+                    console.log("error: " + JSON.stringify(e));
+                }
+            });
+        }
+    }
+
+    $("#StartDate,#EndDate").datepicker({
+        dateFormat: 'yy-mm-dd'
+    });
+</script>

@@ -1,0 +1,238 @@
+<style>
+    .col-label-a{
+        border-bottom: solid 1px #cdcdcd ;
+        padding-bottom: 10px;
+        margin-bottom:10px;
+        padding-top: 10px;
+        margin-top:10px;
+        color:  #000;
+        border-top:solid 1px #cdcdcd ;
+        /*padding:60%;*/
+        text-align: center;
+    }
+
+    .col-label{
+        text-align: right;
+        padding-top:5px;
+    }
+    .panel{
+        margin-bottom:5px;
+    }
+    .panel-body{
+        padding-bottom:5px;
+        padding-top:5px;
+    }
+    .missing-value{
+        border:solid 1px red;
+    }
+</style>
+
+<div id='rowDetails' class='rowDetails' >
+
+    <div class='panel panel-default'>
+        <div class='panel panel-heading'>
+            Department Create
+        </div>   
+        <div class='panel panel-body'>
+            <div class='row'>
+                <div class='col-3 col-xs-3 col-sm-3 col-md-3 col-lg-3 col-label'>
+                    Department Name :
+                </div>
+                <div class='col-3 col-xs-3 col-sm-3 col-md-3 col-lg-3 col-label'>
+                    <input type='text'id='txtDepName' onBlur="CheckDup();" class='form-control' value=''>
+                </div>
+                <div class='col-3 col-xs-3 col-sm-3 col-md-3 col-lg-3 col-label'>
+                    Section :
+                </div>
+                <div class='col-3 col-xs-3 col-sm-3 col-md-3 col-lg-3 col-label'>
+                    <select class='form-control' id='selSection'>
+                        {Section_Options}
+                    </select>
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-3 col-xs-3 col-sm-3 col-md-3 col-lg-3 col-label'>
+                    Head :
+                </div>
+                <div class='col-3 col-xs-3 col-sm-3 col-md-3 col-lg-3 col-label'>
+                    <select  id='selHead'  class='form-control'>
+                        {User_Options}
+                    </select>
+                </div>
+                <div class='col-3 col-xs-3 col-sm-3 col-md-3 col-lg-3 col-label'>
+                    Tel :
+                </div>
+                <div class='col-3 col-xs-3 col-sm-3 col-md-3 col-lg-3 col-label'>
+                    <input type='text' id='txtTel'  class='form-control' value=''>
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-3 col-xs-3 col-sm-3 col-md-3 col-lg-3 col-label'>
+                    Fax :
+                </div>
+                <div class='col-3 col-xs-3 col-sm-3 col-md-3 col-lg-3 col-label'>
+                    <input type='text' id='txtFax'  class='form-control' value=''>
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-3 col-xs-3 col-sm-3 col-md-3 col-lg-3 col-label'>
+                    Email :
+                </div>
+                <div class='col-3 col-xs-3 col-sm-3 col-md-3 col-lg-3 col-label'>
+                    <input type='text' id='txtEmail' class='form-control' value=''>
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-12 text-center'>
+                    <a href='#' class='btn btn-success' id='btnAdd'><i class='fas fa-check-circle'></i>&nbsp;SAVE</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class='row' id='flashMsg'>
+    </div>
+</div>
+<input type="hidden" id="isDup" value="0">
+<script type='text/javascript'>
+    $("#btnAdd").click(function () {
+        var ErrCount = 0;
+        var ErrTxt = "";
+        var txtDepName = $("#txtDepName").val();
+        var selSection = $("#selSection").val();
+        var selHead = $("#selHead").val();
+        var Marker = [];
+        if ((txtDepName == "") || (txtDepName == "undefined")) {
+            ErrCount++;
+            ErrTxt += "<br><i class='fa fa-chevron-right'></i>&nbsp;Missing [Department Name] ";
+            Marker.push("txtDepName");
+        } else {          
+            if ($("#isDup").val()=="1") {
+                ErrCount++;
+                ErrTxt += "<br><i class='fa fa-chevron-right'></i>&nbsp;Duplicate [Department Name] ";
+                Marker.push("txtDepName");
+            }
+        }
+        if (selSection == "0") {
+            ErrCount++;
+            ErrTxt += "<br><i class='fa fa-chevron-right'></i>&nbsp;Missing [Section] ";
+            Marker.push("selSection");
+        }
+        if (selHead == "0") {
+            ErrCount++;
+            ErrTxt += "<br><i class='fa fa-chevron-right'></i>&nbsp;Missing [Head User] ";
+            Marker.push("selHead");
+        }
+        if (ErrCount > 0) {
+            $.alert({
+                title: "<font color='red'><i class='fa fa-times'></i>&nbsp;Can't save data . </font>",
+                content: "<div align='left'>" + ErrTxt + "</p>",
+                theme: 'modern'
+
+            });
+            $.each(Marker, function (key, value) {
+                if (!$("#" + value).hasClass("missing-value")) {
+                    $("#" + value).addClass("missing-value")
+                }
+
+            });
+        } else {
+            $.confirm({
+                title: "SAVE DATA ? ",
+                content: "",
+                theme: 'modern',
+                buttons: {
+                    confirm: function () {
+                        AddNew();
+                    },
+                    canel: function () {
+
+                    },
+                }
+            });
+        }
+    });
+    function CheckDup() {
+        var txtDepName = $("#txtDepName").val();
+        $.ajax({
+            url: "./module/MasterData.php",
+            type: 'post',
+            data: {
+                ajax: 'true',
+                action: "CheckDepDup",
+                dep_name: txtDepName,
+            },
+            success: function (data) {
+//                console.log(data);
+                $("#isDup").val(data);
+            },
+            error: function (xhr, status, error) {
+                var err = eval("(" + xhr.responseText + ")");
+                alert(err.Message);
+                $("#debug").html(error);
+            }
+        });
+    }
+    function AddNew() {
+        var dep_name = $("#txtDepName").val();
+        var head_id = $("#selHead").val();
+        var sec_id = $("#selSection").val();
+        var dep_tel = $("#txtTel").val();
+        var dep_fax = $("#txtFax").val();
+        var dep_email = $("#txtEmail").val();
+
+        $.ajax({
+            url: "./module/MasterData.php",
+            type: 'post',
+            data: {
+                ajax: 'true',
+                action: "AddNewDep",
+                dep_name: dep_name,
+                head_id: head_id,
+                sec_id: sec_id,
+                dep_tel: dep_tel,
+                dep_fax: dep_fax,
+                dep_email: dep_email,
+            },
+            success: function (data) {
+              
+                  $.confirm({
+                        title: data.msg,
+                        content: "",
+                        theme: 'modern',
+                        buttons: {
+                            confirm: function () {
+                                location.reload();
+                            }
+                        }
+                    });
+//                if (data.result == "1") {
+//                    $.confirm({
+//                        title: "<font color='green'><i class='fa fa-check-circle'></i>&nbsp;SAVE COMPLETE </font>",
+//                        content: "",
+//                        theme: 'modern',
+//                        buttons: {
+//                            confirm: function () {
+//                                location.reload();
+//                            }
+//                        }
+//                    });
+//                } else {
+//                    $.alert({
+//                        title: "<font color='red'><i class='fa fa-times'></i>&nbsp;Can't save data . </font>",
+//                        content: "<div align='left'>" + data.msg + "</p>",
+//                        theme: 'modern'
+//
+//                    });
+//                }
+            },
+            error: function (xhr, status, error) {
+//                alert(error);
+                var err = eval("(" + xhr.responseText + ")");
+                alert(err.Message);
+                $("#debug").html(error);
+            },
+            dataType: "JSON"
+        });
+
+    }
+</script>

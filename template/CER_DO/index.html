@@ -1,0 +1,285 @@
+<style>
+    .col-search{
+        padding-left:3px;
+        padding-right:3px;
+    }
+    .table thead th{
+        text-align: center;
+    }
+
+    .col-flt-page{
+        padding-top:10px;
+        font-weight: bold;
+    }
+
+    #tblReport tbody tr td a {
+        cursor: pointer ;
+    }
+    table.dataTable.fixedHeader-floating, table.dataTable.fixedHeader-locked {
+        background-color: white;
+        margin-top: 50px !important;
+        margin-bottom: 0 !important;
+    }
+
+    .tr-row-cn td{
+        color :red;
+    }
+    #tblModal {
+        z-index:999999;
+    }
+    .loading-overlay{
+        z-index:99999999 ;
+    }
+</style>
+
+<div class='row' >
+
+    <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12" style="font-size:18px;">
+        <b>ทำใบ Cer DO</b> 
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12  col-search">
+        <div class="input-group">
+            <div class="input-group-addon">เลือกวันที่</div>
+            <input type="text" class="form-control txt-filter" id="txtCerDate">
+        </div>
+    </div>
+
+    <div class="col-lg-1 col-md-2 col-sm-1 col-xs-6  col-search">
+        <button id="btnSearch" class="btn btn-info"><i class="fa fa-search"></i>&nbsp;ค้นหา</button>
+    </div>
+</div>
+
+<div class="row" id="divReport">
+    <table class="table table-condensed table-bordered table-striped" id="tblReport">
+        <thead>
+            <tr>
+                <th>วันที่ - เวลา</th>
+                <th>เลขที่ใบกำกับ</th>
+                <th>Do_Seq</th>
+                <th>ลูกค้า</th>
+                <th>รายการ</th>
+                <th>จำนวนเส้น</th>
+                <th>คลัง</th>
+                <th>LOT</th>       
+                <th>LOT QTY</th>   
+            </tr>
+        </thead>
+        <!--        <tbody id="tblReportList">
+                </tbody>-->
+    </table>
+</div>
+
+
+<div class="modal" id="myModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                Multiple lot in same line data
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-left"  style="padding-top:5px;font-weight: bold ;font-size: 14px;" id="modalDetailLine">
+
+                    </div>
+
+                </div>
+                <!--                <div class="row">
+                                    <div class="col-xs-6 col-sm-6 col-md-4 col-lg-4 text-right"  style="padding-top:5px;">
+                                        Item
+                                    </div>
+                                    <div class="col-xs-6 col-sm-6 col-md-8 col-lg-8 text-left">
+                                        <label id="lblModalItem" ></label>
+                                    </div>
+                                </div>-->
+                <table class="table table-condensed table-bordered table-striped" id="tblModal">
+                    <thead>
+                        <tr>          
+                            <th>#</th>
+                            <th>Lot</th>
+                            <th>LotQty</th>                            
+                        </tr>
+                    </thead>
+                    <tbody id="tbodyModal">
+
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#selCust').selectize({
+            plugins: ['remove_button'],
+            delimiter: ',',
+            persist: false,
+            create: function (input) {
+                return {
+                    value: input,
+                    text: input
+                }
+            }
+        });
+    });
+
+    $("#txtCerDate").val(GetToday());
+
+    $("#txtCerDate").datepicker({
+        dateFormat: 'yy-mm-dd',
+    });
+    $("#btnSearch").click(function () {
+        loadData();
+    });
+
+    $(".txt-filter").on("keypress", function (e) {
+        if (e.keyCode == 13) {
+            ReportItemSearch();
+            return false; // prevent the button click from happening
+        }
+    });
+    function loadData() {
+        var txtCerDate = $("#txtCerDate").val();
+        var OldHtml = $("#btnSearch").html();
+        $.ajax({
+            type: 'GET',
+            url: "././module/CER_DO/data.php",
+            contentType: "text/plain",
+            dataType: 'json',
+            beforeSend: function () {
+                $("#btnSearch").html("<i class='fa fa-spinner fa-spin'>");
+            },
+            data: {
+                load: 'ajax2',
+                txtCerDate: txtCerDate,
+            },
+            success: function (data) {
+                $("#tblReportList").DataTable().clear();
+                $('#tblReport').dataTable({
+                    fixedHeader: true,
+                    "aaData": data,
+//                    "pageLength": 25,
+                    "columns": [
+                        {"data": "pickup_date_conv"},
+                        {"data": "do_num", "className": "text-center"},
+                        {"data": "do_seq", "className": "text-center"},
+                        {"data": "cust_name"},
+                        {"data": "item_desc"},
+                        {"data": "qty_conv", "className": "text-right"},
+                        {"data": "Loc"},
+                        {"data": "lots" ,"render" : function(data, type, row, meta){
+                                  var ret = "";
+                                if(row["CountLot"]==1){
+                                    ret = row["lot1"] ;
+                                }else{
+                                     ret = row["lots"] ;
+                                }
+                                return ret ; 
+                        }},
+                        {"data": "CountLot", "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = "";
+                                if (data <= 1) {
+                                    ret = data;
+                                } else {
+                                    var thisId = "multiLot!!"
+                                            + row["co_num"] + "!!"
+                                            + row["Co_line"] + "!!"
+                                            + row["do_num"] + "!!"
+                                            + row["do_seq"] + "!!"
+                                            + row["CountLot"] + "!!"
+                                            + row["qty_conv"] + "!!"
+                                            + row["item_desc"];
+                                    ret = "<a id='" + thisId + "' OnClick='ShowMultiLot(this.id)'>" + data + "</a>";
+                                }
+                                return ret;
+                            }}
+                    ],
+                    'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                            "<'row'<'col-md-12'tr>>" +
+                            "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                    buttons: [
+                        {
+                            extend: 'print',
+                            text: "<i class='fa fa-print'></i>&nbsp;Print",
+                            title: ''
+                        },
+                        {
+                            extend: 'excel',
+                            text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                            title: ''
+                        },
+                    ]
+                });
+
+                $('#tblReport').loading("stop");
+                $("#btnSearch").html(OldHtml);
+            },
+            error: function (e) {
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+    }
+
+    function ShowMultiLot(thisid) {
+        var txtCerDate = $("#txtCerDate").val();
+        var TarGetTableId = "tblModal";
+        $("#myModal").modal('show');
+        $("#" + TarGetTableId).loading();
+        $("#tbodyModal").empty();
+        //======== Table ==========
+
+
+        //======== Param ==========
+        var ArrThisId = thisid.split("!!");
+        var CoNum = ArrThisId[1];
+        var CoLine = ArrThisId[2];
+        var DoNum = ArrThisId[3];
+        var DoLine = ArrThisId[4];
+        var LotCount = ArrThisId[5];
+        var QtyShipped = ArrThisId[6];
+        var Item = ArrThisId[7];
+        $("#modalDetailLine").html("DO : " + DoNum + " | Line : " + DoLine + " | Item : " + Item + " | <br>Shipped : " + QtyShipped + " | Use LOT : " + LotCount);
+        //========================
+        $.ajax({
+            type: 'GET',
+            url: "././module/CER_DO/data.php",
+            contentType: "text/plain",
+            dataType: 'json',
+            beforeSend: function () {
+                $("#" + TarGetTableId).loading();
+            },
+            data: {
+                load: 'MultiLot',
+                CoNum: CoNum,
+                CoLine: CoLine,
+                txtCerDate: txtCerDate,
+            },
+            success: function (data) {
+                var lineTable = "";
+                var RowIndex = 0;
+                $.each(data, function (index, row) {
+                    RowIndex++;
+                    $("#tbodyModal").append("<tr><td align='center'>" + RowIndex + "</td><td align='center'>" + row["lot"] + "</td><td align='right'>" + row["qty_conv"] + "</td></tr>");
+                });
+                $('#' + TarGetTableId).loading("stop");
+            },
+            error: function (e) {
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+
+    }
+</script>

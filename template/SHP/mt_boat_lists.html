@@ -1,0 +1,178 @@
+<style>
+  .btn-list-back {
+    width: 80px;
+    height: 30px;
+    padding-left: 5px;
+    margin-right: 10px;
+  }
+
+  .btn-list-create {
+    padding-bottom: 10px;
+    padding-top: 10px;
+    border-radius: 5px;
+  }
+
+  th {
+    text-align: center;
+  }
+
+  .td-text {
+    text-align: left;
+  }
+
+  .td-num {
+    text-align: center;
+  }
+
+  a {
+    color: #4286f4;
+  }
+
+  .row-table {
+    margin-left: 10%;
+    margin-right: 10%;
+  }
+
+  button[id*="b-"] {
+    background: transparent;
+    padding: 2px 2px 2px 2px;
+    border: none;
+    width: 30px;
+    color: #4286f4;
+    cursor: pointer;
+  }
+
+  a[id*="d-"] {
+    background: transparent;
+    width: 30px;
+    text-align: center;
+    padding-left: 10px;
+    /*padding: 2px 2px 2px 2px;*/
+    border: none;
+    color: red;
+    cursor: pointer;
+  }
+</style>
+<div class="row rowheader">
+
+  <div class="col-6 col-label">
+    <strong><h5>
+          <a href="?mt_index" class=" btn-info btn-list-back">
+          <i class="fa fa-chevron-left"></i>
+          </a>
+          Master Data : Boat
+      </h5>  </strong>
+
+  </div>
+
+  <div class="col-5" style="padding-right:0px;">
+    <form id="form1" name="form1" method="post" action="?mt_boat_lists">
+      <div class="input-group">
+        <input type="text" class="form-control" placeholder="Quick search with (MV,LighterNo)" id="txtKeyword" name="txtKeyword" aria-label="Search" aria-describedby="basic-addon1" value="{keyword}">
+        <button type="submit" class="input-group-addon"><i class="fa fa-search"></i></button>
+      </div>
+    </form>
+  </div>
+  <div class="col-1" style="padding-left:0px;">
+    <a id="create" class="btn-list-create btn btn-default form-control text-center" style="border-color:#e9ecef;"><i class="fa fa-plus"></i></a>
+  </div>
+</div>
+<div class="row row-table">
+  <div class="col-12 text-center" align="center">
+    <table class="table table-striped" style="width:100%;">
+      <thead>
+        <th>#</th>
+        <th>M.V.</th>
+        <th>LIGHTER NO.</th>
+        <th>Control</th>
+      </thead>
+      <tbody>
+        {lists}
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<div id="divcreate"></div>
+<div id="divedit"></div>
+
+<script>
+  $("#txtKeyword").focus();
+  var x = $("#txtKeyword").val().length;
+  document.getElementById("txtKeyword").setSelectionRange(0, x);
+
+  function Cancel(ids) {
+
+    var parts = ids.split("-");
+    // alert(parts[1]);
+    var Conf = confirm("Want to cancel [" + parts[1] + "] data ? ");
+    if (Conf == false) {
+      return false;
+    } else {
+      $.post("./module/SHP/bn_doc_cancel.php", {
+        "HeadCode": parts[1],
+        "Cancel": 1,
+        "Type": "Cancel"
+      }, function(data) {
+        location.reload();
+
+      }, 'html');
+    }
+  }
+  $('#create').click(function() {
+    $('#divcreate').dialog({
+        modal: true,
+        autoOpen: true,
+        show: 'fade',
+        width: 800,
+        height: 400,
+        title: ":: Create Boat master"
+      })
+      .load("./module/SHP/mt_boat_form.php", {
+        "form": "create"
+      });
+
+  });
+  //
+
+
+  $("button[id^='b-']").click(function() {
+    var SplitId = this.id.split("-");
+    var GetId = SplitId[1];
+    // alert(GetId);
+    $('#divcreate').dialog({
+        modal: true,
+        autoOpen: true,
+        show: 'fade',
+        width: 800,
+        height: 400,
+        title: ":: Edit Boat master"
+      })
+      .load("./module/SHP/mt_boat_form.php", {
+        "form": "edit",
+        "IdRun": GetId
+      });
+  });
+  $("a[id^='d-']").click(function() {
+    var SplitId = this.id.split("-");
+    var GetId = SplitId[1];
+    if (confirm('ต้องการลบข้อมูลที่เลือกใช่หรือไม่ ?') == false) {
+      return false;
+    }
+    $.post("./module/SHP/mt_boat_save.php", {
+        'action': 'delete',
+        'IdRun': GetId
+      },
+      function(data) {
+        //alert(data);
+        //alert(data);
+        if (data.substr(0, 5) == "Error") {
+          alert(data);
+          return false;
+        } else {
+          location.reload();
+        }
+      }, 'html');
+  });
+</script>
