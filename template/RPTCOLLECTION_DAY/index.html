@@ -361,6 +361,7 @@
                                 "data": "sales_tax",
                                 "className": "text-right",
                                 "width": "10%",
+
                                 "render": function (data, type, row, meta) {
                                     var ret = addCommas(parseFloat(data).toFixed(2));
                                     if (row["inv_num"].substring(0, 2) == "CN") {
@@ -422,7 +423,7 @@
                             },
                             {
                                 "data": "receipt_date_conv",
-                                "className": "text-left",
+                                "className": "text-right",
                                 "width": "5%",
                                 "render": function (data, type, row, meta) {
                                     var ret = data;
