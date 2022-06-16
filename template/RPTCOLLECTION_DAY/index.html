@@ -156,6 +156,7 @@
                 <th>apply_to_inv</th>
                 <th>amount</th>
                 <th>sales_tax</th>
+                <th>remain</th>
                 <th>due_date_day</br>(Credit term)</th>
                 <th>inv_date</th>
                 <th>due_date</th>
@@ -365,6 +366,18 @@
                                     if (row["inv_num"].substring(0, 2) == "CN") {
 
                                         ret = "<span style='color:red;'>" + addCommas(parseFloat(data).toFixed(2)) + "</span>";
+                                    }
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "remain",
+                                "className": "text-right",
+                                "width": "10%",
+                                "render": function (data, type, row, meta) {
+                                    var ret = addCommas(parseFloat(data).toFixed(2));
+                                    if (row["inv_num"].substring(0, 2) == "CN") {
+                                        ret = "<span style='color:red;'>" + ret + "</span>";
                                     }
                                     return ret;
                                 }
