@@ -417,7 +417,7 @@ if ($load == "saveOperation") {
     $CallModel->SyteLine_Models();
     $Trans = new JobOrder();
     $Trans->setConn($ConnSL);
-    $Trans = $Trans->saveOperation($txtFromDate, $txtToDate, $operationWeight, $operationSpeed, $operationTime);
+    $Trans = $Trans->saveOperation($txtFromDate, $txtToDate, $operationWeight, $operationSpeed, $operationTime, $w_c);
     echo json_encode($Trans);
 }
 

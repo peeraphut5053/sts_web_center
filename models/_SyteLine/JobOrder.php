@@ -1211,13 +1211,12 @@ class JOBORDER {
         return $rs0;
     }
     
-    function saveOperation($txtFromDate, $txtToDate, $operationWeight, $operationSpeed, $operationTime){
+    function saveOperation($txtFromDate, $txtToDate, $operationWeight, $operationSpeed, $operationTime, $w_c){
         
-        $query = " insert into STS_forming_operation (fromDate,toDate,operationWeight,operationSpeed,operationTime) "
-                . "VALUES ('$txtFromDate','$txtToDate','$operationWeight','$operationSpeed','$operationTime')";
+        $query = " insert into STS_forming_operation (fromDate,toDate,operationWeight,operationSpeed,operationTime,w_c) "
+                . "VALUES ('$txtFromDate','$txtToDate','$operationWeight','$operationSpeed','$operationTime','$w_c')";
         $cSql = new SqlSrv();
         $cSql->SqlQuery($this->StrConn, $query);
-        return $query0;
     }
     
     function STS_QTY_MOVE_REPORT($doc_num) {
