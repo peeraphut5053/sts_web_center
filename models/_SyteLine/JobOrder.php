@@ -1211,6 +1211,14 @@ class JOBORDER {
         return $rs0;
     }
     
+    function saveOperation($txtFromDate, $txtToDate, $operationWeight, $operationSpeed, $operationTime, $w_c){
+        
+        $query = " insert into STS_forming_operation (fromDate,toDate,operationWeight,operationSpeed,operationTime,w_c) "
+                . "VALUES ('$txtFromDate','$txtToDate','$operationWeight','$operationSpeed','$operationTime','$w_c')";
+        $cSql = new SqlSrv();
+        $cSql->SqlQuery($this->StrConn, $query);
+    }
+    
     function STS_QTY_MOVE_REPORT($doc_num) {
         
         $query = " EXEC STS_QTY_MOVE_REPORT @doc_num = N'$doc_num' ";
