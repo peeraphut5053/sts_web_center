@@ -24,8 +24,8 @@
     <div class="row justify-content-center">
         <div class="col-md-4">
           <label for="department" class="form-label">แผนก</label>
-          <select id="department" name="department" id="department" class="form-select">
-            <option selected>--กรุณาเลือกแผนก--</option>
+          <select name="department" id="department" class="form-select" required>
+            <option selected disabled value="">--กรุณาเลือกแผนก--</option>
             <option>ฝ่ายบัญชี</option>
             <option>ฝ่ายจัดซื้อ</option>
             <option>ฝ่ายขาย</option>
@@ -40,23 +40,23 @@
         <div class="col-md-4">
           <label for="username" class="form-label">ชื่อผู้ขอ</label>
           <input type="hidden" name="load" value="minkick">
-          <input type="text" name="username" id="username" value="" class="form-control">
+          <input type="text" name="username" id="username" value="" class="form-control" required>
         </div>
       </div>
 <br>
     <div class="row justify-content-center">
       <div class="d-grid gap-2 col-4 mx-auto">
         <!-- <a href="http://61.90.156.165/sts_web_center/module/APP_Infor_syteline_user_session/data.php?load=minkick&minkick=9&textline=%E0%B8%84%E0%B8%A3%E0%B8%B1%E0%B8%9A%E0%B8%9C%E0%B8%A1%20%E0%B9%80%E0%B8%82%E0%B9%89%E0%B8%B2%E0%B9%84%E0%B8%94%E0%B9%89%E0%B9%80%E0%B8%A5%E0%B8%A2%E0%B8%84%E0%B8%A3%E0%B8%B1%E0%B8%9A%20!!&con_sendtoline=1&con_clickuser=1">  -->
-          <button type="submit" onclick="submitForm('data.php')" class="btn btn-primary active">ขอเข้าระบบ</button></a>
+          <button type="submit" class="btn btn-primary active">ขอเข้าระบบ</button></a>
       </div>
 </from>
-</div>
-<script type="text/javascript">
+
+<!-- <script type="text/javascript">
   function submitForm(action) {
     var form = document.getElementById('form1');
     form.action = action;
     form.submit();
   }
-</script>
+</script> -->
 </body>
 </html>
