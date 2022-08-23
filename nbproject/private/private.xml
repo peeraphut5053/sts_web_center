@@ -38,6 +38,8 @@
         <group>
             <file>file:/C:/xampp/htdocs/sts_web_center/template/sync.html</file>
             <file>file:/C:/xampp/htdocs/sts_web_center/models/_SyteLine/BcTag.php</file>
+            <file>file:/C:/xampp/htdocs/sts_web_center/module/RPT_JOBPACKING/data.php</file>
+            <file>file:/C:/xampp/htdocs/sts_web_center/models/_SyteLine/JobOrder.php</file>
             <file>file:/C:/xampp/htdocs/sts_web_center/module/API_QuantityMove/data.php</file>
         </group>
     </open-files>
