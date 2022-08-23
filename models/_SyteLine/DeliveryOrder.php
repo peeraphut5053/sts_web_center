@@ -179,6 +179,15 @@ class DeliveryOrder {
         $cSql->SqlQuery($this->StrConn, $q);
     }
 
+    Function Log_Request_Session($username,$department) {
+        $cSql = new SqlSrv();
+        $sql = "INSERT INTO log_syteline (username,department,datetime) VALUES ('$username','$department', Getdate())";
+        $rs = $cSql->SqlQuery($this->StrConn, $sql);
+        $q = "EXEC STS_DELETE_SESSION_USER '15' ";
+        $cSql->SqlQuery($this->StrConn, $q);
+        return $sql;
+    }
+
     Function ConnectionInformation3() {
         $cSql = new SqlSrv();
         $q = "select GroupName,count(UserGroupMap_mst.UserId) as useronline "

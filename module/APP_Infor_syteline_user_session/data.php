@@ -72,43 +72,30 @@ if ($load == "form") {
         $DVR->STS_DELETE_SESSION_USER(15);
     }
 } else if ($load == "minkick") {
+
+    if (isset ($_POST['username'],$_POST['department'])) {
+        $username = $_POST['username'];
+        $department = $_POST['department'];
+    }
+    else{   
+        $username ='';
+        $department = '';
+    }
+    // ----
     $CallModel = new CallModel();
     $CallModel->SyteLine_Models();
     $DVR = new DeliveryOrder();
     $DVR->setConn($ConnSL);
-    $CountUserOnline = count($DVR->ConnectionInformation());
+    $DVRS = $DVR->Log_Request_Session($username, $department);
+    // ----
 
-    function notify_message($message, $token) {
-        $queryData = array('message' => $message);
-        $queryData = http_build_query($queryData, '', '&');
-        $headerOptions = array(
-            'http' => array(
-                'method' => 'POST',
-                'header' => "Content-Type: application/x-www-form-urlencoded\r\n"
-                . "Authorization: Bearer " . $token . "\r\n"
-                . "Content-Length: " . strlen($queryData) . "\r\n",
-                'content' => $queryData
-            ),
-        );
-        $context = stream_context_create($headerOptions);
-        $result = file_get_contents(LINE_API, FALSE, $context);
-        $res = json_decode($result);
-        return $res;
-    }
-
-    //q2cvv1Pjj4fw3VEJ6SqFZEe06e5bLhXLWL9FDEYJOl0 --กลุ่มใหญ่
-    //b5H1dHQVjRiGk0wJnIQX4JgUdeNx4HLjtQE9pYxd9O2 -- ส่วนตัว
-    define('LINE_API', "https://notify-api.line.me/api/notify");
-    //$token = "q2cvv1Pjj4fw3VEJ6SqFZEe06e5bLhXLWL9FDEYJOl0"; //token line notify
-    //($con_sendtoline == 1)? (notify_message($textline, $token)):''; //ส่งข้อความเข้าไลน์
-    ($con_clickuser == 1) ? ($DVR->STS_DELETE_SESSION_USER($minkick)) : ''; //ส่งค่าเพื่อ Delete Session
+    // echo $DVRS;
     echo '<script>setTimeout(function(){ window.close(); }, 1000);</script>';
     echo ''
-    . '<div style="font-size:3em;text-align:center;padding-top:40%;">'
+    . '<div style="font-size:3em;text-align:center;padding-top:10%;">'
     . ' <div style="border-style: outset;padding:50px;border-radius: 12px;margin: 2em;border: 2px solid green;">"ยืนยันการขอเข้าระบบสำเร็จ"</div>'
-    . '<div style="padding-top:50px">'
-    . 'กดปิดที่เครื่องหมาย x มุมซ้ายบน<br> แล้วเข้าระบบได้เลยครับ'
-    . '</div>'
+   
     . '<div><img src="sts_logo.jpg" alt="Cinque Terre" width="300" ></div>'
     . '</div>';
 }
+?>
