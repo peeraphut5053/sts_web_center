@@ -114,7 +114,7 @@ class BcTag {
 
     Function STS_qty_move_hrd() {
         $cSql = new SqlSrv();
-        $query = "select top 100 * FROM STS_qty_move_hrd order by doc_num desc ";
+        $query = "select top 3000 doc_num, loc, create_date, doc_type, destination FROM STS_qty_move_hrd order by doc_num desc ";
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
         return $rs;
