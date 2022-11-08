@@ -198,6 +198,14 @@ if ($load == "workcenter") {
     echo json_encode($Trans);
 }
 
+if ($load == "workcenter_selection") {
+    $CallModel = new CallModel();
+    $CallModel->SyteLine_Models();
+    $Trans = new JobOrder();
+    $Trans->setConn($ConnSL);
+    $Trans = $Trans->workcenter_selection();
+    echo json_encode($Trans);
+}
 
 if ($load == "location") {
     $CallModel = new CallModel();
@@ -383,6 +391,15 @@ if ($load == "DeleteForming_reason_meter") {
 }
 
 if ($load == "getForming_last_meter") {
+    $CallModel = new CallModel();
+    $CallModel->SyteLine_Models();
+    $Trans = new JobOrder();
+    $Trans->setConn($ConnSL);
+    $Trans = $Trans->getForming_last_meter($w_c);
+    echo json_encode($Trans);
+}
+
+if ($load == "getFormingOperation") {
     $CallModel = new CallModel();
     $CallModel->SyteLine_Models();
     $Trans = new JobOrder();

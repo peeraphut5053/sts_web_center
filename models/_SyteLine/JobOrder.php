@@ -952,6 +952,14 @@ class JOBORDER {
         array_splice($rs0, count($rs0) - 1, 1);
         return $rs0;
     }
+
+    function workcenter_selection() {
+        $query = " select wc AS dataSelection ,description FROM wc_mst    where description not like  '%ลบ%' ";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
     
     function location() {
         $query = " select loc ,description FROM location_mst    ";
