@@ -178,4 +178,12 @@ if ($load == "auditlog") {
     echo json_encode($JsonValue);
 }
 
+if ($load == "ProductionDashboardP") {
+    $JsonValue = $CallModelObj->ProductionDashboardP();
+    echo json_encode($JsonValue);
+}
 
+if ($load == "ProductionDashboardW") {
+    $JsonValue = $CallModelObj->ProductionDashboardW();
+    echo json_encode($JsonValue);
+}
