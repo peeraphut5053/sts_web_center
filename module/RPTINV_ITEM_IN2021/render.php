@@ -8,7 +8,7 @@ while (list($key, $data) = each($_GET) OR list($key, $data) = each($_POST)) {
 //error_reporting(E_ALL);
 include "../../initial.php";
 
-$temp = new ReplaceHtml("../../template/RPTINV_ITEM_IN/$pageHtml.html");
+$temp = new ReplaceHtml("../../template/RPTINV_ITEM_IN2021/$pageHtml.html");
 
 echo $temp->getReplace();
 ?>
