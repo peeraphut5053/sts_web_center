@@ -399,15 +399,6 @@ if ($load == "getForming_last_meter") {
     echo json_encode($Trans);
 }
 
-if ($load == "getFormingOperation") {
-    $CallModel = new CallModel();
-    $CallModel->SyteLine_Models();
-    $Trans = new JobOrder();
-    $Trans->setConn($ConnSL);
-    $Trans = $Trans->getForming_last_meter($w_c);
-    echo json_encode($Trans);
-}
-
 //-------------------------------- End CRUD STS_forming_reason -----------------------------
 // RadioOT
 if ($load == "CreateBreakTimeForming") {

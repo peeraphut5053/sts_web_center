@@ -87,7 +87,6 @@ class GeneralLedger {
             $query = $query;
         }
         $query .= " ORDER BY inv_date ";
-        //echo $query;
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
 

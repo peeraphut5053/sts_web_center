@@ -118,6 +118,110 @@ class Inventory {
         array_splice($rs0, count($rs0) - 1, 1);
         return $rs0;
     }
+	
+	 Function RPT_NEW_INVENTORY_BALANCE_InvoiceAD_IN($txtStartDate, $txtEndDate) {
+        $query = " EXEC Rpt_STS_InvoiceAD_IN "
+        . " @TransactionDateStarting  = N'$txtStartDate',"
+        . " @TransactionDateEnding = N'$txtEndDate'";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+
+    Function Select_itemGradeSch ($itemGradeSch) {
+       
+        if ($itemGradeSch == ""){
+            $query = "select * from STS_AD_itemGradeSch order by item";
+        } else {
+            $query = "select * from STS_AD_itemGradeSch where item = '$itemGradeSch'";
+        }
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+
+    Function Select_itemSIZEH ($itemSIZEH) {
+       
+        if ($itemSIZEH == ""){
+            $query = "select * from STS_AD_itemSIZEH order by item";
+        } else {
+            $query = "select * from STS_AD_itemSIZEH where item = '$itemSIZEH'";
+        }
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+
+    Function GetItemGradeData ($itemGrade) {
+        $query = "select * from STS_AD_itemGradeSch where item = '$itemGrade'";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+
+    Function GetItemSizehData ($itemSizeh) {
+        $query = "select * from STS_AD_itemSIZEH where item = '$itemSizeh'";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+
+    Function InsertItemGrade ($itemGrade,$spec,$GRADEH,$SCHH,$saveStat) {
+        if ($saveStat == 'Insert'){
+            $query = "INSERT INTO STS_AD_itemGradeSch(item,spec,GRADEH,SCHH) VALUES('$itemGrade','$spec','$GRADEH','$SCHH')";
+        }
+        elseif ($saveStat == 'Update'){
+            $query = "UPDATE STS_AD_itemGradeSch SET "
+            . "item ='$itemGrade', "
+            . "spec ='$spec', "
+            . "GRADEH ='$GRADEH', "
+            . "SCHH ='$SCHH'"
+            . "WHERE item ='$itemGrade'";
+        }
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+
+    Function InsertItemSizeh ($itemSizeh,$inch,$MM,$SIZEH,$saveStat) {
+        if ($saveStat == 'Insert'){
+            $query = "INSERT INTO STS_AD_itemSIZEH(item,inch,MM,SIZEH) VALUES('$itemSizeh','$inch','$MM','$SIZEH')";
+        }
+        elseif ($saveStat == 'Update'){
+            $query = "UPDATE STS_AD_itemSIZEH  SET "
+            . "item ='$itemSizeh', "
+            . "inch ='$inch', "
+            . "MM ='$MM', "
+            . "SIZEH ='$SIZEH'"
+            . "WHERE item ='$itemSizeh'";
+        }
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+
+    Function DeleteItemGrade ($itemGrade) {
+        $query = "delete from STS_AD_itemGradeSch where item = '$itemGrade'";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+
+    Function DeleteItemSizeh ($itemSizeh) {
+        $query = "delete from STS_AD_itemSIZEH where item = '$itemSizeh'";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
 
     Function RPT_NEW_INVENTORY_BALANCE_Stock_Card_by_Invoice_No($item, $txtStartDate, $txtEndDate, $ThVendInvNum) {
 
