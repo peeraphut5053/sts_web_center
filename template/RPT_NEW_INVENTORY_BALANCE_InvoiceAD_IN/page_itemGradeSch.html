@@ -1,0 +1,236 @@
+<h3>&nbsp; itemGradeSch</h3>
+<div class="row">
+    
+    <div class="col-lg-2 col-md-3 col-sm-3 col-xs-3" >
+        <div class="input-group">
+            <div class="input-group-addon">ITEM</div>
+            <input type="text" id="itemGradeSch" class="form-control" name="itemGradeSch">
+        </div>
+
+    </div>
+
+    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3" >
+        <button class="btn btn-info" id="btnGradeSch"><i class="fa fa-search"></i>&nbsp;Search </button>
+        &nbsp;
+        <button class="btn btn-success" id="btnModal"><i class="fa fa-plus-circle"></i>&nbsp;Add item</button>
+    </div>
+
+</div>
+<div class="row">
+    <table class="table table-condensed table-bordered table-striped" id="tblGradeSch" >
+        <thead>
+            <tr>
+                <th style="width: 20%;">item</th>
+                <th style="width: 40%;">spec</th>
+                <th style="width: 15%;">GRADEH</th>
+                <th style="width: 15%;">SCHH</th>
+                <th style="width: 5%;">Edit</th>
+                <th style="width: 5%;">Delete</th>                     
+            </tr>
+        </thead>
+    </table>
+</div>
+
+<div class="modal" id="GradeModal">
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 700px">
+            <div class="modal-header">
+                <label id="lblModalHead"></label>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div id="modalBody" class="modal-body" >
+            </div>
+            <!-- <div class="modal-footer">
+                <button hidden type="button" class="btn btn-success" id="btn_add">&nbsp;Add&nbsp;</button>
+                <button hidden type="button" class="btn btn-warning" id="btn_edit">&nbsp;Edit&nbsp;</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div> -->
+
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+    $("#btnGradeSch").click(function (){
+        Search();
+    });
+
+    function Search(){
+        var itemGradeSch = $("#itemGradeSch").val();
+        var tblId = "#tblGradeSch";
+        $(tblId + " tfoot ").remove();
+        $.ajax({
+            type: 'POST',
+            url: "././module/RPT_NEW_INVENTORY_BALANCE_InvoiceAD_IN/data.php",
+            dataType: 'json',
+            beforeSend: function () {
+                $(tblId).loading();
+            },
+            data: {
+                "load": "ajax_itemGradeSch",
+                "itemGradeSch": itemGradeSch
+            },
+            success: function (data) {
+                console.log(data);
+                $(tblId).DataTable().clear();
+                var RowFooterBuild = "";
+                var ColBuild = "";
+                var ColCount = 4;
+                var i = 0;
+                RowFooterBuild = "<tfoot><tr>!!ColBuild!!</tr></tfoot>";
+                for (i = 1; i <= ColCount; i++) {
+                    ColBuild += "<td></td>";
+                }
+                $(tblId).append(RowFooterBuild.replace("!!ColBuild!!", ColBuild));
+
+                $(tblId).dataTable({
+                    "aaData": data,
+                    "paging": false,
+                    "searching": false,
+                    "initComplete": function (settings, json) {
+
+                    },
+                    fixedHeader: true,
+                    destroy: true,
+                    'processing': true,
+                    "columns": [
+                        {
+                            "data": "item",
+                            "className": "text-center",
+                        },
+                        {
+                            "data": "spec",
+                            "className": "text-left",
+                        },
+                        {
+                            "data": "GRADEH",
+                            "className": "text-right",
+                        },
+                        {
+                            "data": "SCHH",
+                            "className": "text-right",
+                        },
+                        {   "data": "", 
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                return "<a id='ItemEdit!!" + row["item"] + "' OnClick='openmodal(`Update`,this.id)'><i class='fa fa-edit'></i></a>";
+                        }},
+                        {   "data": "", 
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                return "<a id='ItemDelete!!" + row["item"] + "' OnClick='CheckDeleteitem(`Delete`,this.id)'><i class='fa fa-trash'></i></a>";
+                        }},
+                    ],
+                    // 'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                    //         "<'row'<'col-md-12'tr>>" +
+                    //         "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                    // buttons: [{
+                    //         extend: 'print',
+                    //         text: "<i class='fa fa-print'></i>&nbsp;Print",
+                    //         title: ''
+                    //     },
+                    //     {
+                    //         extend: 'excel',
+                    //         text: "<i class='fa fa-file-excel'></i>Excel",
+                    //     },
+                    // ],
+                });
+                $(tblId).loading("stop");
+            },
+            error: function (e) {
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+    }
+    
+    $("#btnModal").click (function (e, dt, node, config) {
+                openmodal("Insert", "");           
+        });
+
+    function openmodal(form, itemGrade) {
+        console.log("form :" + form);
+        console.log("itemGrade :" + itemGrade);
+        $("#GradeModal").modal("show");
+        var itemGrade = itemGrade.split("!!")[1];
+        var Url = "././template/RPT_NEW_INVENTORY_BALANCE_InvoiceAD_IN/_FromitemGradeSch.html";
+        $("#lblModalHead").html("Add item");
+        $("#modalBody").load(Url, {
+            "form": form,
+            itemGrade: itemGrade,
+        }, function () {
+            if (form == "Update") {
+                GetitemDetail(itemGrade);
+                // document.getElementById("btn_add").disabled = false
+                // document.getElementById("btn_edit").disabled = true
+            } 
+        });
+    }
+
+    function GetitemDetail(itemGrade) {
+        var Url = "././module/RPT_NEW_INVENTORY_BALANCE_InvoiceAD_IN/data.php";
+        $("#lblModalHead").text("Edit item");
+        document.getElementById("btn_add").disabled = true
+        document.getElementById("btn_edit").disabled = false
+        $.ajax({
+            type: 'GET',
+            url: Url,
+            contentType: "text/plain",
+            dataType: 'json',
+            beforeSend: function () {
+            },
+            data: {
+                load: "Get_itemGrade",
+                itemGrade: itemGrade,
+            },
+            success: function (data) {
+                console.log(data);
+                $("#itemGrade").val(data[0].item);
+                $("#spec").val(data[0].spec);
+                $("#GRADEH").val(data[0].GRADEH);
+                $("#SCHH").val(data[0].SCHH);
+            },
+            error: function (e) {
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+    }
+
+    function CheckDeleteitem(form, itemGrade) {
+        console.log("form :" + form);
+        console.log("itemGrade :" + itemGrade);
+        var itemGrade = itemGrade.split("!!")[1];
+        $.confirm({
+                    title: 'ลบข้อมูลใช่หรือไม่',
+                    theme: 'modern',
+                    // content: '',
+                    buttons: {
+                        confirm: function () {
+                            Deleteitem('Delete',itemGrade);
+                        },
+                        cancel: function () {
+                        },
+                    },
+                });
+            }
+
+    function Deleteitem(form, itemGrade) {
+        console.log("action :" + form);
+        // console.log("itemGrade :" + itemGrade);
+        $.ajax({
+                url: "././module/RPT_NEW_INVENTORY_BALANCE_InvoiceAD_IN/data.php",
+                type: 'POST',
+                data: {
+                    load: 'DeleteteItemGrade',
+                    itemGrade: itemGrade,
+                },
+                success: function () {
+                    Search();
+                }
+            });
+        }  
+        
+</script>

@@ -1,0 +1,141 @@
+<div style="overflow-y: 520px;padding-right: 5vw;" class="container-modal">
+    <div  class="row" >
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 text-right form-label-row">
+            <font color="red">*</font>&nbsp;item
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+            <input type="text" id="itemGrade" class="form-control" value="">
+            <span id="ItemGradeReq" class="text-danger" hidden>กรุณากรอก item</span>
+            <span id="txtUserNameDup" class="text-danger" hidden>ขออภัย ชื่อนี้มีอยู่ในระบบแล้ว </span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 text-right form-label-row">
+            <font color="red">*</font>&nbsp;spec 
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 ">
+            <input placeholder="" autocomplete="on" type="text" id="spec" class="form-control" value="">
+            <span id="SpecReq" class="text-danger" hidden>กรุณากรอก spec</span>
+            <span id="txtUserNameDup" class="text-danger" hidden>ขออภัย ชื่อนี้มีอยู่ในระบบแล้ว </span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 text-right form-label-row">
+            <font color="red">*</font>&nbsp;GRADEH
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 ">
+            <input  placeholder="" type="text" id="GRADEH" class="form-control" value="">
+            <span  id="GRADEHReq" class="text-danger" hidden>กรุณากรอก GRADEH</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 text-right form-label-row">
+            <font color="red">*</font>&nbsp;SCHH
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 ">
+            <input  placeholder="" type="text" id="SCHH" class="form-control" value="">
+            <span  id="SCHHReq" class="text-danger" hidden>กรุณากรอก SCHH</span>
+        </div>
+    </div>
+    <br>
+    <div class="modal-footer">
+        <button  type="button" class="btn btn-success" id="btn_add">&nbsp;Add&nbsp;</button>
+        <button  type="button" class="btn btn-warning" id="btn_edit" disabled>&nbsp;Edit&nbsp;</button>
+        <!-- <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button> -->
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $("#btn_add").one("click", function () {
+        SaveItem('Insert');
+    });
+    $("#btn_edit").one("click", function () {
+        SaveItem('Update');
+    });
+    
+    function SaveItem(form) {
+        console.log("action :" + form);
+        if ($("#itemGrade").val() == "") {
+            $("#ItemGradeReq").show();
+        }
+        if ($("#spec").val() == "") {
+            $("#SpecReq").show();
+        }
+        if ($("#GRADEH").val() == "") {
+            $("#GRADEHReq").show();
+        }
+         if ($("#SCHH").val() == "") {
+            $("#SCHHReq").show();
+        }
+        if ($("#itemGrade").val() == "" || $("#spec").val() == "" || $("#GRADEH").val() == "" || $("#SCHH").val() == "") {
+            return false;
+        } else {
+            var itemGrade = $("#itemGrade").val();
+            if (form == "Update") {
+                var saveStat = "Update"
+            } else {saveStat = "Insert"} 
+            var spec = $("#spec").val();
+            var GRADEH = $("#GRADEH").val();
+            var SCHH = $("#SCHH").val();
+            $.ajax({
+                type: 'POST',
+                url: "./module/RPT_NEW_INVENTORY_BALANCE_InvoiceAD_IN/data.php",
+                data: {
+                    load: 'SaveitemGrade',
+                    itemGrade: itemGrade,
+                    spec: spec,
+                    GRADEH: GRADEH,
+                    SCHH: SCHH,
+                    saveStat: saveStat,
+                },
+                success: function (result) {
+                    $.confirm({
+                        title: 'บันทึกข้อมูลสำเร็จ ',
+                        theme: 'modern',
+                        buttons: {
+                            confirm: function () {
+                                Search();
+                            },
+                        }
+                    });
+                }
+            });
+        }
+    }
+    
+//============ Start Check Dupicate ==============================
+    // $("#spec").change(function () {
+    //     var spec = $("#spec").val();
+    //     CheckDupUserName(spec)
+    // });
+    // function CheckDupUserName(spec) {
+    //     $("#hdDupUserName").val("0");
+    //     $.ajax({
+    //         url: "./module/User.php",
+    //         type: 'post',
+    //         data: {
+    //             ajax: 'true',
+    //             action: "CheckUserNameDup",
+    //             username: spec,
+    //         },
+    //         success: function (data) {
+    //             console.log(data);
+    //             $("#hdDupUserName").val(data);
+    //             if (data > 0) {
+    //                 $("#txtUserNameDup").show();
+    //                 $("#btn_save").prop("disabled", true);
+    //             } else {
+    //                 $("#txtUserNameDup").hide();
+    //                 $("#btn_save").prop("disabled", false);
+    //             }
+    //         },
+    //         error: function (xhr, status, error) {
+    //             var err = eval("(" + xhr.responseText + ")");
+    //             $("#debug").html(error);
+    //         }
+    //     });
+    // }
+    //============ End Check Dupicate ==============================
+
+</script>

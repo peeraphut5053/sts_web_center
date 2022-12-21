@@ -1,0 +1,695 @@
+<style>
+    .buttons-colvis {
+        transform: translate(100px,-120px);
+        margin-bottom: 0px;
+        margin-left: 1200px;
+        margin-top: -31px;
+        border: none;
+        border-radius: 5px;
+        height: 32px;
+        background-color: #FFFFFF !important;
+        color: black !important;
+    }
+    .col-search {
+        padding-left: 3px;
+        padding-right: 3px;
+    }
+    .table thead th {
+        text-align: center;
+    }
+
+    .col-flt-page {
+        padding-top: 10px;
+        font-weight: bold;
+    }
+
+    #tblReport tbody tr td a {
+        cursor: pointer;
+    }
+
+    table.dataTable.fixedHeader-floating,
+    table.dataTable.fixedHeader-locked {
+        background-color: white;
+        margin-top: 50px !important;
+        margin-bottom: 0 !important;
+    }
+
+    @media print {
+        table th:nth-child(0) {
+            width: 200px;
+            word-break: break-all;
+            white-space: pre-line;
+        }
+
+        table td:nth-child(0) {
+            width: 200px;
+            word-break: break-all;
+            white-space: pre-line;
+        }
+
+    }
+    .text-wrap {
+        white-space: normal;
+    }
+
+    .width-200 {
+        width: 200px;
+    }
+
+    input[type=checkbox] {
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+    .input-group-addon2 {
+        padding: 6px 12px;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 1;
+        color: #555;
+        height: 32px;
+        text-align: center;
+        background-color: #eee;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        border-top-right-radius: 0px;
+        border-bottom-right-radius: 0px;
+    }
+
+    .selectize-input {
+        padding-top: 5px;
+        padding-bottom: 5px;
+        height: 32px;
+        min-height: 64px;
+        border-top-left-radius: 0px;
+        border-bottom-left-radius: 0px;
+    }
+
+    .input-group .form-control {
+        padding-left: 1px;
+        padding-right: 1px;
+    }
+    .modal-body{
+        position: relative;
+        padding: 15px;
+        min-height: 550px;
+    }
+
+    ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+    ::-webkit-scrollbar-thumb {
+        background: #3c8dbc; 
+        border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: #3c8dbc; 
+    }
+</style>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+<div class="row">
+    <h3>&nbsp;InvoiceAD HM IN </h3>
+</div>
+<div class='row'>
+
+    <!-- <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 " >
+        <div class="input-group">
+            <div class="input-group-addon">ITEM</div>
+            <input type="text" id="item" class="form-control" name="item">
+        </div>
+
+    </div> -->
+    <div class="col-lg-2 col-md-2 col-sm-6 col-xs-6 " >
+        <div class="input-group">
+            <div class="input-group-addon">START DATE</div>
+            <input type="text" value="2022-01-01" id="txtStartDate" class="form-control" name="txtStartDate" autocomplete="off">
+        </div>
+    </div>
+    <div class="col-lg-2 col-md-2 col-sm-6 col-xs-6 " >
+        <div class="input-group">
+            <div class="input-group-addon">END DATE</div>
+            <input type="text" id="txtEndDate" class="form-control" name="txtEndDate" autocomplete="off">
+        </div>
+    </div>
+    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 " >
+        <button class="btn btn-info" id="btnSearch"><i class="fa fa-search"></i>&nbsp;Search </button>
+    </div>
+
+    <div class="grid-wrapper">
+        <div id="myGrid" class="ag-theme-alpine">
+        </div>
+    </div>
+</div>
+
+
+</div>
+<div class="row" id="rowResultTable">
+    <table class="table table-condensed table-striped " width="100%" id="tblReport">
+        <thead>
+            <tr>
+                <th>SEQH</th>
+                <th>PRODCODH</th>
+                <th>CONNUMH</th>
+                <th>PRIMEH</th>
+                <th>GRADEH</th>
+                <th>SIZEH</th>
+                <th>WALLH</th>
+                <th>SCHH</th>
+                <th>FINISHH</th>
+                <th>EFINISHH</th>
+                <th>CUSCODH</th>
+                <th>CUSRELH</th>
+                <th>CUSCATH</th>
+                <th>CHANNELH</th>
+                <th>SELLERH</th>
+                <th>SALINDTH</th>
+                <th>SALEDATH</th>
+                <th>QTRH</th>
+                <th>INVOICEH</th>
+                <th>SHIPDATH</th>
+                <th>PAYDATE1H</th>
+                <th>PAYDATE2H</th>
+                <th>SALETERH</th>
+                <th>PAYTERMH</th>
+                <th>QTYH</th>
+                <th>QTYPH</th>
+                <th>UNITH</th>
+                <th>QTYNITH</th>
+                <th>GRSUPRH</th>
+                <th>BILLADJH</th>
+                <th>OTHDISH</th>
+                <th>EARLPYH</th>
+                <th>LOTH</th>
+                <th>INLFTCH</th>
+                <th>WAREHSH</th>
+                <th>CREDITH</th>
+                <th>INDIRSH</th>
+                <th>INDIRSH2</th>
+                <th>INDIRSH3</th>
+                <th>INDIRSH4</th>
+                <th>INVCARH</th>
+                <th>PACKH</th>
+                <th>VCOMH</th>
+                <th>TCOMH</th>
+                <th>DUTYADJHRC</th>
+                <th>DUTYADJZC</th>
+                <th>STATUS</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+<script type="text/javascript">
+
+    $("#btnSearch").click(function () {
+        if ($('#txtEndDate').val() == '') {
+            alert('กรุณากรอก EndDate');
+        } else {
+            ReportItemSearch();
+        }
+    });
+    $("#txtStartDate,#txtEndDate").datepicker({
+        dateFormat: 'yy-mm-dd'
+    });
+    $("#txtEndDate").val(GetToday());
+    
+    
+
+    function ReportItemSearch() {
+        var datapost = SetDataPostElement("ajax");
+        var OldHtml = $("#btnSearch").html();
+        $("#tblReport").DataTable().clear();
+        $("#btnSearch").html("<i class='fa fa-spinner fa-spin'></i>");
+        
+
+        $.ajax({
+            type: 'POST',
+            url: "././module/RPT_NEW_INVENTORY_BALANCE_InvoiceAD_IN/data.php",
+            dataType: 'json',
+            beforeSend: function () {
+                $("#btnSearch").html("<i class='fa fa-spinner fa-spin'>");
+            },
+            data: datapost,
+            success: function (data) {
+            console.log(data);
+                
+                
+
+                $('#tblReport').dataTable({
+                    "sScrollX": "100%",
+                    // "sScrollXInner": "110%",
+                    // "bScrollCollapse": true,
+                    "aaData": data,
+                    "paging": false,
+                    // fixedHeader: true,
+                    destroy: true,
+                    'processing': true,
+                    "order": false,
+                    scrollY: 450,
+                    columns: [
+                        {
+                            "data": "SEQH",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "PRODCODH",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {   
+                            "data": {GRADEH: "GRADEH", SIZEH: "SIZEH", WALLH: "WALLH", SCHH: "SCHH", FINISHH: "FINISHH", EFINISHH: "EFINISHH" },
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                var ret = data.GRADEH + "-" + data.SIZEH + "-" + data.WALLH + "-" + data.SCHH + "-" + data.FINISHH + "-" + data.EFINISHH;
+                                return ret
+                            }
+                        },
+                        {
+                            "data": "PRIMEH",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret
+                            }
+                        },
+                        {
+                            "data": "GRADEH",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret
+                            }
+                        },
+                        {
+                            "data": "SIZEH",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "WALLH",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "SCHH",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "FINISHH",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "EFINISHH",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "CUSCODH",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "CUSRELH",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "CUSCATH",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "CHANNELH",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "SELLERH",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "SALINDTH",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "SALEDATH",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "QTRH",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "INVOICEH",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "SHIPDATH",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "PAYDATE1H",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "PAYDATE2H",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "SALETERH",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "PAYTERMH",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "QTYH",
+                            "className": "text-center",
+                            "id": "QTYH",
+                            "render": function (data, type, row, meta) {
+                                var ret = addCommas(parseFloat(data).toFixed(4));
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "QTYPH",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "UNITH",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "QTYNITH",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "GRSUPRH",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "BILLADJH",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "OTHDISH",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "EARLPYH",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "LOTH",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "INLFTCH",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                var ret = addCommas(parseFloat(data).toFixed(4));
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "WAREHSH",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                var ret = addCommas(parseFloat(data).toFixed(4));
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "CREDITH",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                var ret = addCommas(parseFloat(data).toFixed(4));
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "INDIRSH",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                var ret = addCommas(parseFloat(data).toFixed(4));
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "INDIRSH2",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                var ret = addCommas(parseFloat(data).toFixed(4));
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "INDIRSH3",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                var ret = addCommas(parseFloat(data).toFixed(4));
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "INDIRSH4",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                var ret = addCommas(parseFloat(data).toFixed(4));
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "INVCARH",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                var ret = addCommas(parseFloat(data).toFixed(4));
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "PACKH",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                var ret = addCommas(parseFloat(data).toFixed(4));
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "VCOMH",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                var ret = addCommas(parseFloat(data).toFixed(4));
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "TCOMH",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                var ret = addCommas(parseFloat(data).toFixed(4));
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "DUTYADJHRC",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                var ret = addCommas(parseFloat(data).toFixed(4));
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "DUTYADJZC",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                var ret = addCommas(parseFloat(data).toFixed(4));
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "STATUS",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                    ],
+                    
+                    
+                        
+                    'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                            "<'row'<'col-md-12'tr>>" +
+                            "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                    buttons: [{
+                            extend: 'print',
+                            text: "<i class='fa fa-print'></i>&nbsp;Print",
+                            title: 'Report Invoice AD HM'
+                        },
+                        {
+                            extend: 'excelHtml5',
+                            footer: true,
+                            text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                            title: 'Report Invoice AD HM',
+                            customize: function(xlsx) {
+
+                                //Get the built-in styles
+                                //refer buttons.html5.js "xl/styles.xml" for the XML structure
+                                var styles = xlsx.xl['styles.xml'];
+
+                                //Create our own style to use the "Text" number format with id: 49
+                                var style = '<xf numFmtId="49" fontId="0" fillId="0" borderId="0" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyNumberFormat="1"/>';
+                                // Add new node and update counter
+                                el = $('cellXfs', styles);
+                                el.append(style).attr('count', parseInt(el.attr('count'))+1);
+                                // Index of our new style
+                                var styleIdx = $('xf', el).length - 1;
+
+                                //Apply new style to the first (A) column
+                                var sheet = xlsx.xl.worksheets['sheet1.xml'];
+                                
+                                //Set new style default for the column (optional)
+                                // $('col:eq(0)', sheet).attr('style', styleIdx);
+
+                                //Apply new style to the existing rows of the first column ('A')
+                                //Skipping the header row
+                                $('row:gt(0) c[r^="E"]', sheet).attr('s', styleIdx);
+                                $('row:gt(0) c[r^="F"]', sheet).attr('s', styleIdx);
+                                $('row:gt(0) c[r^="G"]', sheet).attr('s', styleIdx);
+                                $('row:gt(0) c[r^="H"]', sheet).attr('s', styleIdx);
+                                $('row:eq(1) c', sheet).attr( 's', '2' );  //bold
+                            // },
+                            // exportOptions: {
+                            //     format: {
+                            //         body: function(data, row, column, node) {
+                            //             return column === 4 ? "\0" + data : data ;
+
+                            //         }}
+                            
+                            },
+                        },
+                    ],
+                }); 
+        
+    
+                $("#btnSearch").html(OldHtml);
+            },
+            error: function (e) {
+
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        })
+    }
+</script>
