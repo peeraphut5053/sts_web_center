@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+
+
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+<title>upexcel_sub</title>
+<link rel ='stylesheet' href='../../css/bootstrap.min.css'>
+</head>
+
+<body>
+
+<style>
+    .headingTable {
+        background-color: #cccccc;
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .col-step1{
+        background-color:#94e8c8;
+        color:#FFFFFF;
+    }
+    .col-step2{
+        background-color:#43e8ab;
+        color:#FFFFFF;
+    }
+    .col-step3{
+        background-color:#13af75;
+        color:#FFFFFF;
+    }
+    .col-color{
+        position:fixed;
+        width:100%;
+    }
+    #ReaderExcelSub{
+        margin-top: 180px;
+    }
+    #ReaderExcel table,thead{
+         /* position:fixed; */
+    }
+</style>
+
+<input type='hidden' id='hdfStsIdPrefix' value="">
+
+<div class='alert alert-primary col-color'>
+
+    <div class="col-md-6 text-left col-Hotroll" style='font-size: 18px;'>
+        <b>&nbsp;&nbsp;Hotroll import</b>
+    </div><br>
+
+    <div class="row " style='margin-left:5px;margin-top:10px;margin-bottom:10px;'>
+        <div class="col-md-1 text-right col-step1">
+            <b>STEP 1</b><br>
+            เลือกไฟล์
+        </div>
+        <div class="col-md-3 text-right">
+            <div class='col-md-10 col-lg-10 col-sm-10 col-xs-10'>
+                <input type="file" id="files" accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+            </div>
+            <div class='col-md-2 col-lg-2 col-sm-2 col-xs-2 colResultBrowse'>
+            </div>
+        </div>
+
+        <div class="col-md-1 text-right col-step2">
+            <b>STEP 2</b><br>
+            เลือก Sheet
+        </div>
+        <div class="col-md-3">
+            <div class='col-md-10 col-lg-10 col-sm-10 col-xs-10'> 
+                <select class='form-control'  id='sheet_name' disabled>
+                    <option value="">... Please select ...</option>
+                </select>
+            </div>
+            <div class='col-md-2 col-lg-2 col-sm-2 col-xs-2 colResultSheet'></div>
+        </div>
+
+        <div class="col-md-1 text-right col-step3">
+            <b>STEP 3</b><br>
+            import
+        </div>
+        <div class="col-md-1">
+            <button class="btn btn-success" id="btnImport" disabled><i class='fa fa-download'></i>Import</button>
+            <label id='colResultButtonSub'></label>
+        </div>
+    </div>
+</div>
+
+<div id='DivResult' class='row text-center'></div>
+
+<div  id="ReaderExcelSub"></div>
+
+<div class="row text-center" >
+	<script type='text/javascript' src='../../js/jquery.js'></script>
+    <script type='text/javascript' src='../../js/xlsx.core.min.js'></script>
+    <script type='text/javascript' src='../../js/xlsx.full.min.js'></script>
+    <script type="text/javascript">
+        
+        var loadingDiv = "<i class='fa fa-spinner fa-spin'></i>";
+        $('#files').change(function (e) {
+            $('#ReaderExcelSub').empty();
+            $(".colResultBrowse").html(loadingDiv);
+            var sheet_name = $("#sheet_name").val();
+            $('#ReaderExcelSub').empty();
+//            alert(this.files[0].mozFullPath);
+            $("#FilePath").html();
+            var reader = new FileReader();
+            reader.readAsArrayBuffer(e.target.files[0]);
+            reader.onload = function (e) {
+                var data = new Uint8Array(reader.result);
+                var wb = XLSX.read(data, {type: 'array'});
+                var sheetcount = wb.SheetNames.length;
+                var i = 0;
+                $("#sheet_name").empty();
+                $("#sheet_name").append('<option value="">... Please select ...</option>');
+                for (i = 0; i < sheetcount; i++) {
+                    $("#sheet_name").append('<option value="' + wb.SheetNames[i] + '">' + wb.SheetNames[i] + '</option>');
+                }
+                $(".colResultBrowse").html("");
+                $("#sheet_name").removeAttr("disabled");
+            }
+        });
+
+        $("#sheet_name").change(function () {
+            $(".colResultSheet").html(loadingDiv);
+            var files_input = document.getElementById("files");
+            var file = files_input.files[0];
+
+            if (!file) {
+                $.alert({
+                    title: 'Can not import excel file !',
+                    content: "Please select excel file"
+                });
+                return false;
+            }
+            var sheet_name = $("#sheet_name").val();
+            var file_name = $('#files').val().replace(/C:\\fakepath\\/i, '');
+            $("#tmpXlsSheet").val(sheet_name);
+            $("#tmpXlsFile").val(file_name);
+            console.log();
+            var reader = new FileReader();
+            reader.readAsArrayBuffer(file);
+            reader.onload = function (e) {
+                var data = new Uint8Array(reader.result);
+                try {
+                    var wb = XLSX.read(data, {type: 'array'});
+                    var htmlstr = XLSX.write(wb, {sheet: sheet_name, type: 'binary', bookType: 'html'});
+                    $('#ReaderExcelSub').empty();
+                    $('#ReaderExcelSub')[0].innerHTML += htmlstr;
+                    $('#ReaderExcelSub table').addClass('table table-striped table-bordered table-condensed');
+	//========== remove head =========
+			$('table tbody tr:eq(0)').remove();
+            $('table tbody tr:eq(0)').remove();
+//=========add nre head =========
+                    $('table').prepend("<thead> <th>size</th> <th>thick</th> <th>length</th> <th>standard</th> <th>sts_no</th> <th>Mec_test_TS</th> <th>Mec_test_YS</th> <th>Mec_test_EI</th> <th>Mec_test_EL_1</th> <th>Mec_test_EL_2</th> <th>Mec_test_EL_3</th> <th>charpy_mean</th> <th>charpy1</th> <th>charpy2</th> <th>charpy3</th> <th>Metal_P</th> <th>Metal_F</th> <th>Metal_M</th> <th>Hydro_test</th> <th>prod_FM_no</th> <th>prod_date</th> <th>test_date</th></tr></thead>");
+			$('table thead').find('tr').each(function(){
+              
+		   });
+            var x = 0 ;
+            var i=0 ;
+		    var CountTr = $("tbody tr").length ;
+			
+			var LastStsId = $('#LastStsId').text().trim();
+
+			var StsNo = $('#StsNo').text().trim();
+
+		
+			for(i=0;i<CountTr;i++){				
+				x++;
+
+				$('table tbody tr:eq('+i+') ').find('td:eq(0)').text();
+			}
+                    //============render datatable========//                  
+                    //=================================//
+                    $(".colResultSheet").html("");
+                   
+                    $("#colResultButtonSub").html(CountTr + ' Rows');
+                    $("#btnImport").removeAttr("disabled");
+                } catch (err) {
+					alert(err);
+                //    $.alert({
+                      //  title: 'Can not import excel file !',
+                     //   content: err,
+                  //  });
+                    $(".colResultSheet").html("");
+                }
+            }
+        });
+		function pad (str, max) {
+		  str = str.toString();
+		  return str.length < max ? pad("0" + str, max) : str;
+		}
+        $("#btnImport").click(function () {
+          if(confirm('Do you want to Import data ? ')==true){
+			PackDataToArrayAndSave();
+		  }
+        });
+
+        function PackDataToArrayAndSave() {
+            var i = 0;
+            var load = "InsertQcTestLab_Sub";
+			var size = [];
+			var thick=[];
+			var length =[];
+            var standard = [];
+            var sts_no = [];
+            var Mec_test_TS = [];
+            var Mec_test_YS = [];
+            var Mec_test_EI = [];
+            var Mec_test_EL_1 = [];
+            var Mec_test_EL_2 = [];
+            var Mec_test_EL_3 = [];
+            var charpy_mean = [];
+			var charpy1=[];
+            var charpy2=[];
+			var charpy3 =[];
+            var Metal_P = [];
+            var Metal_F = [];
+            var Metal_M = [];
+            var Hydro_test = [];
+            var prod_FM_no = [];
+            var prod_date = [];
+            var test_date = [];
+
+            var CountItem = 0;
+           
+            $("tbody tr").each(function () {
+                if (i >= 0) {
+					size.push($(this).find('td:eq(0)').text());
+					thick.push($(this).find('td:eq(1)').text());
+					length.push($(this).find('td:eq(2)').text());
+                    standard.push($(this).find('td:eq(3)').text());
+                    sts_no.push($(this).find('td:eq(4)').text());
+                    Mec_test_TS.push($(this).find('td:eq(5)').text());                    
+                    Mec_test_YS.push($(this).find('td:eq(6)').text());
+                    Mec_test_EI.push($(this).find('td:eq(7)').text());
+					Mec_test_EL_1.push($(this).find('td:eq(8)').text());
+                    Mec_test_EL_2.push($(this).find('td:eq(9)').text());
+                    Mec_test_EL_3.push($(this).find('td:eq(10)').text());
+                    charpy_mean.push($(this).find('td:eq(11)').text());
+					charpy1.push($(this).find('td:eq(12)').text());
+					charpy2.push($(this).find('td:eq(13)').text());
+                    charpy3.push($(this).find('td:eq(14)').text());                    
+                    Metal_P.push($(this).find('td:eq(15)').text());
+                    Metal_F.push($(this).find('td:eq(16)').text());
+					Metal_M.push($(this).find('td:eq(17)').text());
+                    Hydro_test.push($(this).find('td:eq(18)').text());
+                    prod_FM_no.push($(this).find('td:eq(19)').text());
+                    prod_date.push($(this).find('td:eq(20)').text());
+                    test_date.push($(this).find('td:eq(21)').text());
+                    
+                    CountItem++;
+                }
+                i++;
+            });
+            console.log(sts_no);
+            $.ajax({
+                url: "../../module/APP_Qc_TestLab/data.php",
+                type: 'POST',
+                dataType: 'text',
+                data: {
+                    load : load,                
+                    size : size,
+                    thick : thick,
+                    length : length,
+                    standard : standard,
+                    sts_no : sts_no,
+                    Mec_test_TS : Mec_test_TS,
+                    Mec_test_YS : Mec_test_YS,
+                    Mec_test_EI : Mec_test_EI,
+                    Mec_test_EL_1 : Mec_test_EL_1,
+                    Mec_test_EL_2 : Mec_test_EL_2,
+                    Mec_test_EL_3 : Mec_test_EL_3,
+                    charpy_mean : charpy_mean,
+                    charpy1 : charpy1,
+                    charpy2 : charpy2,
+                    charpy3 : charpy3,
+                    Metal_P : Metal_P,
+                    Metal_F : Metal_F,
+                    Metal_M : Metal_M,
+                    Hydro_test : Hydro_test,
+                    prod_FM_no : prod_FM_no,
+                    prod_date : prod_date,
+                    test_date : test_date
+                },
+                success: function (data) {
+                    if(data==1){
+						alert("complete");
+						location.reload();
+					}
+                },
+                error: function (xhr, status, error) {
+                    var err = eval("(" + xhr.responseText + ")");
+                    $("#colResultButtonSub").html("Error!");
+                    $("#btnImport").attr("disabled", true);
+
+                },
+            });
+        }
+     
+    </script>
+</body>
+<script type='text/javascript' src='../../js/jquery.js'></script>
+</html>
