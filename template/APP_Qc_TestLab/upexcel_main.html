@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+
+
+
+<html lang="en">
+
+    <head>
+
+        <meta charset="utf-8">
+<title>upload Tensile</title>
+<link rel ='stylesheet' href='../../css/bootstrap.min.css'>
+</head>
+
+<body>
+
+
+<!--<form action="upload.php" method="post" enctype="multipart/form-data" name="form1" id="form1">
+  
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td bgcolor="#FFFFCC"><div align="center"><label for="file">Import File :</label>
+  <input name="fileCSV" type="file" id="fileCSV" size="15" />
+  <input name="btnSubmit" type="submit" id="btnSubmit" value="Submit" /></div></td>
+  </tr>
+</table>
+
+</form> -->
+<style>
+    .headingTable {
+        background-color: #cccccc;
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .col-step1{
+        background-color:#94e8c8;
+        color:#FFFFFF;
+    }
+    .col-step2{
+        background-color:#43e8ab;
+        color:#FFFFFF;
+    }
+    .col-step3{
+        background-color:#13af75;
+        color:#FFFFFF;
+    }
+    .col-color{
+        position:fixed;
+        width:100%;
+    }
+    #ReaderExcel{
+        margin-top: 180px;
+    }
+    #ReaderExcel table,thead{
+         /* position:fixed; */
+    }
+</style>
+
+<input type='hidden' id='hdfStsIdPrefix' value="">
+
+<div class='alert alert-primary col-color'>
+
+    <div class="col-md-6 text-left col-Hotroll" style='font-size: 18px;'>
+        <b>&nbsp;&nbsp;Hotroll import</b>
+    </div><br>
+
+    <div class="row " style='margin-left:5px;margin-top:10px;margin-bottom:10px;'>
+        <div class="col-md-1 text-right col-step1">
+            <b>STEP 1</b><br>
+            เลือกไฟล์
+        </div>
+        <div class="col-md-3 text-right">
+            <div class='col-md-10 col-lg-10 col-sm-10 col-xs-10'>
+                <input type="file" id="files" accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+            </div>
+            <div class='col-md-2 col-lg-2 col-sm-2 col-xs-2 colResultBrowse'>
+            </div>
+        </div>
+
+        <div class="col-md-1 text-right col-step2">
+            <b>STEP 2</b><br>
+            เลือก Sheet
+        </div>
+        <div class="col-md-3">
+            <div class='col-md-10 col-lg-10 col-sm-10 col-xs-10'> 
+                <select class='form-control'  id='sheet_name' disabled>
+                    <option value="">... Please select ...</option>
+                </select>
+            </div>
+            <div class='col-md-2 col-lg-2 col-sm-2 col-xs-2 colResultSheet'></div>
+        </div>
+
+        <div class="col-md-1 text-right col-step3">
+            <b>STEP 3</b><br>
+            import
+        </div>
+        <div class="col-md-1">
+            <button class="btn btn-success" id="btnImport" disabled><i class='fa fa-download'></i>Import</button>
+            <label id='colResultButtonMain'></label>
+        </div>
+    </div>
+</div>
+
+<div id='DivResult' class='row text-center'></div>
+
+<div  id="ReaderExcel"></div>
+
+<div class="row text-center" >
+	<script type='text/javascript' src='../../js/jquery.js'></script>
+    <script type='text/javascript' src='../../js/xlsx.core.min.js'></script>
+    <script type='text/javascript' src='../../js/xlsx.full.min.js'></script>
+    <script type="text/javascript">
+        
+        var loadingDiv = "<i class='fa fa-spinner fa-spin'></i>";
+        // function RemoveColumns() {
+        //     $('#ReaderExcel tr').find('td:eq(18),th:eq(18)').remove();
+        //     $('#ReaderExcel tr').find('td:eq(19),th:eq(19)').remove();
+        //     var i = 0;
+        //     for (i = 22; i <= 47; i++) {
+        //         $('#ReaderExcel tr').find('td:eq(' + i + '),th:eq(' + i + ')').remove();
+        //     }
+        // }
+        $('#files').change(function (e) {
+            $('#ReaderExcel').empty();
+            $(".colResultBrowse").html(loadingDiv);
+            var sheet_name = $("#sheet_name").val();
+            $('#ReaderExcel').empty();
+//            alert(this.files[0].mozFullPath);
+            $("#FilePath").html();
+            var reader = new FileReader();
+            reader.readAsArrayBuffer(e.target.files[0]);
+            reader.onload = function (e) {
+                var data = new Uint8Array(reader.result);
+                var wb = XLSX.read(data, {type: 'array'});
+                var sheetcount = wb.SheetNames.length;
+                var i = 0;
+                $("#sheet_name").empty();
+                $("#sheet_name").append('<option value="">... Please select ...</option>');
+                for (i = 0; i < sheetcount; i++) {
+                    $("#sheet_name").append('<option value="' + wb.SheetNames[i] + '">' + wb.SheetNames[i] + '</option>');
+                }
+                $(".colResultBrowse").html("");
+                $("#sheet_name").removeAttr("disabled");
+            }
+        });
+
+        $("#sheet_name").change(function () {
+            $(".colResultSheet").html(loadingDiv);
+            var files_input = document.getElementById("files");
+            var file = files_input.files[0];
+
+            if (!file) {
+                $.alert({
+                    title: 'Can not import excel file !',
+                    content: "Please select excel file"
+                });
+                return false;
+            }
+            var sheet_name = $("#sheet_name").val();
+            var file_name = $('#files').val().replace(/C:\\fakepath\\/i, '');
+            $("#tmpXlsSheet").val(sheet_name);
+            $("#tmpXlsFile").val(file_name);
+            console.log();
+            var reader = new FileReader();
+            reader.readAsArrayBuffer(file);
+            reader.onload = function (e) {
+                var data = new Uint8Array(reader.result);
+                try {
+                    var wb = XLSX.read(data, {type: 'array'});
+                    var htmlstr = XLSX.write(wb, {sheet: sheet_name, type: 'binary', bookType: 'html'});
+                    $('#ReaderExcel').empty();
+                    $('#ReaderExcel')[0].innerHTML += htmlstr;
+                    $('#ReaderExcel table').addClass('table table-striped table-bordered table-condensed');
+	//========== remove head =========
+			$('table tbody tr:eq(0)').remove();
+            $('table tbody tr:eq(0)').remove();
+//=========add nre head =========
+                    $('table').prepend("<thead> <th>sts_c</th> <th>sts_si</th> <th>sts_mn</th> <th>sts_p</th> <th>sts_s</th> <th>sts_cu</th> <th>sts_v</th> <th>sts_ni</th> <th>sts_cr</th> <th>sts_mo</th> <th>sts_ti</th> <th>sts_nb</th> <th>sts_al</th> <th>sts_b</th> <th>sts_co</th> <th>sts_pb</th> <th>sts_fe</th> <th>sts_ts</th> <th>sts_ys</th> <th>sts_el</th> </tr></thead>");
+			$('table thead').find('tr').each(function(){
+                $(this).find('th').eq(0).before('<th>sup_el</th>');
+                $(this).find('th').eq(0).before('<th>sup_ys</th>');
+                $(this).find('th').eq(0).before('<th>sup_ts</th>');
+                $(this).find('th').eq(0).before('<th>sup_fe</th>');
+                $(this).find('th').eq(0).before('<th>sup_pb</th>');
+                $(this).find('th').eq(0).before('<th>sup_co</th>');
+                $(this).find('th').eq(0).before('<th>sup_b</th>');
+                $(this).find('th').eq(0).before('<th>sup_al</th>');
+                $(this).find('th').eq(0).before('<th>sup_nb</th>');
+                $(this).find('th').eq(0).before('<th>sup_ti</th>');
+                $(this).find('th').eq(0).before('<th>sup_mo</th>');
+                $(this).find('th').eq(0).before('<th>sup_cr</th>');
+                $(this).find('th').eq(0).before('<th>sup_ni</th>');
+                $(this).find('th').eq(0).before('<th>sup_v</th>');
+                $(this).find('th').eq(0).before('<th>sup_cu</th>');
+                $(this).find('th').eq(0).before('<th>sup_s</th>');
+                $(this).find('th').eq(0).before('<th>sup_p</th>');
+                $(this).find('th').eq(0).before('<th>sup_mn</th>');
+                $(this).find('th').eq(0).before('<th>sup_si</th>');
+                $(this).find('th').eq(0).before('<th>sup_c</th>');
+                $(this).find('th').eq(0).before('<th>h_no</th>');
+                $(this).find('th').eq(0).before('<th>c_no</th>');
+                $(this).find('th').eq(0).before('<th>sts_no</th>');
+                $(this).find('th').eq(0).before('<th>weight</th>');
+				$(this).find('th').eq(0).before('<th>width</th>');
+			    $(this).find('th').eq(0).before('<th>thick</th>');		
+				$(this).find('th').eq(0).before('<th>standard</th>');
+		   });
+		//    	$('table tbody').find('tr').each(function(){
+		// 		$(this).find('td').eq(0).before('<td></td>');
+		// 		$(this).find('td').eq(0).before('<td></td>');
+		// 		$(this).find('td').eq(0).before('<td></td>');
+		//    });
+            var x = 0 ;
+            var i=0 ;
+		    var CountTr = $("tbody tr").length ;
+			
+			var LastStsId = $('#LastStsId').text().trim();
+
+			var StsNo = $('#StsNo').text().trim();
+
+			// var PoDate = $('#PoDate').text().trim();
+			// var prefix = $('#hdfStsIdPrefix').val();
+			
+					// var KeepVal =0 ;
+			for(i=0;i<CountTr;i++){				
+				x++;
+				// $('table tbody tr:eq('+i+') ').find('td:eq(0)').text();
+						 
+// 					if ($('#StsNo').text().indexOf("GI")!= -1  ){
+// 						KeepVal = parseInt(StsNo)+x  -1 ;
+// 							$('table tbody tr:eq('+i+') ').find('td:eq(1)').text();
+						
+// 					}else{
+// 						KeepVal = parseInt(StsNo)+x ;
+// 							$('table tbody tr:eq('+i+') ').find('td:eq(1)').text();
+// console.log(KeepVal);
+// 					}
+				$('table tbody tr:eq('+i+') ').find('td:eq(0)').text();
+			}
+                    //============render datatable========//                  
+                    //=================================//
+                    $(".colResultSheet").html("");
+                   
+                    $("#colResultButtonMain").html(CountTr + ' Rows');
+                    $("#btnImport").removeAttr("disabled");
+                } catch (err) {
+					alert(err);
+                //    $.alert({
+                      //  title: 'Can not import excel file !',
+                     //   content: err,
+                  //  });
+                    $(".colResultSheet").html("");
+                }
+            }
+        });
+		function pad (str, max) {
+		  str = str.toString();
+		  return str.length < max ? pad("0" + str, max) : str;
+		}
+        $("#btnImport").click(function () {
+          if(confirm('Do you want to Import data ? ')==true){
+			PackDataToArrayAndSave();
+		  }
+        });
+
+        function PackDataToArrayAndSave() {
+            var i = 0;
+            // var alldata = [];
+            var load = "InsertQcTestLab_Main";
+			var standard = [];
+			var thick=[];
+			var width =[];
+            var weight = [];
+            var sts_no = [];
+            var c_no = [];
+            var h_no = [];
+
+            var sup_c = [];
+            var sup_si = [];
+            var sup_mn = [];
+            var sup_p = [];
+            var sup_s = [];
+			var sup_cu=[];
+			var sup_v =[];
+            var sup_ni = [];
+            var sup_cr = [];
+            var sup_mo = [];
+            var sup_ti = [];
+            var sup_nb = [];
+            var sup_al = [];
+            var sup_b = [];
+            var sup_co = [];
+            var sup_pb = [];
+            var sup_fe = [];
+            var sup_ts = [];
+            var sup_ys = [];       
+            var sup_el = [];
+
+            var sts_c = [];
+            var sts_si = [];
+            var sts_mn = [];
+            var sts_p = [];
+            var sts_s = [] ;
+			var sts_cu=[];
+			var sts_v =[];
+            var sts_ni = [];
+            var sts_cr = [];
+            var sts_mo = [];
+            var sts_ti = [];
+            var sts_nb = [];
+            var sts_al = [];
+            var sts_b = [];
+            var sts_co = [];
+            var sts_pb = [];
+            var sts_fe = [];
+            var sts_ts = [];
+            var sts_ys = [];
+            var sts_el = [];
+
+            // var standard = "";
+			// var thick= "";
+			// var width = "";
+            // var weight = "";
+            // var sts_no = "";
+            // var c_no = "";
+            // var h_no = "";
+
+            // var sup_c = "";
+            // var sup_si = "";
+            // var sup_mn = "";
+            // var sup_p = "";
+            // var sup_s = "";
+			// var sup_cu= "";
+			// var sup_v = "";
+            // var sup_ni = "";
+            // var sup_cr = "";
+            // var sup_mo = "";
+            // var sup_ti = "";
+            // var sup_nb = "";
+            // var sup_al = "";
+            // var sup_b = "";
+            // var sup_co = "";
+            // var sup_pb = "";
+            // var sup_fe = "";
+            // var sup_ts = "";
+            // var sup_ys = "";       
+            // var sup_el = "";
+
+            // var sts_c = "";
+            // var sts_si = "";
+            // var sts_mn = "";
+            // var sts_p = "";
+            // var sts_s = "";
+			// var sts_cu= "";
+			// var sts_v = "";
+            // var sts_ni = "";
+            // var sts_cr = "";
+            // var sts_mo = "";
+            // var sts_ti = "";
+            // var sts_nb = "";
+            // var sts_al = "";
+            // var sts_b = "";
+            // var sts_co = "";
+            // var sts_pb = "";
+            // var sts_fe = "";
+            // var sts_ts = "";
+            // var sts_ys = "";
+            // var sts_el = "";
+
+            var CountItem = 0;
+
+           
+            $("tbody tr").each(function () {
+                if (i >= 0) {
+					standard.push($(this).find('td:eq(0)').text());
+					thick.push($(this).find('td:eq(1)').text());
+					width.push($(this).find('td:eq(2)').text());
+                    weight.push($(this).find('td:eq(3)').text());
+                    sts_no.push($(this).find('td:eq(4)').text());
+                    c_no.push($(this).find('td:eq(5)').text());                    
+                    h_no.push($(this).find('td:eq(6)').text());
+                    
+                    sup_c.push($(this).find('td:eq(7)').text());
+					sup_si.push($(this).find('td:eq(8)').text());
+                    sup_mn.push($(this).find('td:eq(9)').text());
+                    sup_p.push($(this).find('td:eq(10)').text());
+                    sup_s.push($(this).find('td:eq(11)').text());
+					sup_cu.push($(this).find('td:eq(12)').text());
+					sup_v.push($(this).find('td:eq(13)').text());
+                    sup_ni.push($(this).find('td:eq(14)').text());
+                    sup_cr.push($(this).find('td:eq(15)').text());                    
+                    sup_mo.push($(this).find('td:eq(16)').text());
+                    sup_ti.push($(this).find('td:eq(17)').text());
+					sup_nb.push($(this).find('td:eq(18)').text());
+                    sup_al.push($(this).find('td:eq(19)').text());
+                    sup_b.push($(this).find('td:eq(20)').text());
+                    sup_co.push($(this).find('td:eq(21)').text());
+                    sup_pb.push($(this).find('td:eq(22)').text());
+                    sup_fe.push($(this).find('td:eq(23)').text());
+                    sup_ts.push($(this).find('td:eq(24)').text());
+                    sup_ys.push($(this).find('td:eq(25)').text());
+                    sup_el.push($(this).find('td:eq(26)').text());
+
+                    sts_c.push($(this).find('td:eq(27)').text());
+					sts_si.push($(this).find('td:eq(28)').text());
+                    sts_mn.push($(this).find('td:eq(29)').text());
+                    sts_p.push($(this).find('td:eq(30)').text());
+                    sts_s.push($(this).find('td:eq(31)').text());
+					sts_cu.push($(this).find('td:eq(32)').text());
+					sts_v.push($(this).find('td:eq(33)').text());
+                    sts_ni.push($(this).find('td:eq(34)').text());
+                    sts_cr.push($(this).find('td:eq(35)').text());                    
+                    sts_mo.push($(this).find('td:eq(36)').text());
+                    sts_ti.push($(this).find('td:eq(37)').text());
+					sts_nb.push($(this).find('td:eq(38)').text());
+                    sts_al.push($(this).find('td:eq(39)').text());
+                    sts_b.push($(this).find('td:eq(40)').text());
+                    sts_co.push($(this).find('td:eq(41)').text());
+                    sts_pb.push($(this).find('td:eq(42)').text());
+                    sts_fe.push($(this).find('td:eq(43)').text());
+                    sts_ts.push($(this).find('td:eq(44)').text());
+                    sts_ys.push($(this).find('td:eq(45)').text());
+                    sts_el.push($(this).find('td:eq(46)').text());
+
+                    CountItem++;
+                }
+                i++;
+            });
+            console.log(sts_no);
+            $.ajax({
+                url: "../../module/APP_Qc_TestLab/data.php",
+                type: 'POST',
+                dataType: 'text',
+                data: {
+                    load : load,                
+                    standard : standard,
+                    thick : thick,
+                    width : width,
+                    weight : weight,
+                    sts_no : sts_no,
+                    c_no : c_no,
+                    h_no : h_no,
+
+                    sup_c : sup_c,
+                    sup_si : sup_si,
+                    sup_mn : sup_mn,
+                    sup_p : sup_p,
+                    sup_s : sup_s,
+                    sup_cu : sup_cu,
+                    sup_v : sup_v,
+                    sup_ni : sup_ni,
+                    sup_cr : sup_cr,
+                    sup_mo : sup_mo,
+                    sup_ti : sup_ti,
+                    sup_nb : sup_nb,
+                    sup_al : sup_al,
+                    sup_b : sup_b,
+                    sup_co : sup_co,
+                    sup_pb : sup_pb,
+                    sup_fe : sup_fe,
+                    sup_ts : sup_ts,
+                    sup_ys : sup_ys,       
+                    sup_el : sup_el,
+
+                    sts_c : sts_c,
+                    sts_si : sts_si,
+                    sts_mn : sts_mn,
+                    sts_p : sts_p,
+                    sts_s : sts_s,
+                    sts_cu : sts_cu,
+                    sts_v : sts_v,
+                    sts_ni : sts_ni,
+                    sts_cr : sts_cr,
+                    sts_mo : sts_mo,
+                    sts_ti : sts_ti,
+                    sts_nb : sts_nb,
+                    sts_al : sts_al,
+                    sts_b : sts_b,
+                    sts_co : sts_co,
+                    sts_pb : sts_pb,
+                    sts_fe : sts_fe,
+                    sts_ts : sts_ts,
+                    sts_ys : sts_ys,
+                    sts_el : sts_el
+					
+                },
+                success: function (data) {
+                    if(data==1){
+						alert("complete");
+						location.reload();
+					}
+                },
+                error: function (xhr, status, error) {
+                    var err = eval("(" + xhr.responseText + ")");
+                    $("#colResultButtonMain").html("Error!");
+                    $("#btnImport").attr("disabled", true);
+
+                },
+            });
+        }
+     
+    </script>
+</body>
+<script type='text/javascript' src='../../js/jquery.js'></script>
+</html>
