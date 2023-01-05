@@ -77,8 +77,8 @@
         <thead>
             <tr>
                 <th colspan="8" class="bg-gray">Hot Roll Coil</th>
-                <th colspan="20" class="bg-gray">Chemical analysis from supplier</th>
-                <th colspan="20" class="bg-gray">Chemical analysis from Lab.'STS</th>
+                <th colspan="20" class="bg-primary">Chemical analysis from supplier</th>
+                <th colspan="20" class="bg-info">Chemical analysis from Lab.'STS</th>
             </tr>
             <tr>
                 <th class="bg-gray"></th>
@@ -800,7 +800,7 @@ function format(d) {
                             <th colspan='6'>Mechanical Testing</th>
                             <th colspan='4'>Charpy V-notch Testing</th>
                             <th colspan='3'>Metallurgical</th>
-                            <th colspan='4'>Production</th>
+                            <th colspan='5'>Production</th>
                         </tr>
                         <tr class="bg-gray">
                             <th colspan='4'>Coil</th>
@@ -812,7 +812,7 @@ function format(d) {
 
                             <th colspan='4'>Absorbed Energy (Joules)</th>
                             <th colspan='3'>Analysis</th>
-                            <th colspan='4'>Date</th>
+                            <th colspan='5'>Date</th>
                         </tr>
                         <tr class="bg-gray">                       
                             <th>size</th>
@@ -834,8 +834,9 @@ function format(d) {
 
                             <th>P</th>
                             <th>F</th>
-                            <th>M</th>
-                         
+                            <th>M</th> 
+                            
+                            <th>hydro test</th>
                             <th>FM no.</th>
                             <th>produce date</th>
                             <th>thick x length</th>
@@ -930,6 +931,9 @@ function format(d) {
                                 "className": "text-center",
                             },
                             {"data": "Metal_M",
+                                "className": "text-center",
+                            },
+                            {"data": "Hydro_test",
                                 "className": "text-center",
                             },
                             {"data": "prod_FM_no",
