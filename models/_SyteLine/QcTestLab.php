@@ -38,13 +38,14 @@ class QcTestLab {
         return $rs0; 
     }
 
-    function InsertQcTestLab_Sub($size,$thick,$length,$standard,$sts_no,$Mec_test_TS,$Mec_test_YS,$Mec_test_EI,
-    $Mec_test_EL_1,$Mec_test_EL_2,$Mec_test_EL_3,$charpy_mean,$charpy1,$charpy2,$charpy3,$Metal_P,$Metal_F,$Metal_M,$Hydro_test,$prod_FM_no,$prod_date,$test_date) {
+    function InsertQcTestLab_Sub($opr_no,$size,$thick,$length,$standard,$sts_no,
+    $Mec_test_TS,$Mec_test_YS,$Mec_test_EI,$Mec_test_EL_1,$Mec_test_EL_2,$Mec_test_EL_3,
+    $Not_Mec_test_TS,$Not_Mec_test_YS,$Not_Mec_test_EI,$Not_Mec_test_EL_1,$Not_Mec_test_EL_2,$Not_Mec_test_EL_3,$charpy_mean,$charpy1,$charpy2,$charpy3,$Metal_P,$Metal_F,$Metal_M,$Hydro_test,$prod_FM_no,$prod_date,$test_date) {
 
-            $query ="INSERT INTO STS_QA_LAB_SUB (size,thick_sub,length,standard_sub,sts_no,Mec_test_TS,Mec_test_YS,Mec_test_EI,"
-                    ."Mec_test_EL_1,Mec_test_EL_2,Mec_test_EL_3,charpy_mean,charpy1,charpy2,charpy3,Metal_P,Metal_F,Metal_M,Hydro_test,prod_FM_no,prod_date,test_date,ImportDate)"
-                    ."VALUES ('".$size."', '".$thick."', '".$length."', '".$standard."', '".$sts_no."', '".$Mec_test_TS."', '".$Mec_test_YS."','".$Mec_test_EI."',"
-                    ."'".$Mec_test_EL_1."', '".$Mec_test_EL_2."', '".$Mec_test_EL_3."', '".$charpy_mean."', '".$charpy1."', '".$charpy2."', '".$charpy3."', '".$Metal_P."', '".$Metal_F."', '".$Metal_M."', '".$Hydro_test."', '".$prod_FM_no."', '".$prod_date."', '".$test_date."',Getdate())";
+            $query ="INSERT INTO STS_QA_LAB_SUB (opr_no,size,thick_sub,length,standard_sub,sts_no,Mec_test_TS,Mec_test_YS,Mec_test_EI,"
+                    ."Mec_test_EL_1,Mec_test_EL_2,Mec_test_EL_3,Not_Mec_test_TS,Not_Mec_test_YS,Not_Mec_test_EI,Not_Mec_test_EL_1,Not_Mec_test_EL_2,Not_Mec_test_EL_3,charpy_mean,charpy1,charpy2,charpy3,Metal_P,Metal_F,Metal_M,Hydro_test,prod_FM_no,prod_date,test_date,ImportDate)"
+                    ."VALUES ('".$opr_no."','".$size."', '".$thick."', '".$length."', '".$standard."', '".$sts_no."', '".$Mec_test_TS."', '".$Mec_test_YS."','".$Mec_test_EI."',"
+                    ."'".$Mec_test_EL_1."', '".$Mec_test_EL_2."', '".$Mec_test_EL_3."', '".$Not_Mec_test_TS."', '".$Not_Mec_test_YS."','".$Not_Mec_test_EI."', '".$Not_Mec_test_EL_1."', '".$Not_Mec_test_EL_2."', '".$Not_Mec_test_EL_3."', '".$charpy_mean."', '".$charpy1."', '".$charpy2."', '".$charpy3."', '".$Metal_P."', '".$Metal_F."', '".$Metal_M."', '".$Hydro_test."', '".$prod_FM_no."', '".$prod_date."', '".$test_date."',Getdate())";
             $cSql = new SqlSrv();
             $rs0 = $cSql->SqlQuery($this->StrConn, $query);
             array_splice($rs0, count($rs0) - 1, 1);
