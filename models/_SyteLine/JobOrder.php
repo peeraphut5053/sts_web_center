@@ -1257,5 +1257,15 @@ class JOBORDER {
         array_splice($rs0, count($rs0) - 1, 1);
         return $rs0;
     }
+
+    function BoatNoteSelectByDoGroup($do_group_name) {
+        $query = " EXEC sts_boatnote_report @do_group_name = N'$do_group_name' ";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+
+    
     
 }

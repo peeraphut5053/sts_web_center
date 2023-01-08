@@ -429,5 +429,15 @@ if ($load == "saveOperation") {
     echo json_encode($Trans);
 }
 
+if ($load == "BoatNoteSelectByDoGroup") {
+    $CallModel = new CallModel();
+    $CallModel->SyteLine_Models();
+    $Trans = new JobOrder();
+    $Trans->setConn($ConnSL);
+    $Trans = $Trans->BoatNoteSelectByDoGroup($do_group_name);
+
+    echo json_encode($Trans);
+}
+
 
 
