@@ -434,7 +434,7 @@ if ($load == "BoatNoteSelectByDoGroup") {
     $CallModel->SyteLine_Models();
     $Trans = new JobOrder();
     $Trans->setConn($ConnSL);
-    $Trans = $Trans->BoatNoteSelectByDoGroup($do_group_name);
+    $Trans = $Trans->BoatNoteSelectByDoGroup($do_group_name,$loc,$boatPosition);
 
     echo json_encode($Trans);
 }

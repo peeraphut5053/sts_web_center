@@ -1258,8 +1258,8 @@ class JOBORDER {
         return $rs0;
     }
 
-    function BoatNoteSelectByDoGroup($do_group_name) {
-        $query = " EXEC sts_boatnote_report @do_group_name = N'$do_group_name' ";
+    function BoatNoteSelectByDoGroup($do_group_name,$loc,$boatPosition) {
+        $query = "EXEC sts_boatnote_report @do_group_name = N'$do_group_name', @loc = N'$loc', @Boat_position = N'$boatPosition' ";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);
