@@ -29,7 +29,22 @@ class QcTestLab {
     function InsertQcTestLab_Main($standard,$thick,$width,$weight,$sts_no,$c_no,$h_no,
     $sup_c,$sup_si,$sup_mn,$sup_p,$sup_s,$sup_cu,$sup_v,$sup_ni,$sup_cr,$sup_mo,$sup_ti,$sup_nb,$sup_al,$sup_b,$sup_co,$sup_pb,$sup_fe,$sup_ts,$sup_ys,$sup_el,
     $sts_c,$sts_si,$sts_mn,$sts_p,$sts_s,$sts_cu,$sts_v,$sts_ni,$sts_cr,$sts_mo,$sts_ti,$sts_nb,$sts_al,$sts_b,$sts_co,$sts_pb,$sts_fe,$sts_ts,$sts_ys,$sts_el) {
-
+        
+        $qSelect = "select * from STS_QA_LAB where sts_no = '$sts_no'";
+        $cSql = new SqlSrv();
+        $rsSelect = $cSql->SqlQuery($this->StrConn, $qSelect);
+        
+        if ( $sts_no == isset($rsSelect[1]["sts_no"])){
+            $query ="UPDATE STS_QA_LAB SET standard = '$standard', thick = '$thick', width = '$width', weight = '$weight', sts_no = '$sts_no', c_no = '$c_no', h_no = '$h_no',
+                    sup_c = '$sup_c', sup_si = '$sup_si', sup_mn = '$sup_mn', sup_p = '$sup_p', sup_s = '$sup_s', sup_cu = '$sup_cu', sup_v = '$sup_v', sup_ni = '$sup_ni', sup_cr = '$sup_cr', sup_mo = '$sup_mo', sup_ti = '$sup_ti', sup_nb = '$sup_nb', sup_al = '$sup_al', sup_b = '$sup_b', sup_co = '$sup_co', sup_pb = '$sup_pb', sup_fe = '$sup_fe', sup_ts = '$sup_ts', sup_ys = '$sup_ys', sup_el = '$sup_el',
+                    sts_c = '$sts_c', sts_si = '$sts_si', sts_mn = '$sts_mn', sts_p = '$sts_p', sts_s = '$sts_s', sts_cu = '$sts_cu', sts_v = '$sts_v', sts_ni = '$sts_ni', sts_cr = '$sts_cr', sts_mo = '$sts_mo', sts_ti = '$sts_ti', sts_nb = '$sts_nb', sts_al = '$sts_al', sts_b = '$sts_b', sts_co = '$sts_co', sts_pb = '$sts_pb', sts_fe = '$sts_fe', sts_ts = '$sts_ts', sts_ys = '$sts_ys', sts_el = '$sts_el', ImportDate = Getdate()
+                    where sts_no =  '$sts_no'";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0; 
+        }
+        else{
          $query ="INSERT INTO STS_QA_LAB (standard,thick,width,weight,sts_no,c_no,h_no,"
                 ."sup_c,sup_si,sup_mn,sup_p,sup_s,sup_cu,sup_v,sup_ni,sup_cr,sup_mo,sup_ti,sup_nb,sup_al,sup_b,sup_co,sup_pb,sup_fe,sup_ts,sup_ys,sup_el,"
                 ."sts_c,sts_si,sts_mn,sts_p,sts_s,sts_cu,sts_v,sts_ni,sts_cr,sts_mo,sts_ti,sts_nb,sts_al,sts_b,sts_co,sts_pb,sts_fe,sts_ts,sts_ys,sts_el,ImportDate)"
@@ -40,6 +55,7 @@ class QcTestLab {
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);
         return $rs0; 
+        }
     }
 
     function InsertQcTestLab_Sub($opr_no,$size,$thick,$length,$standard,$sts_no,

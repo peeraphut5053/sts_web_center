@@ -178,13 +178,13 @@ class DeliveryOrder {
         $q = "EXEC STS_DELETE_SESSION_USER '$minkick' ";
         $cSql->SqlQuery($this->StrConn, $q);
     }
-	
-	Function Log_Request_Session($username,$department) {
+
+    Function Log_Request_Session($username,$department) {
         $cSql = new SqlSrv();
         $sqlUser = "select * from usernames where Username is not null and Username = '$username'";
         $rs_sqlUser = $cSql->SqlQuery($this->StrConn, $sqlUser);
         
-        if ($username ==  $rs_sqlUser[1]["Username"] && $username != ""){
+        if ($username ==  isset($rs_sqlUser[1]["Username"]) && $username != ""){
             echo '<script>setTimeout(function(){ window.close(); }, 1000);</script>';
             echo ''
             . '<div style="font-size:3em;text-align:center;padding-top:10%;">'
@@ -206,7 +206,6 @@ class DeliveryOrder {
             echo " <script language='JavaScript'>history.go(-1);</script>"; 
         }
     }
-
     Function ConnectionInformation3() {
         $cSql = new SqlSrv();
         $q = "select GroupName,count(UserGroupMap_mst.UserId) as useronline "
