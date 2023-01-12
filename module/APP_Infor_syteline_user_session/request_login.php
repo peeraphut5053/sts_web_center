@@ -40,7 +40,7 @@
         <div class="col-md-4">
           <label for="username" class="form-label">ชื่อผู้ขอ</label>
           <input type="hidden" name="load" value="minkick">
-          <input type="text" name="username" id="username" value="" class="form-control" required>
+          <input type="text" name="username" id="username" value="" class="form-control" placeholder="Username syteline" required>
         </div>
       </div>
 <br>

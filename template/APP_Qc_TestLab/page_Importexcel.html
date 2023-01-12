@@ -1011,32 +1011,34 @@ function format(d) {
             });
     }
 
-// function UpdateQcTestLab(thisId, col_name) {
-//     $(`#${thisId}`).addClass("input-text-value-success");
-//     setTimeout(function () {
-//         $(`#${thisId}`).removeClass("input-text-value-success");
-//     }, 2500)
-//     let Split = thisId.split("_");
-//     let sts_no = Split[2];
-//     let valdata = $(`#${thisId}`).val();
-//     $.ajax({
-//         type: 'POST',
-//         url: "././module/APP_Qc_TestLab/data.php",
-//         beforeSend: function () {
-//         },
-//         data: {
-//             load: 'UpdateQcTestLab',
-//             sts_no: sts_no,
-//             col_name: col_name,
-//             valdata: valdata
-//         },
-//         success: function (data) {
-//             console.log(data);
-//         },
-//         error: function (e) {
-//             console.log("There was an error with your request...");
-//             console.log("error: " + JSON.stringify(e));
-//         }
-//     });
-// }
+function UpdateQcTestLab(thisId, col_name) {
+    $(`#${thisId}`).addClass("input-text-value-success");
+    
+    setTimeout(function () {
+    $(`#${thisId}`).removeClass("input-text-value-success");
+    }, 2500)
+
+    let Split = thisId.split("_");
+    let sts_no = Split[2];
+    let valdata = $(`#${thisId}`).val();
+    $.ajax({
+        type: 'POST',
+        url: "././module/APP_Qc_TestLab/data.php",
+        beforeSend: function () {
+        },
+        data: {
+            load: 'UpdateQcTestLab_Main',
+            sts_no: sts_no,
+            col_name: col_name,
+            valdata: valdata
+        },
+        success: function (data) {
+            console.log(data);
+        },
+        error: function (e) {
+            console.log("There was an error with your request...");
+            console.log("error: " + JSON.stringify(e));
+        }
+    });
+}
 </script>

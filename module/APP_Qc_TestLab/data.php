@@ -43,12 +43,21 @@ if ($load == 'ajax') {
 }
 
 
-if ($load == 'UpdateQcTestLab') {
+// if ($load == 'UpdateQcTestLab') {
+//     $CallModel = new CallModel();
+//     $CallModel->MGT_Models();
+//     $UpdateQcTestLab = new PO_QC();
+//     $UpdateQcTestLab->setConn($var);
+//     $UpdateQcTestLab = $UpdateQcTestLab->UpdateQcTestLab($sts_no,$col_name,$valdata);
+//     echo json_encode($sts_no);
+// }
+
+if ($load == 'UpdateQcTestLab_Main') {
     $CallModel = new CallModel();
-    $CallModel->MGT_Models();
-    $UpdateQcTestLab = new PO_QC();
-    $UpdateQcTestLab->setConn($var);
-    $UpdateQcTestLab = $UpdateQcTestLab->UpdateQcTestLab($sts_no,$col_name,$valdata);
+    $CallModel->SyteLine_Models();
+    $QcTestLab = new QcTestLab();
+    $QcTestLab->setConn($ConnSL);
+    $QcTestLab = $QcTestLab->UpdateQcTestLab_Main($sts_no,$col_name,$valdata);
     echo json_encode($sts_no);
 }
 

@@ -33,7 +33,7 @@ class QcTestLab {
         $qSelect = "select * from STS_QA_LAB where sts_no = '$sts_no'";
         $cSql = new SqlSrv();
         $rsSelect = $cSql->SqlQuery($this->StrConn, $qSelect);
-        
+
         if ( $sts_no == isset($rsSelect[1]["sts_no"])){
             $query ="UPDATE STS_QA_LAB SET standard = '$standard', thick = '$thick', width = '$width', weight = '$weight', sts_no = '$sts_no', c_no = '$c_no', h_no = '$h_no',
                     sup_c = '$sup_c', sup_si = '$sup_si', sup_mn = '$sup_mn', sup_p = '$sup_p', sup_s = '$sup_s', sup_cu = '$sup_cu', sup_v = '$sup_v', sup_ni = '$sup_ni', sup_cr = '$sup_cr', sup_mo = '$sup_mo', sup_ti = '$sup_ti', sup_nb = '$sup_nb', sup_al = '$sup_al', sup_b = '$sup_b', sup_co = '$sup_co', sup_pb = '$sup_pb', sup_fe = '$sup_fe', sup_ts = '$sup_ts', sup_ys = '$sup_ys', sup_el = '$sup_el',
@@ -107,5 +107,16 @@ class QcTestLab {
         array_splice($rs0, count($rs0) - 1, 1);
         return $rs0;
     }
+
+    function UpdateQcTestLab_Main($sts_no, $col_name, $valdata) {
+        $query = "UPDATE STS_QA_LAB SET $col_name = '$valdata'  WHERE sts_no ='$sts_no' ";
+        // $query = "update po_qc  set $col_name = '$valdata' where h_no in (select * FROM (select h_no from po_qc where sno ='$sno') as po_qc_tmp) "
+        //         . " and  width in (select * FROM (select width from po_qc where sno ='$sno') as po_qc_tmp2)  ";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+
 }
 ?>
