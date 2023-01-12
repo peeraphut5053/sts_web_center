@@ -62,6 +62,22 @@ class QcTestLab {
     $Mec_test_TS,$Mec_test_YS,$Mec_test_EI,$Mec_test_EL_1,$Mec_test_EL_2,$Mec_test_EL_3,
     $Not_Mec_test_TS,$Not_Mec_test_YS,$Not_Mec_test_EI,$Not_Mec_test_EL_1,$Not_Mec_test_EL_2,$Not_Mec_test_EL_3,$charpy_mean,$charpy1,$charpy2,$charpy3,$Metal_P,$Metal_F,$Metal_M,$Hydro_test,$prod_FM_no,$prod_date,$test_date) {
 
+        $qSelect = "select * from STS_QA_LAB_SUB where sts_no = '$sts_no' and prod_FM_no = '$prod_FM_no' and length = '$length'  and convert(date,prod_date) = '$prod_date'";
+        $cSql = new SqlSrv();
+        $rsSelect = $cSql->SqlQuery($this->StrConn, $qSelect);
+
+        if ( $sts_no == isset($rsSelect[1]["sts_no"]) && $prod_FM_no == isset($rsSelect[1]["prod_FM_no"]) && $length == isset($rsSelect[1]["length"]) && $prod_date == isset($rsSelect[1]["prod_date"])){
+            $query ="UPDATE STS_QA_LAB_SUB SET opr_no = '$opr_no', size= '$size', thick_sub= '$thick', length= '$length', standard_sub= '$standard', sts_no= '$sts_no', 
+                    Mec_test_TS= '$Mec_test_TS', Mec_test_YS= '$Mec_test_YS', Mec_test_EI = '$Mec_test_EI', Mec_test_EL_1 = '$Mec_test_EL_1', Mec_test_EL_2 = '$Mec_test_EL_2', Mec_test_EL_3 = '$Mec_test_EL_3', 
+                    Not_Mec_test_TS = '$Not_Mec_test_TS', Not_Mec_test_YS = '$Not_Mec_test_YS', Not_Mec_test_EI = '$Not_Mec_test_EI', Not_Mec_test_EL_1 = '$Not_Mec_test_EL_1', Not_Mec_test_EL_2 = '$Not_Mec_test_EL_2', Not_Mec_test_EL_3 = '$Not_Mec_test_EL_3', 
+                    charpy_mean = '$charpy_mean', charpy1 = '$charpy1', charpy2 = '$charpy2', charpy3 = '$charpy3', Metal_P = '$Metal_P', Metal_F = '$Metal_F', Metal_M = '$Metal_M', Hydro_test = '$Hydro_test', prod_FM_no = '$prod_FM_no', prod_date = '$prod_date', test_date = '$test_date', ImportDate = Getdate()
+                    where sts_no = '$sts_no'  and prod_FM_no = '$prod_FM_no' and length = '$length'  and convert(date,prod_date) = '$prod_date'";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0; 
+        }
+        else{
             $query ="INSERT INTO STS_QA_LAB_SUB (opr_no,size,thick_sub,length,standard_sub,sts_no,Mec_test_TS,Mec_test_YS,Mec_test_EI,"
                     ."Mec_test_EL_1,Mec_test_EL_2,Mec_test_EL_3,Not_Mec_test_TS,Not_Mec_test_YS,Not_Mec_test_EI,Not_Mec_test_EL_1,Not_Mec_test_EL_2,Not_Mec_test_EL_3,charpy_mean,charpy1,charpy2,charpy3,Metal_P,Metal_F,Metal_M,Hydro_test,prod_FM_no,prod_date,test_date,ImportDate)"
                     ."VALUES ('".$opr_no."','".$size."', '".$thick."', '".$length."', '".$standard."', '".$sts_no."', '".$Mec_test_TS."', '".$Mec_test_YS."','".$Mec_test_EI."',"
@@ -70,6 +86,7 @@ class QcTestLab {
             $rs0 = $cSql->SqlQuery($this->StrConn, $query);
             array_splice($rs0, count($rs0) - 1, 1);
             return $rs0; 
+        }
     }
 
     function ReportAll($from_stsno,$to_stsno){
