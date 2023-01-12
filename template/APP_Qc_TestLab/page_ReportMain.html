@@ -1,0 +1,324 @@
+<div class="row" style="border-bottom:solid 1px #e8e8e8;">  
+    <div class="row">
+        <h3 style="padding-left:5px;">Qc Test Lab</h3>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2  col-search">
+        <div class="input-group">
+            <div class="input-group-addon">From STS_NO</div>
+            <input type="text" class="form-control txt-filter" id="from_stsnoM">
+        </div>
+    </div>
+
+    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2  col-search">
+        <div class="input-group">
+            <div class="input-group-addon">To STS_NO</div>
+            <input type="text" class="form-control txt-filter" id="to_stsnoM">
+        </div>
+    </div>
+
+    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2  col-search">
+        <div class="input-group">
+            <div class="input-group-addon">Coil No</div>
+            <input type="text" value="" class="form-control txt-filter" id="c_noM">
+        </div>
+    </div>
+
+    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2  col-search">
+        <div class="input-group">
+            <div class="input-group-addon">Heat No</div>
+            <input type="text"  class="form-control txt-filter" id="h_noM">
+        </div>
+    </div>
+
+    <div class="col-lg-1 col-md-2 col-sm-1 col-xs-6  col-search">
+        <button id="BtnSearchM" class="btn btn-info"><i class="fa fa-search"></i>Search</button>
+    </div>
+</div>
+
+    <br>
+
+    <div class="row" id="divReportM">
+        <table class="table table-condensed table-bordered table-striped" id="tblReportM">
+            <thead>
+                <tr>
+                    <th colspan="8" class="bg-gray">Hot Roll Coil</th>
+                    <th colspan="20" class="bg-primary">Chemical analysis from supplier</th>
+                    <th colspan="20" class="bg-info">Chemical analysis from Lab.'STS</th>
+                </tr>
+                <tr>0
+                    <th class="bg-gray">standard</th>
+                    <th class="bg-gray">thick</th>
+                    <th class="bg-gray">width</th>
+                    <th class="bg-gray">weight</th>
+                    <th class="bg-gray">sts_no</th>
+                    <th class="bg-gray">coil_no</th>
+                    <th class="bg-gray">heat_no</th>
+                    <th>sup_C</th>
+                    <th>sup_Si</th>
+                    <th>sup_Mn</th>
+                    <th>sup_P</th>
+                    <th>sup_S</th>
+                    <th>sup_Cu</th>
+                    <th>sup_V</th>
+                    <th>sup_Ni</th>
+                    <th>sup_Cr</th>
+                    <th>sup_Mo</th>
+                    <th>sup_Ti</th>
+                    <th>sup_Nb</th>
+                    <th>sup_Al</th>
+                    <th>sup_B</th>
+                    <th>sup_Co</th>
+                    <th>sup_Pb</th>
+                    <th>sup_Fe</th>
+                    <th>sup_Ts</th>
+                    <th>sup_Ys</th>
+                    <th>sup_El</th>
+                    <th>sts_C</th>
+                    <th>sts_Si</th>
+                    <th>sts_Mn</th>
+                    <th>sts_P</th>
+                    <th>sts_S</th>
+                    <th>sts_Cu</th>
+                    <th>sts_V</th>
+                    <th>sts_Ni</th>
+                    <th>sts_Cr</th>
+                    <th>sts_Mo</th>
+                    <th>sts_Ti</th>
+                    <th>sts_Nb</th>
+                    <th>sts_Al</th>
+                    <th>sts_B</th>
+                    <th>sts_Co</th>
+                    <th>sts_Pb</th>
+                    <th>sts_Fe</th>
+                    <th>sts_Ts</th>
+                    <th>sts_Ys</th>
+                    <th>sts_El</th>
+                </tr>
+        </table>
+    </div>
+
+<script type="text/javascript">
+
+    $("#BtnSearchM").click(function () {
+            ReportAllSearch();
+        });
+
+
+    function ReportAllSearch() {
+    var OldHtml = $("#BtnSearchM").html();
+    var from_stsno = $("#from_stsnoM").val();
+    var to_stsno = $("#to_stsnoM").val();
+    var c_no = $("#c_noM").val();
+    var h_no = $("#h_noM").val();
+    if ((from_stsno == "") && (to_stsno == "") && ((h_no == "") && (c_no == ""))) {
+        $.alert("กรุณาเลือกช่วง STS_NO หรือป้อนรายละเอียดเพื่อกรองข้อมูล");
+    } else {
+        $.ajax({
+            type: 'POST',
+            url: "././module/APP_Qc_TestLab/data.php",
+            dataType: 'json',
+            beforeSend: function () {
+                $("#BtnSearchM").html("<i class='fa fa-spinner fa-spin'>");
+            },
+            data: {
+                "load": "search",
+                "from_stsno": from_stsno,
+                "to_stsno": to_stsno,
+                "c_no": c_no,
+                "h_no": h_no
+            },
+            success: function (data) {
+                console.log(data)
+                $("#tblReportM").dataTable().fnDestroy();
+                var table = $('#tblReportM').DataTable({
+                    scrollY: "400px",
+                    "scrollX": true,
+                    scrollCollapse: true,
+                    "aaData": data,
+                    "paging": false,
+//                        fixedColumns: {
+//                            leftColumns: 1,
+//                        },
+                    "searching": false,
+                    "bInfo": false,
+
+                    "columns": [
+                    {"data": "standard",
+                            "className": "text-center",
+                        },
+                        {"data": "thick",
+                            "className": "text-center",
+                        },
+                        {"data": "width",
+                            "className": "text-center",
+                        },
+                        {"data": "weight",
+                            "className": "text-center",
+                        },
+                        {"data": "sts_no",
+                            "className": "text-center",
+                        },
+                        {"data": "c_no",
+                            "className": "text-center",
+                        },
+                        {"data": "h_no",
+                            "className": "text-center",
+                        },
+
+                        {"data": "sup_c",
+                        "className": "text-left",
+                        },
+                        {"data": "sup_si",
+                            "className": "text-left",
+                        },
+                        {"data": "sup_mn",
+                            "className": "text-left",                          
+                        },
+                        {"data": "sup_p", 
+                            "className": "text-left",                           
+                        },
+                        {"data": "sup_s",
+                            "className": "text-left",
+                        },
+                        {"data": "sup_cu",
+                            "className": "text-left",
+                        },
+                        {"data": "sup_v",
+                            "className": "text-left",                          
+                        },
+                        {"data": "sup_ni",
+                            "className": "text-left",                           
+                        },
+                        {"data": "sup_cr",
+                            "className": "text-left",                          
+                        },
+                        {"data": "sup_mo",
+                            "className": "text-left",                           
+                        },
+                        {"data": "sup_ti",
+                            "className": "text-left",                         
+                        },
+                        {"data": "sup_nb",
+                            "className": "text-left",
+                        },
+                        {"data": "sup_al",
+                            "className": "text-left",
+                        },
+                        {"data": "sup_b", 
+                            "className": "text-left",
+                        },
+                        {"data": "sup_co", 
+                            "className": "text-left",
+                        },
+                        {"data": "sup_pb", 
+                            "className": "text-left",
+                        },
+                        {"data": "sup_fe",
+                            "className": "text-left",
+                        },
+                        {"data": "sup_ts",
+                            "className": "text-left",
+                        },
+                        {"data": "sup_ys",
+                            "className": "text-left",
+                        },
+                        {"data": "sup_el",
+                            "className": "text-left",
+                        },
+
+                        {"data": "sts_c",
+                        "className": "text-left",
+                        },
+                        {"data": "sts_si",
+                            "className": "text-left",
+                        },
+                        {"data": "sts_mn",
+                            "className": "text-left",                          
+                        },
+                        {"data": "sts_p", 
+                            "className": "text-left",                           
+                        },
+                        {"data": "sts_s",
+                            "className": "text-left",
+                        },
+                        {"data": "sts_cu",
+                            "className": "text-left",
+                        },
+                        {"data": "sts_v",
+                            "className": "text-left",                          
+                        },
+                        {"data": "sts_ni",
+                            "className": "text-left",                           
+                        },
+                        {"data": "sts_cr",
+                            "className": "text-left",                          
+                        },
+                        {"data": "sts_mo",
+                            "className": "text-left",                           
+                        },
+                        {"data": "sts_ti",
+                            "className": "text-left",                         
+                        },
+                        {"data": "sts_nb",
+                            "className": "text-left",
+                        },
+                        {"data": "sts_al",
+                            "className": "text-left",
+                        },
+                        {"data": "sts_b", 
+                            "className": "text-left",
+                        },
+                        {"data": "sts_co", 
+                            "className": "text-left",
+                        },
+                        {"data": "sts_pb", 
+                            "className": "text-left",
+                        },
+                        {"data": "sts_fe",
+                            "className": "text-left",
+                        },
+                        {"data": "sts_ts",
+                            "className": "text-left",
+                        },
+                        {"data": "sts_ys",
+                            "className": "text-left",
+                        },
+                        {"data": "sts_el",
+                            "className": "text-left",
+                        },
+                    ],
+                    'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                            "<'row'<'col-md-12'tr>>" +
+                            "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                    buttons: [
+                        {
+                            extend: 'print',
+                            text: "<i class='fa fa-print'></i>&nbsp;Print",
+                            title: ''
+                        },
+                        {
+                            extend: 'excel',
+                            text: "<i class='fa fa-file-excel'></i>&nbsp;Excel&nbsp;",
+                            title: `ReportMain sts_no ${from_stsno}-${to_stsno}`,
+                            customize: function (xlsx) {
+                                var sheet = xlsx.xl.worksheets['sheet1.xml'];
+                                var numrows = 2;
+                            }
+                        },
+                    ],
+                });
+
+                $('#tblReportM').loading("stop");
+                $("#BtnSearchM").html("<i class='fa fa-search'></i>Search");
+            },
+            error: function (e) {
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+    }
+}
+</script>

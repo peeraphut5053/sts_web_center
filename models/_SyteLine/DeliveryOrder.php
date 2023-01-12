@@ -178,6 +178,34 @@ class DeliveryOrder {
         $q = "EXEC STS_DELETE_SESSION_USER '$minkick' ";
         $cSql->SqlQuery($this->StrConn, $q);
     }
+	
+	Function Log_Request_Session($username,$department) {
+        $cSql = new SqlSrv();
+        $sqlUser = "select * from usernames where Username is not null and Username = '$username'";
+        $rs_sqlUser = $cSql->SqlQuery($this->StrConn, $sqlUser);
+        
+        if ($username ==  $rs_sqlUser[1]["Username"] && $username != ""){
+            echo '<script>setTimeout(function(){ window.close(); }, 1000);</script>';
+            echo ''
+            . '<div style="font-size:3em;text-align:center;padding-top:10%;">'
+            . ' <div style="border-style: outset;padding:50px;border-radius: 12px;margin: 2em;border: 2px solid green;">"ยืนยันการขอเข้าระบบสำเร็จ"</div>'
+        
+            . '<div><img src="sts_logo.jpg" alt="Cinque Terre" width="300" ></div>'
+            . '</div>';
+            
+            $sql = "INSERT INTO log_syteline (username,department,datetime) VALUES ('$username','$department', Getdate())";
+            $rs = $cSql->SqlQuery($this->StrConn, $sql);
+            
+            $q = "EXEC STS_DELETE_SESSION_USER '15' ";
+            $cSql->SqlQuery($this->StrConn, $q);
+            return $rs;
+        }
+        else
+        {
+            echo '<script>alert("ไม่พบผู้ใช้นี้");</script>';
+            echo " <script language='JavaScript'>history.go(-1);</script>"; 
+        }
+    }
 
     Function ConnectionInformation3() {
         $cSql = new SqlSrv();

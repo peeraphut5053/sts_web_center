@@ -78,9 +78,28 @@ if ($load == 'search') {
     $QcTestLab->setConn($ConnSL);
     $where = "where 1=1";
     if ($sts_no != "") {
-        $where = $where . " AND sts_no = '" . $sts_no . "' ";
+        $where = $where . " AND b.sts_no = '" . $sts_no . "' ";
     }
-    $QcTestLab = $QcTestLab->SearchQcTestLab_Sub($where);
+    $QcTestLab = $QcTestLab->SearchQcTestLab_Sub($where,$load);
+    echo json_encode($QcTestLab); 
+}
+
+if ($load == 'ReportSub') {
+    $CallModel = new CallModel();
+    $CallModel->SyteLine_Models();
+    $QcTestLab = new QcTestLab();
+    $QcTestLab->setConn($ConnSL);
+    $where = "where";
+    if (($from_stsno != "") && ($to_stsno != "")) {
+        $where = $where . " b.sts_no BETWEEN '$from_stsno' AND '$to_stsno'";
+    }
+    else if ($c_no != "") {
+        $where = $where . " c_no = '" . $c_no . "' ";
+    }
+    else if ($h_no != "") {
+        $where = $where . " h_no = '" . $h_no . "' ";
+    }
+    $QcTestLab = $QcTestLab->SearchQcTestLab_Sub($where,$load);
     echo json_encode($QcTestLab); 
 }
 
@@ -165,6 +184,15 @@ if ($load == 'InsertQcTestLab_Sub') {
     $_POST["Not_Mec_test_TS"][$i], $_POST["Not_Mec_test_YS"][$i], $_POST["Not_Mec_test_EI"][$i], $_POST["Not_Mec_test_EL_1"][$i], $_POST["Not_Mec_test_EL_2"][$i], $_POST["Not_Mec_test_EL_3"][$i], $_POST["charpy_mean"][$i], $_POST["charpy1"][$i], $_POST["charpy2"][$i], $_POST["charpy3"][$i], $_POST["Metal_P"][$i], $_POST["Metal_F"][$i], $_POST["Metal_M"][$i], $_POST["Hydro_test"][$i], $_POST["prod_FM_no"][$i], $_POST["prod_date"][$i], $_POST["test_date"][$i]);
     echo json_encode($i);    
     }
+}
+
+if ($load == 'searchAll') {
+    $CallModel = new CallModel();
+    $CallModel->SyteLine_Models();
+    $QcTestLab = new QcTestLab();
+    $QcTestLab->setConn($ConnSL);
+    $QcTestLab = $QcTestLab->ReportAll($from_stsno,$to_stsno);
+    echo json_encode($QcTestLab); 
 }
 
 

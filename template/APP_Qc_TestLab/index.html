@@ -122,14 +122,23 @@
     <!-- <h3>TEST</h3> -->
     <nav class="tabs">
         <div class="selector"></div>
-        <a href="#" id ="tab_Report" class="active"><i class="fa fa-file-text-o"></i>&nbsp;&nbsp;Report</a>
+        <a href="#" id ="tab_ReportQc" class="active"><i class="fa fa-file-text-o"></i>&nbsp;&nbsp;Report Qc</a>
+        <a href="#" id ="tab_ReportMain" ><i class="fa fa-file-text-o"></i>&nbsp;&nbsp;Report Main</a>
+        <a href="#" id ="tab_ReportSub" ><i class="fa fa-file-text-o"></i>&nbsp;&nbsp;Report Sub</a>
         <a href="#" id ="tab_Importexcel" ><i class="fa fa-file-text-o"></i>&nbsp;&nbsp;Import</a>
         <a href="#" id ="tab_Edit" ><i class="fa fa-pencil-square-o"></i>&nbsp;&nbsp;Edit</a>
     </nav>
 </div>
-<div id="page_Report" >
-
+<div id="page_ReportQc">
 </div>
+
+<div id="page_ReportMain" class="not-show-content">
+</div>
+
+<div id="page_ReportSub" class="not-show-content">
+</div>
+
+
 <div id="page_Importexcel" class="not-show-content">
 
 </div>
@@ -159,9 +168,9 @@
 
 
     $(document).ready(function () {
-        pageHtml = "page_Report";
+        pageHtml = "page_ReportQc";
         Url = "././module/APP_Qc_TestLab/render.php"
-        $("#page_Report").load(Url, {"pageHtml": pageHtml}, function (response, status, xhr) {
+        $("#page_ReportQc").load(Url, {"pageHtml": pageHtml}, function (response, status, xhr) {
             if (status == "error") {
                 var msg = "Sorry, error: ";
                 $.alert(msg + xhr.status + " " + xhr.statusText);

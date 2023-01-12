@@ -155,7 +155,7 @@
             url: "././module/APP_Qc_TestLab/data.php",
             dataType: 'json',
             beforeSend: function () {
-                $("#btnSearch").html("<i class='fa fa-spinner fa-spin'>");
+                $("#BtnSearch").html("<i class='fa fa-spinner fa-spin'>");
             },
             data: {
                 "load": "search",
@@ -778,7 +778,7 @@
                 });
 
                 $('#tblReportIm').loading("stop");
-                $("#BtnSearch").html("<i class='fa fa-search'></i>ค้นหา");
+                $("#BtnSearch").html("<i class='fa fa-search'></i>Search");
             },
             error: function (e) {
                 console.log("There was an error with your request...");
@@ -796,7 +796,8 @@ function format(d) {
                 <table id='tblReportDetail_${d.sts_no}' class='table table-condensed table-bordered' style='text-align-last: center;'>
                     <thead>        
                         <tr class="bg-gray">
-                            <th colspan='5'>Hot Roll</th>
+                            <th></th>
+                            <th colspan='4'>Product</th>
                             <th colspan='6'>Mechanical Testing</th>
                             <th colspan='6' style='background-color:#FFCCCC;'>Not Accept Mechanical Testing</th>
                             <th colspan='4'>Charpy V-notch Testing</th>
@@ -804,7 +805,8 @@ function format(d) {
                             <th colspan='5'>Production</th>
                         </tr>
                         <tr class="bg-gray">
-                            <th colspan='5'>Coil</th>
+                            <th></th>
+                            <th colspan='4'></th>
                             <th></th>
                             <th></th>
                             <th></th>
@@ -855,7 +857,7 @@ function format(d) {
                             <th>hydro test</th>
                             <th>FM no.</th>
                             <th>produce date</th>
-                            <th>thick x length</th>
+                            <th>thick x width</th>
                             <th>test date</th>
                         </tr>
                     </thead> 
@@ -901,7 +903,7 @@ function format(d) {
                             //         return ret;
                             //     }
                             // },
-                            {"data": "operating_no",
+                            {"data": "opr_no",
                                 "className": "text-center",
                             },
                             {"data": "size",
@@ -983,10 +985,10 @@ function format(d) {
                                 return ret;
                             }
                             },
-                            {"data": {thick: "thick_sub", length: "length"},
+                            {"data": {thick: "thick", width: "width"},
                                 "className": "text-center",
                                 "render": function (data, type, row, meta) {
-                                var ret = data.thick_sub + " x " + data.length;
+                                var ret = data.thick + " x " + data.width;
                                 return ret;
                             }
                             },
