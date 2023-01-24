@@ -309,7 +309,8 @@ class Executive {
     }
 
     function ProductionDashboardP() {
-        $query = "select wc.description, sum(cast(mat.qty as decimal(6,0))) as qty from matltran_mst mat inner join wc_mst wc on mat.wc = wc.wc where mat.trans_type ='F' and convert(date,mat.trans_date) = convert(date,getdate()) and mat.wc like 'P%' group by wc.description";
+        $query = "select description as Station, qty as [Qty Today (PCS)],qtyTon as [Qty Today (Ton)] , MTDqty as [Qty MTD (PCS)] , MTDqtyTon as [Qty MTD (Ton)]
+                  from V_STS_execProdDash where wc like 'P%' order by description";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);
@@ -317,7 +318,8 @@ class Executive {
     }
 
     function ProductionDashboardW() {
-        $query = "select wc.description, sum(cast(mat.qty as decimal(6,0))) as qty from matltran_mst mat inner join wc_mst wc on mat.wc = wc.wc where mat.trans_type ='F' and convert(date,mat.trans_date) = convert(date,getdate())  and mat.wc like 'W%' group by wc.description";
+        $query = "select description as Station, qty as [Qty Today (PCS)], qtyTon as [Qty Today (Ton)], MTDqty as [Qty MTD (PCS)] , MTDqtyTon as [Qty MTD (Ton)]
+				  from V_STS_execProdDash where wc like 'W%' order by description";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);
