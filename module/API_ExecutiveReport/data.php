@@ -192,3 +192,13 @@ if ($load == "STS_execRpt_F_byType_Live_Detail") {
     $JsonValue = $CallModelObj->STS_execRpt_F_byType_Live_Detail($daystart, $dayend, $country);
     echo json_encode($JsonValue);
 }
+	
+if ($load == "STS_execRpt_F_bySize_Live_Detail") {
+    $JsonValue = $CallModelObj->STS_execRpt_F_bySize_Live_Detail($daystart, $dayend, $country);
+    echo json_encode($JsonValue);
+}
+
+if ($load == "STS_execRpt_F_bySizeType_Live_Detail") {
+    $JsonValue = $CallModelObj->STS_execRpt_F_bySizeType_Live_Detail($daystart, $dayend, $country);
+    echo json_encode($JsonValue);
+}
