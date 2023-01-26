@@ -187,3 +187,8 @@ if ($load == "ProductionDashboardW") {
     $JsonValue = $CallModelObj->ProductionDashboardW();
     echo json_encode($JsonValue);
 }
+
+if ($load == "STS_execRpt_F_byType_Live_Detail") {
+    $JsonValue = $CallModelObj->STS_execRpt_F_byType_Live_Detail($daystart, $dayend, $country);
+    echo json_encode($JsonValue);
+}
