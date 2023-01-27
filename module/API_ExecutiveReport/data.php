@@ -188,6 +188,7 @@ if ($load == "ProductionDashboardW") {
     echo json_encode($JsonValue);
 }
 
+//Detailสำเร็จรูป
 if ($load == "STS_execRpt_F_byType_Live_Detail") {
     $JsonValue = $CallModelObj->STS_execRpt_F_byType_Live_Detail($daystart, $dayend, $country);
     echo json_encode($JsonValue);
@@ -200,5 +201,21 @@ if ($load == "STS_execRpt_F_bySize_Live_Detail") {
 
 if ($load == "STS_execRpt_F_bySizeType_Live_Detail") {
     $JsonValue = $CallModelObj->STS_execRpt_F_bySizeType_Live_Detail($daystart, $dayend, $country);
+    echo json_encode($JsonValue);
+}
+
+//Detailระหว่างผลิต
+if ($load == "STS_execRpt_W_byType_Live_Detail") {
+    $JsonValue = $CallModelObj->STS_execRpt_W_byType_Live_Detail($daystart, $dayend, $country);
+    echo json_encode($JsonValue);
+}
+
+if ($load == "STS_execRpt_W_bySize_Live_Detail") {
+    $JsonValue = $CallModelObj->STS_execRpt_W_bySize_Live_Detail($daystart, $dayend, $country);
+    echo json_encode($JsonValue);
+}
+
+if ($load == "STS_execRpt_W_bySizeType_Live_Detail") {
+    $JsonValue = $CallModelObj->STS_execRpt_W_bySizeType_Live_Detail($daystart, $dayend, $country);
     echo json_encode($JsonValue);
 }

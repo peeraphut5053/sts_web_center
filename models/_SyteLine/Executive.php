@@ -349,4 +349,29 @@ class Executive {
         array_splice($rs0, count($rs0) - 1, 1);
         return $rs0;
     }
+	
+	  function STS_execRpt_W_byType_Live_Detail($daystart, $dayend, $country) {
+        $query = "STS_execRpt_W_byType_Live_Detail @daystart = '$daystart', @dayend = '$dayend', @country = '$country'";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+	
+	  function STS_execRpt_W_bySize_Live_Detail($daystart, $dayend, $country) {
+        $query = "STS_execRpt_W_bySize_Live_Detail @daystart = '$daystart', @dayend = '$dayend', @country = '$country'";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+	
+	  function STS_execRpt_W_bySizeType_Live_Detail($daystart, $dayend, $country) {
+        $query = "STS_execRpt_W_bySizeType_Live_Detail @daystart = '$daystart', @dayend = '$dayend', @country = '$country'";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+
 }
