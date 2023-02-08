@@ -322,5 +322,31 @@ class BcTag {
         return $rs;
     }
     
+	Function SearchTagStatus($wh) {
+        $cSql = new SqlSrv();
+        $query = "select mv_bc_tag.*, item.[description]
+                from mv_bc_tag inner join item_mst item on item.item = mv_bc_tag.item
+                where id <> ''".$wh." 
+                order by id asc";
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
 
+    Function UpdateTagStatus($id,$status_value) {
+        $cSql = new SqlSrv();
+        $query = "update mv_bc_tag set tag_status = '".$status_value."' where id = '".$id."' ";
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+    Function SaveDetail($detail_id,$detail_value) {
+        $cSql = new SqlSrv();
+        $query = "update mv_bc_tag set detail = '".$detail_value."' where id = '".$detail_id."' ";
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+	
 }

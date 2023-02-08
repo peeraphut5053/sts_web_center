@@ -1,0 +1,371 @@
+<div class="row" style="border-bottom:solid 1px #e8e8e8;">  
+    <div class="row">
+        <h3 style="padding-left:5px;">Tag Status</h3>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-3 col-md-2 col-sm-2 col-xs-2  col-search">
+        <div class="input-group">
+            <div class="input-group-addon">Tag id</div>
+            <input type="text" class="form-control txt-filter" id="tag_id">
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-md-2 col-sm-2 col-xs-2  col-search">
+        <div class="input-group">
+            <div class="input-group-addon">sts no</div>
+            <input type="text" class="form-control txt-filter" id="sts_no">
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-md-2 col-sm-2 col-xs-2  col-search">
+        <div class="input-group">
+            <div class="input-group-addon">Job</div>
+            <input type="text" value="" class="form-control txt-filter" id="job">
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-md-2 col-sm-2 col-xs-2  col-search">
+        <div class="input-group">
+            <div class="input-group-addon">item</div>
+            <input type="text"  class="form-control txt-filter" id="item">
+        </div>
+    </div>
+
+</div>
+
+<div class="row">
+    <div class="col-lg-3 col-md-2 col-sm-2 col-xs-2  col-search">
+        <div class="input-group">
+            <div class="input-group-addon">Lot</div>
+            <input type="text"  class="form-control txt-filter" id="lot">
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-md-2 col-sm-2 col-xs-2  col-search">
+        <div class="input-group">
+            <div class="input-group-addon">Status</div>
+            <select id="tag_status" class="form-control">
+                <option selected value="">---- &nbsp; please select &nbsp; ----&nbsp;</option>
+                <option value='Good' > Good </option>
+                <option value='OnHold'> OnHold </option>
+            </select>
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-md-2 col-sm-2 col-xs-2  col-search">
+        <div class="input-group">
+            <div class="input-group-addon">Date</div>
+            <input type="text"  class="form-control txt-filter" id="mfg_date">
+        </div>
+    </div>
+
+    <div class="col-lg-1 col-md-2 col-sm-1 col-xs-6  col-search">
+        <button id="BtnSearchM" class="btn btn-info"><i class="fa fa-search"></i>Search</button>
+    </div>
+</div>
+
+    <div class="row" id="divReportM">
+        <table class="table table-condensed table-bordered table-striped" id="tblReportHidden"  hidden>
+            <thead>
+               
+                <tr>
+                    <th class="bg-gray" width="65px">Tag id</th>
+                    <th class="bg-gray">sts no</th>
+                    <th class="bg-gray"width="45px">Job</th>
+                    <th class="bg-gray" width="200px">item</th>
+                    <th class="bg-gray" width="230px">Description</th>
+                    <th class="bg-gray" width="90px">Lot</th>
+                    <th class="bg-gray">Quantity</th>
+                    <th class="bg-gray">TagStatus</th>
+                    <th class="bg-gray" width="300px">Detail</th>
+                </tr>
+        </table>
+
+        <table class="table table-condensed table-bordered table-striped" id="tblReportShow">
+            <thead>
+               
+                <tr>
+                    <th class="bg-gray" width="65px">Tag id</th>
+                    <th class="bg-gray">sts no</th>
+                    <th class="bg-gray"width="45px">Job</th>
+                    <th class="bg-gray" width="200px">item</th>
+                    <th class="bg-gray" width="230px">Description</th>
+                    <th class="bg-gray" width="90px">Lot</th>
+                    <th class="bg-gray">Quantity</th>
+                    <th class="bg-gray">TagStatus</th>
+                    <th class="bg-gray" width="300px">Detail</th>
+                </tr>
+        </table>
+
+    </div>
+
+<script type="text/javascript">
+
+    $("#mfg_date").datepicker({
+        dateFormat: 'yy-mm-dd'
+    });
+
+    // $("#mfg_date").val(GetToday());
+
+    $("#BtnSearchM").click(function () {
+            ReportAllSearchHidden();
+            ReportAllSearchShow();
+        });
+    
+        var select_status = [
+            "-- select --",
+            "Good",
+            "OnHold",
+    ];
+
+    function ReportAllSearchHidden() {
+    var OldHtml = $("#BtnSearchM").html();
+    var tag_id = $("#tag_id").val();
+    var sts_no = $("#sts_no").val();
+    var job = $("#job").val();
+    var item = $("#item").val();
+    var lot = $("#lot").val();
+    var tag_status = $("#tag_status").val();
+    var mfg_date = $("#mfg_date").val();
+    if ((tag_id == "") && (sts_no == "") && (job == "") && (item == "") && (lot == "") && (tag_status == "") && (mfg_date == "")) {
+        $.alert("กรุณาป้อนรายละเอียดเพื่อกรองข้อมูล");
+    } else {
+        $.ajax({
+            type: 'POST',
+            url: "././module/REPORT_TagStatus/data.php",
+            dataType: 'json',
+            beforeSend: function () {
+                $("#BtnSearchM").html("<i class='fa fa-spinner fa-spin'>");
+            },
+            data: {
+                "load": "SearchTagStatus",
+                "tag_id": tag_id,
+                "sts_no": sts_no,
+                "job": job,
+                "item": item,
+                "lot": lot,
+                "tag_status": tag_status,
+                "mfg_date": mfg_date
+            },
+            success: function (data) {
+                console.log(data)
+                $("#tblReportHidden").dataTable().fnDestroy();
+                var table = $('#tblReportHidden').DataTable({
+                    scrollY: "400px",
+                    "scrollX": true,
+                    scrollCollapse: true,
+                    "aaData": data,
+                    "paging": false,
+//                        fixedColumns: {
+//                            leftColumns: 1,
+//                        },
+                    "searching": false,
+                    "bInfo": false,
+
+                    "columns": [
+                        {"data": "id",
+                            "className": "text-left",
+                        },
+                        {"data": "sts_no",
+                            "className": "text-left",
+                        },
+                        {"data": "job",
+                        "className": "text-left",
+                        },
+                        {"data": "item",
+                            "className": "text-left",
+                        },
+                        {"data": "description",
+                            "className": "text-left",
+                        },
+                        {"data": "lot",
+                            "className": "text-left",                          
+                        },
+                        {"data": "qty1", 
+                            "className": "text-left",                           
+                        },
+                        {"data": "tag_status",
+                            "className": "text-left",
+                        }, 
+                        {"data": "detail",
+                            "className": "text-left",
+                        }
+                    ],
+                    'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                            "<'row'<'col-md-12'tr>>" +
+                            "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                    buttons: [
+                        // {
+                        //     extend: 'print',
+                        //     text: "<i class='fa fa-print'></i>&nbsp;Print",
+                        //     title: ''
+                        // },
+                        {
+                            extend: 'excel',
+                            text: "<i class='fa fa-file-excel'></i>&nbsp;Excel&nbsp;",
+                            title: "Report TagStatus",
+                            // `ReportMain sts_no ${from_stsno}-${to_stsno}`,
+                            customize: function (xlsx) {
+                                var sheet = xlsx.xl.worksheets['sheet1.xml'];
+                                var numrows = 2;
+                            }
+                        },
+                    ],
+                });
+
+                $('#tblReportHidden').loading("stop");
+                $("#BtnSearchM").html("<i class='fa fa-search'></i>Search");
+            },
+            error: function (e) {
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+    }
+}
+
+    function ReportAllSearchShow() {
+    var OldHtml = $("#BtnSearchM").html();
+    var tag_id = $("#tag_id").val();
+    var sts_no = $("#sts_no").val();
+    var job = $("#job").val();
+    var item = $("#item").val();
+    var lot = $("#lot").val();
+    var tag_status = $("#tag_status").val();
+    var mfg_date = $("#mfg_date").val();
+    if ((tag_id == "") && (sts_no == "") && (job == "") && (item == "") && (lot == "") && (tag_status == "") && (mfg_date == "")) {
+        // $.alert("กรุณาป้อนรายละเอียดเพื่อกรองข้อมูล");
+    } else {
+        $.ajax({
+            type: 'POST',
+            url: "././module/REPORT_TagStatus/data.php",
+            dataType: 'json',
+            beforeSend: function () {
+                $("#BtnSearchM").html("<i class='fa fa-spinner fa-spin'>");
+            },
+            data: {
+                "load": "SearchTagStatus",
+                "tag_id": tag_id,
+                "sts_no": sts_no,
+                "job": job,
+                "item": item,
+                "lot": lot,
+                "tag_status": tag_status,
+                "mfg_date": mfg_date
+            },
+            success: function (data) {
+                console.log(data)
+                $("#tblReportShow").dataTable().fnDestroy();
+                var table = $('#tblReportShow').DataTable({
+                    scrollY: "400px",
+                    "scrollX": true,
+                    scrollCollapse: true,
+                    "aaData": data,
+                    "paging": false,
+//                        fixedColumns: {
+//                            leftColumns: 1,
+//                        },
+                    "searching": false,
+                    "bInfo": false,
+
+                    "columns": [
+                        {"data": "id",
+                            "className": "text-left",
+                        },
+                        {"data": "sts_no",
+                            "className": "text-left",
+                        },
+                        {"data": "job",
+                        "className": "text-left",
+                        },
+                        {"data": "item",
+                            "className": "text-left",
+                        },
+                        {"data": "description",
+                            "className": "text-left",
+                        },
+                        {"data": "lot",
+                            "className": "text-left",                          
+                        },
+                        {"data": "qty1", 
+                            "className": "text-left",                           
+                        },
+                        {"data": "tag_status",
+                            "className": "text-center",
+                            "render": function(data, type, row, meta){
+                            var $select = $("<select id='"+ row.id +"' value='"+data+"'  onchange='UpdateStatus(this.id,value)'></select>", {
+                        });
+                        $.each(select_status, function(k,v){
+                            var $option = $("<option></option>", {
+                                "text": v,
+                                "value": v
+                            });
+                            if(data === v){
+                                $option.attr("selected", "selected")
+                            }
+                            $select.append($option);
+                        });
+                        return $select.prop("outerHTML");
+                    }
+                        }, 
+                        {"data": "detail",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                            let valdata = data;
+                            let ret = `<span hidden>${(valdata) }</span><input type='text' class='input-text-value' size='45' id=${row.id} onchange="SaveDetail(this.id,value);" value='${(valdata)}' />`;
+                            return ret;
+                        }
+                    }
+                    ],
+                });
+
+                $('#tblReportShow').loading("stop");
+                $("#BtnSearchM").html("<i class='fa fa-search'></i>Search");
+            },
+            error: function (e) {
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+    }
+}
+
+    function UpdateStatus(id,status_value) {
+    // console.log(id)
+    // console.log(status_value)
+    $.ajax({
+            url: "././module/REPORT_TagStatus/data.php",
+            type: 'get',
+            // processData: false,
+            data: {
+            "load": "update_status",
+            "id": id,
+            "status_value": status_value
+            },
+            success: function () {
+                // alert("true");
+            }
+        });
+    }
+
+    function SaveDetail(detail_id,detail_value) {
+    // console.log(detail_id)
+    // console.log(detail_value)
+    $.ajax({
+            url: "././module/REPORT_TagStatus/data.php",
+            type: 'get',
+            // processData: false,
+            data: {
+            "load": "save_detail",
+            "detail_id": detail_id,
+            "detail_value": detail_value
+            },
+            success: function () {
+                // alert("true");
+            }
+        });
+    }
+    
+</script>

@@ -1,0 +1,50 @@
+<style>
+#Pass::placeholder {
+    color: red;
+    opacity: 1;
+  }
+</style>
+
+</div>
+    <div id="page_TagStatus">
+</div>
+<script type="text/javascript">
+    
+    $(document).ready(function () {
+        pageHtml = "page_TagStatus";
+        if (pageHtml == "page_TagStatus"){
+            $.confirm({
+                title: 'กรุณาใส่ Password',
+                theme: 'modern',
+                content: '<input placeholder="" type="password" id="Pass" class="form-control" name="Pass" autofocus>',
+                buttons: {
+                    confirm: function checked() {
+                        var Pass = $("#Pass").val();
+                        // console.log('P ',Pass);
+                        if (Pass == 1234){
+                            Url = "././module/REPORT_TagStatus/render.php"
+                            $("#page_TagStatus").load(Url, {"pageHtml": pageHtml}, function (response, status, xhr) {
+                                if (status == "error") {
+                                    var msg = "Sorry, error: ";
+                                    $.alert(msg + xhr.status + " " + xhr.statusText);
+                                } else {
+                                    $("#page_TagStatus").loading("stop");
+                                }
+                            });
+                        }else{
+                            $('#Pass').attr('placeholder','Password ไม่ถูกต้อง');
+                            $("#Pass").val('');
+                            return false;
+                        }
+                    }, 
+                    cencel: function close() {
+                        window.close()
+                    }
+                }
+            });
+        }
+    });
+
+    </script>
+
+    
