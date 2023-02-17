@@ -122,7 +122,7 @@ class BcTag {
 
     Function STS_qty_move_line($doc_num) {
         $cSql = new SqlSrv();
-        $query = "select STS_qty_move_line.id,fromloc as loc,mv_bc_tag.id, CONVERT(int, lot_loc_mst.qty_on_hand) as qty1, STS_qty_move_line.lot,lot_mst.item,item_mst.u_m,STS_qty_move_line.boat_position FROM STS_qty_move_line LEFT JOIN lot_mst ON lot_mst.lot = STS_qty_move_line.lot LEFT JOIN mv_bc_tag ON lot_mst.lot = mv_bc_tag.lot and lot_mst.item = mv_bc_tag.item LEFT JOIN lot_loc_mst ON lot_loc_mst.lot = STS_qty_move_line.lot and lot_loc_mst.item = mv_bc_tag.item LEFT JOIN item_mst ON item_mst.item = lot_loc_mst.item "
+        $query = "select STS_qty_move_line.id,fromloc as loc,mv_bc_tag.id, CONVERT(int, lot_loc_mst.qty_on_hand) as qty1, STS_qty_move_line.lot,lot_mst.item,item_mst.u_m,STS_qty_move_line.boat_position FROM STS_qty_move_line LEFT JOIN lot_mst ON lot_mst.lot = STS_qty_move_line.lot LEFT JOIN mv_bc_tag ON lot_mst.lot = mv_bc_tag.lot and lot_mst.item = mv_bc_tag.item and case when STS_qty_move_line.tag_id is null then '1' else mv_bc_tag.id end =  case when STS_qty_move_line.tag_id is null then '1' else STS_qty_move_line.tag_id end LEFT JOIN lot_loc_mst ON lot_loc_mst.lot = STS_qty_move_line.lot and lot_loc_mst.item = mv_bc_tag.item and STS_qty_move_line.toloc = lot_loc_mst.loc LEFT JOIN item_mst ON item_mst.item = lot_loc_mst.item "
                 . " where STS_qty_move_line.doc_num = '$doc_num' and mv_bc_tag.active=1 and mv_bc_tag.qty1 <> 0  ";
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
