@@ -349,4 +349,14 @@ class BcTag {
         return $rs;
     }
 	
+	Function UpdateBoat_Position($id,$doc_num,$boat_position) {
+        $cSql = new SqlSrv();
+        $query = "update STS_qty_move_line "
+                . " set boat_position = '$boat_position' "
+                . " where tag_id = $id and doc_num = '$doc_num' ";
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+	
 }

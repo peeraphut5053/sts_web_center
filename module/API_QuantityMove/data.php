@@ -115,3 +115,8 @@ if ($load == "DeleteSTS_list_of_do_group") {
     $checkItemLotLoc = $CallModelObj->DeleteSTS_list_of_do_group($id);
     echo json_encode($checkItemLotLoc);
 }
+
+if ($load == "UpdateBoat_Position") {
+    $checkItemLotLoc = $CallModelObj->UpdateBoat_Position($id,$doc_num,$boat_position);
+    echo json_encode($checkItemLotLoc);
+}
