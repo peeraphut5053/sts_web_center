@@ -36,7 +36,7 @@ class BcTag {
         $query = "select mv_bc_tag.id, mv_bc_tag.lot, loc, mv_bc_tag.item, qty1, item_mst.u_m FROM lot_loc_mst"
                 . " LEFT JOIN mv_bc_tag ON lot_loc_mst.lot = mv_bc_tag.lot"
                 . " LEFT JOIN item_mst ON item_mst.item = Mv_Bc_Tag.item"
-                . " where mv_bc_tag.id = '$tag_id'";
+                . " where mv_bc_tag.id = '$tag_id' and qty1 = qty_on_hand";
 
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
