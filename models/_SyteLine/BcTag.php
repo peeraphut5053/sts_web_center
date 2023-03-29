@@ -144,7 +144,7 @@ class BcTag {
         //return $rs;
     }
 
-    Function moveqty_create_hdr($toLoc, $w_c, $doc_type, $do_num, $boatList,$destination) {
+    Function moveqty_create_hdr($toLoc, $w_c, $doc_type, $do_num, $boatList,$destination,$ActWeight) {
         if ($doc_type == "") {
             $doc_type == "Internal";
         }
