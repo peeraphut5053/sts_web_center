@@ -149,7 +149,7 @@ class BcTag {
             $doc_type == "Internal";
         }
         $cSql = new SqlSrv();
-        $query = "exec STS_QtyMoveLotLocation_GEN_HEADER @loc = '$toLoc' , @w_c= '$w_c' ,@doc_type= '$doc_type' , @do_num='$do_num',@boatList='$boatList',@destination = '$destination'  ";
+        $query = "exec STS_QtyMoveLotLocation_GEN_HEADER @loc = '$toLoc' , @w_c= '$w_c' ,@doc_type= '$doc_type' , @do_num='$do_num',@boatList='$boatList',@destination = '$destination,@ActWeight = '$ActWeight'  ";
         $cSql->SqlQuery($this->StrConn, $query);
 
         $query2 = " select top (1)* FROM STS_qty_move_hrd order by id desc";
