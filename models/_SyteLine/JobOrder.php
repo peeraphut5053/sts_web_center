@@ -1278,6 +1278,16 @@ class JOBORDER {
         array_splice($rs0, count($rs0) - 1, 1);
         return $rs0;
     }
+	
+	function ReportTagBoatNote() {
+        $query = "select tag.id,tag.lot,lot.loc, lot.item, lot.qty_on_hand, tag.qty1 as tagQTY
+                  from lot_loc_mst lot inner join mv_bc_tag tag on lot.lot=tag.lot
+                  where loc like 'cl%'  and tag.active=1 and qty1 <> 0 ";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
 
     
     

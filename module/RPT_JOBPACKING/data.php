@@ -448,5 +448,14 @@ if ($load == "BoatNoteSummaryByDoGroup") {
     echo json_encode($Trans);
 }
 
+if ($load == "ReportTagBoatNote") {
+    $CallModel = new CallModel();
+    $CallModel->SyteLine_Models();
+    $Trans = new JobOrder();
+    $Trans->setConn($ConnSL);
+    $Trans = $Trans->ReportTagBoatNote();
+    echo json_encode($Trans);
+}
+
 
 
