@@ -121,8 +121,13 @@ if ($load == "UpdateBoat_Position") {
     echo json_encode($checkItemLotLoc);
 }
 
-if ($load == "Saerch_STS_qty_move_hrd") {
-    $Saerch_STS_qty_move_hrd = $CallModelObj->Saerch_STS_qty_move_hrd($doc_num);
-    echo json_encode($Saerch_STS_qty_move_hrd);
+if ($load == "Search_STS_qty_move_hrd") {
+    $Search_STS_qty_move_hrd = $CallModelObj->Search_STS_qty_move_hrd($doc_num);
+    echo json_encode($Search_STS_qty_move_hrd);
+}
+
+if ($load == "editActualWeight") {
+    $editActualWeight = $CallModelObj->editActualWeight($doc_num, $eActualWeight);
+    echo json_encode($editActualWeight);
 }
 

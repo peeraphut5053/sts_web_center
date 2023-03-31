@@ -359,9 +359,17 @@ class BcTag {
         return $rs;
     }
 	
-	Function Saerch_STS_qty_move_hrd($doc_num) {
+	Function Search_STS_qty_move_hrd($doc_num) {
         $cSql = new SqlSrv();
         $query = "select * FROM STS_qty_move_hrd where doc_num = '$doc_num'";
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+	
+	Function editActualWeight($doc_num, $eActualWeight) {
+        $cSql = new SqlSrv();
+        $query = "update STS_qty_move_hrd set ActWeight = $eActualWeight  where doc_num = '$doc_num'";
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
         return $rs;
