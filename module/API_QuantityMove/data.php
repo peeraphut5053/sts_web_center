@@ -56,6 +56,7 @@ if ($load == "SelectDOList") {
 if ($load == "moveqty_create_hdr") {
     (isset($w_c)) ? $w_c = $w_c : $w_c = "";
     (isset($destination)) ? $destination = $destination : $destination = "";
+	(isset($ActWeight)) ? $ActWeight = $ActWeight : $ActWeight = 0;
 
     //
     (isset($doc_type)) ? $doc_type = $doc_type : $doc_type = "Internal";
