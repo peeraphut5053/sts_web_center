@@ -1267,11 +1267,11 @@ class JOBORDER {
     }
 	
 	function BoatNoteSummaryByDoGroup($do_group_name,$loc) {
-        $query = "select uf_by,loc,loc_description, cust_name,city,sts_PO,sum(countsts_PO) as sumSTS_PO, sum([weight]) as sumWeight, cust_po, loc_no
+        $query = "select uf_by,loc,loc_description, cust_name,city,sts_PO,sum(countsts_PO) as sumSTS_PO, sum([weight]) as sumWeight, cust_po, loc_no, startDate, endDate
                   from V_STS_BoatNote_SUM
                   where do_group_name = '$do_group_name'
                   and case when '$loc' is null or '$loc' = '' then '1' else loc end = case when '$loc' is null or '$loc' = '' then '1' else '$loc' end
-                  group by uf_by,loc,loc_description, cust_name,city,sts_PO,do_group_name, cust_po, loc_no
+                  group by uf_by,loc,loc_description, cust_name,city,sts_PO,do_group_name, cust_po, loc_no, startDate, endDate
                   order by sts_PO ";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
