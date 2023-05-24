@@ -1280,9 +1280,13 @@ class JOBORDER {
     }
 	
 	function ReportTagBoatNote() {
-        $query = "select tag.id,tag.lot,lot.loc, lot.item, lot.qty_on_hand, tag.qty1 as tagQTY
-                  from lot_loc_mst lot inner join mv_bc_tag tag on lot.lot=tag.lot
-                  where loc like 'cl%'  and tag.active=1 and qty1 <> 0 ";
+        $query = "select distinct tag.id, preship.do_num,tag.lot,lot.loc, lot.item, lot.qty_on_hand, tag.qty1 as tagQTY
+                 from lot_loc_mst lot 
+                 inner join mv_bc_tag tag on lot.lot=tag.lot
+                 inner join job_mst on LEFT(lot.lot,10) = job_mst.job 
+                 inner join AIT_Preship_Do_Seq preship on job_mst.ord_num = preship.co_num and job_mst.ord_line = preship.co_line 
+                 where lot.loc like 'cl%'  and tag.active=1 and qty1 <> 0
+                 order by id";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);
