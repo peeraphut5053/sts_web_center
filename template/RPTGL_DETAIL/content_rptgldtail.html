@@ -1,0 +1,421 @@
+
+<div class="row">
+    <h4>General Ledger Detail Report</h4>
+</div>
+
+<div class='row'>
+    <div class="col-lg-2 col-md-2 col-sm-6 col-xs-2 text-left input-group-addon" style="width:100px;padding-top:7px;border-top-left-radius: 5px;border-bottom-left-radius: 5px;">
+        Account            
+    </div>
+
+    <div class="col-6 col-sm-6 col-xs-6 col-md-6 col-lg-6" style="padding-right:50px;padding-left:0px;">
+
+        <div class="row" style="margin-top:0px;margin-bottom:0px;padding-top:0px;padding-left:0px;padding-bottom:0px;">
+            <select class="form-control" id="SelAcct" >
+                {options_acct}
+            </select>
+
+        </div>
+    </div>
+
+    
+
+    <div class="col-lg-2 col-md-2 col-sm-6 col-xs-6 " >
+        <div class='row' style="margin-top:0px;">
+            <div class="input-group">
+                <div class="input-group-addon">Year</div>
+                <select class="form-control" id="selYear">
+
+                </select>
+            </div>
+        </div>
+
+        <div class='row'>
+            <div class="input-group">
+                <div class="input-group-addon">FROM Month</div>
+                <select class="form-control" id="selMonth" >
+                </select>
+            </div>
+            <div class="input-group">
+                <div class="input-group-addon">To Month</div>
+                <select class="form-control" id="selMonth2">
+                </select>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-lg-1 col-md-1 col-sm-6 col-xs-6 text-left">
+        <button class="btn btn-info" id="btnSearch"><i class="fa fa-search"></i>&nbsp;Search </button>
+    </div>
+
+</div>
+
+<!-- -- -->
+<div class="col-lg-2 col-md-2 col-sm-6 col-xs-2 text-left input-group-addon" style="width:100px;padding-top:7px;border-top-left-radius: 5px;border-bottom-left-radius: 5px;">
+    Department            
+</div>
+
+<div class="col-6 col-sm-6 col-xs-6 col-md-6 col-lg-6" style="padding-right:50px;padding-left:0px;">
+
+    <div class="row" style="margin-top:0px;margin-bottom:0px;padding-top:0px;padding-left:0px;padding-bottom:0px;">
+        <select class="form-control" id="SelUnit1" >
+            {options_unit1}
+        </select>
+
+    </div>
+</div>
+<!-- --- -->
+
+<div class="row" id="rowResultTable">
+    <table class="table table-condensed table-striped " width="100%" id="tblReport">
+        <thead>
+            <tr>
+                <!--<th>trans_num</th>-->
+                <!-- <th>trans_num</th> -->
+                <th>acct</th>
+                <th>acct_desc</th>
+                <th>acct_unit1</th>
+                <th>Dept1</th>
+                <th>acct_unit2</th>
+                <th>Dept2</th>
+                <th>acct_unit3</th>
+                <th>Dept3</th>
+                <th>acct_unit4</th>
+                <th>Dept4</th>
+                <th>trans_date</th>
+                <th>dom_amount</th>
+                <th>ref</th>
+                <th>control_year</th>
+                <th>control_period</th>
+            </tr>
+        </thead>
+
+    </table>
+</div>
+<script type="text/javascript">
+    //Init render page environment //
+    $(document).ready(function () {
+        $('#SelAcct').selectize({
+            // plugins: ['remove_button'],
+            // delimiter: ',',
+            persist: false,
+            create: function (input) {
+                return {
+                    value: input,
+                    text: input
+                }
+            }
+        });
+
+        $('#SelUnit1').selectize({
+            // plugins: ['remove_button'],
+            // delimiter: ',',
+            persist: false,
+            create: function (input) {
+                return {
+                    value: input,
+                    text: input
+                }
+            }
+        });
+    });
+    GetYearMonth("selYear", "selMonth");
+    GetYearMonth("selYear2", "selMonth2");
+
+    $("#btnSearch").click(function () {
+        ReportItemSearch();
+    });
+    $("#txtStartDate,#txtEndDate").datepicker({
+        dateFormat: 'yy-mm-dd'
+    });
+    function ReportItemSearch() {
+        var OldHtml = $("#btnSearch").html();
+        // var Acct = [];
+        var Acct = $("#SelAcct").val();
+        var Unit1 = $("#SelUnit1").val();
+        // console.log(Acct);
+        // console.log(Unit1);
+        var selYear = $("#selYear").val();
+        var selMonth = $("#selMonth").val();
+        var selMonth2 = $("#selMonth2").val();
+
+        if (Acct == "" && Unit1 == "")  {
+            $.alert("Please select Account or Department ");
+            return false;
+        } else if (Acct == null && Unit1 == "") {
+            $.alert("กรุณาเลือก Account or Department ");
+            return false;
+        } else {
+        //     Acct = Acct + ',';
+//            console.log("Year : " + selYear + " Month : " + selMonth + " Acct : " + Acct);
+            $("#btnSearch").html("<i class='fa fa-spinner fa-spin'></i>");
+            $("#tblReport").loading();
+            $.ajax({
+                type: 'GET',
+                url: "././module/RPTGL_DETAIL/data.php",
+                //  contentType: "text/plain",
+                dataType: 'json',
+                beforeSend: function () {
+                    $("#btnSearch").html("<i class='fa fa-spinner fa-spin'>");
+                },
+                data: {
+                    "load": "ajax",
+                    "selYear": selYear,
+                    "selMonth": selMonth,
+                    "selMonth2": selMonth2,
+                    "Acct": Acct,
+                    "Unit1": Unit1
+                },
+                success: function (data) {
+
+                    $("#tblReport").DataTable().clear();
+                    $('#tblReport').dataTable({
+                        "ordering": false,
+                        // "aaSorting": [],
+                        "aaData": data,
+                        "paging": false,
+                        destroy: true,
+                        'processing': true,
+                        // aoColumnDefs: [
+                        //     {"aTargets": [0], "bSortable": false},
+                        //     {"aTargets": [1], "bSortable": true},
+                        //     {"aTargets": [2], "bSortable": false},
+                        //     {"aTargets": [3], "bSortable": false}
+                        // ],
+                        "columns": [
+                            {
+                                "data": "acct",
+                                "className": "text-center",
+                                "width": "5%",
+                            },
+                            {
+                                "data": "acct_desc",
+                                "className": "text-center",
+                                "width": "10%"
+                            },
+                            {
+                                "data": "acct_unit1",
+                                "className": "text-center",
+                                "width": "5%"
+                            },
+                            {
+                                "data": "Dept1",
+                                "className": "text-center",
+                                "width": "10%"
+                            },
+                            {
+                                "data": "acct_unit2",
+                                "className": "text-center",
+                                "width": "5%"
+                            },
+                            {
+                                "data": "Dept2",
+                                "className": "text-center",
+                                "width": "10%"
+                            },
+                            {
+                                "data": "acct_unit3",
+                                "className": "text-center",
+                                "width": "5%"
+                            },
+                            {
+                                "data": "Dept3",
+                                "className": "text-center",
+                                "width": "10%"
+                            },
+                            {
+                                "data": "acct_unit4",
+                                "className": "text-center",
+                                "width": "5%"
+                            },
+                            {
+                                "data": "Dept4",
+                                "className": "text-center",
+                                "width": "10%"
+                            },
+                            {
+                                "data": "trans_date",
+                                "className": "text-center",
+                                "width": "5%",
+                                "render": function (data, type, row, meta) {
+                                    var ret = addCommas(String(data));
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "dom_amount",
+                                "className": "text-right",
+                                "width": "10%",
+                                "render": function (data, type, row, meta) {
+                                    var ret = addCommas(parseFloat(data).toFixed(2));
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "ref",
+                                "className": "text-center",
+                                "width": "20%"
+                            },
+                            {
+                                "data": "control_year",
+                                "className": "text-center",
+                                "width": "5%"
+                            },
+                            {
+                                "data": "control_period",
+                                "className": "text-center",
+                                "width": "5%"
+                            },
+                           
+                        ],
+                        'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                                "<'row'<'col-md-12'tr>>" +
+                                "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                        buttons: [{
+                                extend: 'print',
+                                text: "<i class='fa fa-print'></i>&nbsp;Print",
+                                title: 'LedgerReport'
+                            },
+                            {
+                                extend: 'excel',
+                                footer: true,
+                                text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                                title: 'LedgerReport'
+                            },
+                        ],
+                        //                        "footerCallback": function (row, data, start, end, display) {
+                        //                            var api = this.api(),
+                        //                                    data;
+                        //                      
+                        //                            var intVal = function (i) {
+                        //                                return typeof i === 'string' ?
+                        //                                        i.replace(/[\$,]/g, '') * 1 :
+                        //                                        typeof i === 'number' ?
+                        //                                        i : 0;
+                        //                            };
+                        //                            // computing column Total of the complete result
+                        //                            var amt_total = api
+                        //                                    .column(4)
+                        //                                    .data()
+                        //                                    .reduce(function (a, b) {
+                        //                                        return intVal(a) + intVal(b);
+                        //                                    }, 0);
+                        //                
+                        //                            $(api.column(3).footer()).html('Total');
+                        //
+                        //                            $(api.column(4).footer()).html(addCommas(amt_total.toFixed(2)));
+                        //         
+                        //                        },
+                    });
+                    $('#tblReport').loading("stop");
+                    $("#btnSearch").html(OldHtml);
+                },
+                error: function (e) {
+
+                    console.log("There was an error with your request...");
+                    console.log("error: " + JSON.stringify(e));
+                }
+            });
+            //            $("#tblReportList").load("././module/RPTARTRAN/data.php", {
+            //                "load": "ajax",
+            //                "StartDate": StartDate,
+            //                "EndDate": EndDate,
+            //                "docs": docs
+            //            }, function () {
+            //                $('#tblReport').DataTable({
+            //                    ordering: false,
+            ////                    searching: false,
+            //                    fixedHeader: true,
+            //                    retrieve: true,
+            //                    scrollX: true,
+            //                    scrollY: 400,
+            //                    columnDefs: [
+            //                        {
+            //                            render: function (data, type, full, meta) {
+            //                                return "<div class='text-wrap width-200'>" + data + "</div>";
+            //                            },
+            //                            targets: 0
+            //                        }
+            //                    ],
+            //                    "pageLength": 999999999,
+            //                    'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'>>" +
+            //                            "<'row'<'col-md-12'tr>>" +
+            //                            "<'row'<'col-md-5'><'col-sm-7'>>",
+            //                    "columnDefs": [
+            //                        {"width": "5%", "className": "text-center", "targets": 0}, //#
+            //                        {"width": "10%", "className": "text-center", "targets": 1}, //inv_date
+            //                        {"width": "10%", "className": "text-left", "targets": 2}, //inv_num
+            //                        {"width": "10%", "className": "text-center", "targets": 3}, //cust_num
+            //                        {"width": "10%", "className": "text-left", "targets": 4}, //cust_name
+            //                        {"width": "10%", "className": "text-right", "targets": 5}, //amount
+            //                        {"width": "10%", "className": "text-right", "targets": 6}, //sales_tax
+            //                        {"width": "20%", "className": "text-left", "targets": 7}, //desc
+            //                        {"width": "10%", "className": "text-center", "targets": 8}, //apply to inv
+            //                        {"width": "5%", "className": "text-center", "targets": 9}, //post_from_cp
+            ////                        {"width": "5%","className": "text-right", "targets": 10},
+            //                    ],
+            //                    buttons: [
+            //                        {
+            //                            extend: 'print',
+            //                            text: "<i class='fa fa-print'></i>&nbsp;Print",
+            //                            title: ''
+            //                        },
+            //                        {
+            //                            extend: 'excel',
+            //                            text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+            //                            title: ''
+            //                        },
+            //                    ],
+            //                    "footerCallback": function (row, data, start, end, display) {
+            //                        var api = this.api(), data;
+            //
+            //                        // Remove the formatting to get integer data for summation
+            //                        var intVal = function (i) {
+            //                            return typeof i === 'string' ?
+            //                                    i.replace(/[\$,]/g, '') * 1 :
+            //                                    typeof i === 'number' ?
+            //                                    i : 0;
+            //                        };
+            //
+            //                        // Total over all pages
+            //                        total = api
+            //                                .column(4)
+            //                                .data()
+            //                                .reduce(function (a, b) {
+            //                                    return intVal(a) + intVal(b);
+            //                                }, 0);
+            //
+            //                        // Total over this page
+            //                        pageTotal = api
+            //                                .column(4, {page: 'current'})
+            //                                .data()
+            //                                .reduce(function (a, b) {
+            //                                    return intVal(a) + intVal(b);
+            //                                }, 0);
+            //
+            //                        // Update footer
+            //                        $(api.column(4).footer()).html(
+            //                                '$' + pageTotal + ' ( $' + total + ' total)'
+            //                                );
+            //                    }
+            //                });
+            //                var len = $(".table tbody tr").length - 1;
+            //                $("#btnSearch").html(oldHtmlBtn);
+            //                $("#rowResultTable").loading("stop");
+            ////                $(".col-flt-page").text("จำนวนทั้งหมด : " + len);
+            //            });
+        }
+    }
+    $("#btnExportExcel").click(function () {
+        //        onclick="javascript:
+
+        //       xport.toCSV('tblReport');
+    });
+    //    $("#Loc").select2();
+
+
+    $("#StartDate,#EndDate").datepicker({
+        dateFormat: 'yy-mm-dd'
+    });
+</script>
