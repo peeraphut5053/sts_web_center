@@ -228,5 +228,15 @@ class GeneralLedger {
         array_splice($rs0, count($rs0) - 1, 1);
         return $rs0;
     }
+    Function GetRowsGLMonthly($Year, $Unit) {
+
+        $query = "EXEC STS_GL_MTHLY_REPORT 
+                  @year  = '$Year',
+                  @unit1 = '$Unit' ";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
 
 }
