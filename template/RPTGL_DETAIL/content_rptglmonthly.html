@@ -1,0 +1,292 @@
+
+<div class="row">
+    <h4>General Ledger Monthly Report</h4>
+</div>
+
+<div class="col-lg-2 col-md-2 col-sm-6 col-xs-2 text-left input-group-addon" style="width:100px;padding-top:7px;border-top-left-radius: 5px;border-bottom-left-radius: 5px;">
+    Department            
+</div>
+
+<div class="col-6 col-sm-6 col-xs-6 col-md-6 col-lg-6" style="padding-right:50px;padding-left:0px;">
+
+    <div class="row" style="margin-top:0px;margin-bottom:0px;padding-top:0px;padding-left:0px;padding-bottom:0px;">
+        <select class="form-control" id="Unit" >
+            {options_unit1}
+        </select>
+
+    </div>
+</div>
+
+    <div class="col-lg-2 col-md-2 col-sm-6 col-xs-6 " >
+        <div class='row' style="margin-top:0px;">
+            <div class="input-group">
+                <div class="input-group-addon">Year</div>
+                <select class="form-control" id="Year">
+
+                </select>
+            </div>
+        </div>
+
+        <!-- <div class='row'>
+            <div class="input-group">
+                <div class="input-group-addon">FROM Month</div>
+                <select class="form-control" id="selMonth" >
+                </select>
+            </div>
+            <div class="input-group">
+                <div class="input-group-addon">To Month</div>
+                <select class="form-control" id="selMonth2">
+                </select>
+            </div>
+        </div> -->
+    </div>
+
+
+    <div class="col-lg-1 col-md-1 col-sm-6 col-xs-6 text-left">
+        <button class="btn btn-info" id="BtnSearch"><i class="fa fa-search"></i>&nbsp;Search </button>
+    </div>
+
+</div>
+
+<div class="row" id="rowResultTable">
+    <table class="table table-condensed table-striped " width="100%" id="TblReport">
+        <thead>
+            <tr>
+                <th>acct_unit1</th>
+                <th>Department</th>
+                <th>JAN</th>
+                <th>FEB</th>
+                <th>MAR</th>
+                <th>APR</th>
+                <th>MAY</th>
+                <th>JUN</th>
+                <th>JUL</th>
+                <th>AUG</th>
+                <th>SEP</th>
+                <th>OCT</th>
+                <th>NOV</th>
+                <th>DEC</th>
+            </tr>
+        </thead>
+
+    </table>
+</div>
+<script type="text/javascript">
+    //Init render page environment //
+    $(document).ready(function () {
+        $('#Unit').selectize({
+            // plugins: ['remove_button'],
+            // delimiter: ',',
+            persist: false,
+            create: function (input) {
+                return {
+                    value: input,
+                    text: input
+                }
+            }
+        });
+    });
+    GetYearMonth("Year");
+    // GetYearMonth("selYear", "selMonth");
+    // GetYearMonth("selYear2", "selMonth2");
+
+    $("#BtnSearch").click(function () {
+        ReportSearch();
+    });
+    $("#txtStartDate,#txtEndDate").datepicker({
+        dateFormat: 'yy-mm-dd'
+    });
+    function ReportSearch() {
+        var OldHtml = $("#BtnSearch").html();
+        var Unit = $("#Unit").val();
+        // console.log(Unit);
+        var Year = $("#Year").val();
+        // var selMonth = $("#selMonth").val();
+        // var selMonth2 = $("#selMonth2").val();
+
+        // if (Acct == "" && Unit == "")  {
+        //     $.alert("Please select Account or Department ");
+        //     return false;
+        // } else {
+        //     Acct = Acct + ',';
+//            console.log("Year : " + selYear + " Month : " + selMonth + " Acct : " + Acct);
+            $("#BtnSearch").html("<i class='fa fa-spinner fa-spin'></i>");
+            $("#TblReport").loading();
+            $.ajax({
+                type: 'GET',
+                url: "././module/RPTGL_DETAIL/data.php",
+                //  contentType: "text/plain",
+                dataType: 'json',
+                beforeSend: function () {
+                    $("#BtnSearch").html("<i class='fa fa-spinner fa-spin'>");
+                },
+                data: {
+                    "load": "monthly",
+                    "Year": Year,
+                    // "selMonth": selMonth,
+                    // "selMonth2": selMonth2,
+                    // "Acct": Acct,
+                    "Unit": Unit
+                },
+                success: function (data) {
+
+                    $("#TblReport").DataTable().clear();
+                    $('#TblReport').dataTable({
+                        "ordering": false,
+                        // "aaSorting": [],
+                        "aaData": data,
+                        "paging": false,
+                        destroy: true,
+                        'processing': true,
+                        "columns": [
+                            {
+                                "data": "acct_unit1",
+                                "className": "text-center",
+                                "width": "5%",
+                            },
+                            {
+                                "data": "Department",
+                                "className": "text-center",
+                                "width": "10%"
+                            },
+                            {
+                                "data": "JAN",
+                                "className": "text-center",
+                                "width": "10%",
+                                "render": function (data, type, row, meta) {
+                                    var ret = addCommas(parseFloat(data).toFixed(2));
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "FEB",
+                                "className": "text-center",
+                                "width": "10%",
+                                "render": function (data, type, row, meta) {
+                                    var ret = addCommas(parseFloat(data).toFixed(2));
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "MAR",
+                                "className": "text-center",
+                                "width": "10%",
+                                "render": function (data, type, row, meta) {
+                                    var ret = addCommas(parseFloat(data).toFixed(2));
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "APR",
+                                "className": "text-center",
+                                "width": "10%",
+                                "render": function (data, type, row, meta) {
+                                    var ret = addCommas(parseFloat(data).toFixed(2));
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "MAY",
+                                "className": "text-center",
+                                "width": "10%",
+                                "render": function (data, type, row, meta) {
+                                    var ret = addCommas(parseFloat(data).toFixed(2));
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "JUN",
+                                "className": "text-center",
+                                "width": "10%",
+                                "render": function (data, type, row, meta) {
+                                    var ret = addCommas(parseFloat(data).toFixed(2));
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "JUL",
+                                "className": "text-center",
+                                "width": "10%",
+                                "render": function (data, type, row, meta) {
+                                    var ret = addCommas(parseFloat(data).toFixed(2));
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "AUG",
+                                "className": "text-center",
+                                "width": "10%",
+                                "render": function (data, type, row, meta) {
+                                    var ret = addCommas(parseFloat(data).toFixed(2));
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "SEP",
+                                "className": "text-center",
+                                "width": "10%",
+                                "render": function (data, type, row, meta) {
+                                    var ret = addCommas(parseFloat(data).toFixed(2));
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "OCT",
+                                "className": "text-right",
+                                "width": "10%",
+                                "render": function (data, type, row, meta) {
+                                    var ret = addCommas(parseFloat(data).toFixed(2));
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "NOV",
+                                "className": "text-center",
+                                "width": "10%",
+                                "render": function (data, type, row, meta) {
+                                    var ret = addCommas(parseFloat(data).toFixed(2));
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "DEC",
+                                "className": "text-center",
+                                "width": "10%",
+                                "render": function (data, type, row, meta) {
+                                    var ret = addCommas(parseFloat(data).toFixed(2));
+                                    return ret;
+                                }
+                            },
+                        ],
+                        'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                                "<'row'<'col-md-12'tr>>" +
+                                "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                        buttons: [{
+                                extend: 'print',
+                                text: "<i class='fa fa-print'></i>&nbsp;Print",
+                                title: 'LedgerReport'
+                            },
+                            {
+                                extend: 'excel',
+                                footer: true,
+                                text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                                title: 'LedgerReportMonthly'
+                            },
+                        ],
+                    });
+                    $('#TblReport').loading("stop");
+                    $("#BtnSearch").html(OldHtml);
+                },
+                error: function (e) {
+
+                    console.log("There was an error with your request...");
+                    console.log("error: " + JSON.stringify(e));
+                }
+            });
+          
+        }
+
+    // $("#StartDate,#EndDate").datepicker({
+    //     dateFormat: 'yy-mm-dd'
+    // });
+</script>

@@ -71,8 +71,6 @@
     <table class="table table-condensed table-striped " width="100%" id="tblReport">
         <thead>
             <tr>
-                <!--<th>trans_num</th>-->
-                <!-- <th>trans_num</th> -->
                 <th>acct</th>
                 <th>acct_desc</th>
                 <th>acct_unit1</th>
@@ -177,12 +175,6 @@
                         "paging": false,
                         destroy: true,
                         'processing': true,
-                        // aoColumnDefs: [
-                        //     {"aTargets": [0], "bSortable": false},
-                        //     {"aTargets": [1], "bSortable": true},
-                        //     {"aTargets": [2], "bSortable": false},
-                        //     {"aTargets": [3], "bSortable": false}
-                        // ],
                         "columns": [
                             {
                                 "data": "acct",
@@ -281,32 +273,9 @@
                                 extend: 'excel',
                                 footer: true,
                                 text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
-                                title: 'LedgerReport'
+                                title: 'LedgerReportDetail'
                             },
                         ],
-                        //                        "footerCallback": function (row, data, start, end, display) {
-                        //                            var api = this.api(),
-                        //                                    data;
-                        //                      
-                        //                            var intVal = function (i) {
-                        //                                return typeof i === 'string' ?
-                        //                                        i.replace(/[\$,]/g, '') * 1 :
-                        //                                        typeof i === 'number' ?
-                        //                                        i : 0;
-                        //                            };
-                        //                            // computing column Total of the complete result
-                        //                            var amt_total = api
-                        //                                    .column(4)
-                        //                                    .data()
-                        //                                    .reduce(function (a, b) {
-                        //                                        return intVal(a) + intVal(b);
-                        //                                    }, 0);
-                        //                
-                        //                            $(api.column(3).footer()).html('Total');
-                        //
-                        //                            $(api.column(4).footer()).html(addCommas(amt_total.toFixed(2)));
-                        //         
-                        //                        },
                     });
                     $('#tblReport').loading("stop");
                     $("#btnSearch").html(OldHtml);
@@ -317,103 +286,8 @@
                     console.log("error: " + JSON.stringify(e));
                 }
             });
-            //            $("#tblReportList").load("././module/RPTARTRAN/data.php", {
-            //                "load": "ajax",
-            //                "StartDate": StartDate,
-            //                "EndDate": EndDate,
-            //                "docs": docs
-            //            }, function () {
-            //                $('#tblReport').DataTable({
-            //                    ordering: false,
-            ////                    searching: false,
-            //                    fixedHeader: true,
-            //                    retrieve: true,
-            //                    scrollX: true,
-            //                    scrollY: 400,
-            //                    columnDefs: [
-            //                        {
-            //                            render: function (data, type, full, meta) {
-            //                                return "<div class='text-wrap width-200'>" + data + "</div>";
-            //                            },
-            //                            targets: 0
-            //                        }
-            //                    ],
-            //                    "pageLength": 999999999,
-            //                    'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'>>" +
-            //                            "<'row'<'col-md-12'tr>>" +
-            //                            "<'row'<'col-md-5'><'col-sm-7'>>",
-            //                    "columnDefs": [
-            //                        {"width": "5%", "className": "text-center", "targets": 0}, //#
-            //                        {"width": "10%", "className": "text-center", "targets": 1}, //inv_date
-            //                        {"width": "10%", "className": "text-left", "targets": 2}, //inv_num
-            //                        {"width": "10%", "className": "text-center", "targets": 3}, //cust_num
-            //                        {"width": "10%", "className": "text-left", "targets": 4}, //cust_name
-            //                        {"width": "10%", "className": "text-right", "targets": 5}, //amount
-            //                        {"width": "10%", "className": "text-right", "targets": 6}, //sales_tax
-            //                        {"width": "20%", "className": "text-left", "targets": 7}, //desc
-            //                        {"width": "10%", "className": "text-center", "targets": 8}, //apply to inv
-            //                        {"width": "5%", "className": "text-center", "targets": 9}, //post_from_cp
-            ////                        {"width": "5%","className": "text-right", "targets": 10},
-            //                    ],
-            //                    buttons: [
-            //                        {
-            //                            extend: 'print',
-            //                            text: "<i class='fa fa-print'></i>&nbsp;Print",
-            //                            title: ''
-            //                        },
-            //                        {
-            //                            extend: 'excel',
-            //                            text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
-            //                            title: ''
-            //                        },
-            //                    ],
-            //                    "footerCallback": function (row, data, start, end, display) {
-            //                        var api = this.api(), data;
-            //
-            //                        // Remove the formatting to get integer data for summation
-            //                        var intVal = function (i) {
-            //                            return typeof i === 'string' ?
-            //                                    i.replace(/[\$,]/g, '') * 1 :
-            //                                    typeof i === 'number' ?
-            //                                    i : 0;
-            //                        };
-            //
-            //                        // Total over all pages
-            //                        total = api
-            //                                .column(4)
-            //                                .data()
-            //                                .reduce(function (a, b) {
-            //                                    return intVal(a) + intVal(b);
-            //                                }, 0);
-            //
-            //                        // Total over this page
-            //                        pageTotal = api
-            //                                .column(4, {page: 'current'})
-            //                                .data()
-            //                                .reduce(function (a, b) {
-            //                                    return intVal(a) + intVal(b);
-            //                                }, 0);
-            //
-            //                        // Update footer
-            //                        $(api.column(4).footer()).html(
-            //                                '$' + pageTotal + ' ( $' + total + ' total)'
-            //                                );
-            //                    }
-            //                });
-            //                var len = $(".table tbody tr").length - 1;
-            //                $("#btnSearch").html(oldHtmlBtn);
-            //                $("#rowResultTable").loading("stop");
-            ////                $(".col-flt-page").text("จำนวนทั้งหมด : " + len);
-            //            });
         }
     }
-    $("#btnExportExcel").click(function () {
-        //        onclick="javascript:
-
-        //       xport.toCSV('tblReport');
-    });
-    //    $("#Loc").select2();
-
 
     $("#StartDate,#EndDate").datepicker({
         dateFormat: 'yy-mm-dd'
