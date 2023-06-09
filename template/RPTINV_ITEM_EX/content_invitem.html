@@ -50,7 +50,9 @@
                 <th>Price/KG</th>
                 <th>Discount</th>
                 <th>AMT_USD</th>
-                <th>AMT_THB</th>             
+                <th>AMT_THB</th>  
+                <th>order_date</th>
+                <th>due_date</th>           
             </tr>
         </thead>
     </table>
@@ -483,7 +485,16 @@
                                         }
                                         return ret;
                                     }
-                                }
+                                },
+                                {
+                                    "data": "order_date",
+                                    "className": "text-center",
+                                },
+                                {
+                                    "data": "due_date",
+                                    "className": "text-center",
+                                },
+                                
 
                             ],
                             'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
