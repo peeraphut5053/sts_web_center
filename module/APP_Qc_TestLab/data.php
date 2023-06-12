@@ -204,6 +204,24 @@ if ($load == 'searchAll') {
     echo json_encode($QcTestLab); 
 }
 
+if ($load == 'DeleteMain') {
+    $CallModel = new CallModel();
+    $CallModel->SyteLine_Models();
+    $QcTestLab = new QcTestLab();
+    $QcTestLab->setConn($ConnSL);
+    $QcTestLab = $QcTestLab->DeleteMain($sts_no);
+    echo json_encode($QcTestLab); 
+}
+
+if ($load == 'DeleteSub') {
+    $CallModel = new CallModel();
+    $CallModel->SyteLine_Models();
+    $QcTestLab = new QcTestLab();
+    $QcTestLab->setConn($ConnSL);
+    $QcTestLab = $QcTestLab->DeleteSub($length, $sts_no, $prod_FM_no, $prod_Date);
+    echo json_encode($QcTestLab); 
+}
+
 
 
 
