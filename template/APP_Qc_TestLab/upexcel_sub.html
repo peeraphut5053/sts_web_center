@@ -306,9 +306,10 @@
                     test_date : test_date
                 },
                 success: function (data) {
-                    if(data==1){
-						alert("complete");
-						location.reload();
+                 
+                    if(data!=''){
+						alert(`complete ${(data.length)} rows`);
+						// location.reload();
 					}
                 },
                 error: function (xhr, status, error) {
