@@ -428,7 +428,7 @@ class Invoice {
         $item = $this->_item;
 
         $query = "SELECT  CONVERT(varchar,inv_date,103) as inv_date_conv ,FORMAT(AMT, 'N2') as AMT_2d ,FORMAT(VAT, 'N2') as VAT_2d,FORMAT(AMT_TOTAL, 'N2') as AMT_TOTAL_2d, *  FROM V_WebApp_InvItem_IN "
-                . "WHERE acct <> '22400' ";
+                . "WHERE acct <> '22400' and  ( description <> 'เงินรับเงินมัดจำล่วงหน้า' or description is null  )  ";
         if (($start_inv) && ($end_inv)) {
             $query .= " AND ( inv_num between '$start_inv' AND '$end_inv' ) ";
         }
