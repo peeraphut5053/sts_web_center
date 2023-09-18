@@ -66,7 +66,7 @@ class QcTestLab {
         $cSql = new SqlSrv();
         $rsSelect = $cSql->SqlQuery($this->StrConn, $qSelect);
 
-        if ( $sts_no == isset($rsSelect[1]["sts_no"]) && $prod_FM_no == isset($rsSelect[1]["prod_FM_no"]) && $length == isset($rsSelect[1]["length"]) && $prod_date == isset($rsSelect[1]["prod_date"])){
+        if ( $opr_no == isset($rsSelect[1]["opr_no"]) && $sts_no == isset($rsSelect[1]["sts_no"]) && $prod_FM_no == isset($rsSelect[1]["prod_FM_no"]) && $length == isset($rsSelect[1]["length"]) && $prod_date == isset($rsSelect[1]["prod_date"])){
             $query ="UPDATE STS_QA_LAB_SUB SET opr_no = '$opr_no', size= '$size', thick_sub= '$thick', length= '$length', standard_sub= '$standard', sts_no= '$sts_no', 
                     Mec_test_TS= '$Mec_test_TS', Mec_test_YS= '$Mec_test_YS', Mec_test_EI = '$Mec_test_EI', Mec_test_EL_1 = '$Mec_test_EL_1', Mec_test_EL_2 = '$Mec_test_EL_2', Mec_test_EL_3 = '$Mec_test_EL_3', 
                     Not_Mec_test_TS = '$Not_Mec_test_TS', Not_Mec_test_YS = '$Not_Mec_test_YS', Not_Mec_test_EI = '$Not_Mec_test_EI', Not_Mec_test_EL_1 = '$Not_Mec_test_EL_1', Not_Mec_test_EL_2 = '$Not_Mec_test_EL_2', Not_Mec_test_EL_3 = '$Not_Mec_test_EL_3', 
