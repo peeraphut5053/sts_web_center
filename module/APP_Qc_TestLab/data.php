@@ -200,7 +200,29 @@ if ($load == 'searchAll') {
     $CallModel->SyteLine_Models();
     $QcTestLab = new QcTestLab();
     $QcTestLab->setConn($ConnSL);
-    $QcTestLab = $QcTestLab->ReportAll($from_stsno,$to_stsno);
+    $where = "where 1=1";
+    if (($from_stsno != "") && ($to_stsno != "")) {
+        $where = $where . " AND ( b.sts_no BETWEEN '$from_stsno' AND '$to_stsno' )  ";
+    }
+    else if ($c_no != "") {
+        $where = $where . " AND c_no = '" . $c_no . "' ";
+    }
+    else if ($h_no != "") {
+        $where = $where . " AND h_no = '" . $h_no . "' ";
+    }
+    else if ($size != "") {
+        $where = $where . " AND size = '" . $size . "' ";
+    }
+    else if ($standard != "") {
+        $where = $where . " AND standard = '" . $standard . "' ";
+    }
+    else if ($prod_FM_no != "") {
+        $where = $where . " AND prod_FM_no = '" . $prod_FM_no . "' ";
+    }
+    else if ($prod_date != "") {
+        $where = $where . " AND prod_date = '" . $prod_date . "' ";
+    }
+    $QcTestLab = $QcTestLab->ReportAll($where );
     echo json_encode($QcTestLab); 
 }
 

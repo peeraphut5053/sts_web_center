@@ -89,7 +89,7 @@ class QcTestLab {
         }
     }
 
-    function ReportAll($from_stsno,$to_stsno){
+    function ReportAll($where){
         $query = "select opr_no,size,thick_sub,length,standard_sub,b.sts_no,h_no,
         sts_c,sts_si,sts_mn,sts_p,sts_s,sts_cu,sts_v,sts_ni,sts_cr,sts_mo,
         sts_ti,sts_nb,sts_al,sts_b,sts_co,sts_pb,sts_fe,sts_ts,sts_ys,sts_el,
@@ -118,7 +118,7 @@ class QcTestLab {
         test_date,
         thick,
         width
-        from STS_QA_LAB_SUB b left join sts_qa_lab a  on a.sts_no = b.sts_no where b.sts_no BETWEEN '$from_stsno' and '$to_stsno'";
+        from STS_QA_LAB_SUB b left join sts_qa_lab a  on a.sts_no = b.sts_no ".$where."";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);

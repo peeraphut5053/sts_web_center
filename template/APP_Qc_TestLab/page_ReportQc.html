@@ -35,6 +35,34 @@
         </div>
     </div>
 
+    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2  col-search">
+        <div class="input-group">
+            <div class="input-group-addon">Size</div>
+            <input type="text"  class="form-control txt-filter" id="sizeR">
+        </div>
+    </div>
+
+    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2  col-search">
+        <div class="input-group">
+            <div class="input-group-addon">Standard</div>
+            <input type="text"  class="form-control txt-filter" id="standardR">
+        </div>
+    </div>
+
+    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2  col-search">
+        <div class="input-group">
+            <div class="input-group-addon">&nbsp;Prod FM_No&nbsp;&nbsp;</div>
+            <input type="text"  class="form-control txt-filter" id="prod_FM_noR">
+        </div>
+    </div>
+
+    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2  col-search">
+        <div class="input-group">
+            <div class="input-group-addon">Prod_Date</div>
+            <input type="text"  class="form-control txt-filter" id="prod_dateR">
+        </div>
+    </div>
+
     <div class="col-lg-1 col-md-2 col-sm-1 col-xs-6  col-search">
         <button id="BtnSearchR" class="btn btn-info"><i class="fa fa-search"></i>Search</button>
     </div>
@@ -125,6 +153,10 @@
             ReportAllSearch();
         });
 
+        $("#prod_dateR").datepicker({
+        dateFormat: 'yy-mm-dd',
+    });
+
 
     function ReportAllSearch() {
     var OldHtml = $("#BtnSearchR").html();
@@ -132,7 +164,12 @@
     var to_stsno = $("#to_stsnoR").val();
     var c_no = $("#c_noR").val();
     var h_no = $("#h_noR").val();
-    if ((from_stsno == "") && (to_stsno == "") && ((h_no == "") && (c_no == ""))) {
+
+    var size = $("#sizeR").val();
+    var standard = $("#standardR").val();
+    var prod_FM_no = $("#prod_FM_noR").val();
+    var prod_date = $("#prod_dateR").val();
+    if ((from_stsno == "") && (to_stsno == "") && ((h_no == "") && (c_no == "") && (size == "") && (standard == "") && (prod_FM_no == "") && (prod_date == ""))) {
         $.alert("กรุณาเลือกช่วง STS_NO หรือป้อนรายละเอียดเพื่อกรองข้อมูล");
     } else {
         $.ajax({
@@ -147,7 +184,11 @@
                 "from_stsno": from_stsno,
                 "to_stsno": to_stsno,
                 "c_no": c_no,
-                "h_no": h_no
+                "h_no": h_no,
+                "size": size,
+                "standard": standard,
+                "prod_FM_no": prod_FM_no,
+                "prod_date": prod_date,
             },
             success: function (data) {
                 console.log(data)
