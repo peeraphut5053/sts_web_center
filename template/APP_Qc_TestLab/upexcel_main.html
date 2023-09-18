@@ -485,8 +485,8 @@
 					
                 },
                 success: function (data) {
-                    if(data==1){
-						alert("complete");
+                    if(data!=''){
+						alert(`complete ${(data.length)} rows`);
 						location.reload();
 					}
                 },
