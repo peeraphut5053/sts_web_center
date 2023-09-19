@@ -824,7 +824,7 @@ function CheckDeleteMain(form, sts_no) {
                     sts_no: sts_no,
                 },
                 success: function () {
-                    Search();
+                    // Search();
                 }
             });
         }
@@ -843,7 +843,7 @@ function format(d) {
                             <th colspan='6' style='background-color:#FFCCCC;'>Not Accept Mechanical Testing</th>
                             <th colspan='4'>Charpy V-notch Testing</th>
                             <th colspan='3'>Metallurgical</th>
-                            <th colspan='5'>Production</th>
+                            <th colspan='6'>Production</th>
                             <th style='background-color:#f36c60;'></th>
                         </tr>
                         <tr class="bg-gray">
@@ -863,7 +863,7 @@ function format(d) {
 
                             <th colspan='4'>Absorbed Energy (Joules)</th>
                             <th colspan='3'>Analysis</th>
-                            <th colspan='5'>Date</th>
+                            <th colspan='6'>Date</th>
                             <th style='background-color:#f36c60;'></th>
                         </tr>
                         <tr class="bg-gray">
@@ -902,6 +902,7 @@ function format(d) {
                             <th>produce date</th>
                             <th>thick x width</th>
                             <th>test date</th>
+                            <th>remark</th>
 
                             <th style='background-color:#f36c60;'>Delete</th>
                         </tr>
@@ -1045,10 +1046,24 @@ function format(d) {
                                 return ret;
                             }
                             },
+                            // {"data": "remark",
+                            //     "className": "text-center",
+                            // },
+                            {"data": {opr_no: "opr_no" , length: "length", sts_no: "sts_no", prod_FM_no: "prod_FM_no", prod_Date: "prod_Date" , remark: "remark"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'remark';
+                                let valdata = data.remark;
+                                let iddata = `Update_${row.opr_no}_${row.length}_${row.sts_no}_${row.prod_FM_no}_${row.prod_Date}`;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${(valdata) }</span><input type='text' class='input-text-value' id='Update_${row.opr_no}_${row.length}_${row.sts_no}_${row.prod_FM_no}_${row.prod_Date}' onchange="UpdateSub('UpdateSub',this.id,value);" value='${(valdata)}' />`;
+                                return ret;
+                            }
+                        },
                             {   "data": "", 
                             "className": "text-center",
                             "render": function (data, type, row, meta) {
-                                return "<a id='ItemDelete!!" + row["length"] + "!!" + row["sts_no"] + "!!" + row["prod_FM_no"] + "!!" + row["prod_Date"] + "' OnClick='CheckDeleteSub(`Delete`,this.id)'><i class='fa fa-trash'></i></a>";
+                                return "<a id='ItemDelete!!" + row["opr_no"] + "!!" + row["length"] + "!!" + row["sts_no"] + "!!" + row["prod_FM_no"] + "!!" + row["prod_Date"] + "' OnClick='CheckDeleteSub(`Delete`,this.id)'><i class='fa fa-trash'></i></a>";
                         }},
                         ]
                     });
@@ -1095,17 +1110,18 @@ function UpdateQcTestLab(thisId, col_name) {
 function CheckDeleteSub(form, data) {
     console.log("form :" + form);
     console.log("data :" + data);
-    var length = data.split("!!")[1];
-    var sts_no = data.split("!!")[2];
-    var prod_FM_no = data.split("!!")[3];
-    var prod_Date = data.split("!!")[4];
+    var opr_no = data.split("!!")[1];
+    var length = data.split("!!")[2];
+    var sts_no = data.split("!!")[3];
+    var prod_FM_no = data.split("!!")[4];
+    var prod_Date = data.split("!!")[5];
     $.confirm({
                 title: 'ลบข้อมูลใช่หรือไม่',
                 theme: 'modern',
                 // content: '',
                 buttons: {
                     confirm: function () {
-                        DeleteSub('Delete',length, sts_no, prod_FM_no, prod_Date);
+                        DeleteSub('Delete', opr_no, length, sts_no, prod_FM_no, prod_Date);
                     },
                     cancel: function () {
                     },
@@ -1113,8 +1129,9 @@ function CheckDeleteSub(form, data) {
             });
         }
 
-function DeleteSub(form, length, sts_no, prod_FM_no, prod_Date) {
-    console.log("action :" + form);
+function DeleteSub(form, opr_no, length, sts_no, prod_FM_no, prod_Date) {
+    console.log("action :" + form); 
+    console.log("opr_no :" + opr_no);
     console.log("length :" + length);
     console.log("sts_no :" + sts_no);
     console.log("prod_FM_no :" + prod_FM_no);
@@ -1124,6 +1141,7 @@ function DeleteSub(form, length, sts_no, prod_FM_no, prod_Date) {
             type: 'POST',
             data: {
                 load: 'DeleteSub',
+                opr_no: opr_no,
                 length: length,
                 sts_no: sts_no,
                 prod_FM_no: prod_FM_no,
@@ -1131,6 +1149,36 @@ function DeleteSub(form, length, sts_no, prod_FM_no, prod_Date) {
             },
             success: function () {
                 Search();
+            }
+        });
+    }  
+
+    function UpdateSub(form, thisId, remark) {
+    console.log("form :" + form);
+    console.log("data :" + thisId)
+    let Split = thisId.split("_");
+    // console.log(remark)
+    var opr_no = Split[1];
+    var length = Split[2];
+    var sts_no = Split[3];
+    var prod_FM_no = Split[4];
+    var prod_Date = Split[5];
+ 
+
+    $.ajax({
+            url: "././module/APP_Qc_TestLab/data.php",
+            type: 'POST',
+            data: {
+                load: 'UpdateSub',
+                opr_no: opr_no,
+                length: length,
+                sts_no: sts_no,
+                prod_FM_no: prod_FM_no,
+                prod_Date: prod_Date,
+                remark : remark
+            },
+            success: function () {
+                // Search();
             }
         });
     }  

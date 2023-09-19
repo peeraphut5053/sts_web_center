@@ -143,8 +143,16 @@ class QcTestLab {
         return $rs0;
     }
 
-    function DeleteSub($length, $sts_no, $prod_FM_no, $prod_Date) {
-        $query = "DELETE from STS_QA_LAB_SUB where sts_no = '$sts_no'  and prod_FM_no = '$prod_FM_no' and length = '$length'  and convert(date,prod_date) = '$prod_Date'";
+    function DeleteSub($opr_no,$length, $sts_no, $prod_FM_no, $prod_Date) {
+        $query = "DELETE from STS_QA_LAB_SUB where opr_no = '$opr_no' and  sts_no = '$sts_no'  and prod_FM_no = '$prod_FM_no' and length = '$length'  and convert(date,prod_date) = '$prod_Date'";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+
+    function UpdateSub($opr_no,$length, $sts_no, $prod_FM_no, $prod_Date, $remark) {
+        $query = "UPDATE STS_QA_LAB_SUB set remark = '$remark'  where opr_no = '$opr_no' and  sts_no = '$sts_no'  and prod_FM_no = '$prod_FM_no' and length = '$length'  and convert(date,prod_date) = '$prod_Date'";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);

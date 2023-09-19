@@ -240,7 +240,16 @@ if ($load == 'DeleteSub') {
     $CallModel->SyteLine_Models();
     $QcTestLab = new QcTestLab();
     $QcTestLab->setConn($ConnSL);
-    $QcTestLab = $QcTestLab->DeleteSub($length, $sts_no, $prod_FM_no, $prod_Date);
+    $QcTestLab = $QcTestLab->DeleteSub($opr_no,$length, $sts_no, $prod_FM_no, $prod_Date);
+    echo json_encode($QcTestLab); 
+}
+
+if ($load == 'UpdateSub') {
+    $CallModel = new CallModel();
+    $CallModel->SyteLine_Models();
+    $QcTestLab = new QcTestLab();
+    $QcTestLab->setConn($ConnSL);
+    $QcTestLab = $QcTestLab->UpdateSub($opr_no,$length, $sts_no, $prod_FM_no, $prod_Date, $remark);
     echo json_encode($QcTestLab); 
 }
 
