@@ -51,7 +51,7 @@
                     <th colspan='6' style='background-color:#FFCCCC;'>Not Accept Mechanical Testing</th>
                     <th colspan='4'>Charpy V-notch Testing Absorbed Energy (Joules)</th>
                     <th colspan='3'>Metallurgical Analysis</th>
-                    <th colspan='5'>Production Date</th>
+                    <th colspan='6'>Production Date</th>
                 </tr>
                 <tr class="bg-gray">
                 
@@ -89,6 +89,7 @@
                     <th>produce date</th>
                     <th>thick x width</th>
                     <th>test date</th>
+                    <th>remark</th>
                 </tr>
         </table>
     </div>
@@ -234,6 +235,9 @@
                             var ret = formatDate(data);
                             return ret;
                         }
+                        },
+                        {"data": "remark",
+                            "className": "text-center",
                         },
                     ],
                     'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
