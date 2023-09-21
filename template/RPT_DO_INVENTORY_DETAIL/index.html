@@ -38,6 +38,35 @@
 </div>
 
 <div class="row" id="divReport" >
+    <table class="table table-condensed table-bordered table-striped" id="tblReportHidden" hidden>
+        <thead>
+            <tr>
+                <th>do num</th>
+                <th>co num</th>
+                <th>co line</th>  
+                <th>CUST PO</th>
+                <th>STS PO</th>
+                <th>item</th>
+                <th>Type/End</th>
+                <th>NPS</th>
+                <th>Grade</th>
+                <th>Schedule</th>
+                <th>Length</th>
+                <th>Uf spec grid Col</th>
+                <th>qty</th>
+                <th>lot</th>
+                <th>location</th>
+                <th>sts no</th>
+                <th>qty sts no</th>
+                <th>sts no 2</th>
+                <th>qty sts no2</th>
+                <th>sts no 3</th>
+                <th>qty sts no3</th>
+                <th>remark</th>
+            </tr>
+        </thead>
+    </table>
+
     <table class="table table-condensed table-bordered table-striped" id="tblReport" style="width:100%;">
         <thead>
             <tr>
@@ -67,12 +96,256 @@
         </thead>
     </table>
 </div>
+
 <script type="text/javascript">
     $("#txtFromDate,#txtToDate").datepicker({
         dateFormat: 'yy-mm-dd',
     });
     $("#txtFromDate,#txtToDate").val(GetToday());
+
     $("#btnSearch").click(function () {
+        tblReportHidden();
+        tblReport();
+        });
+
+    function tblReportHidden () {
+        var tblReportId = '#tblReportHidden';
+        var btnSearch = '#btnSearch';
+
+        $.ajax({
+            type: 'GET',
+            url: "././module/RPT_DO_INVENTORY_DETAIL/data.php",
+            dataType: 'json',
+            beforeSend: function () {
+            },
+            data: {
+                load: "ajax",
+                do_num: $("#do_num").val(),
+                sts_no: $("#sts_no").val(),
+                cust_po: $("#cust_po").val(),
+            },
+            success: function (data) {
+                console.log(data)
+                $("#tblReportHidden").dataTable().fnDestroy();
+                var table = $(tblReportId).DataTable({
+                    scrollY: "400px",
+                    "scrollX": true,
+                    scrollCollapse: true,
+                    "aaData": data,
+                    "paging": false,
+//                        fixedColumns: {
+//                            leftColumns: 1,
+//                        },
+                    "searching": false,
+                    "bInfo": false,
+                    "columns": [
+                        {
+                            "data": "do_num",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "co_num",
+                            "render": function (data, type, row) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "width": 250,
+                            "data": "co_line",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "cust_po",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "STS_PO",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "item",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "Uf_typeEnd",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "Uf_NPS",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "Uf_Grade",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "Uf_Schedule",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "Uf_length",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "Uf_spec",
+                            "className": "text-right",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "qty_sts_no",
+                            "render": function (data, type, row) {
+                                var ret = data;
+                                ret = "<span>" + formatMoney(data);
+                                +"</span>";
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "lot",
+                            "render": function (data, type, row) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "loc",
+                            "render": function (data, type, row) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "sts_no",
+                            "render": function (data, type, row) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "qty_sts_no",
+                            "render": function (data, type, row) {
+                                var ret = formatMoney(data);
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "sts_no2",
+                            "render": function (data, type, row) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "qty_sts_no2",
+                            "render": function (data, type, row) {
+                                var ret = formatMoney(data);
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "sts_no3",
+                            "render": function (data, type, row) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "qty_sts_no3",
+                            "render": function (data, type, row) {
+                                var ret = formatMoney(data);
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": {lot: "lot", remark: "remark"},
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                let ret = data.remark;
+                                return ret;
+                            }
+                        },
+                    ],
+                    'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                            "<'row'<'col-md-12'tr>>" +
+                            "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                    buttons: [
+                        {
+                            extend: 'print',
+                            text: "<i class='fa fa-print'></i>&nbsp;Print",
+                            title: '',
+                        },
+                        {
+                            extend: 'excel',
+                            text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                            title: 'รายงาน ' + GetCurrDateTime()
+                        },
+                    ],
+                });
+            },
+            error: function (e) {
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+
+
+        //SearchDataFn(tblReportId, btnSearch, tablecolumsArr, "DO INVENTORY DETAIL REPORT ", "ajax");
+    };
+
+        
+    
+    function tblReport () {
         var tblReportId = '#tblReport';
         var btnSearch = '#btnSearch';
 
@@ -281,21 +554,21 @@
                             }
                         },
                     ],
-                    'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
-                            "<'row'<'col-md-12'tr>>" +
-                            "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
-                    buttons: [
-                        {
-                            extend: 'print',
-                            text: "<i class='fa fa-print'></i>&nbsp;Print",
-                            title: '',
-                        },
-                        {
-                            extend: 'excel',
-                            text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
-                            title: 'รายงาน ' + GetCurrDateTime()
-                        },
-                    ],
+                    // 'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                    //         "<'row'<'col-md-12'tr>>" +
+                    //         "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                    // buttons: [
+                    //     {
+                    //         extend: 'print',
+                    //         text: "<i class='fa fa-print'></i>&nbsp;Print",
+                    //         title: '',
+                    //     },
+                    //     {
+                    //         extend: 'excel',
+                    //         text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                    //         title: 'รายงาน ' + GetCurrDateTime()
+                    //     },
+                    // ],
                 });
             },
             error: function (e) {
@@ -306,7 +579,7 @@
 
 
         //SearchDataFn(tblReportId, btnSearch, tablecolumsArr, "DO INVENTORY DETAIL REPORT ", "ajax");
-    });
+    };
 
 
 
