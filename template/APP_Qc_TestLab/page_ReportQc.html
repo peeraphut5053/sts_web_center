@@ -206,8 +206,17 @@
                     "bInfo": false,
 
                     "columns": [
-                        {"data": "opr_no",
+                    {"data": "opr_no",
                             "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                if (data == "NOT"){
+                                    var ret = `<span style="color: red;">${(data)}</span>`
+                                }
+                                else{
+                                    var ret = `<span>${(data)}</span>`
+                                }
+                            return ret;
+                        }
                         },
                         {"data": "size",
                             "className": "text-center",
@@ -306,7 +315,11 @@
                             "className": "text-left",
                         },
                         {"data": "Not_Mec_test_TS",
-                            "className": "text-left",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                            var ret = `<span style="color: red;">${(data)}</span>`
+                            return ret;
+                        }
                         },
                         {"data": "Not_Mec_test_YS",
                             "className": "text-left",
