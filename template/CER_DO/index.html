@@ -61,7 +61,9 @@
                 <th>จำนวนเส้น</th>
                 <th>คลัง</th>
                 <th>LOT</th>       
-                <th>LOT QTY</th>   
+                <th>LOT QTY</th>
+                <th>QTY Shipped</th>
+                <th>Ship Date</th>
             </tr>
         </thead>
         <!--        <tbody id="tblReportList">
@@ -174,7 +176,7 @@
                         {"data": "do_num", "className": "text-center"},
                         {"data": "do_seq", "className": "text-center"},
                         {"data": "cust_name"},
-                        {"data": "item_desc"},
+                        {"data": "item_desc", "width": "19%"},
                         {"data": "qty_conv", "className": "text-right"},
                         {"data": "Loc"},
                         {"data": "lots" ,"render" : function(data, type, row, meta){
@@ -203,7 +205,14 @@
                                     ret = "<a id='" + thisId + "' OnClick='ShowMultiLot(this.id)'>" + data + "</a>";
                                 }
                                 return ret;
-                            }}
+                            }},
+                        {"data": "qty_shipped", "className": "text-right", "width": "5%",
+                        "render": function (data, type, row, meta) {
+                            ret = new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format(data)
+                            return ret;
+                        }}, 
+                        {"data": "ship_date_conv", "className": "text-right"},
+                            
                     ],
                     'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
                             "<'row'<'col-md-12'tr>>" +

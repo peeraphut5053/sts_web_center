@@ -42,11 +42,11 @@ class DeliveryOrder {
 
     function GetCER_DO() {
         $cerDate = $this->_CerDate;
-        $query = "Select   * from V_WebApp_DO   ";
+        $query = "Select  CONVERT(varchar,ship_date,120) as ship_date_conv , * from V_WebApp_DO   ";
         $query .= " WHERE "
                 . "( co_num like 'TT%' ) "
 //                . "AND (stat = 'F' ) "
-                . "AND ( pickup_date  BETWEEN '$cerDate 00:00:00' AND '$cerDate 23:59:59' ) ";
+                . "AND ( pickup_date  BETWEEN '$cerDate 00:00:00' AND '$cerDate 23:59:59' ) order by do_hdr_date, do_num, do_seq ";
 
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
