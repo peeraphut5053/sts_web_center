@@ -170,6 +170,11 @@
                 $('#tblReport').dataTable({
                     fixedHeader: true,
                     "aaData": data,
+                    paging: false,
+                    searching: false,
+                    destroy: true,
+                    scrollY: "400px",
+                    "scrollX": true,
 //                    "pageLength": 25,
                     "columns": [
                         {"data": "pickup_date_conv"},
