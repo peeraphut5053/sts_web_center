@@ -46,7 +46,7 @@ class DeliveryOrder {
         $query .= " WHERE "
                 . "( co_num like 'TT%' ) "
 //                . "AND (stat = 'F' ) "
-                . "AND ( pickup_date  BETWEEN '$cerDate 00:00:00' AND '$cerDate 23:59:59' ) order by do_hdr_date, do_num, do_seq ";
+                . "AND ( ship_date  BETWEEN '$cerDate' AND '$cerDate' ) order by ship_date, do_num, do_seq ";
 
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
