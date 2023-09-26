@@ -39,8 +39,22 @@
     </div>
     <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12  col-search">
         <div class="input-group">
-            <div class="input-group-addon">เลือกวันที่</div>
+            <div class="input-group-addon">Pickup_date</div>
             <input type="text" class="form-control txt-filter" id="txtCerDate">
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12  col-search">
+        <div class="input-group">
+            <div class="input-group-addon">Ship_date</div>
+            <input type="text" class="form-control txt-filter" id="txtShipDate">
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12  col-search">
+        <div class="input-group">
+            <div class="input-group-addon">Do_num</div>
+            <input type="text" class="form-control txt-filter" id="txtDoNum">
         </div>
     </div>
 
@@ -53,7 +67,7 @@
     <table class="table table-condensed table-bordered table-striped" id="tblReport">
         <thead>
             <tr>
-                <th>วันที่ - เวลา</th>
+                <th>Pickup Date</th>
                 <th>เลขที่ใบกำกับ</th>
                 <th>Do_Seq</th>
                 <th>ลูกค้า</th>
@@ -135,9 +149,9 @@
         });
     });
 
-    $("#txtCerDate").val(GetToday());
+    // $("#txtCerDate, #txtShipDate").val(GetToday());
 
-    $("#txtCerDate").datepicker({
+    $("#txtCerDate, #txtShipDate").datepicker({
         dateFormat: 'yy-mm-dd',
     });
     $("#btnSearch").click(function () {
@@ -152,6 +166,9 @@
     });
     function loadData() {
         var txtCerDate = $("#txtCerDate").val();
+        var txtShipDate = $("#txtShipDate").val();
+        var txtDoNum = $("#txtDoNum").val();
+
         var OldHtml = $("#btnSearch").html();
         $.ajax({
             type: 'GET',
@@ -164,6 +181,8 @@
             data: {
                 load: 'ajax2',
                 txtCerDate: txtCerDate,
+                txtShipDate: txtShipDate,
+                txtDoNum: txtDoNum,
             },
             success: function (data) {
                 $("#tblReportList").DataTable().clear();

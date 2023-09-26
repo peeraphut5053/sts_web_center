@@ -41,7 +41,18 @@ if ($load == "form") {
     $DOSEQ = new DeliveryOrder();
     $DOSEQ->setConn($ConnSL);
     $DOSEQ->_CerDate = $txtCerDate;
-    $DOPENDING = $DOSEQ->GetCER_DO();
+
+    if ($txtShipDate != ""){
+        $and = "AND ( ship_date  BETWEEN '$txtShipDate' AND '$txtShipDate' )";
+    } 
+    else if ($txtDoNum != "") {
+        $and = "AND ( do_num  BETWEEN '$txtDoNum' AND '$txtDoNum' )";
+    } 
+    else if ($txtCerDate != "") {
+        $and = "AND ( pickup_date  BETWEEN '$txtCerDate' AND '$txtCerDate' )";
+    }
+
+    $DOPENDING = $DOSEQ->GetCER_DO($and );
     echo json_encode($DOPENDING);
     
 } else if ($load == "MultiLot") {

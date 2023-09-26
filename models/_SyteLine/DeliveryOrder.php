@@ -40,13 +40,14 @@ class DeliveryOrder {
         $this->StrConn = $c;
     }
 
-    function GetCER_DO() {
+    function GetCER_DO($and ) {
         $cerDate = $this->_CerDate;
         $query = "Select  CONVERT(varchar,ship_date,120) as ship_date_conv , * from V_WebApp_DO   ";
         $query .= " WHERE "
                 . "( co_num like 'TT%' ) "
 //                . "AND (stat = 'F' ) "
-                . "AND ( ship_date  BETWEEN '$cerDate' AND '$cerDate' ) order by ship_date, do_num, do_seq ";
+                . " $and "
+                ." order by ship_date, do_num, do_seq ";
 
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
