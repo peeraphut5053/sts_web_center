@@ -90,35 +90,48 @@ class QcTestLab {
     }
 
     function ReportAll($where){
-        $query = "select opr_no,size,thick_sub,length,standard_sub,b.sts_no,h_no,
-        sts_c,sts_si,sts_mn,sts_p,sts_s,sts_cu,sts_v,sts_ni,sts_cr,sts_mo,
-        sts_ti,sts_nb,sts_al,sts_b,sts_co,sts_pb,sts_fe,sts_ts,sts_ys,sts_el,
-        Mec_test_TS,
-        Mec_test_YS,
-        Mec_test_EI,
-        Mec_test_EL_1,
-        Mec_test_EL_2,
-        Mec_test_EL_3,
-        Not_Mec_test_TS,
-        Not_Mec_test_YS,
-        Not_Mec_test_EI,
-        Not_Mec_test_EL_1,
-        Not_Mec_test_EL_2,
-        Not_Mec_test_EL_3,
-        charpy_mean,
-        charpy1,
-        charpy2,
-        charpy3,
-        Metal_P,
-        Metal_F,
-        Metal_M,
-        Hydro_test,
-        prod_FM_no,
-        prod_date,
-        test_date,
-        thick,
-        width
-        from STS_QA_LAB_SUB b left join sts_qa_lab a  on a.sts_no = b.sts_no ".$where."";
+        $query = "select distinct ait.do_num, mv.item
+        ,opr_no
+        ,size
+        ,length,standard_sub
+        ,b.Uf_Schedule
+        ,b.uf_grade
+        ,b.sts_no,h_no,
+              sts_c,sts_si,sts_mn,sts_p,sts_s,sts_cu,sts_v,sts_ni,sts_cr,sts_mo,
+              sts_ti,sts_nb,sts_al,sts_b,sts_co,sts_pb,sts_fe,sts_ts,sts_ys,sts_el,
+              Mec_test_TS,
+              Mec_test_YS,
+              Mec_test_EI,
+              Mec_test_EL_1,
+              Mec_test_EL_2,
+              Mec_test_EL_3,
+              Not_Mec_test_TS,
+              Not_Mec_test_YS,
+              Not_Mec_test_EI,
+              Not_Mec_test_EL_1,
+              Not_Mec_test_EL_2,
+              Not_Mec_test_EL_3,
+              charpy_mean,
+              charpy1,
+              charpy2,
+              charpy3,
+              Metal_P,
+              Metal_F,
+              Metal_M,
+              Hydro_test,
+              prod_FM_no,
+              prod_date,
+              test_date,
+              thick,
+              width 
+      from ait_preship_do_seq ait
+         inner join matltrack_mst mtk on ait.co_num = mtk.ref_num and ait.co_line = mtk.ref_line_suf
+         inner join mv_bc_tag mv on mtk.item = mv.item and mtk.lot = mv.lot
+         inner join STS_QA_LAB_SUB b on b.sts_no = mv.sts_no 
+           and mv.item like '%'+b.item+'%'
+          left join sts_qa_lab a  on a.sts_no = b.sts_no 
+      $where
+      order by do_num, sts_no, item";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);

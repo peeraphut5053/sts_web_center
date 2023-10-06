@@ -222,6 +222,9 @@ if ($load == 'searchAll') {
     else if ($prod_date != "") {
         $where = $where . " AND prod_date = '" . $prod_date . "' ";
     }
+    else if ($do_num != "") {
+        $where = $where . " AND ait.do_num = '" . $do_num . "' ";
+    }
     $QcTestLab = $QcTestLab->ReportAll($where );
     echo json_encode($QcTestLab); 
 }
