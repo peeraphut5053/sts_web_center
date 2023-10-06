@@ -93,8 +93,8 @@ class QcTestLab {
         $query = "select distinct ait.do_num, mv.item
         ,opr_no
         ,size
-        ,length,standard_sub
         ,b.Uf_Schedule
+        ,length,standard_sub
         ,b.uf_grade
         ,b.sts_no,h_no,
               sts_c,sts_si,sts_mn,sts_p,sts_s,sts_cu,sts_v,sts_ni,sts_cr,sts_mo,
@@ -115,10 +115,6 @@ class QcTestLab {
               charpy1,
               charpy2,
               charpy3,
-              Metal_P,
-              Metal_F,
-              Metal_M,
-              Hydro_test,
               prod_FM_no,
               prod_date,
               test_date,
