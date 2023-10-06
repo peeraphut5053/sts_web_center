@@ -188,9 +188,9 @@ if ($load == 'InsertQcTestLab_Sub') {
     $CallModel->SyteLine_Models();
     $QcTestLab[$i] = new QcTestLab();
     $QcTestLab[$i]->setConn($ConnSL);
-    $QcTestLab[$i] = $QcTestLab[$i]->InsertQcTestLab_Sub($_POST["opr_no"][$i], $_POST["size"][$i], $_POST["thick"][$i], $_POST["length"][$i], $_POST["standard"][$i], $_POST["sts_no"][$i], 
+    $QcTestLab[$i] = $QcTestLab[$i]->InsertQcTestLab_Sub($_POST["item"][$i],$_POST["opr_no"][$i], $_POST["size"][$i], $_POST["schedule"][$i], $_POST["length"][$i], $_POST["standard"][$i], $_POST["grade"][$i], $_POST["sts_no"][$i], 
     $_POST["Mec_test_TS"][$i], $_POST["Mec_test_YS"][$i], $_POST["Mec_test_EI"][$i], $_POST["Mec_test_EL_1"][$i], $_POST["Mec_test_EL_2"][$i], $_POST["Mec_test_EL_3"][$i],
-    $_POST["Not_Mec_test_TS"][$i], $_POST["Not_Mec_test_YS"][$i], $_POST["Not_Mec_test_EI"][$i], $_POST["Not_Mec_test_EL_1"][$i], $_POST["Not_Mec_test_EL_2"][$i], $_POST["Not_Mec_test_EL_3"][$i], $_POST["charpy_mean"][$i], $_POST["charpy1"][$i], $_POST["charpy2"][$i], $_POST["charpy3"][$i], $_POST["Metal_P"][$i], $_POST["Metal_F"][$i], $_POST["Metal_M"][$i], $_POST["Hydro_test"][$i], $_POST["prod_FM_no"][$i], $_POST["prod_date"][$i], $_POST["test_date"][$i]);
+    $_POST["Not_Mec_test_TS"][$i], $_POST["Not_Mec_test_YS"][$i], $_POST["Not_Mec_test_EI"][$i], $_POST["Not_Mec_test_EL_1"][$i], $_POST["Not_Mec_test_EL_2"][$i], $_POST["Not_Mec_test_EL_3"][$i], $_POST["charpy_mean"][$i], $_POST["charpy1"][$i], $_POST["charpy2"][$i], $_POST["charpy3"][$i], $_POST["prod_FM_no"][$i], $_POST["prod_date"][$i], $_POST["test_date"][$i], $_POST["remark"][$i]);
     echo json_encode($i);    
     }
 }

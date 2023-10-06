@@ -47,7 +47,7 @@
 <div class='alert alert-primary col-color'>
 
     <div class="col-md-6 text-left col-Hotroll" style='font-size: 18px;'>
-        <b>&nbsp;&nbsp;Hotroll import</b>
+        <b>&nbsp;&nbsp;SUB import</b>
     </div><br>
 
     <div class="row " style='margin-left:5px;margin-top:10px;margin-bottom:10px;'>
@@ -153,7 +153,7 @@
 			$('table tbody tr:eq(0)').remove();
             $('table tbody tr:eq(0)').remove();
 //=========add nre head =========
-                    $('table').prepend("<thead> <th>opr_no</th> <th>size</th> <th>thick</th> <th>length</th> <th>standard</th> <th>sts_no</th> <th>Mec_test_TS</th> <th>Mec_test_YS</th> <th>Mec_test_EI</th> <th>Mec_test_EL_1</th> <th>Mec_test_EL_2</th> <th>Mec_test_EL_3</th> <th>Not_Mec_test_TS</th> <th>Not_Mec_test_YS</th> <th>Not_Mec_test_EI</th> <th>Not_Mec_test_EL_1</th> <th>Not_Mec_test_EL_2</th> <th>Not_Mec_test_EL_3</th> <th>charpy_mean</th> <th>charpy1</th> <th>charpy2</th> <th>charpy3</th> <th>Metal_P</th> <th>Metal_F</th> <th>Metal_M</th> <th>Hydro_test</th> <th>prod_FM_no</th> <th>prod_date</th> <th>test_date</th></tr></thead>");
+                    $('table').prepend("<thead> <th>item</th> <th>opr_no</th> <th>size</th> <th>schedule</th> <th>length</th> <th>standard</th> <th>grade</th> <th>sts_no</th> <th>Mec_test_TS</th> <th>Mec_test_YS</th> <th>Mec_test_EI</th> <th>Mec_test_EL_1</th> <th>Mec_test_EL_2</th> <th>Mec_test_EL_3</th> <th>Not_Mec_test_TS</th> <th>Not_Mec_test_YS</th> <th>Not_Mec_test_EI</th> <th>Not_Mec_test_EL_1</th> <th>Not_Mec_test_EL_2</th> <th>Not_Mec_test_EL_3</th> <th>charpy_mean</th> <th>charpy1</th> <th>charpy2</th> <th>charpy3</th>  <th>prod_FM_no</th> <th>prod_date</th> <th>test_date</th> <th>remark</th></tr></thead>"); 
 			$('table thead').find('tr').each(function(){
               
 		   });
@@ -200,11 +200,13 @@
         function PackDataToArrayAndSave() {
             var i = 0;
             var load = "InsertQcTestLab_Sub";
+            var item = [];
             var opr_no = [];
 			var size = [];
-			var thick=[];
+			var schedule=[];
 			var length =[];
             var standard = [];
+            var grade = [];
             var sts_no = [];
             var Mec_test_TS = [];
             var Mec_test_YS = [];
@@ -222,47 +224,51 @@
 			var charpy1=[];
             var charpy2=[];
 			var charpy3 =[];
-            var Metal_P = [];
-            var Metal_F = [];
-            var Metal_M = [];
-            var Hydro_test = [];
+            // var Metal_P = [];
+            // var Metal_F = [];
+            // var Metal_M = [];
+            // var Hydro_test = [];
             var prod_FM_no = [];
             var prod_date = [];
             var test_date = [];
+            var remark = [];
 
             var CountItem = 0;
            
             $("tbody tr").each(function () {
                 if (i >= 0) {
-                    opr_no.push($(this).find('td:eq(0)').text());
-					size.push($(this).find('td:eq(1)').text());
-					thick.push($(this).find('td:eq(2)').text());
-					length.push($(this).find('td:eq(3)').text());
-                    standard.push($(this).find('td:eq(4)').text());
-                    sts_no.push($(this).find('td:eq(5)').text());
-                    Mec_test_TS.push($(this).find('td:eq(6)').text());                    
-                    Mec_test_YS.push($(this).find('td:eq(7)').text());
-                    Mec_test_EI.push($(this).find('td:eq(8)').text());
-					Mec_test_EL_1.push($(this).find('td:eq(9)').text());
-                    Mec_test_EL_2.push($(this).find('td:eq(10)').text());
-                    Mec_test_EL_3.push($(this).find('td:eq(11)').text());
-                    Not_Mec_test_TS.push($(this).find('td:eq(12)').text());                    
-                    Not_Mec_test_YS.push($(this).find('td:eq(13)').text());
-                    Not_Mec_test_EI.push($(this).find('td:eq(14)').text());
-					Not_Mec_test_EL_1.push($(this).find('td:eq(15)').text());
-                    Not_Mec_test_EL_2.push($(this).find('td:eq(16)').text());
-                    Not_Mec_test_EL_3.push($(this).find('td:eq(17)').text());
-                    charpy_mean.push($(this).find('td:eq(18)').text());
-					charpy1.push($(this).find('td:eq(19)').text());
-					charpy2.push($(this).find('td:eq(20)').text());
-                    charpy3.push($(this).find('td:eq(21)').text());                    
-                    Metal_P.push($(this).find('td:eq(22)').text());
-                    Metal_F.push($(this).find('td:eq(23)').text());
-					Metal_M.push($(this).find('td:eq(24)').text());
-                    Hydro_test.push($(this).find('td:eq(25)').text());
-                    prod_FM_no.push($(this).find('td:eq(26)').text());
-                    prod_date.push($(this).find('td:eq(27)').text());
-                    test_date.push($(this).find('td:eq(28)').text());
+                    item.push($(this).find('td:eq(0)').text());
+                    opr_no.push($(this).find('td:eq(1)').text());
+					size.push($(this).find('td:eq(2)').text());
+					schedule.push($(this).find('td:eq(3)').text());
+					length.push($(this).find('td:eq(4)').text());
+                    standard.push($(this).find('td:eq(5)').text());
+                    grade.push($(this).find('td:eq(6)').text());
+                    sts_no.push($(this).find('td:eq(7)').text());
+                    Mec_test_TS.push($(this).find('td:eq(8)').text());                    
+                    Mec_test_YS.push($(this).find('td:eq(9)').text());
+                    Mec_test_EI.push($(this).find('td:eq(10)').text());
+					Mec_test_EL_1.push($(this).find('td:eq(11)').text());
+                    Mec_test_EL_2.push($(this).find('td:eq(12)').text());
+                    Mec_test_EL_3.push($(this).find('td:eq(13)').text());
+                    Not_Mec_test_TS.push($(this).find('td:eq(14)').text());                    
+                    Not_Mec_test_YS.push($(this).find('td:eq(15)').text());
+                    Not_Mec_test_EI.push($(this).find('td:eq(16)').text());
+					Not_Mec_test_EL_1.push($(this).find('td:eq(17)').text());
+                    Not_Mec_test_EL_2.push($(this).find('td:eq(18)').text());
+                    Not_Mec_test_EL_3.push($(this).find('td:eq(19)').text());
+                    charpy_mean.push($(this).find('td:eq(20)').text());
+					charpy1.push($(this).find('td:eq(21)').text());
+					charpy2.push($(this).find('td:eq(22)').text());
+                    charpy3.push($(this).find('td:eq(23)').text());                    
+                    // Metal_P.push($(this).find('td:eq(22)').text());
+                    // Metal_F.push($(this).find('td:eq(23)').text());
+					// Metal_M.push($(this).find('td:eq(24)').text());
+                    // Hydro_test.push($(this).find('td:eq(25)').text());
+                    prod_FM_no.push($(this).find('td:eq(24)').text());
+                    prod_date.push($(this).find('td:eq(25)').text());
+                    test_date.push($(this).find('td:eq(26)').text());
+                    remark.push($(this).find('td:eq(27)').text());
                     
                     CountItem++;
                 }
@@ -275,11 +281,13 @@
                 dataType: 'text',
                 data: {
                     load : load, 
+                    item : item,
                     opr_no : opr_no,               
                     size : size,
-                    thick : thick,
+                    schedule : schedule,
                     length : length,
                     standard : standard,
+                    grade : grade,
                     sts_no : sts_no,
                     Mec_test_TS : Mec_test_TS,
                     Mec_test_YS : Mec_test_YS,
@@ -297,13 +305,14 @@
                     charpy1 : charpy1,
                     charpy2 : charpy2,
                     charpy3 : charpy3,
-                    Metal_P : Metal_P,
-                    Metal_F : Metal_F,
-                    Metal_M : Metal_M,
-                    Hydro_test : Hydro_test,
+                    // Metal_P : Metal_P,
+                    // Metal_F : Metal_F,
+                    // Metal_M : Metal_M,
+                    // Hydro_test : Hydro_test,
                     prod_FM_no : prod_FM_no,
                     prod_date : prod_date,
-                    test_date : test_date
+                    test_date : test_date,
+                    remark : remark
                 },
                 success: function (data) {
                  
