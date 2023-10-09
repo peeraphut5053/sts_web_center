@@ -98,7 +98,7 @@ if ($load == 'ReportSub') {
     $CallModel->SyteLine_Models();
     $QcTestLab = new QcTestLab();
     $QcTestLab->setConn($ConnSL);
-    $where = "where";
+    $where = "where 1=1";
     if (($from_stsno != "") && ($to_stsno != "")) {
         $where = $where . " b.sts_no BETWEEN '$from_stsno' AND '$to_stsno'";
     }
@@ -109,16 +109,16 @@ if ($load == 'ReportSub') {
     //     $where = $where . " h_no = '" . $h_no . "' ";
     // }
     if ($size != "") {
-        $where = $where . " size = '" . $size . "' ";
+        $where = $where . " AND size = '" . $size . "' ";
     }
     if ($standard != "") {
-        $where = $where . " standard_sub = '" . $standard . "' ";
+        $where = $where . " AND standard_sub = '" . $standard . "' ";
     }
     if ($prod_FM_no != "") {
-        $where = $where . "  prod_FM_no = '" . $prod_FM_no . "' ";
+        $where = $where . " AND prod_FM_no = '" . $prod_FM_no . "' ";
     }
     if ($prod_date != "") {
-        $where = $where . "  prod_date = '" . $prod_date . "' ";
+        $where = $where . " AND prod_date = '" . $prod_date . "' ";
     }
     $QcTestLab = $QcTestLab->SearchQcTestLab_Sub($where,$load);
     echo json_encode($QcTestLab); 
