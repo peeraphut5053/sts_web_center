@@ -100,7 +100,7 @@ if ($load == 'ReportSub') {
     $QcTestLab->setConn($ConnSL);
     $where = "where 1=1";
     if (($from_stsno != "") && ($to_stsno != "")) {
-        $where = $where . " b.sts_no BETWEEN '$from_stsno' AND '$to_stsno'";
+        $where = $where . " AND b.sts_no BETWEEN '$from_stsno' AND '$to_stsno'";
     }
     // else if ($c_no != "") {
     //     $where = $where . " c_no = '" . $c_no . "' ";
