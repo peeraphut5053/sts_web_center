@@ -70,10 +70,10 @@ if ($load == 'search') {
     if (($from_stsno != "") && ($to_stsno != "")) {
         $where = $where . " AND ( sts_no BETWEEN '$from_stsno' AND '$to_stsno' )  ";
     }
-    else if ($c_no != "") {
+    if ($c_no != "") {
         $where = $where . " AND c_no = '" . $c_no . "' ";
     }
-    else if ($h_no != "") {
+    if ($h_no != "") {
         $where = $where . " AND h_no = '" . $h_no . "' ";
     }
     $QcTestLab = $QcTestLab->SearchQcTestLab_Main($where);
@@ -108,16 +108,16 @@ if ($load == 'ReportSub') {
     // else if ($h_no != "") {
     //     $where = $where . " h_no = '" . $h_no . "' ";
     // }
-    else if ($size != "") {
+    if ($size != "") {
         $where = $where . " size = '" . $size . "' ";
     }
-    else if ($standard != "") {
+    if ($standard != "") {
         $where = $where . " standard_sub = '" . $standard . "' ";
     }
-    else if ($prod_FM_no != "") {
+    if ($prod_FM_no != "") {
         $where = $where . "  prod_FM_no = '" . $prod_FM_no . "' ";
     }
-    else if ($prod_date != "") {
+    if ($prod_date != "") {
         $where = $where . "  prod_date = '" . $prod_date . "' ";
     }
     $QcTestLab = $QcTestLab->SearchQcTestLab_Sub($where,$load);
@@ -219,25 +219,25 @@ if ($load == 'searchAll') {
     // else if ($c_no != "") {
     //     $where = $where . " AND c_no = '" . $c_no . "' ";
     // }
-    else if ($h_no != "") {
-        $where = $where . " AND h_no = '" . $h_no . "' ";
-    }
-    else if ($size != "") {
-        $where = $where . " AND size = '" . $size . "' ";
-    }
-    else if ($standard != "") {
-        $where = $where . " AND standard_sub = '" . $standard . "' ";
-    }
-    else if ($prod_FM_no != "") {
-        $where = $where . " AND prod_FM_no = '" . $prod_FM_no . "' ";
-    }
-    else if ($prod_date != "") {
-        $where = $where . " AND prod_date = '" . $prod_date . "' ";
-    }
-    else if ($do_num != "") {
+    if ($do_num != "") {
         $where = $where . " AND ait.do_num = '" . $do_num . "' ";
     }
-    $QcTestLab = $QcTestLab->ReportAll($where );
+    if ($h_no != "") {
+        $where = $where . " AND h_no = '" . $h_no . "' ";
+    }
+    if ($size != "") {
+        $where = $where . " AND size = '" . $size . "' ";
+    }
+    if ($standard != "") {
+        $where = $where . " AND standard_sub = '" . $standard . "' ";
+    }
+    if ($prod_FM_no != "") {
+        $where = $where . " AND prod_FM_no = '" . $prod_FM_no . "' ";
+    }
+    if ($prod_date != "") {
+        $where = $where . " AND prod_date = '" . $prod_date . "' ";
+    }
+    $QcTestLab = $QcTestLab->ReportAll($where);
     echo json_encode($QcTestLab); 
 }
 

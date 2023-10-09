@@ -126,7 +126,7 @@ class QcTestLab {
          inner join STS_QA_LAB_SUB b on b.sts_no = mv.sts_no 
            and mv.item like '%'+b.item+'%'
           left join sts_qa_lab a  on a.sts_no = b.sts_no 
-      $where
+          $where
       order by do_num, sts_no, item";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
