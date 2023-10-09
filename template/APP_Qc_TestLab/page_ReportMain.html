@@ -48,7 +48,7 @@
                     <th colspan="20" class="bg-primary">Chemical analysis from supplier</th>
                     <th colspan="20" class="bg-info">Chemical analysis from Lab.'STS</th>
                 </tr>
-                <tr>0
+                <tr>
                     <th class="bg-gray">standard</th>
                     <th class="bg-gray">thick</th>
                     <th class="bg-gray">width</th>
@@ -113,7 +113,7 @@
     var to_stsno = $("#to_stsnoM").val();
     var c_no = $("#c_noM").val();
     var h_no = $("#h_noM").val();
-    if ((from_stsno == "") && (to_stsno == "") && ((h_no == "") && (c_no == ""))) {
+    if ((from_stsno == "") && (to_stsno == "") && (h_no == "") && (c_no == "")) {
         $.alert("กรุณาเลือกช่วง STS_NO หรือป้อนรายละเอียดเพื่อกรองข้อมูล");
     } else {
         $.ajax({

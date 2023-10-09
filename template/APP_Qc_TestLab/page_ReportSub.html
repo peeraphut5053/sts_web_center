@@ -19,7 +19,7 @@
         </div>
     </div>
 
-    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2  col-search">
+    <!-- <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2  col-search">
         <div class="input-group">
             <div class="input-group-addon">Coil No</div>
             <input type="text" value="" class="form-control txt-filter" id="c_noS">
@@ -31,7 +31,36 @@
             <div class="input-group-addon">Heat No</div>
             <input type="text"  class="form-control txt-filter" id="h_noS">
         </div>
+    </div> -->
+
+    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2  col-search">
+        <div class="input-group">
+            <div class="input-group-addon">Size</div>
+            <input type="text"  class="form-control txt-filter" id="sizeS">
+        </div>
     </div>
+
+    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2  col-search">
+        <div class="input-group">
+            <div class="input-group-addon">Standard</div>
+            <input type="text"  class="form-control txt-filter" id="standardS">
+        </div>
+    </div>
+
+    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2  col-search">
+        <div class="input-group">
+            <div class="input-group-addon">&nbsp;Prod FM_No&nbsp;&nbsp;</div>
+            <input type="text"  class="form-control txt-filter" id="prod_FM_noS">
+        </div>
+    </div>
+
+    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2  col-search">
+        <div class="input-group">
+            <div class="input-group-addon">Prod_Date</div>
+            <input type="text"  class="form-control txt-filter" id="prod_dateS">
+        </div>
+    </div>
+
 
     <div class="col-lg-1 col-md-2 col-sm-1 col-xs-6  col-search">
         <button id="BtnSearchS" class="btn btn-info"><i class="fa fa-search"></i>Search</button>
@@ -103,14 +132,25 @@
             ReportAllSearch();
         });
 
+        $("#prod_dateS").datepicker({
+        dateFormat: 'yy-mm-dd',
+    });
+
+
 
     function ReportAllSearch() {
     var OldHtml = $("#BtnSearchS").html();
     var from_stsno = $("#from_stsnoS").val();
     var to_stsno = $("#to_stsnoS").val();
-    var c_no = $("#c_noS").val();
-    var h_no = $("#h_noS").val();
-    if ((from_stsno == "") && (to_stsno == "") && ((h_no == "") && (c_no == ""))) {
+    // var c_no = $("#c_noS").val();
+    // var h_no = $("#h_noS").val();
+
+    var size = $("#sizeS").val();
+    var standard = $("#standardS").val();
+    var prod_FM_no = $("#prod_FM_noS").val();
+    var prod_date = $("#prod_dateS").val();
+
+    if ((from_stsno == "") && (to_stsno == "") && (size == "") && (standard == "") && (prod_FM_no == "") && (prod_date == "")) {
         $.alert("กรุณาเลือกช่วง STS_NO หรือป้อนรายละเอียดเพื่อกรองข้อมูล");
     } else {
         $.ajax({
@@ -124,8 +164,12 @@
                 "load": "ReportSub",
                 "from_stsno": from_stsno,
                 "to_stsno": to_stsno,
-                "c_no": c_no,
-                "h_no": h_no
+                // "c_no": c_no,
+                // "h_no": h_no,
+                "size": size,
+                "standard": standard,
+                "prod_FM_no": prod_FM_no,
+                "prod_date": prod_date,
             },
             success: function (data) {
                 console.log(data)

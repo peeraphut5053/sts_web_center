@@ -102,11 +102,23 @@ if ($load == 'ReportSub') {
     if (($from_stsno != "") && ($to_stsno != "")) {
         $where = $where . " b.sts_no BETWEEN '$from_stsno' AND '$to_stsno'";
     }
-    else if ($c_no != "") {
-        $where = $where . " c_no = '" . $c_no . "' ";
+    // else if ($c_no != "") {
+    //     $where = $where . " c_no = '" . $c_no . "' ";
+    // }
+    // else if ($h_no != "") {
+    //     $where = $where . " h_no = '" . $h_no . "' ";
+    // }
+    else if ($size != "") {
+        $where = $where . " size = '" . $size . "' ";
     }
-    else if ($h_no != "") {
-        $where = $where . " h_no = '" . $h_no . "' ";
+    else if ($standard != "") {
+        $where = $where . " standard_sub = '" . $standard . "' ";
+    }
+    else if ($prod_FM_no != "") {
+        $where = $where . "  prod_FM_no = '" . $prod_FM_no . "' ";
+    }
+    else if ($prod_date != "") {
+        $where = $where . "  prod_date = '" . $prod_date . "' ";
     }
     $QcTestLab = $QcTestLab->SearchQcTestLab_Sub($where,$load);
     echo json_encode($QcTestLab); 
@@ -204,9 +216,9 @@ if ($load == 'searchAll') {
     if (($from_stsno != "") && ($to_stsno != "")) {
         $where = $where . " AND ( b.sts_no BETWEEN '$from_stsno' AND '$to_stsno' )  ";
     }
-    else if ($c_no != "") {
-        $where = $where . " AND c_no = '" . $c_no . "' ";
-    }
+    // else if ($c_no != "") {
+    //     $where = $where . " AND c_no = '" . $c_no . "' ";
+    // }
     else if ($h_no != "") {
         $where = $where . " AND h_no = '" . $h_no . "' ";
     }
@@ -214,7 +226,7 @@ if ($load == 'searchAll') {
         $where = $where . " AND size = '" . $size . "' ";
     }
     else if ($standard != "") {
-        $where = $where . " AND standard = '" . $standard . "' ";
+        $where = $where . " AND standard_sub = '" . $standard . "' ";
     }
     else if ($prod_FM_no != "") {
         $where = $where . " AND prod_FM_no = '" . $prod_FM_no . "' ";

@@ -21,12 +21,12 @@
         </div>
     </div>
 
-    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2  col-search">
+    <!-- <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2  col-search">
         <div class="input-group">
             <div class="input-group-addon">Coil No</div>
             <input type="text" value="" class="form-control txt-filter" id="c_noR">
         </div>
-    </div>
+    </div> -->
 
     <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2  col-search">
         <div class="input-group">
@@ -179,10 +179,10 @@
     var size = $("#sizeR").val();
     var standard = $("#standardR").val();
     var prod_FM_no = $("#prod_FM_noR").val();
-    var prod_date = $("#prod_dateR").val(); do_num
+    var prod_date = $("#prod_dateR").val();
     var do_num = $("#do_numR").val();
 
-    if ((from_stsno == "") && (to_stsno == "") && ((h_no == "") && (c_no == "") && (size == "") && (standard == "") && (prod_FM_no == "") && (prod_date == "") && (do_num == ""))) {
+    if ((from_stsno == "") && (to_stsno == "") && (h_no == "") && (size == "") && (standard == "") && (prod_FM_no == "") && (prod_date == "") && (do_num == "")) {
         $.alert("กรุณาเลือกช่วง STS_NO หรือป้อนรายละเอียดเพื่อกรองข้อมูล");
     } else {
         $.ajax({
