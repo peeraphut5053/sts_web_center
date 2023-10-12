@@ -457,5 +457,14 @@ if ($load == "ReportTagBoatNote") {
     echo json_encode($Trans);
 }
 
+if ($load == "getFormingOperation") {
+    $CallModel = new CallModel();
+    $CallModel->SyteLine_Models();
+    $Trans = new JobOrder();
+    $Trans->setConn($ConnSL);
+    $Trans = $Trans->getFormingOperation($txtFromDate,$txtToDate,$txtw_c);
+    echo json_encode($Trans);
+}
+
 
 

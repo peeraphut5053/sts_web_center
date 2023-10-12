@@ -1293,6 +1293,15 @@ class JOBORDER {
         return $rs0;
     }
 
+    function getFormingOperation($txtFromDate,$txtToDate,$txtw_c) {
+        $query =  "select * from STS_forming_operation"
+        . "where w_c= '$txtw_c' and fromDate >= '$txtFromDate' and toDate <= '$txtToDate' )";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+
     
     
 }
