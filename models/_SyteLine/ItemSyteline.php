@@ -366,7 +366,7 @@ class ItemSyteLine {
         return $tmpResult;
     }
 
-    function GetItemHR() {
+    function GetItemHR($Thick_Lot,$Width_Lot) {
         $Locs = array();
         $Locs = $this->_locations;
 //        print_r($Locs);
@@ -386,6 +386,12 @@ class ItemSyteLine {
                 . "AND ( item_code like '%rcr%' or item_code like '%rhr%' or item_code like '%rgi%'   )  $CriteriaDate ";
         if ($thickness != "") {
             $query = $query . " AND UF_thickness ='$thickness' ";
+        }
+        if ($Thick_Lot != "") {
+            $query = $query . " AND lot_Uf_thickness ='$Thick_Lot' ";
+        }
+        if ($Width_Lot != "") {
+            $query = $query . " AND lot_Uf_width ='$Width_Lot' ";
         }
 //        if (!in_array("ALL", $Locs)) {
         if (count($Locs) == 1) {

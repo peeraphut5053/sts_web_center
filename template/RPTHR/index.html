@@ -88,6 +88,13 @@
                             ความหนา 
                         </div>
                         <input type='text' class='form-control' id='txtThick' >
+                    </div>  
+                    <br>
+                    <div class="input-group">
+                        <div class="input-group-addon">
+                            ความหนา (Lot)
+                        </div>
+                        <input type='text' class='form-control' id='txtThick_Lot' >
                     </div>    
                 </div>
             </div>
@@ -99,6 +106,13 @@
                         </div>
                         <input type='text' class='form-control' id='txtWidth' >
                     </div>   
+                    <br>
+                    <div class="input-group">
+                        <div class="input-group-addon">
+                            หน้ากว้าง (Lot)
+                        </div>
+                        <input type='text' class='form-control' id='txtWidth_Lot' >
+                    </div>  
                 </div>
             </div>
         </div>
@@ -133,6 +147,9 @@
                 <th >Description</th>
                 <th >Thick</th>
                 <th >Width</th>
+                <th >Lot</th>
+                <th >Lot Thick</th>
+                <th >Lot Width</th>
                 <th >Standard</th>
                 <th >Location</th>
                 <th >วันที่รับเข้า</th>
@@ -199,6 +216,8 @@
         $("#rowResultTable").loading();
         var txtThick = $("#txtThick").val();
         var txtWidth = $("#txtWidth").val();
+        var txtThick_Lot = $("#txtThick_Lot").val();
+        var txtWidth_Lot = $("#txtWidth_Lot").val();
         var txtStartDate = $("#txtStartDate").val();
         var txtToDate = $("#txtToDate").val();
         var Loc = $("#txtLoc").val();
@@ -218,6 +237,8 @@
                 "Locs": Locs,
                 "Thick": txtThick,
                 "Width": txtWidth,
+                "Thick_Lot": txtThick_Lot,
+                "Width_Lot": txtWidth_Lot,
                 "txtStartDate": txtStartDate,
                 "txtToDate": txtToDate,
                 "cb": cb

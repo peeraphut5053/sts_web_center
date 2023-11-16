@@ -44,7 +44,7 @@ if ($load == "form") {
         $ItemSL->_StartDate = $txtStartDate;
         $ItemSL->_ToDate = $txtToDate;
 
-        $Items = $ItemSL->GetItemHR();
+        $Items = $ItemSL->GetItemHR($Thick_Lot,$Width_Lot);
 //        echo $Items ;
         $i = 0;
         $TotalRoll = 0;
@@ -67,6 +67,9 @@ if ($load == "form") {
                         . "<td align='center' >" . $rrr["item_desc"] . "</td>"
                         . "<td align='center'>" . $rrr["Uf_thickness"] . "</td>"
                         . "<td align='center'>" . $rrr["item_width"] . "</td>"
+                        . "<td align='left' >" . $rrr["lot"] . "</td>"
+                        . "<td align='center'>" . $rrr["lot_Uf_thickness"] . "</td>"
+                        . "<td align='center'>" . $rrr["lot_Uf_width"] . "</td>"
                         . "<td align='center'>" . $rrr["item_standard"] . "</td>"
                         . "<td align='center'>" . $rrr["loc_desc"] . "</td>"
                         . "<td align='center'>" . $rrr["create_date"]->format("Y-m-d") . "</td>"
@@ -79,6 +82,9 @@ if ($load == "form") {
             }
             $lines = $lines . "<tr>"
                     . "<td><b>Total Item : <u>" . $itemGroupName[0] . "-" . $itemGroupName[1] . "</u></b></td>"
+                    . "<td></td>"
+                    . "<td></td>"
+                    . "<td></td>"
                     . "<td></td>"
                     . "<td></td>"
                     . "<td></td>"
@@ -109,6 +115,9 @@ if ($load == "form") {
     }
     $lines = $lines . "<tr>"
             . "<td><b>Grand Total for Location : $wLoc    $Thick   $Width </b></td>"
+            . "<td></td>"
+            . "<td></td>"
+            . "<td></td>"
             . "<td></td>"
             . "<td></td>"
             . "<td></td>"
