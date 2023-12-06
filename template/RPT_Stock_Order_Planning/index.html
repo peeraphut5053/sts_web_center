@@ -1,0 +1,213 @@
+<style>
+    .not-show-content{
+        display:none;
+    }
+
+    .footer{
+        color: blue ;
+        font-weight: bold;
+    }
+    .col-search {
+        padding-left: 3px;
+        padding-right: 3px;
+    }
+
+    .table thead th {
+        text-align: center;
+    }
+
+    .col-flt-page {
+        padding-top: 10px;
+        font-weight: bold;
+    }
+
+    #tblReport tbody tr td a {
+        cursor: pointer;
+    }
+
+    table.dataTable.fixedHeader-floating,
+    table.dataTable.fixedHeader-locked {
+        background-color: white;
+        margin-top: 50px !important;
+        margin-bottom: 0 !important;
+    }
+
+    .tr-row-cn td {
+        color: red;
+    }
+    .selectize-input{
+        min-height: 80px;
+    }
+    .panel-body{
+        padding-top:5px;
+        padding-bottom:5px;
+    }
+
+    @import  url('https://fonts.googleapis.com/css?family=Roboto');
+
+    body{
+        font-family: 'Roboto', sans-serif;
+    }
+
+    h2{
+        margin:0px;
+        text-transform: uppercase;
+    }
+
+    h6{
+        margin:0px;
+        color:#777;
+    }
+
+    h3 {
+        margin-top: 0px;
+        margin-bottom: 0px;
+    }
+
+    .tabs{
+        margin-top:10px;
+        font-size:15px;
+        padding:0px;
+        list-style:none;
+        background:#fff;
+        box-shadow:0px 5px 20px rgba(0,0,0,0.1);
+        display:inline-block;
+        border-radius:50px;
+        position:relative;
+    }
+
+    .tabs a{
+        text-decoration:none;
+        color: #777;
+        /* text-transform:uppercase; */
+        padding:10px 20px;
+        display:inline-block;
+        position:relative;
+        z-index:1;
+        transition-duration:0.6s;
+    }
+
+    .tabs a.active{
+        color:#fff;
+    }
+
+    .tabs a i{
+        margin-right:5px;
+    }
+
+    .tabs .selector{
+        height:100%;
+        display:inline-block;
+        position:absolute;
+        left:0px;
+        top:0px;
+        z-index:1;
+        border-radius:50px;
+        transition-duration:0.6s;
+        transition-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+        background: #05abe0;
+        background: -moz-linear-gradient(45deg, #05abe0 0%, #8200f4 100%);
+        background: -webkit-linear-gradient(45deg, #05abe0 0%,#8200f4 100%);
+        background: linear-gradient(45deg, #05abe0 0%,#8200f4 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#05abe0', endColorstr='#8200f4',GradientType=1 );
+    }
+    #Pass::placeholder {
+        color: red;
+        opacity: 1;
+      }
+</style>
+
+<div style="text-align: center">
+    <!-- <h3>TEST</h3> -->
+    <nav class="tabs">
+        <div class="selector"></div>
+        <a href="#" id ="tab_ByItem" class="active"><i class="fa fa-file-text-o"></i>&nbsp;&nbsp;Report ByItem</a>
+        <a href="#" id ="tab_ByCo" ><i class="fa fa-file-text-o"></i>&nbsp;&nbsp;Report ByCo</a>
+        <a href="#" id ="tab_All" ><i class="fa fa-file-text-o"></i>&nbsp;&nbsp;Report ALL</a>
+        <!-- <a href="#" id ="tab_Importexcel" ><i class="fa fa-file-text-o"></i>&nbsp;&nbsp;Import</a>
+        <a href="#" id ="tab_Edit" ><i class="fa fa-pencil-square-o"></i>&nbsp;&nbsp;Edit</a> -->
+    </nav>
+</div>
+<div id="page_ByItem">
+</div>
+
+<div id="page_ByCo" class="not-show-content">
+</div>
+
+<div id="page_All" class="not-show-content">
+</div>
+
+
+<script type="text/javascript">
+
+
+
+    $(".panel-heading").click(function () {
+        $(".panel-body").slideToggle("slow");
+    });
+
+    var tabs = $('.tabs');
+    var selector = $('.tabs').find('a').length;
+//var selector = $(".tabs").find(".selector");
+    var activeItem = tabs.find('.active');
+    var activeWidth = activeItem.innerWidth();
+    $(".selector").css({
+        "left": activeItem.position.left + "px",
+        "width": activeWidth + "px"
+    });
+
+
+
+    $(document).ready(function () {
+        pageHtml = "page_ByItem";
+        Url = "././module/RPT_Stock_Order_Planning/render.php"
+        $("#page_ByItem").load(Url, {"pageHtml": pageHtml}, function (response, status, xhr) {
+            if (status == "error") {
+                var msg = "Sorry, error: ";
+                $.alert(msg + xhr.status + " " + xhr.statusText);
+            } else {
+                $("#page_Helloworld").loading("stop");
+            }
+        });
+    });
+
+
+    $(".tabs").on("click", "a", function (e) {
+        e.preventDefault();
+        $('.tabs a').removeClass("active");
+        $(this).addClass('active');
+        var activeWidth = $(this).innerWidth();
+        var itemPos = $(this).position();
+        $(".selector").css({
+            "left": itemPos.left + "px",
+            "width": activeWidth + "px"
+        });
+        var thisId = $(this).attr("id");
+        var split_id_tab = thisId.split("_");
+        var tab_name = split_id_tab[1];
+
+        // console.log(tab_name);
+ 
+        loadPage(tab_name)
+
+        function loadPage(tab_name){
+        console.log('loadPage:',tab_name)
+        $("div[id^='page']").hide();
+        $("#page_" + tab_name).fadeToggle("slow", "linear");
+        Url = "././module/RPT_Stock_Order_Planning/render.php"
+        pageHtml = "page_" + tab_name;
+        // console.log(pageHtml);
+            
+        $("#page_" + tab_name).load(Url, {"pageHtml": pageHtml}, function (response, status, xhr) {
+            // console.log("2"+pageHtml);
+            if (status == "error") {
+                var msg = "Sorry, error: ";
+                $.alert(msg + xhr.status + " " + xhr.statusText);
+            } else {
+                $("#page_Helloworld").loading("stop");
+            }
+        });
+    } 
+});
+</script>

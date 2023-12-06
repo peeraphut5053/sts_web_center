@@ -1302,6 +1302,36 @@ class JOBORDER {
         return $rs0;
     }
 
+    function BY_Item($Item) {
+        $query =  "select convert(varchar,due_date) as Due_Date, * 
+        from V_STS_orderAvaiStock
+        where item ='$Item'
+        order by item, convert(date,due_date), co_num, co_line";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+
+    function BY_CO($CO) {
+        $query =  "select convert(varchar,due_date) as Due_Date, * 
+        from V_STS_orderAvaiStock
+        where co_num ='$CO'
+        order by item, convert(date,due_date), co_num, co_line";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
     
+    function ALL() {
+        $query =  "select convert(varchar,due_date) as Due_Date, * 
+        from V_STS_orderAvaiStock
+        order by item, convert(date,due_date), co_num, co_line";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
     
 }

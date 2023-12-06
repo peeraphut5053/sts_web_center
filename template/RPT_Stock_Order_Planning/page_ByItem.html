@@ -1,0 +1,191 @@
+<div class="row" style="border-bottom:solid 1px #e8e8e8;">  
+    <div class="row">
+        <h3 style="padding-left:5px;">Stock Order Planning</h3>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-3 col-search">
+        <div class="input-group">
+            <div class="input-group-addon">Item</div>
+            <input type="text" class="form-control txt-filter" id="BY_Item">
+        </div>
+    </div>
+
+    <div class="col-lg-1 col-md-2 col-sm-1 col-xs-6  col-search">
+        <button id="BtnSearchItem" class="btn btn-info"><i class="fa fa-search"></i>Search</button>
+    </div>
+</div>
+
+    <div class="row" id="divReportByitem">
+        <table class="table table-condensed table-bordered table-striped" id="tblReportByitem">
+            <thead>
+                <tr>
+                    <th>item</th>
+                    <th>co_num</th>
+                    <th>co_line</th>
+                    <th>due_date</th>
+                    <th>qty_ordered</th>
+                    <th>job_completed</th>
+                    <th>qty_need</th>
+                    <th>avai_FC</th>
+                    <th>avai_WC</th>
+                    <th>avai_WSHR</th>
+                    <th>avai_RHR</th>
+
+                </tr>
+        </table>
+    </div>
+
+<script type="text/javascript">
+
+    $("#BtnSearchItem").click(function () {
+            ReportAllSearch();
+        });
+
+
+    function ReportAllSearch() {
+    var OldHtml = $("#BtnSearchItem").html();
+    var Item = $("#BY_Item").val();
+
+    if (Item == "") {
+        $.alert("กรุณากรอกข้อมูล");
+    } else {
+        $.ajax({
+            type: 'POST',
+            url: "././module/RPT_Stock_Order_Planning/data.php",
+            dataType: 'json',
+            beforeSend: function () {
+                $("#BtnSearchItem").html("<i class='fa fa-spinner fa-spin'>");
+            },
+            data: {
+                "load": "BY_Item",
+                "Item": Item,
+            },
+            success: function (data) {
+                console.log(data)
+
+                $("#tblReportByitem").DataTable().clear();
+                    var RowFooterBuild = "";
+                    var ColBuild = "";
+                    var ColCount = 11;
+                    var i = 0;
+                    RowFooterBuild = "<tfoot><tr>!!ColBuild!!</tr></tfoot>";
+                    for (i = 1; i <= ColCount; i++) {
+                        ColBuild += "<td></td>";
+                    }
+                    $("#tblReportByitem").append(RowFooterBuild.replace("!!ColBuild!!", ColBuild));
+
+                $("#tblReportByitem").dataTable().fnDestroy();
+                var table = $('#tblReportByitem').DataTable({
+                    scrollY: "400px",
+                    "scrollX": true,
+                    scrollCollapse: true,
+                    "aaData": data,
+                    "paging": false,
+//                        fixedColumns: {
+//                            leftColumns: 1,
+//                        },
+                    "searching": false,
+                    "bInfo": false,
+
+                    "columns": [
+                        {"data": "item",
+                            "className": "text-center",
+                        },
+                        {"data": "co_num",
+                            "className": "text-center",
+                        },
+                        {"data": "co_line",
+                            "className": "text-center",
+                        },
+                        {"data": "Due_Date",
+                            "className": "text-center",
+                        },
+                        {"data": "qty_ordered",
+                            "className": "text-center",
+                        },
+                        {"data": "job_completed",
+                            "className": "text-center",
+                        },
+                        {"data": "qty_need",
+                            "className": "text-center",
+                        },
+                        {"data": "avai_FC",
+                            "className": "text-center",
+                        },
+                        {"data": "avai_WC",
+                            "className": "text-center",
+                        },
+                        {"data": "avai_WSHR",
+                            "className": "text-center",
+                        },
+                        {"data": "avai_RHR",
+                            "className": "text-center",
+                        },
+                    ],
+                    'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                            "<'row'<'col-md-12'tr>>" +
+                            "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                    buttons: [
+                        {
+                            extend: 'print',
+                            text: "<i class='fa fa-print'></i>&nbsp;Print",
+                            title: ''
+                        },
+                        {
+                            extend: 'excel',
+                            text: "<i class='fa fa-file-excel'></i>&nbsp;Excel&nbsp;",
+                            title: `ReportByitem`,
+                            customize: function (xlsx) {
+                                var sheet = xlsx.xl.worksheets['sheet1.xml'];
+                                var numrows = 2;
+                            }
+                        },
+                    ],
+                    "footerCallback": function (row, data, start, end, display) {
+                            var api = this.api(),
+                                    data;
+
+                            // converting to interger to find total
+                            var intVal = function (i) {
+                                return typeof i === 'string' ?
+                                        i.replace(/[\$,]/g, '') * 1 :
+                                        typeof i === 'number' ?
+                                        i : 0;
+                            };
+
+                            // computing column Total of the complete result
+                            var qty_need = api
+                                    .column(6)
+                                    .data()
+                                    .reduce(function (a, b) {
+                                        return intVal(a) + intVal(b);
+                                    }, 0);
+
+                            var avai_FC = api
+                                    .column(7)
+                                    .data()
+                                    .reduce(function (a, b) {
+                                        return intVal(b) > intVal(a) ? intVal(b) : intVal(a);
+                                    }, 0);
+
+                            $(api.column(0).footer()).html('qty_need');
+                            $(api.column(1).footer()).html(addCommas(qty_need.toFixed(0)));
+                            $(api.column(2).footer()).html('avai_FC');
+                            $(api.column(3).footer()).html(addCommas(avai_FC.toFixed(0)));
+                            $(api.column(4).footer()).html('avai_FC - qty_need');
+                            $(api.column(5).footer()).html(addCommas((avai_FC-qty_need).toFixed(0)));
+                        },
+                });
+                $('#tblReportByitem').loading("stop");
+                $("#BtnSearchItem").html("<i class='fa fa-search'></i>Search");
+            },
+            error: function (e) {
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+    }
+}
+</script>
