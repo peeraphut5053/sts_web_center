@@ -83,7 +83,7 @@
                     "bInfo": false,
 
                     "columns": [
-                        {"data": "item",
+                    {"data": "item",
                             "className": "text-center",
                         },
                         {"data": "co_num",
@@ -96,25 +96,53 @@
                             "className": "text-center",
                         },
                         {"data": "qty_ordered",
-                            "className": "text-center",
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                            var ret = Math.floor(data).toFixed(2)
+                            return ret;
+                        }
                         },
                         {"data": "job_completed",
                             "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                            var ret = Math.floor(data).toFixed(2)
+                            return ret;
+                        }
                         },
                         {"data": "qty_need",
                             "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                            var ret = Math.floor(data).toFixed(2)
+                            return ret;
+                        }
                         },
                         {"data": "avai_FC",
                             "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                            var ret = Math.floor(data).toFixed(2)
+                            return ret;
+                        }
                         },
                         {"data": "avai_WC",
                             "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                            var ret = Math.floor(data).toFixed(2)
+                            return ret;
+                        }
                         },
                         {"data": "avai_WSHR",
                             "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                            var ret = Math.floor(data).toFixed(2)
+                            return ret;
+                        }
                         },
                         {"data": "avai_RHR",
                             "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                            var ret = Math.floor(data).toFixed(2)
+                            return ret;
+                        }
                         },
                     ],
                     'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
@@ -165,11 +193,11 @@
                                     }, 0);
 
                             $(api.column(0).footer()).html('qty_need');
-                            $(api.column(1).footer()).html(addCommas(qty_need.toFixed(0)));
+                            $(api.column(1).footer()).html(addCommas(qty_need.toFixed(2)));
                             $(api.column(2).footer()).html('avai_FC');
-                            $(api.column(3).footer()).html(addCommas(avai_FC.toFixed(0)));
+                            $(api.column(3).footer()).html(addCommas(avai_FC.toFixed(2)));
                             $(api.column(4).footer()).html('avai_FC - qty_need');
-                            $(api.column(5).footer()).html(addCommas((avai_FC-qty_need).toFixed(0)));
+                            $(api.column(5).footer()).html(addCommas((avai_FC-qty_need).toFixed(2)));
                         },
                 });
                 $('#tblReportAll').loading("stop");
