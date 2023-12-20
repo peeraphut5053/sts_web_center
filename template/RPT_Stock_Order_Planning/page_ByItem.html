@@ -29,6 +29,7 @@
                     <th>job_completed</th>
                     <th>qty_need</th>
                     <th>avai_FC</th>
+                    <th>FC_cumulative</th>
                     <th>avai_WC</th>
                     <th>avai_WSHR</th>
                     <th>avai_RHR</th>
@@ -68,7 +69,7 @@
                 $("#tblReportByitem").DataTable().clear();
                     var RowFooterBuild = "";
                     var ColBuild = "";
-                    var ColCount = 11;
+                    var ColCount = 12;
                     var i = 0;
                     RowFooterBuild = "<tfoot><tr>!!ColBuild!!</tr></tfoot>";
                     for (i = 1; i <= ColCount; i++) {
@@ -124,6 +125,13 @@
                         }
                         },
                         {"data": "avai_FC",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                            var ret = Math.floor(data).toFixed(2)
+                            return ret;
+                        }
+                        },
+                        {"data": "FC_cumulative",
                             "className": "text-center",
                             "render": function (data, type, row, meta) {
                             var ret = Math.floor(data).toFixed(2)
