@@ -1316,7 +1316,7 @@ class JOBORDER {
         $query =  "select V.* , subitem.FC_cumulative ,convert(varchar,V.due_date) as Due_Date
         from V_STS_orderAvaiStock v
         inner join
-        (select * from V_STS_orderAvaiStock_item) subitem
+        (select * from V_STS_orderAvaiStock_item_sub) subitem
         on subitem.item = v.item and subitem.co_num = v.co_num and subitem.co_line = v.co_line and convert(date,subitem.due_date) = convert(date,v.due_date)
         where   V.co_num ='$CO'
         order by V.item, convert(date,V.due_date), V.co_num, V.co_line";
@@ -1327,9 +1327,12 @@ class JOBORDER {
     }
     
     function ALL() {
-        $query =  "select convert(varchar,due_date) as Due_Date, * 
-        from V_STS_orderAvaiStock
-        order by item, convert(date,due_date), co_num, co_line";
+        $query =  "select V.* , subitem.FC_cumulative ,convert(varchar,V.due_date) as Due_Date
+        from V_STS_orderAvaiStock v
+        inner join
+        (select * from V_STS_orderAvaiStock_item_sub) subitem
+        on subitem.item = v.item and subitem.co_num = v.co_num and subitem.co_line = v.co_line and convert(date,subitem.due_date) = convert(date,v.due_date)
+        order by V.item, convert(date,V.due_date), V.co_num, V.co_line";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);
