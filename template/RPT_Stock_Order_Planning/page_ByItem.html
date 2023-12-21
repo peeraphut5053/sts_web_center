@@ -21,6 +21,7 @@
         <table class="table table-condensed table-bordered table-striped" id="tblReportByitem">
             <thead>
                 <tr>
+                    <th>NO</th>
                     <th>item</th>
                     <th>co_num</th>
                     <th>co_line</th>
@@ -71,7 +72,7 @@
                 $("#tblReportByitem").DataTable().clear();
                     var RowFooterBuild = "";
                     var ColBuild = "";
-                    var ColCount = 14;
+                    var ColCount = 15;
                     var i = 0;
                     RowFooterBuild = "<tfoot><tr>!!ColBuild!!</tr></tfoot>";
                     for (i = 1; i <= ColCount; i++) {
@@ -93,6 +94,13 @@
                     "bInfo": false,
 
                     "columns": [
+                        {
+                        "data": "STS_PO",
+                        "className": "text-center",
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                        },
                         {"data": "item",
                             "className": "text-center",
                         },
@@ -207,54 +215,53 @@
 
                             
                             var qty_ordered = api
-                                    .column(5)
-                                    .data()
-                                    .reduce(function (a, b) {
-                                        return intVal(a) + intVal(b);
-                                    }, 0);
-
-                            var qty_shipped = api
                                     .column(6)
                                     .data()
                                     .reduce(function (a, b) {
                                         return intVal(a) + intVal(b);
                                     }, 0);
 
-                            var qty_ready = api
+                            var qty_shipped = api
                                     .column(7)
                                     .data()
                                     .reduce(function (a, b) {
                                         return intVal(a) + intVal(b);
                                     }, 0);
 
-                            var qty_need = api
+                            var qty_ready = api
                                     .column(8)
                                     .data()
                                     .reduce(function (a, b) {
                                         return intVal(a) + intVal(b);
                                     }, 0);
 
-                            var avai_FC = api
+                            var qty_need = api
                                     .column(9)
+                                    .data()
+                                    .reduce(function (a, b) {
+                                        return intVal(a) + intVal(b);
+                                    }, 0);
+
+                            var avai_FC = api
+                                    .column(10)
                                     .data()
                                     .reduce(function (a, b) {
                                         return intVal(b) > intVal(a) ? intVal(b) : intVal(a);
                                     }, 0);
 
                             // var FC_cumulative = api
-                            //         .column(10)
+                            //         .column(11)
                             //         .data()
                             //         .reduce(function (a, b) {
-                            //             return intVal(b) > intVal(a) ? intVal(b) : intVal(a);
+                            //             return intVal(a) > intVal(b) ? intVal(a) : intVal(b);
                             //         }, 0);
 
-                            // $(api.column(5).footer()).html('qty_need');
-                            $(api.column(5).footer()).html(addCommas(qty_ordered.toFixed(2)));
-                            $(api.column(6).footer()).html(addCommas(qty_shipped.toFixed(2)));
-                            $(api.column(7).footer()).html(addCommas(qty_ready.toFixed(2)));
-                            $(api.column(8).footer()).html(addCommas(qty_need.toFixed(2)));
-                            $(api.column(9).footer()).html(addCommas(avai_FC.toFixed(2)));
-                            // $(api.column(10).footer()).html(addCommas(FC_cumulative.toFixed(2)));
+                            $(api.column(6).footer()).html(addCommas(qty_ordered.toFixed(2)));
+                            $(api.column(7).footer()).html(addCommas(qty_shipped.toFixed(2)));
+                            $(api.column(8).footer()).html(addCommas(qty_ready.toFixed(2)));
+                            $(api.column(9).footer()).html(addCommas(qty_need.toFixed(2)));
+                            $(api.column(10).footer()).html(addCommas(avai_FC.toFixed(2)));
+                            // $(api.column(11).footer()).html(addCommas(FC_cumulative.toFixed(2)));
                         },
                 });
                 $('#tblReportByitem').loading("stop");
