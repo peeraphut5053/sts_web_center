@@ -1319,7 +1319,7 @@ class JOBORDER {
         (select * from V_STS_orderAvaiStock_item_sub) subitem
         on subitem.item = v.item and subitem.co_num = v.co_num and subitem.co_line = v.co_line and convert(date,subitem.due_date) = convert(date,v.due_date)
         where   V.co_num ='$CO'
-        order by V.item, convert(date,V.due_date), V.co_num, V.co_line";
+        order by  convert(date,V.due_date), V.co_num, V.co_line";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);

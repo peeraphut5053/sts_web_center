@@ -25,8 +25,10 @@
                     <th>co_num</th>
                     <th>co_line</th>
                     <th>due_date</th>
+                    <th>STS_PO</th>
                     <th>qty_ordered</th>
-                    <th>job_completed</th>
+                    <th>qty_shipped</th>
+                    <th>qty_ready</th>
                     <th>qty_need</th>
                     <th>avai_FC</th>
                     <th>FC_cumulative</th>
@@ -69,7 +71,7 @@
                 $("#tblReportByitem").DataTable().clear();
                     var RowFooterBuild = "";
                     var ColBuild = "";
-                    var ColCount = 12;
+                    var ColCount = 14;
                     var i = 0;
                     RowFooterBuild = "<tfoot><tr>!!ColBuild!!</tr></tfoot>";
                     for (i = 1; i <= ColCount; i++) {
@@ -103,6 +105,9 @@
                         {"data": "Due_Date",
                             "className": "text-center",
                         },
+                        {"data": "STS_PO",
+                            "className": "text-center",
+                        },
                         {"data": "qty_ordered",
                             "className": "text-left",
                             "render": function (data, type, row, meta) {
@@ -110,7 +115,14 @@
                             return ret;
                         }
                         },
-                        {"data": "job_completed",
+                        {"data": "qty_shipped",
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                            var ret = Math.floor(data).toFixed(2)
+                            return ret;
+                        }
+                        },
+                        {"data": "qty_ready",
                             "className": "text-center",
                             "render": function (data, type, row, meta) {
                             var ret = Math.floor(data).toFixed(2)
@@ -192,26 +204,57 @@
                             };
 
                             // computing column Total of the complete result
-                            var qty_need = api
+
+                            
+                            var qty_ordered = api
+                                    .column(5)
+                                    .data()
+                                    .reduce(function (a, b) {
+                                        return intVal(a) + intVal(b);
+                                    }, 0);
+
+                            var qty_shipped = api
                                     .column(6)
                                     .data()
                                     .reduce(function (a, b) {
                                         return intVal(a) + intVal(b);
                                     }, 0);
 
-                            var avai_FC = api
+                            var qty_ready = api
                                     .column(7)
+                                    .data()
+                                    .reduce(function (a, b) {
+                                        return intVal(a) + intVal(b);
+                                    }, 0);
+
+                            var qty_need = api
+                                    .column(8)
+                                    .data()
+                                    .reduce(function (a, b) {
+                                        return intVal(a) + intVal(b);
+                                    }, 0);
+
+                            var avai_FC = api
+                                    .column(9)
                                     .data()
                                     .reduce(function (a, b) {
                                         return intVal(b) > intVal(a) ? intVal(b) : intVal(a);
                                     }, 0);
 
-                            $(api.column(0).footer()).html('qty_need');
-                            $(api.column(1).footer()).html(addCommas(qty_need.toFixed(2)));
-                            $(api.column(2).footer()).html('avai_FC');
-                            $(api.column(3).footer()).html(addCommas(avai_FC.toFixed(2)));
-                            $(api.column(4).footer()).html('avai_FC - qty_need');
-                            $(api.column(5).footer()).html(addCommas((avai_FC-qty_need).toFixed(2)));
+                            // var FC_cumulative = api
+                            //         .column(10)
+                            //         .data()
+                            //         .reduce(function (a, b) {
+                            //             return intVal(b) > intVal(a) ? intVal(b) : intVal(a);
+                            //         }, 0);
+
+                            // $(api.column(5).footer()).html('qty_need');
+                            $(api.column(5).footer()).html(addCommas(qty_ordered.toFixed(2)));
+                            $(api.column(6).footer()).html(addCommas(qty_shipped.toFixed(2)));
+                            $(api.column(7).footer()).html(addCommas(qty_ready.toFixed(2)));
+                            $(api.column(8).footer()).html(addCommas(qty_need.toFixed(2)));
+                            $(api.column(9).footer()).html(addCommas(avai_FC.toFixed(2)));
+                            // $(api.column(10).footer()).html(addCommas(FC_cumulative.toFixed(2)));
                         },
                 });
                 $('#tblReportByitem').loading("stop");
