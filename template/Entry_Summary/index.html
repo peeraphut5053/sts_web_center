@@ -69,6 +69,8 @@
                 <th>ship_date</th>
                 <th>entry_num1</th>
                 <th>entry_num2</th>
+                <th>entry_type1</th>
+                <th>entry_type2</th>
                 <th>port_code1</th>
                 <th>port_code2</th>
                 <th>ENTDATEU1</th>
@@ -112,6 +114,8 @@
                 <th>ship_date</th>
                 <th>entry_num1</th>
                 <th>entry_num2</th>
+                <th>entry_type1</th>
+                <th>entry_type2</th>
                 <th>port_code1</th>
                 <th>port_code2</th>
                 <th>ENTDATEU1</th>
@@ -283,6 +287,30 @@
                             "render": function (data, type, row, meta) {
                                 let col_name = 'entry_num2';
                                 let valdata = data.entry_num2;
+                                let iddata = `${col_name}_${data.inv_num}`;
+                                let inv_num = data.inv_num;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="Insert('${iddata}','${col_name}','${inv_num}');" value='${(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                        {"data": {entry_type1: "entry_type1", inv_num: "inv_num"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'entry_type1';
+                                let valdata = data.entry_type1;
+                                let iddata = `${col_name}_${data.inv_num}`;
+                                let inv_num = data.inv_num;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="Insert('${iddata}','${col_name}','${inv_num}');" value='${(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                        {"data": {entry_type2: "entry_type2", inv_num: "inv_num"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'entry_type2';
+                                let valdata = data.entry_type2;
                                 let iddata = `${col_name}_${data.inv_num}`;
                                 let inv_num = data.inv_num;
                                 ((valdata == null) ? valdata = "" : valdata = valdata)
@@ -634,6 +662,12 @@ function ReportItemSearchHid() {
                             "className": "text-left",
                         },
                         {"data": "entry_num2",
+                            "className": "text-left",
+                        },
+                        {"data": "entry_type1",
+                            "className": "text-left",
+                        },
+                        {"data": "entry_type2",
                             "className": "text-left",
                         },
                         {"data": "port_code1",

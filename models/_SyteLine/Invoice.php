@@ -1342,6 +1342,8 @@ where left(customer_mst.cust_num,2) = 'EX' group by custaddr_mst.cust_num,custad
 		CONVERT (varchar , STS_AD_Entry_Summary.ship_date ,120) as ship_date,
 		STS_AD_Entry_Summary.entry_num1,
 		STS_AD_Entry_Summary.entry_num2,
+        STS_AD_Entry_Summary.entry_type1,
+        STS_AD_Entry_Summary.entry_type2,
 		STS_AD_Entry_Summary.port_code1,
 		STS_AD_Entry_Summary.port_code2,
 		CONVERT (varchar , STS_AD_Entry_Summary.ENTDATEU1 ,120) as ENTDATEU1,
