@@ -1,0 +1,820 @@
+<style>
+    table.dataTable thead th, table.dataTable tbody td {
+        padding-left:2px;
+        padding-right:2px;
+        text-align: center;
+    }
+    .input-text-value{
+        padding-left: 3px;
+        margin-left: 2px;
+        margin-right: 2px;
+        border: solid rgb(175, 174, 174) 0.5px;
+        width: 80px;
+        border-radius: 3px;
+    }
+</style>
+<div class="row" style="border-bottom:solid 1px #e8e8e8;">
+    <div class="col-md-6 text-left">
+        <h3 style="padding-left:5px;">Entry Summary</h3>
+    </div>
+    <!-- <div class="col-md-6 text-right" >
+        <a class="btn btn-success" href="module/Entry_Summary/upexcel_main.php"  id="btnTransfer">&nbsp;import excel (MAIN)</a>
+        <a class="btn btn-success" href="module/Entry_Summary/upexcel_sub.php"  id="btnTransfer">&nbsp;import excel (SUB)</a>
+    </div> -->
+</div>
+<div class="row">
+    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2  col-search">
+        <div class="input-group">
+            <div class="input-group-addon">From inv_num</div>
+            <input type="text" class="form-control txt-filter" id="from_invnum">
+        </div>
+    </div>
+
+    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2  col-search">
+        <div class="input-group">
+            <div class="input-group-addon">To inv_num</div>
+            <input type="text" class="form-control txt-filter" id="to_invnum">
+        </div>
+    </div>
+
+    <div class="col-lg-1 col-md-2 col-sm-1 col-xs-6  col-search">
+        <button id="BtnSearch" class="btn btn-info"><i class="fa fa-search"></i>Search</button>
+    </div>
+
+    <div class="col-md-2">
+        <!-- <button OnClick="Search();" class="btn btn-info" id="btnSearch"><i class="fa fa-search"></i>&nbsp;</button>
+        <label id='TotalRows'></label> -->
+        <!--<a OnCLick="ClearData();" id="clearData"><i class='fa fa-trash'></i></a>-->
+    </div>
+</div>
+<div class="col-lg-2 col-md-2 col-sm-2 col-xs-6  col-search">
+    <h5 style="color: red">**กรุณาเลือก temp ก่อนทุกครั้ง**</h5>
+ </div>
+<br>
+
+<div class="row" id="divReportHid">
+    <table class="table table-condensed table-bordered table-striped" id="tblReportHid" hidden>
+        <thead>
+            <!-- <tr>
+                <th colspan="8" class="bg-gray">Hot Roll Coil</th>
+                <th colspan="20" class="bg-primary">Chemical analysis from supplier</th>
+                <th colspan="20" class="bg-info">Chemical analysis from Lab.'STS</th>
+                <th style="background-color: #f36c60;"></th>
+            </tr> -->
+            <tr>
+                <th class="bg-gray">inv_num</th>
+                <th>temp</th>
+                <th>sales_term</th>
+                <th>BL_date</th>
+                <th>ship_date</th>
+                <th>entry_num1</th>
+                <th>entry_num2</th>
+                <th>port_code1</th>
+                <th>port_code2</th>
+                <th>ENTDATEU1</th>
+                <th>ENTDATEU2</th>
+                <th>BL_num1</th>
+                <th>BL_num2</th>
+                <th>importer1</th>
+                <th>importer2</th>
+                <th>AD_rate1</th>
+                <th>AD_rate2</th>
+                <th>AD_amount1</th>
+                <th>AD_amount2</th>
+                <th>ENTVALUE1</th>
+                <th>ENTVALUE2</th>
+                <th>pay_date1</th>
+                <th>amount_rec1</th>
+                <th>pay_date2</th>
+                <th>amount_rec2</th>
+                <th>pay_date3</th>
+                <th>amount_rec3</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+
+<div class="row" id="divReportIm">
+    <table class="table table-condensed table-bordered table-striped" id="tblReport">
+        <thead>
+            <!-- <tr>
+                <th colspan="8" class="bg-gray">Hot Roll Coil</th>
+                <th colspan="20" class="bg-primary">Chemical analysis from supplier</th>
+                <th colspan="20" class="bg-info">Chemical analysis from Lab.'STS</th>
+                <th style="background-color: #f36c60;"></th>
+            </tr> -->
+            <tr>
+                <th class="bg-gray">inv_num</th>
+                <th>temp</th>
+                <th>sales_term</th>
+                <th>BL_date</th>
+                <th>ship_date</th>
+                <th>entry_num1</th>
+                <th>entry_num2</th>
+                <th>port_code1</th>
+                <th>port_code2</th>
+                <th>ENTDATEU1</th>
+                <th>ENTDATEU2</th>
+                <th>BL_num1</th>
+                <th>BL_num2</th>
+                <th>importer1</th>
+                <th>importer2</th>
+                <th>AD_rate1</th>
+                <th>AD_rate2</th>
+                <th>AD_amount1</th>
+                <th>AD_amount2</th>
+                <th>ENTVALUE1</th>
+                <th>ENTVALUE2</th>
+                <th>pay_date1</th>
+                <th>amount_rec1</th>
+                <th>pay_date2</th>
+                <th>amount_rec2</th>
+                <th>pay_date3</th>
+                <th>amount_rec3</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+
+
+<script type="text/javascript">
+
+    $("#BtnSearch").click(function () {
+            ReportItemSearchHid();
+            ReportItemSearch();
+        });
+
+        var select_temp = [
+            "-- select --",
+            "temp1",
+            "temp2",
+            "temp3",
+            "temp4",
+            "temp5",
+    ];
+        
+    function ReportItemSearch() {
+    var OldHtml = $("#btnSearch").html();
+    var from_invnum = $("#from_invnum").val();
+    var to_invnum = $("#to_invnum").val();
+
+    if ((from_invnum == "") && (to_invnum == "")) {
+        $.alert("กรุณาเลือกช่วง inv_num หรือป้อนรายละเอียดเพื่อกรองข้อมูล");
+    } else {
+        $.ajax({
+            type: 'POST',
+            url: "././module/Entry_Summary/data.php",
+            dataType: 'json',
+            beforeSend: function () {
+                $("#BtnSearch").html("<i class='fa fa-spinner fa-spin'>");
+            },
+            data: {
+                "load": "search",
+                "from_invnum": from_invnum,
+                "to_invnum": to_invnum,
+            },
+            success: function (data) {
+                console.log(data)
+                $("#tblReport").dataTable().fnDestroy();
+                var table = $('#tblReport').DataTable({
+                    scrollY: "400px",
+                    "scrollX": true,
+                    scrollCollapse: true,
+                    "aaData": data,
+                    "paging": false,
+//                        fixedColumns: {
+//                            leftColumns: 1,
+//                        },
+                    "searching": false,
+                    "bInfo": false,
+
+                    "columns": [
+                        {"data": "inv_num",
+                            "className": "text-center",
+                        },
+                        // {"data": {temp: "temp", inv_num: "inv_num"},
+                        //     "className": "text-left",
+                        //     "render": function (data, type, row, meta) {
+                        //         let col_name = 'temp';
+                        //         let valdata = data.temp;
+                        //         let iddata = `${col_name}_${data.inv_num}`;
+                        //         let inv_num = data.inv_num;
+                        //         ((valdata == null) ? valdata = "" : valdata = valdata)
+                        //         let ret = `<span hidden>${(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="Insert('${iddata}','${col_name}','${inv_num}');" value='${(valdata)}' />`;
+                        //         return ret;
+                        //     }
+                        // },
+                        {"data": {temp: "temp", inv_num: "inv_num"},
+                            "className": "text-center",
+                            "render": function(data, type, row, meta){
+                                let col_name = 'temp';
+                                let valdata = data.temp;
+                                let iddata = `${col_name}_${data.inv_num}`;
+                                let inv_num = data.inv_num;
+                                // ((valdata == null) ? valdata = "" : valdata = valdata)
+                            var $select = $("<select id='"+iddata+"' value='"+data.temp+"' onchange='updateTemp(this.id,value)'></select>", {
+                        });
+                        $.each(select_temp, function(k,v){
+                            var $option = $("<option></option>", {
+                                "text": v,
+                                "value": v
+                            });
+                            if(data.temp === v){
+                                $option.attr("selected", "selected")
+                            }
+                            $select.append($option);
+                        });
+                        return $select.prop("outerHTML");
+                        }
+                        },
+                        
+                        {"data": {sales_term: "sales_term", inv_num: "inv_num"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'sales_term';
+                                let valdata = data.sales_term;
+                                let iddata = `${col_name}_${data.inv_num}`;
+                                let inv_num = data.inv_num;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="Insert('${iddata}','${col_name}','${inv_num}');" value='${(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                        {"data": {BL_date: "BL_date", inv_num: "inv_num"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'BL_date';
+                                let valdata = data.BL_date;
+                                let iddata = `${col_name}_${data.inv_num}`;
+                                let inv_num = data.inv_num;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="Insert('${iddata}','${col_name}','${inv_num}');" value='${(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                        {"data": {ship_date: "ship_date", inv_num: "inv_num"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'ship_date';
+                                let valdata = data.ship_date;
+                                let iddata = `${col_name}_${data.inv_num}`;
+                                let inv_num = data.inv_num;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="Insert('${iddata}','${col_name}','${inv_num}');" value='${(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                        {"data": {entry_num1: "entry_num1", inv_num: "inv_num"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'entry_num1';
+                                let valdata = data.entry_num1;
+                                let iddata = `${col_name}_${data.inv_num}`;
+                                let inv_num = data.inv_num;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="Insert('${iddata}','${col_name}','${inv_num}');" value='${(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                        {"data": {entry_num2: "entry_num2", inv_num: "inv_num"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'entry_num2';
+                                let valdata = data.entry_num2;
+                                let iddata = `${col_name}_${data.inv_num}`;
+                                let inv_num = data.inv_num;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="Insert('${iddata}','${col_name}','${inv_num}');" value='${(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                        {"data": {port_code1: "port_code1", inv_num: "inv_num"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'port_code1';
+                                let valdata = data.port_code1;
+                                let iddata = `${col_name}_${data.inv_num}`;
+                                let inv_num = data.inv_num;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="Insert('${iddata}','${col_name}','${inv_num}');" value='${(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                        {"data": {port_code2: "port_code2", inv_num: "inv_num"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'port_code2';
+                                let valdata = data.port_code2;
+                                let iddata = `${col_name}_${data.inv_num}`;
+                                let inv_num = data.inv_num;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="Insert('${iddata}','${col_name}','${inv_num}');" value='${(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                        {"data": {ENTDATEU1: "ENTDATEU1", inv_num: "inv_num"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'ENTDATEU1';
+                                let valdata = data.ENTDATEU1;
+                                let iddata = `${col_name}_${data.inv_num}`;
+                                let inv_num = data.inv_num;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="Insert('${iddata}','${col_name}','${inv_num}');" value='${(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                        {"data": {ENTDATEU2: "ENTDATEU2", inv_num: "inv_num"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'ENTDATEU2';
+                                let valdata = data.ENTDATEU2;
+                                let iddata = `${col_name}_${data.inv_num}`;
+                                let inv_num = data.inv_num;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="Insert('${iddata}','${col_name}','${inv_num}');" value='${(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                        {"data": {BL_num1: "BL_num1", inv_num: "inv_num"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'BL_num1';
+                                let valdata = data.BL_num1;
+                                let iddata = `${col_name}_${data.inv_num}`;
+                                let inv_num = data.inv_num;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="Insert('${iddata}','${col_name}','${inv_num}');" value='${(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                        {"data": {BL_num2: "BL_num2", inv_num: "inv_num"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'BL_num2';
+                                let valdata = data.BL_num2;
+                                let iddata = `${col_name}_${data.inv_num}`;
+                                let inv_num = data.inv_num;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="Insert('${iddata}','${col_name}','${inv_num}');" value='${(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                        {"data": {importer1: "importer1", inv_num: "inv_num"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'importer1';
+                                let valdata = data.importer1;
+                                let iddata = `${col_name}_${data.inv_num}`;
+                                let inv_num = data.inv_num;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="Insert('${iddata}','${col_name}','${inv_num}');" value='${(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                        {"data": {importer2: "importer2", inv_num: "inv_num"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'importer2';
+                                let valdata = data.importer2;
+                                let iddata = `${col_name}_${data.inv_num}`;
+                                let inv_num = data.inv_num;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="Insert('${iddata}','${col_name}','${inv_num}');" value='${(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                        {"data": {AD_rate1: "AD_rate1", inv_num: "inv_num"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'AD_rate1';
+                                let valdata = data.AD_rate1;
+                                let iddata = `${col_name}_${data.inv_num}`;
+                                let inv_num = data.inv_num;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="Insert('${iddata}','${col_name}','${inv_num}');" value='${(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                        {"data": {AD_rate2: "AD_rate2", inv_num: "inv_num"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'AD_rate2';
+                                let valdata = data.AD_rate2;
+                                let iddata = `${col_name}_${data.inv_num}`;
+                                let inv_num = data.inv_num;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="Insert('${iddata}','${col_name}','${inv_num}');" value='${(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                        {"data": {AD_amount1: "AD_amount1", inv_num: "inv_num"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'AD_amount1';
+                                let valdata = data.AD_amount1;
+                                let iddata = `${col_name}_${data.inv_num}`;
+                                let inv_num = data.inv_num;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="Insert('${iddata}','${col_name}','${inv_num}');" value='${(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                        {"data": {AD_amount2: "AD_amount2", inv_num: "inv_num"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'AD_amount2';
+                                let valdata = data.AD_amount2;
+                                let iddata = `${col_name}_${data.inv_num}`;
+                                let inv_num = data.inv_num;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="Insert('${iddata}','${col_name}','${inv_num}');" value='${(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                        {"data": {ENTVALUE1: "ENTVALUE1", inv_num: "inv_num"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'ENTVALUE1';
+                                let valdata = data.ENTVALUE1;
+                                let iddata = `${col_name}_${data.inv_num}`;
+                                let inv_num = data.inv_num;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="Insert('${iddata}','${col_name}','${inv_num}');" value='${(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                        {"data": {ENTVALUE2: "ENTVALUE2", inv_num: "inv_num"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'ENTVALUE2';
+                                let valdata = data.ENTVALUE2;
+                                let iddata = `${col_name}_${data.inv_num}`;
+                                let inv_num = data.inv_num;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="Insert('${iddata}','${col_name}','${inv_num}');" value='${(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                        {"data": {pay_date1: "pay_date1", inv_num: "inv_num"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'pay_date1';
+                                let valdata = data.pay_date1;
+                                let iddata = `${col_name}_${data.inv_num}`;
+                                let inv_num = data.inv_num;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="Insert('${iddata}','${col_name}','${inv_num}');" value='${(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                        {"data": {amount_rec1: "amount_rec1", inv_num: "inv_num"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'amount_rec1';
+                                let valdata = data.amount_rec1;
+                                let iddata = `${col_name}_${data.inv_num}`;
+                                let inv_num = data.inv_num;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="Insert('${iddata}','${col_name},','${inv_num}');" value='${(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                        {"data": {pay_date2: "pay_date2", inv_num: "inv_num"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'pay_date2';
+                                let valdata = data.pay_date2;
+                                let iddata = `${col_name}_${data.inv_num}`;
+                                let inv_num = data.inv_num;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="Insert('${iddata}','${col_name}','${inv_num}');" value='${(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                        {"data": {amount_rec2: "amount_rec2", inv_num: "inv_num"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'amount_rec2';
+                                let valdata = data.amount_rec2;
+                                let iddata = `${col_name}_${data.inv_num}`;
+                                let inv_num = data.inv_num;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="Insert('${iddata}','${col_name}','${inv_num}');" value='${(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                        {"data": {pay_date3: "pay_date3", inv_num: "inv_num"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'pay_date3';
+                                let valdata = data.pay_date3;
+                                let iddata = `${col_name}_${data.inv_num}`;
+                                let inv_num = data.inv_num;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="Insert('${iddata}','${col_name}','${inv_num}');" value='${(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                        {"data": {amount_rec3: "amount_rec3", inv_num: "inv_num"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'amount_rec3';
+                                let valdata = data.amount_rec3;
+                                let iddata = `${col_name}_${data.inv_num}`;
+                                let inv_num = data.inv_num;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="Insert('${iddata}','${col_name}','${inv_num}');" value='${(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                    ],
+                    // 'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                    //         "<'row'<'col-md-12'tr>>" +
+                    //         "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                    // buttons: [
+                    //     {
+                    //         extend: 'print',
+                    //         text: "<i class='fa fa-print'></i>&nbsp;Print",
+                    //         title: ''
+                    //     },
+                    //     {
+                    //         extend: 'excel',
+                    //         text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                    //         title: 'Entry Summary',
+                    //         customize: function (xlsx) {
+                    //             var sheet = xlsx.xl.worksheets['sheet1.xml'];
+                    //             var numrows = 2;
+                    //         }
+                    //     },
+                    // ],
+
+                });
+
+                $('.details-control').on('click', function () {
+                    var tr = $(this).closest('tr');
+                    var row = table.row(tr);
+                    if (row.child.isShown()) {
+                        // This row is already open - close it
+                        row.child.hide();
+                        tr.removeClass('shown');
+
+                    } else {
+                        // Open this row
+                        row.child(format(row.data())).show();
+                        tr.addClass('shown');
+                    }
+                });
+
+                $('#tblReport').loading("stop");
+                $("#BtnSearch").html("<i class='fa fa-search'></i>Search");
+            },
+            error: function (e) {
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+    }
+}
+
+function ReportItemSearchHid() {
+    var OldHtml = $("#btnSearch").html();
+    var from_invnum = $("#from_invnum").val();
+    var to_invnum = $("#to_invnum").val();
+
+    if ((from_invnum == "") && (to_invnum == "")) {
+        // $.alert("กรุณาเลือกช่วง inv_num หรือป้อนรายละเอียดเพื่อกรองข้อมูล");
+    } else {
+        $.ajax({
+            type: 'POST',
+            url: "././module/Entry_Summary/data.php",
+            dataType: 'json',
+            beforeSend: function () {
+                $("#BtnSearch").html("<i class='fa fa-spinner fa-spin'>");
+            },
+            data: {
+                "load": "search",
+                "from_invnum": from_invnum,
+                "to_invnum": to_invnum,
+            },
+            success: function (data) {
+                console.log(data)
+                $("#tblReportHid").dataTable().fnDestroy();
+                var table = $('#tblReportHid').DataTable({
+                    scrollY: "400px",
+                    "scrollX": true,
+                    scrollCollapse: true,
+                    "aaData": data,
+                    "paging": false,
+//                        fixedColumns: {
+//                            leftColumns: 1,
+//                        },
+                    "searching": false,
+                    "bInfo": false,
+
+                    "columns": [
+                        {"data": "inv_num",
+                            "className": "text-center",
+                        },
+                        {"data": "temp",
+                            "className": "text-left",
+                        },
+                        {"data": "sales_term",
+                            "className": "text-left",
+                        },
+                        {"data": "BL_date",
+                            "className": "text-left",
+                        },
+                        {"data": "ship_date",
+                            "className": "text-left",
+                        },
+                        {"data": "entry_num1",
+                            "className": "text-left",
+                        },
+                        {"data": "entry_num2",
+                            "className": "text-left",
+                        },
+                        {"data": "port_code1",
+                            "className": "text-left",
+                        },
+                        {"data": "port_code2",
+                            "className": "text-left",
+                        },
+                        {"data": "ENTDATEU1",
+                            "className": "text-left",
+                        },
+                        {"data": "ENTDATEU2",
+                            "className": "text-left",
+                        },
+                        {"data": "BL_num1",
+                            "className": "text-left",
+                        },
+                        {"data": "BL_num2",
+                            "className": "text-left",
+                        },
+                        {"data": "importer1",
+                            "className": "text-left",
+                        },
+                        {"data": "importer2",
+                            "className": "text-left",
+                        },
+                        {"data": "AD_rate1",
+                            "className": "text-left",
+                        },
+                        {"data": "AD_rate2",
+                            "className": "text-left",
+                        },
+                        {"data": "AD_amount1",
+                            "className": "text-left",
+                        },
+                        {"data": "AD_amount2",
+                            "className": "text-left",
+                        },
+                        {"data": "ENTVALUE1",
+                            "className": "text-left",
+                        },
+                        {"data": "ENTVALUE2",
+                            "className": "text-left",
+                        },
+                        {"data": "pay_date1",
+                            "className": "text-left",
+                        },
+                        {"data": "amount_rec1",
+                            "className": "text-left",
+                        },
+                        {"data": "pay_date2",
+                            "className": "text-left",
+                        },
+                        {"data": "amount_rec2",
+                            "className": "text-left",
+                        },
+                        {"data": "pay_date3",
+                            "className": "text-left",
+                        },
+                        {"data": "amount_rec3",
+                            "className": "text-left",
+                        },
+                    ],
+                    'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                            "<'row'<'col-md-12'tr>>" +
+                            "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                    buttons: [
+                        {
+                            extend: 'print',
+                            text: "<i class='fa fa-print'></i>&nbsp;Print",
+                            title: ''
+                        },
+                        {
+                            extend: 'excel',
+                            text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                            title: 'Entry Summary',
+                            customize: function (xlsx) {
+                                var sheet = xlsx.xl.worksheets['sheet1.xml'];
+                                var numrows = 2;
+                            }
+                        },
+                    ],
+
+                });
+
+                $('.details-control').on('click', function () {
+                    var tr = $(this).closest('tr');
+                    var row = table.row(tr);
+                    if (row.child.isShown()) {
+                        // This row is already open - close it
+                        row.child.hide();
+                        tr.removeClass('shown');
+
+                    } else {
+                        // Open this row
+                        row.child(format(row.data())).show();
+                        tr.addClass('shown');
+                    }
+                });
+
+                $('#tblReportHid').loading("stop");
+                $("#BtnSearch").html("<i class='fa fa-search'></i>Search");
+            },
+            error: function (e) {
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+    }
+}
+
+
+
+function Insert (thisId, col_name, inv_num) {
+    $(`#${thisId}`).addClass("input-text-value-success");
+    
+    setTimeout(function () {
+    $(`#${thisId}`).removeClass("input-text-value-success");
+    }, 2500)
+
+    console.log(thisId)
+
+    let Split = thisId.split("_");
+    // let inv_num = inv_num
+    let valdata = $(`#${thisId}`).val();
+    console.log(inv_num)
+    $.ajax({
+        type: 'POST',
+        url: "././module/Entry_Summary/data.php",
+        beforeSend: function () {
+        },
+        data: {
+            load: 'Insert',
+            inv_num: inv_num,
+            col_name: col_name,
+            valdata: valdata
+        },
+        success: function (data) {
+            console.log(data);
+        },
+        error: function (e) {
+            console.log("There was an error with your request...");
+            console.log("error: " + JSON.stringify(e));
+        }
+    });
+}
+
+function updateTemp (thisId, value) {
+    $(`#${thisId}`).addClass("input-text-value-success");
+    
+    setTimeout(function () {
+    $(`#${thisId}`).removeClass("input-text-value-success");
+    }, 2500)
+
+    console.log(thisId)
+    let Split = thisId.split("_");
+    let inv_num = Split[1];
+    let col_name = Split[0];
+    let valdata = $(`#${thisId}`).val();
+    console.log(inv_num)
+    console.log(valdata)
+    $.ajax({
+        type: 'POST',
+        url: "././module/Entry_Summary/data.php",
+        beforeSend: function () {
+        },
+        data: {
+            load: 'Insert',
+            inv_num: inv_num,
+            col_name: col_name,
+            valdata: valdata
+        },
+        success: function (data) {
+            console.log(data);
+        },
+        error: function (e) {
+            console.log("There was an error with your request...");
+            console.log("error: " + JSON.stringify(e));
+        }
+    });
+}
+
+
+</script>

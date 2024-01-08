@@ -1334,4 +1334,65 @@ where left(customer_mst.cust_num,2) = 'EX' group by custaddr_mst.cust_num,custad
         return $rs0;
     }
 
+    function Getinv_num($from_invnum, $to_invnum) {
+        $query = "select inv_hdr_mst.inv_num,
+		STS_AD_Entry_Summary.temp, 
+		STS_AD_Entry_Summary.sales_term,
+		CONVERT (varchar , STS_AD_Entry_Summary.BL_date ,120) as BL_date,
+		CONVERT (varchar , STS_AD_Entry_Summary.ship_date ,120) as ship_date,
+		STS_AD_Entry_Summary.entry_num1,
+		STS_AD_Entry_Summary.entry_num2,
+		STS_AD_Entry_Summary.port_code1,
+		STS_AD_Entry_Summary.port_code2,
+		CONVERT (varchar , STS_AD_Entry_Summary.ENTDATEU1 ,120) as ENTDATEU1,
+		CONVERT (varchar , STS_AD_Entry_Summary.ENTDATEU2 ,120) as ENTDATEU2,
+		STS_AD_Entry_Summary.BL_num1,
+        STS_AD_Entry_Summary.BL_num2,
+		STS_AD_Entry_Summary.importer1,
+		STS_AD_Entry_Summary.importer2,
+		STS_AD_Entry_Summary.AD_rate1,
+		STS_AD_Entry_Summary.AD_rate2,
+		STS_AD_Entry_Summary.AD_amount1,
+		STS_AD_Entry_Summary.AD_amount2,
+		STS_AD_Entry_Summary.ENTVALUE1,
+		STS_AD_Entry_Summary.ENTVALUE2,
+		CONVERT (varchar , STS_AD_Entry_Summary.pay_date1 ,120) as pay_date1,
+		STS_AD_Entry_Summary.amount_rec1,
+		CONVERT (varchar , STS_AD_Entry_Summary.pay_date2 ,120) as pay_date2,
+		STS_AD_Entry_Summary.amount_rec2,
+		CONVERT (varchar , STS_AD_Entry_Summary.pay_date3 ,103) as pay_date3,
+		STS_AD_Entry_Summary.amount_rec3
+        from inv_hdr_mst
+		left join STS_AD_Entry_Summary
+		ON inv_hdr_mst.inv_num = STS_AD_Entry_Summary.inv_num
+        where inv_hdr_mst.inv_num like 'EX%' and inv_hdr_mst.inv_num  BETWEEN '$from_invnum' and '$to_invnum' ";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+
+    function Insertinv_num($inv_num, $col_name, $valdata) {
+
+        $queryinv = "select * 
+        from STS_AD_Entry_Summary where inv_num  = '$inv_num' ";
+        $cSql1 = new SqlSrv();
+        $rs01 = $cSql1->SqlQuery($this->StrConn, $queryinv);
+
+        if ( $inv_num == isset($rs01[1]["inv_num"])){
+            $query = "UPDATE STS_AD_Entry_Summary SET $col_name = '$valdata'  WHERE inv_num ='$inv_num' ";
+            $cSql = new SqlSrv();
+            $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+            array_splice($rs0, count($rs0) - 1, 1);
+            return $rs0;
+        } else {
+            $query = "INSERT INTO STS_AD_Entry_Summary (inv_num,$col_name) VALUES ('$inv_num','$valdata')";
+            $cSql = new SqlSrv();
+            $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+            array_splice($rs0, count($rs0) - 1, 1);
+            return $rs0;
+        }
+      
+    }
+
 }
