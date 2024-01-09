@@ -1,0 +1,338 @@
+<style>
+    table.dataTable thead th, table.dataTable tbody td {
+        padding-left:2px;
+        padding-right:2px;
+        text-align: center;
+    }
+    .input-text-value{
+        padding-left: 3px;
+        margin-left: 2px;
+        margin-right: 2px;
+        border: solid rgb(175, 174, 174) 0.5px;
+        width: 80px;
+        border-radius: 3px;
+    }
+</style>
+<div class="row" style="border-bottom:solid 1px #e8e8e8;">
+    <div class="col-md-6 text-left">
+        <h3 style="padding-left:5px;">AD All Temp</h3>
+    </div>
+    <!-- <div class="col-md-6 text-right" >
+        <a class="btn btn-success" href="module/Entry_Summary/upexcel_main.php"  id="btnTransfer">&nbsp;import excel (MAIN)</a>
+        <a class="btn btn-success" href="module/Entry_Summary/upexcel_sub.php"  id="btnTransfer">&nbsp;import excel (SUB)</a>
+    </div> -->
+</div>
+<div class="row">
+    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2  col-search">
+        <div class="input-group">
+            <div class="input-group-addon">From inv_num</div>
+            <input type="text" class="form-control txt-filter" id="from_invnum">
+        </div>
+    </div>
+
+    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2  col-search">
+        <div class="input-group">
+            <div class="input-group-addon">To inv_num</div>
+            <input type="text" class="form-control txt-filter" id="to_invnum">
+        </div>
+    </div>
+
+    <div class="col-lg-1 col-md-2 col-sm-1 col-xs-6  col-search">
+        <button id="BtnSearch" class="btn btn-info"><i class="fa fa-search"></i>Search</button>
+    </div>
+
+    <div class="col-md-2">
+        <!-- <button OnClick="Search();" class="btn btn-info" id="btnSearch"><i class="fa fa-search"></i>&nbsp;</button>
+        <label id='TotalRows'></label> -->
+        <!--<a OnCLick="ClearData();" id="clearData"><i class='fa fa-trash'></i></a>-->
+    </div>
+</div>
+
+<div class="col-lg-2 col-md-2 col-sm-2 col-xs-2  col-search">
+    <div class="input-group">
+        <div class="input-group-addon">From date</div>
+        <input type="text" class="form-control txt-filter" id="fromDate">
+    </div>
+</div>
+
+<div class="col-lg-2 col-md-2 col-sm-2 col-xs-2  col-search">
+    <div class="input-group">
+        <div class="input-group-addon">To date</div>
+        <input type="text" class="form-control txt-filter" id="toDate">
+    </div>
+</div>
+
+<br>
+<br>
+
+<div class="row" id="divReport">
+    <table class="table table-condensed table-bordered table-striped" id="tblReport">
+        <thead>
+            <!-- <tr>
+                <th colspan="8" class="bg-gray">Hot Roll Coil</th>
+                <th colspan="20" class="bg-primary">Chemical analysis from supplier</th>
+                <th colspan="20" class="bg-info">Chemical analysis from Lab.'STS</th>
+                <th style="background-color: #f36c60;"></th>
+            </tr> -->
+            <tr>
+                <th class="bg-gray">inv_num</th>
+                <th>inv_date</th>
+                <th>cust_num</th>
+                <th>terms_code</th>
+                <th>item</th>
+                <th>Qty_Shipt</th>
+                <th>Amount_US</th>
+                <th>AmountUSD2</th>
+                <th>AmountUSD</th>
+                <th>ShippedTerm</th>
+                <th>temp</th>
+                <th>sales_term</th>
+                <th>BL_date</th>
+                <th>ship_date</th>
+                <th>entry_num1</th>
+                <th>entry_num2</th>
+                <th>entry_type1</th>
+                <th>entry_type2</th>
+                <th>port_code1</th>
+                <th>port_code2</th>
+                <th>ENTDATEU1</th>
+                <th>ENTDATEU2</th>
+                <th>BL_num1</th>
+                <th>BL_num2</th>
+                <th>importer1</th>
+                <th>importer2</th>
+                <th>AD_rate1</th>
+                <th>AD_rate2</th>
+                <th>AD_amount1</th>
+                <th>AD_amount2</th>
+                <th>ENTVALUE1</th>
+                <th>ENTVALUE2</th>
+                <th>pay_date1</th>
+                <th>amount_rec1</th>
+                <th>pay_date2</th>
+                <th>amount_rec2</th>
+                <th>pay_date3</th>
+                <th>amount_rec3</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+
+
+<script type="text/javascript">
+
+    $("#BtnSearch").click(function () {
+            ReportItemSearch();
+        });
+ 
+        $("#fromDate , #toDate").datepicker({
+        dateFormat: 'yy-mm-dd',
+    });
+
+function ReportItemSearch() {
+    var OldHtml = $("#btnSearch").html();
+    var from_invnum = $("#from_invnum").val();
+    var to_invnum = $("#to_invnum").val();
+
+    var fromDate = $("#fromDate").val();
+    var toDate = $("#toDate").val();
+
+    if (((from_invnum == "") || (to_invnum == ""))&&((fromDate == "") || (toDate == ""))) {
+        $.alert("กรุณาป้อนรายละเอียดเพื่อกรองข้อมูล");
+    } else {
+        $.ajax({
+            type: 'POST',
+            url: "././module/AD_All_Temp/data.php",
+            dataType: 'json',
+            beforeSend: function () {
+                $("#BtnSearch").html("<i class='fa fa-spinner fa-spin'>");
+            },
+            data: {
+                "load": "search",
+                "from_invnum": from_invnum,
+                "to_invnum": to_invnum,
+                "fromDate": fromDate,
+                "toDate": toDate,
+            },
+            success: function (data) {
+                console.log(data)
+                $("#tblReport").dataTable().fnDestroy();
+                var table = $('#tblReport').DataTable({
+                    scrollY: "400px",
+                    "scrollX": true,
+                    scrollCollapse: true,
+                    "aaData": data,
+                    "paging": false,
+//                        fixedColumns: {
+//                            leftColumns: 1,
+//                        },
+                    "searching": false,
+                    "bInfo": false,
+
+                    "columns": [
+                        {"data": "inv_num",
+                            "className": "text-center",
+                        },
+                        {"data": "inv_date",
+                            "className": "text-center",
+                        },
+                        {"data": "cust_num",
+                            "className": "text-center",
+                        },
+                        {"data": "terms_code",
+                            "className": "text-center",
+                        },
+                        {"data": "item",
+                            "className": "text-center",
+                        },
+                        {"data": "Qty_Shipt",
+                            "className": "text-center",
+                        },
+                        {"data": "Amount_US",
+                            "className": "text-center",
+                        },
+                        {"data": "AmountUSD2",
+                            "className": "text-center",
+                        },
+                        {"data": "AmountUSD",
+                            "className": "text-center",
+                        },
+                        {"data": "ShippedTerm",
+                            "className": "text-center",
+                        },
+                        {"data": "temp",
+                            "className": "text-left",
+                        },
+                        {"data": "sales_term",
+                            "className": "text-left",
+                        },
+                        {"data": "BL_date",
+                            "className": "text-left",
+                        },
+                        {"data": "ship_date",
+                            "className": "text-left",
+                        },
+                        {"data": "entry_num1",
+                            "className": "text-left",
+                        },
+                        {"data": "entry_num2",
+                            "className": "text-left",
+                        },
+                        {"data": "entry_type1",
+                            "className": "text-left",
+                        },
+                        {"data": "entry_type2",
+                            "className": "text-left",
+                        },
+                        {"data": "port_code1",
+                            "className": "text-left",
+                        },
+                        {"data": "port_code2",
+                            "className": "text-left",
+                        },
+                        {"data": "ENTDATEU1",
+                            "className": "text-left",
+                        },
+                        {"data": "ENTDATEU2",
+                            "className": "text-left",
+                        },
+                        {"data": "BL_num1",
+                            "className": "text-left",
+                        },
+                        {"data": "BL_num2",
+                            "className": "text-left",
+                        },
+                        {"data": "importer1",
+                            "className": "text-left",
+                        },
+                        {"data": "importer2",
+                            "className": "text-left",
+                        },
+                        {"data": "AD_rate1",
+                            "className": "text-left",
+                        },
+                        {"data": "AD_rate2",
+                            "className": "text-left",
+                        },
+                        {"data": "AD_amount1",
+                            "className": "text-left",
+                        },
+                        {"data": "AD_amount2",
+                            "className": "text-left",
+                        },
+                        {"data": "ENTVALUE1",
+                            "className": "text-left",
+                        },
+                        {"data": "ENTVALUE2",
+                            "className": "text-left",
+                        },
+                        {"data": "pay_date1",
+                            "className": "text-left",
+                        },
+                        {"data": "amount_rec1",
+                            "className": "text-left",
+                        },
+                        {"data": "pay_date2",
+                            "className": "text-left",
+                        },
+                        {"data": "amount_rec2",
+                            "className": "text-left",
+                        },
+                        {"data": "pay_date3",
+                            "className": "text-left",
+                        },
+                        {"data": "amount_rec3",
+                            "className": "text-left",
+                        },
+                    ],
+                    'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                            "<'row'<'col-md-12'tr>>" +
+                            "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                    buttons: [
+                        {
+                            extend: 'print',
+                            text: "<i class='fa fa-print'></i>&nbsp;Print",
+                            title: ''
+                        },
+                        {
+                            extend: 'excel',
+                            text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                            title: 'AD All Temp',
+                            customize: function (xlsx) {
+                                var sheet = xlsx.xl.worksheets['sheet1.xml'];
+                                var numrows = 2;
+                            }
+                        },
+                    ],
+
+                });
+
+                $('.details-control').on('click', function () {
+                    var tr = $(this).closest('tr');
+                    var row = table.row(tr);
+                    if (row.child.isShown()) {
+                        // This row is already open - close it
+                        row.child.hide();
+                        tr.removeClass('shown');
+
+                    } else {
+                        // Open this row
+                        row.child(format(row.data())).show();
+                        tr.addClass('shown');
+                    }
+                });
+
+                $('#tblReport').loading("stop");
+                $("#BtnSearch").html("<i class='fa fa-search'></i>Search");
+            },
+            error: function (e) {
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+    }
+}
+
+
+</script>

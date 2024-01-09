@@ -1336,7 +1336,7 @@ where left(customer_mst.cust_num,2) = 'EX' group by custaddr_mst.cust_num,custad
 
     function Getinv_num($from_invnum, $to_invnum) {
         $query = "select inv_hdr_mst.inv_num,
-		STS_AD_Entry_Summary.temp, 
+        rtrim(ltrim(STS_AD_Entry_Summary.temp)) as temp,
 		STS_AD_Entry_Summary.sales_term,
 		CONVERT (varchar , STS_AD_Entry_Summary.BL_date ,120) as BL_date,
 		CONVERT (varchar , STS_AD_Entry_Summary.ship_date ,120) as ship_date,
@@ -1395,6 +1395,28 @@ where left(customer_mst.cust_num,2) = 'EX' group by custaddr_mst.cust_num,custad
             return $rs0;
         }
       
+    }
+
+    function Report_AD_All_Temp($from_invnum, $to_invnum, $fromDate, $toDate) {
+
+        // $fromDate == "" ? $fromDate = 'NUll' : $fromDate = "$fromDate";
+        // $toDate == "" ? $toDate = 'NUll' : $toDate = "$toDate";
+        // $from_invnum == "" ? $from_invnum = 'NUll' : $from_invnum = "$from_invnum";
+        // $to_invnum == "" ? $to_invnum = 'NUll' : $to_invnum = "$to_invnum";
+        
+
+        $query = "EXEC [dbo].[STS_AD_AllTemp]
+        @vSite = STS,
+        @vInvStr = '$from_invnum',
+        @vInvEnd = '$to_invnum',
+        @vDateStr = '$fromDate',
+        @vDateEnd = '$toDate',
+        @vCustStr = NULL,
+        @vCustEnd = NULL ";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
     }
 
 }
