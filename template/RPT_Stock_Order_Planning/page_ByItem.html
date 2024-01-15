@@ -34,8 +34,10 @@
                     <th>avai_FC</th>
                     <th>FC_cumulative</th>
                     <th>avai_WC</th>
-                    <th>avai_WSHR</th>
-                    <th>avai_RHR</th>
+                    <th>avai_WSHR_PCS</th>
+                    <th>avai_WSHR_KG</th>
+                    <th>avai_RHR_PCS</th>
+                    <th>avai_RHR_KG</th>
 
                 </tr>
         </table>
@@ -72,7 +74,7 @@
                 $("#tblReportByitem").DataTable().clear();
                     var RowFooterBuild = "";
                     var ColBuild = "";
-                    var ColCount = 15;
+                    var ColCount = 17;
                     var i = 0;
                     RowFooterBuild = "<tfoot><tr>!!ColBuild!!</tr></tfoot>";
                     for (i = 1; i <= ColCount; i++) {
@@ -165,14 +167,28 @@
                             return ret;
                         }
                         },
-                        {"data": "avai_WSHR",
+                        {"data": "avai_WSHR_PCS",
                             "className": "text-center",
                             "render": function (data, type, row, meta) {
                             var ret = Math.floor(data).toFixed(2)
                             return ret;
                         }
                         },
-                        {"data": "avai_RHR",
+                        {"data": "avai_WSHR_KG",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                            var ret = Math.floor(data).toFixed(2)
+                            return ret;
+                        }
+                        },
+                        {"data": "avai_RHR_PCS",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                            var ret = Math.floor(data).toFixed(2)
+                            return ret;
+                        }
+                        },
+                        {"data": "avai_RHR_KG",
                             "className": "text-center",
                             "render": function (data, type, row, meta) {
                             var ret = Math.floor(data).toFixed(2)
@@ -249,12 +265,46 @@
                                         return intVal(b) > intVal(a) ? intVal(b) : intVal(a);
                                     }, 0);
 
+                            var avai_WSHR_PCS = api
+                                    .column(13)
+                                    .data()
+                                    .reduce(function (a, b) {
+                                        return intVal(b) > intVal(a) ? intVal(b) : intVal(a);
+                                    }, 0);
+
+                            var avai_WSHR_KG = api
+                                    .column(14)
+                                    .data()
+                                    .reduce(function (a, b) {
+                                        return intVal(b) > intVal(a) ? intVal(b) : intVal(a);
+                                    }, 0);
+
+                            var avai_RHR_PCS = api
+                                    .column(15)
+                                    .data()
+                                    .reduce(function (a, b) {
+                                        return intVal(b) > intVal(a) ? intVal(b) : intVal(a);
+                                    }, 0);
+
+                            var avai_RHR_KG = api
+                                    .column(16)
+                                    .data()
+                                    .reduce(function (a, b) {
+                                        return intVal(b) > intVal(a) ? intVal(b) : intVal(a);
+                                    }, 0);
+
+
+
                             $(api.column(6).footer()).html(addCommas(qty_ordered.toFixed(2)));
                             $(api.column(7).footer()).html(addCommas(qty_shipped.toFixed(2)));
                             $(api.column(8).footer()).html(addCommas(qty_ready.toFixed(2)));
                             $(api.column(9).footer()).html(addCommas(qty_need.toFixed(2)));
                             $(api.column(10).footer()).html(addCommas(avai_FC.toFixed(2)));
                             $(api.column(11).footer()).html(addCommas((avai_FC-qty_need).toFixed(2)));
+                            $(api.column(13).footer()).html(addCommas(((avai_FC-qty_need)-avai_WSHR_PCS).toFixed(2)));
+                            $(api.column(14).footer()).html(addCommas(((avai_FC-qty_need)-avai_WSHR_PCS-avai_WSHR_KG).toFixed(2)));
+                            $(api.column(15).footer()).html(addCommas(((avai_FC-qty_need)-avai_WSHR_PCS-avai_WSHR_KG-avai_RHR_PCS).toFixed(2)));
+                            $(api.column(16).footer()).html(addCommas(((avai_FC-qty_need)-avai_WSHR_PCS-avai_WSHR_KG-avai_RHR_PCS-avai_RHR_KG).toFixed(2)));
                         },
                 });
                 $('#tblReportByitem').loading("stop");
