@@ -38,6 +38,7 @@
                     <th>avai_RHR_PCS</th>
                     <th>avai_WSHR_KG</th>
                     <th>avai_RHR_KG</th>
+                    <th>avai_RC</th>
 
                 </tr>
         </table>
@@ -189,6 +190,13 @@
                         }
                         },
                         {"data": "avai_RHR_KG",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                            var ret = Math.floor(data).toFixed(2)
+                            return ret;
+                        }
+                        },
+                        {"data": "avai_RC",
                             "className": "text-center",
                             "render": function (data, type, row, meta) {
                             var ret = Math.floor(data).toFixed(2)
