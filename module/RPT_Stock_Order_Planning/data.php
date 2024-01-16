@@ -19,6 +19,11 @@ if ($load == "BY_CO") {
     echo json_encode($Data);
 }
 
+if ($load == "BY_DO") {
+    $Data = $Data->BY_DO($DO);
+    echo json_encode($Data);
+}
+
 if ($load == "ALL") {
     $Data = $Data->ALL();
     echo json_encode($Data);

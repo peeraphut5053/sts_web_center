@@ -1325,6 +1325,16 @@ class JOBORDER {
         array_splice($rs0, count($rs0) - 1, 1);
         return $rs0;
     }
+
+    function BY_DO($DO) {
+        $query =  "select * ,convert(varchar, due_date) as Due_Date from V_STS_orderAvaiStock_DO
+        where do_num ='$DO'
+        order by co_num, co_line, do_num";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
     
     function ALL() {
         $query =  "select V.* , subitem.FC_cumulative ,convert(varchar,V.due_date) as Due_Date
