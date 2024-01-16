@@ -29,8 +29,9 @@
                     <th>due_date</th>
                     <th>STS_PO</th>
                     <th>qty_ordered</th>
-                    <th>qty_shipped_DO</th>
+                    <th>qty_shipped_CO</th>
                     <th>qty_DO</th>
+                    <th>qty_shipped_DO</th>
                     <th>qty_ready</th>
                     <th>qty_need</th>
                     <th>job_ready</th>
@@ -70,7 +71,7 @@
                 $("#tblReportByCO").DataTable().clear();
                     var RowFooterBuild = "";
                     var ColBuild = "";
-                    var ColCount = 13;
+                    var ColCount = 14;
                     var i = 0;
                     RowFooterBuild = "<tfoot><tr>!!ColBuild!!</tr></tfoot>";
                     for (i = 1; i <= ColCount; i++) {
@@ -124,7 +125,7 @@
                             return ret;
                         }
                         },
-                        {"data": "qty_shipped_DO",
+                        {"data": "qty_shipped_CO",
                             "className": "text-left",
                             "render": function (data, type, row, meta) {
                             var ret = Math.floor(data).toFixed(2)
@@ -132,6 +133,13 @@
                         }
                         },
                         {"data": "qty_DO",
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                            var ret = Math.floor(data).toFixed(2)
+                            return ret;
+                        }
+                        },
+                        {"data": "qty_shipped_DO",
                             "className": "text-left",
                             "render": function (data, type, row, meta) {
                             var ret = Math.floor(data).toFixed(2)
