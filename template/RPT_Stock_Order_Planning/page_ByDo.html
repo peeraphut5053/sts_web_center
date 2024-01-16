@@ -51,9 +51,9 @@
     var OldHtml = $("#BtnSearchCO").html();
     var DO = $("#BY_DO").val();
 
-    if (DO == "") {
-        $.alert("กรุณากรอกข้อมูล");
-    } else {
+    // if (DO == "") {
+    //     $.alert("กรุณากรอกข้อมูล");
+    // } else {
         $.ajax({
             type: 'POST',
             url: "././module/RPT_Stock_Order_Planning/data.php",
@@ -243,5 +243,5 @@
             }
         });
     }
-}
+// }
 </script>
