@@ -663,7 +663,7 @@ class Invoice {
         $Month = $this->_Month;
         $cust_num = $this->cust_num;
         $cust_seq = $this->cust_seq;
-        $query = "select cust_num,name,city,cust_seq,QtyKG,AMT_USD from V_WebApp_InvItem_EX where 1=1 ";
+        $query = "select cust_num,name,end_customer,city,cust_seq,QtyKG,AMT_USD from V_WebApp_InvItem_EX where 1=1 ";
 //        if ($Year and $Month) {
 //            $query = $query . "and year(inv_date) = '$Year' and month(inv_date) = '$Month' ";
 //        }
