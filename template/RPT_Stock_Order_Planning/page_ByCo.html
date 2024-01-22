@@ -33,9 +33,14 @@
                     <th>qty_need</th>
                     <th>avai_FC</th>
                     <th>FC_cumulative</th>
-                    <th>avai_WC</th>
-                    <th>avai_WSHR</th>
-                    <th>avai_RHR</th>
+                    <th>avai_WC</th> 
+                    <th>avai_WSHR_PCS</th> 
+                    <th>avai_WSHR_PCS</th>   	
+                    <th>avai_WSHR_KG</th>
+                    <th>avai_RHR_KG</th>
+                    <th>avai_RC</th> 
+                    <th>WSHR_KGperPCS</th> 
+                    <th>RHR_KGperPCS</th>  	
 
                 </tr>
         </table>
@@ -72,7 +77,7 @@
                 $("#tblReportByCO").DataTable().clear();
                     var RowFooterBuild = "";
                     var ColBuild = "";
-                    var ColCount = 15;
+                    var ColCount = 20;
                     var i = 0;
                     RowFooterBuild = "<tfoot><tr>!!ColBuild!!</tr></tfoot>";
                     for (i = 1; i <= ColCount; i++) {
@@ -165,20 +170,55 @@
                             return ret;
                         }
                         },
-                        {"data": "avai_WSHR",
+                        {"data": "avai_WSHR_PCS",
                             "className": "text-center",
                             "render": function (data, type, row, meta) {
                             var ret = Math.floor(data).toFixed(2)
                             return ret;
                         }
                         },
-                        {"data": "avai_RHR",
+                        {"data": "avai_WSHR_PCS",
                             "className": "text-center",
                             "render": function (data, type, row, meta) {
                             var ret = Math.floor(data).toFixed(2)
                             return ret;
                         }
                         },
+                        {"data": "avai_WSHR_KG",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                            var ret = Math.floor(data).toFixed(2)
+                            return ret;
+                        }
+                        },
+                        {"data": "avai_RHR_KG",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                            var ret = Math.floor(data).toFixed(2)
+                            return ret;  
+                        }
+                        }, 
+                        {"data": "avai_RC",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                            var ret = Math.floor(data).toFixed(2)
+                            return ret;  
+                        }
+                        },
+                        {"data": "avai_WSHR_KGperPCS",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                            var ret = Math.floor(data).toFixed(2)
+                            return ret;  
+                        }
+                        },
+                        {"data": "avai_RHR_KGperPCS",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                            var ret = Math.floor(data).toFixed(2)
+                            return ret;  
+                        }
+                        },  
                     ],
                     'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
                             "<'row'<'col-md-12'tr>>" +
