@@ -208,14 +208,14 @@
                         {"data": "avai_WSHR_KGperPCS",
                             "className": "text-center",
                             "render": function (data, type, row, meta) {
-                            var ret = Math.floor(data)
+                            var ret = (data)
                             return ret;
                         }
                         },
                         {"data": "avai_RHR_KGperPCS",
                             "className": "text-center",
                             "render": function (data, type, row, meta) {
-                            var ret = Math.floor(data)
+                            var ret = (data)
                             return ret;
                         }
                         },
@@ -347,8 +347,8 @@
                             $(api.column(12).footer()).html(addCommas(((avai_FC+avai_WC)-qty_need).toFixed(2)));
                             $(api.column(13).footer()).html(addCommas(((avai_FC+avai_WC)-qty_need+avai_WSHR_PCS).toFixed(2)));
                             $(api.column(14).footer()).html(addCommas(((avai_FC+avai_WC)-qty_need+avai_WSHR_PCS+avai_RHR_PCS).toFixed(2)));
-                            $(api.column(15).footer()).html(addCommas((avai_WSHR_KG*avai_WSHR_KGperPCS).toFixed(2)));
-                            $(api.column(16).footer()).html(addCommas((avai_RHR_KG*avai_RHR_KGperPCS).toFixed(2)));
+                            $(api.column(15).footer()).html(addCommas((((avai_FC+avai_WC)-qty_need+avai_WSHR_PCS)*avai_WSHR_KGperPCS).toFixed(2)));
+                            $(api.column(16).footer()).html(addCommas((((avai_FC+avai_WC)-qty_need+avai_WSHR_PCS+avai_RHR_PCS)*avai_RHR_KGperPCS).toFixed(2)));
 
                         },
                 });
