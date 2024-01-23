@@ -123,7 +123,7 @@ class QcTestLab {
       from ait_preship_do_seq ait
          inner join matltrack_mst mtk on ait.co_num = mtk.ref_num and ait.co_line = mtk.ref_line_suf
          inner join mv_bc_tag mv on mtk.item = mv.item and mtk.lot = mv.lot and mv.ship_stat = 1
-         inner join STS_QA_LAB_SUB b on b.sts_no = mv.sts_no 
+         inner join STS_QA_LAB_SUB b on (b.sts_no = mv.sts_no or b.sts_no = mv.sts_no2 or b.sts_no = mv.sts_no3)
            and mv.item like '%'+b.item+'%'
           left join sts_qa_lab a  on a.sts_no = b.sts_no 
           $where
