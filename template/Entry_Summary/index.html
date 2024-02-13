@@ -64,7 +64,8 @@
             <tr>
                 <th class="bg-gray">inv_num</th>
                 <th>temp</th>
-                <th>sales_term</th>
+                <th>amount_FOB</th>
+                <th>sales_term</th> 
                 <th>BL_date</th>
                 <th>ship_date</th>
                 <th>entry_num1</th>
@@ -109,6 +110,7 @@
             <tr>
                 <th class="bg-gray">inv_num</th>
                 <th>temp</th>
+                <th>amount_FOB</th> 
                 <th>sales_term</th>
                 <th>BL_date</th>
                 <th>ship_date</th>
@@ -232,6 +234,19 @@
                         });
                         return $select.prop("outerHTML");
                         }
+                        },
+
+                        {"data": {amount_FOB: "amount_FOB", inv_num: "inv_num"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'amount_FOB';
+                                let valdata = data.amount_FOB;
+                                let iddata = `${col_name}_${data.inv_num}`;
+                                let inv_num = data.inv_num;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="Insert('${iddata}','${col_name}','${inv_num}');" value='${(valdata)}' />`;
+                                return ret;
+                            }
                         },
                         
                         {"data": {sales_term: "sales_term", inv_num: "inv_num"},
@@ -647,6 +662,9 @@ function ReportItemSearchHid() {
                             "className": "text-center",
                         },
                         {"data": "temp",
+                            "className": "text-left",
+                        },
+                        {"data": "amount_FOB",
                             "className": "text-left",
                         },
                         {"data": "sales_term",
