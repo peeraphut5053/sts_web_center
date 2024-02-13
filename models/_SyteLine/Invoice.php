@@ -1337,6 +1337,7 @@ where left(customer_mst.cust_num,2) = 'EX' group by custaddr_mst.cust_num,custad
     function Getinv_num($from_invnum, $to_invnum) {
         $query = "select inv_hdr_mst.inv_num,
         rtrim(ltrim(STS_AD_Entry_Summary.temp)) as temp,
+        STS_AD_Entry_Summary.amount_FOB,
 		STS_AD_Entry_Summary.sales_term,
 		CONVERT (varchar , STS_AD_Entry_Summary.BL_date ,120) as BL_date,
 		CONVERT (varchar , STS_AD_Entry_Summary.ship_date ,120) as ship_date,
