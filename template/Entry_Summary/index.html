@@ -67,7 +67,7 @@
                 <th>amount_FOB</th>
                 <th>sales_term</th> 
                 <th>BL_date</th>
-                <th>ship_date</th>
+                <!-- <th>ship_date</th> -->
                 <th>entry_num1</th>
                 <th>entry_num2</th>
                 <th>entry_type1</th>
@@ -113,7 +113,7 @@
                 <th>amount_FOB</th> 
                 <th>sales_term</th>
                 <th>BL_date</th>
-                <th>ship_date</th>
+                <!-- <th>ship_date</th> -->
                 <th>entry_num1</th>
                 <th>entry_num2</th>
                 <th>entry_type1</th>
@@ -273,18 +273,18 @@
                                 return ret;
                             }
                         },
-                        {"data": {ship_date: "ship_date", inv_num: "inv_num"},
-                            "className": "text-left",
-                            "render": function (data, type, row, meta) {
-                                let col_name = 'ship_date';
-                                let valdata = data.ship_date;
-                                let iddata = `${col_name}_${data.inv_num}`;
-                                let inv_num = data.inv_num;
-                                ((valdata == null) ? valdata = "" : valdata = valdata)
-                                let ret = `<span hidden>${(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="Insert('${iddata}','${col_name}','${inv_num}');" value='${(valdata)}' />`;
-                                return ret;
-                            }
-                        },
+                        // {"data": {ship_date: "ship_date", inv_num: "inv_num"},
+                        //     "className": "text-left",
+                        //     "render": function (data, type, row, meta) {
+                        //         let col_name = 'ship_date';
+                        //         let valdata = data.ship_date;
+                        //         let iddata = `${col_name}_${data.inv_num}`;
+                        //         let inv_num = data.inv_num;
+                        //         ((valdata == null) ? valdata = "" : valdata = valdata)
+                        //         let ret = `<span hidden>${(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="Insert('${iddata}','${col_name}','${inv_num}');" value='${(valdata)}' />`;
+                        //         return ret;
+                        //     }
+                        // },
                         {"data": {entry_num1: "entry_num1", inv_num: "inv_num"},
                             "className": "text-left",
                             "render": function (data, type, row, meta) {
@@ -673,9 +673,9 @@ function ReportItemSearchHid() {
                         {"data": "BL_date",
                             "className": "text-left",
                         },
-                        {"data": "ship_date",
-                            "className": "text-left",
-                        },
+                        // {"data": "ship_date",
+                        //     "className": "text-left",
+                        // },
                         {"data": "entry_num1",
                             "className": "text-left",
                         },
