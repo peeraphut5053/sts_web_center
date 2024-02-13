@@ -1340,7 +1340,7 @@ where left(customer_mst.cust_num,2) = 'EX' group by custaddr_mst.cust_num,custad
         STS_AD_Entry_Summary.amount_FOB,
 		STS_AD_Entry_Summary.sales_term,
 		CONVERT (varchar , STS_AD_Entry_Summary.BL_date ,120) as BL_date,
-		// CONVERT (varchar , STS_AD_Entry_Summary.ship_date ,120) as ship_date,
+
 		STS_AD_Entry_Summary.entry_num1,
 		STS_AD_Entry_Summary.entry_num2,
         STS_AD_Entry_Summary.entry_type1,
@@ -1373,6 +1373,7 @@ where left(customer_mst.cust_num,2) = 'EX' group by custaddr_mst.cust_num,custad
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);
         return $rs0;
+        // CONVERT (varchar , STS_AD_Entry_Summary.ship_date ,120) as ship_date,
     }
 
     function Insertinv_num($inv_num, $col_name, $valdata) {
