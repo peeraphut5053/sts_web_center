@@ -1,3 +1,8 @@
+<style>
+    td.table-cell-edit{
+  background-color: gray;
+}
+</style>
 <div class="row" style="border-bottom:solid 1px #e8e8e8;">  
     <div class="row">
         <h3 style="padding-left:5px;">Stock Order Planning</h3>
@@ -39,8 +44,8 @@
                     <th>avai_WSHR_KG</th>
                     <th>avai_RHR_KG</th>
                     <th>avai_RC</th> 
-                    <th>WSHR_KGperPCS</th> 
-                    <th>RHR_KGperPCS</th>  	
+                    <th style="background-color: gray;">WSHR_KGperPCS</th> 
+                    <th style="background-color: gray;">RHR_KGperPCS</th>  	
 
                 </tr>
         </table>
@@ -124,96 +129,96 @@
                         {"data": "qty_ordered",
                             "className": "text-left",
                             "render": function (data, type, row, meta) {
-                            var ret = Math.floor(data).toFixed(2)
+                            var ret = new Intl.NumberFormat("en-US").format(Math.floor(data))
                             return ret;
                         }
                         },
                         {"data": "qty_shipped",
                             "className": "text-left",
                             "render": function (data, type, row, meta) {
-                            var ret = Math.floor(data).toFixed(2)
+                            var ret = new Intl.NumberFormat("en-US").format(Math.floor(data))
                             return ret;
                         }
                         },
                         {"data": "qty_ready",
                             "className": "text-center",
                             "render": function (data, type, row, meta) {
-                            var ret = Math.floor(data).toFixed(2)
+                            var ret = new Intl.NumberFormat("en-US").format(Math.floor(data))
                             return ret;
                         }
                         },
                         {"data": "qty_need",
                             "className": "text-center",
                             "render": function (data, type, row, meta) {
-                            var ret = Math.floor(data).toFixed(2)
+                            var ret = new Intl.NumberFormat("en-US").format(Math.floor(data))
                             return ret;
                         }
                         },
                         {"data": "avai_FC",
                             "className": "text-center",
                             "render": function (data, type, row, meta) {
-                            var ret = Math.floor(data).toFixed(2)
+                            var ret = new Intl.NumberFormat("en-US").format(Math.floor(data))
                             return ret;
                         }
                         },
                         {"data": "FC_cumulative",
                             "className": "text-center",
                             "render": function (data, type, row, meta) {
-                            var ret = Math.floor(data).toFixed(2)
+                            var ret = new Intl.NumberFormat("en-US").format(Math.floor(data))
                             return ret;
                         }
                         },
                         {"data": "avai_WC",
                             "className": "text-center",
                             "render": function (data, type, row, meta) {
-                            var ret = Math.floor(data).toFixed(2)
+                            var ret = new Intl.NumberFormat("en-US").format(Math.floor(data))
                             return ret;
                         }
                         },
                         {"data": "avai_WSHR_PCS",
                             "className": "text-center",
                             "render": function (data, type, row, meta) {
-                            var ret = Math.floor(data).toFixed(2)
+                            var ret = new Intl.NumberFormat("en-US").format(Math.floor(data))
                             return ret;
                         }
                         },
                         {"data": "avai_WSHR_PCS",
                             "className": "text-center",
                             "render": function (data, type, row, meta) {
-                            var ret = Math.floor(data).toFixed(2)
+                            var ret = new Intl.NumberFormat("en-US").format(Math.floor(data))
                             return ret;
                         }
                         },
                         {"data": "avai_WSHR_KG",
                             "className": "text-center",
                             "render": function (data, type, row, meta) {
-                            var ret = Math.floor(data).toFixed(2)
+                            var ret = new Intl.NumberFormat("en-US").format(Math.floor(data))
                             return ret;
                         }
                         },
                         {"data": "avai_RHR_KG",
                             "className": "text-center",
                             "render": function (data, type, row, meta) {
-                            var ret = Math.floor(data).toFixed(2)
+                            var ret = new Intl.NumberFormat("en-US").format(Math.floor(data))
                             return ret;  
                         }
                         }, 
                         {"data": "avai_RC",
                             "className": "text-center",
                             "render": function (data, type, row, meta) {
-                            var ret = Math.floor(data).toFixed(2)
+                            var ret = new Intl.NumberFormat("en-US").format(Math.floor(data))
                             return ret;  
                         }
                         },
                         {"data": "avai_WSHR_KGperPCS",
-                            "className": "text-center",
+                            "className": "table-cell-edit",
                             "render": function (data, type, row, meta) {
                             var ret = Math.floor(data).toFixed(2)
                             return ret;  
                         }
                         },
                         {"data": "avai_RHR_KGperPCS",
-                            "className": "text-center",
+                            "className": "table-cell-edit",
                             "render": function (data, type, row, meta) {
                             var ret = Math.floor(data).toFixed(2)
                             return ret;  
