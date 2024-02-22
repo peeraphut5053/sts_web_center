@@ -128,42 +128,72 @@
                         {"data": "qty_shipped_CO",
                             "className": "text-left",
                             "render": function (data, type, row, meta) {
-                            var ret = new Intl.NumberFormat("en-US").format(Math.floor(data))
+                            if (data < 0){
+                                var ret = `<span style="color: red;">${new Intl.NumberFormat("en-US").format(Math.floor(data))}</span>`
+                            }
+                            else{
+                                var ret = new Intl.NumberFormat("en-US").format(Math.floor(data))
+                            }
                             return ret;
                         }
                         },
                         {"data": "qty_DO",
                             "className": "text-left",
                             "render": function (data, type, row, meta) {
-                            var ret = new Intl.NumberFormat("en-US").format(Math.floor(data))
+                            if (data < 0){
+                                var ret = `<span style="color: red;">${new Intl.NumberFormat("en-US").format(Math.floor(data))}</span>`
+                            }
+                            else{
+                                var ret = new Intl.NumberFormat("en-US").format(Math.floor(data))
+                            }
                             return ret;
                         }
                         },
                         {"data": "qty_shipped_DO",
                             "className": "text-left",
                             "render": function (data, type, row, meta) {
-                            var ret = new Intl.NumberFormat("en-US").format(Math.floor(data))
+                            if (data < 0){
+                                var ret = `<span style="color: red;">${new Intl.NumberFormat("en-US").format(Math.floor(data))}</span>`
+                            }
+                            else{
+                                var ret = new Intl.NumberFormat("en-US").format(Math.floor(data))
+                            }
                             return ret;
                         }
                         },
                         {"data": "qty_ready",
                             "className": "text-center",
                             "render": function (data, type, row, meta) {
-                            var ret = new Intl.NumberFormat("en-US").format(Math.floor(data))
+                            if (data < 0){
+                                var ret = `<span style="color: red;">${new Intl.NumberFormat("en-US").format(Math.floor(data))}</span>`
+                            }
+                            else{
+                                var ret = new Intl.NumberFormat("en-US").format(Math.floor(data))
+                            }
                             return ret;
                         }
                         },
                         {"data": "qty_need",
                             "className": "text-center",
                             "render": function (data, type, row, meta) {
-                            var ret = new Intl.NumberFormat("en-US").format(Math.floor(data))
+                            if (data < 0){
+                                var ret = `<span style="color: red;">${new Intl.NumberFormat("en-US").format(Math.floor(data))}</span>`
+                            }
+                            else{
+                                var ret = new Intl.NumberFormat("en-US").format(Math.floor(data))
+                            }
                             return ret;
                         }
                         },
                         {"data": "job_ready",
                             "className": "text-center",
                             "render": function (data, type, row, meta) {
-                            var ret = new Intl.NumberFormat("en-US").format(Math.floor(data))
+                            if (data < 0){
+                                var ret = `<span style="color: red;">${new Intl.NumberFormat("en-US").format(Math.floor(data))}</span>`
+                            }
+                            else{
+                                var ret = new Intl.NumberFormat("en-US").format(Math.floor(data))
+                            }
                             return ret;
                         }
                         }

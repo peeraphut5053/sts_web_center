@@ -119,56 +119,96 @@
                         {"data": "qty_shipped",
                             "className": "text-left",
                             "render": function (data, type, row, meta) {
-                            var ret = new Intl.NumberFormat("en-US").format(Math.floor(data))
+                            if (data < 0){
+                                var ret = `<span style="color: red;">${new Intl.NumberFormat("en-US").format(Math.floor(data))}</span>`
+                            }
+                            else{
+                                var ret = new Intl.NumberFormat("en-US").format(Math.floor(data))
+                            }
                             return ret;
                         }
                         },
                         {"data": "qty_ready",
                             "className": "text-center",
                             "render": function (data, type, row, meta) {
-                            var ret = new Intl.NumberFormat("en-US").format(Math.floor(data))
+                            if (data < 0){
+                                var ret = `<span style="color: red;">${new Intl.NumberFormat("en-US").format(Math.floor(data))}</span>`
+                            }
+                            else{
+                                var ret = new Intl.NumberFormat("en-US").format(Math.floor(data))
+                            }
                             return ret;
                         }
                         },
                         {"data": "qty_need",
                             "className": "text-center",
                             "render": function (data, type, row, meta) {
-                            var ret = new Intl.NumberFormat("en-US").format(Math.floor(data))
+                            if (data < 0){
+                                var ret = `<span style="color: red;">${new Intl.NumberFormat("en-US").format(Math.floor(data))}</span>`
+                            }
+                            else{
+                                var ret = new Intl.NumberFormat("en-US").format(Math.floor(data))
+                            }
                             return ret;
                         }
                         },
                         {"data": "avai_FC",
                             "className": "text-center",
                             "render": function (data, type, row, meta) {
-                            var ret = new Intl.NumberFormat("en-US").format(Math.floor(data))
+                            if (data < 0){
+                                var ret = `<span style="color: red;">${new Intl.NumberFormat("en-US").format(Math.floor(data))}</span>`
+                            }
+                            else{
+                                var ret = new Intl.NumberFormat("en-US").format(Math.floor(data))
+                            }
                             return ret;
                         }
                         },
                         {"data": "FC_cumulative",
                             "className": "text-center",
                             "render": function (data, type, row, meta) {
-                            var ret = new Intl.NumberFormat("en-US").format(Math.floor(data))
+                            if (data < 0){
+                                var ret = `<span style="color: red;">${new Intl.NumberFormat("en-US").format(Math.floor(data))}</span>`
+                            }
+                            else{
+                                var ret = new Intl.NumberFormat("en-US").format(Math.floor(data))
+                            }
                             return ret;
                         }
                         },
                         {"data": "avai_WC",
                             "className": "text-center",
                             "render": function (data, type, row, meta) {
-                            var ret = new Intl.NumberFormat("en-US").format(Math.floor(data))
+                            if (data < 0){
+                                var ret = `<span style="color: red;">${new Intl.NumberFormat("en-US").format(Math.floor(data))}</span>`
+                            }
+                            else{
+                                var ret = new Intl.NumberFormat("en-US").format(Math.floor(data))
+                            }
                             return ret;
                         }
                         },
                         {"data": "avai_WSHR",
                             "className": "text-center",
                             "render": function (data, type, row, meta) {
-                            var ret = new Intl.NumberFormat("en-US").format(Math.floor(data))
+                            if (data < 0){
+                                var ret = `<span style="color: red;">${new Intl.NumberFormat("en-US").format(Math.floor(data))}</span>`
+                            }
+                            else{
+                                var ret = new Intl.NumberFormat("en-US").format(Math.floor(data))
+                            }
                             return ret;
                         }
                         },
                         {"data": "avai_RHR",
                             "className": "text-center",
                             "render": function (data, type, row, meta) {
-                            var ret = new Intl.NumberFormat("en-US").format(Math.floor(data))
+                            if (data < 0){
+                                var ret = `<span style="color: red;">${new Intl.NumberFormat("en-US").format(Math.floor(data))}</span>`
+                            }
+                            else{
+                                var ret = new Intl.NumberFormat("en-US").format(Math.floor(data))
+                            }
                             return ret;
                         }
                         },
