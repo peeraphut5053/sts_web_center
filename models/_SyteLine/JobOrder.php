@@ -314,7 +314,7 @@ class JOBORDER {
         $job_type = $this->_job_type;
         $w_c = $this->_w_c;
 
-        $query = " EXEC STS_JOB_REPORT_DIARY_TEST "
+        $query = " STS_JOB_REPORT_DIARY "
                 . " @start_date  = N'$start_date',"
                 . " @end_date = N'$end_date',"
                 . " @wc_group_query  = '$wc_group_query' ,"
