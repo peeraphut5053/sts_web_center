@@ -107,7 +107,7 @@ class DeliveryOrder {
         left join co_ship_mst cosh on cosh.do_num = do_seq_mst.do_num and cosh.do_line = do_seq_mst.do_line and cosh.do_seq = do_seq_mst.do_seq
          and cosh.co_num = do_seq_mst.ref_num and cosh.co_line = do_seq_mst.ref_line and cosh.date_seq = do_seq_mst.date_seq
          and cosh.ship_date = do_seq_mst.ship_date
-         where 1=1 ";
+         where 1=1 and cosh.qty_shipped = mv_bc_tag.qty1 ";
 
         $query = $query . $Searchdo_num . $Searchsts_no . $Searchcust_po;
         $query = $query . " and  mv_bc_tag.receipt = 1 order by lot ";
