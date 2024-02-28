@@ -348,6 +348,7 @@
     function tblReport () {
         var tblReportId = '#tblReport';
         var btnSearch = '#btnSearch';
+        var OldHtml = $("#btnSearch").html();
 
 
         $.ajax({
@@ -355,6 +356,7 @@
             url: "././module/RPT_DO_INVENTORY_DETAIL/data.php",
             dataType: 'json',
             beforeSend: function () {
+                $("#btnSearch").html("<i class='fa fa-spinner fa-spin'>");
             },
             data: {
                 load: "ajax",
@@ -570,6 +572,8 @@
                     //     },
                     // ],
                 });
+                $('#tblReport').loading("stop");
+                $("#btnSearch").html(OldHtml);
             },
             error: function (e) {
                 console.log("There was an error with your request...");
