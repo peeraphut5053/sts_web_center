@@ -85,7 +85,7 @@ class DeliveryOrder {
         if ($cust_po != "") {
             $Searchcust_po = "and co_mst.cust_po like '%$cust_po%'";
         }
-        $query = "select distinct top 20000 isnull(sts_remark_line_report.remark,'') as remark,mv_bc_tag.id
+        $query = "select distinct top 20000 isnull(sts_remark_line_report.remark,'') as remark
         ,do_seq_mst.do_num 
         , do_seq_mst.do_line ,loc, do_seq_mst.ref_num as co_num 
         ,ref_line as co_line , co_mst.cust_po ,co_mst.Uf_StsPO_refNo as STS_PO 
