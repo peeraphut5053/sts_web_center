@@ -85,33 +85,70 @@ class DeliveryOrder {
         if ($cust_po != "") {
             $Searchcust_po = "and co_mst.cust_po like '%$cust_po%'";
         }
-        $query = "select distinct top 20000 isnull(sts_remark_line_report.remark,'') as remark--,mv_bc_tag.id
+        $query = "select
+        top 20000 
+        isnull(sts_remark_line_report.remark,'') as remark
         ,do_seq_mst.do_num 
-        , do_seq_mst.do_line ,loc, do_seq_mst.ref_num as co_num 
+        , do_seq_mst.do_line ,mltk.loc, do_seq_mst.ref_num as co_num 
         ,ref_line as co_line , co_mst.cust_po ,co_mst.Uf_StsPO_refNo as STS_PO 
         ,coitem_mst.item, item_mst.Uf_typeEnd ,item_mst.Uf_NPS , item_mst.Uf_Grade 
         ,item_mst.Uf_Schedule, item_mst.Uf_length ,item_mst.Uf_spec ,mv_bc_tag.lot 
         ,sts_no
-        ,qty_sts_no as qty_tag
+        ,qty_sts_no 
         ,cosh.qty_shipped
         , sts_no2 ,qty_sts_no2,sts_no3 ,qty_sts_no3 
         from do_seq_mst LEFT JOIN co_mst ON co_mst.co_num = do_seq_mst.ref_num 
         LEFT JOIN coitem_mst on do_seq_mst.ref_num = coitem_mst.co_num 
          and do_seq_mst.ref_line = coitem_mst.co_line and do_seq_mst.ref_release = coitem_mst.co_release 
         LEFT JOIN item_mst on item_mst.item = coitem_mst.item 
+        left join matltrack_mst mltk on mltk.ref_num = do_seq_mst.ref_num AND mltk.ref_line_suf = do_seq_mst.ref_line 
+         AND mltk.ref_release =do_seq_mst.ref_release AND mltk.trans_date = do_seq_mst.ship_date 
+         AND mltk.date_seq = do_seq_mst.date_seq and mltk.qty<0 and mltk.ref_type = 'O' 
+        
         left join co_ship_mst cosh on cosh.do_num = do_seq_mst.do_num and cosh.do_line = do_seq_mst.do_line and cosh.do_seq = do_seq_mst.do_seq
          and cosh.co_num = do_seq_mst.ref_num and cosh.co_line = do_seq_mst.ref_line and cosh.date_seq = do_seq_mst.date_seq
          and cosh.ship_date = do_seq_mst.ship_date
-        left join ast_ship ast on ast.do_num = cosh.do_num and ast.do_line = cosh.do_line and ast.do_seq=cosh.do_seq
+        
+        left join ast_ship ast on ast.do_num = cosh.do_num and ast.do_line = cosh.do_line 
          and ast.co_num = cosh.co_num and ast.co_line = cosh.co_line 
-        left join mv_bc_tag on mv_bc_tag.id = ast.tag_id  --mv_bc_tag.lot = ast.lot and mv_bc_tag.item = ast.item
+         and ast.trans_date = cosh.ship_date   and ast.lot = mltk.lot
+        
+        left join mv_bc_tag on mv_bc_tag.id = ast.tag_id  
         LEFT JOIN sts_remark_line_report on sts_remark_line_report.lot = mv_bc_tag.lot
          where 1=1 and cosh.qty_shipped = mv_bc_tag.qty1 and mv_bc_tag.ship_stat = 1 ";
 
+        //  select --distinct 
+        // top 20000 
+        // isnull(sts_remark_line_report.remark,'') as remark--,mv_bc_tag.id
+        // ,do_seq_mst.do_num 
+        // , do_seq_mst.do_line ,mltk.loc, do_seq_mst.ref_num as co_num 
+        // ,ref_line as co_line , co_mst.cust_po ,co_mst.Uf_StsPO_refNo as STS_PO 
+        // ,coitem_mst.item, item_mst.Uf_typeEnd ,item_mst.Uf_NPS , item_mst.Uf_Grade 
+        // ,item_mst.Uf_Schedule, item_mst.Uf_length ,item_mst.Uf_spec ,mv_bc_tag.lot 
+        // ,sts_no
+        // ,qty_sts_no 
+        // ,cosh.qty_shipped
+        // , sts_no2 ,qty_sts_no2,sts_no3 ,qty_sts_no3 
+        // from do_seq_mst LEFT JOIN co_mst ON co_mst.co_num = do_seq_mst.ref_num 
+        // LEFT JOIN coitem_mst on do_seq_mst.ref_num = coitem_mst.co_num 
+        //  and do_seq_mst.ref_line = coitem_mst.co_line and do_seq_mst.ref_release = coitem_mst.co_release 
+        // LEFT JOIN item_mst on item_mst.item = coitem_mst.item 
         // left join matltrack_mst mltk on mltk.ref_num = do_seq_mst.ref_num AND mltk.ref_line_suf = do_seq_mst.ref_line 
-        // AND mltk.ref_release =do_seq_mst.ref_release AND mltk.trans_date = do_seq_mst.ship_date 
-        // AND mltk.date_seq = do_seq_mst.date_seq and mltk.qty<0 and mltk.ref_type = 'O' 
-        // LEFT JOIN mv_bc_tag on mv_bc_tag.lot = mltk.lot and mv_bc_tag.item = mltk.item 
+        //  AND mltk.ref_release =do_seq_mst.ref_release AND mltk.trans_date = do_seq_mst.ship_date 
+        //  AND mltk.date_seq = do_seq_mst.date_seq and mltk.qty<0 and mltk.ref_type = 'O' 
+        // --LEFT JOIN mv_bc_tag on mv_bc_tag.lot = mltk.lot and mv_bc_tag.item = mltk.item 
+        
+        // left join co_ship_mst cosh on cosh.do_num = do_seq_mst.do_num and cosh.do_line = do_seq_mst.do_line and cosh.do_seq = do_seq_mst.do_seq
+        //  and cosh.co_num = do_seq_mst.ref_num and cosh.co_line = do_seq_mst.ref_line and cosh.date_seq = do_seq_mst.date_seq
+        //  and cosh.ship_date = do_seq_mst.ship_date
+        
+        // left join ast_ship ast on ast.do_num = cosh.do_num and ast.do_line = cosh.do_line 
+        //  and ast.co_num = cosh.co_num and ast.co_line = cosh.co_line 
+        //  and ast.trans_date = cosh.ship_date   and ast.lot = mltk.lot
+        
+        // left join mv_bc_tag on mv_bc_tag.id = ast.tag_id  
+        // LEFT JOIN sts_remark_line_report on sts_remark_line_report.lot = mv_bc_tag.lot
+        //  where 1=1 and cosh.qty_shipped = mv_bc_tag.qty1 and mv_bc_tag.ship_stat = 1 
 
         $query = $query . $Searchdo_num . $Searchsts_no . $Searchcust_po;
         $query = $query . " and  mv_bc_tag.receipt = 1 order by lot ";
