@@ -111,7 +111,7 @@ class DeliveryOrder {
         
         left join ast_ship ast on ast.do_num = cosh.do_num and ast.do_line = cosh.do_line 
          and ast.co_num = cosh.co_num and ast.co_line = cosh.co_line 
-         and ast.trans_date = cosh.ship_date   and ast.lot = mltk.lot
+         and ast.lot = mltk.lot
         
         left join mv_bc_tag on mv_bc_tag.id = ast.tag_id  
         LEFT JOIN sts_remark_line_report on sts_remark_line_report.lot = mv_bc_tag.lot
