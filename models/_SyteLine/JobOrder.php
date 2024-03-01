@@ -327,6 +327,26 @@ class JOBORDER {
         return $rs0;
     }
 
+    function STS_JOB_REPORT_DIARY_SUB($txtItem, $txtref_num, $txtw_c, $wc_group_query) {
+        $start_date = $this->_start_date;
+        $end_date = $this->_end_date;
+        $ref_num = $this->_ref_num;
+        $job_type = $this->_job_type;
+        $w_c = $this->_w_c;
+
+        $query = " STS_JOB_REPORT_DIARY_SUB "
+                . " @start_date  = N'$start_date',"
+                . " @end_date = N'$end_date',"
+                . " @wc_group_query  = '$wc_group_query' ,"
+                . " @item = '$txtItem' ,"
+                . " @ref_num   = '$txtref_num',"
+                . " @wc   ='$txtw_c'";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+
     function API_STS_Stock_mthly($month, $year) {
         $query = " EXEC STS_Stock_mthly @month = N'$month', @year = N'$year' ";
         $cSql = new SqlSrv();

@@ -46,6 +46,21 @@ if ($load == "ajax2") {
     echo json_encode($Trans);
 }
 
+if ($load == "STS_JOB_REPORT_DIARY_SUB") {
+    $CallModel = new CallModel();
+    $CallModel->SyteLine_Models();
+
+    $Trans = new JobOrder();
+    $Trans->setConn($ConnSL);
+    $Trans->_start_date = $txtFromDate;
+    $Trans->_end_date = $txtToDate;
+    $Trans->_ref_num = $txtref_num;
+    $Trans->_item = $txtItem;
+    $Trans->_w_c = $txtw_c;
+    $Trans = $Trans->STS_JOB_REPORT_DIARY_SUB($txtItem, $txtref_num, $txtw_c, $wc_group_query);
+    echo json_encode($Trans);
+}
+
 if ($load == "StampingReport") {
     $CallModel = new CallModel();
     $CallModel->SyteLine_Models();
