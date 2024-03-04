@@ -327,14 +327,14 @@ class JOBORDER {
         return $rs0;
     }
 
-    function STS_JOB_REPORT_DIARY_SUB($txtItem, $txtref_num, $txtw_c, $wc_group_query) {
+    function STS_JOB_REPORT_DIARY_SUB_QUERY($txtItem, $txtref_num, $txtw_c, $wc_group_query) {
         $start_date = $this->_start_date;
         $end_date = $this->_end_date;
         $ref_num = $this->_ref_num;
         $job_type = $this->_job_type;
         $w_c = $this->_w_c;
 
-        $query = " STS_JOB_REPORT_DIARY_SUB "
+        $query = " STS_JOB_REPORT_DIARY_SUB_QUERY "
                 . " @start_date  = N'$start_date',"
                 . " @end_date = N'$end_date',"
                 . " @wc_group_query  = '$wc_group_query' ,"
