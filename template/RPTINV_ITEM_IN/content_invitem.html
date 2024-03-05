@@ -57,7 +57,9 @@
                 <th>Inv Date</th>
                 <th>Inv Num</th>
                 <th>Doc State</th>
+                <th>Cust Num</th>
                 <th>Customer</th>
+                <th>Terms Code</th>
                 <th>Item</th>  
                 <th>Description</th>  
                 <th>Group</th>  
@@ -387,7 +389,27 @@
                                     }
                                 },
                                 {
+                                    "data": "cust_num",
+                                    "render": function (data, type, row) {
+                                        var ret = data;
+                                        if (row["inv_num"].substring(0, 2) == "CN") {
+                                            ret = "<span style='color:red;'>" + data + "</span>";
+                                        }
+                                        return ret;
+                                    }
+                                },
+                                {
                                     "data": "cust_name",
+                                    "render": function (data, type, row) {
+                                        var ret = data;
+                                        if (row["inv_num"].substring(0, 2) == "CN") {
+                                            ret = "<span style='color:red;'>" + data + "</span>";
+                                        }
+                                        return ret;
+                                    }
+                                },
+                                {
+                                    "data": "terms_code",
                                     "render": function (data, type, row) {
                                         var ret = data;
                                         if (row["inv_num"].substring(0, 2) == "CN") {
