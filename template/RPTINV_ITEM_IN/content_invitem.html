@@ -72,8 +72,8 @@
                 <th>AMT</th>
                 <th>VAT</th>    
                 <th>TOTAL</th>  
-                <th>recpt_date</th>  
-                <th>recpt_amount</th>  
+                <!-- <th>recpt_date</th>  
+                <th>recpt_amount</th>   -->
             </tr>
         </thead>
     </table>
@@ -338,7 +338,7 @@
                         $("#tblReport").DataTable().clear();
                         var RowFooterBuild = "";
                         var ColBuild = "";
-                        var ColCount = 20;
+                        var ColCount = 18;
                         var i = 0;
                         RowFooterBuild = "<tfoot><tr>!!ColBuild!!</tr></tfoot>";
                         for (i = 1; i <= ColCount; i++) {
@@ -566,28 +566,28 @@
                                         return data;
                                     }
                                 },
-                                {
-                                    "data": "recpt_date",
-                                    "className": "text-right",
-                                    "render": function (data, type, row) {
+                                // {
+                                //     "data": "recpt_date",
+                                //     "className": "text-right",
+                                //     "render": function (data, type, row) {
 
-                                        if (row["inv_num"].substring(0, 2) == "CN") {
-                                            ret = "<span style='color:red;'>" + parseFloat(data).toFixed(2) + "</span>";
-                                        }
-                                        return data;
-                                    }
-                                },
-                                {
-                                    "data": "recpt_amount",
-                                    "className": "text-right",
-                                    "render": function (data, type, row) {
+                                //         if (row["inv_num"].substring(0, 2) == "CN") {
+                                //             ret = "<span style='color:red;'>" + parseFloat(data).toFixed(2) + "</span>";
+                                //         }
+                                //         return data;
+                                //     }
+                                // },
+                                // {
+                                //     "data": "recpt_amount",
+                                //     "className": "text-right",
+                                //     "render": function (data, type, row) {
 
-                                        if (row["inv_num"].substring(0, 2) == "CN") {
-                                            ret = "<span style='color:red;'>" + parseFloat(data).toFixed(2) + "</span>";
-                                        }
-                                        return data;
-                                    }
-                                }
+                                //         if (row["inv_num"].substring(0, 2) == "CN") {
+                                //             ret = "<span style='color:red;'>" + parseFloat(data).toFixed(2) + "</span>";
+                                //         }
+                                //         return data;
+                                //     }
+                                // }
 
                             ],
                             'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
