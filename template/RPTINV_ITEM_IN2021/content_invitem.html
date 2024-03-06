@@ -56,7 +56,9 @@
                 <th>Inv Date</th>
                 <th>Inv Num</th>
                 <th>Doc State</th>
+                <th>Cust Num</th>
                 <th>Customer</th>
+                <th>Terms Code</th>
                 <th>Item</th>  
                 <th>Description</th>  
                 <th>Group</th>  
@@ -67,8 +69,8 @@
                 <th>Price/KG</th>
                 <th>Price/PCS</th>
                 <th>AMT</th>
-                <th>VAT</th>    
-                <th>TOTAL</th>  
+                <!-- <th>VAT</th>    
+                <th>TOTAL</th>   -->
             </tr>
         </thead>
     </table>
@@ -375,7 +377,27 @@
                                     }
                                 },
                                 {
-                                    "data": "name",
+                                    "data": "cust_num",
+                                    "render": function (data, type, row) {
+                                        var ret = data;
+                                        if (row["inv_num"].substring(0, 2) == "CN") {
+                                            ret = "<span style='color:red;'>" + data + "</span>";
+                                        }
+                                        return ret;
+                                    }
+                                },
+                                {
+                                    "data": "cust_name",
+                                    "render": function (data, type, row) {
+                                        var ret = data;
+                                        if (row["inv_num"].substring(0, 2) == "CN") {
+                                            ret = "<span style='color:red;'>" + data + "</span>";
+                                        }
+                                        return ret;
+                                    }
+                                },
+                                {
+                                    "data": "terms_code",
                                     "render": function (data, type, row) {
                                         var ret = data;
                                         if (row["inv_num"].substring(0, 2) == "CN") {
@@ -508,30 +530,30 @@
                                         return ret;
                                     }
                                 },
-                                {
-                                    "data": "VAT",
-                                    "className": "text-right",
-                                    "render": function (data, type, row) {
-                                        var ret = data;
-                                        if  (row["inv_num"].substring(0, 2) == "CN"){
+                                // {
+                                //     "data": "VAT",
+                                //     "className": "text-right",
+                                //     "render": function (data, type, row) {
+                                //         var ret = data;
+                                //         if  (row["inv_num"].substring(0, 2) == "CN"){
 									 
-                                            ret = "<span style='color:red;'>" + formatMoney(data) + "</span>";
-                                        }
-                                        return ret;
-                                    }
-                                },
-                                {
-                                    "data": "AMT_TOTAL",
-                                    "className": "text-right",
-                                    "render": function (data, type, row) {
-                                        var ret = data;
+                                //             ret = "<span style='color:red;'>" + formatMoney(data) + "</span>";
+                                //         }
+                                //         return ret;
+                                //     }
+                                // },
+                                // {
+                                //     "data": "AMT_TOTAL",
+                                //     "className": "text-right",
+                                //     "render": function (data, type, row) {
+                                //         var ret = data;
 
-                                          if  (row["inv_num"].substring(0, 2) == "CN") {										
-                                            ret = "<span style='color:red;'>" + formatMoney(data)+ "</span>";
-                                        }
-                                        return ret;
-                                    }
-                                }
+                                //           if  (row["inv_num"].substring(0, 2) == "CN") {										
+                                //             ret = "<span style='color:red;'>" + formatMoney(data)+ "</span>";
+                                //         }
+                                //         return ret;
+                                //     }
+                                // }
 
                             ],
                             'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
