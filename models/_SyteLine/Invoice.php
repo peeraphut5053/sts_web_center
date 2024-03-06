@@ -427,8 +427,26 @@ class Invoice {
 
         $item = $this->_item;
 
-        $query = "SELECT  CONVERT(varchar,inv_date,103) as inv_date_conv ,FORMAT(AMT, 'N2') as AMT_2d ,FORMAT(VAT, 'N2') as VAT_2d,FORMAT(AMT_TOTAL, 'N2') as AMT_TOTAL_2d, *  FROM V_WebApp_InvItem_IN "
-                . "WHERE acct <> '22400'";
+        $query = "SELECT  CONVERT(varchar,inv_date,103) as inv_date_conv ,FORMAT(AMT, 'N2') as AMT_2d 
+        ,FORMAT(VAT, 'N2') as VAT_2d,FORMAT(AMT_TOTAL, 'N2') as AMT_TOTAL_2d, *  
+               ,recpt_date =   isnull(stuff(
+                                       (SELECT ',' + convert(varchar,convert(date,(recpt_date)))
+                                     FROM artran_mst arsub
+                                        WHERE arsub.inv_num = V_WebApp_InvItem_IN.inv_num
+                                          AND arsub.[type] = 'P'
+                                        GROUP BY inv_num,recpt_date
+                                        ORDER BY convert(date,recpt_date) 
+                                        FOR XML PATH ('')) , 1, 1, ''), '')
+              , recpt_amount =   isnull(stuff(
+                                       (SELECT ',' + convert(varchar,amount)
+                                     FROM artran_mst arsub
+                                        WHERE arsub.inv_num = V_WebApp_InvItem_IN.inv_num
+                                          AND arsub.[type] = 'P'
+                                        GROUP BY inv_num,convert(date,recpt_date),amount
+                                        ORDER BY convert(date,recpt_date) 
+                                        FOR XML PATH ('')) , 1, 1, ''), '')
+        FROM V_WebApp_InvItem_IN
+        WHERE acct <> '22400' ";
         if (($start_inv) && ($end_inv)) {
             $query .= " AND ( inv_num between '$start_inv' AND '$end_inv' ) ";
         }
