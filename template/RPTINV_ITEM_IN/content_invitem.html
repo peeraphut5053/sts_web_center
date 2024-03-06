@@ -72,6 +72,8 @@
                 <th>AMT</th>
                 <th>VAT</th>    
                 <th>TOTAL</th>  
+                <th>recpt_date</th>  
+                <th>recpt_amount</th>  
             </tr>
         </thead>
     </table>
@@ -244,16 +246,16 @@
         var GrandTotal = 0;
         var i = 0;
         $("#tblReport tbody tr ").each(function () {
-            GrandAmount += parseFloat($(this).find("td:eq(14)").text().replace(",", "").replace(",", ""));
-            GrandVat += parseFloat($(this).find("td:eq(15)").text().replace(",", "").replace(",", ""));
-            GrandTotal += parseFloat($(this).find("td:eq(16)").text().replace(",", "").replace(",", ""));
+            GrandAmount += parseFloat($(this).find("td:eq(16)").text().replace(",", "").replace(",", ""));
+            GrandVat += parseFloat($(this).find("td:eq(17)").text().replace(",", "").replace(",", ""));
+            GrandTotal += parseFloat($(this).find("td:eq(19)").text().replace(",", "").replace(",", ""));
             i++;
         });
         console.log(i);
         var x = 0;
-        $("#tblReport tfoot tr:eq(0)").find("td:eq(14)").text(addCommas(GrandAmount.toFixed(2)));
-        $("#tblReport tfoot tr:eq(0)").find("td:eq(15)").text(addCommas(GrandVat.toFixed(2)));
-        $("#tblReport tfoot tr:eq(0)").find("td:eq(16)").text(addCommas(GrandTotal.toFixed(2)));
+        $("#tblReport tfoot tr:eq(0)").find("td:eq(16)").text(addCommas(GrandAmount.toFixed(2)));
+        $("#tblReport tfoot tr:eq(0)").find("td:eq(17)").text(addCommas(GrandVat.toFixed(2)));
+        $("#tblReport tfoot tr:eq(0)").find("td:eq(19)").text(addCommas(GrandTotal.toFixed(2)));
 //        $("#tblReport tfoot tr:eq(0)").append(footline);
     }
     function getRootAppPath() {
@@ -336,7 +338,7 @@
                         $("#tblReport").DataTable().clear();
                         var RowFooterBuild = "";
                         var ColBuild = "";
-                        var ColCount = 16;
+                        var ColCount = 20;
                         var i = 0;
                         RowFooterBuild = "<tfoot><tr>!!ColBuild!!</tr></tfoot>";
                         for (i = 1; i <= ColCount; i++) {
@@ -563,6 +565,28 @@
                                         }
                                         return data;
                                     }
+                                },
+                                {
+                                    "data": "recpt_date",
+                                    "className": "text-right",
+                                    "render": function (data, type, row) {
+
+                                        if (row["inv_num"].substring(0, 2) == "CN") {
+                                            ret = "<span style='color:red;'>" + parseFloat(data).toFixed(2) + "</span>";
+                                        }
+                                        return data;
+                                    }
+                                },
+                                {
+                                    "data": "recpt_amount",
+                                    "className": "text-right",
+                                    "render": function (data, type, row) {
+
+                                        if (row["inv_num"].substring(0, 2) == "CN") {
+                                            ret = "<span style='color:red;'>" + parseFloat(data).toFixed(2) + "</span>";
+                                        }
+                                        return data;
+                                    }
                                 }
 
                             ],
@@ -591,13 +615,13 @@
                                 };
                                 // computing column Total of the complete result
                                 var totalPCS = api
-                                        .column(9)
+                                        .column(11)
                                         .data()
                                         .reduce(function (a, b) {
                                             return intVal(a) + intVal(b);
                                         }, 0);
                                 var totalWeight = api
-                                        .column(10)
+                                        .column(12)
                                         .data()
                                         .reduce(function (a, b) {
                                             return intVal(a) + intVal(b);
@@ -607,39 +631,39 @@
 
 
                                 var totalAmt = api
-                                        .column(13)
-                                        .data()
-                                        .reduce(function (a, b) {
-                                            return intVal(a) + intVal(b);
-                                        }, 0);
-                                var totalVat = api
-                                        .column(14)
-                                        .data()
-                                        .reduce(function (a, b) {
-                                            return intVal(a) + intVal(b);
-                                        }, 0);
-                                var totalGrand = api
                                         .column(15)
                                         .data()
                                         .reduce(function (a, b) {
                                             return intVal(a) + intVal(b);
                                         }, 0);
-                                $(api.column(0).footer()).html("<b></b>");
-                                $(api.column(1).footer()).html("<b></b>");
-                                $(api.column(2).footer()).html("<b></b>");
-                                $(api.column(3).footer()).html("<b></b>");
-                                $(api.column(4).footer()).html("<b></b>");
-                                $(api.column(5).footer()).html("<b></b>");
-                                $(api.column(6).footer()).html("<b></b>");
-                                $(api.column(7).footer()).html("<b></b>");
-                                $(api.column(8).footer()).html("<b>TOTAL</b>");
-                                $(api.column(9).footer()).html(addCommas(totalPCS.toFixed(2)));
-                                $(api.column(10).footer()).html(addCommas(totalWeight.toFixed(2)));
-                                //  $(api.column(11).footer()).html(addCommas(totalPricePerKG.toFixed(2)));
-                                //    $(api.column(12).footer()).html(addCommas(totalPricePerPCS.toFixed(2)));
-                                $(api.column(13).footer()).html(addCommas(totalAmt.toFixed(2)));
-                                $(api.column(14).footer()).html(addCommas(totalVat.toFixed(2)));
-                                $(api.column(15).footer()).html(addCommas(totalGrand.toFixed(2)));
+                                var totalVat = api
+                                        .column(16)
+                                        .data()
+                                        .reduce(function (a, b) {
+                                            return intVal(a) + intVal(b);
+                                        }, 0);
+                                var totalGrand = api
+                                        .column(17)
+                                        .data()
+                                        .reduce(function (a, b) {
+                                            return intVal(a) + intVal(b);
+                                        }, 0);
+                                // $(api.column(0).footer()).html("<b></b>");
+                                // $(api.column(1).footer()).html("<b></b>");
+                                // $(api.column(2).footer()).html("<b></b>");
+                                // $(api.column(3).footer()).html("<b></b>");
+                                // $(api.column(4).footer()).html("<b></b>");
+                                // $(api.column(5).footer()).html("<b></b>");
+                                // $(api.column(6).footer()).html("<b></b>");
+                                // $(api.column(7).footer()).html("<b></b>");
+                                // $(api.column(10).footer()).html("<b>TOTAL</b>");
+                                // $(api.column(11).footer()).html(addCommas(totalPCS.toFixed(2)));
+                                // $(api.column(12).footer()).html(addCommas(totalWeight.toFixed(2)));
+                                // //  $(api.column(11).footer()).html(addCommas(totalPricePerKG.toFixed(2)));
+                                // //    $(api.column(12).footer()).html(addCommas(totalPricePerPCS.toFixed(2)));
+                                // $(api.column(15).footer()).html(addCommas(totalAmt.toFixed(2)));
+                                // $(api.column(16).footer()).html(addCommas(totalVat.toFixed(2)));
+                                // $(api.column(17).footer()).html(addCommas(totalGrand.toFixed(2)));
                             },
                         });
                         $('#tblReport').loading("stop");
