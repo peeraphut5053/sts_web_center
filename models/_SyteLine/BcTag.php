@@ -146,12 +146,15 @@ class BcTag {
 
     Function GEN_Doc_num() {
         $cSql = new SqlSrv();
-        $query = "DECLARE @newDocumentNumber nvarchar(15)
-        EXEC [dbo].[STS_QtyMoveLotLocation_GEN_Doc_num]
-        @newDocumentNumber = @newDocumentNumber OUTPUT
-        SELECT @newDocumentNumber as N'newDocumentNumber'";
-        $rs = $cSql->SqlQuery($this->StrConn, $query);
-        return $rs;
+        $query = "EXEC [dbo].[STS_QtyMoveLotLocation_GEN_Doc_num] 
+                  @newDocumentNumber = OUTPUT";
+        $cSql->SqlQuery($this->StrConn, $query);
+
+        $query2 = "select top (1) doc_num FROM STS_qty_move_doc_num order by id desc";
+        $rs2 = $cSql->SqlQuery($this->StrConn, $query2);
+        array_splice($rs2, count($rs2) - 1, 1);
+        return $rs2[0];
+
     }
 
     Function moveqty_create_hdr($toLoc, $w_c, $doc_type, $do_num, $boatList,$destination,$ActWeight) {
