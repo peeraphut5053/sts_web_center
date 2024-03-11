@@ -149,7 +149,7 @@ class BcTag {
         $query = "DECLARE @newDocumentNumber nvarchar(15)
         EXEC [dbo].[STS_QtyMoveLotLocation_GEN_Doc_num]
         @newDocumentNumber = @newDocumentNumber OUTPUT
-        SELECT @newDocumentNumber as N'@newDocumentNumber'";
+        SELECT @newDocumentNumber as N'newDocumentNumber'";
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         return $rs[0];
     }
