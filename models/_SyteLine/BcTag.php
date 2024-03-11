@@ -151,7 +151,7 @@ class BcTag {
         @newDocumentNumber = @newDocumentNumber OUTPUT
         SELECT @newDocumentNumber as N'newDocumentNumber'";
         $rs = $cSql->SqlQuery($this->StrConn, $query);
-        return $rs[0];
+        return $rs;
     }
 
     Function moveqty_create_hdr($toLoc, $w_c, $doc_type, $do_num, $boatList,$destination,$ActWeight) {
