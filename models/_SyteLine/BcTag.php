@@ -144,6 +144,16 @@ class BcTag {
         //return $rs;
     }
 
+    Function GEN_Doc_num() {
+        $cSql = new SqlSrv();
+        $query = "DECLARE @newDocumentNumber nvarchar(15)
+        EXEC [dbo].[STS_QtyMoveLotLocation_GEN_Doc_num]
+        @newDocumentNumber = @newDocumentNumber OUTPUT
+        SELECT @newDocumentNumber as N'@newDocumentNumber'";
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        return $rs[0];
+    }
+
     Function moveqty_create_hdr($toLoc, $w_c, $doc_type, $do_num, $boatList,$destination,$ActWeight) {
         if ($doc_type == "") {
             $doc_type == "Internal";

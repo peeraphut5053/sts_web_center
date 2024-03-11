@@ -53,6 +53,11 @@ if ($load == "SelectDOList") {
     echo json_encode($STS_qty_move_line);
 }
 
+if ($load == "STS_QtyMoveLotLocation_GEN_Doc_num"){
+    $GEN_Doc_num = $CallModelObj->GEN_Doc_num();
+    echo json_encode($GEN_Doc_num);
+}
+
 if ($load == "moveqty_create_hdr") {
     (isset($w_c)) ? $w_c = $w_c : $w_c = "";
     (isset($destination)) ? $destination = $destination : $destination = "";
