@@ -86,12 +86,6 @@
                 <th>AD_amount2</th>
                 <th>ENTVALUE1</th>
                 <th>ENTVALUE2</th>
-                <th>pay_date1</th>
-                <th>amount_rec1</th>
-                <th>pay_date2</th>
-                <th>amount_rec2</th>
-                <th>pay_date3</th>
-                <th>amount_rec3</th>
             </tr>
         </thead>
     </table>
@@ -132,12 +126,6 @@
                 <th>AD_amount2</th>
                 <th>ENTVALUE1</th>
                 <th>ENTVALUE2</th>
-                <th>pay_date1</th>
-                <th>amount_rec1</th>
-                <th>pay_date2</th>
-                <th>amount_rec2</th>
-                <th>pay_date3</th>
-                <th>amount_rec3</th>
             </tr>
         </thead>
     </table>
@@ -501,79 +489,7 @@
                                 return ret;
                             }
                         },
-                        {"data": {pay_date1: "pay_date1", inv_num: "inv_num"},
-                            "className": "text-left",
-                            "render": function (data, type, row, meta) {
-                                let col_name = 'pay_date1';
-                                let valdata = data.pay_date1;
-                                let iddata = `${col_name}_${data.inv_num}`;
-                                let inv_num = data.inv_num;
-                                ((valdata == null) ? valdata = "" : valdata = valdata)
-                                let ret = `<span hidden>${(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="Insert('${iddata}','${col_name}','${inv_num}');" value='${(valdata)}' />`;
-                                return ret;
-                            }
-                        },
-                        {"data": {amount_rec1: "amount_rec1", inv_num: "inv_num"},
-                            "className": "text-left",
-                            "render": function (data, type, row, meta) {
-                                let col_name = 'amount_rec1';
-                                let valdata = data.amount_rec1;
-                                let iddata = `${col_name}_${data.inv_num}`;
-                                let inv_num = data.inv_num;
-                                ((valdata == null) ? valdata = "" : valdata = valdata)
-                                let ret = `<span hidden>${(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="Insert('${iddata}','${col_name},','${inv_num}');" value='${(valdata)}' />`;
-                                return ret;
-                            }
-                        },
-                        {"data": {pay_date2: "pay_date2", inv_num: "inv_num"},
-                            "className": "text-left",
-                            "render": function (data, type, row, meta) {
-                                let col_name = 'pay_date2';
-                                let valdata = data.pay_date2;
-                                let iddata = `${col_name}_${data.inv_num}`;
-                                let inv_num = data.inv_num;
-                                ((valdata == null) ? valdata = "" : valdata = valdata)
-                                let ret = `<span hidden>${(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="Insert('${iddata}','${col_name}','${inv_num}');" value='${(valdata)}' />`;
-                                return ret;
-                            }
-                        },
-                        {"data": {amount_rec2: "amount_rec2", inv_num: "inv_num"},
-                            "className": "text-left",
-                            "render": function (data, type, row, meta) {
-                                let col_name = 'amount_rec2';
-                                let valdata = data.amount_rec2;
-                                let iddata = `${col_name}_${data.inv_num}`;
-                                let inv_num = data.inv_num;
-                                ((valdata == null) ? valdata = "" : valdata = valdata)
-                                let ret = `<span hidden>${(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="Insert('${iddata}','${col_name}','${inv_num}');" value='${(valdata)}' />`;
-                                return ret;
-                            }
-                        },
-                        {"data": {pay_date3: "pay_date3", inv_num: "inv_num"},
-                            "className": "text-left",
-                            "render": function (data, type, row, meta) {
-                                let col_name = 'pay_date3';
-                                let valdata = data.pay_date3;
-                                let iddata = `${col_name}_${data.inv_num}`;
-                                let inv_num = data.inv_num;
-                                ((valdata == null) ? valdata = "" : valdata = valdata)
-                                let ret = `<span hidden>${(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="Insert('${iddata}','${col_name}','${inv_num}');" value='${(valdata)}' />`;
-                                return ret;
-                            }
-                        },
-                        {"data": {amount_rec3: "amount_rec3", inv_num: "inv_num"},
-                            "className": "text-left",
-                            "render": function (data, type, row, meta) {
-                                let col_name = 'amount_rec3';
-                                let valdata = data.amount_rec3;
-                                let iddata = `${col_name}_${data.inv_num}`;
-                                let inv_num = data.inv_num;
-                                ((valdata == null) ? valdata = "" : valdata = valdata)
-                                let ret = `<span hidden>${(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="Insert('${iddata}','${col_name}','${inv_num}');" value='${(valdata)}' />`;
-                                return ret;
-                            }
-                        },
-                    ],
+                    ]
                     // 'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
                     //         "<'row'<'col-md-12'tr>>" +
                     //         "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
@@ -728,24 +644,6 @@ function ReportItemSearchHid() {
                             "className": "text-left",
                         },
                         {"data": "ENTVALUE2",
-                            "className": "text-left",
-                        },
-                        {"data": "pay_date1",
-                            "className": "text-left",
-                        },
-                        {"data": "amount_rec1",
-                            "className": "text-left",
-                        },
-                        {"data": "pay_date2",
-                            "className": "text-left",
-                        },
-                        {"data": "amount_rec2",
-                            "className": "text-left",
-                        },
-                        {"data": "pay_date3",
-                            "className": "text-left",
-                        },
-                        {"data": "amount_rec3",
                             "className": "text-left",
                         },
                     ],
