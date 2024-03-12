@@ -493,7 +493,7 @@ class Invoice {
                               FROM artran_mst arsub
                                  WHERE arsub.inv_num = V_WebApp_InvItem_IN_noVAT.inv_num
                                    AND arsub.[type] = 'P'
-                                 GROUP BY inv_num,recpt_date
+                                 GROUP BY inv_num,recpt_date,inv_seq
                                  ORDER BY convert(date,recpt_date) 
                                  FOR XML PATH ('')) , 1, 1, ''), '')
        , recpt_amount =   isnull(stuff(
@@ -501,7 +501,7 @@ class Invoice {
                               FROM artran_mst arsub
                                  WHERE arsub.inv_num = V_WebApp_InvItem_IN_noVAT.inv_num
                                    AND arsub.[type] = 'P'
-                                 GROUP BY inv_num,convert(date,recpt_date),amount
+                                 GROUP BY inv_num,convert(date,recpt_date),amount,inv_seq
                                  ORDER BY convert(date,recpt_date) 
                                  FOR XML PATH ('')) , 1, 1, ''), '') 
  FROM V_WebApp_InvItem_IN_noVAT
@@ -664,7 +664,7 @@ class Invoice {
         }
 
 
-        $query = " select cust_num,cust_name,sum(isnull(qtyKG,0)) as summary_kg,sum(AMT) as summary_amount FROM V_WebApp_InvItem_IN_2021 "
+        $query = " select cust_num,cust_name,sum(isnull(qtyKG,0)) as summary_kg,sum(AMT) as summary_amount FROM V_WebApp_InvItem_IN_noVAT "
                 . " where  inv_date between '$from_date' and '$end_date' group by cust_num ,cust_name ";
 
         $cSql = new SqlSrv();
@@ -877,7 +877,7 @@ where left(customer_mst.cust_num,2) = 'EX' group by custaddr_mst.cust_num,custad
         $query = " select isnull(group_final,'Z_ORDER') as group_code , isnull(group_final,'') as group_final ,"
                 . " SUM( isnull(cast(replace(QtyKG, ',', '') as decimal(23, 2)), 0) ) as summary_kg, "
                 . " SUM( isnull(cast(replace(AMT, ',', '') as decimal(23, 2)), 0) ) as summary_amount "
-                . " FROM V_WebApp_InvItem_IN_2021 where 1=1 ";
+                . " FROM V_WebApp_InvItem_IN_noVAT where 1=1 ";
 
         if ($from_date && $end_date) {
             $query = $query . " and (inv_date between '$from_date 00:00:00'  and '$end_date 23:59:59') ";

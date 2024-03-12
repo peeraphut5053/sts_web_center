@@ -107,15 +107,11 @@
                 <th>AD_amount2</th>
                 <th>ENTVALUE1</th>
                 <th>ENTVALUE2</th>
-                <th>pay_date1</th>
-                <th>amount_rec1</th>
-                <th>pay_date2</th>
-                <th>amount_rec2</th>
-                <th>pay_date3</th>
-                <th>amount_rec3</th>
                 <th>amount_FOB</th>
                 <th>N_WT_MT</th> 
                 <th>G_WT_MT</th>
+                <th>recpt_date</th>
+                <th>recpt_amount</th>
             </tr>
         </thead>
     </table>
@@ -270,24 +266,6 @@ function ReportItemSearch() {
                         {"data": "ENTVALUE2",
                             "className": "text-left",
                         },
-                        {"data": "pay_date1",
-                            "className": "text-left",
-                        },
-                        {"data": "amount_rec1",
-                            "className": "text-left",
-                        },
-                        {"data": "pay_date2",
-                            "className": "text-left",
-                        },
-                        {"data": "amount_rec2",
-                            "className": "text-left",
-                        },
-                        {"data": "pay_date3",
-                            "className": "text-left",
-                        },
-                        {"data": "amount_rec3",
-                            "className": "text-left",
-                        },
                         {"data": "amount_FOB",
                             "className": "text-left",
                         },
@@ -297,6 +275,12 @@ function ReportItemSearch() {
                         {"data": "G_WT_MT",
                             "className": "text-left",
                         },
+                        {"data": "recpt_date",
+                            "className": "text-left",
+                        },
+                        {"data": "recpt_amount",
+                            "className": "text-left",
+                        }
                     ],
                     'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
                             "<'row'<'col-md-12'tr>>" +

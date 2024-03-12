@@ -157,12 +157,12 @@ class BcTag {
 
     }
 
-    Function moveqty_create_hdr($toLoc, $w_c, $doc_type, $do_num, $boatList,$destination,$ActWeight) {
+    Function moveqty_create_hdr($toLoc, $w_c, $doc_type, $do_num, $boatList,$destination,$ActWeight,$newdo_num) {
         if ($doc_type == "") {
             $doc_type == "Internal";
         }
         $cSql = new SqlSrv();
-        $query = "exec STS_QtyMoveLotLocation_GEN_HEADER @loc = '$toLoc' , @w_c= '$w_c' ,@doc_type= '$doc_type' , @do_num='$do_num',@boatList='$boatList',@destination = '$destination',@ActWeight = '$ActWeight'  ";
+        $query = "exec STS_QtyMoveLotLocation_GEN_HEADER_NEW @loc = '$toLoc' , @w_c= '$w_c' ,@doc_type= '$doc_type' , @do_num='$do_num',@boatList='$boatList',@destination = '$destination',@ActWeight = '$ActWeight' ,@newDocumentNumber ='$newdo_num'  ";
         $cSql->SqlQuery($this->StrConn, $query);
 
         $query2 = " select top (1)* FROM STS_qty_move_hrd order by id desc";

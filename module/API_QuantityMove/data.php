@@ -68,7 +68,7 @@ if ($load == "moveqty_create_hdr") {
     (isset($do_num)) ? $do_num = $do_num : $do_num = "";
     (isset($boatList)) ? $boatList = $boatList : $boatList = "";
 
-    $moveqty_create_hdr = $CallModelObj->moveqty_create_hdr($toLoc, $w_c, $doc_type, $do_num, $boatList, $destination, $ActWeight);
+    $moveqty_create_hdr = $CallModelObj->moveqty_create_hdr($toLoc, $w_c, $doc_type, $do_num, $boatList, $destination, $ActWeight, $newdo_num);
     echo json_encode($moveqty_create_hdr);
 }
 
