@@ -64,9 +64,10 @@
             <tr>
                 <th class="bg-gray">inv_num</th>
                 <th>temp</th>
-                <th>amount_FOB</th>
-                <th>sales_term</th> 
+                <th>amount_FOB</th> 
+                <th>sales_term</th>
                 <th>BL_date</th>
+                <th>ETA</th>
                 <!-- <th>ship_date</th> -->
                 <th>entry_num1</th>
                 <th>entry_num2</th>
@@ -75,7 +76,9 @@
                 <th>port_code1</th>
                 <th>port_code2</th>
                 <th>ENTDATEU1</th>
+                <th>ENTVALUE1</th>
                 <th>ENTDATEU2</th>
+                <th>ENTVALUE2</th>
                 <th>BL_num1</th>
                 <th>BL_num2</th>
                 <th>importer1</th>
@@ -84,8 +87,6 @@
                 <th>AD_rate2</th>
                 <th>AD_amount1</th>
                 <th>AD_amount2</th>
-                <th>ENTVALUE1</th>
-                <th>ENTVALUE2</th>
             </tr>
         </thead>
     </table>
@@ -107,6 +108,7 @@
                 <th>amount_FOB</th> 
                 <th>sales_term</th>
                 <th>BL_date</th>
+                <th>ETA</th>
                 <!-- <th>ship_date</th> -->
                 <th>entry_num1</th>
                 <th>entry_num2</th>
@@ -115,7 +117,9 @@
                 <th>port_code1</th>
                 <th>port_code2</th>
                 <th>ENTDATEU1</th>
+                <th>ENTVALUE1</th>
                 <th>ENTDATEU2</th>
+                <th>ENTVALUE2</th>
                 <th>BL_num1</th>
                 <th>BL_num2</th>
                 <th>importer1</th>
@@ -124,8 +128,6 @@
                 <th>AD_rate2</th>
                 <th>AD_amount1</th>
                 <th>AD_amount2</th>
-                <th>ENTVALUE1</th>
-                <th>ENTVALUE2</th>
             </tr>
         </thead>
     </table>
@@ -261,6 +263,18 @@
                                 return ret;
                             }
                         },
+                        {"data": {ENTVALUE2: "ETA", inv_num: "inv_num"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'ENTVALUE2';
+                                let valdata = data.ENTVALUE2;
+                                let iddata = `${col_name}_${data.inv_num}`;
+                                let inv_num = data.inv_num;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="Insert('${iddata}','${col_name}','${inv_num}');" value='${(valdata)}' />`;
+                                return ret;
+                            }
+                        },
                         // {"data": {ship_date: "ship_date", inv_num: "inv_num"},
                         //     "className": "text-left",
                         //     "render": function (data, type, row, meta) {
@@ -357,11 +371,35 @@
                                 return ret;
                             }
                         },
+                        {"data": {ENTVALUE1: "ENTVALUE1", inv_num: "inv_num"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'ENTVALUE1';
+                                let valdata = data.ENTVALUE1;
+                                let iddata = `${col_name}_${data.inv_num}`;
+                                let inv_num = data.inv_num;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="Insert('${iddata}','${col_name}','${inv_num}');" value='${(valdata)}' />`;
+                                return ret;
+                            }
+                        },
                         {"data": {ENTDATEU2: "ENTDATEU2", inv_num: "inv_num"},
                             "className": "text-left",
                             "render": function (data, type, row, meta) {
                                 let col_name = 'ENTDATEU2';
                                 let valdata = data.ENTDATEU2;
+                                let iddata = `${col_name}_${data.inv_num}`;
+                                let inv_num = data.inv_num;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="Insert('${iddata}','${col_name}','${inv_num}');" value='${(valdata)}' />`;
+                                return ret;
+                            }
+                        },
+                        {"data": {ENTVALUE2: "ENTVALUE2", inv_num: "inv_num"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'ENTVALUE2';
+                                let valdata = data.ENTVALUE2;
                                 let iddata = `${col_name}_${data.inv_num}`;
                                 let inv_num = data.inv_num;
                                 ((valdata == null) ? valdata = "" : valdata = valdata)
@@ -458,30 +496,6 @@
                             "render": function (data, type, row, meta) {
                                 let col_name = 'AD_amount2';
                                 let valdata = data.AD_amount2;
-                                let iddata = `${col_name}_${data.inv_num}`;
-                                let inv_num = data.inv_num;
-                                ((valdata == null) ? valdata = "" : valdata = valdata)
-                                let ret = `<span hidden>${(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="Insert('${iddata}','${col_name}','${inv_num}');" value='${(valdata)}' />`;
-                                return ret;
-                            }
-                        },
-                        {"data": {ENTVALUE1: "ENTVALUE1", inv_num: "inv_num"},
-                            "className": "text-left",
-                            "render": function (data, type, row, meta) {
-                                let col_name = 'ENTVALUE1';
-                                let valdata = data.ENTVALUE1;
-                                let iddata = `${col_name}_${data.inv_num}`;
-                                let inv_num = data.inv_num;
-                                ((valdata == null) ? valdata = "" : valdata = valdata)
-                                let ret = `<span hidden>${(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="Insert('${iddata}','${col_name}','${inv_num}');" value='${(valdata)}' />`;
-                                return ret;
-                            }
-                        },
-                        {"data": {ENTVALUE2: "ENTVALUE2", inv_num: "inv_num"},
-                            "className": "text-left",
-                            "render": function (data, type, row, meta) {
-                                let col_name = 'ENTVALUE2';
-                                let valdata = data.ENTVALUE2;
                                 let iddata = `${col_name}_${data.inv_num}`;
                                 let inv_num = data.inv_num;
                                 ((valdata == null) ? valdata = "" : valdata = valdata)
@@ -589,6 +603,9 @@ function ReportItemSearchHid() {
                         {"data": "BL_date",
                             "className": "text-left",
                         },
+                        {"data": "ETA",
+                            "className": "text-left",
+                        },
                         // {"data": "ship_date",
                         //     "className": "text-left",
                         // },
@@ -613,7 +630,13 @@ function ReportItemSearchHid() {
                         {"data": "ENTDATEU1",
                             "className": "text-left",
                         },
+                        {"data": "ENTVALUE1",
+                            "className": "text-left",
+                        },
                         {"data": "ENTDATEU2",
+                            "className": "text-left",
+                        },
+                        {"data": "ENTVALUE2",
                             "className": "text-left",
                         },
                         {"data": "BL_num1",
@@ -638,12 +661,6 @@ function ReportItemSearchHid() {
                             "className": "text-left",
                         },
                         {"data": "AD_amount2",
-                            "className": "text-left",
-                        },
-                        {"data": "ENTVALUE1",
-                            "className": "text-left",
-                        },
-                        {"data": "ENTVALUE2",
                             "className": "text-left",
                         },
                     ],

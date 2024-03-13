@@ -1376,7 +1376,8 @@ where left(customer_mst.cust_num,2) = 'EX' group by custaddr_mst.cust_num,custad
 		STS_AD_Entry_Summary.AD_amount1,
 		STS_AD_Entry_Summary.AD_amount2,
 		STS_AD_Entry_Summary.ENTVALUE1,
-		STS_AD_Entry_Summary.ENTVALUE2
+		STS_AD_Entry_Summary.ENTVALUE2,
+        STS_AD_Entry_Summary.ETA
         from inv_hdr_mst
 		left join STS_AD_Entry_Summary
 		ON inv_hdr_mst.inv_num = STS_AD_Entry_Summary.inv_num
