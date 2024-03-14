@@ -263,11 +263,11 @@
                                 return ret;
                             }
                         },
-                        {"data": {ENTVALUE2: "ETA", inv_num: "inv_num"},
+                        {"data": {ETA: "ETA", inv_num: "inv_num"},
                             "className": "text-left",
                             "render": function (data, type, row, meta) {
-                                let col_name = 'ENTVALUE2';
-                                let valdata = data.ENTVALUE2;
+                                let col_name = 'ETA';
+                                let valdata = data.ETA;
                                 let iddata = `${col_name}_${data.inv_num}`;
                                 let inv_num = data.inv_num;
                                 ((valdata == null) ? valdata = "" : valdata = valdata)
