@@ -93,12 +93,13 @@ class DeliveryOrder {
         ,ref_line as co_line , co_mst.cust_po ,co_mst.Uf_StsPO_refNo as STS_PO 
         ,coitem_mst.item, item_mst.Uf_typeEnd ,item_mst.Uf_NPS , item_mst.Uf_Grade 
         ,item_mst.Uf_Schedule, item_mst.Uf_length ,item_mst.Uf_spec ,mltk.lot 
-        ,sts_no
-        ,qty_sts_no 
+        ,lot_mst.uf_lot_sts_no as sts_no
+        ,lot_mst.uf_qty_sts_no as qty_sts_no 
         ,cosh.qty_shipped
-        , sts_no2 ,qty_sts_no2,sts_no3 ,qty_sts_no3 
-
-  ,mv_bc_tag.id
+        , lot_mst.uf_sts_no2 as sts_no2 
+  , lot_mst.uf_qty_sts_no2 as qty_sts_no2
+  ,lot_mst.uf_sts_no3 as sts_no3 
+  ,lot_mst.uf_qty_sts_no3 as qty_sts_no3 
 
         from do_seq_mst LEFT JOIN co_mst ON co_mst.co_num = do_seq_mst.ref_num 
         LEFT JOIN coitem_mst on do_seq_mst.ref_num = coitem_mst.co_num 
@@ -112,12 +113,11 @@ class DeliveryOrder {
          and cosh.co_num = do_seq_mst.ref_num and cosh.co_line = do_seq_mst.ref_line and cosh.date_seq = do_seq_mst.date_seq
          and cosh.ship_date = do_seq_mst.ship_date
         
-   
-  left join mv_bc_tag on mltk.lot = mv_bc_tag.lot and mltk.item = mv_bc_tag.item and abs(mltk.qty) = abs(mv_bc_tag.qty1)  and mv_bc_tag.active = 1 and mv_bc_tag.ship_stat = 1
-    and cosh.qty_shipped = mv_bc_tag.qty1
+        left join lot_mst on mltk.lot = lot_mst.lot 
 
-        LEFT JOIN sts_remark_line_report on sts_remark_line_report.lot = mv_bc_tag.lot
-         where 1=1 ";
+        LEFT JOIN sts_remark_line_report on sts_remark_line_report.lot = lot_mst.lot 
+         where 1=1
+     and cosh.qty_shipped <> 0 ";
 //          select
 //          top 20000 
 //          isnull(sts_remark_line_report.remark,'') as remark
