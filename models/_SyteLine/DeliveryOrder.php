@@ -77,7 +77,7 @@ class DeliveryOrder {
         $Searchsts_no = "";
         $Searchcust_po = "";
         if ($do_num != "") {
-            $Searchdo_num = "do_seq_mst.do_num = '$do_num' ";
+            $Searchdo_num = "and do_seq_mst.do_num  = '$do_num' ";
         }
         if ($sts_no != "") {
             $Searchsts_no = "and sts_no like '%$sts_no%' ";
