@@ -157,7 +157,8 @@ class DeliveryOrder {
 //           where 1=1 --and cosh.qty_shipped = mv_bc_tag.qty1 and mv_bc_tag.ship_stat = 10
 
         $query = $query . $Searchdo_num . $Searchsts_no . $Searchcust_po;
-        $query = $query . " and  mv_bc_tag.receipt = 1 order by lot ";
+        $query = $query . "  order by lot ";
+        //and  mv_bc_tag.receipt = 1
 
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
