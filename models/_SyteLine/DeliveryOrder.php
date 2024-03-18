@@ -77,7 +77,7 @@ class DeliveryOrder {
         $Searchsts_no = "";
         $Searchcust_po = "";
         if ($do_num != "") {
-            $Searchdo_num = "and do_seq_mst.do_num = '$do_num' ";
+            $Searchdo_num = "do_seq_mst.do_num = '$do_num' ";
         }
         if ($sts_no != "") {
             $Searchsts_no = "and sts_no like '%$sts_no%' ";
@@ -112,12 +112,12 @@ class DeliveryOrder {
          and cosh.co_num = do_seq_mst.ref_num and cosh.co_line = do_seq_mst.ref_line and cosh.date_seq = do_seq_mst.date_seq
          and cosh.ship_date = do_seq_mst.ship_date
         
-
+   
   left join mv_bc_tag on mltk.lot = mv_bc_tag.lot and mltk.item = mv_bc_tag.item and abs(mltk.qty) = abs(mv_bc_tag.qty1)  and mv_bc_tag.active = 1 and mv_bc_tag.ship_stat = 1
     and cosh.qty_shipped = mv_bc_tag.qty1
 
         LEFT JOIN sts_remark_line_report on sts_remark_line_report.lot = mv_bc_tag.lot
-         where 1=1  ";
+         where 1=1";
 //          select
 //          top 20000 
 //          isnull(sts_remark_line_report.remark,'') as remark
