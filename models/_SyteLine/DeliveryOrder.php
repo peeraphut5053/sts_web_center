@@ -117,7 +117,7 @@ class DeliveryOrder {
     and cosh.qty_shipped = mv_bc_tag.qty1
 
         LEFT JOIN sts_remark_line_report on sts_remark_line_report.lot = mv_bc_tag.lot
-         where 1=1";
+         where 1=1 ";
 //          select
 //          top 20000 
 //          isnull(sts_remark_line_report.remark,'') as remark
