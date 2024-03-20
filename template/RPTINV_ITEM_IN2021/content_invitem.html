@@ -22,13 +22,13 @@
         <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3" style="padding-left:0px;">   
             <div class="input-group">
                 <div class="input-group-addon">From date</div>
-                <input value="2019-10-01" type="text" autocomplete="off"  class="form-control txt-filter" id="txtFromDate_Q">
+                <input value="" type="text" autocomplete="off"  class="form-control txt-filter" id="txtFromDate_Q">
             </div>
         </div>
         <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3">   
             <div class="input-group">
                 <div class="input-group-addon">To date</div>
-                <input value="2019-10-31" type="text" autocomplete="off"  class="form-control txt-filter" id="txtToDate_Q">
+                <input value="" type="text" autocomplete="off"  class="form-control txt-filter" id="txtToDate_Q">
             </div>
         </div>
         <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3">   
@@ -69,6 +69,7 @@
                 <th>Price/KG</th>
                 <th>Price/PCS</th>
                 <th>AMT</th>
+                <th>total_INVamount</th>
                 <!-- <th>VAT</th>    
                 <th>TOTAL</th>   -->
                 <th>recpt_date</th>  
@@ -528,6 +529,19 @@
 													
 										
                                             ret = "<span style='color:red;'>" + formatMoney(data)+ "</span>";
+                                        }
+                                        return ret;
+                                    }
+                                }, 
+                                {
+                                    "data": "total_INVamount",
+                                    "className": "text-right",
+                                    "render": function (data, type, row) {
+                                          var ret = data;
+                                           if  (row["inv_num"].substring(0, 2) == "CN") {
+											
+										
+                                            ret = "<span style='color:red;'>" + data + "</span>";
                                         }
                                         return ret;
                                     }

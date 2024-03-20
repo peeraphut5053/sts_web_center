@@ -493,16 +493,16 @@ class Invoice {
                               FROM artran_mst arsub
                                  WHERE arsub.inv_num = V_WebApp_InvItem_IN_noVAT.inv_num
                                    AND arsub.[type] = 'P'
-                                 GROUP BY inv_num,recpt_date,inv_seq
-                                 ORDER BY convert(date,recpt_date) 
+                                 GROUP BY inv_num,inv_seq,recpt_date,amount
+                                 ORDER BY inv_seq--,convert(date,recpt_date),amount 
                                  FOR XML PATH ('')) , 1, 1, ''), '')
        , recpt_amount =   isnull(stuff(
-                                (SELECT ',' + convert(varchar,amount)
+                                (SELECT ',' + convert(varchar,convert(decimal(20,3),amount))
                               FROM artran_mst arsub
                                  WHERE arsub.inv_num = V_WebApp_InvItem_IN_noVAT.inv_num
                                    AND arsub.[type] = 'P'
-                                 GROUP BY inv_num,convert(date,recpt_date),amount,inv_seq
-                                 ORDER BY convert(date,recpt_date) 
+                                 GROUP BY inv_num,inv_seq,convert(date,recpt_date),amount
+                                 ORDER BY inv_seq--,convert(date,recpt_date),amount
                                  FOR XML PATH ('')) , 1, 1, ''), '') 
  FROM V_WebApp_InvItem_IN_noVAT
  where 1=1";
