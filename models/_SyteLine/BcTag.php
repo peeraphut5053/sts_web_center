@@ -387,5 +387,44 @@ class BcTag {
         array_splice($rs, count($rs) - 1, 1);
         return $rs;
     }
+
+     // BoatNoteOnly 14/3/2024 bymay
+
+     Function STS_qty_move_hrd_ship() {
+        $cSql = new SqlSrv();
+        $query = "select top 3500 doc_num, loc, create_date, doc_type, destination FROM STS_qty_move_hrd where doc_type = 'ship' order by doc_num desc ";
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+    Function moveqty_create_hdr_BoatNoteOnly($toLoc, $w_c, $doc_type, $do_num, $boatList,$destination,$ActWeight) {
+        if ($doc_type == "") {
+            $doc_type == "Internal";
+        }
+        $cSql = new SqlSrv();
+        $query = "exec STS_QtyMoveLotLocation_GEN_HEADER @loc = '$toLoc' , @w_c= '$w_c' ,@doc_type= '$doc_type' , @do_num='$do_num',@boatList='$boatList',@destination = '$destination',@ActWeight = '$ActWeight' ";
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        return $rs[0];
+    }
+
+    
+    Function moveqty_create_line_BoatNoteOnly($tagnum, $toLoc, $boatPosition, $docline) {
+        $query2 = " select top (1)* FROM STS_qty_move_hrd order by id desc";
+        $cSql2 = new SqlSrv();
+        $rs2 = $cSql2->SqlQuery($this->StrConn, $query2);
+
+        $query = "EXEC [dbo].[STS_QtyMoveLotLocation_BoatNote]
+		@docnum = N'".$rs2[1]["doc_num"]."',
+		@docline = N'$docline',
+		@tagNum = N'$tagnum',
+		@toLoc = N'$toLoc',
+		@boatPosition = N'$boatPosition'";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        return $rs[0];
+    }
 	
 }
+
+

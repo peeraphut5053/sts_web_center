@@ -137,3 +137,37 @@ if ($load == "editActualWeight") {
     echo json_encode($editActualWeight);
 }
 
+// BoatNoteOnly 14/3/2024 bymay
+
+if ($load == "STS_qty_move_hrd_ship") {
+    $STS_qty_move_hrd_ship = $CallModelObj->STS_qty_move_hrd_ship();
+    echo json_encode($STS_qty_move_hrd_ship);
+}
+
+if ($load == "moveqty_create_hdr_BoatNoteOnly") {
+    (isset($w_c)) ? $w_c = $w_c : $w_c = "";
+    (isset($destination)) ? $destination = $destination : $destination = "";
+	(isset($ActWeight)) ? $ActWeight = $ActWeight : $ActWeight = 0;
+
+    //
+    (isset($doc_type)) ? $doc_type = $doc_type : $doc_type = "Internal";
+    (isset($do_num)) ? $do_num = $do_num : $do_num = "";
+    (isset($boatList)) ? $boatList = $boatList : $boatList = "";
+
+    $moveqty_create_hdr_BoatNoteOnly = $CallModelObj->moveqty_create_hdr_BoatNoteOnly($toLoc, $w_c, $doc_type, $do_num, $boatList, $destination, $ActWeight);
+    echo json_encode($moveqty_create_hdr_BoatNoteOnly);
+}
+
+if ($load == "moveqty_create_line_BoatNoteOnly") {
+    $tagnum = $_GET["tagnum"] ;
+    $boatPosition = $_GET["boatPosition"] ;
+    $toLoc = $_GET["toLoc"] ;
+
+    for ($i=0;$i<count($tagnum);$i++){
+        $docline = $i+1;
+        $moveqty_create_line_BoatNoteOnly[$i] = new BcTag();
+        $moveqty_create_line_BoatNoteOnly[$i]->setConn($ConnSL);
+        $moveqty_create_line_BoatNoteOnly[$i] = $CallModelObj->moveqty_create_line_BoatNoteOnly($tagnum[$i], $toLoc, $boatPosition[$i], $docline);
+        echo json_encode($i);
+    }
+}
