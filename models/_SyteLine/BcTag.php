@@ -388,9 +388,9 @@ class BcTag {
         return $rs;
     }
 
-     // BoatNoteOnly 14/3/2024 bymay
+    // BoatNoteOnly 14/3/2024 bymay
 
-     Function STS_qty_move_hrd_ship() {
+    Function STS_qty_move_hrd_ship() {
         $cSql = new SqlSrv();
         $query = "select top 3500 doc_num, loc, create_date, doc_type, destination FROM STS_qty_move_hrd where doc_type = 'ship' order by doc_num desc ";
         $rs = $cSql->SqlQuery($this->StrConn, $query);
