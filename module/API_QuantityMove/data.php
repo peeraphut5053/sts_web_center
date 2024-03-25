@@ -53,28 +53,28 @@ if ($load == "SelectDOList") {
     echo json_encode($STS_qty_move_line);
 }
 
-if ($load == "STS_QtyMoveLotLocation_GEN_Doc_num"){
-    $GEN_Doc_num = $CallModelObj->GEN_Doc_num();
-    echo json_encode($GEN_Doc_num);
-}
+// if ($load == "STS_QtyMoveLotLocation_GEN_Doc_num"){
+//     $GEN_Doc_num = $CallModelObj->GEN_Doc_num();
+//     echo json_encode($GEN_Doc_num);
+// }
 
-if ($load == "moveqty_create_hdr") {
-    (isset($w_c)) ? $w_c = $w_c : $w_c = "";
-    (isset($destination)) ? $destination = $destination : $destination = "";
-	(isset($ActWeight)) ? $ActWeight = $ActWeight : $ActWeight = 0;
+// if ($load == "moveqty_create_hdr") {
+//     (isset($w_c)) ? $w_c = $w_c : $w_c = "";
+//     (isset($destination)) ? $destination = $destination : $destination = "";
+// 	(isset($ActWeight)) ? $ActWeight = $ActWeight : $ActWeight = 0;
 
-    //
-    (isset($doc_type)) ? $doc_type = $doc_type : $doc_type = "Internal";
-    (isset($do_num)) ? $do_num = $do_num : $do_num = "";
-    (isset($boatList)) ? $boatList = $boatList : $boatList = "";
+//     //
+//     (isset($doc_type)) ? $doc_type = $doc_type : $doc_type = "Internal";
+//     (isset($do_num)) ? $do_num = $do_num : $do_num = "";
+//     (isset($boatList)) ? $boatList = $boatList : $boatList = "";
 
-    $moveqty_create_hdr = $CallModelObj->moveqty_create_hdr($toLoc, $w_c, $doc_type, $do_num, $boatList, $destination, $ActWeight, $newdo_num);
-    echo json_encode($moveqty_create_hdr);
-}
+//     $moveqty_create_hdr = $CallModelObj->moveqty_create_hdr($toLoc, $w_c, $doc_type, $do_num, $boatList, $destination, $ActWeight, $newdo_num);
+//     echo json_encode($moveqty_create_hdr);
+// }
 
-if ($load == "moveqty_create_line") {
-    $CallModelObj->moveqty_create_line($docnum, $docline, $tagnum, $toLoc, $boatPosition);
-}
+// if ($load == "moveqty_create_line") {
+//     $CallModelObj->moveqty_create_line($docnum, $docline, $tagnum, $toLoc, $boatPosition);
+// }
 
 if ($load == "checkItemLotLoc") {
     $checkItemLotLoc = $CallModelObj->checkItemLotLoc($loc);

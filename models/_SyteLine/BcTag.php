@@ -144,39 +144,39 @@ class BcTag {
         //return $rs;
     }
 
-    Function GEN_Doc_num() {
-        $cSql = new SqlSrv();
-        $query = "EXEC [dbo].[STS_QtyMoveLotLocation_GEN_Doc_num] 
-                  @newDocumentNumber = OUTPUT";
-        $cSql->SqlQuery($this->StrConn, $query);
+    // Function GEN_Doc_num() {
+    //     $cSql = new SqlSrv();
+    //     $query = "EXEC [dbo].[STS_QtyMoveLotLocation_GEN_Doc_num] 
+    //               @newDocumentNumber = OUTPUT";
+    //     $cSql->SqlQuery($this->StrConn, $query);
 
-        $query2 = "select top (1) doc_num FROM STS_qty_move_doc_num order by id desc";
-        $rs2 = $cSql->SqlQuery($this->StrConn, $query2);
-        array_splice($rs2, count($rs2) - 1, 1);
-        return $rs2[0];
+    //     $query2 = "select top (1) doc_num FROM STS_qty_move_doc_num order by id desc";
+    //     $rs2 = $cSql->SqlQuery($this->StrConn, $query2);
+    //     array_splice($rs2, count($rs2) - 1, 1);
+    //     return $rs2[0];
 
-    }
+    // }
 
-    Function moveqty_create_hdr($toLoc, $w_c, $doc_type, $do_num, $boatList,$destination,$ActWeight,$newdo_num) {
-        if ($doc_type == "") {
-            $doc_type == "Internal";
-        }
-        $cSql = new SqlSrv();
-        $query = "exec STS_QtyMoveLotLocation_GEN_HEADER_NEW @loc = '$toLoc' , @w_c= '$w_c' ,@doc_type= '$doc_type' , @do_num='$do_num',@boatList='$boatList',@destination = '$destination',@ActWeight = '$ActWeight' ,@newDocumentNumber ='$newdo_num'  ";
-        $cSql->SqlQuery($this->StrConn, $query);
+    // Function moveqty_create_hdr($toLoc, $w_c, $doc_type, $do_num, $boatList,$destination,$ActWeight,$newdo_num) {
+    //     if ($doc_type == "") {
+    //         $doc_type == "Internal";
+    //     }
+    //     $cSql = new SqlSrv();
+    //     $query = "exec STS_QtyMoveLotLocation_GEN_HEADER_NEW @loc = '$toLoc' , @w_c= '$w_c' ,@doc_type= '$doc_type' , @do_num='$do_num',@boatList='$boatList',@destination = '$destination',@ActWeight = '$ActWeight' ,@newDocumentNumber ='$newdo_num'  ";
+    //     $cSql->SqlQuery($this->StrConn, $query);
 
-        $query2 = " select top (1)* FROM STS_qty_move_hrd order by id desc";
-        $rs2 = $cSql->SqlQuery($this->StrConn, $query2);
-        array_splice($rs2, count($rs2) - 1, 1);
-        return $rs2[0];
-    }
+    //     $query2 = " select top (1)* FROM STS_qty_move_hrd order by id desc";
+    //     $rs2 = $cSql->SqlQuery($this->StrConn, $query2);
+    //     array_splice($rs2, count($rs2) - 1, 1);
+    //     return $rs2[0];
+    // }
 
-    Function moveqty_create_line($docnum, $docline, $tagnum, $toLoc, $boatPosition) {
-        $cSql = new SqlSrv();
-        $query = "exec STS_QtyMoveLotLocation @docnum=N'$docnum', @docline=N'$docline', @tagNum = N'$tagnum' ,@toLoc = N'$toLoc', @boatPosition =  '$boatPosition' ";
-        $rs = $cSql->SqlQuery($this->StrConn, $query);
-        return $rs[0];
-    }
+    // Function moveqty_create_line($docnum, $docline, $tagnum, $toLoc, $boatPosition) {
+    //     $cSql = new SqlSrv();
+    //     $query = "exec STS_QtyMoveLotLocation @docnum=N'$docnum', @docline=N'$docline', @tagNum = N'$tagnum' ,@toLoc = N'$toLoc', @boatPosition =  '$boatPosition' ";
+    //     $rs = $cSql->SqlQuery($this->StrConn, $query);
+    //     return $rs[0];
+    // }
 
     Function checkTagImgDuplicate($tag_id) {
         $cSql = new SqlSrv();
