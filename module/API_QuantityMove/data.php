@@ -179,3 +179,16 @@ if ($load == "STS_qty_move_hrd_Truck") {
         $STS_qty_move_hrd_ship = $CallModelObj->STS_qty_move_hrd_Truck();
         echo json_encode($STS_qty_move_hrd_ship);
 }
+
+if ($load == "moveqty_create_line_Truck") {
+    $tagnum = $_GET["tagnum"] ;
+    $toLoc = $_GET["toLoc"] ;
+
+    for ($i=0;$i<count($tagnum);$i++){
+        $docline = $i+1;
+        $moveqty_create_line_Truck[$i] = new BcTag();
+        $moveqty_create_line_Truck[$i]->setConn($ConnSL);
+        $moveqty_create_line_Truck[$i] = $CallModelObj->moveqty_create_line_Truck($tagnum[$i], $toLoc, $docline);
+        echo json_encode($i);
+    }
+}

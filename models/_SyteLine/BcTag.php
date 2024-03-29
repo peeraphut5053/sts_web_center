@@ -432,6 +432,21 @@ class BcTag {
         array_splice($rs, count($rs) - 1, 1);
         return $rs;
     }
+
+    Function moveqty_create_line_Truck($tagnum, $toLoc, $docline) {
+        $query2 = " select top (1)* FROM STS_qty_move_hrd order by id desc";
+        $cSql2 = new SqlSrv();
+        $rs2 = $cSql2->SqlQuery($this->StrConn, $query2);
+
+        $query = "EXEC [dbo].[STS_QtyMoveLotLocation_BoatNote]
+		@docnum = N'".$rs2[1]["doc_num"]."',
+		@docline = N'$docline',
+		@tagNum = N'$tagnum',
+		@toLoc = N'$toLoc'";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        return $rs[0];
+    }
 	
 }
 
