@@ -997,6 +997,13 @@ class JOBORDER {
         return $rs0;
     }
     
+    function locationPTR() {
+        $query = " select loc ,description FROM location_mst where loc like '%PTR%'     ";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
     
 
     function dataMatl($txtFromDate, $txtToDate, $txtItem, $txtref_num, $txtw_c) {

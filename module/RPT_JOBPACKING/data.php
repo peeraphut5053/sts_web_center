@@ -240,6 +240,15 @@ if ($load == "locationCL") {
     echo json_encode($Trans);
 }
 
+if ($load == "locationPTR") {
+    $CallModel = new CallModel();
+    $CallModel->SyteLine_Models();
+    $Trans = new JobOrder();
+    $Trans->setConn($ConnSL);
+    $Trans = $Trans->locationPTR();
+    echo json_encode($Trans);
+}
+
 if ($load == "dataMatl") {
     $CallModel = new CallModel();
     $CallModel->SyteLine_Models();
