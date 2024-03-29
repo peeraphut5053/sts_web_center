@@ -172,3 +172,10 @@ if ($load == "moveqty_create_line_BoatNoteOnly") {
         echo json_encode($i);
     }
 }
+
+// TruckNote 29/3/2024 bymay
+
+if ($load == "STS_qty_move_hrd_Truck") {
+        $STS_qty_move_hrd_ship = $CallModelObj->STS_qty_move_hrd_Truck();
+        echo json_encode($STS_qty_move_hrd_ship);
+}

@@ -424,6 +424,14 @@ class BcTag {
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         return $rs[0];
     }
+
+    Function STS_qty_move_hrd_Truck() {
+        $cSql = new SqlSrv();
+        $query = "select top 3500 doc_num, loc, create_date, doc_type, destination FROM STS_qty_move_hrd where doc_type = 'Truck' order by doc_num desc ";
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
 	
 }
 
