@@ -192,3 +192,8 @@ if ($load == "moveqty_create_line_Truck") {
         echo json_encode($i);
     }
 }
+
+if ($load == "locEdit_Truck") {
+    $locEdit_Truck = $CallModelObj->locEdit_Truck($loc, $doc_num);
+    echo json_encode($locEdit_Truck);
+}
