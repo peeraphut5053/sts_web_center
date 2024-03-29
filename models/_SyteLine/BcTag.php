@@ -450,18 +450,20 @@ class BcTag {
 
     Function locEdit_Truck($loc, $doc_num) {
        
-        $cSql = new SqlSrv();
+       
         $query = "UPDATE STS_qty_move_line
         SET toloc = '$loc'
         WHERE doc_num = '$doc_num'; ";
+        $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
         return $rs;
         
-        $cSqlhrd = new SqlSrv();
+        
         $queryhrd = "UPDATE STS_qty_move_hrd
         SET loc = '$loc'
         WHERE doc_num = '$doc_num'; ";
+        $cSqlhrd = new SqlSrv();
         $rshrd = $cSqlhrd->SqlQuery($this->StrConn, $queryhrd);
     }
 	
