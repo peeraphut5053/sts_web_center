@@ -112,6 +112,8 @@
                 <th>G_WT_MT</th>
                 <th>recpt_date</th>
                 <th>recpt_amount</th>
+                <th>Uf_Weight_FT</th>
+                <th>Uf_Weight_metre</th>
             </tr>
         </thead>
     </table>
@@ -280,7 +282,13 @@ function ReportItemSearch() {
                         },
                         {"data": "recpt_amount",
                             "className": "text-left",
-                        }
+                        },
+                        {"data": "Uf_Weight_FT",
+                            "className": "text-left",
+                        },
+                        {"data": "Uf_Weight_metre",
+                            "className": "text-left",
+                        },
                     ],
                     'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
                             "<'row'<'col-md-12'tr>>" +
