@@ -472,8 +472,9 @@ class BcTag {
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
-    }
         return $rs;
+    }
+       
     
     }
 	
