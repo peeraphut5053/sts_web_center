@@ -458,6 +458,8 @@ class BcTag {
     }
 
     Function locEdit_Truck($loc, $doc_num) {
+
+        if ($loc != ''){
         $queryhrd = "UPDATE STS_qty_move_hrd
         SET loc = '$loc'
         WHERE doc_num = '$doc_num'; ";
@@ -470,7 +472,9 @@ class BcTag {
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
+    }
         return $rs;
+    
     }
 	
 }
