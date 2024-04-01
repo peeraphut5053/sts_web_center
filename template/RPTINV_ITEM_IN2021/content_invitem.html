@@ -62,6 +62,8 @@
                 <th>Item</th>  
                 <th>Description</th>  
                 <th>Group</th>  
+                <th>uf_weight_FT</th>
+                <th>uf_weight_metre</th>
                 <th>Unit Weight</th>
                 <th>U_M</th>
                 <th>QTY(PCS)</th>
@@ -431,6 +433,26 @@
                                 },
                                 {
                                     "data": "group_final",
+                                    "render": function (data, type, row) {
+                                        var ret = data;
+                                        if (row["inv_num"].substring(0, 2) == "CN") {
+                                            ret = "<span style='color:red;'>" + data + "</span>";
+                                        }
+                                        return ret;
+                                    }
+                                },
+                                {
+                                    "data": "uf_weight_FT",
+                                    "render": function (data, type, row) {
+                                        var ret = data;
+                                        if (row["inv_num"].substring(0, 2) == "CN") {
+                                            ret = "<span style='color:red;'>" + data + "</span>";
+                                        }
+                                        return ret;
+                                    }
+                                },
+                                {
+                                    "data": "uf_weight_metre",
                                     "render": function (data, type, row) {
                                         var ret = data;
                                         if (row["inv_num"].substring(0, 2) == "CN") {
