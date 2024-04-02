@@ -76,48 +76,56 @@ class DeliveryOrder {
         $Searchdo_num = "";
         $Searchsts_no = "";
         $Searchcust_po = "";
-        if ($do_num != "") {
-            $Searchdo_num = "and do_seq_mst.do_num  = '$do_num' ";
-        }
-        if ($sts_no != "") {
-            $Searchsts_no = "and sts_no like '%$sts_no%' ";
-        }
-        if ($cust_po != "") {
-            $Searchcust_po = "and co_mst.cust_po like '%$cust_po%'";
-        }
-        $query = "select
-        top 20000 
-        isnull(sts_remark_line_report.remark,'') as remark
-        ,do_seq_mst.do_num 
-        , do_seq_mst.do_line ,mltk.loc, do_seq_mst.ref_num as co_num 
-        ,ref_line as co_line , co_mst.cust_po ,co_mst.Uf_StsPO_refNo as STS_PO 
-        ,coitem_mst.item, item_mst.Uf_typeEnd ,item_mst.Uf_NPS , item_mst.Uf_Grade 
-        ,item_mst.Uf_Schedule, item_mst.Uf_length ,item_mst.Uf_spec ,mltk.lot 
-        ,lot_mst.uf_lot_sts_no as sts_no
-        ,lot_mst.uf_qty_sts_no as qty_sts_no 
-        ,cosh.qty_shipped
-        , lot_mst.uf_sts_no2 as sts_no2 
-  , lot_mst.uf_qty_sts_no2 as qty_sts_no2
-  ,lot_mst.uf_sts_no3 as sts_no3 
-  ,lot_mst.uf_qty_sts_no3 as qty_sts_no3 
+        // if ($do_num != "") {
+        //     $Searchdo_num = "and do_seq_mst.do_num  = '$do_num' ";
+        // }
+        // if ($sts_no != "") {
+        //     $Searchsts_no = "and sts_no like '%$sts_no%' ";
+        // }
+        // if ($cust_po != "") {
+        //     $Searchcust_po = "and co_mst.cust_po like '%$cust_po%'";
+        // }
+        $query = " EXEC [dbo].[STS_WebApp_QC_DO_detail]
+                    @do_num = N'$do_num',
+                    @sts_no = '$sts_no',
+                    @cust_po = '$cust_po' ";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+//         "select
+//         top 20000 
+//         isnull(sts_remark_line_report.remark,'') as remark
+//         ,do_seq_mst.do_num 
+//         , do_seq_mst.do_line ,mltk.loc, do_seq_mst.ref_num as co_num 
+//         ,ref_line as co_line , co_mst.cust_po ,co_mst.Uf_StsPO_refNo as STS_PO 
+//         ,coitem_mst.item, item_mst.Uf_typeEnd ,item_mst.Uf_NPS , item_mst.Uf_Grade 
+//         ,item_mst.Uf_Schedule, item_mst.Uf_length ,item_mst.Uf_spec ,mltk.lot 
+//         ,lot_mst.uf_lot_sts_no as sts_no
+//         ,lot_mst.uf_qty_sts_no as qty_sts_no 
+//         ,cosh.qty_shipped
+//         , lot_mst.uf_sts_no2 as sts_no2 
+//   , lot_mst.uf_qty_sts_no2 as qty_sts_no2
+//   ,lot_mst.uf_sts_no3 as sts_no3 
+//   ,lot_mst.uf_qty_sts_no3 as qty_sts_no3 
 
-        from do_seq_mst LEFT JOIN co_mst ON co_mst.co_num = do_seq_mst.ref_num 
-        LEFT JOIN coitem_mst on do_seq_mst.ref_num = coitem_mst.co_num 
-         and do_seq_mst.ref_line = coitem_mst.co_line and do_seq_mst.ref_release = coitem_mst.co_release 
-        LEFT JOIN item_mst on item_mst.item = coitem_mst.item 
-        left join matltrack_mst mltk on mltk.ref_num = do_seq_mst.ref_num AND mltk.ref_line_suf = do_seq_mst.ref_line 
-         AND mltk.ref_release =do_seq_mst.ref_release AND mltk.trans_date = do_seq_mst.ship_date 
-         AND mltk.date_seq = do_seq_mst.date_seq and mltk.qty<0 and mltk.ref_type = 'O' 
+//         from do_seq_mst LEFT JOIN co_mst ON co_mst.co_num = do_seq_mst.ref_num 
+//         LEFT JOIN coitem_mst on do_seq_mst.ref_num = coitem_mst.co_num 
+//          and do_seq_mst.ref_line = coitem_mst.co_line and do_seq_mst.ref_release = coitem_mst.co_release 
+//         LEFT JOIN item_mst on item_mst.item = coitem_mst.item 
+//         left join matltrack_mst mltk on mltk.ref_num = do_seq_mst.ref_num AND mltk.ref_line_suf = do_seq_mst.ref_line 
+//          AND mltk.ref_release =do_seq_mst.ref_release AND mltk.trans_date = do_seq_mst.ship_date 
+//          AND mltk.date_seq = do_seq_mst.date_seq and mltk.qty<0 and mltk.ref_type = 'O' 
         
-        left join co_ship_mst cosh on cosh.do_num = do_seq_mst.do_num and cosh.do_line = do_seq_mst.do_line and cosh.do_seq = do_seq_mst.do_seq
-         and cosh.co_num = do_seq_mst.ref_num and cosh.co_line = do_seq_mst.ref_line and cosh.date_seq = do_seq_mst.date_seq
-         and cosh.ship_date = do_seq_mst.ship_date
+//         left join co_ship_mst cosh on cosh.do_num = do_seq_mst.do_num and cosh.do_line = do_seq_mst.do_line and cosh.do_seq = do_seq_mst.do_seq
+//          and cosh.co_num = do_seq_mst.ref_num and cosh.co_line = do_seq_mst.ref_line and cosh.date_seq = do_seq_mst.date_seq
+//          and cosh.ship_date = do_seq_mst.ship_date
         
-        left join lot_mst on mltk.lot = lot_mst.lot 
+//         left join lot_mst on mltk.lot = lot_mst.lot 
 
-        LEFT JOIN sts_remark_line_report on sts_remark_line_report.lot = lot_mst.lot 
-         where 1=1
-     and cosh.qty_shipped <> 0 ";
+//         LEFT JOIN sts_remark_line_report on sts_remark_line_report.lot = lot_mst.lot 
+//          where 1=1
+//      and cosh.qty_shipped <> 0 ";
 //          select
 //          top 20000 
 //          isnull(sts_remark_line_report.remark,'') as remark
@@ -156,14 +164,9 @@ class DeliveryOrder {
 //          LEFT JOIN sts_remark_line_report on sts_remark_line_report.lot = mv_bc_tag.lot
 //           where 1=1 --and cosh.qty_shipped = mv_bc_tag.qty1 and mv_bc_tag.ship_stat = 10
 
-        $query = $query . $Searchdo_num . $Searchsts_no . $Searchcust_po;
-        $query = $query . "  order by lot ";
+        // $query = $query . $Searchdo_num . $Searchsts_no . $Searchcust_po;
+        // $query = $query . "  order by lot ";
         //and  mv_bc_tag.receipt = 1
-
-        $cSql = new SqlSrv();
-        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
-        array_splice($rs0, count($rs0) - 1, 1);
-        return $rs0;
     }
 
     function GetCarSelect() {
