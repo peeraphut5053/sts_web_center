@@ -76,6 +76,7 @@
                 <th>TOTAL</th>   -->
                 <th>recpt_date</th>  
                 <th>recpt_amount</th>  
+                <th>orig_inv_num</th> 
             </tr>
         </thead>
     </table>
@@ -611,7 +612,18 @@
                                         if (row["inv_num"].substring(0, 2) == "CN") {
                                             ret = "<span style='color:red;'>" + parseFloat(data).toFixed(2) + "</span>";
                                         }
-                                        return data;
+                                        return data; 
+                                    }
+                                },
+                                {
+                                    "data": "orig_inv_num",
+                                    "className": "text-right",
+                                    "render": function (data, type, row) {
+
+                                        if (row["inv_num"].substring(0, 2) == "CN") {
+                                            ret = "<span style='color:red;'>" + parseFloat(data).toFixed(2) + "</span>";
+                                        }
+                                        return data; 
                                     }
                                 }
 
