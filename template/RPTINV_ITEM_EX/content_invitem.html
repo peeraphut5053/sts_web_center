@@ -446,9 +446,9 @@
                                     "data": "PricePerKG",
                                     "className": "text-right",
                                     "render": function (data, type, row) {
-                                        var ret = data;
+                                        var ret = new Intl.NumberFormat("en-US").format(data);
                                         if (row["inv_num"].substring(0, 2) == "CX") {
-                                            ret = "<span style='color:red;'>" + data + "</span>";
+                                            ret = "<span style='color:red;'>" + new Intl.NumberFormat("en-US").format(data) + "</span>";
                                         }
                                         return ret;
                                     }
@@ -457,9 +457,9 @@
                                     "data": "Discount",
                                     "className": "text-right",
                                     "render": function (data, type, row, meta) {
-                                        var ret = data;
+                                        var ret = new Intl.NumberFormat("en-US").format(data);
                                         if (row["inv_num"].substring(0, 2) == "CX") {
-                                            ret = "<span style='color:red;'>" + data + "</span>";
+                                            ret = "<span style='color:red;'>" + new Intl.NumberFormat("en-US").format(data); + "</span>";
                                         }
                                         return ret;
                                     }
