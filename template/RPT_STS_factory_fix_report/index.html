@@ -10,52 +10,21 @@
             <div class="col-lg-3" >   
                 <div class="input-group">
                     <div class="input-group-addon">From date</div>
-                    <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtFromDate">
+                    <input type="text" autocomplete="off"  class="form-control txt-filter" id="TransactionDateStarting">
                 </div>
             </div>
             <div class="col-lg-3">   
                 <div class="input-group">
                     <div class="input-group-addon">To date</div>
-                    <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtToDate">
+                    <input type="text" autocomplete="off"  class="form-control txt-filter" id="TransactionDateEnding">
                 </div>
             </div>
             <div class="col-lg-3">   
                 <div class="input-group">
-                    <div class="input-group-addon">Lot.</div>
-                    <input type="text" class="form-control txt-filter" id="txtLot">
+                    <div class="input-group-addon">unit1</div>
+                    <input type="text" class="form-control txt-filter" id="unit1">
                 </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-3" >   
-                <div class="input-group">
-                    <div class="input-group-addon">Ref num</div>
-                    <input type="text" class="form-control txt-filter" id="txtref_num">
-                </div>
-            </div>
-            <div class="col-lg-3" >   
-                <select class="form-control txt-filter" id="txttrans_type">
-                </select>
-            </div>      
-            <div class="col-lg-3" >
-                <select class="form-control txt-filter" id="txtu_m">
-                </select>
-            </div>
-            
-        </div>
-        <div class="row">
-            <div class="col-lg-3" >   
-                <div class="input-group">
-                    <div class="input-group-addon">location</div>
-                    <input type="text" class="form-control txt-filter" id="location">
-                </div>
-            </div>
-            <div class="col-lg-3" >   
-                <div class="input-group">
-                    <div class="input-group-addon">item</div>
-                    <input type="text" class="form-control txt-filter" id="item">
-                </div>
-            </div>      
             <div class="col-lg-3" >
                 <button id="btnSearch" class="btn btn-info"><i class="fa fa-searh"></i>&nbsp;ค้นหา</button>
             </div>
@@ -101,7 +70,7 @@
 <script type="text/javascript">
 
 
-    $("#txtFromDate , #txtToDate").datepicker({
+    $("#TransactionDateStarting , #TransactionDateEnding").datepicker({
         dateFormat: 'yy-mm-dd',
     });
     $("#btnSearch").click(function () {
@@ -110,7 +79,7 @@
         SearchDataFooterFn(tblReportId, btnSearch, tablecolumsArr, "Slit Report", "ajax");
         RowFooterBuild(tblReportId);
     });
-    $("#txtFromDate,#txtToDate").val(GetToday());
+    $("#TransactionDateStarting,#TransactionDateEnding").val(GetToday());
 
     $(".txt-filter").on("keypress", function (e) {
         if (e.keyCode == 13) {
@@ -120,8 +89,6 @@
     });
 
     var url = "././module/RPT_STS_factory_fix_report/data.php";
-    GetSelectOption("txtu_m", url, "GetUMList", "u_m", "u_m", "U/M");
-    GetSelectOption("txttrans_type", url, "GetTranstypeList", "trans_type", "trans_description", "Trans type");
 
     function footerCallback(api) {
         $(api.column(6).footer()).html("<b>TOTAL</b>");
