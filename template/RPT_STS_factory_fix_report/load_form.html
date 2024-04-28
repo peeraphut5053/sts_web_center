@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Bootstrap Example</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    </head>
+    <body>
+        <div class="container-fluid">
+            <div>
+                <div class="row">
+                    <div class="col-sm-6" >
+                        ref number : {vend_num}
+                    </div>
+                    <div class="col-sm-6" >
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="row">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>ref</th>
+                                <th>po num</th>
+                                <th>vend_name</th>
+                                <th>item</th>
+                                <th>item_name</th>
+                                <th>qty_voucher</th>
+                                <th>item_cost_conv</th>
+                                <th>tot_rec_cost</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {tableDetail}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+<!--                                <th></th>-->
+                                <th style="text-align: right"></th>
+                                <th style="text-align: right">
+<!--                                    <span align="right" id="summary"></span>-->
+                                </th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </body>
+</html>
+<script>
+    var sum = 0;
+    $(".money").each(function () {
+        var value = $(this).text();
+        if (!isNaN(value) && value.length != 0) {
+            sum += parseFloat(value);
+            $("#summary").text(sum);
+        }
+    });
+
+</script>

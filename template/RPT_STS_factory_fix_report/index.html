@@ -1,31 +1,31 @@
 <div class="row">
-    <div class="row quicksearch col-lg-10" >
-        <div class="row" >
+    <div class="row quicksearch col-lg-10">
+        <div class="row">
             <div>
                 <h1>STS_factory_fix_report
                 </h1>
-            </div> 
-        </div> 
+            </div>
+        </div>
         <div class="row col-lg-12">
-            <div class="col-lg-3" >   
+            <div class="col-lg-3">
                 <div class="input-group">
                     <div class="input-group-addon">From date</div>
-                    <input type="text" autocomplete="off"  class="form-control txt-filter" id="TransactionDateStarting">
+                    <input type="text" autocomplete="off" class="form-control txt-filter" id="TransactionDateStarting">
                 </div>
             </div>
-            <div class="col-lg-3">   
+            <div class="col-lg-3">
                 <div class="input-group">
                     <div class="input-group-addon">To date</div>
-                    <input type="text" autocomplete="off"  class="form-control txt-filter" id="TransactionDateEnding">
+                    <input type="text" autocomplete="off" class="form-control txt-filter" id="TransactionDateEnding">
                 </div>
             </div>
-            <div class="col-lg-3">   
+            <div class="col-lg-3">
                 <div class="input-group">
                     <div class="input-group-addon">unit1</div>
                     <input type="text" class="form-control txt-filter" id="unit1">
                 </div>
             </div>
-            <div class="col-lg-3" >
+            <div class="col-lg-3">
                 <button id="btnSearch" class="btn btn-info"><i class="fa fa-searh"></i>&nbsp;ค้นหา</button>
             </div>
         </div>
@@ -46,23 +46,43 @@
         </div>-->
 </div>
 
-<div class="row" id="divReport" >
+
+<div class="row" id="divReport">
     <table class="table table-condensed table-bordered table-striped" id="tblReport" style="width:100%;">
         <thead>
             <tr>
-                <th>Transaction Date</th>
-                <th>Transaction Type</th>
-                <th>Location</th>  
-                <th>Lot</th>
-                <th>Ref Number</th>
-                <th>Item</th>    
-                <th>Description</th>
-                <th>Quantity</th>
-                <th>U/M</th>
-                <th>Date and Time of Transaction</th>
+                <th>Credit</th>
+                <th>Debit</th>
+                <th>acct</th>
+                <th>acct_description</th>
+                <th>acct_unit1</th>
+                <th>date</th>
+                <th>ref</th>
+                <th>trans_num</th>
+                <th>unit1_description</th>
+                <th></th>
             </tr>
         </thead>
     </table>
+
+    <div class="modal" id="DetailModal" >
+        <div class="modal-dialog" style="width: 100%">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <label id="lblModalHead">
+                        <h1>Material Purchase Report Detail</h1>
+                    </label>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div id="modalBody" class="modal-body">
+
+                </div>
+                <div class="modal-footer">
+                </div>
+
+            </div>
+        </div>
+    </div>
 </div>
 
 
@@ -91,14 +111,14 @@
     var url = "././module/RPT_STS_factory_fix_report/data.php";
 
     function footerCallback(api) {
-        $(api.column(6).footer()).html("<b>TOTAL</b>");
-        ColumnSumVal(7, api)
+        // $(api.column(6).footer()).html("<b>TOTAL</b>");
+        // ColumnSumVal(1, api)
     }
 
     tablecolumsArr = [
         {
             "width": "120px",
-            "data": "trans_date.date",
+            "data": "Credit",
             "className": "text-right",
             "render": function (data, type, row, meta) {
                 var ret = data.substring(0, 10);
@@ -107,7 +127,7 @@
         },
         {
             "width": "120px",
-            "data": "trans_description",
+            "data": "Debit",
             "render": function (data, type, row) {
                 var ret = data;
                 return ret;
@@ -115,15 +135,15 @@
         },
         {
             "width": "70px",
-            "data": "loc", "className": "text-center",
+            "data": "acct", "className": "text-center",
             "render": function (data, type, row, meta) {
                 var ret = data;
                 return ret;
             }
         },
         {
-            "width": "100px",
-            "data": "lot",
+            "width": "250px",
+            "data": "acct_description",
             "className": "text-right",
             "render": function (data, type, row, meta) {
                 var ret = data;
@@ -134,7 +154,7 @@
         },
         {
             "width": "100px",
-            "data": "ref_num",
+            "data": "acct_unit1",
             "className": "text-right",
             "render": function (data, type, row, meta) {
                 var ret = data;
@@ -142,16 +162,16 @@
             }
         },
         {
-            "width": "80px",
-            "data": "item",
+            "width": "200px",
+            "data": "date.date",
             "render": function (data, type, row) {
                 var ret = data;
                 return ret;
             }
         },
         {
-            "width": "80px",
-            "data": "ItemDesc",
+            "width": "150px",
+            "data": "ref",
             "render": function (data, type, row) {
                 var ret = data;
                 return ret;
@@ -159,7 +179,7 @@
         },
         {
             "width": "120px",
-            "data": "qty",
+            "data": "trans_num",
             "className": "text-right",
             "render": function (data, type, row) {
                 var ret = parseFloat(data).toFixed(2);
@@ -167,21 +187,45 @@
             }
         },
         {
-            "width": "120px",
-            "data": "ItemUM",
+            "width": "200px",
+            "data": "unit1_description",
             "render": function (data, type, row) {
                 var ret = data;
                 return ret;
             }
         },
         {
-            "data": "RecordDate.date",
-            "className": "text-left",
-            "render": function (data, type, row) {
-                var ret = data.substring(1, 19);
-                return ret;
+            "data": "", "className": "text-center",
+            "render": function (data, type, row, meta) {
+                return "<a id='refnum_" + row["ref"] + "' OnClick='openModal(this.id,`" + row["ref"]+"`)'><i class='fa fa-search'></i></a>";
             }
         },
     ];
+
+
+    function openModal(thisid, ref) {
+            var Year = $("#Year").val();
+            var Month = $("#Month").val();
+            var Saleside = $("#Saleside").val();
+            var Type = "Detail";
+            
+            var ref = thisid.split("_")[1];
+            var vend_name = vend_name;
+            var item_group = item_group;
+            var total_amount = total_amount;
+            var modalId = "#DetailModal";
+
+
+            var Url = "././module/RPT_STS_factory_fix_report/load_form.php";
+            //alert(UserId)
+
+            $(modalId).modal("show");
+
+            $("#modalBody").load(Url, {
+                "ref": ref,
+            }, function () {
+
+            });
+        }
 
 </script>
