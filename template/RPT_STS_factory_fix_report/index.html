@@ -1,0 +1,220 @@
+<div class="row">
+    <div class="row quicksearch col-lg-10" >
+        <div class="row" >
+            <div>
+                <h1>STS_factory_fix_report
+                </h1>
+            </div> 
+        </div> 
+        <div class="row col-lg-12">
+            <div class="col-lg-3" >   
+                <div class="input-group">
+                    <div class="input-group-addon">From date</div>
+                    <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtFromDate">
+                </div>
+            </div>
+            <div class="col-lg-3">   
+                <div class="input-group">
+                    <div class="input-group-addon">To date</div>
+                    <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtToDate">
+                </div>
+            </div>
+            <div class="col-lg-3">   
+                <div class="input-group">
+                    <div class="input-group-addon">Lot.</div>
+                    <input type="text" class="form-control txt-filter" id="txtLot">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-3" >   
+                <div class="input-group">
+                    <div class="input-group-addon">Ref num</div>
+                    <input type="text" class="form-control txt-filter" id="txtref_num">
+                </div>
+            </div>
+            <div class="col-lg-3" >   
+                <select class="form-control txt-filter" id="txttrans_type">
+                </select>
+            </div>      
+            <div class="col-lg-3" >
+                <select class="form-control txt-filter" id="txtu_m">
+                </select>
+            </div>
+            
+        </div>
+        <div class="row">
+            <div class="col-lg-3" >   
+                <div class="input-group">
+                    <div class="input-group-addon">location</div>
+                    <input type="text" class="form-control txt-filter" id="location">
+                </div>
+            </div>
+            <div class="col-lg-3" >   
+                <div class="input-group">
+                    <div class="input-group-addon">item</div>
+                    <input type="text" class="form-control txt-filter" id="item">
+                </div>
+            </div>      
+            <div class="col-lg-3" >
+                <button id="btnSearch" class="btn btn-info"><i class="fa fa-searh"></i>&nbsp;ค้นหา</button>
+            </div>
+        </div>
+    </div>
+    <!--    <div class="col-lg-2">
+            <div class="nav-tabs-custom">
+                 Tabs within a box 
+                <ul class="nav nav-tabs pull-right">
+                    <li class="pull-left header"><i class="fa fa-inbox"></i> Job transection</li>
+                </ul>
+                <div class="tab-content no-padding" id="Chart_graph">
+                     Morris chart - Sales 
+                    <div class="chart tab-pane active" id="chart_donut" style="position: relative; height: 120px;">
+    
+                    </div>
+                </div>
+            </div>
+        </div>-->
+</div>
+
+<div class="row" id="divReport" >
+    <table class="table table-condensed table-bordered table-striped" id="tblReport" style="width:100%;">
+        <thead>
+            <tr>
+                <th>Transaction Date</th>
+                <th>Transaction Type</th>
+                <th>Location</th>  
+                <th>Lot</th>
+                <th>Ref Number</th>
+                <th>Item</th>    
+                <th>Description</th>
+                <th>Quantity</th>
+                <th>U/M</th>
+                <th>Date and Time of Transaction</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+
+<script type="text/javascript" src="js/main.js"></script>
+<script type="text/javascript">
+
+
+    $("#txtFromDate , #txtToDate").datepicker({
+        dateFormat: 'yy-mm-dd',
+    });
+    $("#btnSearch").click(function () {
+        var tblReportId = '#tblReport';
+        var btnSearch = '#btnSearch';
+        SearchDataFooterFn(tblReportId, btnSearch, tablecolumsArr, "Slit Report", "ajax");
+        RowFooterBuild(tblReportId);
+    });
+    $("#txtFromDate,#txtToDate").val(GetToday());
+
+    $(".txt-filter").on("keypress", function (e) {
+        if (e.keyCode == 13) {
+            SearchItemNormal();
+            return false; // prevent the button click from happening
+        }
+    });
+
+    var url = "././module/RPT_STS_factory_fix_report/data.php";
+    GetSelectOption("txtu_m", url, "GetUMList", "u_m", "u_m", "U/M");
+    GetSelectOption("txttrans_type", url, "GetTranstypeList", "trans_type", "trans_description", "Trans type");
+
+    function footerCallback(api) {
+        $(api.column(6).footer()).html("<b>TOTAL</b>");
+        ColumnSumVal(7, api)
+    }
+
+    tablecolumsArr = [
+        {
+            "width": "120px",
+            "data": "trans_date.date",
+            "className": "text-right",
+            "render": function (data, type, row, meta) {
+                var ret = data.substring(0, 10);
+                return ret;
+            }
+        },
+        {
+            "width": "120px",
+            "data": "trans_description",
+            "render": function (data, type, row) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "width": "70px",
+            "data": "loc", "className": "text-center",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "width": "100px",
+            "data": "lot",
+            "className": "text-right",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                ret = "<span>" + data + "</span>";
+
+                return ret;
+            }
+        },
+        {
+            "width": "100px",
+            "data": "ref_num",
+            "className": "text-right",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "width": "80px",
+            "data": "item",
+            "render": function (data, type, row) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "width": "80px",
+            "data": "ItemDesc",
+            "render": function (data, type, row) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "width": "120px",
+            "data": "qty",
+            "className": "text-right",
+            "render": function (data, type, row) {
+                var ret = parseFloat(data).toFixed(2);
+                return ret;
+            }
+        },
+        {
+            "width": "120px",
+            "data": "ItemUM",
+            "render": function (data, type, row) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "RecordDate.date",
+            "className": "text-left",
+            "render": function (data, type, row) {
+                var ret = data.substring(1, 19);
+                return ret;
+            }
+        },
+    ];
+
+</script>
