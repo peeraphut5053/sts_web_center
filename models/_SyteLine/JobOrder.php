@@ -996,6 +996,22 @@ class JOBORDER {
         array_splice($rs0, count($rs0) - 1, 1);
         return $rs0;
     }
+
+    function LocationByDo($do) {
+        $query = " select distinct location_mst.loc ,location_mst.description  
+        from mv_bc_tag tag 
+          inner join job_mst on tag.job = job_mst.job 
+          left join AIT_Preship_Do_Seq preship on job_mst.ord_num = preship.co_num and job_mst.ord_line = preship.co_line 
+          inner JOIN STS_qty_move_line on STS_qty_move_line.lot = tag.lot and STS_qty_move_line.toloc like 'CL%' 
+          inner JOIN STS_qty_move_hrd on STS_qty_move_hrd.doc_num = STS_qty_move_line.doc_num and STS_qty_move_hrd.loc like 'CL%' and STS_qty_move_hrd.doc_type ='Ship'
+          inner join STS_list_of_do_group gr on gr.do_group_list like '%'+preship.do_num+'%' and preship.do_num <> '1'
+          inner join location_mst on location_mst.loc = STS_qty_move_hrd.loc
+        where gr.do_group_name = '$do'    ";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
     
     function locationPTR() {
         $query = " select loc ,description FROM location_mst where loc like '%PTR%'     ";
