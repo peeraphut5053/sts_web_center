@@ -2,7 +2,7 @@
     <div class="row quicksearch col-lg-10">
         <div class="row">
             <div>
-                <h1>STS_factory_fix_report
+                <h1>รายงานการซ่อมแซมโรงงาน
                 </h1>
             </div>
         </div>
@@ -51,21 +51,21 @@
     <table class="table table-condensed table-bordered table-striped" id="tblReport" style="width:100%;">
         <thead>
             <tr>
-                <th>Credit</th>
-                <th>Debit</th>
+                <th>date</th>
+                <th>trans_num</th>
+                <th>ref</th>
                 <th>acct</th>
                 <th>acct_description</th>
                 <th>acct_unit1</th>
-                <th>date</th>
-                <th>ref</th>
-                <th>trans_num</th>
                 <th>unit1_description</th>
+                <th>Debit</th>
+                <th>Credit</th>
                 <th></th>
             </tr>
         </thead>
     </table>
 
-    <div class="modal" id="DetailModal" >
+    <div class="modal" id="DetailModal">
         <div class="modal-dialog" style="width: 100%">
             <div class="modal-content">
                 <div class="modal-header">
@@ -117,17 +117,25 @@
 
     tablecolumsArr = [
         {
-            "width": "120px",
-            "data": "Credit",
-            "className": "text-right",
-            "render": function (data, type, row, meta) {
+            "width": "200px",
+            "data": "date.date",
+            "render": function (data, type, row) {
                 var ret = data.substring(0, 10);
                 return ret;
             }
         },
         {
             "width": "120px",
-            "data": "Debit",
+            "data": "trans_num",
+            "className": "text-right",
+            "render": function (data, type, row) {
+                var ret = parseFloat(data).toFixed(2);
+                return ret;
+            }
+        },
+        {
+            "width": "150px",
+            "data": "ref",
             "render": function (data, type, row) {
                 var ret = data;
                 return ret;
@@ -161,31 +169,9 @@
                 return ret;
             }
         },
-        {
-            "width": "200px",
-            "data": "date.date",
-            "render": function (data, type, row) {
-                var ret = data;
-                return ret;
-            }
-        },
-        {
-            "width": "150px",
-            "data": "ref",
-            "render": function (data, type, row) {
-                var ret = data;
-                return ret;
-            }
-        },
-        {
-            "width": "120px",
-            "data": "trans_num",
-            "className": "text-right",
-            "render": function (data, type, row) {
-                var ret = parseFloat(data).toFixed(2);
-                return ret;
-            }
-        },
+
+
+
         {
             "width": "200px",
             "data": "unit1_description",
@@ -194,38 +180,56 @@
                 return ret;
             }
         },
+
+        {
+            "width": "120px",
+            "data": "Debit",
+            "render": function (data, type, row) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "width": "120px",
+            "data": "Credit",
+            "className": "text-right",
+            "render": function (data, type, row, meta) {
+                var ret = data.substring(0, 10);
+                return ret;
+            }
+        },
         {
             "data": "", "className": "text-center",
             "render": function (data, type, row, meta) {
-                return "<a id='refnum_" + row["ref"] + "' OnClick='openModal(this.id,`" + row["ref"]+"`)'><i class='fa fa-search'></i></a>";
+                return "<a id='refnum_" + row["ref"] + "' OnClick='openModal(this.id,`" + row["ref"] + "`)'><i class='fa fa-search'></i></a>";
             }
         },
     ];
 
 
     function openModal(thisid, ref) {
-            var Year = $("#Year").val();
-            var Month = $("#Month").val();
-            var Saleside = $("#Saleside").val();
-            var Type = "Detail";
-            
-            var ref = thisid.split("_")[1];
-            var vend_name = vend_name;
-            var item_group = item_group;
-            var total_amount = total_amount;
-            var modalId = "#DetailModal";
+        var Year = $("#Year").val();
+        var Month = $("#Month").val();
+        var Saleside = $("#Saleside").val();
+        var Type = "Detail";
+
+        var ref = thisid.split("_")[1];
+        var vend_name = vend_name;
+        var item_group = item_group;
+        var total_amount = total_amount;
+        var modalId = "#DetailModal";
 
 
-            var Url = "././module/RPT_STS_factory_fix_report/load_form.php";
-            //alert(UserId)
+        var Url = "././module/RPT_STS_factory_fix_report/load_form.php";
+        //alert(UserId)
 
-            $(modalId).modal("show");
+        $(modalId).modal("show");
 
-            $("#modalBody").load(Url, {
-                "ref": ref,
-            }, function () {
+        $("#modalBody").load(Url, {
+            "ref": ref,
+        }, function () {
 
-            });
-        }
+        });
+    }
 
 </script>
