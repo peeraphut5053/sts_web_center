@@ -201,7 +201,7 @@
         {
             "data": "", "className": "text-center",
             "render": function (data, type, row, meta) {
-                return "<a id='refnum_" + row["ref"] + "' OnClick='openModal(this.id,`" + row["ref"] + "`)'><i class='fa fa-search'></i></a>";
+                return "<a id='refnum_" + row["ref"] + "' OnClick='openModal(this.id,`" + row["ref"] + row["trans_num"] + "`)'><i class='fa fa-search'></i></a>";
             }
         },
     ];
@@ -219,7 +219,7 @@
         var total_amount = total_amount;
         var modalId = "#DetailModal";
 
-
+        console.log(ref)
         var Url = "././module/RPT_STS_factory_fix_report/load_form.php";
         //alert(UserId)
 
@@ -231,5 +231,8 @@
 
         });
     }
+
+    $(document).ready(function(){});
+
 
 </script>
