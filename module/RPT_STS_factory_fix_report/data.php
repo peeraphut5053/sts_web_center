@@ -25,5 +25,14 @@ if ($load == "ajax") {
 
     $RPT_STS_factory_fix_report = $CallModelObj->RPT_STS_factory_fix_report($TransactionDateStarting,$TransactionDateEnding,$unit1);
     echo json_encode($RPT_STS_factory_fix_report);
+}  else if ($load == "RPT_STS_factory_fix_report_sub") {
+
+    $RPT_STS_factory_fix_report = $CallModelObj->RPT_STS_factory_fix_report_sub($ref,$acct_unit1);
+    echo json_encode($RPT_STS_factory_fix_report);
+} else if ($load == "Getunit1List") {
+    $RPT_STS_factory_fix_report = $CallModelObj->Getunit1List();
+    echo json_encode($RPT_STS_factory_fix_report);
 }
+
+
 

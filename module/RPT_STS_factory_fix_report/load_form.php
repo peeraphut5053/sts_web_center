@@ -15,7 +15,7 @@ if (1 == 1) {
     $CM->SyteLine_Models();
     $GL = new Factory();
     $GL->setConn($ConnSL);
-    $GLS = $GL->RPT_STS_factory_fix_report_sub($ref);
+    $GLS = $GL->RPT_STS_factory_fix_report_sub($ref,$acct_unit1);
     $CM = null;
     $GL = null;
     $tdDetail = "";
@@ -26,16 +26,17 @@ if (1 == 1) {
         $tdDetail = $tdDetail ."<td>" .$rows["vend_name"]."</td>";
         $tdDetail = $tdDetail ."<td>" .$rows["item"]."</td>";
         $tdDetail = $tdDetail ."<td>" .$rows["item_name"]."</td>";
-        $tdDetail = $tdDetail ."<td>" .$rows["qty_voucher"]."</td>";
+        $tdDetail = $tdDetail ."<td align='right' class='money'>" .number_format ($rows["qty_voucher"], 2, ".", ",")."</td>";
         $tdDetail = $tdDetail ."<td align='right' class='money'>" .number_format ($rows["item_cost_conv"], 2, ".", ",")."</td>";
-        $tdDetail = $tdDetail ."<td>" .$rows["tot_rec_cost"]."</td>";
+        $tdDetail = $tdDetail ."<td align='right' class='money'>" .number_format ($rows["tot_rec_cost"], 2, ".", ",")."</td>";
         //$tdDetail = $tdDetail ."<td align='right' class='qty_kg'>" .$rows["qty_kg"]."</td>";
         $tdDetail = $tdDetail ."</tr>";
     }
      
     //echo json_encode($GLS);
     $temp = new ReplaceHtml("../../template/RPT_STS_factory_fix_report/load_form.html");
-    $temp->setReplace("{vend_num}", $ref);
+    $temp->setReplace("{ref_num}", $ref);
+    $temp->setReplace("{acct_unit1}", $acct_unit1);
     $temp->setReplace("{tableDetail}", $tdDetail);
     echo $temp->getReplace();
 }

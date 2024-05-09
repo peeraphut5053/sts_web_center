@@ -1,75 +1,202 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <title>Bootstrap Example</title>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
-    </head>
-    <body>
-        <div class="container-fluid">
+<div class="row">
+    <!-- <div class="row quicksearch col-lg-10">
+        <div class="row">
             <div>
-                <div class="row">
-                    <div class="col-sm-6" >
-                        ref number : {trans_num}
-                    </div>
-                    <div class="col-sm-6" >
+                <h1>รายงานการซ่อมแซมโรงงาน SUB
+                </h1>
+            </div>
+        </div>
+    </div> -->
+    <!--    <div class="col-lg-2">
+            <div class="nav-tabs-custom">
+                 Tabs within a box 
+                <ul class="nav nav-tabs pull-right">
+                    <li class="pull-left header"><i class="fa fa-inbox"></i> Job transection</li>
+                </ul>
+                <div class="tab-content no-padding" id="Chart_graph">
+                     Morris chart - Sales 
+                    <div class="chart tab-pane active" id="chart_donut" style="position: relative; height: 120px;">
+    
                     </div>
                 </div>
             </div>
-            <div>
-                <div class="row">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>ref</th>
-                                <th>po num</th>
-                                <th>vend_name</th>
-                                <th>item</th>
-                                <th>item_name</th>
-                                <th>qty_voucher</th>
-                                <th>item_cost_conv</th>
-                                <th>tot_rec_cost</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {tableDetail}
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-<!--                                <th></th>-->
-                                <th style="text-align: right"></th>
-                                <th style="text-align: right">
-<!--                                    <span align="right" id="summary"></span>-->
-                                </th>
-                            </tr>
-                        </tfoot>
-                    </table>
+        </div>-->
+
+        <div class="row col-lg-12">
+            <div class="col-lg-3">
+                <div class="input-group">
+                    <div class="input-group-addon">ref_num</div>
+                    <input type="text" class="form-control txt-filter" id="ref_num" value="{ref_num}">
                 </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="input-group">
+                    <div class="input-group-addon">acct_unit1</div>
+                    <input type="text" class="form-control txt-filter" id="acct_unit1" value="{acct_unit1}">
+                </div>
+            </div>
+            <div class="col-lg-3">
+
+            </div>
+            <div class="col-lg-3">
+
             </div>
         </div>
 
-    </body>
-</html>
-<script>
-    var sum = 0;
-    $(".money").each(function () {
-        var value = $(this).text();
-        if (!isNaN(value) && value.length != 0) {
-            sum += parseFloat(value);
-            $("#summary").text(sum);
-        }
+</div>
+
+
+<div class="row" id="divReport">
+    <table class="table table-condensed table-bordered table-striped" id="tblReport2" style="width:100%;">
+        <thead>
+            <tr>
+                <th>ref</th>
+                <th>po num</th>
+                <th>vend_name</th>
+                <th>item</th>
+                <th>item_name</th>
+                <th>qty_voucher</th>
+                <th>item_cost_conv</th>
+                <th>tot_rec_cost</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+
+<script type="text/javascript" src="js/main.js"></script>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        var tblReportId2 = '#tblReport2';
+        var ModuleName = $("#CurrentPage").val();
+        var urlModule = "././module/" + ModuleName + "/data.php";
+        var excelName = "RPT_STS_factory_fix_report_sub";
+        $.ajax({
+            type: 'POST',
+            url: urlModule,
+            dataType: 'json',
+            data: { load: 'RPT_STS_factory_fix_report_sub', ref: $("#ref_num").val(), acct_unit1: $("#acct_unit1").val() },
+            success: function (data) {
+                console.log(data)
+                $(tblReportId2).DataTable().clear();
+                $(tblReportId2).dataTable({
+                    scrollY: 400,
+                    "scrollX": true,
+                    "aaData": data,
+                    "paging": false,
+                    "searching": false,
+                    "initComplete": function (settings, json) {
+                    },
+                    destroy: true,
+                    'processing': true,
+                    "columns": tablecolumsArr2,
+                    'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                        "<'row'<'col-md-12'tr>>" +
+                        "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                    buttons: [
+                        {
+                            extend: 'print',
+                            text: "<i class='fa fa-print'></i>&nbsp;Print",
+                            title: '',
+                        },
+                        {
+                            extend: 'excel',
+                            text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                            title: 'รายงาน ' + excelName + ' ' + GetCurrDateTime()
+                        },
+                    ],
+                    "footerCallback": function () {
+                        var api = this.api();
+                        footerCallback(api)
+                    },
+                });
+            },
+            error: function (e) {
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+
+
     });
 
+    tablecolumsArr2 = [
+        {
+            "width": "200px",
+            "data": "ref",
+            "render": function (data, type, row) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "width": "120px",
+            "data": "po_num",
+            "className": "text-right",
+            "render": function (data, type, row) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "width": "150px",
+            "data": "vend_name",
+            "render": function (data, type, row) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "width": "70px",
+            "data": "item", "className": "text-center",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "width": "250px",
+            "data": "item_name",
+            "className": "text-right",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                ret = "<span>" + data + "</span>";
 
-    $(document).ready(function(){});
+                return ret;
+            }
+        },
+        {
+            "width": "100px",
+            "data": "qty_voucher",
+            "className": "text-right",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                return ret;
+            }
+        },
+
+
+
+        {
+            "width": "200px",
+            "data": "item_cost_conv",
+            "render": function (data, type, row) {
+                var ret = data;
+                return ret;
+            }
+        },
+
+        {
+            "width": "120px",
+            "data": "tot_rec_cost",
+            "className": "text-right",
+            "render": function (data, type, row) {
+                ret = "<span>" + formatMoney(data) + "</span>";
+                return ret;
+            }
+        },
+    ];
 
 </script>

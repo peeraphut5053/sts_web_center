@@ -21,8 +21,10 @@
             </div>
             <div class="col-lg-3">
                 <div class="input-group">
-                    <div class="input-group-addon">unit1</div>
-                    <input type="text" class="form-control txt-filter" id="unit1">
+                    <!-- <div class="input-group-addon">unit1</div>
+                    <input type="text" class="form-control txt-filter" id="unit1"> -->
+                    <select class="form-control txt-filter" id="unit1">
+                    </select>
                 </div>
             </div>
             <div class="col-lg-3">
@@ -70,7 +72,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <label id="lblModalHead">
-                        <h1>Material Purchase Report Detail</h1>
+                        <h1>factory fix report sub</h1>
                     </label>
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
@@ -109,6 +111,7 @@
     });
 
     var url = "././module/RPT_STS_factory_fix_report/data.php";
+    GetSelectOption("unit1", url, "Getunit1List", "acct_unit1", "unit1_description", "unit1");
 
     function footerCallback(api) {
         // $(api.column(6).footer()).html("<b>TOTAL</b>");
@@ -129,7 +132,7 @@
             "data": "trans_num",
             "className": "text-right",
             "render": function (data, type, row) {
-                var ret = parseFloat(data).toFixed(2);
+                var ret = data;
                 return ret;
             }
         },
@@ -184,8 +187,9 @@
         {
             "width": "120px",
             "data": "Debit",
+            "className": "text-right",
             "render": function (data, type, row) {
-                var ret = data;
+                ret = "<span>" + formatMoney(data) + "</span>";
                 return ret;
             }
         },
@@ -194,32 +198,32 @@
             "data": "Credit",
             "className": "text-right",
             "render": function (data, type, row, meta) {
-                var ret = data.substring(0, 10);
+                ret = "<span>" + formatMoney(data) + "</span>";
                 return ret;
             }
         },
         {
             "data": "", "className": "text-center",
             "render": function (data, type, row, meta) {
-                return "<a id='refnum_" + row["ref"] + "' OnClick='openModal(this.id,`" + row["ref"] + row["trans_num"] + "`)'><i class='fa fa-search'></i></a>";
+                return "<a id='refnum_" + row["ref"] + "_"+ row["acct_unit1"] +"' OnClick='openModal(this.id,`" + row["trans_num"] +"`)'><i class='fa fa-search'></i></a>";
             }
         },
     ];
 
 
     function openModal(thisid, ref) {
-        var Year = $("#Year").val();
-        var Month = $("#Month").val();
-        var Saleside = $("#Saleside").val();
-        var Type = "Detail";
+        $(document).ready(function(){});
 
         var ref = thisid.split("_")[1];
+        var acct_unit1 = thisid.split("_")[2];
         var vend_name = vend_name;
         var item_group = item_group;
         var total_amount = total_amount;
         var modalId = "#DetailModal";
 
-        console.log(ref)
+        console.log("thisid",thisid)
+        console.log("ref",ref)
+        console.log("acct_unit1",acct_unit1)
         var Url = "././module/RPT_STS_factory_fix_report/load_form.php";
         //alert(UserId)
 
@@ -227,12 +231,12 @@
 
         $("#modalBody").load(Url, {
             "ref": ref,
+            "acct_unit1": acct_unit1,
         }, function () {
 
         });
     }
 
-    $(document).ready(function(){});
 
 
 </script>
