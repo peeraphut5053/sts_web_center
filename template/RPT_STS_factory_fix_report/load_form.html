@@ -134,7 +134,7 @@
         {
             "width": "120px",
             "data": "po_num",
-            "className": "text-right",
+            "className": "text-left",
             "render": function (data, type, row) {
                 var ret = data;
                 return ret;
@@ -150,7 +150,7 @@
         },
         {
             "width": "70px",
-            "data": "item", "className": "text-center",
+            "data": "item", "className": "text-left",
             "render": function (data, type, row, meta) {
                 var ret = data;
                 return ret;
@@ -159,7 +159,7 @@
         {
             "width": "250px",
             "data": "item_name",
-            "className": "text-right",
+            "className": "text-left",
             "render": function (data, type, row, meta) {
                 var ret = data;
                 ret = "<span>" + data + "</span>";
@@ -172,7 +172,7 @@
             "data": "qty_voucher",
             "className": "text-right",
             "render": function (data, type, row, meta) {
-                var ret = data;
+                ret = "<span>" + formatMoney(data) + "</span>";
                 return ret;
             }
         },
@@ -182,8 +182,9 @@
         {
             "width": "200px",
             "data": "item_cost_conv",
+            "className": "text-right",
             "render": function (data, type, row) {
-                var ret = data;
+                ret = "<span>" + formatMoney(data) + "</span>";
                 return ret;
             }
         },
