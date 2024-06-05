@@ -445,7 +445,7 @@ where STS_qty_move_line.doc_num = '$doc_num' and mv_bc_tag.active=1 and mv_bc_ta
 
     Function STS_qty_move_hrd_Truck() {
         $cSql = new SqlSrv();
-        $query = "select top 3500 doc_num, loc, create_date, doc_type, destination FROM STS_qty_move_hrd where doc_type in ('Truck','Boat') order by doc_num desc ";
+        $query = "select top 3500 doc_num, loc, create_date, doc_type, destination FROM STS_qty_move_hrd where doc_type in ('Truck','Boat','Cont') order by doc_num desc ";
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
         return $rs;
