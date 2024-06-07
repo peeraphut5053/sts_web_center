@@ -155,7 +155,10 @@
                             "data": "acct_name", "className": "text-center"
                             },
                             {
-                            "data": "dom_amount", "className": "text-center"
+                            "data": "dom_amount", "className": "text-center",  "render": function (data, type, row, meta) {
+                                var ret = parseFloat(data).toLocaleString('th', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                                return ret;
+                            }
                             },
                             {
                             "data": "ref", "className": "text-center"
@@ -250,8 +253,8 @@
 //            console.log($(this).find("td:eq(4)").text().replace(",", "").replace(",", ""));
             i++;
         });
-        console.log(GrandAmount,'GrandAmount');
         $("#tblReport tfoot tr:eq(0)").find("td:eq(2)").text();
     }
+
 
 </script>
