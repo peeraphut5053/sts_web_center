@@ -51,6 +51,7 @@
                 <option value='Good' > Good </option>
                 <option value='OnHold'> OnHold </option>
                 <option value='Follow'> Follow </option>
+                <option value='Reject'> Reject </option>
             </select>
         </div>
     </div>
@@ -78,6 +79,7 @@
                     <th class="bg-gray" width="200px">item</th>
                     <th class="bg-gray" width="230px">Description</th>
                     <th class="bg-gray" width="90px">Lot</th>
+                    <th class="bg-gray" width="90px">Old Lot</th>
                     <th class="bg-gray">Quantity</th>
                     <th class="bg-gray">TagStatus</th>
                     <th class="bg-gray" width="300px">Detail</th>
@@ -94,6 +96,7 @@
                     <th class="bg-gray" width="200px">item</th>
                     <th class="bg-gray" width="230px">Description</th>
                     <th class="bg-gray" width="90px">Lot</th>
+                    <th class="bg-gray" width="90px">Old Lot</th>
                     <th class="bg-gray">Quantity</th>
                     <th class="bg-gray">TagStatus</th>
                     <th class="bg-gray" width="300px">Detail</th>
@@ -120,6 +123,7 @@
             "Good",
             "OnHold",
             "Follow",
+            "Reject"
     ];
 
     function ReportAllSearchHidden() {
@@ -183,6 +187,9 @@
                             "className": "text-left",
                         },
                         {"data": "lot",
+                            "className": "text-left",                          
+                        },
+                        {"data": "old_lot",
                             "className": "text-left",                          
                         },
                         {"data": "qty1", 
@@ -289,6 +296,9 @@
                             "className": "text-left",
                         },
                         {"data": "lot",
+                            "className": "text-left",                          
+                        },
+                        {"data": "old_lot",
                             "className": "text-left",                          
                         },
                         {"data": "qty1", 
