@@ -48,7 +48,6 @@
     .text-header {
         font-weight: bold;
         font-size: 20px;
-        padding-left: 1.5rem;
     }
     .text-wrap{
         white-space:normal;
@@ -62,11 +61,15 @@
     .cb_lb{
         margin-top:-5px;
     }*/
+    .item-center{ 
+        display: flex;
+        justify-content: center;
+    }
 </style>
 <div class="row">
-    <h4 class="text-header">รายงาน General Ledger Domestic Invoice</h4>
+    <h4 class="text-header text-center">รายงาน General Ledger Domestic Invoice</h4>
 </div>
-<div class='row'>
+<div class='row item-center'>
     <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 ">
         <div class="input-group">
             <div class="input-group-addon">Start Date</div>
@@ -85,17 +88,17 @@
 </div>
 
 <div class="row"  id="rowResultTable">
-    <table class="table table-condensed table-striped "  width="100%" id="tblReport">
+    <table class="table table-condensed table-bordered table-striped"  width="100%" id="tblReport">
         <thead>
             <tr>
                 <!--<th >#</th>-->
-                <th>acct</th>
-                <th>acct_name</th>
-                <th>dom_amount</th>
-                <th>ref</th>
-                <th>vend_num</th>
-                <th>voucher</th>
-                <th>trans_date</th>
+                <th class="bg-gray">acct</th>
+                <th class="bg-gray">acct_name</th>
+                <th class="bg-gray">dom_amount</th>
+                <th class="bg-gray">ref</th>
+                <th class="bg-gray">vend_num</th>
+                <th class="bg-gray">voucher</th>
+                <th class="bg-gray">trans_date</th>
             </tr>
         </thead>
         <!--        <tbody id="tblReportList">

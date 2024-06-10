@@ -355,10 +355,10 @@ where STS_qty_move_line.doc_num = '$doc_num' and mv_bc_tag.active=1 and mv_bc_ta
     
 	Function SearchTagStatus($wh) {
         $cSql = new SqlSrv();
-        $query = "select mv_bc_tag.*, item.[description]
+        $query = "select top 2000 mv_bc_tag.*, item.[description]
                 from mv_bc_tag inner join item_mst item on item.item = mv_bc_tag.item
                 where id <> ''".$wh." 
-                order by id asc";
+                order by id desc";
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
         return $rs;
