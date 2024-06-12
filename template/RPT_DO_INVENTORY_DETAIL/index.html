@@ -125,7 +125,7 @@
                 cust_po: $("#cust_po").val(),
             },
             success: function (data) {
-                console.log(data)
+                data = data.filter((v, i, a) => a.findIndex(t => (t.lot === v.lot)) === i);
                 $("#tblReportHidden").dataTable().fnDestroy();
                 var table = $(tblReportId).DataTable({
                     scrollY: "400px",
@@ -365,7 +365,8 @@
                 cust_po: $("#cust_po").val(),
             },
             success: function (data) {
-                console.log(data)
+                // remove duplicate data field lot 
+                data = data.filter((v, i, a) => a.findIndex(t => (t.lot === v.lot)) === i);
                 $(tblReportId).DataTable().clear();
                 $(tblReportId).dataTable({
                     scrollY: 400,

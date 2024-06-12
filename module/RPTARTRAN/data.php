@@ -1,5 +1,5 @@
 <?php
-
+header("Access-Control-Allow-Origin: *");
 while (list($key, $data) = each($_GET) OR list($key, $data) = each($_POST)) {
     ${$key} = trim($data);
 }
@@ -17,7 +17,7 @@ if ($load == "form") {
     $AT->setConn($ConnSL);
     $AT->_StartDate = $StartDate;
     $AT->_EndDate = $EndDate;
-    $AT->_docs = $_POST["docs"];
+    $AT->_docs = ["IN", "CN", "DN"];
     $Artrans = $AT->GetRows();
     echo json_encode($Artrans);
 //    $lines = "";
@@ -69,5 +69,26 @@ if ($load == "form") {
 //    $grandTotal = $sum_amount + $sum_tax;
 //    $lines .= "<tr><td ></td><td ></td><td ></td><td ></td><td ></td><td ><b>TOTAL</b></td><td ><b>" . number_format($sum_amount, 2) . "</b></td><td><b>" . number_format($sum_tax, 2) . "</b></td><td ><b>" . number_format($grandTotal, 2) . "</b></td><td ></td><td ></td></tr>";
 //    echo $lines;
-} 
+} else {
+    $CM = new CallModel();
+    $CM->SyteLine_Models();
+    $AT = new ArTran();
+    $AT->setConn($ConnSL);
+    $AT->_StartDate = $StartDate;
+    $AT->_EndDate = $EndDate;
+    $AT->_docs = [];
+
+    if ($IN == "true") {
+        $AT->_docs = array_merge($AT->_docs, ["IN"]);
+    } 
+    if ($CN == "true") {
+        $AT->_docs = array_merge($AT->_docs, ["CN"]);
+    }
+    if ($DN == "true") {
+        $AT->_docs = array_merge($AT->_docs, ["DN"]);
+    }
+
+    $Artrans = $AT->GetRows();
+    echo json_encode($Artrans);
+}
 
