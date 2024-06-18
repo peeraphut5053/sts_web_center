@@ -17,7 +17,7 @@ if ($load == "form") {
     $AT->setConn($ConnSL);
     $AT->_StartDate = $StartDate;
     $AT->_EndDate = $EndDate;
-    $AT->_docs = ["IN", "CN", "DN"];
+    $AT->_docs = $_POST["docs"];
     $Artrans = $AT->GetRows();
     echo json_encode($Artrans);
 //    $lines = "";
