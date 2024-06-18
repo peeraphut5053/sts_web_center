@@ -21,3 +21,10 @@ if ($load == "monthly"){
     $GLS = $GL->GetRowsGLMonthly($Year, $Unit);
     echo json_encode($GLS);
 }
+
+if ($load == "department"){
+    $GetModel = new Chart();
+    $GetModel->setConn($ConnSL);
+    $GetModelValue = $GetModel->GetUnit1();
+    echo json_encode($GetModelValue);
+}

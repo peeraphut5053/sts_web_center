@@ -81,4 +81,12 @@ if ($load == "ajax") {
     echo json_encode($ArrGLS);
     $CM = null;
     $GL = null;
+
+} elseif ($load == 'list') {
+    $CM = new CallModel();
+    $CM->SyteLine_Models();
+    $GetModel = new Chart();
+    $GetModel->setConn($ConnSL);
+    $GetModelValue = $GetModel->GetRows();
+    echo json_encode($GetModelValue);
 }

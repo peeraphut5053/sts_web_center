@@ -5,6 +5,7 @@
 
 <?php
 
+header("Access-Control-Allow-Origin: *");
 while (list($key, $data) = each($_GET) OR list($key, $data) = each($_POST)) {
     ${$key} = trim($data);
 }

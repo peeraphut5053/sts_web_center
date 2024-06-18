@@ -32,6 +32,11 @@
             <input type="text" class="form-control txt-filter" id="cust_po">
         </div>
     </div>
+    <div class="col-lg-2">   
+        <label class='checkbox-inline'>
+            <input type='checkbox' checked name='duplicate' value=true> Duplicate
+        </label>
+    </div>
     <div class="col-lg-4">   
         <button id="btnSearch" class="btn btn-info"><i class="fa fa-searh"></i>&nbsp;ค้นหา</button>
     </div>
@@ -125,7 +130,9 @@
                 cust_po: $("#cust_po").val(),
             },
             success: function (data) {
-                data = data.filter((v, i, a) => a.findIndex(t => (t.lot === v.lot)) === i);
+                if ($("input[name='duplicate']").is(':checked')) {
+                    data = data.filter((v, i, a) => a.findIndex(t => (t.lot === v.lot)) === i);
+                }
                 $("#tblReportHidden").dataTable().fnDestroy();
                 var table = $(tblReportId).DataTable({
                     scrollY: "400px",
@@ -366,7 +373,9 @@
             },
             success: function (data) {
                 // remove duplicate data field lot 
-                data = data.filter((v, i, a) => a.findIndex(t => (t.lot === v.lot)) === i);
+                if ($("input[name='duplicate']").is(':checked')) {
+                    data = data.filter((v, i, a) => a.findIndex(t => (t.lot === v.lot)) === i);
+                }
                 $(tblReportId).DataTable().clear();
                 $(tblReportId).dataTable({
                     scrollY: 400,

@@ -1,5 +1,6 @@
 <?php
 
+header("Access-Control-Allow-Origin: *");
 while (list($key, $data) = each($_GET) OR list($key, $data) = each($_POST)) {
     ${$key} = trim($data);
 }
@@ -22,4 +23,11 @@ if ($load == "form") {
     $GLS = $GL->GetRowsCollectionDay();
 
     echo json_encode($GLS);
+} else {
+    $CM = new CallModel();
+    $CM->SyteLine_Models();
+    $GetModel = new Customer();
+    $GetModel->setConn($ConnSL);
+    $GetModelValue = $GetModel->GetRowsAddr();
+    echo json_encode($GetModelValue);
 }
