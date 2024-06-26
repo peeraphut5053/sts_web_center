@@ -1,0 +1,361 @@
+<style>
+  .col-search {
+    padding-left: 3px;
+    padding-right: 3px;
+  }
+  /*    table.dataTable thead .sorting:after,
+        table.dataTable thead .sorting:before,
+        table.dataTable thead .sorting_asc:after,
+        table.dataTable thead .sorting_asc:before,
+        table.dataTable thead .sorting_asc_disabled:after,
+        table.dataTable thead .sorting_asc_disabled:before,
+        table.dataTable thead .sorting_desc:after,
+        table.dataTable thead .sorting_desc:before,
+        table.dataTable thead .sorting_desc_disabled:after,
+        table.dataTable thead .sorting_desc_disabled:before {
+            bottom: .5em;
+        }*/
+  .table thead th {
+    text-align: center;
+  }
+
+  .col-flt-page {
+    padding-top: 10px;
+    font-weight: bold;
+  }
+
+  #tblReport tbody tr td a {
+    cursor: pointer;
+  }
+  table.dataTable.fixedHeader-floating,
+  table.dataTable.fixedHeader-locked {
+    background-color: white;
+    margin-top: 50px !important;
+    margin-bottom: 0 !important;
+  }
+  @media print {
+    table th:nth-child(0) {
+      width: 200px;
+      word-break: break-all;
+      white-space: pre-line;
+    }
+    table td:nth-child(0) {
+      width: 200px;
+      word-break: break-all;
+      white-space: pre-line;
+    }
+  }
+  .text-header {
+    font-weight: bold;
+    font-size: 20px;
+  }
+  .text-wrap {
+    white-space: normal;
+  }
+  .width-200 {
+    width: 200px;
+  }
+  input[type="checkbox"] {
+    margin-left: 5px;
+    margin-right: 5px;
+  } /*
+    .cb_lb{
+        margin-top:-5px;
+    }*/
+  .item-center {
+    display: flex;
+    justify-content: center;
+  }
+</style>
+<div class="row">
+  <h4 class="text-header text-center">QC Lab Tag Detail</h4>
+</div>
+<div class="row item-center">
+  <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+    <div class="input-group">
+      <div class="input-group-addon">Tag ID</div>
+      <input type="text" class="form-control" id="txtTagID" />
+    </div>
+  </div>
+  <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+    <div class="input-group">
+      <div class="input-group-addon">STS No</div>
+      <input type="text" class="form-control" id="txtSTSNo" />
+    </div>
+  </div>
+  <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+    <div class="input-group">
+      <div class="input-group-addon">Start Date</div>
+      <input
+        type="text"
+        class="form-control"
+        id="txtStartDate"
+        autocomplete="off"
+      />
+    </div>
+  </div>
+  <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+    <div class="input-group">
+      <div class="input-group-addon">End Date</div>
+      <input
+        type="text"
+        class="form-control"
+        id="txtEndDate"
+        autocomplete="off"
+      />
+    </div>
+  </div>
+  <div class="col-lg-1 col-md-1 col-sm-6 col-xs-6 text-left">
+    <button class="btn btn-info" id="btnSearch">
+      <i class="fa fa-search"></i>&nbsp; Search
+    </button>
+  </div>
+</div>
+
+<div class="row" id="rowResultTable">
+  <table
+    class="table table-condensed table-bordered table-striped"
+    width="100%"
+    id="tblReport"
+  >
+    <thead>
+      <tr>
+        <!--<th >#</th>-->
+        <th class="bg-gray">หมายเลขปฏิบัติการ</th>
+        <th class="bg-gray">Tag ID</th>
+        <th class="bg-gray">Size</th>
+        <th class="bg-gray">Schedule</th>
+        <th class="bg-gray">Length</th>
+        <th class="bg-gray">Standard</th>
+        <th class="bg-gray">Grade</th>
+        <th class="bg-gray">STS No</th>
+        <th class="bg-gray">Coil No</th>
+        <th class="bg-gray">Heat No</th>
+        <th class="bg-gray">FM</th>
+        <th class="bg-gray">หนา x กว้าง</th>
+        <th class="bg-gray">Date</th>
+      </tr>
+    </thead>
+    <!--        <tbody id="tblReportList">
+                    <tr><td align="center" colspan="12">.... No item search ....</td></tr>
+                </tbody>-->
+  </table>
+</div>
+<script type="text/javascript">
+  $("#btnSearch").click(function () {
+    ReportItemSearch();
+  });
+  $("#txtStartDate,#txtEndDate").datepicker({
+    dateFormat: "yy-mm-dd",
+  });
+  function ReportItemSearch() {
+    var OldHtml = $("#btnSearch").html();
+    let TagID = $("#txtTagID").val();
+    let STSNo = $("#txtSTSNo").val();
+    var StartDate = $("#txtStartDate").val();
+    var EndDate = $("#txtEndDate").val();
+
+    if (StartDate == "" && EndDate == "") {
+      $.alert("กรุณาเลือกช่วงวันที่รายงาน");
+      return false;
+    } else {
+      $("#btnSearch").html("<i class='fa fa-spinner fa-spin'></i>");
+      $("#tblReport").loading();
+      $("#tblReport tfoot").remove();
+      $.ajax({
+        type: "POST",
+        url: "././module/RPT_QC_Lab_Tag_Detail/data.php",
+        dataType: "json",
+        beforeSend: function () {
+          $("#btnSearch").html("<i class='fa fa-spinner fa-spin'>");
+        },
+        data: {
+          load: "ajax",
+          tag_id: TagID,
+          sts_no: STSNo,
+          StartDate: StartDate,
+          EndDate: EndDate,
+        },
+        success: function (data) {
+          console.log(data);
+          $("#tblReport").DataTable().clear();
+          $("#tblReport").append(
+            "<tfoot><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></tfoot>"
+          );
+          $("#tblReport").dataTable({
+            aaData: data,
+            paging: false,
+            initComplete: function (settings, json) {
+              ReCalGridAmount();
+            },
+            fixedHeader: true,
+            destroy: true,
+            processing: true,
+            columns: [
+              {
+                data: "qc_oper_num",
+                className: "text-center",
+                render: function (data, type, row, meta) {
+                  let qc_oper_num = data == null ? "" : data;
+                  let ret = `<span hidden>${qc_oper_num}</span><input type='text' class='input-text-value' size='25' id=${row.id} onchange="SaveQc(this.id,value);" value='${qc_oper_num}' />`;
+                  return ret;
+                },
+              },
+              {
+                data: "id",
+                className: "text-center",
+              },
+              {
+                data: "size",
+                className: "text-center",
+              },
+              {
+                data: "uf_schedule",
+                className: "text-center",
+              },
+              {
+                data: "uf_length",
+                className: "text-center",
+              },
+              {
+                data: "standard",
+                className: "text-center",
+              },
+              {
+                data: "uf_grade",
+                className: "text-center",
+              },
+              {
+                data: "sts_no",
+                className: "text-center",
+              },
+              {
+                data: "Coil_No",
+                className: "text-center",
+              },
+              {
+                data: "Heat_no",
+                className: "text-center",
+              },
+              {
+                data: "FM",
+                className: "text-center",
+              },
+              {
+                data: "thick",
+                className: "text-center",
+              },
+              {
+                data: "date.date",
+                className: "text-center",
+                render: function (data, type, row) {
+                  return data.split(" ")[0];
+                },
+              },
+            ],
+            dom:
+              "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+              "<'row'<'col-md-12'tr>>" +
+              "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+            buttons: [
+              {
+                extend: "print",
+                text: "<i class='fa fa-print'></i>&nbsp;Print",
+                title: "",
+              },
+              {
+                extend: "excel",
+                footer: true,
+                text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                title:
+                  "RPT_GENERAL_LEDGER_DOMESTIC_INVOICE_" +
+                  StartDate +
+                  "_to_" +
+                  EndDate,
+              },
+            ],
+            footerCallback: function (row, data, start, end, display) {
+              var api = this.api(),
+                data;
+
+              // converting to interger to find total
+              var intVal = function (i) {
+                return typeof i === "string"
+                  ? i.replace(/[\$,]/g, "") * 1
+                  : typeof i === "number"
+                  ? i
+                  : 0;
+              };
+
+              // computing column Total of the complete result
+              var amount_total = api
+                .column(2)
+                .data()
+                .reduce(function (a, b) {
+                  return intVal(a) + intVal(b);
+                }, 0);
+            },
+          });
+
+          $("#tblReport").loading("stop");
+          $("#btnSearch").html(OldHtml);
+          ReCalGridAmount();
+        },
+        error: function (e) {
+          console.log("There was an error with your request...");
+          console.log("error: " + JSON.stringify(e));
+        },
+      });
+    }
+  }
+  $("#btnExportExcel").click(function () {
+    //        onclick="javascript:
+    //       xport.toCSV('tblReport');
+  });
+
+  $("#StartDate,#EndDate").datepicker({
+    dateFormat: "yy-mm-dd",
+  });
+
+  var intVal2 = function (i) {
+    return typeof i === "string"
+      ? i.replace(/[\$,]/g, "") * 1
+      : typeof i === "number"
+      ? i
+      : 0;
+  };
+
+  function ReCalGridAmount() {
+    var GrandAmount = 0;
+    var i = 0;
+    $("#tblReport tbody tr ").each(function () {
+      GrandAmount += parseFloat(
+        $(this).find("td:eq(2)").text().replace(",", "").replace(",", "")
+      );
+      //            console.log($(this).find("td:eq(4)").text().replace(",", "").replace(",", ""));
+      i++;
+    });
+    $("#tblReport tfoot tr:eq(0)").find("td:eq(2)").text();
+  }
+
+  function SaveQc(qc_id,qc_value) {
+
+    $.ajax({
+      type: "POST",
+      url: "././module/RPT_QC_Lab_Tag_Detail/data.php",
+      dataType: "json",
+      data: {
+        load: "save",
+        tag_id: qc_id,
+        qc_oper_num: qc_value,
+      },
+      success: function (data) {
+        console.log(data);
+      },
+      error: function (e) {
+        console.log("There was an error with your request...");
+        console.log("error: " + JSON.stringify(e));
+      },
+    });
+    }
+</script>

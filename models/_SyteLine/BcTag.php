@@ -483,8 +483,43 @@ where STS_qty_move_line.doc_num = '$doc_num' and mv_bc_tag.active=1 and mv_bc_ta
         array_splice($rs, count($rs) - 1, 1);
         return $rs;
     }
-       
+
     
+    }
+
+    function QcLabTagDetail($tag_id, $sts_no, $StartDate, $EndDate) {
+        // search by tag_id and sts_no if not empty
+        if ($tag_id != "") {
+            $wh = " and mv_bc_tag.id = '$tag_id' ";
+        } elseif ($sts_no != "") {
+            $wh = " and mv_bc_tag.sts_no = '$sts_no' ";
+        } else {
+            $wh = "";
+        }
+        
+        $query = "select  qc_oper_num , id 
+  , uf_nps as size, item_mst.uf_schedule, item_mst.uf_length, item_mst.uf_spec as [standard]
+  , item_mst.uf_grade,mv_bc_tag.sts_no
+  , sts_po_qc.c_no as Coil_No, STS_po_qc.h_no as Heat_no
+  , matltran_mst.wc as FM, concat(sts_po_qc.thick,' x ',sts_po_qc.width) as thick
+  , convert(date,mv_bc_tag.mfg_date) as [date]
+from mv_bc_tag inner join item_mst on item_mst.item = mv_bc_tag.item
+      inner join sts_po_qc on sts_po_qc.sno = mv_bc_tag.sts_no 
+      inner join matltran_mst on matltran_mst.lot = mv_bc_tag.lot 
+      and matltran_mst.trans_type='F'
+where mv_bc_tag.active = 1 and convert(date,mv_bc_tag.mfg_date) between '$StartDate' and '$EndDate' $wh ";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+
+    function SaveQc_Oper_Num($tag_id, $qc_oper_num) {
+        $query = "update mv_bc_tag set qc_oper_num = '$qc_oper_num' where id = '$tag_id' ";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
     }
 	
 }

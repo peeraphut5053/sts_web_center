@@ -1,5 +1,6 @@
 <?php
 
+header("Access-Control-Allow-Origin: *");
 while (list($key, $data) = each($_GET) OR list($key, $data) = each($_POST)) {
     ${$key} = trim($data);
 }
@@ -9,6 +10,13 @@ include "../../initial.php";
 
 
 if ($load == "form") {
+    $CM = new CallModel();
+    $CM->SyteLine_Models();
+    $ItemSL = new CustomerOrder();
+    $ItemSL->setConn($ConnSL);
+    $Thicks = $ItemSL->Customer_report_order($txtStartDate, $txtToDate);
+    array_splice($Thicks, count($Thicks) - 1, 1);
+    echo json_encode($Thicks);
     
 } else if ($load == "ajax") {
     if (isset($_POST["Locs"])) {

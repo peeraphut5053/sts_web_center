@@ -199,7 +199,7 @@ class DeliveryOrder {
         $query = "select top 2000 "
                 . "CONVERT(varchar,do_hdr_date,103) as do_hdr_date_conv,"
                 . "CONVERT(varchar,pickup_date,103) as pickup_date_conv,"
-                . " do_num,do_hdr_date,cust_num,do_value,pickup_date,invoicee_name FROM do_hdr_mst where 1=1 ";
+                . " do_num,do_hdr_date,cust_num,do_value,pickup_date,invoicee_name FROM do_hdr_mst where 1=1 order by do_hdr_date desc";
         if ($FromDate != "") {
             $query = $query . "AND do_hdr_date BETWEEN '$FromDate 00:00:00' AND '$ToDate 23:59:59'  ";
         }
