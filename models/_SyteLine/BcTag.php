@@ -488,6 +488,12 @@ where STS_qty_move_line.doc_num = '$doc_num' and mv_bc_tag.active=1 and mv_bc_ta
     }
 
     function QcLabTagDetail($tag_id, $sts_no, $StartDate, $EndDate) {
+         // search by StartDate and EndDate if not empty
+        if ($StartDate != "" && $EndDate != "") {
+            $date = " and convert(date,mv_bc_tag.mfg_date) between '$StartDate' and '$EndDate' ";
+        } else {
+            $date = "";
+        }
         // search by tag_id and sts_no if not empty
         if ($tag_id != "") {
             $wh = " and mv_bc_tag.id = '$tag_id' ";
@@ -507,7 +513,7 @@ from mv_bc_tag inner join item_mst on item_mst.item = mv_bc_tag.item
       inner join sts_po_qc on sts_po_qc.sno = mv_bc_tag.sts_no 
       inner join matltran_mst on matltran_mst.lot = mv_bc_tag.lot 
       and matltran_mst.trans_type='F'
-where mv_bc_tag.active = 1 and convert(date,mv_bc_tag.mfg_date) between '$StartDate' and '$EndDate' $wh ";
+where mv_bc_tag.active = 1 $wh $date ";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);

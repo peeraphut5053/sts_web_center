@@ -155,8 +155,13 @@
     var StartDate = $("#txtStartDate").val();
     var EndDate = $("#txtEndDate").val();
 
-    if (StartDate == "" && EndDate == "") {
-      $.alert("กรุณาเลือกช่วงวันที่รายงาน");
+    if (StartDate != "" && EndDate == "" || StartDate == "" && EndDate != "") {
+        $.alert("กรุณาเลือกวันที่เริ่มต้นและสิ้นสุดให้ครบถ้วน");
+        return false;
+    }
+
+    if (TagID == "" && STSNo == "" && StartDate == "" && EndDate == "") {
+      $.alert("กรุณากรอกข้อมูลอย่างน้อย 1 ช่อง");
       return false;
     } else {
       $("#btnSearch").html("<i class='fa fa-spinner fa-spin'></i>");
@@ -185,9 +190,6 @@
           $("#tblReport").dataTable({
             aaData: data,
             paging: false,
-            initComplete: function (settings, json) {
-              ReCalGridAmount();
-            },
             fixedHeader: true,
             destroy: true,
             processing: true,
@@ -273,35 +275,15 @@
                   "_to_" +
                   EndDate,
               },
-            ],
-            footerCallback: function (row, data, start, end, display) {
-              var api = this.api(),
-                data;
-
-              // converting to interger to find total
-              var intVal = function (i) {
-                return typeof i === "string"
-                  ? i.replace(/[\$,]/g, "") * 1
-                  : typeof i === "number"
-                  ? i
-                  : 0;
-              };
-
-              // computing column Total of the complete result
-              var amount_total = api
-                .column(2)
-                .data()
-                .reduce(function (a, b) {
-                  return intVal(a) + intVal(b);
-                }, 0);
-            },
+            ]
           });
 
           $("#tblReport").loading("stop");
           $("#btnSearch").html(OldHtml);
-          ReCalGridAmount();
         },
         error: function (e) {
+          $("#tblReport").loading("stop");
+          $("#btnSearch").html(OldHtml);
           console.log("There was an error with your request...");
           console.log("error: " + JSON.stringify(e));
         },
@@ -324,19 +306,6 @@
       ? i
       : 0;
   };
-
-  function ReCalGridAmount() {
-    var GrandAmount = 0;
-    var i = 0;
-    $("#tblReport tbody tr ").each(function () {
-      GrandAmount += parseFloat(
-        $(this).find("td:eq(2)").text().replace(",", "").replace(",", "")
-      );
-      //            console.log($(this).find("td:eq(4)").text().replace(",", "").replace(",", ""));
-      i++;
-    });
-    $("#tblReport tfoot tr:eq(0)").find("td:eq(2)").text();
-  }
 
   function SaveQc(qc_id,qc_value) {
 
