@@ -122,6 +122,7 @@
       <tr>
         <!--<th >#</th>-->
         <th class="bg-gray">หมายเลขปฏิบัติการ</th>
+        <th class="bg-gray">Item</th>
         <th class="bg-gray">Tag ID</th>
         <th class="bg-gray">Size</th>
         <th class="bg-gray">Schedule</th>
@@ -185,7 +186,7 @@
           console.log(data);
           $("#tblReport").DataTable().clear();
           $("#tblReport").append(
-            "<tfoot><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></tfoot>"
+            "<tfoot><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td><td></td></td><td></td><td></td><td></td><td></td><td></td></tr></tfoot>"
           );
           $("#tblReport").dataTable({
             aaData: data,
@@ -193,15 +194,21 @@
             fixedHeader: true,
             destroy: true,
             processing: true,
+            scrollY: "500px",
+            scrollCollapse: true,
             columns: [
               {
                 data: "qc_oper_num",
                 className: "text-center",
                 render: function (data, type, row, meta) {
                   let qc_oper_num = data == null ? "" : data;
-                  let ret = `<span hidden>${qc_oper_num}</span><input type='text' class='input-text-value' size='25' id=${row.id} onchange="SaveQc(this.id,value);" value='${qc_oper_num}' />`;
+                  let ret = `<span hidden>${qc_oper_num}</span><input type='text' class='input-text-value' size='20' id=${row.id} onchange="SaveQc(this.id,value);" value='${qc_oper_num}' />`;
                   return ret;
                 },
+              },
+              {
+                data: "item",
+                className: "text-center",
               },
               {
                 data: "id",
