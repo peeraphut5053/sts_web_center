@@ -131,7 +131,7 @@
         {
             "width": "120px",
             "data": "trans_date.date",
-            "className": "text-right",
+            "className": "text-center",
             "render": function (data, type, row, meta) {
                 var ret = data.substring(0, 10);
                 return ret;
@@ -140,13 +140,14 @@
         {
             "width": "120px",
             "data": "trans_description",
+            "className": "text-center",
             "render": function (data, type, row) {
                 var ret = data;
                 return ret;
             }
         },
         {
-            "width": "70px",
+            "width": "60px",
             "data": "loc", "className": "text-center",
             "render": function (data, type, row, meta) {
                 var ret = data;
@@ -156,7 +157,7 @@
         {
             "width": "100px",
             "data": "lot",
-            "className": "text-right",
+            "className": "text-center",
             "render": function (data, type, row, meta) {
                 var ret = data;
                 ret = "<span>" + data + "</span>";
@@ -167,15 +168,16 @@
         {
             "width": "100px",
             "data": "ref_num",
-            "className": "text-right",
+            "className": "text-center",
             "render": function (data, type, row, meta) {
                 var ret = data;
                 return ret;
             }
         },
         {
-            "width": "80px",
+            "width": "100px",
             "data": "item",
+            "className": "text-center",
             "render": function (data, type, row) {
                 var ret = data;
                 return ret;
@@ -184,23 +186,25 @@
         {
             "width": "80px",
             "data": "ItemDesc",
+            "className": "text-center",
             "render": function (data, type, row) {
                 var ret = data;
                 return ret;
             }
         },
         {
-            "width": "120px",
+            "width": "100px",
             "data": "qty",
-            "className": "text-right",
+            "className": "text-center",
             "render": function (data, type, row) {
                 var ret = parseFloat(data).toFixed(2);
                 return ret;
             }
         },
         {
-            "width": "120px",
+            "width": "80px",
             "data": "ItemUM",
+            "className": "text-center",
             "render": function (data, type, row) {
                 var ret = data;
                 return ret;
@@ -208,7 +212,7 @@
         },
         {
             "data": "RecordDate.date",
-            "className": "text-left",
+            "className": "text-center",
             "render": function (data, type, row) {
                 var ret = data.substring(1, 19);
                 return ret;
