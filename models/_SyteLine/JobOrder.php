@@ -44,7 +44,7 @@ class JOBORDER {
             $u_m = " AND  ItemUM like '%$u_m%'  ";
         }
         if ($item) {
-            $item = " AND  mat.item like '%$item%'  ";
+            $item = " AND  mat.item like '$item%'  ";
         }
         if ($location) {
             $location = " AND   mat.loc like '%$location%'  ";
