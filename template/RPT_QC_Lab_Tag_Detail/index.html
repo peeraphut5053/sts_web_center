@@ -127,7 +127,9 @@
       <tr>
         <!--<th >#</th>-->
         <th class="bg-gray">หมายเลขปฏิบัติการ</th>
+        <th class="bg-gray">Remove</th>
         <th class="bg-gray">Item</th>
+        <th class="bg-gray">Lot</th>
         <th class="bg-gray">Tag ID</th>
         <th class="bg-gray">Size</th>
         <th class="bg-gray">Schedule</th>
@@ -141,7 +143,26 @@
         <th class="bg-gray">หนา x กว้าง</th>
         <th class="bg-gray">ชั้นคุณภาพ</th>
         <th class="bg-gray">Date</th>
-        <th class="bg-gray">Remove</th>
+        <th class="bg-gray">sts_C</th>
+        <th class="bg-gray">sts_Si</th>
+        <th class="bg-gray">sts_Mn</th>
+        <th class="bg-gray">sts_P</th>
+        <th class="bg-gray">sts_S</th>
+        <th class="bg-gray">sts_Cu</th>
+        <th class="bg-gray">sts_V</th>
+        <th class="bg-gray">sts_Ni</th>
+        <th class="bg-gray">sts_Cr</th>
+        <th class="bg-gray">sts_Mo</th>
+        <th class="bg-gray">sts_Ti</th>
+        <th class="bg-gray">sts_Nb</th>
+        <th class="bg-gray">sts_Al</th>
+        <th class="bg-gray">sts_B</th>
+        <th class="bg-gray">sts_Co</th>
+        <th class="bg-gray">sts_Pb</th>
+        <th class="bg-gray">sts_Fe</th>
+        <th class="bg-gray">sts_Ts</th>
+        <th class="bg-gray">sts_Ys</th>
+        <th class="bg-gray">sts_El</th>
       </tr>
     </thead>
     <!--        <tbody id="tblReportList">
@@ -210,13 +231,14 @@
         },
         success: function (data) {
           // update mydata + old data 
+          //console.log(data);
           mydata.push(...data);
           // but not duplicate
           // mydata = [...mydata, ...data.filter((item) => !mydata.some((old) => old.id == item.id))];
 
           $("#tblReport").DataTable().clear();
           $("#tblReport").append(
-            "<tfoot><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td><td></td></td><td></td><td></td><td></td><td></td><td></td></tr></tfoot>"
+            "<tfoot><tr></tr></td></tr></td></tr></td></tr></td></tr></td></tr></td></tr></td></tr></td></tr></td></tr></td></tr></td></tr></td></tr></td></tr></td></tr></td></tr></td></tr></td></tr></td></tr></td></tr></td></tr></td></tr></td></tr></td></tr></td></tr></td></tr></td></tr></td></tr></td></tr></td></tr></td></tr></td></tr></td></tr></td></tr></td></tr></td></tr></td></tr></td></tr></tfoot>"
           );
           $("#tblReport").dataTable({
             aaData: mydata,
@@ -238,7 +260,18 @@
                 },
               },
               {
+                data: "id",
+                className: "text-center",
+                render: function (data) {
+                   return '<button onclick="removeById('+data+')" class="btn btn-danger">ลบ</button>'
+                }
+              },
+              {
                 data: "item",
+                className: "text-center",
+              },
+              {
+                data: "lot",
                 className: "text-center",
               },
               {
@@ -297,12 +330,86 @@
                 },
               },
               {
-                data: "id",
+                data: "sts_c",
                 className: "text-center",
-                render: function (data) {
-                   return '<button onclick="removeById('+data+')" class="btn btn-danger">Remove</button>'
-                }
-              }
+              },
+              {
+                data: "sts_si",
+                className: "text-center",
+              },
+              {
+                data: "sts_mn",
+                className: "text-center",
+              },
+              {
+                data: "sts_p",
+                className: "text-center",
+              },
+              {
+                data: "sts_s",
+                className: "text-center",
+              },
+              {
+                data: "sts_cu",
+                className: "text-center",
+              },
+              {
+                data: "sts_v",
+                className: "text-center",
+              },
+              {
+                data: "sts_ni",
+                className: "text-center",
+              },
+              {
+                data: "sts_cr",
+                className: "text-center",
+              },
+              {
+                data: "sts_mo",
+                className: "text-center",
+              },
+              {
+                data: "sts_ti",
+                className: "text-center",
+              },
+              {
+                data: "sts_nb",
+                className: "text-center",
+              },
+              {
+                data: "sts_al",
+                className: "text-center",
+              },
+              {
+                data: "sts_b",
+                className: "text-center",
+              },
+              {
+                data: "sts_co",
+                className: "text-center",
+              },
+              {
+                data: "sts_pb",
+                className: "text-center",
+              },
+              {
+                data: "sts_fe",
+                className: "text-center",
+              },
+              {
+                data: "sts_ts",
+                className: "text-center",
+              },
+              {
+                data: "sts_ys",
+                className: "text-center",
+              },
+              {
+                data: "sts_el",
+                className: "text-center",
+              },
+             
             ],
             dom:
               "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +

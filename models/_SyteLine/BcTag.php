@@ -510,10 +510,36 @@ where STS_qty_move_line.doc_num = '$doc_num' and mv_bc_tag.active=1 and mv_bc_ta
   , matltran_mst.wc as FM, concat(sts_po_qc.thick,' x ',sts_po_qc.width) as thick
   , convert(date,mv_bc_tag.mfg_date) as [date], mv_bc_tag.item
   , sts_po_qc.grade
+  , mv_bc_tag.lot
+  , STS_QA_LAB.sts_c
+  , STS_QA_LAB.sts_si
+  , STS_QA_LAB.sts_mn
+  , STS_QA_LAB.sts_p
+  , STS_QA_LAB.sts_s
+  , STS_QA_LAB.sts_cu
+  , STS_QA_LAB.sts_v
+  , STS_QA_LAB.sts_ni
+  , STS_QA_LAB.sts_cr
+  , STS_QA_LAB.sts_mo
+  , STS_QA_LAB.sts_ti
+  , STS_QA_LAB.sts_nb
+  , STS_QA_LAB.sts_al
+  , STS_QA_LAB.sts_b
+  , STS_QA_LAB.sts_co
+  , STS_QA_LAB.sts_pb
+  , STS_QA_LAB.sts_fe
+  , STS_QA_LAB.sts_ts
+  , STS_QA_LAB.sts_ys
+  , STS_QA_LAB.sts_el
 from mv_bc_tag inner join item_mst on item_mst.item = mv_bc_tag.item
       inner join sts_po_qc on sts_po_qc.sno = mv_bc_tag.sts_no 
       inner join matltran_mst on matltran_mst.lot = mv_bc_tag.lot 
       and matltran_mst.trans_type='F'
+   left join STS_QA_LAB on STS_QA_LAB.sts_no = sts_po_qc.sno 
+   and STS_QA_LAB.c_no = sts_po_qc.c_no 
+   and STS_QA_LAB.h_no = sts_po_qc.h_no 
+   and STS_QA_LAB.thick = sts_po_qc.thick 
+   and STS_QA_LAB.width = sts_po_qc.width
 where mv_bc_tag.active = 1 and matltran_mst.wc like '%FM%' $wh $date ";
        
         $cSql = new SqlSrv();
