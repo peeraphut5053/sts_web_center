@@ -110,6 +110,11 @@
       <i class="fa fa-search"></i>&nbsp; Search
     </button>
   </div>
+  <div class="col-lg-1 col-md-1 col-sm-6 col-xs-6 text-left">
+    <button class="btn btn-danger" id="btnRemove">
+      <i class="fa fa-trash"></i>&nbsp; Clear Data
+    </button>
+  </div>
 </div>
 
 <div class="row" id="rowResultTable">
@@ -136,20 +141,40 @@
         <th class="bg-gray">หนา x กว้าง</th>
         <th class="bg-gray">ชั้นคุณภาพ</th>
         <th class="bg-gray">Date</th>
+        <!--<th class="bg-gray">Remove</th>-->
       </tr>
     </thead>
     <!--        <tbody id="tblReportList">
                     <tr><td align="center" colspan="12">.... No item search ....</td></tr>
                 </tbody>-->
+
   </table>
 </div>
 <script type="text/javascript">
+
+   let mydata = [];
+
   $("#btnSearch").click(function () {
     ReportItemSearch();
   });
   $("#txtStartDate,#txtEndDate").datepicker({
     dateFormat: "yy-mm-dd",
   });
+
+  function removeById(id) {
+    // remove item by id and update table data
+    let table = $("#tblReport").DataTable();
+    mydata = mydata.filter((item) => item.id != id);
+    table.clear()
+    table.rows.add(mydata)
+    table.draw()
+  }
+  
+  $("#btnRemove").click(function () {
+    mydata = [];
+    $("#tblReport").DataTable().clear().destroy();
+  });
+
   function ReportItemSearch() {
     var OldHtml = $("#btnSearch").html();
     let TagID = $("#txtTagID").val();
@@ -184,19 +209,24 @@
           EndDate: EndDate,
         },
         success: function (data) {
-          console.log(data);
+          // update mydata + old data 
+          mydata.push(...data);
+          // but not duplicate
+          // mydata = [...mydata, ...data.filter((item) => !mydata.some((old) => old.id == item.id))];
+
           $("#tblReport").DataTable().clear();
           $("#tblReport").append(
             "<tfoot><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td><td></td></td><td></td><td></td><td></td><td></td><td></td></tr></tfoot>"
           );
           $("#tblReport").dataTable({
-            aaData: data,
+            aaData: mydata,
             paging: false,
             fixedHeader: true,
             destroy: true,
             processing: true,
             scrollY: "65vh",
             scrollCollapse: true,
+            scrollX: true,
             columns: [
               {
                 data: "qc_oper_num",
@@ -266,6 +296,13 @@
                   return data.split(" ")[0];
                 },
               },
+              /*{
+                data: "id",
+                className: "text-center",
+                render: function (data) {
+                   return '<button onclick="removeById('+data+')" class="btn btn-danger">Remove</button>'
+                }
+              },*/
             ],
             dom:
               "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
@@ -311,16 +348,7 @@
     dateFormat: "yy-mm-dd",
   });
 
-  var intVal2 = function (i) {
-    return typeof i === "string"
-      ? i.replace(/[\$,]/g, "") * 1
-      : typeof i === "number"
-      ? i
-      : 0;
-  };
-
   function SaveQc(qc_id,qc_value) {
-
     $.ajax({
       type: "POST",
       url: "././module/RPT_QC_Lab_Tag_Detail/data.php",
