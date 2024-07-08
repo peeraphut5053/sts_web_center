@@ -555,6 +555,45 @@ where mv_bc_tag.active = 1 and matltran_mst.wc like '%FM%' $wh $date ";
         array_splice($rs, count($rs) - 1, 1);
         return $rs;
     }
+
+    function getDataChart($StartDate, $EndDate, $StartLastMonth, $EndLastMonth) {
+        $query = "select wcGroup,  sum(sumA) as sumA, sum(sumB) as sumB, sum(sumC) as sumC
+from V_STS_PROD_TIME_REPORT
+where [date] between '$StartDate' and '$EndDate'
+group by  wcGroup";
+$query1 = "select wcGroup,  sum(sumA) as sumA, sum(sumB) as sumB, sum(sumC) as sumC
+from V_STS_PROD_TIME_REPORT
+where [date] between '$StartLastMonth' and '$EndLastMonth'
+group by  wcGroup";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        $rs1 = $cSql->SqlQuery($this->StrConn, $query1);
+
+        array_splice($rs, count($rs) - 1, 1);
+        array_splice($rs1, count($rs1) - 1, 1);
+        return array($rs,$rs1);
+    }
+
+    function getGroupChart($StartDate, $EndDate, $StartLastMonth, $EndLastMonth, $GroupBy) {
+        $query = "select *
+from V_STS_PROD_TIME_REPORT
+where [date] between '$StartDate' and '$EndDate'
+  and wcGroup =  '$GroupBy'
+order by [date]";
+$query1 = "select *
+from V_STS_PROD_TIME_REPORT
+where [date] between '$StartLastMonth' and '$EndLastMonth'
+  and wcGroup = '$GroupBy'
+order by [date]";
+
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        $rs1 = $cSql->SqlQuery($this->StrConn, $query1);
+
+        array_splice($rs, count($rs) - 1, 1);
+        array_splice($rs1, count($rs1) - 1, 1);
+        return array($rs,$rs1);
+    }
 	
 }
 

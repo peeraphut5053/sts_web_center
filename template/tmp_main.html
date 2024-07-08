@@ -33,6 +33,23 @@
 
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
         <!--<script src="js/main.js" ></script>--> 
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+            tailwind.config = {
+              theme: {
+                extend: {
+                  colors: {
+                    clifford: '#da373d',
+                  },
+                  primary: {
+                    base: 'bg-clifford',
+                    hover: 'hover:bg-clifford-dark',
+                    active: 'active:bg-clifford-darker',
+                  },
+                }
+              }
+            }
+          </script>
     </head>
     <!--sidebar-collapse-->
     <body style="font-family: 'Athiti', sans-serif;" class="hold-transition skin-blue sidebar-mini wysihtml5-supported sidebar-collapse">
