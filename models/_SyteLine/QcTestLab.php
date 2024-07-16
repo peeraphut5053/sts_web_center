@@ -96,7 +96,7 @@ class QcTestLab {
         ,b.Uf_Schedule
         ,length,standard_sub
         ,b.uf_grade
-        ,b.sts_no,h_no,
+        ,a.sts_no,h_no,
               sts_c,sts_si,sts_mn,sts_p,sts_s,sts_cu,sts_v,sts_ni,sts_cr,sts_mo,
               sts_ti,sts_nb,sts_al,sts_b,sts_co,sts_pb,sts_fe,sts_ts,sts_ys,sts_el,
               Mec_test_TS,
@@ -120,12 +120,14 @@ class QcTestLab {
               test_date,
               thick,
               width 
-      from ait_preship_do_seq ait
-         inner join matltrack_mst mtk on ait.co_num = mtk.ref_num and ait.co_line = mtk.ref_line_suf
+      from do_seq_mst ait
+         inner join matltrack_mst mtk on ait.ref_num = mtk.ref_num and ait.ref_line = mtk.ref_line_suf
+    and mtk.date_seq = ait.date_seq and mtk.trans_date = ait.ship_date
+    and mtk.qty < 0 and mtk.ref_type = 'O'
          inner join mv_bc_tag mv on mtk.item = mv.item and mtk.lot = mv.lot and mv.ship_stat = 1
-         inner join STS_QA_LAB_SUB b on (b.sts_no = mv.sts_no or b.sts_no = mv.sts_no2 or b.sts_no = mv.sts_no3)
+   inner join sts_qa_lab a  on (a.sts_no = mv.sts_no or a.sts_no = mv.sts_no2 or a.sts_no = mv.sts_no3)
+         left join STS_QA_LAB_SUB b on a.sts_no = b.sts_no
            and mv.item like '%'+b.item+'%'
-          left join sts_qa_lab a  on a.sts_no = b.sts_no 
           $where
       order by do_num, sts_no, item";
         $cSql = new SqlSrv();
