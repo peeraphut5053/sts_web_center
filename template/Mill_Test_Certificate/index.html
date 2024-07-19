@@ -1,0 +1,555 @@
+
+
+<div class="row" style="border-bottom:solid 1px #e8e8e8;">  
+    <div class="row">
+        <h3 style="padding-left:5px;">Mill Test Certificate</h3>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2  col-search">
+        <div class="input-group">
+            <div class="input-group-addon">From STS_NO</div>
+            <input type="text" class="form-control txt-filter" id="from_stsnoR">
+        </div>
+    </div>
+
+    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2  col-search">
+        <div class="input-group">
+            <div class="input-group-addon">To STS_NO</div>
+            <input type="text" class="form-control txt-filter" id="to_stsnoR">
+        </div>
+    </div>
+
+    <!-- <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2  col-search">
+        <div class="input-group">
+            <div class="input-group-addon">Coil No</div>
+            <input type="text" value="" class="form-control txt-filter" id="c_noR">
+        </div>
+    </div> -->
+
+    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2  col-search">
+        <div class="input-group">
+            <div class="input-group-addon">Heat No</div>
+            <input type="text"  class="form-control txt-filter" id="h_noR">
+        </div>
+    </div>
+
+    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2  col-search">
+        <div class="input-group">
+            <div class="input-group-addon">Size</div>
+            <input type="text"  class="form-control txt-filter" id="sizeR">
+        </div>
+    </div>
+
+    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2  col-search">
+        <div class="input-group">
+            <div class="input-group-addon">Standard</div>
+            <input type="text"  class="form-control txt-filter" id="standardR">
+        </div>
+    </div>
+
+    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2  col-search">
+        <div class="input-group">
+            <div class="input-group-addon">&nbsp;Prod FM_No&nbsp;&nbsp;</div>
+            <input type="text"  class="form-control txt-filter" id="prod_FM_noR">
+        </div>
+    </div>
+
+    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2  col-search">
+        <div class="input-group">
+            <div class="input-group-addon">Prod_Date</div>
+            <input type="text"  class="form-control txt-filter" id="prod_dateR">
+        </div>
+    </div>
+
+    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2  col-search">
+        <div class="input-group">
+            <div class="input-group-addon">Do_num</div>
+            <input type="text"  class="form-control txt-filter" id="do_numR">
+        </div>
+    </div>
+
+    <div class="col-lg-1 col-md-2 col-sm-1 col-xs-6  col-search">
+        <button id="BtnSearchR" class="btn btn-info"><i class="fa fa-search"></i>Search</button>
+    </div>
+</div>
+
+    <br>
+
+    <div class="row" id="divReportR">
+        <table class="table table-condensed table-bordered table-striped" id="tblReportR">
+            <thead>
+                <tr>
+                    <!-- <th></th>
+                    <th></th> -->
+                    <th rowspan="2" class="bg-gray">do_num</th>
+                    <th rowspan="2" class="bg-gray">item</th>
+                    <th rowspan="2" class="bg-gray">หมายเลข <br> ปฏิบัติการ</th>
+                    <th rowspan="2" class="bg-gray">size</th>
+                    <th colspan="6" class="bg-gray">Product</th>
+                    <th colspan="20" class="bg-info">Chemical analysis from Lab.'STS</th>
+                    <th colspan="6" style='background-color:#C5E4C7;'>Mechanical Testing</th>
+                    <th colspan='6' style='background-color:#FFCCCC;'>Not Accept Mechanical Testing</th>
+                    <th colspan='4' class="bg-gray">Charpy V-notch Testing Absorbed Energy (Joules)</th>
+                    <!-- <th colspan='3' class="bg-gray">Metallurgical Analysis</th>
+                    <th rowspan="2" class="bg-gray">Hydro_test</th> -->
+                    <th colspan='4' class="bg-gray">Production Date</th>
+                </tr>
+                <tr>
+                    <!-- <th>หมายเลข <br> ปฏิบัติการ</th>
+                    <th>size</th> -->
+                    <!-- <th class="bg-gray">thick</th> -->
+                    <th class="bg-gray">schedule</th> 
+                    <th class="bg-gray">length</th>
+                    <th class="bg-gray">standard</th>
+                    <th class="bg-gray">grade</th> 
+                    <th class="bg-gray">sts_no</th>
+                    <th class="bg-gray">heat_no</th>
+                    <th>sts_C</th>
+                    <th>sts_Si</th>
+                    <th>sts_Mn</th>
+                    <th>sts_P</th>
+                    <th>sts_S</th>
+                    <th>sts_Cu</th>
+                    <th>sts_V</th>
+                    <th>sts_Ni</th>
+                    <th>sts_Cr</th>
+                    <th>sts_Mo</th>
+                    <th>sts_Ti</th>
+                    <th>sts_Nb</th>
+                    <th>sts_Al</th>
+                    <th>sts_B</th>
+                    <th>sts_Co</th>
+                    <th>sts_Pb</th>
+                    <th>sts_Fe</th>
+                    <th>sts_Ts</th>
+                    <th>sts_Ys</th>
+                    <th>sts_El</th>
+                    <th>Mec_test_TS</th>
+                    <th>Mec_test_YS</th>
+                    <th>Mec_test_EI</th>
+                    <th>Mec_test_EL_1</th>
+                    <th>Mec_test_EL_2</th>
+                    <th>Mec_test_EL_3</th>
+                    <th>Not_Mec_test_TS</th>
+                    <th>Not_Mec_test_YS</th>
+                    <th>Not_Mec_test_EI</th>
+                    <th>Not_Mec_test_EL_1</th>
+                    <th>Not_Mec_test_EL_2</th>
+                    <th>Not_Mec_test_EL_3</th>
+
+                    <th>charpy_mean</th>
+                    <th>charpy1</th>
+                    <th>charpy2</th>
+                    <th>charpy3</th>
+<!-- 
+                    <th>Metal_P</th>
+                    <th>Metal_F</th>
+                    <th>Metal_M</th> -->
+
+                    <th>prod_FM_no</th>
+                    <th>prod_date</th>
+                    <th>thick x width</th>
+                    <th>test_date</th>
+
+                </tr>
+                
+        </table>
+    </div>
+
+<script type="text/javascript">
+
+    $("#BtnSearchR").click(function () {
+            ReportAllSearch();
+        });
+
+        $("#prod_dateR").datepicker({
+        dateFormat: 'yy-mm-dd',
+    });
+
+
+    function ReportAllSearch() {
+    var OldHtml = $("#BtnSearchR").html();
+    var from_stsno = $("#from_stsnoR").val();
+    var to_stsno = $("#to_stsnoR").val();
+    var c_no = $("#c_noR").val();
+    var h_no = $("#h_noR").val();
+
+    var size = $("#sizeR").val();
+    var standard = $("#standardR").val();
+    var prod_FM_no = $("#prod_FM_noR").val();
+    var prod_date = $("#prod_dateR").val();
+    var do_num = $("#do_numR").val();
+
+    if ((from_stsno == "") && (to_stsno == "") && (h_no == "") && (size == "") && (standard == "") && (prod_FM_no == "") && (prod_date == "") && (do_num == "")) {
+        $.alert("กรุณาเลือกช่วง STS_NO หรือป้อนรายละเอียดเพื่อกรองข้อมูล");
+    } else {
+        $.ajax({
+            type: 'POST',
+            url: "././module/APP_Qc_TestLab/data.php",
+            dataType: 'json',
+            beforeSend: function () {
+                $("#BtnSearchR").html("<i class='fa fa-spinner fa-spin'>");
+            },
+            data: {
+                "load": "searchAll",
+                "from_stsno": from_stsno,
+                "to_stsno": to_stsno,
+                "c_no": c_no,
+                "h_no": h_no,
+                "size": size,
+                "standard": standard,
+                "prod_FM_no": prod_FM_no,
+                "prod_date": prod_date,
+                "do_num": do_num,
+            },
+            success: function (data) {
+                console.log(data)
+                $("#tblReportR").dataTable().fnDestroy();
+                var table = $('#tblReportR').DataTable({
+                    scrollY: "400px",
+                    "scrollX": true,
+                    scrollCollapse: true,
+                    "aaData": data,
+                    "paging": false,
+//                        fixedColumns: {
+//                            leftColumns: 1,
+//                        },
+                    "searching": false,
+                    "bInfo": false,
+
+                    "columns": [
+                        {"data": "do_num",
+                                "className": "text-center",
+                        },
+                        {"data": "item",
+                                "className": "text-center",
+                        },
+                        {"data": "opr_no",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                if (data == "NOT"){
+                                    var ret = `<span style="color: red;">${(data)}</span>`
+                                }
+                                else{
+                                    var ret = `<span>${(data)}</span>`
+                                }
+                            return ret;
+                        }
+                        },
+                        {"data": "size",
+                            "className": "text-center",
+                        },
+                        // {"data": "thick_sub",
+                        //     "className": "text-center",
+                        // },
+                        {"data": "Uf_Schedule",
+                            "className": "text-center",
+                        },
+                        {"data": "length",
+                            "className": "text-center",
+                        },
+                        {"data": "standard_sub",
+                            "className": "text-center",
+                        },
+                        {"data": "uf_grade",
+                            "className": "text-center",
+                        },
+                        {"data": "sts_no",
+                            "className": "text-center",
+                        },
+                        {"data": "h_no",
+                            "className": "text-center",
+                        },
+                        {"data": "sts_c",
+                        "className": "text-left",
+                        },
+                        {"data": "sts_si",
+                            "className": "text-left",
+                        },
+                        {"data": "sts_mn",
+                            "className": "text-left",                          
+                        },
+                        {"data": "sts_p", 
+                            "className": "text-left",                           
+                        },
+                        {"data": "sts_s",
+                            "className": "text-left",
+                        },
+                        {"data": "sts_cu",
+                            "className": "text-left",
+                        },
+                        {"data": "sts_v",
+                            "className": "text-left",                          
+                        },
+                        {"data": "sts_ni",
+                            "className": "text-left",                           
+                        },
+                        {"data": "sts_cr",
+                            "className": "text-left",                          
+                        },
+                        {"data": "sts_mo",
+                            "className": "text-left",                           
+                        },
+                        {"data": "sts_ti",
+                            "className": "text-left",                         
+                        },
+                        {"data": "sts_nb",
+                            "className": "text-left",
+                        },
+                        {"data": "sts_al",
+                            "className": "text-left",
+                        },
+                        {"data": "sts_b", 
+                            "className": "text-left",
+                        },
+                        {"data": "sts_co", 
+                            "className": "text-left",
+                        },
+                        {"data": "sts_pb", 
+                            "className": "text-left",
+                        },
+                        {"data": "sts_fe",
+                            "className": "text-left",
+                        },
+                        {"data": "sts_ts",
+                            "className": "text-left",
+                        },
+                        {"data": "sts_ys",
+                            "className": "text-left",
+                        },
+                        {"data": "sts_el",
+                            "className": "text-left",
+                        },
+                        {"data": "Mec_test_TS",
+                            "className": "text-left",
+                        },
+                        {"data": "Mec_test_YS",
+                            "className": "text-left",
+                        },
+                        {"data": "Mec_test_EI",
+                            "className": "text-left",
+                        },
+                        {"data": "Mec_test_EL_1",
+                            "className": "text-left",
+                        },
+                        {"data": "Mec_test_EL_2",
+                            "className": "text-left",
+                        },
+                        {"data": "Mec_test_EL_3",
+                            "className": "text-left",
+                        },
+                        {"data": "Not_Mec_test_TS",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                            var ret = `<span style="color: red;">${(data)}</span>`
+                            return ret;
+                        }
+                        },
+                        {"data": "Not_Mec_test_YS",
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                            var ret = `<span style="color: red;">${(data)}</span>`
+                            return ret;
+                        }
+                        },
+                        {"data": "Not_Mec_test_EI",
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                            var ret = `<span style="color: red;">${(data)}</span>`
+                            return ret;
+                        }
+                        },
+                        {"data": "Not_Mec_test_EL_1",
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                            var ret = `<span style="color: red;">${(data)}</span>`
+                            return ret;
+                        }
+                        },
+                        {"data": "Not_Mec_test_EL_2",
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                            var ret = `<span style="color: red;">${(data)}</span>`
+                            return ret;
+                        }
+                        },
+                        {"data": "Not_Mec_test_EL_3",
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                            var ret = `<span style="color: red;">${(data)}</span>`
+                            return ret;
+                        }
+                        },
+
+                        {"data": "charpy_mean",
+                            "className": "text-left",
+                        },
+                        {"data": "charpy1",
+                            "className": "text-left",
+                        },
+                        {"data": "charpy2",
+                            "className": "text-left",
+                        },
+                        {"data": "charpy3",
+                            "className": "text-left",
+                        },
+                        // {"data": "Metal_P",
+                        //     "className": "text-center",
+                        // },
+                        // {"data": "Metal_F",
+                        //     "className": "text-center",
+                        // },
+                        // {"data": "Metal_M",
+                        //     "className": "text-center",
+                        // },
+                        // {"data": "Hydro_test",
+                        //     "className": "text-center",
+                        // },
+                        {"data": "prod_FM_no",
+                            "className": "text-center",
+                        },
+                        {"data": "prod_date",
+                                "className": "text-center",
+                                "render": function (data, type, row, meta) {
+                                var ret = formatDate(data);
+                                return ret;
+                            }
+                            },
+                            {"data": {thick: "thick", width: "width"},
+                                "className": "text-center",
+                                "render": function (data, type, row, meta) {
+                                var ret = data.thick + " x " + data.width;
+                                return ret;
+                            }
+                            },
+                            
+                            {"data": "test_date",
+                                "className": "text-center",
+                                "render": function (data, type, row, meta) {
+                                var ret = formatDate(data);
+                                return ret;
+                            }
+                            },
+                    ],
+                    'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                            "<'row'<'col-md-12'tr>>" +
+                            "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                    buttons: [
+                        {
+                            extend: 'print',
+                            text: "<i class='fa fa-print'></i>&nbsp;Print",
+                            title: ''
+                        },
+                        {
+                            extend: 'excel',
+                            text: "<i class='fa fa-file-excel'></i>&nbsp;Excel&nbsp;",
+                            title: `ReportQc sts_no ${from_stsno}-${to_stsno}`,
+                            customize: function (xlsx) {
+                                var sheet = xlsx.xl.worksheets['sheet1.xml'];
+                                var numrows = 2;
+
+
+                                //debugger;
+                                // var mergeCells = $('mergeCells', sheet);
+                                // mergeCells[0].appendChild(_createNode(sheet, 'mergeCell', {
+                                //     attr: {
+                                //         ref: ['B2:G2'],
+                                //     }
+                                // }));
+
+                                // var mergeCells2 = $('mergeCells', sheet);
+                                // mergeCells2[0].appendChild(_createNode(sheet, 'mergeCell', {
+                                //     attr: {
+                                //         ref: ['H2:X2'],
+                                //     }
+                                // }));
+
+                                // var mergeCells3 = $('mergeCells', sheet);
+                                // mergeCells3[0].appendChild(_createNode(sheet, 'mergeCell', {
+                                //     attr: {
+                                //         ref: ['AC2:AV2'],
+                                //     }
+                                // }));
+
+                                // mergeCells.attr('count', mergeCells.attr('count') + 1);
+                                // function _createNode(doc, nodeName, opts) {
+                                //     var tempNode = doc.createElement(nodeName);
+
+                                //     if (opts) {
+                                //         if (opts.attr) {
+                                //             $(tempNode).attr(opts.attr);
+                                //         }
+
+                                //         if (opts.children) {
+                                //             $.each(opts.children, function (key, value) {
+                                //                 tempNode.appendChild(value);
+                                //             });
+                                //         }
+
+                                //         if (opts.text !== null && opts.text !== undefined) {
+                                //             tempNode.appendChild(doc.createTextNode(opts.text));
+                                //         }
+                                //     }
+
+                                //     return tempNode;
+                                // }
+//                                 var clR = $('row', sheet);
+
+//                                 //update Row
+//                                 clR.each(function () {
+//                                     var attr = $(this).attr('r');
+//                                     var ind = parseInt(attr);
+//                                     ind = ind + numrows;
+//                                     $(this).attr("r", ind);
+//                                 });
+
+//                                 // Create row before data
+//                                 $('row c ', sheet).each(function () {
+//                                     var attr = $(this).attr('r');
+//                                     var pre = attr.substring(0, 1);
+//                                     var ind = parseInt(attr.substring(1, attr.length));
+//                                     ind = ind + numrows;
+//                                     $(this).attr("r", pre + ind);
+//                                 });
+
+//                                 function Addrow(index, data) {
+//                                     msg = '<row r="' + index + '">'
+//                                     for (i = 0; i < data.length; i++) {
+//                                         var key = data[i].key;
+//                                         var value = data[i].value;
+//                                         msg += '<c t="inlineStr" r="' + key + index + '">';
+//                                         msg += '<is>';
+//                                         msg += '<t>' + value + '</t>';
+//                                         msg += '</is>';
+//                                         msg += '</c>';
+//                                     }
+//                                     msg += '</row>';
+//                                     return msg;
+//                                 }
+//                                 //insert
+// //                                    var r1 = Addrow(1, [{key: 'A', value: '1'}, {key: 'B', value: '789'}]);
+// //                                    var r2 = Addrow(2, [{key: 'A', value: '3'}, {key: 'B', value: '4'}, {key: 'C', value: '4'}]);
+//                                 var r2 = Addrow(2, [{key: 'B', value: 'Product'}, {key: 'H', value: 'Chemical analysis from Lab.STS'}, {key: 'AC', value: 'Chemical analysis from Lab.STS'}]);
+// //                                    var a = `<row r="2">
+// //                                                <c t="inlineStr"><is><t>Hot Roll Coil</t></is></c>
+// //                                                <c t="inlineStr"><is><t>Hot Roll Coil</t></is></c>
+// //                                            </row>`;
+//                                 sheet.childNodes[0].childNodes[1].innerHTML = r2 + sheet.childNodes[0].childNodes[1].innerHTML;
+                            }
+                        },
+                    ],
+                });
+
+                $('#tblReportR').loading("stop");
+                $("#BtnSearchR").html("<i class='fa fa-search'></i>Search");
+            },
+            error: function (e) {
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+    }
+}
+</script>

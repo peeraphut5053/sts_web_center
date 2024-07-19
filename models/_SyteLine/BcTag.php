@@ -506,7 +506,7 @@ where STS_qty_move_line.doc_num = '$doc_num' and mv_bc_tag.active=1 and mv_bc_ta
         $query = "select  qc_oper_num , id 
   , uf_nps as size, item_mst.uf_schedule, item_mst.uf_length, item_mst.uf_spec as [standard]
   , item_mst.uf_grade,mv_bc_tag.sts_no
-  , sts_po_qc.c_no as Coil_No, STS_po_qc.h_no as Heat_no
+  , STS_QA_LAB.c_no as Coil_No, STS_po_qc.h_no as Heat_no
   , matltran_mst.wc as FM, concat(sts_po_qc.thick,' x ',sts_po_qc.width) as thick
   , convert(date,mv_bc_tag.mfg_date) as [date], mv_bc_tag.item
   , sts_po_qc.grade
@@ -536,7 +536,7 @@ from mv_bc_tag inner join item_mst on item_mst.item = mv_bc_tag.item
       inner join matltran_mst on matltran_mst.lot = mv_bc_tag.lot 
       and matltran_mst.trans_type='F'
    left join STS_QA_LAB on STS_QA_LAB.sts_no = sts_po_qc.sno 
-   and STS_QA_LAB.c_no = sts_po_qc.c_no 
+ --  and STS_QA_LAB.c_no = sts_po_qc.c_no 
    and STS_QA_LAB.h_no = sts_po_qc.h_no 
    and STS_QA_LAB.thick = sts_po_qc.thick 
    and STS_QA_LAB.width = sts_po_qc.width
