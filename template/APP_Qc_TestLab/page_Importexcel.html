@@ -845,6 +845,9 @@ function format(d) {
                             <th colspan='4'>Charpy V-notch Testing</th>
 
                             <th colspan='4'>Production</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
                             <th style='background-color:#f36c60;'></th>
                         </tr>
                         <tr class="bg-gray">
@@ -866,6 +869,9 @@ function format(d) {
                             <th colspan='4'>Absorbed Energy (Joules)</th>
 
                             <th colspan='4'>Date</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
                             <th style='background-color:#f36c60;'></th>
                         </tr>
                         <tr class="bg-gray">
@@ -901,7 +907,9 @@ function format(d) {
                             <th>produce date</th>
                             <th>test date</th>
                             <th>remark</th>
-
+                            <th>Pb %</th>
+                            <th>Weight of Zinc Coating G/m</th>
+                            <th>HYDRO-STATIC TEST (PSI)</th>
                             <th style='background-color:#f36c60;'>Delete</th>
                         </tr>
                     </thead> 
@@ -1063,10 +1071,22 @@ function format(d) {
                                 return ret;
                             }
                         },
-                            {   "data": "", 
+                        {
+                            "data": "QC_Pb",
+                            "className": "text-center",
+                        },
+                        {
+                            "data": "QC_weight_coat",
+                            "className": "text-center",
+                        },
+                        {
+                            "data": "QC_hydro",
+                            "className": "text-center",
+                        },
+                        {   "data": "", 
                             "className": "text-center",
                             "render": function (data, type, row, meta) {
-                                return "<a id='ItemDelete!!" + row["opr_no"] + "!!" + row["length"] + "!!" + row["sts_no"] + "!!" + row["prod_FM_no"] + "!!" + row["prod_Date"] + "' OnClick='CheckDeleteSub(`Delete`,this.id)'><i class='fa fa-trash'></i></a>";
+                                return "<a id='ItemDelete!!" + row["opr_no"] + "!!" + row["length"] + "!!" + row["sts_no"] + "!!" + row["prod_FM_no"] + "!!" + row["prod_Date"] + "!! " + row["size"] + "'' OnClick='CheckDeleteSub(`Delete`,this.id)'><i class='fa fa-trash'></i></a>";
                         }},
                         ]
                     });
@@ -1118,13 +1138,14 @@ function CheckDeleteSub(form, data) {
     var sts_no = data.split("!!")[3];
     var prod_FM_no = data.split("!!")[4];
     var prod_Date = data.split("!!")[5];
+    var size = data.split("!!")[6];
     $.confirm({
                 title: 'ลบข้อมูลใช่หรือไม่',
                 theme: 'modern',
                 // content: '',
                 buttons: {
                     confirm: function () {
-                        DeleteSub('Delete', opr_no, length, sts_no, prod_FM_no, prod_Date);
+                        DeleteSub('Delete', opr_no, length, sts_no, prod_FM_no, prod_Date, size);
                     },
                     cancel: function () {
                     },
@@ -1139,6 +1160,7 @@ function DeleteSub(form, opr_no, length, sts_no, prod_FM_no, prod_Date) {
     console.log("sts_no :" + sts_no);
     console.log("prod_FM_no :" + prod_FM_no);
     console.log("prod_Date :" + prod_Date);
+    console.log("size :" + size);
     $.ajax({
             url: "././module/APP_Qc_TestLab/data.php",
             type: 'POST',
@@ -1148,7 +1170,9 @@ function DeleteSub(form, opr_no, length, sts_no, prod_FM_no, prod_Date) {
                 length: length,
                 sts_no: sts_no,
                 prod_FM_no: prod_FM_no,
-                prod_Date: prod_Date
+                prod_Date: prod_Date,
+                size : size
+
             },
             success: function () {
                 Search();

@@ -1,10 +1,10 @@
 <div class="row" style="border-bottom:solid 1px #e8e8e8;">  
     <div class="row">
-        <h3 style="padding-left:5px;">Qc Test Lab</h3>
+        <h3 style="padding-left:5px;">Data Test Labs</h3>
     </div>
 </div>
 
-<div class="row">
+<div class="row flex">
     <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2  col-search">
         <div class="input-group">
             <div class="input-group-addon">From STS_NO</div>
@@ -30,6 +30,18 @@
         <div class="input-group">
             <div class="input-group-addon">Heat No</div>
             <input type="text"  class="form-control txt-filter" id="h_noM">
+        </div>
+    </div>
+    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2  col-search">
+        <div class="input-group">
+            <div class="input-group-addon">Thick</div>
+            <input type="text"  class="form-control txt-filter" id="weight">
+        </div>
+    </div>
+    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2  col-search">
+        <div class="input-group">
+            <div class="input-group-addon">Width</div>
+            <input type="text"  class="form-control txt-filter" id="width">
         </div>
     </div>
 
@@ -113,7 +125,9 @@
     var to_stsno = $("#to_stsnoM").val();
     var c_no = $("#c_noM").val();
     var h_no = $("#h_noM").val();
-    if ((from_stsno == "") && (to_stsno == "") && (h_no == "") && (c_no == "")) {
+    var weight = $("#weight").val();
+    var width = $("#width").val();
+    if ((from_stsno == "") && (to_stsno == "") && (h_no == "") && (c_no == "" && (weight == "") && (width == ""))) {
         $.alert("กรุณาเลือกช่วง STS_NO หรือป้อนรายละเอียดเพื่อกรองข้อมูล");
     } else {
         $.ajax({
@@ -128,7 +142,9 @@
                 "from_stsno": from_stsno,
                 "to_stsno": to_stsno,
                 "c_no": c_no,
-                "h_no": h_no
+                "h_no": h_no,
+                "weight": weight,
+                "width": width
             },
             success: function (data) {
                 console.log(data)

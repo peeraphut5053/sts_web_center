@@ -68,7 +68,7 @@
   }
 </style>
 <div class="row">
-  <h4 class="text-header text-center">QC Lab Tag Detail</h4>
+  <h4 class="text-header text-center">HRC In Process of FM For Lab</h4>
 </div>
 <div class="row item-center">
   <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
@@ -126,8 +126,8 @@
     <thead>
       <tr>
         <!--<th >#</th>-->
-        <th class="bg-gray">หมายเลขปฏิบัติการ</th>
         <th class="bg-gray">Remove</th>
+        <th class="bg-gray">หมายเลขปฏิบัติการ</th>
         <th class="bg-gray">Item</th>
         <th class="bg-gray">Lot</th>
         <th class="bg-gray">Tag ID</th>
@@ -265,6 +265,13 @@
             scrollX: true,
             columns: [
               {
+                data: "id",
+                className: "text-center",
+                render: function (data) {
+                   return '<button onclick="removeById('+data+')" class="btn btn-danger"><i class="fa fa-trash"></button>'
+                }
+              },
+              {
                 data: "qc_oper_num",
                 className: "text-center",
                 render: function (data, type, row, meta) {
@@ -272,13 +279,6 @@
                   let ret = `<span hidden>${qc_oper_num}</span><input type='text' class='input-text-value' size='20' id=${row.id} onchange="SaveQc(this.id,value);" value='${qc_oper_num}' />`;
                   return ret;
                 },
-              },
-              {
-                data: "id",
-                className: "text-center",
-                render: function (data) {
-                   return '<button onclick="removeById('+data+')" class="btn btn-danger">ลบ</button>'
-                }
               },
               {
                 data: "item",

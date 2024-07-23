@@ -76,6 +76,12 @@ if ($load == 'search') {
     if ($h_no != "") {
         $where = $where . " AND h_no = '" . $h_no . "' ";
     }
+    if ($weight != "") {
+        $where = $where . " AND thick = '" . $weight . "' ";
+    }
+    if ($width != "") {
+        $where = $where . " AND width = '" . $width . "' ";
+    }
     $QcTestLab = $QcTestLab->SearchQcTestLab_Main($where);
     echo json_encode($QcTestLab);    
  }
@@ -255,7 +261,7 @@ if ($load == 'DeleteSub') {
     $CallModel->SyteLine_Models();
     $QcTestLab = new QcTestLab();
     $QcTestLab->setConn($ConnSL);
-    $QcTestLab = $QcTestLab->DeleteSub($opr_no,$length, $sts_no, $prod_FM_no, $prod_Date);
+    $QcTestLab = $QcTestLab->DeleteSub($opr_no,$length, $sts_no, $prod_FM_no, $prod_Date, $size);
     echo json_encode($QcTestLab); 
 }
 
