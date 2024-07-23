@@ -170,7 +170,7 @@
             "data": "Issue_Withdraw",
             "className": "text-right",
             "render": function (data, type, row) {
-                var ret = formatMoney(data);
+                var ret = (data === null || data === '') ? '0.00' : parseFloat(data).toLocaleString('th', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
                 return ret;
             }
         },
