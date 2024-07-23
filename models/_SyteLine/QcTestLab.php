@@ -120,14 +120,20 @@ class QcTestLab {
               test_date,
               thick,
               width 
+     ,QC_Pb
+     ,QC_weight_coat
+     ,QC_hydro
+     ,cust = case when co_mst.cust_num like 'EX%' then ca.addr##1 else ca.name end
       from do_seq_mst ait
          inner join matltrack_mst mtk on ait.ref_num = mtk.ref_num and ait.ref_line = mtk.ref_line_suf
     and mtk.date_seq = ait.date_seq and mtk.trans_date = ait.ship_date
     and mtk.qty < 0 and mtk.ref_type = 'O'
          inner join mv_bc_tag mv on mtk.item = mv.item and mtk.lot = mv.lot and mv.ship_stat = 1
-   inner join sts_qa_lab a  on (a.sts_no = mv.sts_no or a.sts_no = mv.sts_no2 or a.sts_no = mv.sts_no3)
+   left join sts_qa_lab a  on (a.sts_no = mv.sts_no or a.sts_no = mv.sts_no2 or a.sts_no = mv.sts_no3)
          left join STS_QA_LAB_SUB b on a.sts_no = b.sts_no
-           and mv.item like '%'+b.item+'%'
+           and mv.item like '%'+b.item+'%' 
+  inner join co_mst on co_mst.co_num = ait.ref_num
+  inner join custaddr_mst ca on ca.cust_num = co_mst.cust_num and ca.cust_seq = co_mst.cust_seq
           $where
       order by do_num, sts_no, item";
         $cSql = new SqlSrv();
@@ -154,8 +160,8 @@ class QcTestLab {
         return $rs0;
     }
 
-    function DeleteSub($opr_no,$length, $sts_no, $prod_FM_no, $prod_Date) {
-        $query = "DELETE from STS_QA_LAB_SUB where opr_no = '$opr_no' and  sts_no = '$sts_no'  and prod_FM_no = '$prod_FM_no' and length = '$length'  and convert(date,prod_date) = '$prod_Date'";
+    function DeleteSub($opr_no,$length, $sts_no, $prod_FM_no, $prod_Date,$size) {
+        $query = "DELETE from STS_QA_LAB_SUB where opr_no = '$opr_no' and  sts_no = '$sts_no'  and prod_FM_no = '$prod_FM_no' and length = '$length' and size = '$size'  and convert(date,prod_date) = '$prod_Date'";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);
