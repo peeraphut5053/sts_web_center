@@ -304,7 +304,7 @@ class Invoice {
         if (($start_invdate) && ($end_invdate)) {
             $criteria_date = " AND ( inv_date BETWEEN '$start_invdate' AND '$end_invdate' ) ";
         }
-        $query = "SELECT  * FROM V_WebApp_InvItem_All "
+        $query = "SELECT  * FROM V_WebApp_InvItem_IN "
                 . "WHERE  has_inv_child <=0 and item <> 'ZR-22400'   and Uf_Ref_InvNum is  null     "
                 . " $criteria_inv "
                 . " $SaleCriteria "
