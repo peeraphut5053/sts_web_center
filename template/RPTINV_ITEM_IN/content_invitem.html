@@ -475,17 +475,10 @@
                                     }
                                 },
                                 {
-                                    "data": {QtyPCS: "QtyPCS", um: "um", unit_weight: "unit_weight"},
+                                    "data": "QtyPCS",
                                     "className": "text-right",
                                     "render": function (data, type, row, meta) {
-                                        var ret;
-                                        if (data.um == "KG") {
-                                            calqty = Math.ceil(parseFloat(data.QtyPCS) / parseFloat(data.unit_weight));
-                                            //ret = formatMoney(calqty - 1);
-                                            ret = formatMoney(data.QtyPCS);
-                                        } else {
-                                            ret = formatMoney(data.QtyPCS);
-                                        }
+                                        var ret = parseFloat(data).toLocaleString('th', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
                                         if (row["inv_num"].substring(0, 2) == "CN") {
                                             ret = "<span style='color:red;'>" + ret + "</span>";
                                         }
@@ -537,11 +530,12 @@
                                     "data": "AMT_2d",
                                     "className": "text-right",
                                     "render": function (data, type, row, meta) {
+                                        ret = parseFloat(data).toLocaleString('th', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
                                         if (row["inv_num"].substring(0, 2) == "CN") {
 
-                                            ret = "<span style='color:red;'>" + parseFloat(data).toFixed(2) + "</span>";
+                                            ret = "<span style='color:red;'>" + ret + "</span>";
                                         }
-                                        return data;
+                                        return ret;
                                     }
                                 },
                                 {
