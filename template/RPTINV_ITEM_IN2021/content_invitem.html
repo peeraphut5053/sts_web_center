@@ -547,11 +547,9 @@
                                     "data": "AMT",
                                     "className": "text-right",
                                     "render": function (data, type, row) {
-                                          var ret = data;
+                                        ret = parseFloat(data).toLocaleString('th', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
                                            if  (row["inv_num"].substring(0, 2) == "CN") {
-													
-										
-                                            ret = "<span style='color:red;'>" + formatMoney(data)+ "</span>";
+                                            ret = "<span style='color:red;'>" + ret + "</span>";
                                         }
                                         return ret;
                                     }
