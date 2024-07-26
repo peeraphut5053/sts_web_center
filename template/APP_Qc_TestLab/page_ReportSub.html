@@ -125,7 +125,7 @@
                 </tr>
         </table>
     </div>
-
+    <div id="divCountS" class="text-center font-bold text-md hidden">จำนวนรายการทั้งหมด : <span id="countS"></span> รายการ</div>
 <script type="text/javascript">
 
     $("#BtnSearchS").click(function () {
@@ -172,7 +172,8 @@
                 "prod_date": prod_date,
             },
             success: function (data) {
-                console.log(data)
+                $("#divCountS").removeClass("hidden");
+                $("#countS").html(data.length)
                 $("#tblReportS").dataTable().fnDestroy();
                 var table = $('#tblReportS').DataTable({
                     scrollY: "400px",

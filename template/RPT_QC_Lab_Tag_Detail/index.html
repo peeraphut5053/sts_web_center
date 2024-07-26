@@ -111,6 +111,11 @@
     </button>
   </div>
   <div class="col-lg-1 col-md-1 col-sm-6 col-xs-6 text-left">
+    <button class="btn btn-warning" id="btnDucplicate">
+      <i class="fa fa-scissors" aria-hidden="true"></i></i>&nbsp; Duplicate
+    </button>
+  </div>
+  <div class="col-lg-1 col-md-1 col-sm-6 col-xs-6 text-left">
     <button class="btn btn-danger" id="btnRemove">
       <i class="fa fa-trash"></i>&nbsp; Clear Data
     </button>
@@ -191,7 +196,19 @@
   }
 }
 
-
+  $("#btnDucplicate").click(function () {
+          let table = $("#tblReport").DataTable(); 
+          const oldLength = mydata.length;
+          mydata = mydata.filter((v, i, a) => a.findIndex(t => (t.lot === v.lot)) === i);
+          if (mydata.length == oldLength) {
+            $.alert("ไม่พบข้อมูล Lot ที่ซ้ำกัน");
+            return false;
+          }
+          table.clear()
+          table.rows.add(mydata)
+          table.draw()
+  })
+                  
   $("#txtStartDate,#txtEndDate").datepicker({
     dateFormat: "yy-mm-dd",
   });
