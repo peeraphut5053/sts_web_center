@@ -1155,14 +1155,7 @@ function CheckDeleteSub(form, data) {
             });
         }
 
-function DeleteSub(form, opr_no, length, sts_no, prod_FM_no, prod_Date) {
-    console.log("action :" + form); 
-    console.log("opr_no :" + opr_no);
-    console.log("length :" + length);
-    console.log("sts_no :" + sts_no);
-    console.log("prod_FM_no :" + prod_FM_no);
-    console.log("prod_Date :" + prod_Date);
-    console.log("size :" + size);
+function DeleteSub(form, opr_no, length, sts_no, prod_FM_no, prod_Date, size) {
     $.ajax({
             url: "././module/APP_Qc_TestLab/data.php",
             type: 'POST',
@@ -1177,7 +1170,7 @@ function DeleteSub(form, opr_no, length, sts_no, prod_FM_no, prod_Date) {
 
             },
             success: function () {
-                Search();
+                //Search();
             }
         });
     }  
