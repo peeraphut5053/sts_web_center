@@ -1434,4 +1434,36 @@ where left(customer_mst.cust_num,2) = 'EX' group by custaddr_mst.cust_num,custad
         return $rs0;
     }
 
+    function Report_AD($inv_num, $StartDate, $EndDate) {
+        
+        $date = "";
+        
+        if ($StartDate !== '' && $EndDate !== '') {
+           $date = " and inv_date between '$StartDate' and '$EndDate' ";
+        } else {
+           $date = "";
+        }
+
+        $query = "select inv_date,inv_num,cust_num,cust_name,item,item_description
+  ,qtyPCS = sum(qtyPCS) 
+  ,qtyKG = sum(qtyKG)
+  ,amt = sum(AMT)
+  ,um,group_final,unit_weight
+  ,item_size,item_thick,item_width,item_length,uf_unit_weight,group_code,uf_NPS,uf_TheoryWeightPerItem
+  ,uf_schedule,acct,terms_code,total_invamount
+  ,uf_weight_FT,uf_weight_metre, orig_inv_num
+from V_WebApp_InvItem_IN_noVAT
+where inv_num= '$inv_num' $date
+group by inv_date,inv_num,cust_num,cust_name,item,item_description
+  ,um,group_final,unit_weight
+  ,item_size,item_thick,item_width,item_length,uf_unit_weight,group_code,uf_NPS,uf_TheoryWeightPerItem
+  ,uf_schedule,acct,terms_code,total_invamount
+  ,uf_weight_FT,uf_weight_metre, orig_inv_num
+order by inv_date,inv_num";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+
 }

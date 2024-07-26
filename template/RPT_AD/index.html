@@ -1,0 +1,324 @@
+<style>
+    .col-search{
+        padding-left:3px;
+        padding-right:3px;
+    }
+    /*    table.dataTable thead .sorting:after,
+        table.dataTable thead .sorting:before,
+        table.dataTable thead .sorting_asc:after,
+        table.dataTable thead .sorting_asc:before,
+        table.dataTable thead .sorting_asc_disabled:after,
+        table.dataTable thead .sorting_asc_disabled:before,
+        table.dataTable thead .sorting_desc:after,
+        table.dataTable thead .sorting_desc:before,
+        table.dataTable thead .sorting_desc_disabled:after,
+        table.dataTable thead .sorting_desc_disabled:before {
+            bottom: .5em;
+        }*/
+    .table thead th{
+        text-align: center;
+    }
+
+    .col-flt-page{
+        padding-top:10px;
+        font-weight: bold;
+    }
+
+    #tblReport tbody tr td a {
+        cursor: pointer ;
+    }
+    table.dataTable.fixedHeader-floating, table.dataTable.fixedHeader-locked {
+        background-color: white;
+        margin-top: 50px !important;
+        margin-bottom: 0 !important;
+    }
+    @media print {
+        table th:nth-child(0) {
+            width: 200px;
+            word-break: break-all;
+            white-space: pre-line;
+        }
+        table td:nth-child(0) {
+            width: 200px;
+            word-break: break-all;
+            white-space: pre-line;
+        }
+
+    }
+    .text-header {
+        font-weight: bold;
+        font-size: 20px;
+    }
+    .text-wrap{
+        white-space:normal;
+    }
+    .width-200{
+        width:200px;
+    }
+    input[type=checkbox]{
+        margin-left:5px;margin-right:5px;
+    }/*
+    .cb_lb{
+        margin-top:-5px;
+    }*/
+    .item-center{ 
+        display: flex;
+        justify-content: center;
+    }
+</style>
+<div class="row">
+    <h4 class="text-header text-center">รายงานขายในประเทศ (AD)</h4>
+</div>
+<div class='row item-center'>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 ">
+        <div class="input-group">
+            <div class="input-group-addon">inv num</div>
+            <input type="text" class="form-control" id="inv_num" autocomplete="on">
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 ">
+        <div class="input-group">
+            <div class="input-group-addon">Start Date</div>
+            <input type="text" class="form-control" id="txtStartDate" autocomplete="off">
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 ">
+        <div class="input-group">
+            <div class="input-group-addon"> End Date</div>
+            <input type="text" class="form-control" id="txtEndDate" autocomplete="off">
+        </div>
+    </div>
+    <div class="col-lg-1 col-md-1 col-sm-6 col-xs-6 text-left">
+        <button class="btn btn-info" id="btnSearch"><i class="fa fa-search"></i>&nbsp; Search </button>
+    </div>
+</div>
+
+<div class="row"  id="rowResultTable">
+    <table class="table table-condensed table-bordered table-striped"  width="100%" id="tblReport">
+        <thead>
+            <tr>
+                <!--<th >#</th>-->
+                <th class="bg-gray">inv_date</th>
+                <th class="bg-gray">inv_num</th>
+                <th class="bg-gray">cust_num</th>
+                <th class="bg-gray">cust_name</th>
+                <th class="bg-gray">item</th>
+                <th class="bg-gray">item description</th>
+                <th class="bg-gray">qtyPCS</th>
+                <th class="bg-gray">qtyKG</th>
+                <th class="bg-gray">amt</th>
+                <th class="bg-gray">um</th>
+                <th class="bg-gray">group_final</th>
+                <th class="bg-gray">unit_weight</th>
+                <th class="bg-gray">item_size</th>
+                <th class="bg-gray">item_thick</th>
+                <th class="bg-gray">item_width</th>
+                <th class="bg-gray">item_length</th>
+                <th class="bg-gray">uf_unit_weight</th>
+                <th class="bg-gray">group_code</th>
+                <th class="bg-gray">uf_NPS</th>
+                <th class="bg-gray">uf_TheoryWeightPerItem</th>
+                <th class="bg-gray">uf_schedule</th>
+                <th class="bg-gray">acct</th>
+                <th class="bg-gray">terms_code</th>
+                <th class="bg-gray">total_invamount</th>
+                <th class="bg-gray">uf_weight_FT</th>
+                <th class="bg-gray">uf_weight_metre</th>
+                <th class="bg-gray">orig_inv_num</th>
+            </tr>
+        </thead>
+        <!--        <tbody id="tblReportList">
+                    <tr><td align="center" colspan="12">.... No item search ....</td></tr>
+                </tbody>-->
+    </table>
+</div>
+<script src="bower_components/moment/min/moment.min.js"></script>
+<script type="text/javascript">
+    $("#btnSearch").click(function () {
+        ReportItemSearch();
+    });
+    $("#txtStartDate,#txtEndDate").datepicker({
+        dateFormat: 'yy-mm-dd'
+    });
+    function ReportItemSearch() {
+        var OldHtml = $("#btnSearch").html();
+        var StartDate = $("#txtStartDate").val();
+        var EndDate = $("#txtEndDate").val();
+        var inv_num = $("#inv_num").val();
+
+        if (inv_num == "") {
+            $.alert("กรุณาใส่ inv num");
+            return false;
+        } else {
+            $("#btnSearch").html("<i class='fa fa-spinner fa-spin'></i>");
+            $("#tblReport").loading();
+            $("#tblReport tfoot").remove();
+            $.ajax({
+                type: 'POST',
+                url: "././module/RPT_AD/data.php",
+                dataType: 'json',
+                beforeSend: function () {
+                    $("#btnSearch").html("<i class='fa fa-spinner fa-spin'>");
+                },
+                data: {
+                    "load": "ajax",
+                    "inv_num": inv_num,
+                    "StartDate": StartDate,
+                    "EndDate": EndDate,
+                },
+                success: function (data) {
+                    $("#tblReport").DataTable().clear();
+                    $("#tblReport").append("<tfoot><tr><td></td></tr></tfoot>");
+                    $('#tblReport').dataTable({
+                        "aaData": data,
+                        "paging": false,
+                        fixedHeader: true,
+                        destroy: true,
+                        scrollX: true,
+
+                        'processing': true,
+                        "columns": [
+                            {
+                            "data": "inv_date.date", "className": "text-center", "render" : function(data){
+                                return moment(data).format('DD-MM-YYYY');
+                            }
+                            },
+                            {
+                            "data": "inv_num", "className": "text-center"
+                            },
+                            {
+                            "data": "cust_num", "className": "text-center"
+                            },
+                            {
+                            "data": "cust_name", "className": "text-center"
+                            },
+                            {
+                            "data": "item", "className": "text-center"
+                            },
+                            {
+                            "data": "item_description", "className": "text-center"
+                            },
+                            {
+                            "data": "qtyPCS", "className": "text-center", "render": function (data) {
+                                return data
+                            }
+                            },
+                            {
+                            "data": "qtyKG", "className": "text-center", "render": function (data) {
+                                return data
+                            }
+                            },
+                            {
+                            "data": "amt", "className": "text-center", "render": function (data) {
+                                return parseFloat(data).toLocaleString('th', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                            
+                            }
+                            },
+                            {
+                            "data": "um", "className": "text-center"
+                            },
+                            {
+                            "data": "group_final", "className": "text-center"
+                            },
+                            {
+                            "data": "unit_weight", "className": "text-center" , "render": function (data) {
+                                return data
+                            }
+                            },
+                            {
+                            "data": "item_size", "className": "text-center"
+                            },
+                            {
+                            "data": "item_thick", "className": "text-center"
+                            },
+                            {
+                            "data": "item_width", "className": "text-center"
+                            },
+                            {
+                            "data": "item_length", "className": "text-center"
+                            },
+                            {
+                            "data": "uf_unit_weight", "className": "text-center", "render": function (data) {
+                                return data
+                            }
+                            },
+                            {
+                            "data": "group_code", "className": "text-center"
+                            },
+                            {
+                            "data": "uf_NPS", "className": "text-center"
+                            },
+                            {
+                            "data": "uf_TheoryWeightPerItem", "className": "text-center", "render": function (data) {
+                                return data
+                            }
+                            },
+                            {
+                            "data": "uf_schedule", "className": "text-center"
+                            },
+                            {
+                            "data": "acct", "className": "text-center"
+                            },
+                            {
+                            "data": "terms_code", "className": "text-center"
+                            },
+                            {
+                            "data": "total_invamount", "className": "text-center", "render": function (data) {
+                                return data
+                            }
+                            },
+                            {
+                            "data": "uf_weight_FT", "className": "text-center", "render": function (data) {
+                                return data
+                            }
+                            },
+                            {
+                            "data": "uf_weight_metre", "className": "text-center", "render": function (data) {
+                                return data
+                            }
+                            },
+                            {
+                            "data": "orig_inv_num", "className": "text-center"
+                            }
+                    
+                        ],
+                        'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                                "<'row'<'col-md-12'tr>>" +
+                                "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                        buttons: [
+                            {
+                                extend: 'print',
+                                text: "<i class='fa fa-print'></i>&nbsp;Print",
+                                title: ''
+                            },
+                            {
+                                extend: 'excel',
+                                footer: true,
+                                text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                                title: 'รายงานขายในประเทศ (AD)'
+                            },
+                        ],
+            
+                    });
+                    $('#tblReport').loading("stop");
+                    $("#btnSearch").html(OldHtml);
+                },
+                error: function (e) {
+                    console.log("There was an error with your request...");
+                    console.log("error: " + JSON.stringify(e));
+                }
+            });
+
+        }
+    }
+    $("#btnExportExcel").click(function () {
+        //        onclick="javascript:
+
+        //       xport.toCSV('tblReport');
+    });
+
+    $("#StartDate,#EndDate").datepicker({
+        dateFormat: 'yy-mm-dd'
+    });
+
+</script>

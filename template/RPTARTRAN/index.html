@@ -212,24 +212,24 @@
                                     return ret;
                                 }
                             },
-                            {"data": "amount", "className": "text-right", "render": function (data, type, row, meta) {
-                                    var ret = data;
+                            {"data": "amount", "className": "text-center", "render": function (data, type, row, meta) {
+                                    var ret = parseFloat(data).toLocaleString('th', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
                                     if (row["inv_num"].substring(0, 2) == "CN") {
                                         ret = "<span style='color:red;'>" + data+ "</span>";
                                     }
                                     return ret;
                                 }
                             },
-                            {"data": "sales_tax", "className": "text-right", "render": function (data, type, row, meta) {
-                                    var ret = data;
+                            {"data": "sales_tax", "className": "text-center", "render": function (data, type, row, meta) {
+                                    var ret = parseFloat(data).toLocaleString('th', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
                                     if (row["inv_num"].substring(0, 2) == "CN") {
                                         ret = "<span style='color:red;'>" + data+ "</span>";
                                     }
                                     return ret;
                                 }
                             },
-                            {"data": "net_amt", "className": "text-right", "render": function (data, type, row, meta) {
-                                    var ret = data;
+                            {"data": "net_amt", "className": "text-center", "render": function (data, type, row, meta) {
+                                    var ret = parseFloat(data).toLocaleString('th', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
                                     if (row["inv_num"].substring(0, 2) == "CN") {
                                         ret = "<span style='color:red;'>" + data + "</span>";
                                     }
@@ -360,7 +360,6 @@
     $("#StartDate,#EndDate").datepicker({
         dateFormat: 'yy-mm-dd'
     });
-
 
     var intVal2 = function (i) {
         return typeof i === 'string' ?
