@@ -173,7 +173,8 @@
             },
             success: function (data) {
                 $("#divCountS").removeClass("hidden");
-                $("#countS").html(data.length)
+                $("#countS").html(data.length);
+                console.log(data);
                 $("#tblReportS").dataTable().fnDestroy();
                 var table = $('#tblReportS').DataTable({
                     scrollY: "400px",
