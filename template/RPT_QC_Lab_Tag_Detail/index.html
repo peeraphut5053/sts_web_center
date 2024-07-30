@@ -199,7 +199,7 @@
   $("#btnDucplicate").click(function () {
           let table = $("#tblReport").DataTable(); 
           const oldLength = mydata.length;
-          mydata = mydata.filter((v, i, a) => a.findIndex(t => (t.lot === v.lot)) === i);
+          mydata = mydata.filter((v, i, a) => a.findIndex(t => (t.sts_no === v.sts_no && t.size === v.size)) === i);
           if (mydata.length == oldLength) {
             $.alert("ไม่พบข้อมูล Lot ที่ซ้ำกัน");
             return false;
