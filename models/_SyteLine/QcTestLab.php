@@ -176,5 +176,13 @@ class QcTestLab {
         return $rs0;
     }
 
+    function UpdateSubTest($opr_no,$length, $sts_no, $prod_FM_no, $prod_Date, $form, $value) {
+        $query = "UPDATE STS_QA_LAB_SUB set $form = '$value'  where opr_no = '$opr_no' and  sts_no = '$sts_no'  and prod_FM_no = '$prod_FM_no' and length = '$length'  and convert(date,prod_date) = '$prod_Date'";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+
 }
 ?>

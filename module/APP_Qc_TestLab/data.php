@@ -274,6 +274,15 @@ if ($load == 'UpdateSub') {
     echo json_encode($QcTestLab); 
 }
 
+if ($load == 'UpdateSubTest') {
+    $CallModel = new CallModel();
+    $CallModel->SyteLine_Models();
+    $QcTestLab = new QcTestLab();
+    $QcTestLab->setConn($ConnSL);
+    $QcTestLab = $QcTestLab->UpdateSubTest($opr_no,$length, $sts_no, $prod_FM_no, $prod_Date, $form, $value);
+    echo json_encode($QcTestLab); 
+}
+
 
 
 

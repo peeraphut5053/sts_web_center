@@ -1076,14 +1076,29 @@ function format(d) {
                         {
                             "data": "QC_Pb",
                             "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                let valdata = data ? data : "";
+                                let ret = `<span hidden>${(valdata) }</span><input type='text' class='input-text-value' size='45' id='Update_${row.opr_no}_${row.length}_${row.sts_no}_${row.prod_FM_no}_${row.prod_Date}'  onchange="UpdateSubTest('QC_Pb',this.id,value);" value='${(valdata)}' />`;
+                                return ret;
+                            }
                         },
                         {
                             "data": "QC_weight_coat",
                             "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                let valdata = data ? data : "";
+                                let ret = `<span hidden>${(valdata) }</span><input type='text' class='input-text-value' size='45' id='Update_${row.opr_no}_${row.length}_${row.sts_no}_${row.prod_FM_no}_${row.prod_Date}' onchange="UpdateSubTest('QC_weight_coat',this.id,value);" value='${(valdata)}' />`;
+                                return ret;
+                            }
                         },
                         {
                             "data": "QC_hydro",
                             "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                let valdata = data ? data : "";
+                                let ret = `<span hidden>${(valdata) }</span><input type='text' class='input-text-value' size='45' id='Update_${row.opr_no}_${row.length}_${row.sts_no}_${row.prod_FM_no}_${row.prod_Date}' onchange="UpdateSubTest('QC_hydro',this.id,value);" value='${(valdata)}' />`;
+                                return ret;
+                            }
                         },
                         {   "data": "", 
                             "className": "text-center",
@@ -1204,4 +1219,33 @@ function DeleteSub(form, opr_no, length, sts_no, prod_FM_no, prod_Date, size) {
             }
         });
     }  
+
+    function UpdateSubTest(form, thisId, value) {
+    let Split = thisId.split("_");
+    var opr_no = Split[1];
+    var length = Split[2];
+    var sts_no = Split[3];
+    var prod_FM_no = Split[4];
+    var prod_Date = Split[5];
+    
+    $.ajax({
+            url: "././module/APP_Qc_TestLab/data.php",
+            type: 'POST',
+            data: {
+                load: 'UpdateSubTest',
+                opr_no: opr_no,
+                length: length,
+                sts_no: sts_no,
+                prod_FM_no: prod_FM_no,
+                prod_Date: prod_Date,
+                form : form,
+                value : value
+            },
+            success: function (data) {
+                console.log(data);
+                // Search();
+            }
+        });
+    } 
+    
 </script>
