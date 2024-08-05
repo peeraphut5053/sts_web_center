@@ -7,7 +7,10 @@ class QcTestLab {
     }
 
     function SearchQcTestLab_Main($where){
-        $query = "select * from STS_QA_LAB ".$where."";
+        $query = "select sts_po_qc.grade, STS_QA_LAB.* 
+from STS_QA_LAB inner join sts_po_qc
+  on STS_QA_LAB.sts_no = sts_po_qc.sno and STS_QA_LAB.c_no = sts_po_qc.c_no
+  and STS_QA_LAB.h_no = sts_po_qc.h_no ".$where."";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);
@@ -119,23 +122,58 @@ class QcTestLab {
               prod_date,
               test_date,
               thick,
-              width 
-     ,QC_Pb
+              width
+     ,FORMAT(QC_Pb ,'N3') as QC_Pb
      ,QC_weight_coat
      ,QC_hydro
      ,cust = case when co_mst.cust_num like 'EX%' then ca.addr##1 else ca.name end
+       ,item.uf_typeEnd
       from do_seq_mst ait
          inner join matltrack_mst mtk on ait.ref_num = mtk.ref_num and ait.ref_line = mtk.ref_line_suf
     and mtk.date_seq = ait.date_seq and mtk.trans_date = ait.ship_date
     and mtk.qty < 0 and mtk.ref_type = 'O'
          inner join mv_bc_tag mv on mtk.item = mv.item and mtk.lot = mv.lot and mv.ship_stat = 1
-   left join sts_qa_lab a  on (a.sts_no = mv.sts_no or a.sts_no = mv.sts_no2 or a.sts_no = mv.sts_no3)
-         left join STS_QA_LAB_SUB b on a.sts_no = b.sts_no
-           and mv.item like '%'+b.item+'%' 
+   inner join item_mst item on item.item = mtk.item
+  left join sts_qa_lab a  on (a.sts_no = mv.sts_no or a.sts_no = mv.sts_no2 or a.sts_no = mv.sts_no3)
+     left join STS_QA_LAB_SUB b on a.sts_no = b.sts_no
+    and mv.item like '%'+b.item+'%' 
   inner join co_mst on co_mst.co_num = ait.ref_num
   inner join custaddr_mst ca on ca.cust_num = co_mst.cust_num and ca.cust_seq = co_mst.cust_seq
           $where
       order by do_num, sts_no, item";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+
+    function makeReport($do_num){
+        $query = "EXEC [dbo].[STS_QA_MILLCERT]
+ @DONumStarting = N'$do_num'";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+
+    function loadTest($do_num){
+        $query = "select uf_QC_EDDY , uf_QC_HEAT, uf_QC_FLAT, uf_QC_BEND, uf_QC_VISUAL
+from do_hdr_mst
+where do_num = '$do_num'";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+
+    function saveTest($do_num,$TestOne,$TestTwo,$TestThree,$TestFour, $TestFive){
+        $query = "update do_hdr_mst
+set uf_QC_EDDY = $TestOne
+ , uf_QC_HEAT = $TestTwo
+ , uf_QC_FLAT = $TestThree
+ , uf_QC_BEND = $TestFour
+ , uf_QC_VISUAL = $TestFive
+where do_num = '$do_num'";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);
@@ -177,7 +215,7 @@ class QcTestLab {
     }
 
     function UpdateSubTest($opr_no,$length, $sts_no, $prod_FM_no, $prod_Date, $form, $value) {
-        $query = "UPDATE STS_QA_LAB_SUB set $form = '$value'  where opr_no = '$opr_no' and  sts_no = '$sts_no'  and prod_FM_no = '$prod_FM_no' and length = '$length'  and convert(date,prod_date) = '$prod_Date'";
+        $query = "UPDATE STS_QA_LAB_SUB set $form = $value where opr_no = '$opr_no' and  sts_no = '$sts_no'  and prod_FM_no = '$prod_FM_no' and length = '$length'  and convert(date,prod_date) = '$prod_Date'";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);

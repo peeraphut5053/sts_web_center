@@ -68,19 +68,19 @@ if ($load == 'search') {
     $QcTestLab->setConn($ConnSL);
     $where = "where 1=1";
     if (($from_stsno != "") && ($to_stsno != "")) {
-        $where = $where . " AND ( sts_no BETWEEN '$from_stsno' AND '$to_stsno' )  ";
+        $where = $where . " AND ( STS_QA_LAB.sts_no BETWEEN '$from_stsno' AND '$to_stsno' )  ";
     }
     if ($c_no != "") {
-        $where = $where . " AND c_no = '" . $c_no . "' ";
+        $where = $where . " AND STS_QA_LAB.c_no = '" . $c_no . "' ";
     }
     if ($h_no != "") {
-        $where = $where . " AND h_no = '" . $h_no . "' ";
+        $where = $where . " AND STS_QA_LAB.h_no = '" . $h_no . "' ";
     }
     if ($weight != "") {
-        $where = $where . " AND thick = '" . $weight . "' ";
+        $where = $where . " AND STS_QA_LAB.thick = '" . $weight . "' ";
     }
     if ($width != "") {
-        $where = $where . " AND width = '" . $width . "' ";
+        $where = $where . " AND STS_QA_LAB.width = '" . $width . "' ";
     }
     $QcTestLab = $QcTestLab->SearchQcTestLab_Main($where);
     echo json_encode($QcTestLab);    
@@ -244,6 +244,33 @@ if ($load == 'searchAll') {
         $where = $where . " AND prod_date = '" . $prod_date . "' ";
     }
     $QcTestLab = $QcTestLab->ReportAll($where);
+    echo json_encode($QcTestLab); 
+}
+
+if ($load == 'makePDF') {
+    $CallModel = new CallModel();
+    $CallModel->SyteLine_Models();
+    $QcTestLab = new QcTestLab();
+    $QcTestLab->setConn($ConnSL);
+    $QcTestLab = $QcTestLab->makeReport($do_num);
+    echo json_encode($QcTestLab); 
+}
+
+if ($load == 'loadTest') {
+    $CallModel = new CallModel();
+    $CallModel->SyteLine_Models();
+    $QcTestLab = new QcTestLab();
+    $QcTestLab->setConn($ConnSL);
+    $QcTestLab = $QcTestLab->loadTest($do_num);
+    echo json_encode($QcTestLab); 
+}
+
+if ($load == 'saveTest') {
+    $CallModel = new CallModel();
+    $CallModel->SyteLine_Models();
+    $QcTestLab = new QcTestLab();
+    $QcTestLab->setConn($ConnSL);
+    $QcTestLab = $QcTestLab->saveTest($do_num,$TestOne,$TestTwo,$TestThree,$TestFour, $TestFive);
     echo json_encode($QcTestLab); 
 }
 

@@ -61,7 +61,7 @@
                     <th colspan="20" class="bg-info">Chemical analysis from Lab.'STS</th>
                 </tr>
                 <tr>
-                    <th class="bg-gray">standard</th>
+                    <th class="bg-gray">grade</th>
                     <th class="bg-gray">thick</th>
                     <th class="bg-gray">width</th>
                     <th class="bg-gray">weight</th>
@@ -117,8 +117,7 @@
     $("#BtnSearchM").click(function () {
             ReportAllSearch();
         });
-
-
+        
     function ReportAllSearch() {
     var OldHtml = $("#BtnSearchM").html();
     var from_stsno = $("#from_stsnoM").val();
@@ -163,8 +162,8 @@
                     "bInfo": false,
 
                     "columns": [
-                    {"data": "standard",
-                            "className": "text-center",
+                        {"data": "grade",
+                            "className": "text-center w-24",
                         },
                         {"data": "thick",
                             "className": "text-center",
