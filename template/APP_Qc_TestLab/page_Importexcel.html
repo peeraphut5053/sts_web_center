@@ -1078,7 +1078,7 @@ function format(d) {
                             "className": "text-center",
                             "render": function (data, type, row, meta) {
                                 let valdata = data ? data : "";
-                                let ret = `<span hidden>${(valdata) }</span><input type='text' class='input-text-value' size='45' id='Update_${row.opr_no}_${row.length}_${row.sts_no}_${row.prod_FM_no}_${row.prod_Date}'  onchange="UpdateSubTest('QC_Pb',this.id,value);" value='${(valdata)}' />`;
+                                let ret = `<span hidden>${(valdata) }</span><input type='number' class='input-text-value' size='45' id='Update_${row.opr_no}_${row.length}_${row.sts_no}_${row.prod_FM_no}_${row.prod_Date}'  onchange="UpdateSubTest('QC_Pb',this.id,value);" value='${(valdata)}' />`;
                                 return ret;
                             }
                         },
@@ -1087,7 +1087,7 @@ function format(d) {
                             "className": "text-center",
                             "render": function (data, type, row, meta) {
                                 let valdata = data ? data : "";
-                                let ret = `<span hidden>${(valdata) }</span><input type='text' class='input-text-value' size='45' id='Update_${row.opr_no}_${row.length}_${row.sts_no}_${row.prod_FM_no}_${row.prod_Date}' onchange="UpdateSubTest('QC_weight_coat',this.id,value);" value='${(valdata)}' />`;
+                                let ret = `<span hidden>${(valdata) }</span><input type='number' class='input-text-value' size='45' id='Update_${row.opr_no}_${row.length}_${row.sts_no}_${row.prod_FM_no}_${row.prod_Date}' onchange="UpdateSubTest('QC_weight_coat',this.id,value);" value='${(valdata)}' />`;
                                 return ret;
                             }
                         },
@@ -1096,7 +1096,7 @@ function format(d) {
                             "className": "text-center",
                             "render": function (data, type, row, meta) {
                                 let valdata = data ? data : "";
-                                let ret = `<span hidden>${(valdata) }</span><input type='text' class='input-text-value' size='45' id='Update_${row.opr_no}_${row.length}_${row.sts_no}_${row.prod_FM_no}_${row.prod_Date}' onchange="UpdateSubTest('QC_hydro',this.id,value);" value='${(valdata)}' />`;
+                                let ret = `<span hidden>${(valdata) }</span><input type='number' class='input-text-value' size='45' id='Update_${row.opr_no}_${row.length}_${row.sts_no}_${row.prod_FM_no}_${row.prod_Date}' onchange="UpdateSubTest('QC_hydro',this.id,value);" value='${(valdata)}' />`;
                                 return ret;
                             }
                         },
