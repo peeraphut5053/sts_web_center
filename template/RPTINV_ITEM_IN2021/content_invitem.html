@@ -54,9 +54,9 @@
         <thead>
             <tr>
                 <th>Inv Date</th>
-                <th>Inv Num</th>
-                <th>Co Num</th>
+                <th>co_num</th>
                 <th>Doc State</th>
+                <th>Inv Num</th>
                 <th>Cust Num</th>
                 <th>Customer</th>
                 <th>Terms Code</th>
@@ -374,20 +374,20 @@
                                     }
                                 },
                                 {
-                                    "data": "inv_num",
+                                    "data": "doc_state",
                                     "render": function (data, type, row) {
                                         var ret = data;
-                                        if (data.substring(0, 2) == "CN") {
+                                        if (row["inv_num"].substring(0, 2) == "CN") {
                                             ret = "<span style='color:red;'>" + data + "</span>";
                                         }
                                         return ret;
                                     }
                                 },
                                 {
-                                    "data": "doc_state",
+                                    "data": "inv_num",
                                     "render": function (data, type, row) {
                                         var ret = data;
-                                        if (row["inv_num"].substring(0, 2) == "CN") {
+                                        if (data.substring(0, 2) == "CN") {
                                             ret = "<span style='color:red;'>" + data + "</span>";
                                         }
                                         return ret;
