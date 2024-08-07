@@ -1408,5 +1408,44 @@ class JOBORDER {
         array_splice($rs0, count($rs0) - 1, 1);
         return $rs0;
     }
+
+    function SelectFinishingReason() {
+        $query = "select * FROM STS_finishing_reason_description where 1=1  ";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+
+    function CreateNewReasonFinishing($reason_id, $time_stopped, $time_used, $w_c, $remark, $times_count) {
+        $query = " insert into STS_finishing_reason (reason_id,time_stopped,time_used,create_date,w_c,remark,times_count) "
+                . "VALUES ('$reason_id','$time_stopped','$time_used',GETDATE(),'$w_c','$remark','$times_count')";
+        $cSql = new SqlSrv();
+        $cSql->SqlQuery($this->StrConn, $query);
+        return $query;
+    }
+
+    function SelectFinishing($startdate, $enddate, $w_c) {
+
+        $searchDate = "";
+        $searchw_c = "";
+
+
+        if ($startdate != "" || $enddate != "") {
+            $searchDate = "and (create_date between '$startdate' and '$enddate' ) ";
+        }
+
+        if ($w_c != "") {
+            $searchw_c = "and w_c = '$w_c' ";
+        }
+        $query = "select * from STS_finishing_reason where 1=1  ";
+        $query = $query . $searchDate;
+        $query = $query . $searchw_c;
+
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
     
 }

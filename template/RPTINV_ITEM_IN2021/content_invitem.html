@@ -55,6 +55,7 @@
             <tr>
                 <th>Inv Date</th>
                 <th>Inv Num</th>
+                <th>Co Num</th>
                 <th>Doc State</th>
                 <th>Cust Num</th>
                 <th>Customer</th>
@@ -330,7 +331,7 @@
                         $("#tblReport").DataTable().clear();
                         var RowFooterBuild = "";
                         var ColBuild = "";
-                        var ColCount = 18;
+                        var ColCount = 19;
                         var i = 0;
                         RowFooterBuild = "<tfoot><tr>!!ColBuild!!</tr></tfoot>";
                         for (i = 1; i <= ColCount; i++) {
@@ -357,6 +358,16 @@
                                     "render": function (data, type, row) {
                                         var ret = data;
                                         if (row["inv_num"].substring(0, 2) == "CN") {
+                                            ret = "<span style='color:red;'>" + data + "</span>";
+                                        }
+                                        return ret;
+                                    }
+                                },
+                                {
+                                    "data": "co_num",
+                                    "render": function (data, type, row) {
+                                        var ret = data;
+                                        if (data.substring(0, 2) == "CN") {
                                             ret = "<span style='color:red;'>" + data + "</span>";
                                         }
                                         return ret;

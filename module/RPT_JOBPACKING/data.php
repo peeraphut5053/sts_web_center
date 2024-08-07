@@ -508,5 +508,33 @@ if ($load == "getFormingOperation") {
     echo json_encode($Trans);
 }
 
+if ($load == "FinishingReason") {
+    $CallModel = new CallModel();
+    $CallModel->SyteLine_Models();
+    $Trans = new JobOrder();
+    $Trans->setConn($ConnSL);
+    $Trans = $Trans->SelectFinishingReason();
+    echo json_encode($Trans);
+}
+
+if ($load == "AddNewReasonFinishing") {
+    $CallModel = new CallModel();
+    $CallModel->SyteLine_Models();
+    $Trans = new JobOrder();
+    $Trans->setConn($ConnSL);
+    $Trans = $Trans->SelectFinishingReason();
+    echo json_encode($Trans);
+}
+
+if ($load == "SelectFinishing") {
+    $CallModel = new CallModel();
+    $CallModel->SyteLine_Models();
+    $Trans = new JobOrder();
+    $Trans->setConn($ConnSL);
+    $Trans = $Trans->SelectFinishing($startdate, $enddate, $txtw_c);
+    echo json_encode($Trans);
+}
+
+
 
 
