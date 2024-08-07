@@ -1417,15 +1417,15 @@ class JOBORDER {
         return $rs0;
     }
 
-    function CreateNewReasonFinishing($reason_id, $time_stopped, $time_used, $w_c, $remark, $times_count) {
-        $query = " insert into STS_finishing_reason (reason_id,time_stopped,time_used,create_date,w_c,remark,times_count) "
-                . "VALUES ('$reason_id','$time_stopped','$time_used',GETDATE(),'$w_c','$remark','$times_count')";
+    function CreateNewReasonFinishing($reason_id, $time_stopped, $down_time, $w_c,$remark) {
+        $query = " insert into STS_finishing_reason (reason_id,time_stopped,down_time,w_c,remark,create_date) "
+                . "VALUES ('$reason_id','$time_stopped','$down_time','$w_c','$remark',GETDATE())";
         $cSql = new SqlSrv();
         $cSql->SqlQuery($this->StrConn, $query);
         return $query;
     }
 
-    function SelectFinishing($startdate, $enddate, $w_c) {
+    function SelectFinishing($startdate, $enddate, $w_c, $type) {
 
         $searchDate = "";
         $searchw_c = "";
@@ -1438,9 +1438,12 @@ class JOBORDER {
         if ($w_c != "") {
             $searchw_c = "and w_c = '$w_c' ";
         }
-        $query = "select * from STS_finishing_reason where 1=1  ";
+        $query = "select * from STS_finishing_reason LEFT JOIN STS_finishing_reason_description ON STS_finishing_reason.reason_id = STS_finishing_reason_description.reason_id where 1=1  ";
         $query = $query . $searchDate;
-        $query = $query . $searchw_c;
+        
+        if ($type == 1) {
+            $query = $query . $searchw_c;
+        }
 
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);

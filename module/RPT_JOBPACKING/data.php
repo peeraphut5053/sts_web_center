@@ -522,7 +522,7 @@ if ($load == "AddNewReasonFinishing") {
     $CallModel->SyteLine_Models();
     $Trans = new JobOrder();
     $Trans->setConn($ConnSL);
-    $Trans = $Trans->SelectFinishingReason();
+    $Trans = $Trans->CreateNewReasonFinishing($reason_id, $time_stopped, $down_time, $w_c,$remark);
     echo json_encode($Trans);
 }
 
@@ -531,7 +531,7 @@ if ($load == "SelectFinishing") {
     $CallModel->SyteLine_Models();
     $Trans = new JobOrder();
     $Trans->setConn($ConnSL);
-    $Trans = $Trans->SelectFinishing($startdate, $enddate, $txtw_c);
+    $Trans = $Trans->SelectFinishing($startdate, $enddate, $txtw_c,$type);
     echo json_encode($Trans);
 }
 
