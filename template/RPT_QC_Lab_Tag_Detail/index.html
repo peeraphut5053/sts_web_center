@@ -176,6 +176,9 @@
 
   </table>
 </div>
+<div id="printpopup"></div>
+<script src="https://code.jquery.com/jquery-migrate-3.0.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script type="text/javascript">
 
    var mydata = [];
@@ -280,6 +283,10 @@
             scrollY: "65vh",
             scrollCollapse: true,
             scrollX: true,
+            select: true,
+            select: {
+              style: "multi",
+            },
             columns: [
               {
                 data: "id",
@@ -462,6 +469,13 @@
                   "_to_" +
                   EndDate,
               },
+              {
+                           text: `<button type="button" class="btn btn-info">พิมพ์ Tag </button>`,
+                           action: function (e, dt, node, config) {
+                            let selectedData = Array.from(dt.rows('.selected').data());
+                            printTag(selectedData);
+                        }
+              }
             ]
           });
 
@@ -505,4 +519,22 @@
       },
     });
     }
+
+  function printTag(selectedData) {
+   const tag_ids = selectedData.map((item) => item.id);
+
+   if (tag_ids != "") {
+            $('#printpopup').dialog({
+                modal: true,
+                autoOpen: true,
+                width: 400,
+                height: 600,
+                title: "ตัวอย่างก่อนพิมพ์"
+            }).load("././module/tag_print.php", {"job_no": '', "tag_ids": tag_ids});
+        } else {
+            alert('กรุณาเลือกข้อมูลก่อน');
+        }
+
+        return false;
+  }
 </script>
