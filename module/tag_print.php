@@ -20,7 +20,7 @@ $jobm = explode("+", $job_no);
 //reprint
 
 if (isset($_POST["tag_ids"])) {
-    echo $_POST["tag_ids"];
+
     $s_tag = count($_POST["tag_ids"]);
     for ($t = 0; $t < $s_tag; $t++) {
         $temp->setReplace("{printlist}", $temp->getTemplate("../template/RPT_QC_Lab_Tag_Detail/tag_print_block.html"));
