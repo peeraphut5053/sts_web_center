@@ -26,6 +26,20 @@ if ($load == "ajax") {
     $Mv_Bc_Tag->setConn($ConnSL);
     $rs = $Mv_Bc_Tag->getGroupChart($StartDate, $EndDate, $StartLastMonth, $EndLastMonth,$GroupBy);
     echo json_encode($rs);
+} elseif ($load == 'DailyReport') {
+    $CM = new CallModel();
+    $CM->SyteLine_Models();
+    $Mv_Bc_Tag = new BcTag();
+    $Mv_Bc_Tag->setConn($ConnSL);
+    $rs = $Mv_Bc_Tag->getDailyReport($date,$type);
+    echo json_encode($rs);
+} elseif ($load == 'DailyWorkCenter') {
+    $CM = new CallModel();
+    $CM->SyteLine_Models();
+    $Mv_Bc_Tag = new BcTag();
+    $Mv_Bc_Tag->setConn($ConnSL);
+    $rs = $Mv_Bc_Tag->getDailyWorkCenter($StartDate, $EndDate, $wc,$type);
+    echo json_encode($rs);
 } else {
     $CM = new CallModel();
     $CM->SyteLine_Models();
