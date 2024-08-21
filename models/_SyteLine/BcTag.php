@@ -597,35 +597,37 @@ order by [date]";
 
     function getDailyReport($date, $type) {
         if ($type == 'weight') {
-            $query = "select wc, [description],[date]
-  , [00:00-04:00] = max(case when work_hour = '00:00-04:00' then sumA_weight else 0 end)
-  , [04:00-08:00] = max(case when work_hour = '04:00-08:00' then sumA_weight else 0 end)
-  , [08:00-12:00] = max(case when work_hour = '08:00-12:00' then sumA_weight else 0 end)
-  , [12:00-13:00] = max(case when work_hour = '12:00-13:00' then sumA_weight else 0 end)
-  , [13:00-17:00] = max(case when work_hour = '13:00-17:00' then sumA_weight else 0 end)
-  , [17:00-17:30] = max(case when work_hour = '17:00-17:30' then sumA_weight else 0 end)
-  , [17:30-18:30] = max(case when work_hour = '17:30-18:30' then sumA_weight else 0 end)
-  , [18:30-21:00] = max(case when work_hour = '18:30-21:00' then sumA_weight else 0 end)
-  , [21:00-24:00] = max(case when work_hour = '21:00-24:00' then sumA_weight else 0 end)
-from V_STS_PROD_TIME_REPORT_HOURLY
-where [date] = '$date'
-group by wc,[description],[date]
-order by [date]";
+            $query = "select V_STS_PROD_TIME_REPORT.work_hour,V_STS_PROD_TIME_REPORT.stop_hour,V_STS_PROD_TIME_REPORT.TOT_work_hour, V_STS_PROD_TIME_REPORT_HOURLY.wc, V_STS_PROD_TIME_REPORT_HOURLY.[description],V_STS_PROD_TIME_REPORT_HOURLY.[date]
+  , [00:00-04:00] = max(case when V_STS_PROD_TIME_REPORT_HOURLY.work_hour = '00:00-04:00' then sumA_weight else 0 end)
+  , [04:00-08:00] = max(case when V_STS_PROD_TIME_REPORT_HOURLY.work_hour = '04:00-08:00' then sumA_weight else 0 end)
+  , [08:00-12:00] = max(case when V_STS_PROD_TIME_REPORT_HOURLY.work_hour = '08:00-12:00' then sumA_weight else 0 end)
+  , [12:00-13:00] = max(case when V_STS_PROD_TIME_REPORT_HOURLY.work_hour = '12:00-13:00' then sumA_weight else 0 end)
+  , [13:00-17:00] = max(case when V_STS_PROD_TIME_REPORT_HOURLY.work_hour = '13:00-17:00' then sumA_weight else 0 end)
+  , [17:00-17:30] = max(case when V_STS_PROD_TIME_REPORT_HOURLY.work_hour = '17:00-17:30' then sumA_weight else 0 end)
+  , [17:30-18:30] = max(case when V_STS_PROD_TIME_REPORT_HOURLY.work_hour = '17:30-18:30' then sumA_weight else 0 end)
+  , [18:30-21:00] = max(case when V_STS_PROD_TIME_REPORT_HOURLY.work_hour = '18:30-21:00' then sumA_weight else 0 end)
+  , [21:00-24:00] = max(case when V_STS_PROD_TIME_REPORT_HOURLY.work_hour = '21:00-24:00' then sumA_weight else 0 end)
+
+from V_STS_PROD_TIME_REPORT_HOURLY inner join V_STS_PROD_TIME_REPORT on V_STS_PROD_TIME_REPORT.wc = V_STS_PROD_TIME_REPORT_HOURLY.wc and V_STS_PROD_TIME_REPORT.date = V_STS_PROD_TIME_REPORT_HOURLY.date
+where (V_STS_PROD_TIME_REPORT_HOURLY.[date] = '$date')
+group by V_STS_PROD_TIME_REPORT_HOURLY.wc,V_STS_PROD_TIME_REPORT_HOURLY.[description],V_STS_PROD_TIME_REPORT_HOURLY.[date],V_STS_PROD_TIME_REPORT.work_hour,V_STS_PROD_TIME_REPORT.stop_hour,V_STS_PROD_TIME_REPORT.TOT_work_hour
+order by V_STS_PROD_TIME_REPORT_HOURLY.[date],V_STS_PROD_TIME_REPORT_HOURLY.wc";
         } else {
-            $query = "select wc, [description],[date]
-   , [00:00-04:00] = max(case when work_hour = '00:00-04:00' then sumA_qty else 0 end)
-  , [04:00-08:00] = max(case when work_hour = '04:00-08:00' then sumA_qty else 0 end)
-  , [08:00-12:00] = max(case when work_hour = '08:00-12:00' then sumA_qty else 0 end)
-  , [12:00-13:00] = max(case when work_hour = '12:00-13:00' then sumA_qty else 0 end)
-  , [13:00-17:00] = max(case when work_hour = '13:00-17:00' then sumA_qty else 0 end)
-  , [17:00-17:30] = max(case when work_hour = '17:00-17:30' then sumA_qty else 0 end)
-  , [17:30-18:30] = max(case when work_hour = '17:30-18:30' then sumA_qty else 0 end)
-  , [18:30-21:00] = max(case when work_hour = '18:30-21:00' then sumA_qty else 0 end)
-  , [21:00-24:00] = max(case when work_hour = '21:00-24:00' then sumA_qty else 0 end)
-from V_STS_PROD_TIME_REPORT_HOURLY
-where [date] = '$date'
-group by wc,[description],[date]
-order by [date]";
+            $query = "select V_STS_PROD_TIME_REPORT.work_hour,V_STS_PROD_TIME_REPORT.stop_hour,V_STS_PROD_TIME_REPORT.TOT_work_hour, V_STS_PROD_TIME_REPORT_HOURLY.wc, V_STS_PROD_TIME_REPORT_HOURLY.[description],V_STS_PROD_TIME_REPORT_HOURLY.[date]
+  , [00:00-04:00] = max(case when V_STS_PROD_TIME_REPORT_HOURLY.work_hour = '00:00-04:00' then sumA_qty else 0 end)
+  , [04:00-08:00] = max(case when V_STS_PROD_TIME_REPORT_HOURLY.work_hour = '04:00-08:00' then sumA_qty else 0 end)
+  , [08:00-12:00] = max(case when V_STS_PROD_TIME_REPORT_HOURLY.work_hour = '08:00-12:00' then sumA_qty else 0 end)
+  , [12:00-13:00] = max(case when V_STS_PROD_TIME_REPORT_HOURLY.work_hour = '12:00-13:00' then sumA_qty else 0 end)
+  , [13:00-17:00] = max(case when V_STS_PROD_TIME_REPORT_HOURLY.work_hour = '13:00-17:00' then sumA_qty else 0 end)
+  , [17:00-17:30] = max(case when V_STS_PROD_TIME_REPORT_HOURLY.work_hour = '17:00-17:30' then sumA_qty else 0 end)
+  , [17:30-18:30] = max(case when V_STS_PROD_TIME_REPORT_HOURLY.work_hour = '17:30-18:30' then sumA_qty else 0 end)
+  , [18:30-21:00] = max(case when V_STS_PROD_TIME_REPORT_HOURLY.work_hour = '18:30-21:00' then sumA_qty else 0 end)
+  , [21:00-24:00] = max(case when V_STS_PROD_TIME_REPORT_HOURLY.work_hour = '21:00-24:00' then sumA_qty else 0 end)
+
+from V_STS_PROD_TIME_REPORT_HOURLY inner join V_STS_PROD_TIME_REPORT on V_STS_PROD_TIME_REPORT.wc = V_STS_PROD_TIME_REPORT_HOURLY.wc and V_STS_PROD_TIME_REPORT.date = V_STS_PROD_TIME_REPORT_HOURLY.date
+where (V_STS_PROD_TIME_REPORT_HOURLY.[date] = '$date')
+group by V_STS_PROD_TIME_REPORT_HOURLY.wc,V_STS_PROD_TIME_REPORT_HOURLY.[description],V_STS_PROD_TIME_REPORT_HOURLY.[date],V_STS_PROD_TIME_REPORT.work_hour,V_STS_PROD_TIME_REPORT.stop_hour,V_STS_PROD_TIME_REPORT.TOT_work_hour
+order by V_STS_PROD_TIME_REPORT_HOURLY.[date],V_STS_PROD_TIME_REPORT_HOURLY.wc";
         }
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
@@ -637,35 +639,39 @@ order by [date]";
         $query = "";
 
         if ($type == 'weight') {
-            $query = "select wc, [description],[date]
-  , [00:00-04:00] = max(case when work_hour = '00:00-04:00' then sumA_weight else 0 end)
-  , [04:00-08:00] = max(case when work_hour = '04:00-08:00' then sumA_weight else 0 end)
-  , [08:00-12:00] = max(case when work_hour = '08:00-12:00' then sumA_weight else 0 end)
-  , [12:00-13:00] = max(case when work_hour = '12:00-13:00' then sumA_weight else 0 end)
-  , [13:00-17:00] = max(case when work_hour = '13:00-17:00' then sumA_weight else 0 end)
-  , [17:00-17:30] = max(case when work_hour = '17:00-17:30' then sumA_weight else 0 end)
-  , [17:30-18:30] = max(case when work_hour = '17:30-18:30' then sumA_weight else 0 end)
-  , [18:30-21:00] = max(case when work_hour = '18:30-21:00' then sumA_weight else 0 end)
-  , [21:00-24:00] = max(case when work_hour = '21:00-24:00' then sumA_weight else 0 end)
-from V_STS_PROD_TIME_REPORT_HOURLY
-where ([date] between '$StartDate' and '$EndDate') and wc = '$wc'
-group by wc,[description],[date]
-order by [date]";
+            $query = "select V_STS_PROD_TIME_REPORT.work_hour,V_STS_PROD_TIME_REPORT.stop_hour,V_STS_PROD_TIME_REPORT.TOT_work_hour, V_STS_PROD_TIME_REPORT_HOURLY.wc, V_STS_PROD_TIME_REPORT_HOURLY.[description],V_STS_PROD_TIME_REPORT_HOURLY.[date]
+  , [00:00-04:00] = max(case when V_STS_PROD_TIME_REPORT_HOURLY.work_hour = '00:00-04:00' then sumA_weight else 0 end)
+  , [04:00-08:00] = max(case when V_STS_PROD_TIME_REPORT_HOURLY.work_hour = '04:00-08:00' then sumA_weight else 0 end)
+  , [08:00-12:00] = max(case when V_STS_PROD_TIME_REPORT_HOURLY.work_hour = '08:00-12:00' then sumA_weight else 0 end)
+  , [12:00-13:00] = max(case when V_STS_PROD_TIME_REPORT_HOURLY.work_hour = '12:00-13:00' then sumA_weight else 0 end)
+  , [13:00-17:00] = max(case when V_STS_PROD_TIME_REPORT_HOURLY.work_hour = '13:00-17:00' then sumA_weight else 0 end)
+  , [17:00-17:30] = max(case when V_STS_PROD_TIME_REPORT_HOURLY.work_hour = '17:00-17:30' then sumA_weight else 0 end)
+  , [17:30-18:30] = max(case when V_STS_PROD_TIME_REPORT_HOURLY.work_hour = '17:30-18:30' then sumA_weight else 0 end)
+  , [18:30-21:00] = max(case when V_STS_PROD_TIME_REPORT_HOURLY.work_hour = '18:30-21:00' then sumA_weight else 0 end)
+  , [21:00-24:00] = max(case when V_STS_PROD_TIME_REPORT_HOURLY.work_hour = '21:00-24:00' then sumA_weight else 0 end)
+
+from V_STS_PROD_TIME_REPORT_HOURLY inner join V_STS_PROD_TIME_REPORT on V_STS_PROD_TIME_REPORT.wc = V_STS_PROD_TIME_REPORT_HOURLY.wc and V_STS_PROD_TIME_REPORT.date = V_STS_PROD_TIME_REPORT_HOURLY.date
+where (V_STS_PROD_TIME_REPORT_HOURLY.[date] between '$StartDate' and '$EndDate')
+  and V_STS_PROD_TIME_REPORT_HOURLY.wc = '$wc'
+group by V_STS_PROD_TIME_REPORT_HOURLY.wc,V_STS_PROD_TIME_REPORT_HOURLY.[description],V_STS_PROD_TIME_REPORT_HOURLY.[date],V_STS_PROD_TIME_REPORT.work_hour,V_STS_PROD_TIME_REPORT.stop_hour,V_STS_PROD_TIME_REPORT.TOT_work_hour
+order by V_STS_PROD_TIME_REPORT_HOURLY.[date],V_STS_PROD_TIME_REPORT_HOURLY.wc";
         } else {
-            $query = "select wc, [description],[date]
-   , [00:00-04:00] = max(case when work_hour = '00:00-04:00' then sumA_qty else 0 end)
-  , [04:00-08:00] = max(case when work_hour = '04:00-08:00' then sumA_qty else 0 end)
-  , [08:00-12:00] = max(case when work_hour = '08:00-12:00' then sumA_qty else 0 end)
-  , [12:00-13:00] = max(case when work_hour = '12:00-13:00' then sumA_qty else 0 end)
-  , [13:00-17:00] = max(case when work_hour = '13:00-17:00' then sumA_qty else 0 end)
-  , [17:00-17:30] = max(case when work_hour = '17:00-17:30' then sumA_qty else 0 end)
-  , [17:30-18:30] = max(case when work_hour = '17:30-18:30' then sumA_qty else 0 end)
-  , [18:30-21:00] = max(case when work_hour = '18:30-21:00' then sumA_qty else 0 end)
-  , [21:00-24:00] = max(case when work_hour = '21:00-24:00' then sumA_qty else 0 end)
-from V_STS_PROD_TIME_REPORT_HOURLY
-where ([date] between '$StartDate' and '$EndDate') and wc = '$wc'
-group by wc,[description],[date]
-order by [date]";
+            $query = "select V_STS_PROD_TIME_REPORT.work_hour,V_STS_PROD_TIME_REPORT.stop_hour,V_STS_PROD_TIME_REPORT.TOT_work_hour, V_STS_PROD_TIME_REPORT_HOURLY.wc, V_STS_PROD_TIME_REPORT_HOURLY.[description],V_STS_PROD_TIME_REPORT_HOURLY.[date]
+  , [00:00-04:00] = max(case when V_STS_PROD_TIME_REPORT_HOURLY.work_hour = '00:00-04:00' then sumA_qty else 0 end)
+  , [04:00-08:00] = max(case when V_STS_PROD_TIME_REPORT_HOURLY.work_hour = '04:00-08:00' then sumA_qty else 0 end)
+  , [08:00-12:00] = max(case when V_STS_PROD_TIME_REPORT_HOURLY.work_hour = '08:00-12:00' then sumA_qty else 0 end)
+  , [12:00-13:00] = max(case when V_STS_PROD_TIME_REPORT_HOURLY.work_hour = '12:00-13:00' then sumA_qty else 0 end)
+  , [13:00-17:00] = max(case when V_STS_PROD_TIME_REPORT_HOURLY.work_hour = '13:00-17:00' then sumA_qty else 0 end)
+  , [17:00-17:30] = max(case when V_STS_PROD_TIME_REPORT_HOURLY.work_hour = '17:00-17:30' then sumA_qty else 0 end)
+  , [17:30-18:30] = max(case when V_STS_PROD_TIME_REPORT_HOURLY.work_hour = '17:30-18:30' then sumA_qty else 0 end)
+  , [18:30-21:00] = max(case when V_STS_PROD_TIME_REPORT_HOURLY.work_hour = '18:30-21:00' then sumA_qty else 0 end)
+  , [21:00-24:00] = max(case when V_STS_PROD_TIME_REPORT_HOURLY.work_hour = '21:00-24:00' then sumA_qty else 0 end)
+
+from V_STS_PROD_TIME_REPORT_HOURLY inner join V_STS_PROD_TIME_REPORT on V_STS_PROD_TIME_REPORT.wc = V_STS_PROD_TIME_REPORT_HOURLY.wc and V_STS_PROD_TIME_REPORT.date = V_STS_PROD_TIME_REPORT_HOURLY.date
+where (V_STS_PROD_TIME_REPORT_HOURLY.[date] between '$StartDate' and '$EndDate')
+  and V_STS_PROD_TIME_REPORT_HOURLY.wc = '$wc'
+group by V_STS_PROD_TIME_REPORT_HOURLY.wc,V_STS_PROD_TIME_REPORT_HOURLY.[description],V_STS_PROD_TIME_REPORT_HOURLY.[date],V_STS_PROD_TIME_REPORT.work_hour,V_STS_PROD_TIME_REPORT.stop_hour,V_STS_PROD_TIME_REPORT.TOT_work_hour
+order by V_STS_PROD_TIME_REPORT_HOURLY.[date],V_STS_PROD_TIME_REPORT_HOURLY.wc";
         }
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
