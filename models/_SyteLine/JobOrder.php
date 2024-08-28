@@ -1336,7 +1336,9 @@ class JOBORDER {
                  inner join mv_bc_tag tag on lot.lot=tag.lot
                  inner join job_mst on LEFT(lot.lot,10) = job_mst.job 
                  inner join AIT_Preship_Do_Seq preship on job_mst.ord_num = preship.co_num and job_mst.ord_line = preship.co_line 
-                 where lot.loc like 'cl%'  and tag.active=1 and qty1 <> 0
+     inner join STS_list_of_do_group gr on gr.do_group_list like '%'+preship.do_num+'%'  
+where lot.loc like 'cl%'  and tag.active=1 and qty1 <> 0
+ and gr.id = 35
                  order by id";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
