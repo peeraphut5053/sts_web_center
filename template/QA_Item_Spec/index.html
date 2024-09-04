@@ -1,0 +1,193 @@
+<div class="row">
+    <div>
+        <h1>QA Item Spec</h1>
+    </div> 
+</div> 
+<div class="row" >
+
+</div>
+
+<div class="row" id="divReport" >
+    <div class="col-xs-3">
+        QA Item Spec
+        <div class="row">
+            <div class="input-group">
+                <div class="input-group-addon">itemSpec</div>
+                <input type="text" autocomplete="off"  class="form-control txt-filter" id="itemSpec">
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-group">
+                <div class="input-group-addon">spec</div>
+                <input type="text" autocomplete="off"  class="form-control txt-filter" id="spec">
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-group">
+                <div class="input-group-addon">Grade</div>
+                <input type="text" autocomplete="off"  class="form-control txt-filter" id="Grade">
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-group">
+                <div class="input-group-addon">SCH</div>
+                <input type="text" autocomplete="off"  class="form-control txt-filter" id="SCH">
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-group">
+                <div class="input-group-addon">remark</div>
+                <input type="text" autocomplete="off"  class="form-control txt-filter" id="remark">
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-group">
+                <div class="input-group-addon">specCert</div>
+                <input type="text" autocomplete="off"  class="form-control txt-filter" id="specCert">
+            </div>
+        </div>
+        <div class="row">
+            <button id="btnSave" class="btn btn-success"><i class="fa fa-searh"></i>&nbsp;Save</button>
+        </div>
+    </div>
+    <div class="col-xs-9">
+        Table QA Item Spec
+        <div class="col-lg-2">   
+            <button id="btnSearch" class="btn btn-info"><i class="fa fa-searh"></i>&nbsp;ค้นหา</button>
+        </div>
+        <table class="table table-condensed table-bordered table-striped" id="tblReport" style="width:100%;">
+            <thead>
+                <tr>
+                    <th>itemSpec</th>
+                    <th>spec</th>
+                    <th>Grade</th>
+                    <th>SCH</th>
+                    <th>remark</th>
+                    <th>specCert</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+<script type="text/javascript">
+    $("#txtFromDate,#txtToDate").datepicker({
+        dateFormat: 'yy-mm-dd',
+    });
+    
+    $("#txtFromDate,#txtToDate").val(GetToday());
+    $("#btnSearch").click(function () {
+        var tblReportId = '#tblReport';
+        var btnSearch = '#btnSearch';
+        SearchDataFn(tblReportId, btnSearch, tablecolumsArr, "Spec", "Spec");
+    });
+    var tablecolumsArr = [
+        {
+            "data": "itemSpec",
+            "className": "text-center",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "spec",
+            "render": function (data, type, row) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "Grade",
+            "render": function (data, type, row) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "SCH",
+            "render": function (data, type, row) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "remark",
+            "render": function (data, type, row) {
+                let valdata = data;
+                let ret = `<span hidden>${(valdata) }</span><input type='text' class='input-text-value' size='45' id=${row.itemSpec} onchange="SaveRemark(this.id,value);" value='${(valdata)}' />`;
+                return ret;
+            }
+        },
+        {
+            "data": "specCert",
+            "render": function (data, type, row) {
+                let valdata = data;
+                let ret = `<span hidden>${(valdata) }</span><input type='text' class='input-text-value' size='45' id=${row.itemSpec} onchange="SaveSpecCert(this.id,value);" value='${(valdata)}' />`;
+                return ret;
+            }
+        },
+    ];
+
+    $("#btnSave").click(function () {
+        var itemSpec = $("#itemSpec").val();
+        var spec = $("#spec").val();
+        var Grade = $("#Grade").val();
+        var Sch = $("#SCH").val();
+        var remark = $("#remark").val();
+        var specCert = $("#specCert").val();
+
+        if (itemSpec == "" || spec == "" || Grade == "") {
+            alert("กรุณากรอกข้อมูลให้ครบ");
+            return false;
+        }
+        
+        $.ajax({
+            url: "././module/QA_Item_Spec/data.php",
+            type: 'POST',
+            data: {
+            "load": "Save",
+            "itemSpec": itemSpec,
+            "spec": spec,
+            "Grade": Grade,
+            "SCH": Sch,
+            "remark": remark,
+            "specCert": specCert
+            },
+            success: function () {
+                console.log("Save success");
+            }
+        });
+    })
+
+    function SaveRemark(id,remark) {
+        $.ajax({
+            url: "././module/QA_Item_Spec/data.php",
+            type: 'POST',
+            data: {
+            "load": "UpdateRemark",
+            "itemSpec": id,
+            "remark": remark
+            },
+            success: function () {
+                console.log("Save success");
+            }
+        });
+    }
+
+    function SaveSpecCert(id,specCert) {
+        $.ajax({
+            url: "././module/QA_Item_Spec/data.php",
+            type: 'POST',
+            data: {
+            "load": "UpdateSpecCert",
+            "itemSpec": id,
+            "specCert": specCert
+            },
+            success: function () {
+                console.log("Save success");
+            }
+        });
+    }
+
+
+</script>

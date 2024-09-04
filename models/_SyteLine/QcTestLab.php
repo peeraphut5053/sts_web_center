@@ -222,5 +222,37 @@ where do_num = '$do_num'";
         return $rs0;
     }
 
+    function GetQAItemSpec() {
+        $query = "select * from STS_QA_item_spec";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+  
+    function AddQAItemSpec($itemSpec, $spec, $Grade,$SCH, $remark, $specCert) {
+        $query = "INSERT INTO STS_QA_item_spec (itemSpec, spec, Grade, SCH, remark, specCert) VALUES ('$itemSpec', '$spec', '$Grade', '$SCH', '$remark', '$specCert')";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+
+    function UpdateQAItemSpecRemark($itemSpec,$remark) {
+        $query = "UPDATE STS_QA_item_spec set remark = '$remark' where itemSpec = '$itemSpec'";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+
+    function UpdateQAItemSpecCert($itemSpec,$specCert) {
+        $query = "UPDATE STS_QA_item_spec set specCert = '$specCert' where itemSpec = '$itemSpec'";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+
 }
 ?>
