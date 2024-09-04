@@ -123,9 +123,6 @@ from STS_QA_LAB inner join sts_po_qc
               test_date,
               thick,
               width
-     ,FORMAT(QC_Pb ,'N3') as QC_Pb
-     ,QC_weight_coat
-     ,QC_hydro
      ,cust = case when co_mst.cust_num like 'EX%' then ca.addr##1 else ca.name end
        ,item.uf_typeEnd
       from do_seq_mst ait
