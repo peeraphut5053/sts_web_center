@@ -153,6 +153,15 @@ from STS_QA_LAB inner join sts_po_qc
         return $rs0;
     }
 
+    function makePDF_Header($do_num){
+        $query = "EXEC [dbo].[STS_QA_MILLCERT_HEAD]
+  @donum = '$do_num'";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+
     function loadTest($do_num){
         $query = "select uf_QC_EDDY , uf_QC_HEAT, uf_QC_FLAT, uf_QC_BEND, uf_QC_VISUAL
 from do_hdr_mst

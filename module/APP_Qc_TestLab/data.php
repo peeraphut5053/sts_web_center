@@ -256,6 +256,15 @@ if ($load == 'makePDF') {
     echo json_encode($QcTestLab); 
 }
 
+if ($load == 'makePDF_Header') {
+    $CallModel = new CallModel();
+    $CallModel->SyteLine_Models();
+    $QcTestLab = new QcTestLab();
+    $QcTestLab->setConn($ConnSL);
+    $QcTestLab = $QcTestLab->makePDF_Header($do_num);
+    echo json_encode($QcTestLab); 
+}
+
 if ($load == 'loadTest') {
     $CallModel = new CallModel();
     $CallModel->SyteLine_Models();
