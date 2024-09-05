@@ -1074,6 +1074,7 @@ if (pageData[cur -1][0].standard_sub === 'TIS.107') {
     return {}
 }
 }
+console.log(filter, 'filter');
 
 var docDefinition = {
     pageSize: 'A4',
@@ -1094,7 +1095,7 @@ var docDefinition = {
           { text: `CONTRACT (P/O) No.       : ${dataNow[0].cust_po} `, fontSize: 10, margin: [0, 5, 0, 0] },
           { text: `INSPECTION CERTIFICATE  : ACCORDING TO EN 10204 : 2005 TYPE 3.1`, fontSize: 10, margin: [0, 5, 0, 0] },
           { text: `COMMODITY                  : NEWLY PRODUCED, PRIME QUALITY ERW STEEL PIPE`, fontSize: 10, margin: [0, 5, 0, 0] },
-          { text: `SPECIFICATION               : ${dataNow[0].Uf_spec} `, fontSize: 10, margin: [0, 5, 0, 0] },
+          { text: `SPECIFICATION               : ${filter[currentPage -1].Uf_spec} `, fontSize: 10, margin: [0, 5, 0, 0] },
         ]
       },
       {
