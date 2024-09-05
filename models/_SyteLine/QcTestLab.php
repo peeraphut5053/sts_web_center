@@ -251,5 +251,44 @@ where do_num = '$do_num'";
         return $rs0;
     }
 
+    function GetZincCoating($StartDate, $EndDate) {
+        $query = "select convert(date,matltran_mst.createdate) as prod_date
+  ,matltran_mst.item, item.[description]
+  ,matltran_mst.lot,tag.sts_no
+from matltran_mst
+   inner join mv_bc_tag tag on tag.lot = matltran_mst.lot 
+   and tag.item = matltran_mst.item and tag.active = 1
+   inner join item_mst item on item.item = matltran_mst.item
+where trans_type = 'F'
+     and matltran_mst.wc like '%GL%'
+   and matltran_mst.item like 'w%071%'
+   and (convert(date,matltran_mst.createdate) between  '$StartDate'  and '$EndDate')";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+
+    function InsertSTS_QC_zinc_coat($item, $lot,$sts_no,$QC_Pb,$QC_weight_coat) {
+        $qSelect = "select * from STS_QC_zinc_coat where item = '$item' and lot = '$lot' and sts_no = '$sts_no'";
+        $cSql = new SqlSrv();
+        $rsSelect = $cSql->SqlQuery($this->StrConn, $qSelect);
+
+        if ( $item == isset($rsSelect[1]["item"]) && $lot == isset($rsSelect[1]["lot"]) && $sts_no == isset($rsSelect[1]["sts_no"]) ) {
+        $query = "UPDATE STS_QC_zinc_coat set QC_Pb = '$QC_Pb', QC_weight_coat = '$QC_weight_coat' where item = '$item' and lot = '$lot' and sts_no = '$sts_no'";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+        } else {
+            $query = "INSERT INTO STS_QC_zinc_coat (item, lot, sts_no, QC_Pb, QC_weight_coat,createdate) VALUES ('$item', '$lot', '$sts_no', $QC_Pb, $QC_weight_coat,getdate())";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+        }
+        
+    }
+
 }
 ?>

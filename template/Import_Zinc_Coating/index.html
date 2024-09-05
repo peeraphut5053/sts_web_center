@@ -1,0 +1,264 @@
+<style>
+    .col-search {
+      padding-left: 3px;
+      padding-right: 3px;
+    }
+    /*    table.dataTable thead .sorting:after,
+          table.dataTable thead .sorting:before,
+          table.dataTable thead .sorting_asc:after,
+          table.dataTable thead .sorting_asc:before,
+          table.dataTable thead .sorting_asc_disabled:after,
+          table.dataTable thead .sorting_asc_disabled:before,
+          table.dataTable thead .sorting_desc:after,
+          table.dataTable thead .sorting_desc:before,
+          table.dataTable thead .sorting_desc_disabled:after,
+          table.dataTable thead .sorting_desc_disabled:before {
+              bottom: .5em;
+          }*/
+    .table thead th {
+      text-align: center;
+    }
+  
+    .col-flt-page {
+      padding-top: 10px;
+      font-weight: bold;
+    }
+  
+    #tblReport tbody tr td a {
+      cursor: pointer;
+    }
+    table.dataTable.fixedHeader-floating,
+    table.dataTable.fixedHeader-locked {
+      background-color: white;
+      margin-top: 50px !important;
+      margin-bottom: 0 !important;
+    }
+    @media print {
+      table th:nth-child(0) {
+        width: 200px;
+        word-break: break-all;
+        white-space: pre-line;
+      }
+      table td:nth-child(0) {
+        width: 200px;
+        word-break: break-all;
+        white-space: pre-line;
+      }
+    }
+    .text-header {
+      font-weight: bold;
+      font-size: 20px;
+    }
+    .text-wrap {
+      white-space: normal;
+    }
+    .width-200 {
+      width: 200px;
+    }
+    input[type="checkbox"] {
+      margin-left: 5px;
+      margin-right: 5px;
+    } /*
+      .cb_lb{
+          margin-top:-5px;
+      }*/
+    .item-center {
+      display: flex;
+      justify-content: center;
+    }
+  </style>
+  <div class="row">
+    <h4 class="text-header text-center">Import Zinc Coating</h4>
+  </div>
+  <div class="row item-center">
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+      <div class="input-group">
+        <div class="input-group-addon">Start Date</div>
+        <input
+          type="text"
+          class="form-control"
+          id="txtStartDate"
+          autocomplete="off"
+        />
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+      <div class="input-group">
+        <div class="input-group-addon">End Date</div>
+        <input
+          type="text"
+          class="form-control"
+          id="txtEndDate"
+          autocomplete="off"
+        />
+      </div>
+    </div>
+    <div class="col-lg-1 col-md-1 col-sm-6 col-xs-6 text-left">
+      <button class="btn btn-info" id="btnSearch">
+        <i class="fa fa-search"></i>&nbsp; Search
+      </button>
+    </div>
+    <div class="col-lg-1 col-md-1 col-sm-6 col-xs-6 text-left">
+        <a class="btn btn-success" href="module/Import_Zinc_Coating/Import_Excel.php"  id="btnTransfer">&nbsp;Import Excel Zinc Coating</a>
+    </div>
+  </div>
+  
+  <div class="row" id="rowResultTable">
+    <table
+      class="table table-condensed table-bordered table-striped"
+      width="100%"
+      id="tblReport"
+    >
+      <thead>
+        <tr>
+          <th class="bg-gray">prod_date</th>
+          <th class="bg-gray">item</th>
+          <th class="bg-gray">description</th>
+          <th class="bg-gray">Lot</th>
+          <th class="bg-gray">sts_no</th>
+        </tr>
+      </thead>
+      <!--        <tbody id="tblReportList">
+                      <tr><td align="center" colspan="12">.... No item search ....</td></tr>
+     </tbody>-->
+    </table>
+  </div>
+  <div id="printpopup"></div>
+  <script src="https://code.jquery.com/jquery-migrate-3.0.0.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script type="text/javascript">
+ 
+    $("#btnSearch").click(function () {
+      ReportItemSearch();
+    });
+           
+    $("#txtStartDate,#txtEndDate").datepicker({
+      dateFormat: "yy-mm-dd",
+    });
+    
+    $("#btnRemove").click(function () {
+      $("#tblReport").DataTable().clear().destroy();
+    });
+  
+    function ReportItemSearch() {
+      var OldHtml = $("#btnSearch").html();
+      let TagID = $("#txtTagID").val();
+      let STSNo = $("#txtSTSNo").val();
+      var StartDate = $("#txtStartDate").val();
+      var EndDate = $("#txtEndDate").val();
+  
+      if (StartDate != "" && EndDate == "" || StartDate == "" && EndDate != "") {
+          $.alert("กรุณาเลือกวันที่เริ่มต้นและสิ้นสุดให้ครบถ้วน");
+          return false;
+      }
+  
+      if (TagID == "" && STSNo == "" && StartDate == "" && EndDate == "") {
+        $.alert("กรุณากรอกข้อมูลอย่างน้อย 1 ช่อง");
+        return false;
+      } else {
+        $("#btnSearch").html("<i class='fa fa-spinner fa-spin'></i>");
+        $("#tblReport").loading();
+        $("#tblReport tfoot").remove();
+        $.ajax({
+          type: "POST",
+          url: "././module/Import_Zinc_Coating/data.php",
+          dataType: "json",
+          beforeSend: function () {
+            $("#btnSearch").html("<i class='fa fa-spinner fa-spin'>");
+          },
+          data: {
+            load: "ajax",
+            StartDate: StartDate,
+            EndDate: EndDate,
+          },
+          success: function (data) {
+            $("#tblReport").DataTable().clear();
+            $("#tblReport").append(
+              "<tfoot><tr><td></td><td></td><td></td><td></td><td></td></tr></tfoot>"
+            );
+            $("#tblReport").dataTable({
+              aaData: data,
+              paging: false,
+              fixedHeader: true,
+              destroy: true,
+              processing: true,
+              scrollY: "65vh",
+              scrollCollapse: true,
+              scrollX: true,
+              select: true,
+              select: {
+                style: "multi",
+              },
+              columns: [
+                {
+                  data: "prod_date.date",
+                  className: "text-center",
+                  "render": function (data, type, row){
+                    var ret = data.substring(0, 10);
+                    return ret;
+                  }
+                },
+                {
+                  data: "item",
+                  className: "text-center",
+                },
+                {
+                  data: "description",
+                  className: "text-center",
+                },
+                {
+                  data: "lot",
+                  className: "text-center",
+                },
+                {
+                  data: "sts_no",
+                  className: "text-center",
+                },
+              ],
+              dom:
+                "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                "<'row'<'col-md-12'tr>>" +
+                "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+              buttons: [
+                {
+                  extend: "print",
+                  text: "<i class='fa fa-print'></i>&nbsp;Print",
+                  title: "",
+                },
+                {
+                  extend: "excel",
+                  footer: true,
+                  text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                  title:
+                    "Import_Zinc_Coating" +
+                    StartDate +
+                    "_to_" +
+                    EndDate,
+                },
+              ]
+            });
+  
+            $("#tblReport").loading("stop");
+            $("#btnSearch").html(OldHtml);
+          },
+          error: function (e) {
+            $("#tblReport").loading("stop");
+            $("#btnSearch").html(OldHtml);
+            console.log("There was an error with your request...");
+            console.log("error: " + JSON.stringify(e));
+          },
+        });
+      }
+    }
+    $("#btnExportExcel").click(function () {
+      //        onclick="javascript:
+      //       xport.toCSV('tblReport');
+    });
+  
+    $("#StartDate,#EndDate").datepicker({
+      dateFormat: "yy-mm-dd",
+    });
+  
+
+  </script>
+  

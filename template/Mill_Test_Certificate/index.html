@@ -181,6 +181,11 @@
             <span class="checkmark"></span>
              VISUAL & DIMENSON
         </label>
+        <label class="custom-checkbox">
+            <input type="checkbox" name='Zinc' id="Zinc" />
+            <span class="checkmark"></span>
+             กำหนดช่องเป็น Zinc Coating Thinness (μm)
+        </label>
         <div class="col-lg-1 col-md-2 col-sm-1 col-xs-6  col-search">
             <button id="BtnSave" class="btn btn-success"><i class="fa fa-floppy-o p-1" aria-hidden="true"></i>  Save</button>
         </div>
@@ -778,6 +783,8 @@
             success: function (data) {
                 $('#modal-loading').modal('hide');
                 const dataNow = data
+                console.log(dataNow, 'dataNow');
+                
 
     
 // filter duplicate size
@@ -786,7 +793,7 @@ const filter = dataNow.filter((value, index, self) =>
         t.item === value.item
     ))
 ); 
-  let spec = new Set();
+  {/*let spec = new Set();
     filter.forEach(element => {
        spec.add(element.Uf_spec);
     });
@@ -798,7 +805,7 @@ const filter = dataNow.filter((value, index, self) =>
         }else{
             specStr += ' ' + key;
         }
-    })
+    })*/}
 
 
 var testOne = $("input[name='TestOne']:checked").val();
@@ -806,6 +813,9 @@ var testTwo = $("input[name='TestTwo']:checked").val();
 var testThree = $("input[name='TestThree']:checked").val();
 var testFour = $("input[name='TestFour']:checked").val();
 var testFive = $("input[name='TestFive']:checked").val();
+var zinc = $("input[name='Zinc']:checked").val();
+
+
 let page = 0;
 function createData(res,index) {
     let unique = res.filter((value, index, self) =>
@@ -813,6 +823,7 @@ function createData(res,index) {
         t.item === value.item
     ))
     ); 
+    let titleZinc = zinc == undefined ? 'Zinc Coating Weight                 (g/m2)' : 'Zinc Coating Thinness (um)';
 
     // total bundle and piece
     const bundle = res.reduce((a, b) => a + b.bundle, 0);
@@ -833,14 +844,14 @@ function createData(res,index) {
     { text: 'MECHANICAL PROPERTIES', colSpan: 3, fontSize: 9,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
     {}, {},
     { text: 'Pb', rowSpan: 2, fontSize: 9,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
-    { text: 'WEIGHT OF ZINC COATING', rowSpan: 2, fontSize: 9,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
+    { text: `${titleZinc}`, rowSpan: 2, fontSize: 8,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
     { text: 'HYDRO-STATIC TEST', rowSpan: 2, fontSize: 9,fillColor: '#DCDCDC', alignment: 'center', style: 'header' }
   ],
   // ชั้นที่ 2 ของ header
   [
     {}, {},
     { text: 'NPS', fontSize: 9,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
-    { text: 'Thickness', fontSize: 9,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
+    { text: 'Thickness', fontSize: 8,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
     { text: 'Length', fontSize: 9,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
     {}, {},{},
     { text: 'C', fontSize: 9,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
@@ -854,8 +865,8 @@ function createData(res,index) {
     { text: 'Cr', fontSize: 9,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
     { text: 'Mo', fontSize: 9,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
     { text: 'Nb', fontSize: 9,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
-    { text: 'Y.S.', fontSize: 9,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
     { text: 'T.S.', fontSize: 9,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
+    { text: 'Y.P.', fontSize: 9,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
     { text: 'El', fontSize: 9,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
     {}, {}
   ]
@@ -884,8 +895,8 @@ for (let i = 0; i <= res.length-1; i++) {
   { text: `${res[i]?.Mec_test_TS ? res[i].Mec_test_TS : '-'}`, alignment: 'center', fontSize: 8 },
   { text: `${res[i]?.Mec_test_YS ? res[i].Mec_test_YS : '-'}`, alignment: 'center', fontSize: 8 },
   { text: `${res[i]?.Mec_test_EI ? res[i].Mec_test_EI : '-'}`, alignment: 'center', fontSize: 8 },
-  { text: `${res[i]?.QC_Pb ? res[i].QC_Pb : '-'}`, alignment: 'center', fontSize: 8 },
-  { text: `${res[i]?.QC_weight_coat ? res[i].QC_weight_coat : '-'}`, alignment: 'center', fontSize: 8 },
+  { text: `${res[i]?.QC_Pb > 0 ? res[i].QC_Pb : '-'}`, alignment: 'center', fontSize: 8 },
+  { text: `${res[i]?.QC_weight_coat > 0 ? res[i].QC_weight_coat : '-'}`, alignment: 'center', fontSize: 8 },
   { text: `${res[i]?.QC_hydro ? res[i].QC_hydro : '-'}`, alignment: 'center', fontSize: 8}
 ]);
 // Add empty rows if needed to fill the table
@@ -1080,10 +1091,10 @@ var docDefinition = {
           { text: `CERTIFICATE NO.             : ${dataNow[0].cer_no}`, fontSize: 10, margin: [0, 20, 0, 0] },
           { text: `DATE                             : ${moment().format('DD-MMM-YYYY')} `, fontSize: 10, margin: [0, 5, 0, 0] },
           { text: `CUSTOMER                    : ${dataNow[0].cust}`, fontSize: 10, margin: [0, 5, 0, 0] },
-          { text: `CONTRACT (P/O) No.       : ${dataNow[0].do_num} `, fontSize: 10, margin: [0, 5, 0, 0] },
+          { text: `CONTRACT (P/O) No.       : ${dataNow[0].cust_po} `, fontSize: 10, margin: [0, 5, 0, 0] },
           { text: `INSPECTION CERTIFICATE  : ACCORDING TO EN 10204 : 2005 TYPE 3.1`, fontSize: 10, margin: [0, 5, 0, 0] },
           { text: `COMMODITY                  : NEWLY PRODUCED, PRIME QUALITY ERW STEEL PIPE`, fontSize: 10, margin: [0, 5, 0, 0] },
-          { text: `SPECIFICATION               : ${specStr} `, fontSize: 10, margin: [0, 5, 0, 0] },
+          { text: `SPECIFICATION               : ${dataNow[0].Uf_spec} `, fontSize: 10, margin: [0, 5, 0, 0] },
         ]
       },
       {
@@ -1142,7 +1153,7 @@ function createTables() {
                 table: {
                     headerRows: 2,
                     background: 'red',
-                    widths: [20, 25, 25, 25, 25, 30, 30, 30, 25, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 20, 20, 20, 25, 25, 25],
+                    widths: [15, 25, 25, 25, 25, 30, 30, 30, 25, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 20, 20, 20, 25, 30, 25],
                     body: createData(newRes, i),
                 },
                 // Add a page break after every table except the last one
