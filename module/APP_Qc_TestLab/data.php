@@ -218,34 +218,10 @@ if ($load == 'searchAll') {
     $CallModel->SyteLine_Models();
     $QcTestLab = new QcTestLab();
     $QcTestLab->setConn($ConnSL);
-    $where = "where 1=1";
-    if (($from_stsno != "") && ($to_stsno != "")) {
-        $where = $where . " AND ( b.sts_no BETWEEN '$from_stsno' AND '$to_stsno' )  ";
-    }
-    // else if ($c_no != "") {
-    //     $where = $where . " AND c_no = '" . $c_no . "' ";
-    // }
-    if ($do_num != "") {
-        $where = $where . " AND ait.do_num = '" . $do_num . "' ";
-    }
-    if ($h_no != "") {
-        $where = $where . " AND h_no = '" . $h_no . "' ";
-    }
-    if ($size != "") {
-        $where = $where . " AND size = '" . $size . "' ";
-    }
-    if ($standard != "") {
-        $where = $where . " AND standard_sub = '" . $standard . "' ";
-    }
-    if ($prod_FM_no != "") {
-        $where = $where . " AND prod_FM_no = '" . $prod_FM_no . "' ";
-    }
-    if ($prod_date != "") {
-        $where = $where . " AND prod_date = '" . $prod_date . "' ";
-    }
-    $QcTestLab = $QcTestLab->ReportAll($where);
+    $QcTestLab = $QcTestLab->ReportAll($from_stsno, $to_stsno, $do_num, $h_no, $size, $standard, $prod_FM_no, $prod_date);
     echo json_encode($QcTestLab); 
 }
+
 
 if ($load == 'makePDF') {
     $CallModel = new CallModel();

@@ -92,52 +92,10 @@ from STS_QA_LAB inner join sts_po_qc
         }
     }
 
-    function ReportAll($where){
-        $query = "select distinct ait.do_num, mv.item
-        ,opr_no
-        ,size
-        ,b.Uf_Schedule
-        ,length,standard_sub
-        ,b.uf_grade
-        ,a.sts_no,h_no,
-              sts_c,sts_si,sts_mn,sts_p,sts_s,sts_cu,sts_v,sts_ni,sts_cr,sts_mo,
-              sts_ti,sts_nb,sts_al,sts_b,sts_co,sts_pb,sts_fe,sts_ts,sts_ys,sts_el,
-              Mec_test_TS,
-              Mec_test_YS,
-              Mec_test_EI,
-              Mec_test_EL_1,
-              Mec_test_EL_2,
-              Mec_test_EL_3,
-              Not_Mec_test_TS,
-              Not_Mec_test_YS,
-              Not_Mec_test_EI,
-              Not_Mec_test_EL_1,
-              Not_Mec_test_EL_2,
-              Not_Mec_test_EL_3,
-              charpy_mean,
-              charpy1,
-              charpy2,
-              charpy3,
-              prod_FM_no,
-              prod_date,
-              test_date,
-              thick,
-              width
-     ,cust = case when co_mst.cust_num like 'EX%' then ca.addr##1 else ca.name end
-       ,item.uf_typeEnd
-      from do_seq_mst ait
-         inner join matltrack_mst mtk on ait.ref_num = mtk.ref_num and ait.ref_line = mtk.ref_line_suf
-    and mtk.date_seq = ait.date_seq and mtk.trans_date = ait.ship_date
-    and mtk.qty < 0 and mtk.ref_type = 'O'
-         inner join mv_bc_tag mv on mtk.item = mv.item and mtk.lot = mv.lot and mv.ship_stat = 1
-   inner join item_mst item on item.item = mtk.item
-  left join sts_qa_lab a  on (a.sts_no = mv.sts_no or a.sts_no = mv.sts_no2 or a.sts_no = mv.sts_no3)
-     left join STS_QA_LAB_SUB b on a.sts_no = b.sts_no
-    and mv.item like '%'+b.item+'%' 
-  inner join co_mst on co_mst.co_num = ait.ref_num
-  inner join custaddr_mst ca on ca.cust_num = co_mst.cust_num and ca.cust_seq = co_mst.cust_seq
-          $where
-      order by do_num, sts_no, item";
+    function ReportAll($from_stsno, $to_stsno, $do_num, $h_no, $size, $standard, $prod_FM_no, $prod_date){
+        $query = "EXEC STS_QA_MILLCERT_main
+         @DONumStarting =  '$do_num'
+        ";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);
