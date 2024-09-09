@@ -71,8 +71,8 @@ from STS_QA_LAB inner join sts_po_qc
 
         if ( $opr_no == isset($rsSelect[1]["opr_no"]) && $sts_no == isset($rsSelect[1]["sts_no"]) && $prod_FM_no == isset($rsSelect[1]["prod_FM_no"]) && $length == isset($rsSelect[1]["length"]) && $prod_date == isset($rsSelect[1]["prod_date"])){
             $query ="UPDATE STS_QA_LAB_SUB SET item = '$item', opr_no = '$opr_no', size= '$size', Uf_Schedule= '$schedule', length= '$length', standard_sub= '$standard', Uf_Grade= '$grade', sts_no= '$sts_no', 
-                    Mec_test_TS= '$Mec_test_TS', Mec_test_YS= '$Mec_test_YS', Mec_test_EI = '$Mec_test_EI', Mec_test_EL_1 = '$Mec_test_EL_1', Mec_test_EL_2 = '$Mec_test_EL_2', Mec_test_EL_3 = '$Mec_test_EL_3', 
-                    Not_Mec_test_TS = '$Not_Mec_test_TS', Not_Mec_test_YS = '$Not_Mec_test_YS', Not_Mec_test_EI = '$Not_Mec_test_EI', Not_Mec_test_EL_1 = '$Not_Mec_test_EL_1', Not_Mec_test_EL_2 = '$Not_Mec_test_EL_2', Not_Mec_test_EL_3 = '$Not_Mec_test_EL_3', 
+                    Mec_test_TS= '$Mec_test_TS', Mec_test_YS= '$Mec_test_YS', Mec_test_EI = '$Mec_test_EI', Mec_test_TS_2 = '$Mec_test_TS_2', Mec_test_YS_2 = '$Mec_test_YS_2', Mec_test_EL_2 = '$Mec_test_EL_2', 
+                    Not_Mec_test_TS = '$Not_Mec_test_TS', Not_Mec_test_YS = '$Not_Mec_test_YS', Not_Mec_test_EI = '$Not_Mec_test_EI', Not_Mec_test_TS_2 = '$Not_Mec_test_TS_2', Not_Mec_test_YS_2 = '$Not_Mec_test_YS_2', Not_Mec_test_EL_2 = '$Not_Mec_test_EL_2', 
                     charpy_mean = '$charpy_mean', charpy1 = '$charpy1', charpy2 = '$charpy2', charpy3 = '$charpy3', prod_FM_no = '$prod_FM_no', prod_date = '$prod_date', test_date = '$test_date', remark = '$remark', ImportDate = Getdate()
                     where item = '$item' and opr_no = '$opr_no' and size = '$size' and sts_no = '$sts_no'  and prod_FM_no = '$prod_FM_no' and length = '$length'  and convert(date,prod_date) = '$prod_date'";
         $cSql = new SqlSrv();
@@ -84,7 +84,7 @@ from STS_QA_LAB inner join sts_po_qc
             $query ="INSERT INTO STS_QA_LAB_SUB (item,opr_no,size,Uf_Schedule,length,standard_sub,Uf_Grade,sts_no,Mec_test_TS,Mec_test_YS,Mec_test_EI,"
                     ."Mec_test_EL_1,Mec_test_EL_2,Mec_test_EL_3,Not_Mec_test_TS,Not_Mec_test_YS,Not_Mec_test_EI,Not_Mec_test_EL_1,Not_Mec_test_EL_2,Not_Mec_test_EL_3,charpy_mean,charpy1,charpy2,charpy3,prod_FM_no,prod_date,test_date,remark,ImportDate)"
                     ."VALUES ('".$item."','".$opr_no."','".$size."', '".$schedule."', '".$length."', '".$standard."', '".$grade."', '".$sts_no."', '".$Mec_test_TS."', '".$Mec_test_YS."','".$Mec_test_EI."',"
-                    ."'".$Mec_test_EL_1."', '".$Mec_test_EL_2."', '".$Mec_test_EL_3."', '".$Not_Mec_test_TS."', '".$Not_Mec_test_YS."','".$Not_Mec_test_EI."', '".$Not_Mec_test_EL_1."', '".$Not_Mec_test_EL_2."', '".$Not_Mec_test_EL_3."', '".$charpy_mean."', '".$charpy1."', '".$charpy2."', '".$charpy3."', '".$prod_FM_no."', '".$prod_date."', '".$test_date."', '".$remark."',Getdate())";
+                    ."'".$Mec_test_TS_2."', '".$Mec_test_YS_2."', '".$Mec_test_EL_2."', '".$Not_Mec_test_TS."', '".$Not_Mec_test_YS."','".$Not_Mec_test_EI."', '".$Not_Mec_test_TS_2."', '".$Not_Mec_test_YS_2."', '".$Not_Mec_test_EL_2."', '".$charpy_mean."', '".$charpy1."', '".$charpy2."', '".$charpy3."', '".$prod_FM_no."', '".$prod_date."', '".$test_date."', '".$remark."',Getdate())";
             $cSql = new SqlSrv();
             $rs0 = $cSql->SqlQuery($this->StrConn, $query);
             array_splice($rs0, count($rs0) - 1, 1);
