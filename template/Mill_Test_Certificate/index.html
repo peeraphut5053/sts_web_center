@@ -245,16 +245,15 @@
                     <th>Mec_test_TS</th>
                     <th>Mec_test_YS</th>
                     <th>Mec_test_EI</th>
-                    <th>Mec_test_EL_1</th>
-                    <th>Mec_test_EL_2</th>
-                    <th>Mec_test_EL_3</th>
+                    <th>Mec_test_TS_2</th>
+                    <th>Mec_test_YS_2</th>
+                    <th>Mec_test_EI_2</th>
                     <th>Not_Mec_test_TS</th>
                     <th>Not_Mec_test_YS</th>
                     <th>Not_Mec_test_EI</th>
-                    <th>Not_Mec_test_EL_1</th>
-                    <th>Not_Mec_test_EL_2</th>
-                    <th>Not_Mec_test_EL_3</th>
-
+                    <th>Not_Mec_test_TS_2</th>
+                    <th>Not_Mec_test_YS_2</th>
+                    <th>Not_Mec_test_EI_2</th>
                     <th>charpy_mean</th>
                     <th>charpy1</th>
                     <th>charpy2</th>
@@ -507,13 +506,13 @@
                         {"data": "Mec_test_EI",
                             "className": "text-left",
                         },
-                        {"data": "Mec_test_EL_1",
+                        {"data": "Mec_test_TS_2",
+                            "className": "text-left",
+                        },
+                        {"data": "Mec_test_YS_2",
                             "className": "text-left",
                         },
                         {"data": "Mec_test_EL_2",
-                            "className": "text-left",
-                        },
-                        {"data": "Mec_test_EL_3",
                             "className": "text-left",
                         },
                         {"data": "Not_Mec_test_TS",
@@ -537,7 +536,14 @@
                             return ret;
                         }
                         },
-                        {"data": "Not_Mec_test_EL_1",
+                        {"data": "Not_Mec_test_TS_2",
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                            var ret = `<span style="color: red;">${(data)}</span>`
+                            return ret;
+                        }
+                        },
+                        {"data": "Not_Mec_test_YS_2",
                             "className": "text-left",
                             "render": function (data, type, row, meta) {
                             var ret = `<span style="color: red;">${(data)}</span>`
@@ -545,13 +551,6 @@
                         }
                         },
                         {"data": "Not_Mec_test_EL_2",
-                            "className": "text-left",
-                            "render": function (data, type, row, meta) {
-                            var ret = `<span style="color: red;">${(data)}</span>`
-                            return ret;
-                        }
-                        },
-                        {"data": "Not_Mec_test_EL_3",
                             "className": "text-left",
                             "render": function (data, type, row, meta) {
                             var ret = `<span style="color: red;">${(data)}</span>`
@@ -830,7 +829,7 @@ function createData(res,index) {
         t.item === value.item
     ))
     ); 
-    console.log(unique, 'unique');
+    console.log(res, 'res');
     
     let titleZinc = zinc == undefined ? 'Zinc Coating Weight                 (g/m2)' : 'Zinc Coating Thinness (um)';
 
@@ -841,42 +840,42 @@ function createData(res,index) {
     let data = [];
     data.push(
     [
-    { text: 'ITEM', rowSpan: 2, fontSize: 9, fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
-    { text: 'TYPE OF PIPE END', rowSpan: 2,fillColor: '#DCDCDC', fontSize: 9, alignment: 'center', style: 'header' },
-    { text: 'DIMENSION', colSpan: 3, fontSize: 9,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
+    { text: 'ITEM', rowSpan: 2, fontSize: 9, bold: true, fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
+    { text: 'TYPE OF PIPE END', rowSpan: 2,fillColor: '#DCDCDC', fontSize: 9,bold: true, alignment: 'center', style: 'header' },
+    { text: 'DIMENSION', colSpan: 3, fontSize: 9,bold: true, fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
     {}, {},
-    { text: 'NUMBER OF BUNDLES', rowSpan: 2,fillColor: '#DCDCDC', fontSize: 9, alignment: 'center', style: 'header' },
-    { text: 'NUMBER OF PIECES', rowSpan: 2,fillColor: '#DCDCDC', fontSize: 9, alignment: 'center', style: 'header' },
-    { text: 'H/N (STS)', rowSpan: 2, fontSize: 9,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
-    { text: 'CHEMICAL COMPOSITION %',fillColor: '#DCDCDC', colSpan: 11, fontSize: 9, alignment: 'center', style: 'header' },
+    { text: 'NUMBER OF BUNDLES', rowSpan: 2,fillColor: '#DCDCDC', fontSize: 9,bold: true, alignment: 'center', style: 'header' },
+    { text: 'NUMBER OF PIECES', rowSpan: 2,fillColor: '#DCDCDC', fontSize: 9,bold: true, alignment: 'center', style: 'header' },
+    { text: 'H/N (STS)', rowSpan: 2, fontSize: 9,bold: true,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
+    { text: 'CHEMICAL COMPOSITION %',fillColor: '#DCDCDC', colSpan: 11,bold: true, fontSize: 9, alignment: 'center', style: 'header' },
     {}, {}, {}, {}, {}, {}, {}, {},{},{},
-    { text: 'MECHANICAL PROPERTIES', colSpan: 3, fontSize: 9,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
+    { text: 'MECHANICAL PROPERTIES', colSpan: 3, fontSize: 9,fillColor: '#DCDCDC',bold: true, alignment: 'center', style: 'header' },
     {}, {},
-    { text: 'Pb', rowSpan: 2, fontSize: 9,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
-    { text: `${titleZinc}`, rowSpan: 2, fontSize: 8,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
-    { text: 'HYDRO-STATIC TEST', rowSpan: 2, fontSize: 9,fillColor: '#DCDCDC', alignment: 'center', style: 'header' }
+    { text: 'Pb', rowSpan: 2, fontSize: 9,fillColor: '#DCDCDC',bold: true, alignment: 'center', style: 'header' },
+    { text: `${titleZinc}`, rowSpan: 2, fontSize: 8,fillColor: '#DCDCDC',bold: true, alignment: 'center', style: 'header' },
+    { text: 'HYDRO-STATIC TEST', rowSpan: 2, fontSize: 9,fillColor: '#DCDCDC', bold: true,alignment: 'center', style: 'header' }
   ],
   // ชั้นที่ 2 ของ header
   [
     {}, {},
-    { text: 'NPS', fontSize: 9,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
-    { text: 'Thickness', fontSize: 8,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
-    { text: 'Length', fontSize: 9,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
+    { text: 'NPS', fontSize: 9, bold: true,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
+    { text: 'Thickness', fontSize: 8,bold: true,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
+    { text: 'Length', fontSize: 9,bold: true,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
     {}, {},{},
-    { text: 'C', fontSize: 9,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
-    { text: 'Si', fontSize: 9,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
-    { text: 'Mn', fontSize: 9,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
-    { text: 'P', fontSize: 9,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
-    { text: 'S', fontSize: 9,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
-    { text: 'Cu', fontSize: 9,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
-    { text: 'V', fontSize: 9,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
-    { text: 'Ni', fontSize: 9,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
-    { text: 'Cr', fontSize: 9,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
-    { text: 'Mo', fontSize: 9,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
+    { text: 'C', fontSize: 9,bold: true,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
+    { text: 'Si', fontSize: 9,bold: true,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
+    { text: 'Mn', fontSize: 9,bold: true,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
+    { text: 'P', fontSize: 9,bold: true,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
+    { text: 'S', fontSize: 9,bold: true,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
+    { text: 'Cu', fontSize: 9,bold: true,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
+    { text: 'V', fontSize: 9,bold: true,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
+    { text: 'Ni', fontSize: 9,bold: true,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
+    { text: 'Cr', fontSize: 9,bold: true,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
+    { text: 'Mo', fontSize: 9,bold: true,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
     { text: 'Nb', fontSize: 9,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
-    { text: 'T.S.', fontSize: 9,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
-    { text: 'Y.P.', fontSize: 9,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
-    { text: 'El', fontSize: 9,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
+    { text: 'T.S.', fontSize: 9,bold: true,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
+    { text: 'Y.P.', fontSize: 9,bold: true,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
+    { text: 'El', fontSize: 9,bold: true,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
     {}, {}
   ]
 )
@@ -970,25 +969,25 @@ data.push([
             )
         data.push(
             [
-            { text: `NONDESTRUCTIVE TEST                             EDDY CURRENT `, fontSize: 10, alignment: 'center', style: 'header', colSpan: 4 },
+            { text: `NONDESTRUCTIVE TEST                             EDDY CURRENT `, fontSize: 10,bold: true, alignment: 'center', style: 'header', colSpan: 4 },
                 { text: "", fontSize: 10, alignment: 'center' },
                 { text: ``, fontSize: 10, alignment: 'center' },
                 { text: "", fontSize: 10, alignment: 'center' },
-                { text: "HEAT TREATMENT                  (WELD SEAM)", fontSize: 10, alignment: 'center', style: 'header', colSpan: 3   },
+                { text: "HEAT TREATMENT                  (WELD SEAM)", fontSize: 10,bold: true, alignment: 'center', style: 'header', colSpan: 3   },
                 { text: "", fontSize: 10, alignment: 'center' },
                 { text: "", fontSize: 10, alignment: 'center' },
-                { text: "FLATTENING TEST", fontSize: 10, alignment: 'center', style: 'header', colSpan: 3  },
+                { text: "FLATTENING TEST", fontSize: 10,bold: true, alignment: 'center', style: 'header', colSpan: 3  },
                 { text: "", fontSize: 10, alignment: 'center' },
                 { text: "", fontSize: 10, alignment: 'center' },
-                { text: "BENDING TEST", fontSize: 10, alignment: 'center', style: 'header', colSpan: 4  },
-                { text: "", fontSize: 10, alignment: 'center' },
-                { text: "", fontSize: 10, alignment: 'center' },
-                { text: "", fontSize: 10, alignment: 'center' },
-                { text: "VISUAL & DIMENSON", fontSize: 10, alignment: 'center', style: 'header', colSpan: 4  },
+                { text: "BENDING TEST", fontSize: 10,bold: true, alignment: 'center', style: 'header', colSpan: 4  },
                 { text: "", fontSize: 10, alignment: 'center' },
                 { text: "", fontSize: 10, alignment: 'center' },
                 { text: "", fontSize: 10, alignment: 'center' },
-                { text: "WE CONFIRM THAT MATERIAL IS MERCURY AND LEAD FREE GALVANIZED STEEL PIPE IS IN ACCORDING WITH NSF/ANSI 372", fontSize: 10, alignment: 'center', style: 'header', colSpan: 7, rowSpan: 2 },
+                { text: "VISUAL & DIMENSON", fontSize: 10,bold: true, alignment: 'center', style: 'header', colSpan: 4  },
+                { text: "", fontSize: 10, alignment: 'center' },
+                { text: "", fontSize: 10, alignment: 'center' },
+                { text: "", fontSize: 10, alignment: 'center' },
+                { text: "WE CONFIRM THAT MATERIAL IS MERCURY AND LEAD FREE GALVANIZED STEEL PIPE IS IN ACCORDING WITH NSF/ANSI 372", fontSize: 10,bold: true, alignment: 'center', style: 'header', colSpan: 7, rowSpan: 2 },
                 { text: "", fontSize: 10, alignment: 'center' },
                 { text: "", fontSize: 10, alignment: 'center' },
                 { text: "", fontSize: 10, alignment: 'center' },
@@ -1025,7 +1024,7 @@ data.push([
                 { text: "", fontSize: 10, alignment: 'center' },
             ],
             [
-                { stack: [' ','WE HEREBY CERTIFY THAT THE MATERIAL DESCRIBED HEREIN HAS BEEN MANUFACTURED AND TESTED WITH SATISFACTORY','RESULTS IN ACCORDANCE WITH THE REQUIREMENT OF THE ABOVE MATERIAL SPECIFICATION.'], fontSize: 9, alignment: 'center', style: 'header', colSpan: 18 },
+                { stack: [' ','WE HEREBY CERTIFY THAT THE MATERIAL DESCRIBED HEREIN HAS BEEN MANUFACTURED AND TESTED WITH SATISFACTORY','RESULTS IN ACCORDANCE WITH THE REQUIREMENT OF THE ABOVE MATERIAL SPECIFICATION.'], fontSize: 10, bold: true, alignment: 'center', style: 'header', colSpan: 18 },
                 { text: "", fontSize: 9, alignment: 'center' },
                 { text: ``, fontSize: 9, alignment: 'center' },
                 { text: "", fontSize: 9, alignment: 'center' },
@@ -1043,7 +1042,7 @@ data.push([
                 { text: "", fontSize: 10, alignment: 'center' },
                 { text: "", fontSize: 10, alignment: 'center' },
                 { text: "", fontSize: 10, alignment: 'center' },
-                { stack: [{ image: test, width: 30 }, "NITTAYA SRAJIT", "QUALITY ASSURANCE MANAGER"], fontSize: 10, alignment: 'center', fontSize: 9, alignment: 'center', style: 'header', colSpan: 7 },
+                { stack: [{ image: test, width: 30 }, "NITTAYA SRAJIT", "QUALITY ASSURANCE MANAGER"], fontSize: 10, bold: true,alignment: 'center', fontSize: 9, alignment: 'center', style: 'header', colSpan: 7 },
                 { text: "", fontSize: 10, alignment: 'center' },
                 { text: "", fontSize: 10, alignment: 'center' },
                 { text: "", fontSize: 10, alignment: 'center' },
@@ -1058,6 +1057,8 @@ return data;
 }
 
 function qrCode(cur,pageData) {
+    console.log(pageData,'pageData');
+    
 if (type === 'out') {
     return {} 
 } else {}
@@ -1079,8 +1080,6 @@ if (pageData[cur -1][0].standard_sub === 'TIS.107') {
        fit: 50,
        alignment: 'right'
     }
-} else {
-    return {}
 }
 }
 console.log(filter, 'filter');
@@ -1088,7 +1087,7 @@ console.log(filter, 'filter');
 var docDefinition = {
     pageSize: 'A4',
     pageOrientation: 'landscape',
-    pageMargins: [10, 155, 10, 50],
+    pageMargins: [10, 125, 10, 50],
     header: function (currentPage, pageCount, pageSize) {
         const pageData = this.pageData || {};
         return {
@@ -1098,13 +1097,13 @@ var docDefinition = {
       {
         width: '40%',
         stack: [
-          { text: `CERTIFICATE NO.             : ${dataNow[0].cer_no}`, fontSize: 10, margin: [0, 20, 0, 0] },
-          { text: `DATE                             : ${moment().format('DD-MMM-YYYY')} `, fontSize: 10, margin: [0, 5, 0, 0] },
-          { text: `CUSTOMER                    : ${dataNow[0].cust}`, fontSize: 10, margin: [0, 5, 0, 0] },
-          { text: `CONTRACT (P/O) No.       : ${dataNow[0].cust_po} `, fontSize: 10, margin: [0, 5, 0, 0] },
-          { text: `INSPECTION CERTIFICATE  : ACCORDING TO EN 10204 : 2005 TYPE 3.1`, fontSize: 10, margin: [0, 5, 0, 0] },
-          { text: `COMMODITY                  : NEWLY PRODUCED, PRIME QUALITY ERW STEEL PIPE`, fontSize: 10, margin: [0, 5, 0, 0] },
-          { text: `SPECIFICATION               : ${filter[currentPage -1]?.Uf_spec} `, fontSize: 10, margin: [0, 5, 0, 0] },
+          { text: `CERTIFICATE NO.              : ${dataNow[0].cer_no}`, fontSize: 10, bold: true, margin: [0, 20, 0, 0] },
+          { text: `DATE                              : ${moment().format('DD-MMM-YYYY')} `, fontSize: 10,bold: true, margin: [0, 0, 0, 0] },
+          { text: `CUSTOMER                     : ${dataNow[0].cust}`, fontSize: 10,bold: true, margin: [0, 0, 0, 0] },
+          { text: `CONTRACT (P/O) No.        : ${dataNow[0].cust_po} `, fontSize: 10, bold: true,margin: [0, 0, 0, 0] },
+          { text: `INSPECTION CERTIFICATE   : ACCORDING TO EN 10204 : 2005 TYPE 3.1`, fontSize: 10, bold: true,margin: [0, 0, 0, 0] },
+          { text: `COMMODITY                   : NEWLY PRODUCED, PRIME QUALITY ERW STEEL PIPE`, fontSize: 10,bold: true, margin: [0, 0, 0, 0] },
+          { text: `SPECIFICATION                : ${filter[currentPage -1]?.Uf_spec} `, fontSize: 10,bold: true, margin: [0, 0, 0, 0] },
         ]
       },
       {
@@ -1118,10 +1117,10 @@ var docDefinition = {
         width: '40%',
         stack: [
         { text: 'SAHA THAI STEEL PIPE PCL', fontSize: 12, bold: true, alignment: 'right', margin: [0, 15, 0, 0] },
-                { text: '78 Moo 3 Poochao Road,', fontSize: 10, alignment: 'right', margin: [0, 5, 0, 0] },
-                { text: 'Bangyapraek, Phrapradaeng,', fontSize: 10, alignment: 'right', margin: [0, 5, 0, 0] },
-                { text: 'Samuthprakarn 10131 Thailand.', fontSize: 10, alignment: 'right', margin: [0, 5, 0, 0] },
-                { text: `Tel. +66 (0) 2385-9023` , fontSize: 10, alignment: 'right', margin: [0, 5, 0, 0] },
+                { text: '78 Moo 3 Poochao Road,', fontSize: 10,bold: true,  alignment: 'right', margin: [0, 0, 0, 0] },
+                { text: 'Bangyapraek, Phrapradaeng,', fontSize: 10,bold: true,  alignment: 'right', margin: [0, 0, 0, 0] },
+                { text: 'Samuthprakarn 10131 Thailand.', fontSize: 10, bold: true,  alignment: 'right', margin: [0, 0, 0, 0] },
+                { text: `Tel. +66 (0) 2385-9023` , fontSize: 10,bold: true,  alignment: 'right', margin: [0, 0, 0, 0] },
                 qrCode(currentPage,pageData),
         ],
        
