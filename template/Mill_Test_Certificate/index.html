@@ -829,7 +829,7 @@ function createData(res,index) {
         t.item === value.item
     ))
     ); 
-    console.log(res, 'res');
+    console.log(unique, 'unique');
     
     let titleZinc = zinc == undefined ? 'Zinc Coating Weight                 (g/m2)' : 'Zinc Coating Thinness (um)';
 
@@ -910,7 +910,7 @@ for (let i = 0; i <= res.length-1; i++) {
 // Add empty rows if needed to fill the table
 }
 
-for (let i = res.length; i < 15; i++) {
+for (let i = res.length; i < 17; i++) {
     data.push([
   { text: ` `, alignment: 'center', fontSize: 8 },
   { text: ``, alignment: 'center', fontSize: 8 },
@@ -987,7 +987,7 @@ data.push([
                 { text: "", fontSize: 10, alignment: 'center' },
                 { text: "", fontSize: 10, alignment: 'center' },
                 { text: "", fontSize: 10, alignment: 'center' },
-                { text: "WE CONFIRM THAT MATERIAL IS MERCURY AND LEAD FREE GALVANIZED STEEL PIPE IS IN ACCORDING WITH NSF/ANSI 372", fontSize: 10,bold: true, alignment: 'center', style: 'header', colSpan: 7, rowSpan: 2 },
+                { text: "WE CONFIRM THAT MATERIAL IS MERCURY AND LEAD FREE GALVANIZED STEEL PIPE IS IN ACCORDING WITH NSF/ANSI 372", fontSize: 10,bold: true, alignment: 'center', style: 'header', colSpan: 7, rowSpan: 2, margin: [0, 5, 0, 0] },
                 { text: "", fontSize: 10, alignment: 'center' },
                 { text: "", fontSize: 10, alignment: 'center' },
                 { text: "", fontSize: 10, alignment: 'center' },
@@ -1042,7 +1042,7 @@ data.push([
                 { text: "", fontSize: 10, alignment: 'center' },
                 { text: "", fontSize: 10, alignment: 'center' },
                 { text: "", fontSize: 10, alignment: 'center' },
-                { stack: [{ image: test, width: 30 }, "NITTAYA SRAJIT", "QUALITY ASSURANCE MANAGER"], fontSize: 10, bold: true,alignment: 'center', fontSize: 9, alignment: 'center', style: 'header', colSpan: 7 },
+                { stack: [{ image: test, width: 30 }, "NITTAYA SRAJIT", "QUALITY ASSURANCE MANAGER"], fontSize: 10, alignment: 'center',bold: true, fontSize: 9, alignment: 'center', style: 'header', colSpan: 7 },
                 { text: "", fontSize: 10, alignment: 'center' },
                 { text: "", fontSize: 10, alignment: 'center' },
                 { text: "", fontSize: 10, alignment: 'center' },
@@ -1057,8 +1057,6 @@ return data;
 }
 
 function qrCode(cur,pageData) {
-    console.log(pageData,'pageData');
-    
 if (type === 'out') {
     return {} 
 } else {}
@@ -1080,6 +1078,8 @@ if (pageData[cur -1][0].standard_sub === 'TIS.107') {
        fit: 50,
        alignment: 'right'
     }
+} else {
+    return {}
 }
 }
 console.log(filter, 'filter');
@@ -1097,13 +1097,13 @@ var docDefinition = {
       {
         width: '40%',
         stack: [
-          { text: `CERTIFICATE NO.              : ${dataNow[0].cer_no}`, fontSize: 10, bold: true, margin: [0, 20, 0, 0] },
-          { text: `DATE                              : ${moment().format('DD-MMM-YYYY')} `, fontSize: 10,bold: true, margin: [0, 0, 0, 0] },
-          { text: `CUSTOMER                     : ${dataNow[0].cust}`, fontSize: 10,bold: true, margin: [0, 0, 0, 0] },
-          { text: `CONTRACT (P/O) No.        : ${dataNow[0].cust_po} `, fontSize: 10, bold: true,margin: [0, 0, 0, 0] },
-          { text: `INSPECTION CERTIFICATE   : ACCORDING TO EN 10204 : 2005 TYPE 3.1`, fontSize: 10, bold: true,margin: [0, 0, 0, 0] },
-          { text: `COMMODITY                   : NEWLY PRODUCED, PRIME QUALITY ERW STEEL PIPE`, fontSize: 10,bold: true, margin: [0, 0, 0, 0] },
-          { text: `SPECIFICATION                : ${filter[currentPage -1]?.Uf_spec} `, fontSize: 10,bold: true, margin: [0, 0, 0, 0] },
+          { text: `CERTIFICATE NO.             : ${dataNow[0].cer_no}`, fontSize: 10, bold: true, margin: [0, 20, 0, 0] },
+          { text: `DATE                             : ${moment().format('DD-MMM-YYYY')} `, fontSize: 10,bold: true, margin: [0, 0, 0, 0] },
+          { text: `CUSTOMER                    : ${dataNow[0].cust}`, fontSize: 10,bold: true, margin: [0, 0, 0, 0] },
+          { text: `CONTRACT (P/O) No.       : ${dataNow[0].cust_po} `, fontSize: 10, bold: true,margin: [0, 0, 0, 0] },
+          { text: `INSPECTION CERTIFICATE  : ACCORDING TO EN 10204 : 2005 TYPE 3.1`, fontSize: 10, bold: true,margin: [0, 0, 0, 0] },
+          { text: `COMMODITY                  : NEWLY PRODUCED, PRIME QUALITY ERW STEEL PIPE`, fontSize: 10,bold: true, margin: [0, 0, 0, 0] },
+          { text: `SPECIFICATION               : ${filter[currentPage -1]?.Uf_spec} `, fontSize: 10,bold: true, margin: [0, 0, 0, 0] },
         ]
       },
       {
@@ -1155,9 +1155,9 @@ function createTables() {
     const tables = [];
     for (let i = 0; i < filter.length; i++) {
         let res = dataNow.filter((value) => value.item === filter[i].item);
-        for (let j = 0; j < res.length; j += 14) {
+        for (let j = 0; j < res.length; j += 17) {
             // Slice 15 rows at a time
-            const newRes = res.slice(j, j + 14);
+            const newRes = res.slice(j, j + 17);
             tables.push({
                 table: {
                     headerRows: 2,
@@ -1166,7 +1166,7 @@ function createTables() {
                     body: createData(newRes, i),
                 },
                 // Add a page break after every table except the last one
-                pageBreak: j + 14 < res.length || i < filter.length - 1 ? 'after' : '',
+                pageBreak: j + 17 < res.length || i < filter.length - 1 ? 'after' : '',
                 pageData: newRes
             });
         }
