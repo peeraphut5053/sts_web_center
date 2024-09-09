@@ -153,7 +153,7 @@
 			$('table tbody tr:eq(0)').remove();
             $('table tbody tr:eq(0)').remove();
 //=========add nre head =========
-                    $('table').prepend("<thead> <th>item</th> <th>opr_no</th> <th>size</th> <th>schedule</th> <th>length</th> <th>standard</th> <th>grade</th> <th>sts_no</th> <th>Mec_test_TS</th> <th>Mec_test_YS</th> <th>Mec_test_EI</th> <th>Mec_test_EL_1</th> <th>Mec_test_EL_2</th> <th>Mec_test_EL_3</th> <th>Not_Mec_test_TS</th> <th>Not_Mec_test_YS</th> <th>Not_Mec_test_EI</th> <th>Not_Mec_test_EL_1</th> <th>Not_Mec_test_EL_2</th> <th>Not_Mec_test_EL_3</th> <th>charpy_mean</th> <th>charpy1</th> <th>charpy2</th> <th>charpy3</th>  <th>prod_FM_no</th> <th>prod_date</th> <th>test_date</th> <th>remark</th></tr></thead>"); 
+                    $('table').prepend("<thead> <th>item</th> <th>opr_no</th> <th>size</th> <th>schedule</th> <th>length</th> <th>standard</th> <th>grade</th> <th>sts_no</th> <th>Mec_test_TS</th> <th>Mec_test_YS</th> <th>Mec_test_EI</th> <th>Mec_test_TS_2</th> <th>Mec_test_YS_2</th> <th>Mec_test_EL_2</th> <th>Not_Mec_test_TS</th> <th>Not_Mec_test_YS</th> <th>Not_Mec_test_EI</th> <th>Not_Mec_test_TS_1</th> <th>Not_Mec_test_YS_2</th> <th>Not_Mec_test_EL_2</th> <th>charpy_mean</th> <th>charpy1</th> <th>charpy2</th> <th>charpy3</th>  <th>prod_FM_no</th> <th>prod_date</th> <th>test_date</th> <th>remark</th></tr></thead>"); 
 			$('table thead').find('tr').each(function(){
               
 		   });
@@ -211,15 +211,15 @@
             var Mec_test_TS = [];
             var Mec_test_YS = [];
             var Mec_test_EI = [];
-            var Mec_test_EL_1 = [];
+            var Mec_test_TS_2 = [];
+            var Mec_test_YS_2 = [];
             var Mec_test_EL_2 = [];
-            var Mec_test_EL_3 = [];
             var Not_Mec_test_TS = [];
             var Not_Mec_test_YS = [];
             var Not_Mec_test_EI = [];
-            var Not_Mec_test_EL_1 = [];
+            var Not_Mec_test_TS_2 = [];
+            var Not_Mec_test_YS_2 = [];
             var Not_Mec_test_EL_2 = [];
-            var Not_Mec_test_EL_3 = [];
             var charpy_mean = [];
 			var charpy1=[];
             var charpy2=[];
@@ -248,15 +248,15 @@
                     Mec_test_TS.push($(this).find('td:eq(8)').text());                    
                     Mec_test_YS.push($(this).find('td:eq(9)').text());
                     Mec_test_EI.push($(this).find('td:eq(10)').text());
-					Mec_test_EL_1.push($(this).find('td:eq(11)').text());
-                    Mec_test_EL_2.push($(this).find('td:eq(12)').text());
-                    Mec_test_EL_3.push($(this).find('td:eq(13)').text());
+					Mec_test_TS_2.push($(this).find('td:eq(11)').text());
+                    Mec_test_YS_2.push($(this).find('td:eq(12)').text());
+                    Mec_test_EL_2.push($(this).find('td:eq(13)').text());
                     Not_Mec_test_TS.push($(this).find('td:eq(14)').text());                    
                     Not_Mec_test_YS.push($(this).find('td:eq(15)').text());
                     Not_Mec_test_EI.push($(this).find('td:eq(16)').text());
-					Not_Mec_test_EL_1.push($(this).find('td:eq(17)').text());
-                    Not_Mec_test_EL_2.push($(this).find('td:eq(18)').text());
-                    Not_Mec_test_EL_3.push($(this).find('td:eq(19)').text());
+					Not_Mec_test_TS_2.push($(this).find('td:eq(17)').text());
+                    Not_Mec_test_YS_2.push($(this).find('td:eq(18)').text());
+                    Not_Mec_test_EL_2.push($(this).find('td:eq(19)').text());
                     charpy_mean.push($(this).find('td:eq(20)').text());
 					charpy1.push($(this).find('td:eq(21)').text());
 					charpy2.push($(this).find('td:eq(22)').text());
@@ -292,15 +292,15 @@
                     Mec_test_TS : Mec_test_TS,
                     Mec_test_YS : Mec_test_YS,
                     Mec_test_EI : Mec_test_EI,
-                    Mec_test_EL_1 : Mec_test_EL_1,
+                    Mec_test_TS_2 : Mec_test_TS_2,
+                    Mec_test_YS_2 : Mec_test_YS_2,
                     Mec_test_EL_2 : Mec_test_EL_2,
-                    Mec_test_EL_3 : Mec_test_EL_3,
                     Not_Mec_test_TS : Not_Mec_test_TS,
                     Not_Mec_test_YS : Not_Mec_test_YS,
                     Not_Mec_test_EI : Not_Mec_test_EI,
-                    Not_Mec_test_EL_1 : Not_Mec_test_EL_1,
+                    Not_Mec_test_TS_2 : Not_Mec_test_TS_2,
+                    Not_Mec_test_YS_2 : Not_Mec_test_YS_2,
                     Not_Mec_test_EL_2 : Not_Mec_test_EL_2,
-                    Not_Mec_test_EL_3 : Not_Mec_test_EL_3,
                     charpy_mean : charpy_mean,
                     charpy1 : charpy1,
                     charpy2 : charpy2,

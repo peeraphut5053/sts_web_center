@@ -223,13 +223,13 @@
                         {"data": "Mec_test_EI",
                             "className": "text-center",
                         },
-                        {"data": "Mec_test_EL_1",
+                        {"data": "Mec_test_TS_2",
+                            "className": "text-center",
+                        },
+                        {"data": "Mec_test_YS_2",
                             "className": "text-center",
                         },
                         {"data": "Mec_test_EL_2",
-                            "className": "text-center",
-                        },
-                        {"data": "Mec_test_EL_3",
                             "className": "text-center",
                         },
                         {"data": "Not_Mec_test_TS",
@@ -253,7 +253,14 @@
                             return ret;
                         }
                         },
-                        {"data": "Not_Mec_test_EL_1",
+                        {"data": "Not_Mec_test_TS_2",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                            var ret = `<span style="color: red;">${(data)}</span>`
+                            return ret;
+                        }
+                        },
+                        {"data": "Not_Mec_test_YS_2",
                             "className": "text-center",
                             "render": function (data, type, row, meta) {
                             var ret = `<span style="color: red;">${(data)}</span>`
@@ -261,13 +268,6 @@
                         }
                         },
                         {"data": "Not_Mec_test_EL_2",
-                            "className": "text-center",
-                            "render": function (data, type, row, meta) {
-                            var ret = `<span style="color: red;">${(data)}</span>`
-                            return ret;
-                        }
-                        },
-                        {"data": "Not_Mec_test_EL_3",
                             "className": "text-center",
                             "render": function (data, type, row, meta) {
                             var ret = `<span style="color: red;">${(data)}</span>`

@@ -62,8 +62,8 @@ from STS_QA_LAB inner join sts_po_qc
     }
 
     function InsertQcTestLab_Sub($item,$opr_no,$size,$schedule,$length,$standard,$grade,$sts_no,
-    $Mec_test_TS,$Mec_test_YS,$Mec_test_EI,$Mec_test_EL_1,$Mec_test_EL_2,$Mec_test_EL_3,
-    $Not_Mec_test_TS,$Not_Mec_test_YS,$Not_Mec_test_EI,$Not_Mec_test_EL_1,$Not_Mec_test_EL_2,$Not_Mec_test_EL_3,$charpy_mean,$charpy1,$charpy2,$charpy3,$prod_FM_no,$prod_date,$test_date,$remark) {
+    $Mec_test_TS,$Mec_test_YS,$Mec_test_EI,$Mec_test_TS_2,$Mec_test_YS_2,$Mec_test_EL_2,
+    $Not_Mec_test_TS,$Not_Mec_test_YS,$Not_Mec_test_EI,$Not_Mec_test_TS_2,$Not_Mec_test_YS_2,$Not_Mec_test_EL_2,$charpy_mean,$charpy1,$charpy2,$charpy3,$prod_FM_no,$prod_date,$test_date,$remark) {
 
         $qSelect = "select * from STS_QA_LAB_SUB where item = '$item' and opr_no = '$opr_no' and size = '$size' and sts_no = '$sts_no' and prod_FM_no = '$prod_FM_no' and length = '$length'  and convert(date,prod_date) = '$prod_date'";
         $cSql = new SqlSrv();
@@ -93,9 +93,24 @@ from STS_QA_LAB inner join sts_po_qc
     }
 
     function ReportAll($from_stsno, $to_stsno, $do_num, $h_no, $size, $standard, $prod_FM_no, $prod_date){
+        $from_stsno = $from_stsno ?: null;
+        $to_stsno = $to_stsno ?: null;
+        $do_num = $do_num ?: null;
+        $h_no = $h_no ?: null;
+        $size = $size ?: null;
+        $standard = $standard ?: null;
+        $prod_FM_no = $prod_FM_no ?: null;
+        $prod_date = $prod_date ?: null;
+        
         $query = "EXEC STS_QA_MILLCERT_main
-         @DONumStarting =  '$do_num'
-        ";
+            @DONumStarting = " . ($do_num !== null ? "'$do_num'" : "null") . ",
+            @STSnoStarting = " . ($from_stsno !== null ? $from_stsno : "null") . ",
+            @STSnoEnding = " . ($to_stsno !== null ? $to_stsno : "null") . ",
+            @H_no = " . ($h_no !== null ? "'$h_no'" : "null") . ",
+            @size = " . ($size !== null ? "'$size'" : "null") . ",
+            @standard_sub = " . ($standard !== null ? "'$standard'" : "null") . ",
+            @prod_FM_no = " . ($prod_FM_no !== null ? "'$prod_FM_no'" : "null") . ",
+            @prod_date = " . ($prod_date !== null ? "'$prod_date'" : "null");
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);

@@ -910,7 +910,7 @@ for (let i = 0; i <= res.length-1; i++) {
 // Add empty rows if needed to fill the table
 }
 
-for (let i = res.length; i < 17; i++) {
+for (let i = res.length; i < 16; i++) {
     data.push([
   { text: ` `, alignment: 'center', fontSize: 8 },
   { text: ``, alignment: 'center', fontSize: 8 },
@@ -1155,9 +1155,9 @@ function createTables() {
     const tables = [];
     for (let i = 0; i < filter.length; i++) {
         let res = dataNow.filter((value) => value.item === filter[i].item);
-        for (let j = 0; j < res.length; j += 17) {
+        for (let j = 0; j < res.length; j += 16) {
             // Slice 15 rows at a time
-            const newRes = res.slice(j, j + 17);
+            const newRes = res.slice(j, j + 16);
             tables.push({
                 table: {
                     headerRows: 2,
@@ -1166,7 +1166,7 @@ function createTables() {
                     body: createData(newRes, i),
                 },
                 // Add a page break after every table except the last one
-                pageBreak: j + 17 < res.length || i < filter.length - 1 ? 'after' : '',
+                pageBreak: j + 16 < res.length || i < filter.length - 1 ? 'after' : '',
                 pageData: newRes
             });
         }
