@@ -82,7 +82,7 @@ from STS_QA_LAB inner join sts_po_qc
         }
         else{
             $query ="INSERT INTO STS_QA_LAB_SUB (item,opr_no,size,Uf_Schedule,length,standard_sub,Uf_Grade,sts_no,Mec_test_TS,Mec_test_YS,Mec_test_EI,"
-                    ."Mec_test_TS_2,Mec_test_YS_2,Mec_test_EL_2,Mec_test_EL_3,Not_Mec_test_TS,Not_Mec_test_YS,Not_Mec_test_EI,Not_Mec_test_TS_2,Not_Mec_test_YS_2,Not_Mec_test_EL_2,charpy_mean,charpy1,charpy2,charpy3,prod_FM_no,prod_date,test_date,remark,ImportDate)"
+                    ."Mec_test_TS_2,Mec_test_YS_2,Mec_test_EL_2,Not_Mec_test_TS,Not_Mec_test_YS,Not_Mec_test_EI,Not_Mec_test_TS_2,Not_Mec_test_YS_2,Not_Mec_test_EL_2,charpy_mean,charpy1,charpy2,charpy3,prod_FM_no,prod_date,test_date,remark,ImportDate)"
                     ."VALUES ('".$item."','".$opr_no."','".$size."', '".$schedule."', '".$length."', '".$standard."', '".$grade."', '".$sts_no."', '".$Mec_test_TS."', '".$Mec_test_YS."','".$Mec_test_EI."',"
                     ."'".$Mec_test_TS_2."', '".$Mec_test_YS_2."', '".$Mec_test_EL_2."', '".$Not_Mec_test_TS."', '".$Not_Mec_test_YS."','".$Not_Mec_test_EI."', '".$Not_Mec_test_TS_2."', '".$Not_Mec_test_YS_2."', '".$Not_Mec_test_EL_2."', '".$charpy_mean."', '".$charpy1."', '".$charpy2."', '".$charpy3."', '".$prod_FM_no."', '".$prod_date."', '".$test_date."', '".$remark."',Getdate())";
             $cSql = new SqlSrv();
