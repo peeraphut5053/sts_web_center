@@ -237,10 +237,12 @@ where do_num = '$do_num'";
         $query = "select convert(date,matltran_mst.createdate) as prod_date
   ,matltran_mst.item, item.[description]
   ,matltran_mst.lot,tag.sts_no
+  ,zinc.QC_Pb, zinc.QC_weight_coat, zinc.createdate as import_date
 from matltran_mst
    inner join mv_bc_tag tag on tag.lot = matltran_mst.lot 
-   and tag.item = matltran_mst.item and tag.active = 1
+    and tag.item = matltran_mst.item and tag.active = 1
    inner join item_mst item on item.item = matltran_mst.item
+   left join STS_QC_zinc_coat zinc on zinc.item = tag.item and zinc.lot = tag.lot and zinc.sts_no = tag.sts_no
 where trans_type = 'F'
      and matltran_mst.wc like '%GL%'
    and matltran_mst.item like 'w%071%'
@@ -264,6 +266,35 @@ where trans_type = 'F'
         return $rs0;
         } else {
             $query = "INSERT INTO STS_QC_zinc_coat (item, lot, sts_no, QC_Pb, QC_weight_coat,createdate) VALUES ('$item', '$lot', '$sts_no', $QC_Pb, $QC_weight_coat,getdate())";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+        }
+        
+    }
+
+    function GetReportZinc($month, $y) {
+        $query = "select * from STS_QA_LAB_ZINC";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+
+    function InsertExcelZinc($sts_Pb, $sts_Al, $sts_Cd, $sts_Fe, $sts_Cu, $sts_Zn, $Test_result, $Date_rec, $Date_test, $LeadTime, $remark) {
+        $qSelect = "select * from STS_QA_LAB_ZINC where Date_rec = '$Date_rec'";
+        $cSql = new SqlSrv();
+        $rsSelect = $cSql->SqlQuery($this->StrConn, $qSelect);
+
+        if ($Date_rec == isset($rsSelect[1]["Date_rec"]) ) {
+        $query = "UPDATE STS_QA_LAB_ZINC set sts_Pb = '$sts_Pb', sts_Al = '$sts_Al', sts_Cd = '$sts_Cd', sts_Fe = '$sts_Fe', sts_Cu = '$sts_Cu', sts_Zn = '$sts_Zn', Test_result = '$Test_result', Date_test = '$Date_test', LeadTime = '$LeadTime', remark = '$remark' where Date_rec = '$Date_rec'";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+        } else {
+        $query = "INSERT INTO STS_QA_LAB_ZINC (sts_Pb, sts_Al,sts_Cd,sts_Fe,sts_Cu,sts_Zn, Test_result, Date_rec, Date_test, LeadTime, remark, ImportDate) VALUES ('$sts_Pb', '$sts_Al', '$sts_Cd', '$sts_Fe', '$sts_Cu', '$sts_Zn', '$Test_result', '$Date_rec', '$Date_test', '$LeadTime', '$remark', getdate()) ";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);
