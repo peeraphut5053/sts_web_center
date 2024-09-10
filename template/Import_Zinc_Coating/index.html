@@ -116,6 +116,9 @@
           <th class="bg-gray">description</th>
           <th class="bg-gray">Lot</th>
           <th class="bg-gray">sts_no</th>
+          <th class="bg-gray">QC_Pb</th>
+          <th class="bg-gray">QC_weight_coat</th>
+          <th class="bg-gray">Import_date</th>
         </tr>
       </thead>
       <!--        <tbody id="tblReportList">
@@ -174,7 +177,7 @@
           success: function (data) {
             $("#tblReport").DataTable().clear();
             $("#tblReport").append(
-              "<tfoot><tr><td></td><td></td><td></td><td></td><td></td></tr></tfoot>"
+              "<tfoot><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></tfoot>"
             );
             $("#tblReport").dataTable({
               aaData: data,
@@ -213,6 +216,26 @@
                 {
                   data: "sts_no",
                   className: "text-center",
+                },
+                {
+                  data: "QC_Pb",
+                  className: "text-center",
+                  "render": function (data, type, row){
+                    var ret = parseFloat(data);
+                    return ret
+                  }
+                },
+                {
+                  data: "QC_weight_coat",
+                  className: "text-center",
+                },
+                {
+                  data: "import_date.date",
+                  className: "text-center",
+                  "render": function (data, type, row){
+                    var ret = data.substring(0, 10);
+                    return ret;
+                  }
                 },
               ],
               dom:
