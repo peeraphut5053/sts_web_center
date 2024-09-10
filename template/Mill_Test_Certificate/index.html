@@ -919,7 +919,7 @@ for (let i = 0; i <= res.length-1; i++) {
   { text: `${res[i]?.Mec_test_YS ? res[i].Mec_test_YS : '-'}`, alignment: 'center', fontSize: 8 },
   { text: `${res[i]?.Mec_test_EI ? res[i].Mec_test_EI : '-'}`, alignment: 'center', fontSize: 8 },
   { text: `${res[i]?.QC_hydro ? res[i].QC_hydro : '-'}`, alignment: 'center', fontSize: 8},
-  { text: `${res[i]?.QC_Pb > 0 ? res[i].QC_Pb : '-'}`, alignment: 'center', fontSize: 8 },
+  { text: `${res[i]?.QC_Pb > 0 ? parseFloat(res[i].QC_Pb) : '-'}`, alignment: 'center', fontSize: 8 },
   { text: `${res[i]?.QC_weight_coat > 0 ? res[i].QC_weight_coat : '-'}`, alignment: 'center', fontSize: 8 },
 ]);
 // Add empty rows if needed to fill the table
@@ -1399,7 +1399,7 @@ for (let i = 0; i <= res.length-1; i++) {
   { text: `${res[i]?.Mec_test_YS_2 ? res[i].Mec_test_YS_2 : '-'}`, alignment: 'center', fontSize: 8 },
   { text: `${res[i]?.Mec_test_EI_2 ? res[i].Mec_test_EI_2 : '-'}`, alignment: 'center', fontSize: 8 },
   { text: `${res[i]?.QC_hydro ? res[i].QC_hydro : '-'}`, alignment: 'center', fontSize: 8},
-  { text: `${res[i]?.QC_Pb > 0 ? res[i].QC_Pb : '-'}`, alignment: 'center', fontSize: 8 },
+  { text: `${res[i]?.QC_Pb > 0 ? parseFloat(res[i].QC_Pb) : '-'}`, alignment: 'center', fontSize: 8 },
   { text: `${res[i]?.QC_weight_coat > 0 ? res[i].QC_weight_coat : '-'}`, alignment: 'center', fontSize: 8 },
 ]);
 // Add empty rows if needed to fill the table
