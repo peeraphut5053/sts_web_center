@@ -720,8 +720,15 @@
                             var data = dt.rows().data().toArray();
                             makePDF(data,'in');
                         }
-                        }
+                        },
                         ,
+                        {
+                           text: `<button type="button" class="btn btn-warning${do_num.substr(0, 2) === 'DX' ? ' hide' : ''}">พิมพ์รายงานขายในแบบ 2</button>`,
+                           action: function (e, dt, node, config ) {
+                            var data = dt.rows().data().toArray();
+                            makePDF2(data,'in');
+                        }
+                        },
                         // do_num have string DX hide button print
 
                         {
@@ -731,8 +738,16 @@
                             makePDF(data,'out');
                         }
                         },
+                        
                         {
-                            text: `<button type="button" class="btn btn-info${do_num.substr(0, 2) !== 'DX' ? ' hide' : ''}">พิมพ์ใบปะหน้า</button>`,
+                           text: `<button type="button" class="btn btn-warning${do_num.substr(0, 2) !== 'DX' ? ' hide' : ''}">พิมพ์รายงานขายนอกแบบ 2</button>`,
+                           action: function (e, dt, node, config ) {
+                            var data = dt.rows().data().toArray();
+                            makePDF2(data,'out');
+                        }
+                        },
+                        {
+                            text: `<button type="button" class="btn btn-primary${do_num.substr(0, 2) !== 'DX' ? ' hide' : ''}">พิมพ์ใบปะหน้า</button>`,
                            action: function (e, dt, node, config ) {
                             makePDF_Header(data,'out');
                         }
@@ -1122,13 +1137,13 @@ var docDefinition = {
       {
         width: '40%',
         stack: [
-          { text: `CERTIFICATE NO.             : ${dataNow[0].cer_no}`, fontSize: 10, bold: true, margin: [0, 20, 0, 0] },
-          { text: `DATE                             : ${moment().format('DD-MMM-YYYY')} `, fontSize: 10,bold: true, margin: [0, 0, 0, 0] },
-          { text: `CUSTOMER                    : ${dataNow[0].cust}`, fontSize: 10,bold: true, margin: [0, 0, 0, 0] },
+          { text: `CERTIFICATE NO.              : ${dataNow[0].cer_no}`, fontSize: 10, bold: true, margin: [0, 20, 0, 0] },
+          { text: `DATE                              : ${moment().format('DD-MMM-YYYY')} `, fontSize: 10,bold: true, margin: [0, 0, 0, 0] },
+          { text: `CUSTOMER                     : ${dataNow[0].cust}`, fontSize: 10,bold: true, margin: [0, 0, 0, 0] },
           { text: `CONTRACT (P/O) No.       : ${dataNow[0].cust_po} `, fontSize: 10, bold: true,margin: [0, 0, 0, 0] },
           { text: `INSPECTION CERTIFICATE  : ACCORDING TO EN 10204 : 2005 TYPE 3.1`, fontSize: 10, bold: true,margin: [0, 0, 0, 0] },
-          { text: `COMMODITY                  : NEWLY PRODUCED, PRIME QUALITY ERW STEEL PIPE`, fontSize: 10,bold: true, margin: [0, 0, 0, 0] },
-          { text: `SPECIFICATION               : ${filter[currentPage -1]?.Uf_spec} `, fontSize: 10,bold: true, margin: [0, 0, 0, 0] },
+          { text: `COMMODITY                   : NEWLY PRODUCED, PRIME QUALITY ERW STEEL PIPE`, fontSize: 10,bold: true, margin: [0, 0, 0, 0] },
+          { text: `SPECIFICATION                : ${filter[currentPage -1]?.Uf_spec} `, fontSize: 10,bold: true, margin: [0, 0, 0, 0] },
         ]
       },
       {
@@ -1270,6 +1285,8 @@ var testFive = $("input[name='TestFive']:checked").val();
 var zinc = $("input[name='Zinc']:checked").val();
 
 
+
+
 let page = 0;
 function createData(res,index) {
     let unique = res.filter((value, index, self) =>
@@ -1277,7 +1294,7 @@ function createData(res,index) {
         t.item === value.item
     ))
     ); 
-    console.log(unique, 'unique');
+
     
     let titleZinc = zinc == undefined ? 'Zinc Coating Weight                 (g/m2)' : 'Zinc Coating Thinness (um)';
 
@@ -1288,39 +1305,39 @@ function createData(res,index) {
     let data = [];
     data.push(
     [
-    { text: 'ITEM', rowSpan: 3, fontSize: 9, bold: true, fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
-    { text: 'TYPE OF PIPE END', rowSpan: 3,fillColor: '#DCDCDC', fontSize: 9,bold: true, alignment: 'center', style: 'header' },
-    { text: 'DIMENSION', colSpan: 3, fontSize: 9,bold: true, fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
+    { text: 'ITEM', rowSpan: 3, fontSize: 8, bold: true, fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
+    { text: 'TYPE OF PIPE END', rowSpan: 3,fillColor: '#DCDCDC', fontSize: 8,bold: true, alignment: 'center', style: 'header' },
+    { text: 'DIMENSION', colSpan: 3, fontSize: 8,bold: true, fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
     {}, {},
-    { text: 'NUMBER OF BUNDLES', rowSpan: 3,fillColor: '#DCDCDC', fontSize: 9,bold: true, alignment: 'center', style: 'header' },
-    { text: 'NUMBER OF PIECES', rowSpan: 3,fillColor: '#DCDCDC', fontSize: 9,bold: true, alignment: 'center', style: 'header' },
-    { text: 'H/N (STS)', rowSpan: 3, fontSize: 9,bold: true,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
-    { text: 'CHEMICAL COMPOSITION %',fillColor: '#DCDCDC', colSpan: 11,bold: true, fontSize: 9, alignment: 'center', style: 'header' },
+    { text: 'NUMBER OF BUNDLES', rowSpan: 3,fillColor: '#DCDCDC', fontSize: 8,bold: true, alignment: 'center', style: 'header' },
+    { text: 'NUMBER OF PIECES', rowSpan: 3,fillColor: '#DCDCDC', fontSize: 8,bold: true, alignment: 'center', style: 'header' },
+    { text: 'H/N (STS)', rowSpan: 3, fontSize: 8,bold: true,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
+    { text: 'CHEMICAL COMPOSITION %',fillColor: '#DCDCDC', colSpan: 11,bold: true, fontSize: 8, alignment: 'center', style: 'header' },
     {}, {}, {}, {}, {}, {}, {}, {},{},{},
-    { text: 'MECHANICAL PROPERTIES', colSpan: 6, fontSize: 9,fillColor: '#DCDCDC',bold: true, alignment: 'center', style: 'header' },
+    { text: 'MECHANICAL PROPERTIES', colSpan: 6, fontSize: 8,fillColor: '#DCDCDC',bold: true, alignment: 'center', style: 'header' },
     {}, {},{}, {},{},
-    { text: 'HYDRO-STATIC TEST', rowSpan: 3, fontSize: 9,fillColor: '#DCDCDC', bold: true,alignment: 'center', style: 'header' },
-    { text: 'Pb', rowSpan: 3, fontSize: 9,fillColor: '#DCDCDC',bold: true, alignment: 'center', style: 'header' },
+    { text: 'HYDRO-STATIC TEST', rowSpan: 3, fontSize: 8,fillColor: '#DCDCDC', bold: true,alignment: 'center', style: 'header' },
+    { text: 'Pb', rowSpan: 3, fontSize: 8,fillColor: '#DCDCDC',bold: true, alignment: 'center', style: 'header' },
     { text: `${titleZinc}`, rowSpan: 3, fontSize: 8,fillColor: '#DCDCDC',bold: true, alignment: 'center', style: 'header' },
   ],
   // ชั้นที่ 2 ของ header
   [
     {}, {},
-    { text: 'NPS',rowSpan: 2, fontSize: 9, bold: true,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
+    { text: 'NPS',rowSpan: 2, fontSize: 8, bold: true,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
     { text: 'Thickness',rowSpan: 2,  fontSize: 8,bold: true,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
-    { text: 'Length',rowSpan: 2,  fontSize: 9,bold: true,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
+    { text: 'Length',rowSpan: 2,  fontSize: 8,bold: true,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
     {}, {},{},
-    { text: 'C',rowSpan: 2,  fontSize: 9,bold: true,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
-    { text: 'Si',rowSpan: 2,  fontSize: 9,bold: true,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
-    { text: 'Mn',rowSpan: 2,  fontSize: 9,bold: true,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
-    { text: 'P',rowSpan: 2,  fontSize: 9,bold: true,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
-    { text: 'S',rowSpan: 2,  fontSize: 9,bold: true,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
-    { text: 'Cu',rowSpan: 2,  fontSize: 9,bold: true,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
-    { text: 'V',rowSpan: 2,  fontSize: 9,bold: true,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
-    { text: 'Ni',rowSpan: 2,  fontSize: 9,bold: true,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
-    { text: 'Cr',rowSpan: 2,  fontSize: 9,bold: true,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
-    { text: 'Mo',rowSpan: 2,  fontSize: 9,bold: true,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
-    { text: 'Nb',rowSpan: 2,  fontSize: 9,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
+    { text: 'C',rowSpan: 2,  fontSize: 8,bold: true,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
+    { text: 'Si',rowSpan: 2,  fontSize: 8,bold: true,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
+    { text: 'Mn',rowSpan: 2,  fontSize: 8,bold: true,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
+    { text: 'P',rowSpan: 2,  fontSize: 8,bold: true,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
+    { text: 'S',rowSpan: 2,  fontSize: 8,bold: true,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
+    { text: 'Cu',rowSpan: 2,  fontSize: 8,bold: true,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
+    { text: 'V',rowSpan: 2,  fontSize: 8,bold: true,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
+    { text: 'Ni',rowSpan: 2,  fontSize: 8,bold: true,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
+    { text: 'Cr',rowSpan: 2,  fontSize: 8,bold: true,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
+    { text: 'Mo',rowSpan: 2,  fontSize: 8,bold: true,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
+    { text: 'Nb',rowSpan: 2,  fontSize: 8,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
     { text: 'Test specimen no.1 (base)', colSpan: 3, fontSize: 8,bold: true,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
     {}, {},
     { text: 'Test specimen no.1 (base)', colSpan: 3, fontSize: 8,bold: true,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
@@ -1413,7 +1430,7 @@ function bend() {
 
 
 
-for (let i = res.length; i < 14; i++) {
+for (let i = res.length; i < 15; i++) {
     data.push([
   { text: ` `, alignment: 'center', fontSize: 8 },
   { text: ``, alignment: 'center', fontSize: 8 },
@@ -1617,13 +1634,13 @@ var docDefinition = {
       {
         width: '40%',
         stack: [
-          { text: `CERTIFICATE NO.             : ${dataNow[0].cer_no}`, fontSize: 10, bold: true, margin: [0, 20, 0, 0] },
-          { text: `DATE                             : ${moment().format('DD-MMM-YYYY')} `, fontSize: 10,bold: true, margin: [0, 0, 0, 0] },
-          { text: `CUSTOMER                    : ${dataNow[0].cust}`, fontSize: 10,bold: true, margin: [0, 0, 0, 0] },
+          { text: `CERTIFICATE NO.              : ${dataNow[0].cer_no}`, fontSize: 10, bold: true, margin: [0, 20, 0, 0] },
+          { text: `DATE                              : ${moment().format('DD-MMM-YYYY')} `, fontSize: 10,bold: true, margin: [0, 0, 0, 0] },
+          { text: `CUSTOMER                     : ${dataNow[0].cust}`, fontSize: 10,bold: true, margin: [0, 0, 0, 0] },
           { text: `CONTRACT (P/O) No.       : ${dataNow[0].cust_po} `, fontSize: 10, bold: true,margin: [0, 0, 0, 0] },
           { text: `INSPECTION CERTIFICATE  : ACCORDING TO EN 10204 : 2005 TYPE 3.1`, fontSize: 10, bold: true,margin: [0, 0, 0, 0] },
-          { text: `COMMODITY                  : NEWLY PRODUCED, PRIME QUALITY ERW STEEL PIPE`, fontSize: 10,bold: true, margin: [0, 0, 0, 0] },
-          { text: `SPECIFICATION               : ${filter[currentPage -1]?.Uf_spec} `, fontSize: 10,bold: true, margin: [0, 0, 0, 0] },
+          { text: `COMMODITY                   : NEWLY PRODUCED, PRIME QUALITY ERW STEEL PIPE`, fontSize: 10,bold: true, margin: [0, 0, 0, 0] },
+          { text: `SPECIFICATION                : ${filter[currentPage -1]?.Uf_spec} `, fontSize: 10,bold: true, margin: [0, 0, 0, 0] },
         ]
       },
       {
@@ -1675,18 +1692,18 @@ function createTables() {
     const tables = [];
     for (let i = 0; i < filter.length; i++) {
         let res = dataNow.filter((value) => value.item === filter[i].item);
-        for (let j = 0; j < res.length; j += 14) {
+        for (let j = 0; j < res.length; j += 15) {
             // Slice 15 rows at a time
-            const newRes = res.slice(j, j + 14);
+            const newRes = res.slice(j, j + 15);
             tables.push({
                 table: {
                     headerRows: 2,
                     background: 'red',
-                    widths: [15, 20, 20, 25, 20, 25, 25, 25, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20,20, 20, 20, 25, 25, 30],
+                    widths: [15, 15, 20, 20, 20, 20, 20, 20, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 18, 18, 18,18, 18, 18, 25, 20, 25],
                     body: createData(newRes, i),
                 },
                 // Add a page break after every table except the last one
-                pageBreak: j + 14 < res.length || i < filter.length - 1 ? 'after' : '',
+                pageBreak: j + 15 < res.length || i < filter.length - 1 ? 'after' : '',
                 pageData: newRes
             });
         }
