@@ -132,6 +132,9 @@
 <div id="page_ReportQc">
 </div>
 
+<div id="page_ReportZinc" class="not-show-content"></div>
+</div>
+
 <div id="page_ReportMain" class="not-show-content">
 </div>
 
@@ -229,9 +232,10 @@
         Url = "././module/APP_Qc_TestLab/render.php"
         pageHtml = "page_" + tab_name;
         // console.log(pageHtml);
-            
+        console.log(pageHtml,'loadPage');
         $("#page_" + tab_name).load(Url, {"pageHtml": pageHtml}, function (response, status, xhr) {
-            // console.log("2"+pageHtml);
+         
+           
             if (status == "error") {
                 var msg = "Sorry, error: ";
                 $.alert(msg + xhr.status + " " + xhr.statusText);

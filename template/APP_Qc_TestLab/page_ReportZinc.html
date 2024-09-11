@@ -24,7 +24,7 @@
         </div>
       </div>
     <div class="col-lg-1 col-md-2 col-sm-1 col-xs-6  col-search">
-        <button id="BtnSearchM" class="btn btn-info"><i class="fa fa-search"></i>Search</button>
+        <button id="BtnSearchZ" class="btn btn-info"><i class="fa fa-search"></i>Search</button>
     </div>
 </div>
 
@@ -32,7 +32,7 @@
 
     <div class="row" id="divReportM">
         <table class="table table-condensed table-bordered table-striped"
-        width="100%" id="tblReportM">
+        width="100%" id="tblReportZ">
             <thead>
                 <tr>
                     <th class="bg-gray">Pb</th>
@@ -56,7 +56,7 @@
 
     ReportAllSearch();
   
-    $("#BtnSearchM").click(function () {
+    $("#BtnSearchZ").click(function () {
             ReportAllSearch();
     });
 
@@ -131,8 +131,8 @@ var options = {
     });
                 $("#divCountM").removeClass("hidden");
                 $("#countM").html(data.length);
-                $("#tblReportM").dataTable().fnDestroy();
-                var table = $('#tblReportM').DataTable({
+                $("#tblReportZ").dataTable().fnDestroy();
+                var table = $('#tblReportZ').DataTable({
                   
                     scrollCollapse: true,
                     scrollX: true,
@@ -149,7 +149,7 @@ var options = {
                             "className": "text-center",
                             "render": function (data, type, row, meta) {
                             var ret = parseFloat(data);
-                            if (ret > 0.031){
+                            if (ret > 0.030){
                                 var ret = `<div style="background-color: #F08080;">${(data)}</div>`
                             }
                             else{
@@ -228,8 +228,8 @@ var options = {
                     ],
                 });
 
-                $('#tblReportM').loading("stop");
-                $("#BtnSearchM").html("<i class='fa fa-search'></i>Search");
+                $('#tblReportZ').loading("stop");
+                $("#BtnSearchZ").html("<i class='fa fa-search'></i>Search");
             },
             error: function (e) {
                 console.log("There was an error with your request...");

@@ -935,6 +935,17 @@ function heat() {
 }
 
 function flat() {
+
+    if (unique[0]?.Uf_spec.includes('TIS 107')) {
+        console.log('TIS 107');
+        
+        if (unique[0]?.sizeIN >= 2) {
+            return 'Good'
+        } else {
+            return ''
+        }
+    }
+
     if (unique[0]?.sizeIN >= 2.5) {
         return 'Good'
     }
@@ -942,6 +953,15 @@ function flat() {
 }
 
 function bend() {
+
+    if (unique[0]?.Uf_spec.includes('TIS 107')) {
+        if (unique[0]?.sizeIN <= 1.5) {
+            return 'Good'
+        } else {
+            return ''
+        }
+    }
+
     if (unique[0]?.sizeIN < 2.5 && unique[0]?.sizeIN > 0) {
         return 'Good'
     }
