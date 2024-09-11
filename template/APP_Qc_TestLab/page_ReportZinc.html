@@ -48,7 +48,7 @@
                 </tr>
         </table>
     </div>
- <div id="divCountM" class="text-center font-bold text-md hidden">จำนวนรายการทั้งหมด : <span id="countM"></span> รายการ</div>
+ <div id="divCountZ" class="text-center font-bold text-md hidden">จำนวนรายการทั้งหมด : <span id="countZ"></span> รายการ</div>
  <hr />
  <canvas class="ml-auto" id="myChart" style="width:100%;max-width:500px"></canvas>
  
@@ -129,8 +129,8 @@ var options = {
      options: options,
      plugins: [ChartDataLabels],
     });
-                $("#divCountM").removeClass("hidden");
-                $("#countM").html(data.length);
+                $("#divCountZ").removeClass("hidden");
+                $("#countZ").html(data.length);
                 $("#tblReportZ").dataTable().fnDestroy();
                 var table = $('#tblReportZ').DataTable({
                   
