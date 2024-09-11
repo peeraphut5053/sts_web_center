@@ -1,0 +1,229 @@
+<div class="row" style="border-bottom:solid 1px #e8e8e8;">  
+    <div class="row">
+        <h3 style="padding-left:5px;">Report Zinc</h3>
+    </div>
+</div>
+
+<div class="row flex">
+    <div class="row col-xs-2">
+        <div class="input-group">
+          <div class="input-group-addon">Year</div>
+          <select class="form-control" id="selYear"></select>
+        </div>
+      </div>
+      <div class="row col-xs-2">
+        <div class="input-group">
+          <div class="input-group-addon">Month</div>
+          <select class="form-control" id="selMonth"></select>
+        </div>
+      </div>
+    <div class="col-lg-1 col-md-2 col-sm-1 col-xs-6  col-search">
+        <button id="BtnSearchM" class="btn btn-info"><i class="fa fa-search"></i>Search</button>
+    </div>
+</div>
+
+    <br>
+
+    <div class="row" id="divReportM">
+        <table class="table table-condensed table-bordered table-striped"
+        width="100%" id="tblReportM">
+            <thead>
+                <tr>
+                    <th class="bg-gray">Pb</th>
+                    <th class="bg-gray">Cd</th>
+                    <th class="bg-gray">Fe</th>
+                    <th class="bg-gray">Cu</th>
+                    <th class="bg-gray">Zn</th>
+                    <th class="bg-gray">Test_results</th>
+                    <th class="bg-gray">Date Received</th>
+                    <th class="bg-gray">Test Date</th>
+                    <th class="bg-gray">Lead Time/Day</th>
+                    <th class="bg-gray">remark</th>
+                </tr>
+        </table>
+    </div>
+ <div id="divCountM" class="text-center font-bold text-md hidden">จำนวนรายการทั้งหมด : <span id="countM"></span> รายการ</div>
+ <hr />
+ <canvas class="ml-auto" id="myChart" style="width:100%;max-width:500px"></canvas>
+ 
+<script type="text/javascript">
+
+    ReportAllSearch();
+  
+    $("#BtnSearchM").click(function () {
+            ReportAllSearch();
+    });
+
+    GetYearMonth("selYear", "selMonth");
+        
+    function ReportAllSearch() {
+    var month =  $("#selMonth").val();
+    var year =  $("#selYear").val();
+
+    if (month == null || month == null) {
+        var d = new Date();
+        month = d.getMonth() + 1;
+        year = d.getFullYear();
+    }
+   
+
+    var OldHtml = $("#BtnSearchM").html();
+        $.ajax({
+            type: 'POST',
+            url: "././module/APP_Qc_TestLab/data.php",
+            dataType: 'json',
+            beforeSend: function () {
+                $("#BtnSearchM").html("<i class='fa fa-spinner fa-spin'>");
+            },
+            data: {
+                "load": "ReportZinc",
+                "y": year,
+                "month": month,
+          
+            },
+            success: function (data) {
+                const pass = data.filter(item => item.Test_result == "Pass");
+                const fail = data.filter(item => item.Test_result == "Fail");
+                const data2 = {
+  labels: ['Pass', 'Fail'],
+  datasets: [{
+    label: 'Test Result',
+    data: [pass.length, fail.length],
+    borderWidth: 1,
+    backgroundColor: ['#7FFF00', '#F08080'],
+  }]
+};
+var options = {
+    tooltips: {
+            },
+            plugins: {
+              datalabels: {
+                formatter: (value, ctx) => {
+                  let sum = 0;
+                  let dataArr = ctx.chart.data.datasets[0].data;
+                  dataArr.map(data => {
+                      sum += data;
+                  });
+                  let percentage = (value*100 / sum).toFixed(2)+"%";
+                  return percentage;
+                },
+                color: ['dark', '#fff'],
+              }
+            },
+    
+};
+    const myChart = new Chart("myChart", {
+     type: "doughnut",
+     data: data2,
+     options: options,
+     plugins: [ChartDataLabels],
+    });
+                $("#divCountM").removeClass("hidden");
+                $("#countM").html(data.length);
+                $("#tblReportM").dataTable().fnDestroy();
+                var table = $('#tblReportM').DataTable({
+                  
+                    scrollCollapse: true,
+                    scrollX: true,
+                    "aaData": data,
+                    "paging": false,
+//                        fixedColumns: {
+//                            leftColumns: 1,
+//                        },
+                    "searching": false,
+                    "bInfo": false,
+
+                    "columns": [
+                         {"data": "sts_Pb",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                            var ret = parseFloat(data);
+                            if (ret > 0.031){
+                                var ret = `<div style="background-color: #F08080;">${(data)}</div>`
+                            }
+                            else{
+                                var ret = `<div style="background-color: #7FFF00;">${(data)}</div>`
+                            }
+                            return ret;
+                            }
+                        },
+                        {"data": "sts_Cd",
+                            "className": "text-center",
+                        },
+                        {"data": "sts_Fe",
+                            "className": "text-center",
+                        },
+                        {"data": "sts_Cu",
+                            "className": "text-center",
+                        },
+                        {"data": "sts_Zn",
+                            "className": "text-center",
+                        },
+                        {"data": "Test_result",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                            var ret = data;
+                            if (ret == "Fail"){
+                                var ret = `<div style="background-color: #F08080;">${(data)}</div>`
+                            }
+                            else{
+                                var ret = `<div style="background-color: #7FFF00;">${(data)}</div>`
+                            }
+                            return ret;
+                            }
+                        },
+                        {"data": "Date_rec.date",
+                         "className": "text-center",
+                         "render": function (data, type, row, meta) {
+                            var ret = `${data.substring(0, 10)}`
+                            return ret;
+
+                         }
+                        },
+                        {"data": "Date_test.date",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                            var ret = `${data.substring(0, 10)}`
+                            return ret;
+
+                         }
+                        },
+                        {"data": "LeadTime",
+                            "className": "text-center",
+                            
+                        },
+                        {"data": "remark",
+                            "className": "text-center",
+                        },
+                    ],
+                    'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                            "<'row'<'col-md-12'tr>>" +
+                            "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                    buttons: [
+                        {
+                            extend: 'print',
+                            text: "<i class='fa fa-print'></i>&nbsp;Print",
+                            title: ''
+                        },
+                        {
+                            extend: 'excel',
+                            text: "<i class='fa fa-file-excel'></i>&nbsp;Excel&nbsp;",
+                            title: `${year}-${month}-ReportZinc`,
+                            customize: function (xlsx) {
+                                var sheet = xlsx.xl.worksheets['sheet1.xml'];
+                                var numrows = 2;
+                            }
+                        },
+                    ],
+                });
+
+                $('#tblReportM').loading("stop");
+                $("#BtnSearchM").html("<i class='fa fa-search'></i>Search");
+            },
+            error: function (e) {
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+    }
+</script>

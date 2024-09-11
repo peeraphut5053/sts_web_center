@@ -295,6 +295,39 @@ if ($load == 'UpdateSubTest') {
     echo json_encode($QcTestLab); 
 }
 
+if ($load == 'ReportZinc') {
+    $CallModel = new CallModel();
+    $CallModel->SyteLine_Models();
+    $QcTestLab = new QcTestLab();
+    $QcTestLab->setConn($ConnSL);
+    $QcTestLab = $QcTestLab->GetReportZinc($month,$y);
+    echo json_encode($QcTestLab);
+}
+
+if ($load == 'InsertExcelZinc') {
+    $sts_no = $_POST["sts_Pb"] ;
+    for ($i=0;$i<count($sts_no);$i++){
+       $CallModel = new CallModel();
+       $CallModel->SyteLine_Models();
+       $QcTestLab[$i] = new QcTestLab();
+       $QcTestLab[$i]->setConn($ConnSL);
+       $QcTestLab[$i] = $QcTestLab[$i]->InsertExcelZinc(
+        $_POST["sts_Pb"][$i],
+        $_POST["sts_Al"][$i],
+        $_POST["sts_Cd"][$i],
+        $_POST["sts_Fe"][$i],
+        $_POST["sts_Cu"][$i],
+        $_POST["sts_Zn"][$i],
+        $_POST["Test_result"][$i],
+        $_POST["Date_rec"][$i],
+        $_POST["Date_test"][$i],
+        $_POST["LeadTime"][$i],
+        $_POST["remark"][$i]
+      );
+       echo json_encode($i);    
+       }
+}
+
 
 
 

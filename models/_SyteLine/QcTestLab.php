@@ -275,7 +275,7 @@ where trans_type = 'F'
     }
 
     function GetReportZinc($month, $y) {
-        $query = "select * from STS_QA_LAB_ZINC";
+        $query = "select * from STS_QA_LAB_ZINC where month(Date_rec) = '$month' and year(Date_rec) = '$y' order by Date_rec desc";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);
