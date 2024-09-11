@@ -13,8 +13,14 @@
       </div>
       <div class="row col-xs-2">
         <div class="input-group">
-          <div class="input-group-addon">Month</div>
+          <div class="input-group-addon">StartMonth</div>
           <select class="form-control" id="selMonth"></select>
+        </div>
+      </div>
+      <div class="row col-xs-2">
+        <div class="input-group">
+          <div class="input-group-addon">EndMonth</div>
+          <select class="form-control" id="selMonth2"></select>
         </div>
       </div>
     <div class="col-lg-1 col-md-2 col-sm-1 col-xs-6  col-search">
@@ -55,14 +61,18 @@
     });
 
     GetYearMonth("selYear", "selMonth");
+
+    GetYearMonth("selYear", "selMonth2");
         
     function ReportAllSearch() {
     var month =  $("#selMonth").val();
+    var month2 =  $("#selMonth2").val();
     var year =  $("#selYear").val();
 
     if (month == null || month == null) {
         var d = new Date();
         month = d.getMonth() + 1;
+        month2 = d.getMonth() + 1;
         year = d.getFullYear();
     }
    
@@ -79,6 +89,7 @@
                 "load": "ReportZinc",
                 "y": year,
                 "month": month,
+                "month2": month2
           
             },
             success: function (data) {

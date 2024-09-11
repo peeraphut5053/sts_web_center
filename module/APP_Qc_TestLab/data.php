@@ -300,7 +300,7 @@ if ($load == 'ReportZinc') {
     $CallModel->SyteLine_Models();
     $QcTestLab = new QcTestLab();
     $QcTestLab->setConn($ConnSL);
-    $QcTestLab = $QcTestLab->GetReportZinc($month,$y);
+    $QcTestLab = $QcTestLab->GetReportZinc($month, $month2, $y);
     echo json_encode($QcTestLab);
 }
 

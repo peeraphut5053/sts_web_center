@@ -274,8 +274,8 @@ where trans_type = 'F'
         
     }
 
-    function GetReportZinc($month, $y) {
-        $query = "select * from STS_QA_LAB_ZINC where month(Date_rec) = '$month' and year(Date_rec) = '$y' order by Date_rec desc";
+    function GetReportZinc($month, $month2, $y) {
+        $query = "select * from STS_QA_LAB_ZINC where month(Date_rec) between '$month' and '$month2' and year(Date_rec) = '$y' order by Date_rec asc";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);
