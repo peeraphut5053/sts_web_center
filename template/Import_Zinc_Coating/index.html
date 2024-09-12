@@ -127,8 +127,6 @@
     </table>
   </div>
   <div id="printpopup"></div>
-  <script src="https://code.jquery.com/jquery-migrate-3.0.0.min.js"></script>
-  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
   <script type="text/javascript">
  
     $("#btnSearch").click(function () {
@@ -221,6 +219,9 @@
                   data: "QC_Pb",
                   className: "text-center",
                   "render": function (data, type, row){
+                  if (data == null) {
+                    return "";
+                  }
                     var ret = parseFloat(data);
                     return ret
                   }
@@ -233,7 +234,10 @@
                   data: "import_date.date",
                   className: "text-center",
                   "render": function (data, type, row){
-                    var ret = data.substring(0, 10);
+                    if (data == null) {
+                      return "";
+                    }
+                    var ret = data?.substring(0, 10);
                     return ret;
                   }
                 },
