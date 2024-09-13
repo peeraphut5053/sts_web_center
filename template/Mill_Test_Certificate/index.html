@@ -928,6 +928,11 @@ for (let i = 0; i <= res.length-1; i++) {
 //
 
 function heat() {
+
+    if (unique[0]?.size.includes('x')) {
+        return ''
+    }
+
     if (unique[0]?.sizeIN >= 4 && unique[0]?.grade === 'B') {
         return 'Good'
     }
@@ -935,6 +940,10 @@ function heat() {
 }
 
 function flat() {
+
+    if (unique[0]?.size.includes('x')) {
+        return ''
+    }
 
     if (unique[0]?.Uf_spec.includes('TIS 107')) {
         console.log('TIS 107');
@@ -953,6 +962,10 @@ function flat() {
 }
 
 function bend() {
+
+    if (unique[0]?.size.includes('x')) {
+        return ''
+    }
 
     if (unique[0]?.Uf_spec.includes('TIS 107')) {
         if (unique[0]?.sizeIN <= 1.5) {
@@ -1428,6 +1441,11 @@ for (let i = 0; i <= res.length-1; i++) {
 //
 
 function heat() {
+
+    if (unique[0]?.size.includes('x')) {
+        return ''
+    }
+
     if (unique[0]?.sizeIN >= 4 && unique[0]?.grade === 'B') {
         return 'Good'
     }
@@ -1435,6 +1453,11 @@ function heat() {
 }
 
 function flat() {
+
+    if (unique[0]?.size.includes('x')) {
+        return ''
+    }
+
     if (unique[0]?.sizeIN >= 2.5) {
         return 'Good'
     }
@@ -1442,6 +1465,11 @@ function flat() {
 }
 
 function bend() {
+
+    if (unique[0]?.size.includes('x')) {
+        return ''
+    }
+    
     if (unique[0]?.sizeIN < 2.5 && unique[0]?.sizeIN > 0) {
         return 'Good'
     }
