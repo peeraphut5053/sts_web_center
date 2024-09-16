@@ -1,0 +1,345 @@
+<style>
+    .col-search {
+      padding-left: 3px;
+      padding-right: 3px;
+    }
+    /*    table.dataTable thead .sorting:after,
+          table.dataTable thead .sorting:before,
+          table.dataTable thead .sorting_asc:after,
+          table.dataTable thead .sorting_asc:before,
+          table.dataTable thead .sorting_asc_disabled:after,
+          table.dataTable thead .sorting_asc_disabled:before,
+          table.dataTable thead .sorting_desc:after,
+          table.dataTable thead .sorting_desc:before,
+          table.dataTable thead .sorting_desc_disabled:after,
+          table.dataTable thead .sorting_desc_disabled:before {
+              bottom: .5em;
+          }*/
+    .table thead th {
+      text-align: center;
+    }
+  
+    .col-flt-page {
+      padding-top: 10px;
+      font-weight: bold;
+    }
+  
+    #tblReport tbody tr td a {
+      cursor: pointer;
+    }
+    table.dataTable.fixedHeader-floating,
+    table.dataTable.fixedHeader-locked {
+      background-color: white;
+      margin-top: 50px !important;
+      margin-bottom: 0 !important;
+    }
+    @media print {
+      table th:nth-child(0) {
+        width: 200px;
+        word-break: break-all;
+        white-space: pre-line;
+      }
+      table td:nth-child(0) {
+        width: 200px;
+        word-break: break-all;
+        white-space: pre-line;
+      }
+    }
+    .text-header {
+      font-weight: bold;
+      font-size: 20px;
+    }
+    .text-wrap {
+      white-space: normal;
+    }
+    .width-200 {
+      width: 200px;
+    }
+    input[type="checkbox"] {
+      margin-left: 5px;
+      margin-right: 5px;
+    } /*
+      .cb_lb{
+          margin-top:-5px;
+      }*/
+    .item-center {
+      display: flex;
+      justify-content: center;
+    }
+  </style>
+  <div class="row">
+    <h4 class="text-header text-center">รายงานส่งออก</h4>
+  </div>
+  <div class="row item-center">
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+      <div class="input-group">
+        <div class="input-group-addon">Start Date</div>
+        <input
+          type="text"
+          class="form-control"
+          id="txtStartDate"
+          autocomplete="off"
+        />
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+      <div class="input-group">
+        <div class="input-group-addon">End Date</div>
+        <input
+          type="text"
+          class="form-control"
+          id="txtEndDate"
+          autocomplete="off"
+        />
+      </div>
+    </div>
+    <div class="col-lg-1 col-md-1 col-sm-6 col-xs-6 text-left">
+      <button class="btn btn-info" id="btnSearch">
+        <i class="fa fa-search"></i>&nbsp; Search
+      </button>
+    </div>
+  </div>
+  
+  <div class="row" id="rowResultTable">
+    <table
+      class="table table-condensed table-bordered table-striped"
+      width="100%"
+      id="tblReport"
+    >
+      <thead>
+        <tr>
+          <th rowspan="3" class="bg-gray">ลำดับที่</th>
+          <th colspan="1" class="bg-gray">เลขที่ใบขนฯ/ใบขนฯ โอนย้าย/</th>
+          <th colspan="1" class="bg-gray">วันที่ส่งออก/</th>
+          <th colspan="2" class="bg-gray">ชื่อสินค้า/รุ่น/แบบ/หน่วย( KGS)</th>
+          <th rowspan="3" class="bg-gray">รวม</th>
+          <th rowspan="3" class="bg-gray">มูลค่า(บาท)</th>
+          <th rowspan="3"  class="bg-gray">หมายเหตุ</th>
+        </tr>
+        <tr>
+          <th class="bg-gray">เลขที่ทำเรื่องทำลาย/บริจาก</th>
+          <th class="bg-gray">ชำระอากร</th>
+          <th class="bg-gray">ท่อเหล็กชุบสังกะสี</th>
+          <th class="bg-gray">ท่อเหล็กชุบสังกะสี</th>
+        </tr>
+        <tr>
+
+          <th class="bg-gray"></th>
+          <th class="bg-gray"></th>
+          <th class="bg-gray">(สูตร 06-4012325/718-1)</th>
+          <th class="bg-gray">(สูตร 06-4012329/718-2)</th>
+        </tr>
+      </thead>
+      <!--        <tbody id="tblReportList">
+                      <tr><td align="center" colspan="12">.... No item search ....</td></tr>
+     </tbody>-->
+    </table>
+  </div>
+  <div id="printpopup"></div>
+  <script src="https://code.jquery.com/jquery-migrate-3.0.0.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script src="https://cdn.datatables.net/2.1.5/js/dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/2.1.5/css/dataTables.dataTables.min.css"></script>
+  <script type="text/javascript">
+ 
+    $("#btnSearch").click(function () {
+      ReportItemSearch();
+    });
+           
+    $("#txtStartDate,#txtEndDate").datepicker({
+      dateFormat: "yy-mm-dd",
+    });
+    
+    $("#btnRemove").click(function () {
+      $("#tblReport").DataTable().clear().destroy();
+    });
+  
+    function ReportItemSearch() {
+      var OldHtml = $("#btnSearch").html();
+      var StartDate = $("#txtStartDate").val();
+      var EndDate = $("#txtEndDate").val();
+  
+      if (StartDate != "" && EndDate == "" || StartDate == "" && EndDate != "") {
+          $.alert("กรุณาเลือกวันที่เริ่มต้นและสิ้นสุดให้ครบถ้วน");
+          return false;
+      }
+  
+      if (StartDate == "" && EndDate == "") {
+        $.alert("กรุณากรอกข้อมูลอย่างน้อย 1 ช่อง");
+        return false;
+      } else {
+        $("#btnSearch").html("<i class='fa fa-spinner fa-spin'></i>");
+        $("#tblReport").loading();
+        $("#tblReport tfoot").remove();
+        $.ajax({
+          type: "POST",
+          url: "././module/RPT_STS_custom_OUT/data.php",
+          dataType: "json",
+          beforeSend: function () {
+            $("#btnSearch").html("<i class='fa fa-spinner fa-spin'>");
+          },
+          data: {
+            load: "ajax",
+            StartDate: StartDate,
+            EndDate: EndDate,
+          },
+          success: function (data) {
+            var newData = data.map((item) => {
+              return {
+                ...item,
+                total: (Number(item.weight_zinc) + Number(item.weight_nonzinc)).toFixed(2),
+              };
+            })
+            $("#tblReport").DataTable().clear();
+            $("#tblReport").append(
+              "<tfoot><tr><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th></tr></tfoot>"
+            );
+            $("#tblReport").dataTable({
+              aaData: newData,
+              paging: false,
+              fixedHeader: true,
+              destroy: true,
+              processing: true,
+              scrollY: "65vh",
+              scrollCollapse: true,
+              scrollX: true,
+              select: true,
+              columns: [
+                 {
+                "targets": 0, // คอลัมน์ที่จะแสดง index
+                "data": null,
+                className: "text-center",
+                "render": function (data, type, row, meta) {
+                    return meta.row + 1; // แสดงลำดับแถว +1 เนื่องจาก index เริ่มที่ 0
+                  }
+                },
+                {
+                  data: "doc_no",
+                  className: "text-center",
+                },
+                {
+                  data: "date.date",
+                  className: "text-center",
+                  "render": function (data, type, row, meta) {
+                    return data.substring(0, 10);
+                  }
+                },
+                {
+                  data: "weight_zinc",
+                  className: "text-center",
+                },
+                {
+                  data: "weight_nonzinc",
+                  className: "text-center",
+                },
+                {
+                  data: "total",
+                  className: "text-center",
+                },
+                {
+                  data: "value",
+                  className: "text-center",
+                },
+                {
+                  data: "boatnote",
+                  className: "text-center",
+                },
+              ],
+              dom:
+                "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                "<'row'<'col-md-12'tr>>" +
+                "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+              buttons: [
+                {
+                  extend: "print",
+                  text: "<i class='fa fa-print'></i>&nbsp;Print",
+                  title: "",
+                },
+                {
+                extend: 'excel',
+                exportOptions: {
+                    format: {
+                        header: function ( data, columnIdx, node ) {
+                            var $headers = $('#yourTableId thead tr');
+                            var headerTexts = [];
+                            
+                            $headers.each(function(index) {
+                                var $cells = $(this).find('th');
+                                var cellText = $cells.eq(columnIdx).text().trim();
+                                if (cellText) {
+                                    headerTexts.push(cellText);
+                                }
+                            });
+                            
+                            return headerTexts.join('\n');
+                        }
+                    }
+                },
+                customize: function(xlsx) {
+                    var sheet = xlsx.xl.worksheets['sheet1.xml'];
+                    $('row:first c', sheet).attr('s', '2'); // ตั้งค่า style ให้กับ header
+                }
+            }
+              ],
+              "footerCallback": function (row, data, start, end, display) {
+                        var api = this.api(),
+                                data;
+                        var intVal = function (i) {
+                            return typeof i === 'string' ?
+                                    i.replace(/[\$,]/g, '') * 1 :
+                                    typeof i === 'number' ?
+                                    i : 0;
+                        };
+                        var totalKG = api
+                                .column(3)
+                                .data()
+                                .reduce(function (a, b) {
+                                    return intVal(a) + intVal(b);
+                                }, 0);
+                        var totalAmt = api
+                                .column(4)
+                                .data()
+                                .reduce(function (a, b) {
+                                    return intVal(a) + intVal(b);
+                                }, 0);
+                        var total = api
+                                .column(5)
+                                .data()
+                                .reduce(function (a, b) {
+                                    return intVal(a) + intVal(b);
+                                }, 0);
+                        var totalVal = api
+                                .column(6)
+                                .data()
+                                .reduce(function (a, b) {
+                                    return intVal(a) + intVal(b);
+                                }, 0);
+                        $(api.column(2).footer()).html("รวม");
+                        $(api.column(3).footer()).html(addCommas(totalKG.toFixed(2)));
+                        $(api.column(4).footer()).html(addCommas(totalAmt.toFixed(2)));
+                        $(api.column(5).footer()).html(addCommas(total.toFixed(2)));
+                        $(api.column(6).footer()).html(addCommas(totalVal.toFixed(2)));
+                        $('tfoot').css({
+        'font-weight': 'bold',
+        'font-size': '14px',
+        'text-transform': 'uppercase'
+    });
+                        
+
+                    },
+            });
+            $("#tblReport").loading("stop");
+            $("#btnSearch").html(OldHtml);
+          },
+
+          error: function (e) {
+            $("#tblReport").loading("stop");
+            $("#btnSearch").html(OldHtml);
+            console.log("There was an error with your request...");
+            console.log("error: " + JSON.stringify(e));
+          },
+        });
+      }
+    }
+
+  </script>

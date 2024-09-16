@@ -1,0 +1,323 @@
+<style>
+    .col-search {
+      padding-left: 3px;
+      padding-right: 3px;
+    }
+    /*    table.dataTable thead .sorting:after,
+          table.dataTable thead .sorting:before,
+          table.dataTable thead .sorting_asc:after,
+          table.dataTable thead .sorting_asc:before,
+          table.dataTable thead .sorting_asc_disabled:after,
+          table.dataTable thead .sorting_asc_disabled:before,
+          table.dataTable thead .sorting_desc:after,
+          table.dataTable thead .sorting_desc:before,
+          table.dataTable thead .sorting_desc_disabled:after,
+          table.dataTable thead .sorting_desc_disabled:before {
+              bottom: .5em;
+          }*/
+    .table thead th {
+      text-align: center;
+    }
+  
+    .col-flt-page {
+      padding-top: 10px;
+      font-weight: bold;
+    }
+  
+    #tblReport tbody tr td a {
+      cursor: pointer;
+    }
+    table.dataTable.fixedHeader-floating,
+    table.dataTable.fixedHeader-locked {
+      background-color: white;
+      margin-top: 50px !important;
+      margin-bottom: 0 !important;
+    }
+    @media print {
+      table th:nth-child(0) {
+        width: 200px;
+        word-break: break-all;
+        white-space: pre-line;
+      }
+      table td:nth-child(0) {
+        width: 200px;
+        word-break: break-all;
+        white-space: pre-line;
+      }
+    }
+    .text-header {
+      font-weight: bold;
+      font-size: 20px;
+    }
+    .text-wrap {
+      white-space: normal;
+    }
+    .width-200 {
+      width: 200px;
+    }
+    input[type="checkbox"] {
+      margin-left: 5px;
+      margin-right: 5px;
+    } /*
+      .cb_lb{
+          margin-top:-5px;
+      }*/
+    .item-center {
+      display: flex;
+      justify-content: center;
+    }
+  </style>
+  <div class="row">
+    <h4 class="text-header text-center">รายงานการเสียภาษี</h4>
+  </div>
+  <div class="row item-center">
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+      <div class="input-group">
+        <div class="input-group-addon">Start Date</div>
+        <input
+          type="text"
+          class="form-control"
+          id="txtStartDate"
+          autocomplete="off"
+        />
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+      <div class="input-group">
+        <div class="input-group-addon">End Date</div>
+        <input
+          type="text"
+          class="form-control"
+          id="txtEndDate"
+          autocomplete="off"
+        />
+      </div>
+    </div>
+    <div class="col-lg-1 col-md-1 col-sm-6 col-xs-6 text-left">
+      <button class="btn btn-info" id="btnSearch">
+        <i class="fa fa-search"></i>&nbsp; Search
+      </button>
+    </div>
+  </div>
+  
+  <div class="row" id="rowResultTable">
+    <table
+      class="table table-condensed table-bordered table-striped"
+      width="100%"
+      id="tblReport"
+    >
+      <thead>
+        <tr>
+          <th class="bg-gray">ลำดับที่</th>
+          <th class="bg-gray">เลขที่ใบขนฯ/ใบขนฯ โอนย้าย/เลขที่ทำเรื่องทำลาย/บริจาก</th>
+          <th class="bg-gray">วันที่ส่งออก/ชำระอากร</th>
+          <th class="bg-gray">ชื่อสินค้า/รุ่น/แบบ</th>
+          <th class="bg-gray">จำนวน(กก.)</th>
+          <th class="bg-gray">มูลค่า(บาท)</th>
+          <th class="bg-gray">ภาษีอากร</th>
+          <th class="bg-gray">ภาษีมูลค่าเพิ่ม</th>
+          <th class="bg-gray">ภาษี และค่าธรรมเนียมอื่นๆ</th>
+          <th class="bg-gray">ภาษีอากรรวม</th>
+          <th class="bg-gray">เลขที่สูตรการผลิต/เลขที่ชำระอากร</th>
+          <th class="bg-gray">หมายเหตุใบขนฯอ้างอิง</th>
+        </tr>
+      </thead>
+      <!--        <tbody id="tblReportList">
+                      <tr><td align="center" colspan="12">.... No item search ....</td></tr>
+     </tbody>-->
+    </table>
+  </div>
+  <div id="printpopup"></div>
+  <script src="https://code.jquery.com/jquery-migrate-3.0.0.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script type="text/javascript">
+ 
+    $("#btnSearch").click(function () {
+      ReportItemSearch();
+    });
+           
+    $("#txtStartDate,#txtEndDate").datepicker({
+      dateFormat: "yy-mm-dd",
+    });
+    
+    $("#btnRemove").click(function () {
+      $("#tblReport").DataTable().clear().destroy();
+    });
+  
+    function ReportItemSearch() {
+      var OldHtml = $("#btnSearch").html();
+      var StartDate = $("#txtStartDate").val();
+      var EndDate = $("#txtEndDate").val();
+  
+      if (StartDate != "" && EndDate == "" || StartDate == "" && EndDate != "") {
+          $.alert("กรุณาเลือกวันที่เริ่มต้นและสิ้นสุดให้ครบถ้วน");
+          return false;
+      }
+  
+      if (StartDate == "" && EndDate == "") {
+        $.alert("กรุณากรอกข้อมูลอย่างน้อย 1 ช่อง");
+        return false;
+      } else {
+        $("#btnSearch").html("<i class='fa fa-spinner fa-spin'></i>");
+        $("#tblReport").loading();
+        $("#tblReport tfoot").remove();
+        $.ajax({
+          type: "POST",
+          url: "././module/RPT_STS_custom_scrap/data.php",
+          dataType: "json",
+          beforeSend: function () {
+            $("#btnSearch").html("<i class='fa fa-spinner fa-spin'>");
+          },
+          data: {
+            load: "ajax",
+            StartDate: StartDate,
+            EndDate: EndDate,
+          },
+          success: function (data) {
+            $("#tblReport").DataTable().clear();
+            $("#tblReport").append(
+              "<tfoot><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></tfoot>"
+            );
+            $("#tblReport").dataTable({
+              aaData: data,
+              paging: false,
+              fixedHeader: true,
+              destroy: true,
+              processing: true,
+              scrollY: "65vh",
+              scrollCollapse: true,
+              scrollX: true,
+              select: true,
+              columns: [
+                 {
+                "targets": 0, // คอลัมน์ที่จะแสดง index
+                "data": null,
+                className: "text-center",
+                "render": function (data, type, row, meta) {
+                    return meta.row + 1; // แสดงลำดับแถว +1 เนื่องจาก index เริ่มที่ 0
+                  }
+                },
+                {
+                  data: "doc_no",
+                  className: "text-center",
+                },
+                {
+                  data: "date.date",
+                  className: "text-center",
+                  "render": function (data, type, row, meta) {
+                    return data.substring(0, 10);
+                  }
+                },
+                {
+                  data: "item",
+                  className: "text-center",
+                },
+                {
+                  data: "weight_KG",
+                  className: "text-center",
+                },
+                {
+                  data: "value",
+                  className: "text-center",
+                },
+                {
+                  data: null,
+                  className: "text-center",
+                  "render": function (data, type, row, meta) {
+                    return "-";
+                  }
+                },
+                {
+                    data: null,
+                  className: "text-center",
+                  "render": function (data, type, row, meta) {
+                    return "-";
+                  }
+                },
+                {
+                    data: null,
+                  className: "text-center",
+                  "render": function (data, type, row, meta) {
+                    return "-";
+                  }
+                },
+                {
+                    data: null,
+                  className: "text-center",
+                  "render": function (data, type, row, meta) {
+                    return "-";
+                  }
+                },
+                {
+                  data: "stamp_no",
+                  className: "text-center",
+                },
+                {
+                  data: "ref_doc_no",
+                  className: "text-center",
+                },
+              ],
+              dom:
+                "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                "<'row'<'col-md-12'tr>>" +
+                "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+              buttons: [
+                {
+                  extend: "print",
+                  text: "<i class='fa fa-print'></i>&nbsp;Print",
+                  title: "",
+                },
+                {
+                  extend: "excel",
+                  footer: true,
+                  text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                  title:
+                    "รายงานการเสียภาษี" +
+                    StartDate +
+                    "_to_" +
+                    EndDate,
+                },
+              ],
+              "footerCallback": function (row, data, start, end, display) {
+                        var api = this.api(),
+                                data;
+                        var intVal = function (i) {
+                            return typeof i === 'string' ?
+                                    i.replace(/[\$,]/g, '') * 1 :
+                                    typeof i === 'number' ?
+                                    i : 0;
+                        };
+                        var totalKG = api
+                                .column(4)
+                                .data()
+                                .reduce(function (a, b) {
+                                    return intVal(a) + intVal(b);
+                                }, 0);
+                        var totalAmt = api
+                                .column(5)
+                                .data()
+                                .reduce(function (a, b) {
+                                    return intVal(a) + intVal(b);
+                                }, 0);
+
+                        $(api.column(3).footer()).html("<b>รวม</b>");
+                        $(api.column(4).footer()).html(addCommas(totalKG.toFixed(2)));
+                        $(api.column(5).footer()).html(addCommas(totalAmt.toFixed(2)));
+
+                    },
+            });
+            $("#tblReport").loading("stop");
+            $("#btnSearch").html(OldHtml);
+          },
+
+          error: function (e) {
+            $("#tblReport").loading("stop");
+            $("#btnSearch").html(OldHtml);
+            console.log("There was an error with your request...");
+            console.log("error: " + JSON.stringify(e));
+          },
+        });
+      }
+    }
+
+  </script>

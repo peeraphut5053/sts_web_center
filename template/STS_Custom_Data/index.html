@@ -1,0 +1,1071 @@
+<div class="row">
+    <div class="row" >
+        <div class="text-center" >
+                <h1>ข้อมูลรายงานนอกคลัง</h1>
+        </div> 
+        <hr />
+      <div class="flex justify-center gap-8 m-8">
+        <a class="btn btn-success" href="module/STS_Custom_Data/Import_Excel_In.php"  id="btnTransfer">&nbsp;Import Excel (IN)</a>
+        <a class="btn btn-success" href="module/STS_Custom_Data/Import_Excel_Out.php"  id="btnTransfer">&nbsp;Import Excel (OUT)</a>
+        <a class="btn btn-success" href="module/STS_Custom_Data/Import_Excel_Scrap.php"  id="btnTransfer">&nbsp;Import Excel (Scrap)</a>
+      </div>
+      <div class="flex justify-center gap-8 m-8">
+        <button class="btn btn-success" id="btnPrint">&nbsp;พิมพ์ใบขนย้ายรายสัปดาห์</button>
+        <button class="btn btn-success" id="btnPrint2">&nbsp;พิมพ์ใบสรุปสินค้านอกคลัง</button>
+        <button class="btn btn-success" id="btnPrint3">&nbsp;พิมพ์ใบขนชำระอากร</button>
+        <button class="btn btn-success" id="btnPrint4">&nbsp;พิมพ์ใบคลังสินค้าทัณฑ์บนประเภทโรงผลิต</button>
+      </div>
+       <div class="flex flex-col justify-center items-center w-5/6 mx-auto border-4 border-b-blue-400 border-white  shadow-2xl p-10">
+        <div class="row col-xs-12">
+            <div class="col-xs-3 col-xs-offset-3 p-6" >   
+                <div class="input-group">
+                    <div class="input-group-addon">From date</div>
+                    <input type="text" autocomplete="off"  class="form-control" id="InvFromDate">
+                </div>
+            </div>
+            <div class="col-xs-3 col-xs-offset-0 p-6">   
+                <div class="input-group">
+                    <div class="input-group-addon">To date</div>
+                    <input type="text" autocomplete="off"  class="form-control txt-filter" id="InvToDate">
+                </div>
+            </div>
+            <div class="col-xs-3 col-xs-offset-3 p-6">   
+                <div class="input-group">
+                    <div class="input-group-addon">รายการ</div>
+                    <input type="text" class="form-control txt-filter" id="item">
+                </div>
+            </div>
+            <div class="col-xs-3 col-xs-offset-0 p-6" >   
+                <div class="input-group">
+                    <div class="input-group-addon">น้ำหนัก</div>
+                    <input type="text" class="form-control txt-filter" id="weight_KG">
+                </div>
+            </div>
+            <div class="col-xs-3 col-xs-offset-3 p-6" >   
+                <div class="input-group">
+                    <div class="input-group-addon">จำนวน/ม้วน</div>
+                    <input type="text" class="form-control txt-filter" id="qty">
+                </div>
+            </div>
+            <div class="col-xs-3 col-xs-offset-0 p-6" >   
+                <div class="input-group">
+                    <div class="input-group-addon">จำนวนมัด</div>
+                    <input type="text" class="form-control txt-filter" id="bundle">
+                </div>
+            </div>
+            <div class="col-xs-3 col-xs-offset-3 p-6" >   
+                <div class="input-group">
+                    <div class="input-group-addon">จำนวนเส้น</div>
+                    <input type="text" class="form-control txt-filter" id="pcs">
+                </div>
+            </div>
+            <div class="col-xs-3 col-xs-offset-0 p-6" >   
+                <div class="input-group">
+                    <div class="input-group-addon">โกดัง</div>
+                    <input type="text" class="form-control txt-filter" id="loc">
+                </div>
+            </div>
+        </div>
+        <div>
+            <button id="btnSave" class="btn btn-primary p-4 w-96"><i class="fa fa-searh"></i>&nbsp;บันทึก</button>
+        </div>
+       </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="js/main.js"></script>
+<script type="text/javascript">
+
+
+    $("#InvFromDate , #InvToDate").datepicker({
+        dateFormat: 'yy-mm-dd',
+    });
+
+    $("#btnSave").click(function () {
+        var StartDate = $("#InvFromDate").val();
+        var EndDate = $("#InvToDate").val();
+        var item = $("#item").val();
+        var weight_KG = $("#weight_KG").val();
+        var qty = $("#qty").val();
+        var bundle = $("#bundle").val();
+        var pcs = $("#pcs").val();
+        var loc = $("#loc").val();
+
+        if (StartDate == '' || EndDate == '' || item == '' || weight_KG == '' || qty == '' || bundle == '' || pcs == '' || loc == '') {
+            alert("กรุณากรอกข้อมูลให้ครบ");
+            return false;
+        }
+
+
+        $.ajax({
+        type: "POST",
+        url: "././module/STS_Custom_Data/data.php",
+        dataType: "json",
+        data: {
+        load: "Save",
+        StartDate: StartDate,
+        EndDate: EndDate,
+        item: item,
+        weight_KG: weight_KG,
+        qty: qty,
+        bundle: bundle,
+        pcs: pcs,
+        loc: loc,
+        },
+        success: function (data) {
+          alert("บันทึกสําเร็จ");
+          $("#InvFromDate").val('');
+          $("#InvToDate").val('');
+          $("#item").val('');
+          $("#weight_KG").val('');
+          $("#qty").val('');
+          $("#bundle").val('');
+          $("#pcs").val('');
+          $("#loc").val('');
+        },
+        error: function (e) {
+        alert("บันทึกไม่สําเร็จ");
+        console.log("There was an error with your request...");
+        console.log("error: " + JSON.stringify(e));
+        },
+       });
+    });
+
+    $("#btnPrint").click(function () {
+        printReport();
+    });
+    $("#btnPrint2").click(function () {
+        printReport2();
+    });
+    $("#btnPrint3").click(function () {
+        printReport3();
+    });
+    $("#btnPrint4").click(function () {
+        printReport4();
+    });
+
+    pdfMake.fonts = {
+          THSarabunNew: {
+            normal: 'THSarabunNew.ttf',
+            bold: 'THSarabunNew Bold.ttf',
+            italics: 'THSarabunNew-Italic.ttf',
+            bolditalics: 'THSarabunNew-BoldItalic.ttf'
+           }
+     };
+
+    function printReport(params) {
+
+      
+
+     const data = []
+     data.push([
+        { text: `วันที่เริ่ม`, fontSize: 11, alignment: 'center', style: 'header' },
+        { text: "วันที่สิ้นสุด", fontSize: 11, alignment: 'center' },
+        { text: "รายการ", fontSize: 11, alignment: 'center' },
+        { text: "น้ำหนัก (กิโลกรัม)", fontSize: 11, alignment: 'center' },
+        { text: "จำนวน/ม้วน", fontSize: 11, alignment: 'center' },
+        { text: "จำนวนมัด", fontSize: 11, alignment: 'center' },
+        { text: "จำนวนเส้น", fontSize: 11, alignment: 'center' },
+        { text: "โกดัง", fontSize: 11, alignment: 'center' },
+    ],
+    )
+
+    for (let i = 0; i <= 4; i++) {
+        data.push([
+            { text: '10-07-2024', fontSize: 11, alignment: 'center' },
+            { text: '20-07-2024', fontSize: 11, alignment: 'center' },
+            { text: 'เหล็กสลิต', fontSize: 11, alignment: 'center' },
+            { text: '793,458.00', fontSize: 11, alignment: 'center' },
+            { text: '425.00', fontSize: 11, alignment: 'center' },
+            { text: '509.00', fontSize: 11, alignment: 'center' },
+            { text: '509.00', fontSize: 11, alignment: 'center' },
+            { text: 'A5', fontSize: 11, alignment: 'center' },
+        ],)
+
+        if (i == 4) {
+            data.push([
+            { text: 'รวม', colSpan: 3, fontSize: 11, alignment: 'center' },
+            { text: '', fontSize: 11, alignment: 'center' },
+            { text: '', fontSize: 11, alignment: 'center' },
+            { text: `${(793458.00)*5}`, fontSize: 11, alignment: 'center' },
+            { text: `${425.00*5}`, fontSize: 11, alignment: 'center' },
+            { text: `${509.00*5}`, fontSize: 11, alignment: 'center' },
+            { text: `${509.00*5}`, fontSize: 11, alignment: 'center' },
+            { text: '', fontSize: 11, alignment: 'center' },
+        ],)
+        }
+        
+    }
+
+
+    var docDefinition = {
+        pageSize: 'A4',
+        pageMargins: [25, 50, 50, 50],
+        header: function (currentPage, pageCount, pageSize) {
+            return {
+               
+                stack: [
+                { text: `ใบขนย้ายรายสัปดาห์`, fontSize: 18, alignment: 'center', bold: true, margin: [0, 20, 0, 0] },
+                ]
+               
+            };
+        },
+        content: [
+            {
+                margin: [0, 0, 0, 0],
+                columns: [
+                    {
+
+                        table: {
+                            widths: [40, 40, 140, 60, 50, 50, 50, 40],
+                            headerRows: 1,
+                            body: data,
+                        },
+                    },
+                ],
+            }
+        ],
+        defaultStyle: {
+            font: 'THSarabunNew',
+        },
+    };
+
+    pdfMake.createPdf(docDefinition).open()
+}
+
+   function printReport2() {
+
+    const data = []
+
+    data.push([
+        { text: `ลำดับ`, fontSize: 11, alignment: 'center', style: 'header' },
+        { text: "รายการ", fontSize: 11, alignment: 'center' },
+        { text: "น้ำหนัก/กิโลกรัม", fontSize: 11, alignment: 'center' },
+        { text: "โกดัง", fontSize: 11, alignment: 'center' },
+    ],
+    )
+
+    let total_bundle = 0;
+    let total_pcs = 0;
+    let cal_bundel = []
+    let BreakTimeFormingRate = 8;
+
+    let dataNow = [1,2,3,4]
+
+    for (let i = 0; i < dataNow.length; i++) {
+        data.push([
+            { text: i + 1, alignment: 'center' },
+            { text: "เหล็กสลิต", fontSize: 11, alignment: 'center' },
+            { text: "793,458.00", fontSize: 11, alignment: 'center' },
+            { text: "A5", fontSize: 11, alignment: 'center' },
+        ],
+        )
+
+        if (i === dataNow.length - 1) {
+            data.push([
+                { text: `รวม`, fontSize: 11, alignment: 'center', style: 'header', colSpan: 2 },
+                { text: "", fontSize: 11, alignment: 'center' },
+                { text: "3,598,519.48", fontSize: 11, alignment: 'center' },
+                { text: "", fontSize: 11, alignment: 'center' },
+            ],
+            )
+        }
+    }
+
+
+    let dataReason = [];
+    dataReason.push([
+        { text: `ลำดับ`, fontSize: 11, alignment: 'center', style: 'header' },
+        { text: "รายการ", fontSize: 11, alignment: 'center' },
+        { text: "น้ำหนัก/กิโลกรัม", fontSize: 11, alignment: 'center' },
+    ],
+    )
+
+    let dataNow2 = [1,2,3,4]
+
+for (let i = 0; i < dataNow2.length; i++) {
+    dataReason.push([
+        { text: i + 1, alignment: 'center' },
+        { text: "เหล็กสลิต", fontSize: 11, alignment: 'center' },
+        { text: "793,458.00", fontSize: 11, alignment: 'center' },
+    ],
+    )
+
+    if (i === dataNow2.length - 1) {
+        dataReason.push([
+            { text: `รวม`, fontSize: 11, alignment: 'center', style: 'header', colSpan: 2 },
+            { text: "", fontSize: 11, alignment: 'center' },
+            { text: "3,598,519.48", fontSize: 11, alignment: 'center' },
+        ],
+        )
+    }
+}
+
+    var docDefinition = {
+        pageSize: 'A4',
+        pageOrientation: '',
+        pageMargins: [20, 140, 5, 270],
+        header: function (currentPage, pageCount, pageSize) {
+            return {
+                margin: [20, 5, 20, 10],
+                table: {
+                    widths: [25,500],
+                    body: [
+                        [
+                            {
+                                border: [false, false, false, false],
+                                width: 160,
+                                text: "",
+                                alignment: 'left',
+
+                            },
+                            {
+                                border: [false, false, false, false], text: 'ใบสรุปสินค้านอกคลัง', fontSize: 18, alignment: 'center', margin: [0,0,45,0]
+                            },
+                        ],
+                        [
+                            {
+                                border: [false, false, false, false], text: ``, fontSize: 14  ,alignment: 'center',
+                            },
+                            {
+                                border: [false, false, false, false], text: `วันที่ 1 สิงหาคม 2567`, fontSize: 14  ,alignment: 'right', margin: [0,0,20,0]
+                            },
+                        ],
+                        [
+                            {
+                                border: [false, false, false, false], text: `เรื่อง`, fontSize: 14  ,alignment: 'left',
+                            },
+                            {
+                                border: [false, false, false, false], text: `ขออนุญาต นำของออก จากคลังสินค้าทัณฑ์บนไปผ่านกรรมวิธีการผลิตที่ โกดังA4-A5-A6บริษัท สหไทยสตีลไพพ์ จำกัด (มหาชน)`, fontSize: 14  ,alignment: 'left',
+                            },
+                        ],
+                        [
+                            {
+                                border: [false, false, false, false], text: `เรียน`, fontSize: 14  ,alignment: 'left',
+                            },
+                            {
+                                border: [false, false, false, false], text: `หัวหน้าฝ่ายบริการศุลกากรที่ 2 สพจ. สกท. \n บริษัท สหไทยสตีลไพพ์ จำกัด (มหาชน) ใบอนุญาตจัดตั้งคลังสินค้าทัณฑ์บน  ที่ 165/2561  คลังสินค้าทัณฑ์บนประเภทโรงผลิต ตามหนังสือกรมศุลการ อนุมัติเลขที่ กค 0606(ส) / 0266 ลงวันที่ 24 เมษายน 2540 บริษัทฯขอนำของออกจากคลังสินค้าทัณฑ์บนมีรายการดังนี้`, fontSize: 14  ,alignment: 'left',
+                            },
+                        ],
+                      
+                    ],
+                },
+            };
+        },
+        footer: function (currentPage, pageCount) {
+            return {
+                margin: [20, -120, 50, 10],
+                table: {
+                    widths: [150, 160, 200],
+                    body: [
+                        [
+                            {
+                                border: [false, false, false, false], text: ''
+                                , fontSize: 12, colSpan: 3
+                            },
+                            {
+                                border: [false, false, false, false], text: ''
+                            },
+                            {
+                                border: [false, false, false, false], text: '', fontSize: 18
+                            },
+                        ],
+                        [
+                            {
+
+                                table: {
+                                    widths: [150, 180,180],
+                                    headerRows: 1,
+                                    body: dataReason,
+                                }, fontSize: 16, colSpan: 3, border: [false, false, false, false]
+
+                            },
+                            {
+                                border: [false, false, false, false], text: ''
+
+                            },
+                            {
+                                border: [false, false, false, false], text: ''
+                            },
+
+                        ],
+                        [
+                            {
+
+                                border: [false, false, false, false], text: ``
+                                , fontSize: 16, colSpan: 3
+                            },
+                            {
+                                border: [false, false, false, false], text: ''
+                            },
+                            {
+                                border: [false, false, false, false], text: '', fontSize: 16
+                            },
+
+                        ],
+                        [
+                            {
+                                border: [false, false, false, false], text: ``
+                                , fontSize: 16, colSpan: 2
+                            },
+                            {
+                                border: [false, false, false, false], text: ''
+                            },
+                            {
+                                border: [false, false, false, false], text: '(ลงชื่อ)............................................'
+                                , fontSize: 14, alignment: 'right',margin: [0,10,0,0]
+                            },
+                        ],
+                        [
+                            {
+                                border: [false, false, false, false],
+                                text: `(คุณยอดชาย ลมลอย)`
+                                , fontSize: 14
+                                , colSpan: 3
+                                , alignment: 'right',
+                                margin: [0,0,20,0]
+                            },
+                            { text: 'วันที่', fontSize: 14 },
+                            { text: 'เวลา', fontSize: 14 },
+                        ],
+                        [
+                            {
+                                border: [false, false, false, false],
+                                text: `บันทึกเจ้าหน้าที่ศุลกากรประจำคลังสินค้าทัณฑ์บน`, fontSize: 14, colSpan: 2
+                            },
+                            {
+                                border: [false, false, false, false],
+                                text: '', fontSize: 14
+                            },
+                            {
+                                border: [false, false, false, false],
+                                text: ``, fontSize: 14
+                                , alignment: 'right'
+                            },
+                        ],
+                        [
+                            {
+                                border: [false, false, false, false],
+                                text: `........................................................................................................................................................................................................................................`, fontSize: 14, colSpan:3
+                            },
+                            {
+                                border: [false, false, false, false],
+                                text: '', fontSize: 14
+                            },
+                            {
+                                border: [false, false, false, false],
+                                text: ``, fontSize: 14
+                                , alignment: 'right'
+                            },
+                        ],
+                        [
+                            {
+                                border: [false, false, false, false],
+                                text: `(ลงชื่อ)..........................................			(ลงชื่อ)...........................................	`, fontSize: 14, colSpan:3, alignment: "center"
+                            },
+                            {
+                                border: [false, false, false, false],
+                                text: '', fontSize: 14
+                            },
+                            {
+                                border: [false, false, false, false],
+                                text: ``, fontSize: 14
+                                , alignment: 'right'
+                            },
+                        ],
+                        [
+                            {
+                                border: [false, false, false, false],
+                                text: `(...................................................)   	    (.......................................................)`, fontSize: 14, colSpan:3, alignment: "center"
+                            },
+                            {
+                                border: [false, false, false, false],
+                                text: '', fontSize: 14
+                            },
+                            {
+                                border: [false, false, false, false],
+                                text: ``, fontSize: 14
+                                , alignment: 'right'
+                            },
+                        ],
+                    ],
+                },
+            };
+        },
+        content: [
+            {
+                table: {
+                    widths: [100, 160, 150, 100],
+                    headerRows: 1,
+                    body: data,
+                },
+            },
+            {
+                stack: [
+                { text: `(ลงชื่อ)............................................`, fontSize: 14, alignment: 'right', margin: [0,10,20,0]},
+                { text: `(คุณยอดชาย ลมลอย)`, fontSize: 14, alignment: 'right', margin: [0,0,35,0]}, 
+                {  text: [{text: 'หมายเหตุ', bold: true, decoration: 'underline'},'  นำออกวันที่ 1 สิงหาคม  2567 จะนำกลับเข้ามาภายในวันที่ 3 สิงหาคม 2567'], fontSize: 14, alignment: 'left'}, 
+                { text: `บันทึกเจ้าหน้าที่ศุลกากรประจำคลังสินค้าทัณฑ์บน`, fontSize: 14, alignment: 'left'}, 
+                { text: `(ลงชื่อ)...........................................			 (ลงชื่อ)...........................................`, fontSize: 14, alignment: 'center'},
+                { text: `(.......................................................)   	  (.......................................................)`, fontSize: 14, alignment: 'center'},
+                { text: `วันที่ 3 สิงหาคม 2567`, fontSize: 14, alignment: 'right',margin: [0,0,50,0]},
+                { text: `เรื่อง     	ขออนุญาต นำของเข้า ในคลังสินค้าทัณฑ์บน(ซึ่งได้นำออกไปผ่านกรรมวิธีนอกคลังฯเสร็จแล้ว)`, fontSize: 14, alignment: 'left',margin: [0,0,0,0]},
+                { text: `เรียน         หัวหน้าฝ่ายบริการศุลกากรที่ 2 สพจ. สกท.`, fontSize: 14, alignment: 'left',margin: [0,0,0,0]},
+                { text: `บริษัทฯขออนุญาตนำของเข้าจากคลังสินค้าทัณฑ์บนมีรายการดังนี้`, fontSize: 14, alignment: 'left',margin: [45,0,0,0]},
+                ]
+            }
+        ],
+        defaultStyle: {
+            font: 'THSarabunNew',
+        },
+
+    };
+    pdfMake.createPdf(docDefinition).open()
+
+   }
+
+   
+   function printReport3() {
+
+      
+
+const data = []
+data.push([
+   { text: `ลำดับที่`, fontSize: 11, alignment: 'center', style: 'header' },
+   { text: "เลขที่ใบขนพิธีการ", fontSize: 11, alignment: 'center', style: 'header' },
+   { text: "เลขที่ใบขนชำระอากร", fontSize: 11, alignment: 'center', style: 'header' },
+   { text: "ชื่อวัตถุดิบ", fontSize: 11, alignment: 'center', style: 'header' },
+   { text: "ปริมาณ(กก.)", fontSize: 11, alignment: 'center', style: 'header' },
+   { text: "ราคา(บาท)", fontSize: 11, alignment: 'center', style: 'header' },
+   { text: "อากร(บาท)", fontSize: 11, alignment: 'center', style: 'header' },
+   { text: "ภาษีมูลค่าเพิ่ม", fontSize: 11, alignment: 'center', style: 'header' },
+   { text: "ภาษีและค่าธรรมเนียมอื่นๆ", fontSize: 11, alignment: 'center', style: 'header' },
+   { text: "ภรวมภาษีอากร(บาท)", fontSize: 11, alignment: 'center', style: 'header' },
+   { text: "สำหรับเจ้าหน้าที่งานเอกสาร", fontSize: 11, alignment: 'center', style: 'header', colSpan:2 },
+   {},
+   
+],
+   [
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+
+    { text: "วันรับต้นฉบับใบขน", fontSize: 11, alignment: 'center', style: 'header' },
+    { text: "หมายเหตุ", fontSize: 11, alignment: 'center', style: 'header' },
+   ]
+)
+
+for (let i = 0; i <= 6; i++) {
+   data.push([
+       { text: i+1, fontSize: 11, alignment: 'center' },
+       { text: 'A026P670600019', fontSize: 11, alignment: 'center' },
+       { text: '0513-080012', fontSize: 11, alignment: 'center' },
+       { text: 'เศษเหล็ก', fontSize: 11, alignment: 'center' },
+       { text: '145,521.00', fontSize: 11, alignment: 'center' },
+       { text: '1,818,228.40', fontSize: 11, alignment: 'center' },
+       { text: '-', fontSize: 11, alignment: 'center' },
+       { text: '127,275.00 ', fontSize: 11, alignment: 'center' },
+       { text: '-', fontSize: 11, alignment: 'center' },
+       { text: '127,275.00', fontSize: 11, alignment: 'center' },
+       { text: '-', fontSize: 11, alignment: 'center' },
+       { text: '5', fontSize: 11, alignment: 'center' },
+   ],)
+
+   if (i == 6) {
+       data.push([
+       { text: 'รวม', colSpan: 3, fontSize: 11, alignment: 'center', colSpan:4 },
+       { text: '', fontSize: 11, alignment: 'center' },
+       { text: '', fontSize: 11, alignment: 'center' },
+       { text: '', fontSize: 11, alignment: 'center' },
+       { text: '1,271,845.00', fontSize: 11, alignment: 'center' },
+       { text: '16,186,308.00', fontSize: 11, alignment: 'center' },
+       { text: '-', fontSize: 11, alignment: 'center' },
+       { text: '1,133,039.00', fontSize: 11, alignment: 'center' },
+       { text: '-', fontSize: 11, alignment: 'center' },
+       { text: '1,133,039.00', fontSize: 11, alignment: 'center' },
+       { text: '', fontSize: 11, alignment: 'center' },
+       { text: '', fontSize: 11, alignment: 'center' },
+   ],)
+   }
+   
+}
+
+
+var docDefinition = {
+   pageSize: 'A4',
+   pageOrientation: 'landscape',
+   pageMargins: [25, 120, 50, 50],
+   header: function (currentPage, pageCount, pageSize) {
+       return {
+        margin: [20, 5, 20, 10],
+                table: {
+                    widths: [550,250],
+                    body: [
+                        [
+                            {
+                                border: [false, false, false, false],
+                                fontSize: 18,
+                                text: "รายงานข้อมูลใบขนชำระอากร ประจำเดือน กรกฎาคม พ.ศ. 2567",
+                                alignment: 'right',
+
+                            },
+                            {
+                                border: [false, false, false, false], text: 'เจ้าหน้าที่ประจำคลัง', fontSize: 16, alignment: 'center', margin: [0,5,0,0]
+                            },
+                        ],
+                        [
+                            {
+                                border: [false, false, false, false], text: `บริษัท  สหไทยสตีลไพพ์  จำกัด ( มหาชน )`, bold: true, fontSize: 16  ,alignment: 'right', margin: [0,0,50,0]
+                            },
+                            {
+                                border: [false, false, false, false], text: `สารวัตรเขต…………………………………….……………`, fontSize: 14  ,alignment: 'left', margin: [30,0,20,0]
+                            },
+                        ],
+                        [
+                            {
+                                border: [false, false, false, false], text: ``, fontSize: 14
+                            },
+                            {
+                                border: [false, false, false, false], text: `นายตรวจ…………………………….………………………`, fontSize: 14  ,alignment: 'left', margin: [30,0,20,0]
+                            },
+                        ],
+                        [
+                            {
+                                border: [false, false, false, false], text: ``, fontSize: 14 
+                            },
+                            {
+                                border: [false, false, false, false], text: `ศุลการักษ์…………………………………..……………….`, fontSize: 14  ,alignment: 'left', margin: [30,0,20,0]
+                            },
+                        ],
+                      
+                    ],
+                },
+       };
+   },
+   content: [
+       {
+           margin: [0, 0, 0, 0],
+           columns: [
+               {
+
+                   table: {
+                       widths: [20, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60],
+                       headerRows: 1,
+                       body: data,
+                   },
+               },
+           ],
+       }
+   ],
+   defaultStyle: {
+       font: 'THSarabunNew',
+   },
+};
+
+pdfMake.createPdf(docDefinition).open()
+}
+
+function printReport4(params) {
+
+      
+
+const data = []
+data.push([
+   { text: `รายงาน`, fontSize: 11, alignment: 'center', style: 'header' },
+   { text: "จำนวน(ฉบับ)", fontSize: 11, alignment: 'center' },
+   { text: "น้ำหนัก(กก.)", fontSize: 11, alignment: 'center' },
+   { text: "ราคาสินค้า(บาท)", fontSize: 11, alignment: 'center' },
+   { text: "อากรขาเข้า(บาท)", fontSize: 11, alignment: 'center' },
+   { text: "ภาษีมูลค่าเพิ่ม(บาท)", fontSize: 11, alignment: 'center' },
+   { text: "ภาษีและค่าธรรมเนียมอื่นๆ", fontSize: 11, alignment: 'center' },
+   { text: "รวมค่าภาษีอากร(บาท)", fontSize: 11, alignment: 'center' },
+
+],
+)
+
+for (let i = 0; i <= 27; i++) {
+    if (i === 0) {
+  data.push([
+     { text: '1.การนำเข้า', fontSize: 10, bold: true, alignment: 'left', colSpan:8 },
+ ],)
+ }
+
+ if (i === 1) {
+     data.push([
+     { text: '- คำร้องนำเข้า', fontSize: 10, alignment: 'left' },
+     { text: '-', fontSize: 10, alignment: 'center' },
+     { text: '-', fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: '-', fontSize: 10, alignment: 'center' },
+ ],)
+ }
+
+ if (i === 2) {
+     data.push([
+     { text: '- ใบขนฯขาเข้า EDI', fontSize: 10, alignment: 'left' },
+     { text: '-', fontSize: 10, alignment: 'center' },
+     { text: '-', fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: '-', fontSize: 10, alignment: 'center' },
+ ],)
+ }
+
+ if (i === 3) {
+     data.push([
+     { text: '- ใบขนฯขาเข้า PAPERLESS', fontSize: 10, alignment: 'left' },
+     { text: '3', fontSize: 10, alignment: 'center' },
+     { text: '5,444,412.00', fontSize: 10, alignment: 'center' },
+     { text: `100,681,573.89`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: '-', fontSize: 10, alignment: 'center' },
+ ],)
+ }
+
+ if (i === 4) {
+     data.push([
+     { text: 'รวม', fontSize: 10, bold: true, alignment: 'center' },
+     { text: '3', fontSize: 10, alignment: 'center' },
+     { text: '5,444,412.00', fontSize: 10, alignment: 'center' },
+     { text: `100,681,573.89`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: '-', fontSize: 10, alignment: 'center' },
+ ],)
+ }
+
+ if (i === 5) {
+  data.push([
+     { text: '1.การส่งออก', fontSize: 10, bold: true, alignment: 'left', colSpan:8 },
+ ],)
+ }
+
+ if (i === 6) {
+     data.push([
+     { text: '- คำร้องส่งออก', fontSize: 10, alignment: 'left' },
+     { text: '-', fontSize: 10, alignment: 'center' },
+     { text: '-', fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: '-', fontSize: 10, alignment: 'center' },
+ ],)
+ }
+
+ if (i === 7) {
+     data.push([
+     { text: '- ใบขนฯขาออก EDI', fontSize: 10, alignment: 'left' },
+     { text: '-', fontSize: 10, alignment: 'center' },
+     { text: '-', fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: '-', fontSize: 10, alignment: 'center' },
+ ],)
+ }
+
+ if (i === 8) {
+     data.push([
+     { text: '- ใบขนฯขาออก PAPERLESS', fontSize: 10, alignment: 'left' },
+     { text: '3', fontSize: 10, alignment: 'center' },
+     { text: '5,444,412.00', fontSize: 10, alignment: 'center' },
+     { text: `100,681,573.89`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: '-', fontSize: 10, alignment: 'center' },
+ ],)
+ }
+
+ if (i === 9) {
+     data.push([
+     { text: 'รวม', fontSize: 10, bold: true, alignment: 'center' },
+     { text: '3', fontSize: 10, alignment: 'center' },
+     { text: '5,444,412.00', fontSize: 10, alignment: 'center' },
+     { text: `100,681,573.89`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: '-', fontSize: 10, alignment: 'center' },
+ ],)
+ }
+
+ if (i === 10) {
+  data.push([
+     { text: '3.ใบขนโอน/ย้าย', fontSize: 10, bold: true, alignment: 'left', colSpan:8 },
+ ],)
+ }
+
+ if (i === 10) {
+     data.push([
+     { text: '- ใบขนฯขาเข้า EDI', fontSize: 10, alignment: 'left' },
+     { text: '-', fontSize: 10, alignment: 'center' },
+     { text: '-', fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: '-', fontSize: 10, alignment: 'center' },
+ ],)
+ }
+
+ if (i === 12) {
+     data.push([
+     { text: '- ใบขนฯขาเข้า PAPERLESS', fontSize: 10, alignment: 'left' },
+     { text: '3', fontSize: 10, alignment: 'center' },
+     { text: '5,444,412.00', fontSize: 10, alignment: 'center' },
+     { text: `100,681,573.89`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: '-', fontSize: 10, alignment: 'center' },
+ ],)
+ }
+
+ if (i === 14) {
+     data.push([
+     { text: 'รวม', fontSize: 10, bold: true, alignment: 'center' },
+     { text: '3', fontSize: 10, alignment: 'center' },
+     { text: '5,444,412.00', fontSize: 10, alignment: 'center' },
+     { text: `100,681,573.89`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: '-', fontSize: 10, alignment: 'center' },
+ ],)
+ }
+
+ if (i === 15) {
+     data.push([
+     { text: '- ใบขนฯขาออก EDI', fontSize: 10, alignment: 'left' },
+     { text: '-', fontSize: 10, alignment: 'center' },
+     { text: '-', fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: '-', fontSize: 10, alignment: 'center' },
+ ],)
+ }
+
+ if (i === 16) {
+     data.push([
+     { text: '- ใบขนฯขาออก PAPERLESS', fontSize: 10, alignment: 'left' },
+     { text: '3', fontSize: 10, alignment: 'center' },
+     { text: '5,444,412.00', fontSize: 10, alignment: 'center' },
+     { text: `100,681,573.89`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: '-', fontSize: 10, alignment: 'center' },
+ ],)
+ }
+
+ if (i === 17) {
+     data.push([
+     { text: 'รวม', fontSize: 10, bold: true, alignment: 'center' },
+     { text: '3', fontSize: 10, alignment: 'center' },
+     { text: '5,444,412.00', fontSize: 10, alignment: 'center' },
+     { text: `100,681,573.89`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: '-', fontSize: 10, alignment: 'center' },
+ ],)
+ }
+
+ if (i === 18) {
+  data.push([
+     { text: '4.ใบขนสินค้าขอยกเว้นอากร (เครื่องจักร)', fontSize: 10, bold: true, alignment: 'left', colSpan:8 },
+ ],)
+ }
+
+ if (i === 19) {
+     data.push([
+     { text: '- ใบขนฯขาเข้า EDI', fontSize: 10, alignment: 'left' },
+     { text: '-', fontSize: 10, alignment: 'center' },
+     { text: '-', fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: '-', fontSize: 10, alignment: 'center' },
+ ],)
+ }
+
+ if (i === 20) {
+     data.push([
+     { text: '- ใบขนฯขาเข้า PAPERLESS', fontSize: 10, alignment: 'left' },
+     { text: '3', fontSize: 10, alignment: 'center' },
+     { text: '5,444,412.00', fontSize: 10, alignment: 'center' },
+     { text: `100,681,573.89`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: '-', fontSize: 10, alignment: 'center' },
+ ],)
+ }
+
+ if (i === 21) {
+     data.push([
+     { text: 'รวม', fontSize: 10, bold: true, alignment: 'center' },
+     { text: '3', fontSize: 10, alignment: 'center' },
+     { text: '5,444,412.00', fontSize: 10, alignment: 'center' },
+     { text: `100,681,573.89`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: '-', fontSize: 10, alignment: 'center' },
+ ],)
+ }
+
+ if (i === 22) {
+     data.push([
+     { text: '- ใบขนฯขาออก EDI', fontSize: 10, alignment: 'left' },
+     { text: '-', fontSize: 10, alignment: 'center' },
+     { text: '-', fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: '-', fontSize: 10, alignment: 'center' },
+ ],)
+ }
+
+ if (i === 23) {
+     data.push([
+     { text: '- ใบขนฯขาออก PAPERLESS', fontSize: 10, alignment: 'left' },
+     { text: '3', fontSize: 10, alignment: 'center' },
+     { text: '5,444,412.00', fontSize: 10, alignment: 'center' },
+     { text: `100,681,573.89`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: '-', fontSize: 10, alignment: 'center' },
+ ],)
+ }
+
+ if (i === 24) {
+     data.push([
+     { text: 'รวม', fontSize: 10, bold: true, alignment: 'center' },
+     { text: '3', fontSize: 10, alignment: 'center' },
+     { text: '5,444,412.00', fontSize: 10, alignment: 'center' },
+     { text: `100,681,573.89`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: '-', fontSize: 10, alignment: 'center' },
+ ],)
+ }
+
+ if (i === 25) {
+  data.push([
+     { text: '5.ใบขนสินค้าเสียภาษีอากร', fontSize: 10, bold: true, alignment: 'left', colSpan:8 },
+ ],)
+ }
+
+ if (i === 26) {
+     data.push([
+     { text: '- ใบขนฯขาเข้า PAPERLESS', fontSize: 10, alignment: 'left' },
+     { text: '6', fontSize: 10, alignment: 'center' },
+     { text: '1,271,845.00', fontSize: 10, alignment: 'center' },
+     { text: `16,186,308.00`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: `1,133,039.00`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: '-', fontSize: 10, alignment: 'center' },
+ ],)
+ }
+
+ if (i === 27) {
+     data.push([
+     { text: 'รวม', fontSize: 10, bold: true, alignment: 'center' },
+     { text: '6', fontSize: 10, alignment: 'center' },
+     { text: '1,271,845.00', fontSize: 10, alignment: 'center' },
+     { text: `16,186,308.00`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: `1,133,039.00`, fontSize: 10, alignment: 'center' },
+     { text: `0`, fontSize: 10, alignment: 'center' },
+     { text: '-', fontSize: 10, alignment: 'center' },
+ ],)
+ }
+   
+}
+
+
+var docDefinition = {
+   pageSize: 'A4',
+   pageMargins: [20, 110, 50, 50],
+   header: function (currentPage, pageCount, pageSize) {
+       return {
+           stack: [
+           { text: `คลังสินค้าทัณฑ์บนประเภทโรงผลิต`, fontSize: 14, alignment: 'center', margin: [0, 5, 0, 0] },
+           { text: `บริษัท สหไทยสตีลไพพ์ จำกัด (มหาชน)`, fontSize: 14, alignment: 'center', bold: true, margin: [0, 0, 0, 0] },
+           { text: `เรื่อง  รายงานมูลค่าสินค้านำเข้า-ส่งออก และการดำเนินงานคลังสินค้าทัณฑ์บน`, fontSize: 13, alignment: 'left', margin: [20, 0, 0, 0] },
+           { text: `เรียน  หัวหน้าฝ่ายบริการศุลกากรที่ 2 สพจ. สกท.`, fontSize: 13, alignment: 'left',  margin: [20, 0, 0, 0] },
+           { text: `เจ้าหน้าที่กรมศุลกากรประจำคลังสินค้าทัณฑ์บนขอรายงามมูลค่าสินค้านำเข้า-ส่งออก และ`, fontSize: 13, alignment: 'left',  margin: [44, 0, 0, 0] },
+           { text: `การดำเนินงานของคลังสินค้าทัณฑ์บน ประจำเดือน กรกฎาคม พ.ศ.2567 มีรายงานดังต่อไปนี้`, fontSize: 13, alignment: 'left',  margin: [44, 0, 0, 0] },
+           ]
+          
+       };
+   },
+   footer: function (currentPage, pageCount) {
+            return {
+                margin: [20, -160, 50, 10],
+                stack: [
+           { text: `6) คำร้องขอนำวัตถุดิบออกไปผ่านกรรมวิธีตามขั้นตอน ณ ที่อื่นชั่วคราว                  จำนวน….5…..ฉบับ   น้ำหนัก..28,579,883.74.....กิโลกรัม`, fontSize: 14, alignment: 'left', margin: [0, 5, 0, 0] },
+           { text: `7) คำร้องขอนำวัตถุดิบกลับเข้าคลัง					                                         จำนวน….-…..ฉบับ   น้ำหนัก……………-………กิโลกรัม`, fontSize: 14, alignment: 'left', margin: [0, 0, 0, 0] },
+           { text: `8) การทำลายเศษวัตถุดิบในสูตรการผลิต					                                  จำนวน….-…..ฉบับ   น้ำหนัก……………-………กิโลกรัม`, fontSize: 14, alignment: 'left', margin: [0, 0, 0, 0] },
+           { text: `9) คำร้องขอทำลายเศษวัตถุดิบนอกสูตรการผลิต					                         จำนวน….-…..ฉบับ   น้ำหนัก……………-………กิโลกรัม`, fontSize: 14, alignment: 'left', margin: [0, 0, 0, 0] },
+           { text: `10)คำร้องขอบริจากวัตถุดิบหรือของที่ด้อยคุณภาพ					                       จำนวน….-…..ฉบับ   น้ำหนัก……………-………กิโลกรัม`, fontSize: 14, alignment: 'left', margin: [0, 0, 0, 0] },
+           { text: `11)คำร้องขอลดอัตราอากรเศษและ/หรือของที่ด้อยคุณภาพ					            จำนวน.....-.….ฉบับ   น้ำหนัก……….…....……....กิโลกรัม`, fontSize: 14, alignment: 'left', margin: [0, 0, 0, 0] },
+           { text: `12)คำร้องขอนำของที่ผลิตในคลังฯ ออกจำหน่ายภายในประเทศ					        จำนวน….-…..ฉบับ   น้ำหนัก……………-………กิโลกรัม`, fontSize: 14, alignment: 'left', margin: [0, 0, 0, 0] },
+           { text: `13)คำร้องขอนำวัตถุดิบในคลังฯ ออกจำหน่ายภายในประเทศ					           จำนวน….-…..ฉบับ   น้ำหนัก……………-………กิโลกรัม`, fontSize: 14, alignment: 'left', margin: [0, 0, 0, 0] },
+           { text: `14) จำนวนคนงานของบริษัทฯ……400….คน`, fontSize: 14, alignment: 'left', margin: [0, 0, 0, 0] },
+           { text: `จึงเรียนมาเพื่อโปรดทราบ`, fontSize: 14, alignment: 'left', margin: [50, 0, 0, 0] },
+           { text: `ลงชื่อ……………………………………………………..`, fontSize: 14, alignment: 'right', margin: [0, -10, 0, 0] },
+           ]
+            }
+               
+    },
+   content: [
+       {
+           margin: [0, 0, 0, 0],
+           columns: [
+               {
+
+                   table: {
+                       widths: [100, 20, 60, 60, 60, 60, 60, 60],
+                       headerRows: 1,
+                       body: data,
+                   },
+               },
+           ],
+       }
+   ],
+   defaultStyle: {
+       font: 'THSarabunNew',
+   },
+
+};
+
+pdfMake.createPdf(docDefinition).open()
+}
+</script>

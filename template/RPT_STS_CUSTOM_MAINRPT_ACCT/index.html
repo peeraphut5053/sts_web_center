@@ -1,0 +1,346 @@
+<style>
+  .col-search {
+    padding-left: 3px;
+    padding-right: 3px;
+  }
+  /*    table.dataTable thead .sorting:after,
+          table.dataTable thead .sorting:before,
+          table.dataTable thead .sorting_asc:after,
+          table.dataTable thead .sorting_asc:before,
+          table.dataTable thead .sorting_asc_disabled:after,
+          table.dataTable thead .sorting_asc_disabled:before,
+          table.dataTable thead .sorting_desc:after,
+          table.dataTable thead .sorting_desc:before,
+          table.dataTable thead .sorting_desc_disabled:after,
+          table.dataTable thead .sorting_desc_disabled:before {
+              bottom: .5em;
+          }*/
+  .table thead th {
+    text-align: center;
+  }
+
+  .col-flt-page {
+    padding-top: 10px;
+    font-weight: bold;
+  }
+
+  #tblReport tbody tr td a {
+    cursor: pointer;
+  }
+  table.dataTable.fixedHeader-floating,
+  table.dataTable.fixedHeader-locked {
+    background-color: white;
+    margin-top: 50px !important;
+    margin-bottom: 0 !important;
+  }
+  @media print {
+    table th:nth-child(0) {
+      width: 200px;
+      word-break: break-all;
+      white-space: pre-line;
+    }
+    table td:nth-child(0) {
+      width: 200px;
+      word-break: break-all;
+      white-space: pre-line;
+    }
+  }
+  .text-header {
+    font-weight: bold;
+    font-size: 20px;
+  }
+  .text-wrap {
+    white-space: normal;
+  }
+  .width-200 {
+    width: 200px;
+  }
+  input[type="checkbox"] {
+    margin-left: 5px;
+    margin-right: 5px;
+  } /*
+      .cb_lb{
+          margin-top:-5px;
+      }*/
+  .item-center {
+    display: flex;
+    justify-content: center;
+  }
+</style>
+<div class="row">
+  <h4 class="text-header text-center">รายงานบัญชีแยกประเภท</h4>
+</div>
+<div class="row item-center col-xs-12">
+  <div class="row col-xs-2">
+    <div class="input-group">
+      <div class="input-group-addon">Year</div>
+      <select class="form-control" id="selYear"></select>
+    </div>
+  </div>
+  <div class="row col-xs-2">
+    <div class="input-group">
+      <div class="input-group-addon">Month</div>
+      <select class="form-control" id="selMonth"></select>
+    </div>
+  </div>
+  <div class="col-lg-1 col-md-1 col-sm-6 col-xs-6 text-left">
+    <button class="btn btn-info" id="btnSearch">
+      <i class="fa fa-search"></i>&nbsp; Search
+    </button>
+  </div>
+</div>
+
+<div class="row" id="rowResultTable">
+  <table
+    class="table table-condensed table-bordered table-striped"
+    width="100%"
+    id="tblReport"
+  >
+    <thead>
+      <tr>
+        <th class="bg-gray">ลำดับที่</th>
+        <th class="bg-gray">วันนำเข้า/นำออก</th>
+        <th class="bg-gray">วันนำเข้าคลังฯ</th>
+        <th class="bg-gray">เลขที่ใบขนฯ/ใบขนฯโอนย้าย</th>
+        <th class="bg-gray">ประเภทรายการ</th>
+        <th class="bg-gray">ยอดยกมา</th>
+        <th class="bg-gray">นำเข้า</th>
+        <th class="bg-gray">ส่งออก</th>
+        <th class="bg-gray">ส่งออก</th>
+        <th class="bg-gray">ยอดคงเหลือ</th>
+      </tr>
+    </thead>
+    <!--        <tbody id="tblReportList">
+                      <tr><td align="center" colspan="12">.... No item search ....</td></tr>
+     </tbody>-->
+  </table>
+</div>
+<div id="printpopup"></div>
+<script src="https://momentjs.com/downloads/moment.js" />
+<script type="text/javascript">
+  $("#btnSearch").click(function () {
+    ReportItemSearch();
+  });
+
+  GetYearMonth("selYear", "selMonth");
+
+  $("#btnRemove").click(function () {
+    $("#tblReport").DataTable().clear().destroy();
+  });
+
+  function ReportItemSearch() {
+    var OldHtml = $("#btnSearch").html();
+    var Year = $("#selYear").val();
+    var Month = $("#selMonth").val();
+
+    // get first day of month and last day of month use moment.js
+    var StartDate = moment(Year + "-" + Month + "-01").format("YYYY-MM-DD");
+    var EndDate = moment(Year + "-" + Month + "-01")
+      .endOf("month")
+      .format("YYYY-MM-DD");
+
+    if (
+      (StartDate != "" && EndDate == "") ||
+      (StartDate == "" && EndDate != "")
+    ) {
+      $.alert("กรุณาเลือกวันที่เริ่มต้นและสิ้นสุดให้ครบถ้วน");
+      return false;
+    }
+
+    if (StartDate == "" && EndDate == "") {
+      $.alert("กรุณากรอกข้อมูลอย่างน้อย 1 ช่อง");
+      return false;
+    } else {
+      $("#btnSearch").html("<i class='fa fa-spinner fa-spin'></i>");
+      $("#tblReport").loading();
+      $("#tblReport tfoot").remove();
+      $.ajax({
+        type: "POST",
+        url: "././module/RPT_STS_CUSTOM_MAINRPT_ACCT/data.php",
+        dataType: "json",
+        beforeSend: function () {
+          $("#btnSearch").html("<i class='fa fa-spinner fa-spin'>");
+        },
+        data: {
+          load: "ajax",
+          StartDate: StartDate,
+          EndDate: EndDate,
+        },
+        success: function (data) {
+          const dataVal = data.map
+            
+          let accm = Number(data[0].accum);
+          let newData = [];
+
+          for (let i = 0; i < data.length; i++) {
+            var total;
+            if (i === 0) {
+              total = accm;
+            }
+
+            let item = data[i];
+
+            if (item.doc_type === 1) {
+              total -= Number(item.out_value_H001);
+              console.log(total);
+            } else {
+              total += Number(item.in_value);
+            }
+
+            newData.push({
+              ...item,
+              total: addCommas(Math.floor(total * 100) / 100),
+            });
+          }
+
+          $("#tblReport").DataTable().clear();
+          $("#tblReport").append(
+            "<tfoot><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></tfoot>"
+          );
+          $("#tblReport").dataTable({
+            aaData: newData,
+            paging: false,
+            fixedHeader: true,
+            destroy: true,
+            processing: true,
+            scrollY: "65vh",
+            scrollCollapse: true,
+            scrollX: true,
+            select: true,
+            columns: [
+              {
+                targets: 0, // คอลัมน์ที่จะแสดง index
+                data: null,
+                className: "text-center",
+                render: function (data, type, row, meta) {
+                  return meta.row + 1; // แสดงลำดับแถว +1 เนื่องจาก index เริ่มที่ 0
+                },
+              },
+              {
+                data: "date_in.date",
+                className: "text-center",
+                render: function (data, type, row, meta) {
+                  return data?.substring(0, 10);
+                },
+              },
+              {
+                data: "date_in.date",
+                className: "text-center",
+                render: function (data, type, row, meta) {
+                  return data?.substring(0, 10);
+                },
+              },
+              {
+                data: "doc_no",
+                className: "text-center",
+              },
+              {
+                data: "doc_type",
+                className: "text-center",
+              },
+              {
+                data: "accum",
+                className: "text-center",
+                "render": function (data, type, row, meta) {
+                  var ret = addCommas(data);
+                  return ret;
+                }
+             },
+              {
+                data: "in_value",
+                className: "text-center",
+                "render": function (data, type, row, meta) {
+                  var ret = addCommas(data);
+                  return ret;
+                }
+              },
+              {
+                data: "out_value",
+                className: "text-center",
+                "render": function (data, type, row, meta) {
+                  var ret = addCommas(data);
+                  return ret;
+                }
+              },
+              {
+                data: "out_value_H001",
+                className: "text-center",
+                "render": function (data, type, row, meta) {
+                  var ret = Math.floor(data * 100) / 100;
+                  return ret;
+                }
+              },
+              {
+                data: "total",
+                className: "text-center",
+              },
+            ],
+            dom:
+              "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+              "<'row'<'col-md-12'tr>>" +
+              "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+            buttons: [
+              {
+                extend: "print",
+                text: "<i class='fa fa-print'></i>&nbsp;Print",
+                title: "",
+              },
+              {
+                extend: "excel",
+                footer: true,
+                text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                title:
+                  "รายงานของที่นำเข้าเก็บในคลังสินค้าทัณฑ์บนฯ" +
+                  StartDate +
+                  "_to_" +
+                  EndDate,
+              },
+            ],
+            footerCallback: function (row, data, start, end, display) {
+              var api = this.api(),
+                data;
+              var intVal = function (i) {
+                return typeof i === "string"
+                  ? i.replace(/[\$,]/g, "") * 1
+                  : typeof i === "number"
+                  ? i
+                  : 0;
+              };
+              var totalKG = api
+                .column(6)
+                .data()
+                .reduce(function (a, b) {
+                  return intVal(a) + intVal(b);
+                }, 0);
+              var totalAmt = api
+                .column(7)
+                .data()
+                .reduce(function (a, b) {
+                  return intVal(a) + intVal(b);
+                }, 0);
+                var totalH001 = api
+                .column(8)
+                .data()
+                .reduce(function (a, b) {
+                  return intVal(a) + intVal(b);
+                }, 0);
+
+              $(api.column(3).footer()).html("<b>รวม</b>");
+              $(api.column(6).footer()).html(addCommas(totalKG.toFixed(2)));
+              $(api.column(7).footer()).html(addCommas(totalAmt.toFixed(2)));
+              $(api.column(8).footer()).html(addCommas(totalH001.toFixed(2)));
+            },
+          });
+          $("#tblReport").loading("stop");
+          $("#btnSearch").html(OldHtml);
+        },
+        error: function (e) {
+          $("#tblReport").loading("stop");
+          $("#btnSearch").html(OldHtml);
+          console.log("There was an error with your request...");
+          console.log("error: " + JSON.stringify(e));
+        },
+      });
+    }
+  }
+</script>
