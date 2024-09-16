@@ -930,7 +930,13 @@ for (let i = 0; i <= res.length-1; i++) {
 const size  = unique[0]?.size.replace(/"/g, '');
 const sizeIN = Number(unique[0]?.sizeIN);
 
+const item = unique[0]?.item.slice(0, 2);;
+
 function heat() {
+
+    if (item === 'FL' || item === 'WL') {
+        return ''
+    }
 
     if (unique[0]?.size.includes('x')) {
         return ''
@@ -948,6 +954,10 @@ function heat() {
 }
 
 function flat() {
+
+    if (item === 'FL' || item === 'WL') {
+        return ''
+    }
 
     if (unique[0]?.size.includes('x')) {
         return ''
@@ -974,6 +984,10 @@ function flat() {
 }
 
 function bend() {
+
+    if (item === 'FL' || item === 'WL') {
+        return ''
+    }
 
     const sizeIN = Number(unique[0]?.sizeIN);
   
@@ -1088,7 +1102,7 @@ data.push([
             ],
             [
                 // put Test One 
-                { text: `Good`, fontSize: 9, alignment: 'center', style: 'header', colSpan: 4 },
+                { text: `${item === 'FL' || item == 'WL' ? '' : 'Good'}`, fontSize: 9, alignment: 'center', style: 'header', colSpan: 4 },
                 { text: "", fontSize: 9, alignment: 'center' },
                 { text: ``, fontSize: 9, alignment: 'center' },
                 { text: "", fontSize: 9, alignment: 'center' },
@@ -1459,7 +1473,13 @@ for (let i = 0; i <= res.length-1; i++) {
 const size  = unique[0]?.size.replace(/"/g, '');
 const sizeIN = Number(unique[0]?.sizeIN);
 
+const item = unique[0]?.item.slice(0, 2);;
+
 function heat() {
+
+    if (item === 'FL' || item === 'WL') {
+        return ''
+    }
 
     if (unique[0]?.size.includes('x')) {
         return ''
@@ -1477,6 +1497,10 @@ function heat() {
 }
 
 function flat() {
+
+    if (item === 'FL' || item === 'WL') {
+        return ''
+    }
 
     if (unique[0]?.size.includes('x')) {
         return ''
@@ -1503,6 +1527,10 @@ function flat() {
 }
 
 function bend() {
+
+    if (item === 'FL' || item === 'WL') {
+        return ''
+    }
 
     const sizeIN = Number(unique[0]?.sizeIN);
   
@@ -1627,7 +1655,7 @@ data.push([
             
             [
                 // put Test One 
-                { text: `Good`, fontSize: 9, alignment: 'center', style: 'header', colSpan: 4 },
+                { text: `${item === 'FL' || item == 'WL' ? '' : 'Good'}`, fontSize: 9, alignment: 'center', style: 'header', colSpan: 4 },
                 { text: "", fontSize: 9, alignment: 'center' },
                 { text: ``, fontSize: 9, alignment: 'center' },
                 { text: "", fontSize: 9, alignment: 'center' },
