@@ -848,10 +848,6 @@ function createData(res,index) {
     
     let titleZinc = zinc == undefined ? 'Zinc Coating Weight                 (g/m2)' : 'Zinc Coating Thinness (um)';
 
-    // total bundle and piece
-    const bundle = res.reduce((a, b) => a + b.bundle, 0);
-    const pieces = res.reduce((a, b) => a + b.piece, 0);
-
     let data = [];
     data.push(
     [
@@ -896,31 +892,31 @@ function createData(res,index) {
 )
 for (let i = 0; i <= res.length-1; i++) {
     data.push([
-  { text: `${unique[i]?.uf_typeEnd ? index + 1 : ''}`, alignment: 'center', fontSize: 8 },
-  { text: `${unique[i]?.uf_typeEnd ? unique[i]?.uf_typeEnd : ''}`, alignment: 'center', fontSize: 8 },
-  { text: `${unique[i]?.size ? unique[i]?.size : ''}`, alignment: 'center', fontSize: 8 },
-  { text: `${unique[i]?.Uf_Schedule ? res[i]?.Uf_Schedule : ''}`, alignment: 'center', fontSize: 8 },
-  { text: `${unique[i]?.length? unique[i]?.length : ''}`, alignment: 'center', fontSize: 8 },
-  { text: `${unique[i]?.bundle ? bundle : ''}`, alignment: 'center', fontSize: 8 },
-  { text: `${unique[i]?.piece ? pieces : ''}`, alignment: 'center', fontSize: 8 },
-  { text: `${res[i]?.sts_no ? res[i].sts_no : ''}`, alignment: 'center', fontSize: 8 },
-  { text: `${res[i]?.sts_c ? res[i].sts_c : ''}`, alignment: 'center', fontSize: 8 },
-  { text: `${res[i]?.sts_si ? res[i].sts_si : ''}`, alignment: 'center', fontSize: 8 },
-  { text: `${res[i]?.sts_mn ? res[i].sts_mn : ''}`, alignment: 'center', fontSize: 8 },
-  { text: `${res[i]?.sts_p ? res[i].sts_p : ''}`, alignment: 'center', fontSize: 8 },
-  { text: `${res[i]?.sts_s ? res[i].sts_s : ''}`, alignment: 'center', fontSize: 8 },
-  { text: `${res[i]?.sts_cu ? res[i].sts_cu : ''}`, alignment: 'center', fontSize: 8 },
-  { text: `${res[i]?.sts_v ? res[i].sts_v : ''}`, alignment: 'center', fontSize: 8 },
-  { text: `${res[i]?.sts_ni ? res[i].sts_ni : ''}`, alignment: 'center', fontSize: 8 },
-  { text: `${res[i]?.sts_cr ? res[i].sts_cr : ''}`, alignment: 'center', fontSize: 8 },
-  { text: `${res[i]?.sts_mo ? res[i].sts_mo : ''}`, alignment: 'center', fontSize: 8 },
-  { text: `${res[i]?.sts_nb ? res[i].sts_nb : ''}`, alignment: 'center', fontSize: 8 },
-  { text: `${res[i]?.Mec_test_TS ? res[i].Mec_test_TS : '-'}`, alignment: 'center', fontSize: 8 },
-  { text: `${res[i]?.Mec_test_YS ? res[i].Mec_test_YS : '-'}`, alignment: 'center', fontSize: 8 },
-  { text: `${res[i]?.Mec_test_EI ? res[i].Mec_test_EI : '-'}`, alignment: 'center', fontSize: 8 },
-  { text: `${res[i]?.QC_hydro ? res[i].QC_hydro : '-'}`, alignment: 'center', fontSize: 8},
-  { text: `${res[i]?.QC_Pb > 0 ? parseFloat(res[i].QC_Pb) : '-'}`, alignment: 'center', fontSize: 8 },
-  { text: `${res[i]?.QC_weight_coat > 0 ? res[i].QC_weight_coat : '-'}`, alignment: 'center', fontSize: 8 },
+  { text: `${unique[i]?.uf_typeEnd ? index + 1 : ''}`,bold: true ,alignment: 'center', fontSize: 8 },
+  { text: `${unique[i]?.uf_typeEnd ? unique[i]?.uf_typeEnd : ''}`,bold: true , alignment: 'center', fontSize: 8 },
+  { text: `${unique[i]?.size ? unique[i]?.size : ''}`,bold: true , alignment: 'center', fontSize: 8 },
+  { text: `${unique[i]?.Uf_Schedule ? res[i]?.Uf_Schedule : ''}`,bold: true , alignment: 'center', fontSize: 8 },
+  { text: `${unique[i]?.length? unique[i]?.length : ''}`,bold: true , alignment: 'center', fontSize: 8 },
+  { text: `${unique[i]?.bundle ? unique[i].bundle : ''}`,bold: true , alignment: 'center', fontSize: 8 },
+  { text: `${unique[i]?.piece ? unique[i].piece : ''}`,bold: true , alignment: 'center', fontSize: 8 },
+  { text: `${res[i]?.qa_sts_no ? res[i].qa_sts_no : ''}`,bold: true , alignment: 'center', fontSize: 8 },
+  { text: `${res[i]?.sts_c ? res[i].sts_c : ''}`,bold: true , alignment: 'center', fontSize: 8 },
+  { text: `${res[i]?.sts_si ? res[i].sts_si : ''}`,bold: true , alignment: 'center', fontSize: 8 },
+  { text: `${res[i]?.sts_mn ? res[i].sts_mn : ''}`,bold: true , alignment: 'center', fontSize: 8 },
+  { text: `${res[i]?.sts_p ? res[i].sts_p : ''}`,bold: true , alignment: 'center', fontSize: 8 },
+  { text: `${res[i]?.sts_s ? res[i].sts_s : ''}`,bold: true , alignment: 'center', fontSize: 8 },
+  { text: `${res[i]?.sts_cu ? res[i].sts_cu : ''}`,bold: true , alignment: 'center', fontSize: 8 },
+  { text: `${res[i]?.sts_v ? res[i].sts_v : ''}`,bold: true , alignment: 'center', fontSize: 8 },
+  { text: `${res[i]?.sts_ni ? res[i].sts_ni : ''}`,bold: true , alignment: 'center', fontSize: 8 },
+  { text: `${res[i]?.sts_cr ? res[i].sts_cr : ''}`,bold: true , alignment: 'center', fontSize: 8 },
+  { text: `${res[i]?.sts_mo ? res[i].sts_mo : ''}`,bold: true , alignment: 'center', fontSize: 8 },
+  { text: `${res[i]?.sts_nb ? res[i].sts_nb : ''}`,bold: true , alignment: 'center', fontSize: 8 },
+  { text: `${res[i]?.Mec_test_TS ? res[i].Mec_test_TS : '-'}`,bold: true , alignment: 'center', fontSize: 8 },
+  { text: `${res[i]?.Mec_test_YS ? res[i].Mec_test_YS : '-'}`,bold: true , alignment: 'center', fontSize: 8 },
+  { text: `${res[i]?.Mec_test_EI ? res[i].Mec_test_EI : '-'}`,bold: true , alignment: 'center', fontSize: 8 },
+  { text: `${res[i]?.QC_hydro ? res[i].QC_hydro : '-'}`,bold: true , alignment: 'center', fontSize: 8},
+  { text: `${res[i]?.QC_Pb > 0 ? parseFloat(res[i].QC_Pb) : '-'}`,bold: true , alignment: 'center', fontSize: 8 },
+  { text: `${res[i]?.QC_weight_coat > 0 ? res[i].QC_weight_coat : '-'}`,bold: true , alignment: 'center', fontSize: 8 },
 ]);
 // Add empty rows if needed to fill the table
 }
@@ -1045,13 +1041,13 @@ for (let i = res.length; i < 16; i++) {
 ]);
 }
 data.push([
-                { text: `SUB TOTAL `, fontSize: 10, alignment: 'center', style: 'header', colSpan: 2 },
+                { text: `SUB TOTAL `,bold: true , fontSize: 10, alignment: 'center', style: 'header', colSpan: 2 },
                 { text: "", fontSize: 10, alignment: 'center' },
-                { text: `${res[0].do_num}`, fontSize: 10, alignment: 'center', style: 'header', colSpan: 3 },
+                { text: `${res[0].do_num}`,bold: true , fontSize: 10, alignment: 'center', style: 'header', colSpan: 3 },
                 { text: "", fontSize: 10, alignment: 'center' },
                 { text: "", fontSize: 10, alignment: 'center' },
-                { text: `${bundle}`, fontSize: 10, alignment: 'center' },
-                { text: `${pieces}`, fontSize: 10, alignment: 'center' },
+                { text: `${unique[0]?.bundle ? unique[0]?.bundle : 0}`,bold: true , fontSize: 10, alignment: 'center' },
+                { text: `${unique[0]?.piece ? unique[0]?.piece : 0}`,bold: true , fontSize: 10, alignment: 'center' },
                 { text: "", fontSize: 10, alignment: 'center' },
                 { text: "", fontSize: 10, alignment: 'center' },
                 { text: "", fontSize: 10, alignment: 'center' },
@@ -1102,21 +1098,21 @@ data.push([
             ],
             [
                 // put Test One 
-                { text: `${item === 'FL' || item == 'WL' ? '' : 'Good'}`, fontSize: 9, alignment: 'center', style: 'header', colSpan: 4 },
+                { text: `${item === 'FL' || item == 'WL' ? '' : 'Good'}`,bold: true , fontSize: 9, alignment: 'center', style: 'header', colSpan: 4 },
                 { text: "", fontSize: 9, alignment: 'center' },
                 { text: ``, fontSize: 9, alignment: 'center' },
                 { text: "", fontSize: 9, alignment: 'center' },
-                { text: heat(), fontSize: 9, alignment: 'center', style: 'header', colSpan: 3   },
+                { text: heat(),bold: true , fontSize: 9, alignment: 'center', style: 'header', colSpan: 3   },
                 { text: "", fontSize: 9, alignment: 'center' },
                 { text: "", fontSize: 9, alignment: 'center' },
-                { text: flat(), fontSize: 9, alignment: 'center', style: 'header', colSpan: 3  },
+                { text: flat(),bold: true , fontSize: 9, alignment: 'center', style: 'header', colSpan: 3  },
                 { text: "", fontSize: 9, alignment: 'center' },
                 { text: "", fontSize: 10, alignment: 'center' },
-                { text: bend(), fontSize: 9, alignment: 'center', style: 'header', colSpan: 4  },
+                { text: bend(),bold: true , fontSize: 9, alignment: 'center', style: 'header', colSpan: 4  },
                 { text: "", fontSize: 10, alignment: 'center' },
                 { text: "", fontSize: 10, alignment: 'center' },
                 { text: "", fontSize: 10, alignment: 'center' },
-                { text: `Good`, fontSize: 9, alignment: 'center', style: 'header', colSpan: 4  },
+                { text: `Good`, fontSize: 9, alignment: 'center',bold: true , style: 'header', colSpan: 4  },
                 { text: "", fontSize: 10, alignment: 'center' },
                 { text: "", fontSize: 10, alignment: 'center' },
                 { text: "", fontSize: 10, alignment: 'center' },
@@ -1267,7 +1263,7 @@ function createTables() {
                 table: {
                     headerRows: 2,
                     background: 'red',
-                    widths: [15, 25, 25, 25, 25, 30, 30, 30, 25, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 20, 20, 20, 25, 25, 30],
+                    widths: [15, 25, 25, 25, 25, 30, 30, 30, 25, 22, 22, 22, 22, 22, 22, 22, 22, 25, 25, 20, 20, 20, 25, 25, 30],
                     body: createData(newRes, i),
                 },
                 // Add a page break after every table except the last one
@@ -1438,34 +1434,34 @@ function createData(res,index) {
 )
 for (let i = 0; i <= res.length-1; i++) {
     data.push([
-  { text: `${unique[i]?.uf_typeEnd ? index + 1 : ''}`, alignment: 'center', fontSize: 8 },
-  { text: `${unique[i]?.uf_typeEnd ? unique[i]?.uf_typeEnd : ''}`, alignment: 'center', fontSize: 8 },
-  { text: `${unique[i]?.size ? unique[i]?.size : ''}`, alignment: 'center', fontSize: 8 },
-  { text: `${unique[i]?.Uf_Schedule ? res[i]?.Uf_Schedule : ''}`, alignment: 'center', fontSize: 8 },
-  { text: `${unique[i]?.length? unique[i]?.length : ''}`, alignment: 'center', fontSize: 8 },
-  { text: `${unique[i]?.bundle ? bundle : ''}`, alignment: 'center', fontSize: 8 },
-  { text: `${unique[i]?.piece ? pieces : ''}`, alignment: 'center', fontSize: 8 },
-  { text: `${res[i]?.sts_no ? res[i].sts_no : ''}`, alignment: 'center', fontSize: 8 },
-  { text: `${res[i]?.sts_c ? res[i].sts_c : ''}`, alignment: 'center', fontSize: 8 },
-  { text: `${res[i]?.sts_si ? res[i].sts_si : ''}`, alignment: 'center', fontSize: 8 },
-  { text: `${res[i]?.sts_mn ? res[i].sts_mn : ''}`, alignment: 'center', fontSize: 8 },
-  { text: `${res[i]?.sts_p ? res[i].sts_p : ''}`, alignment: 'center', fontSize: 8 },
-  { text: `${res[i]?.sts_s ? res[i].sts_s : ''}`, alignment: 'center', fontSize: 8 },
-  { text: `${res[i]?.sts_cu ? res[i].sts_cu : ''}`, alignment: 'center', fontSize: 8 },
-  { text: `${res[i]?.sts_v ? res[i].sts_v : ''}`, alignment: 'center', fontSize: 8 },
-  { text: `${res[i]?.sts_ni ? res[i].sts_ni : ''}`, alignment: 'center', fontSize: 8 },
-  { text: `${res[i]?.sts_cr ? res[i].sts_cr : ''}`, alignment: 'center', fontSize: 8 },
-  { text: `${res[i]?.sts_mo ? res[i].sts_mo : ''}`, alignment: 'center', fontSize: 8 },
-  { text: `${res[i]?.sts_nb ? res[i].sts_nb : ''}`, alignment: 'center', fontSize: 8 },
-  { text: `${res[i]?.Mec_test_TS ? res[i].Mec_test_TS : '-'}`, alignment: 'center', fontSize: 8 },
-  { text: `${res[i]?.Mec_test_YS ? res[i].Mec_test_YS : '-'}`, alignment: 'center', fontSize: 8 },
-  { text: `${res[i]?.Mec_test_EI ? res[i].Mec_test_EI : '-'}`, alignment: 'center', fontSize: 8 },
-  { text: `${res[i]?.Mec_test_TS_2 ? res[i].Mec_test_TS_2 : '-'}`, alignment: 'center', fontSize: 8 },
-  { text: `${res[i]?.Mec_test_YS_2 ? res[i].Mec_test_YS_2 : '-'}`, alignment: 'center', fontSize: 8 },
-  { text: `${res[i]?.Mec_test_EI_2 ? res[i].Mec_test_EI_2 : '-'}`, alignment: 'center', fontSize: 8 },
-  { text: `${res[i]?.QC_hydro ? res[i].QC_hydro : '-'}`, alignment: 'center', fontSize: 8},
-  { text: `${res[i]?.QC_Pb > 0 ? parseFloat(res[i].QC_Pb) : '-'}`, alignment: 'center', fontSize: 8 },
-  { text: `${res[i]?.QC_weight_coat > 0 ? res[i].QC_weight_coat : '-'}`, alignment: 'center', fontSize: 8 },
+  { text: `${unique[i]?.uf_typeEnd ? index + 1 : ''}`,bold: true , alignment: 'center', fontSize: 8 },
+  { text: `${unique[i]?.uf_typeEnd ? unique[i]?.uf_typeEnd : ''}`,bold: true , alignment: 'center', fontSize: 8 },
+  { text: `${unique[i]?.size ? unique[i]?.size : ''}`,bold: true , alignment: 'center', fontSize: 8 },
+  { text: `${unique[i]?.Uf_Schedule ? res[i]?.Uf_Schedule : ''}`,bold: true , alignment: 'center', fontSize: 8 },
+  { text: `${unique[i]?.length? unique[i]?.length : ''}`,bold: true , alignment: 'center', fontSize: 8 },
+  { text: `${unique[i]?.bundle ? unique[i].bundle : ''}`,bold: true , alignment: 'center', fontSize: 8 },
+  { text: `${unique[i]?.piece ? unique[i].piece : ''}`,bold: true , alignment: 'center', fontSize: 8 },
+  { text: `${res[i]?.qa_sts_no ? res[i].qa_sts_no : ''}`,bold: true , alignment: 'center', fontSize: 8 },
+  { text: `${res[i]?.sts_c ? res[i].sts_c : ''}`,bold: true , alignment: 'center', fontSize: 8 },
+  { text: `${res[i]?.sts_si ? res[i].sts_si : ''}`,bold: true , alignment: 'center', fontSize: 8 },
+  { text: `${res[i]?.sts_mn ? res[i].sts_mn : ''}`,bold: true , alignment: 'center', fontSize: 8 },
+  { text: `${res[i]?.sts_p ? res[i].sts_p : ''}`,bold: true , alignment: 'center', fontSize: 8 },
+  { text: `${res[i]?.sts_s ? res[i].sts_s : ''}`,bold: true , alignment: 'center', fontSize: 8 },
+  { text: `${res[i]?.sts_cu ? res[i].sts_cu : ''}`,bold: true , alignment: 'center', fontSize: 8 },
+  { text: `${res[i]?.sts_v ? res[i].sts_v : ''}`,bold: true , alignment: 'center', fontSize: 8 },
+  { text: `${res[i]?.sts_ni ? res[i].sts_ni : ''}`,bold: true , alignment: 'center', fontSize: 8 },
+  { text: `${res[i]?.sts_cr ? res[i].sts_cr : ''}`,bold: true , alignment: 'center', fontSize: 8 },
+  { text: `${res[i]?.sts_mo ? res[i].sts_mo : ''}`,bold: true , alignment: 'center', fontSize: 8 },
+  { text: `${res[i]?.sts_nb ? res[i].sts_nb : ''}`,bold: true , alignment: 'center', fontSize: 8 },
+  { text: `${res[i]?.Mec_test_TS ? res[i].Mec_test_TS : '-'}`,bold: true , alignment: 'center', fontSize: 8 },
+  { text: `${res[i]?.Mec_test_YS ? res[i].Mec_test_YS : '-'}`,bold: true , alignment: 'center', fontSize: 8 },
+  { text: `${res[i]?.Mec_test_EI ? res[i].Mec_test_EI : '-'}`,bold: true , alignment: 'center', fontSize: 8 },
+  { text: `${res[i]?.Mec_test_TS_2 ? res[i].Mec_test_TS_2 : '-'}`,bold: true , alignment: 'center', fontSize: 8 },
+  { text: `${res[i]?.Mec_test_YS_2 ? res[i].Mec_test_YS_2 : '-'}`,bold: true , alignment: 'center', fontSize: 8 },
+  { text: `${res[i]?.Mec_test_EI_2 ? res[i].Mec_test_EI_2 : '-'}`,bold: true , alignment: 'center', fontSize: 8 },
+  { text: `${res[i]?.QC_hydro ? res[i].QC_hydro : '-'}`,bold: true , alignment: 'center', fontSize: 8},
+  { text: `${res[i]?.QC_Pb > 0 ? parseFloat(res[i].QC_Pb) : '-'}`,bold: true , alignment: 'center', fontSize: 8 },
+  { text: `${res[i]?.QC_weight_coat > 0 ? res[i].QC_weight_coat : '-'}`,bold: true , alignment: 'center', fontSize: 8 },
 ]);
 // Add empty rows if needed to fill the table
 }
@@ -1557,7 +1553,6 @@ function bend() {
 }
 
 
-
 for (let i = res.length; i < 15; i++) {
     data.push([
   { text: ` `, alignment: 'center', fontSize: 8 },
@@ -1591,13 +1586,13 @@ for (let i = res.length; i < 15; i++) {
 ]);
 }
 data.push([
-                { text: `SUB TOTAL `, fontSize: 10, alignment: 'center', style: 'header', colSpan: 2 },
+                { text: `SUB TOTAL `,bold: true , fontSize: 10, alignment: 'center', style: 'header', colSpan: 2 },
                 { text: "", fontSize: 10, alignment: 'center' },
-                { text: `${res[0].do_num}`, fontSize: 10, alignment: 'center', style: 'header', colSpan: 3 },
+                { text: `${res[0].do_num}`,bold: true , fontSize: 10, alignment: 'center', style: 'header', colSpan: 3 },
                 { text: "", fontSize: 10, alignment: 'center' },
                 { text: "", fontSize: 10, alignment: 'center' },
-                { text: `${bundle}`, fontSize: 10, alignment: 'center' },
-                { text: `${pieces}`, fontSize: 10, alignment: 'center' },
+                { text: `${unique[0]?.bundle ? unique[0]?.bundle : 0}`,bold: true , fontSize: 10, alignment: 'center' },
+                { text: `${unique[0]?.piece ? unique[0]?.piece : 0}`,bold: true , fontSize: 10, alignment: 'center' },
                 { text: "", fontSize: 10, alignment: 'center' },
                 { text: "", fontSize: 10, alignment: 'center' },
                 { text: "", fontSize: 10, alignment: 'center' },
@@ -1655,21 +1650,21 @@ data.push([
             
             [
                 // put Test One 
-                { text: `${item === 'FL' || item == 'WL' ? '' : 'Good'}`, fontSize: 9, alignment: 'center', style: 'header', colSpan: 4 },
+                { text: `${item === 'FL' || item == 'WL' ? '' : 'Good'}`,bold: true , fontSize: 9, alignment: 'center', style: 'header', colSpan: 4 },
                 { text: "", fontSize: 9, alignment: 'center' },
                 { text: ``, fontSize: 9, alignment: 'center' },
                 { text: "", fontSize: 9, alignment: 'center' },
-                { text: heat(), fontSize: 9, alignment: 'center', style: 'header', colSpan: 3   },
+                { text: heat(), fontSize: 9, alignment: 'center',bold: true , style: 'header', colSpan: 3   },
                 { text: "", fontSize: 9, alignment: 'center' },
                 { text: "", fontSize: 9, alignment: 'center' },
-                { text: flat(), fontSize: 9, alignment: 'center', style: 'header', colSpan: 3  },
+                { text: flat(), fontSize: 9, alignment: 'center',bold: true , style: 'header', colSpan: 3  },
                 { text: "", fontSize: 9, alignment: 'center' },
                 { text: "", fontSize: 10, alignment: 'center' },
-                { text: bend(), fontSize: 9, alignment: 'center', style: 'header', colSpan: 4  },
+                { text: bend(), fontSize: 9, alignment: 'center',bold: true , style: 'header', colSpan: 4  },
                 { text: "", fontSize: 10, alignment: 'center' },
                 { text: "", fontSize: 10, alignment: 'center' },
                 { text: "", fontSize: 10, alignment: 'center' },
-                { text: `Good`, fontSize: 9, alignment: 'center', style: 'header', colSpan: 4  },
+                { text: `Good`, fontSize: 9, alignment: 'center', bold: true ,style: 'header', colSpan: 4  },
                 { text: "", fontSize: 10, alignment: 'center' },
                 { text: "", fontSize: 10, alignment: 'center' },
                 { text: "", fontSize: 10, alignment: 'center' },
@@ -1827,7 +1822,7 @@ function createTables() {
                 table: {
                     headerRows: 2,
                     background: 'red',
-                    widths: [15, 15, 20, 20, 20, 20, 20, 20, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 18, 18, 18,18, 18, 18, 25, 20, 25],
+                    widths: [15, 15, 20, 20, 20, 20, 20, 20, 22, 22, 22, 22, 22, 22, 22, 22, 22, 24, 24, 18, 18, 18,18, 18, 18, 22, 20, 25],
                     body: createData(newRes, i),
                 },
                 // Add a page break after every table except the last one
