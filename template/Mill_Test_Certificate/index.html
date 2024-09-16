@@ -927,15 +927,23 @@ for (let i = 0; i <= res.length-1; i++) {
 
 //
 
+const size  = unique[0]?.size.replace(/"/g, '');
+const sizeIN = Number(unique[0]?.sizeIN);
+
 function heat() {
 
     if (unique[0]?.size.includes('x')) {
         return ''
     }
 
+    if (sizeIN === 0) {
+        return size > 4 && unique[0]?.grade === 'B' ? 'Good' : '';
+    }
+
     if (unique[0]?.sizeIN >= 4 && unique[0]?.grade === 'B') {
         return 'Good'
     }
+
     return ''
 }
 
@@ -955,6 +963,10 @@ function flat() {
         }
     }
 
+    if (sizeIN === 0) {
+        return size > 2.5 ? 'Good' : '';
+    }
+
     if (unique[0]?.sizeIN >= 2.5) {
         return 'Good'
     }
@@ -963,16 +975,22 @@ function flat() {
 
 function bend() {
 
+    const sizeIN = Number(unique[0]?.sizeIN);
+  
     if (unique[0]?.size.includes('x')) {
         return ''
     }
-
+    
     if (unique[0]?.Uf_spec.includes('TIS 107')) {
         if (unique[0]?.sizeIN <= 1.5) {
             return 'Good'
         } else {
             return ''
         }
+    } 
+
+    if (sizeIN === 0) {
+        return size < 2.5 ? 'Good' : '';
     }
 
     if (unique[0]?.sizeIN < 2.5 && unique[0]?.sizeIN > 0) {
@@ -1438,7 +1456,8 @@ for (let i = 0; i <= res.length-1; i++) {
 // Add empty rows if needed to fill the table
 }
 
-//
+const size  = unique[0]?.size.replace(/"/g, '');
+const sizeIN = Number(unique[0]?.sizeIN);
 
 function heat() {
 
@@ -1446,9 +1465,14 @@ function heat() {
         return ''
     }
 
+    if (sizeIN === 0) {
+        return size > 4 && unique[0]?.grade === 'B' ? 'Good' : '';
+    }
+
     if (unique[0]?.sizeIN >= 4 && unique[0]?.grade === 'B') {
         return 'Good'
     }
+
     return ''
 }
 
@@ -1456,6 +1480,20 @@ function flat() {
 
     if (unique[0]?.size.includes('x')) {
         return ''
+    }
+
+    if (unique[0]?.Uf_spec.includes('TIS 107')) {
+        console.log('TIS 107');
+        
+        if (unique[0]?.sizeIN >= 2) {
+            return 'Good'
+        } else {
+            return ''
+        }
+    }
+
+    if (sizeIN === 0) {
+        return size > 2.5 ? 'Good' : '';
     }
 
     if (unique[0]?.sizeIN >= 2.5) {
@@ -1466,10 +1504,24 @@ function flat() {
 
 function bend() {
 
+    const sizeIN = Number(unique[0]?.sizeIN);
+  
     if (unique[0]?.size.includes('x')) {
         return ''
     }
     
+    if (unique[0]?.Uf_spec.includes('TIS 107')) {
+        if (unique[0]?.sizeIN <= 1.5) {
+            return 'Good'
+        } else {
+            return ''
+        }
+    } 
+
+    if (sizeIN === 0) {
+        return size < 2.5 ? 'Good' : '';
+    }
+
     if (unique[0]?.sizeIN < 2.5 && unique[0]?.sizeIN > 0) {
         return 'Good'
     }
