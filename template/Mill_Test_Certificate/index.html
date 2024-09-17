@@ -939,10 +939,10 @@ function heat() {
     }
 
     if (sizeIN === 0) {
-        return size > 4 && unique[0]?.grade === 'B' ? 'Good' : '';
+        return size > 4 && unique[0]?.uf_grade === 'B' ? 'Good' : '';
     }
 
-    if (unique[0]?.sizeIN >= 4 && unique[0]?.grade === 'B') {
+    if (unique[0]?.sizeIN >= 4 && unique[0]?.uf_grade === 'B') {
         return 'Good'
     }
 
@@ -966,7 +966,7 @@ function flat() {
             return 'Good'
         } else {
             return ''
-        }
+        } 
     }
 
     if (sizeIN === 0) {
@@ -1482,10 +1482,10 @@ function heat() {
     }
 
     if (sizeIN === 0) {
-        return size > 4 && unique[0]?.grade === 'B' ? 'Good' : '';
+        return size > 4 && unique[0]?.uf_grade === 'B' ? 'Good' : '';
     }
 
-    if (unique[0]?.sizeIN >= 4 && unique[0]?.grade === 'B') {
+    if (unique[0]?.sizeIN >= 4 && unique[0]?.uf_grade === 'B') {
         return 'Good'
     }
 
