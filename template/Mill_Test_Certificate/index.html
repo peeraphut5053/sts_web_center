@@ -1760,7 +1760,7 @@ var docDefinition = {
           { text: `CERTIFICATE NO.              : ${dataNow[0].cer_no}`, fontSize: 10, bold: true, margin: [0, 20, 0, 0] },
           { text: `DATE                              : ${moment().format('DD-MMM-YYYY')} `, fontSize: 10,bold: true, margin: [0, 0, 0, 0] },
           { text: `CUSTOMER                     : ${dataNow[0].cust}`, fontSize: 10,bold: true, margin: [0, 0, 0, 0] },
-          { text: `CONTRACT (P/O) No.       : ${dataNow[0].cust_po} `, fontSize: 10, bold: true,margin: [0, 0, 0, 0] },
+          { text: `CONTRACT (P/O) No.       : ${filter[currentPage - 1].cust_po} `, fontSize: 10, bold: true,margin: [0, 0, 0, 0] },
           { text: `INSPECTION CERTIFICATE  : ACCORDING TO EN 10204 : 2005 TYPE 3.1`, fontSize: 10, bold: true,margin: [0, 0, 0, 0] },
           { text: `COMMODITY                   : NEWLY PRODUCED, PRIME QUALITY ERW STEEL PIPE`, fontSize: 10,bold: true, margin: [0, 0, 0, 0] }
         ]
