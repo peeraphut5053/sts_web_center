@@ -197,6 +197,7 @@
 
             newData.push({
               ...item,
+              date_stock: item.date_stock === null ? "" : item.date_stock.date,
               total: addCommas(Math.floor(total * 100) / 100),
             });
           }
@@ -232,10 +233,10 @@
                 },
               },
               {
-                data: "date_in.date",
+                data: "date_stock",
                 className: "text-center",
                 render: function (data, type, row, meta) {
-                  return data?.substring(0, 10);
+                  return data.substring(0, 10);
                 },
               },
               {
