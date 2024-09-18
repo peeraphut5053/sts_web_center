@@ -79,8 +79,14 @@
   </div>
   <div class="row col-xs-2">
     <div class="input-group">
-      <div class="input-group-addon">Month</div>
+      <div class="input-group-addon">Start Month</div>
       <select class="form-control" id="selMonth"></select>
+    </div>
+  </div>
+  <div class="row col-xs-2">
+    <div class="input-group">
+      <div class="input-group-addon">End Month</div>
+      <select class="form-control" id="selMonth2"></select>
     </div>
   </div>
   <div class="col-lg-1 col-md-1 col-sm-6 col-xs-6 text-left">
@@ -123,6 +129,7 @@
   });
 
   GetYearMonth("selYear", "selMonth");
+  GetYearMonth("selYear", "selMonth2");
 
   $("#btnRemove").click(function () {
     $("#tblReport").DataTable().clear().destroy();
@@ -132,10 +139,11 @@
     var OldHtml = $("#btnSearch").html();
     var Year = $("#selYear").val();
     var Month = $("#selMonth").val();
+    var Month2 = $("#selMonth2").val();
 
     // get first day of month and last day of month use moment.js
     var StartDate = moment(Year + "-" + Month + "-01").format("YYYY-MM-DD");
-    var EndDate = moment(Year + "-" + Month + "-01")
+    var EndDate = moment(Year + "-" + Month2 + "-01")
       .endOf("month")
       .format("YYYY-MM-DD");
 
@@ -242,7 +250,8 @@
                 data: "accum",
                 className: "text-center",
                 "render": function (data, type, row, meta) {
-                  var ret = addCommas(data);
+                  var ret = Math.floor(data * 100) / 100;
+                  var ret = addCommas(ret);
                   return ret;
                 }
              },
@@ -250,7 +259,8 @@
                 data: "in_value",
                 className: "text-center",
                 "render": function (data, type, row, meta) {
-                  var ret = addCommas(data);
+                  var ret = Math.floor(data * 100) / 100;
+                  var ret = addCommas(ret);
                   return ret;
                 }
               },
@@ -267,7 +277,8 @@
                 className: "text-center",
                 "render": function (data, type, row, meta) {
                   var ret = Math.floor(data * 100) / 100;
-                  return ret;
+                  
+                  return addCommas(ret);
                 }
               },
               {
