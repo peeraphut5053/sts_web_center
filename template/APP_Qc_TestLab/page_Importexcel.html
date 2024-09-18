@@ -848,9 +848,6 @@ function format(d) {
                             <th colspan='4'>Charpy V-notch Testing</th>
 
                             <th colspan='4'>Production</th>
-                            <th></th>
-                            <th></th>
-                            <th></th>
                             <th style='background-color:#f36c60;'></th>
                         </tr>
                         <tr class="bg-gray">
@@ -872,9 +869,6 @@ function format(d) {
                             <th colspan='4'>Absorbed Energy (Joules)</th>
 
                             <th colspan='4'>Date</th>
-                            <th></th>
-                            <th></th>
-                            <th></th>
                             <th style='background-color:#f36c60;'></th>
                         </tr>
                         <tr class="bg-gray">
@@ -981,13 +975,13 @@ function format(d) {
                             {"data": "Mec_test_EI",
                                 "className": "text-center",
                             },
-                            {"data": "Mec_test_EL_1",
+                            {"data": "Mec_test_TS_2",
+                                "className": "text-center",
+                            },
+                            {"data": "Mec_test_YS_2",
                                 "className": "text-center",
                             },
                             {"data": "Mec_test_EL_2",
-                                "className": "text-center",
-                            },
-                            {"data": "Mec_test_EL_3",
                                 "className": "text-center",
                             },
                             {"data": "Not_Mec_test_TS",
@@ -999,13 +993,13 @@ function format(d) {
                             {"data": "Not_Mec_test_EI",
                                 "className": "text-center",
                             },
-                            {"data": "Not_Mec_test_EL_1",
+                            {"data": "Not_Mec_test_TS_2",
+                                "className": "text-center",
+                            },
+                            {"data": "Not_Mec_test_YS_2",
                                 "className": "text-center",
                             },
                             {"data": "Not_Mec_test_EL_2",
-                                "className": "text-center",
-                            },
-                            {"data": "Not_Mec_test_EL_3",
                                 "className": "text-center",
                             },
                             {"data": "charpy_mean",
@@ -1068,33 +1062,6 @@ function format(d) {
                                 let iddata = `Update_${row.opr_no}_${row.length}_${row.sts_no}_${row.prod_FM_no}_${row.prod_Date}`;
                                 ((valdata == null) ? valdata = "" : valdata = valdata)
                                 let ret = `<span hidden>${(valdata) }</span><input type='text' class='input-text-value' id='Update_${row.opr_no}_${row.length}_${row.sts_no}_${row.prod_FM_no}_${row.prod_Date}' onchange="UpdateSub('UpdateSub',this.id,value);" value='${(valdata)}' />`;
-                                return ret;
-                            }
-                        },
-                        {
-                            "data": "QC_Pb",
-                            "className": "text-center",
-                            "render": function (data, type, row, meta) {
-                                let valdata = data ? data : "";
-                                let ret = `<span hidden>${(valdata) }</span><input type='number' class='input-text-value' size='45' id='Update_${row.opr_no}_${row.length}_${row.sts_no}_${row.prod_FM_no}_${row.prod_Date}'  onchange="UpdateSubTest('QC_Pb',this.id,value);" value='${(valdata)}' />`;
-                                return ret;
-                            }
-                        },
-                        {
-                            "data": "QC_weight_coat",
-                            "className": "text-center",
-                            "render": function (data, type, row, meta) {
-                                let valdata = data ? data : "";
-                                let ret = `<span hidden>${(valdata) }</span><input type='number' class='input-text-value' size='45' id='Update_${row.opr_no}_${row.length}_${row.sts_no}_${row.prod_FM_no}_${row.prod_Date}' onchange="UpdateSubTest('QC_weight_coat',this.id,value);" value='${(valdata)}' />`;
-                                return ret;
-                            }
-                        },
-                        {
-                            "data": "QC_hydro",
-                            "className": "text-center",
-                            "render": function (data, type, row, meta) {
-                                let valdata = data ? data : "";
-                                let ret = `<span hidden>${(valdata) }</span><input type='number' class='input-text-value' size='45' id='Update_${row.opr_no}_${row.length}_${row.sts_no}_${row.prod_FM_no}_${row.prod_Date}' onchange="UpdateSubTest('QC_hydro',this.id,value);" value='${(valdata)}' />`;
                                 return ret;
                             }
                         },
