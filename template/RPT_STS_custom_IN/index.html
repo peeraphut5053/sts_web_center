@@ -140,8 +140,8 @@
   
     function ReportItemSearch() {
       var OldHtml = $("#btnSearch").html();
-      var StartDate = $("#txtStartDate").val();
-      var EndDate = $("#txtEndDate").val();
+      var StartDate = $("#txtStartDate_IN").val();
+      var EndDate = $("#txtEndDate_").val();
   
       if (StartDate != "" && EndDate == "" || StartDate == "" && EndDate != "") {
           $.alert("กรุณาเลือกวันที่เริ่มต้นและสิ้นสุดให้ครบถ้วน");
