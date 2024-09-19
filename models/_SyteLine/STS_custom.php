@@ -15,30 +15,68 @@ class STS_Custom {
     }
 
     function InsertSTS_Custom_In($doc_no, $date_in, $date_stock, $supplier, $country, $AD_rate, $weight_KG, $value, $remark) {
-        $query = "INSERT INTO STS_custom_IN (doc_no, date_in, date_stock, supplier, country, AD_rate, weight_KG, value, remark, createdate)
-         VALUES ('$doc_no', '$date_in', '$date_stock', '$supplier', '$country', $AD_rate, $weight_KG, $value, '$remark', GETDATE())";
+
+        $sql = "SELECT * FROM STS_custom_IN WHERE doc_no = '$doc_no'";
         $cSql = new SqlSrv();
-        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
-        array_splice($rs0, count($rs0) - 1, 1);
-        return $rs0;
+        $rs0 = $cSql->SqlQuery($this->StrConn, $sql);
+
+        if ($doc_no == $rs0[1]["doc_no"]) {
+            $query = "UPDATE STS_custom_IN set date_stock = '$date_stock', supplier = '$supplier', country = '$country', AD_rate = $AD_rate, weight_KG = $weight_KG, value = $value, remark = '$remark' where doc_no = '$doc_no'";
+            $cSql = new SqlSrv();
+            $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+            array_splice($rs0, count($rs0) - 1, 1);
+            return $rs0;
+        } else {
+            $query = "INSERT INTO STS_custom_IN (doc_no, date_in, date_stock, supplier, country, AD_rate, weight_KG, value, remark, createdate)
+            VALUES ('$doc_no', '$date_in', '$date_stock', '$supplier', '$country', $AD_rate, $weight_KG, $value, '$remark', GETDATE())";
+           $cSql = new SqlSrv();
+           $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+           array_splice($rs0, count($rs0) - 1, 1);
+           return $rs0;
+        }
     }
 
     function InsertSTS_Custom_Out($doc_no, $boatnote, $date, $item, $boat_name, $boat_no, $inv_no, $bundle, $weight_net, $weight_gross, $weight_zinc, $weight_nonzinc, $cust_po, $value, $pier, $BL_no, $loc_name) {
-        $query = "INSERT INTO STS_custom_OUT (doc_no, boatnote, date, item, boat_name, boat_no, inv_no, bundle, weight_net, weight_gross, weight_zinc, weight_nonzinc, cust_po, value, pier, BL_no, loc_name, createdate)
-         VALUES ('$doc_no', '$boatnote', '$date', '$item', '$boat_name', '$boat_no', '$inv_no', $bundle, $weight_net, $weight_gross, $weight_zinc, $weight_nonzinc, '$cust_po', $value, '$pier', '$BL_no', '$loc_name', GETDATE())";
+
+        $sql = "SELECT * FROM STS_custom_OUT WHERE doc_no = '$doc_no'";
         $cSql = new SqlSrv();
-        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
-        array_splice($rs0, count($rs0) - 1, 1);
-        return $rs0;
+        $rs0 = $cSql->SqlQuery($this->StrConn, $sql);
+        if ($doc_no == $rs0[1]["doc_no"]) {
+            // Write update
+            $query = "UPDATE STS_custom_OUT set boatnote = '$boatnote', date = '$date', item = '$item', boat_name = '$boat_name', boat_no = '$boat_no', inv_no = '$inv_no',bundle = $bundle, weight_net = $weight_net, weight_gross = $weight_gross, weight_zinc = $weight_zinc, weight_nonzinc = $weight_nonzinc, cust_po = '$cust_po', value = $value, pier = '$pier', BL_no = '$BL_no', loc_name = '$loc_name' where doc_no = '$doc_no'";
+            $cSql = new SqlSrv();
+            $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+            array_splice($rs0, count($rs0) - 1, 1);
+            return $rs0;
+        } else {
+            $query = "INSERT INTO STS_custom_OUT (doc_no, boatnote, date, item, boat_name, boat_no, inv_no, bundle, weight_net, weight_gross, weight_zinc, weight_nonzinc, cust_po, value, pier, BL_no, loc_name, createdate)
+            VALUES ('$doc_no', '$boatnote', '$date', '$item', '$boat_name', '$boat_no', '$inv_no', $bundle, $weight_net, $weight_gross, $weight_zinc, $weight_nonzinc, '$cust_po', $value, '$pier', '$BL_no', '$loc_name', GETDATE())";
+           $cSql = new SqlSrv();
+           $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+           array_splice($rs0, count($rs0) - 1, 1);
+           return $rs0;
+        } 
     }
 
     function InsertSTS_Custom_Scrap($doc_no, $date, $item, $weight_KG, $value, $stamp_no, $ref_doc_no) {
-        $query = "INSERT INTO STS_custom_scrap (doc_no, date, item, weight_KG, value, stamp_no, ref_doc_no, createdate)
-        VALUES ('$doc_no', '$date', '$item', $weight_KG, $value, '$stamp_no', '$ref_doc_no', GETDATE())";
+
+        $sql = "SELECT * FROM STS_custom_scrap WHERE doc_no = '$doc_no'";
         $cSql = new SqlSrv();
-        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
-        array_splice($rs0, count($rs0) - 1, 1);
-        return $rs0;
+        $rs0 = $cSql->SqlQuery($this->StrConn, $sql);
+        if ($doc_no == $rs0[1]["doc_no"]) {
+            $query = "UPDATE STS_custom_scrap set date = '$date', item = '$item', weight_KG = $weight_KG, value = $value, stamp_no = '$stamp_no', ref_doc_no = '$ref_doc_no' where doc_no = '$doc_no'";
+            $cSql = new SqlSrv();
+            $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+            array_splice($rs0, count($rs0) - 1, 1);
+            return $rs0;
+        } else {
+            $query = "INSERT INTO STS_custom_scrap (doc_no, date, item, weight_KG, value, stamp_no, ref_doc_no, createdate)
+            VALUES ('$doc_no', '$date', '$item', $weight_KG, $value, '$stamp_no', '$ref_doc_no', GETDATE())";
+            $cSql = new SqlSrv();
+            $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+            array_splice($rs0, count($rs0) - 1, 1);
+            return $rs0;
+        }
     }
 
     function GetSTS_Custom_In($StartDate, $EndDate) {
