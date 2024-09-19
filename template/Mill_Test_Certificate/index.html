@@ -960,9 +960,7 @@ function flat() {
     }
 
     if (unique[0]?.Uf_spec.includes('TIS 107')) {
-        console.log('TIS 107');
-        
-        if (unique[0]?.sizeIN >= 2) {
+        if (unique[0]?.sizeIN >= 2 || size >= 2) {
             return 'Good'
         } else {
             return ''
@@ -984,21 +982,19 @@ function bend() {
     if (item === 'FL' || item === 'WL') {
         return ''
     }
-
-    const sizeIN = Number(unique[0]?.sizeIN);
   
     if (unique[0]?.size.includes('x')) {
         return ''
     }
     
     if (unique[0]?.Uf_spec.includes('TIS 107')) {
-        if (unique[0]?.sizeIN <= 1.5) {
+        if ((sizeIN <= 1.5 || size <= 1.5) && sizeIN > 0) {
             return 'Good'
         } else {
             return ''
         }
     } 
-
+    
     if (sizeIN === 0) {
         return size < 2.5 ? 'Good' : '';
     }
@@ -1473,83 +1469,79 @@ const item = unique[0]?.item.slice(0, 2);;
 
 function heat() {
 
-    if (item === 'FL' || item === 'WL') {
-        return ''
-    }
-
-    if (unique[0]?.size.includes('x')) {
-        return ''
-    }
-
-    if (sizeIN === 0) {
-        return size > 4 && unique[0]?.uf_grade === 'B' ? 'Good' : '';
-    }
-
-    if (unique[0]?.sizeIN >= 4 && unique[0]?.uf_grade === 'B') {
-        return 'Good'
-    }
-
+if (item === 'FL' || item === 'WL') {
     return ''
+}
+
+if (unique[0]?.size.includes('x')) {
+    return ''
+}
+
+if (sizeIN === 0) {
+    return size > 4 && unique[0]?.uf_grade === 'B' ? 'Good' : '';
+}
+
+if (unique[0]?.sizeIN >= 4 && unique[0]?.uf_grade === 'B') {
+    return 'Good'
+}
+
+return ''
 }
 
 function flat() {
 
-    if (item === 'FL' || item === 'WL') {
-        return ''
-    }
-
-    if (unique[0]?.size.includes('x')) {
-        return ''
-    }
-
-    if (unique[0]?.Uf_spec.includes('TIS 107')) {
-        console.log('TIS 107');
-        
-        if (unique[0]?.sizeIN >= 2) {
-            return 'Good'
-        } else {
-            return ''
-        }
-    }
-
-    if (sizeIN === 0) {
-        return size > 2.5 ? 'Good' : '';
-    }
-
-    if (unique[0]?.sizeIN >= 2.5) {
-        return 'Good'
-    }
+if (item === 'FL' || item === 'WL') {
     return ''
+}
+
+if (unique[0]?.size.includes('x')) {
+    return ''
+}
+
+if (unique[0]?.Uf_spec.includes('TIS 107')) {
+    if (unique[0]?.sizeIN >= 2 || size >= 2) {
+        return 'Good'
+    } else {
+        return ''
+    } 
+}
+
+if (sizeIN === 0) {
+    return size > 2.5 ? 'Good' : '';
+}
+
+if (unique[0]?.sizeIN >= 2.5) {
+    return 'Good'
+}
+return ''
 }
 
 function bend() {
 
-    if (item === 'FL' || item === 'WL') {
-        return ''
-    }
-
-    const sizeIN = Number(unique[0]?.sizeIN);
-  
-    if (unique[0]?.size.includes('x')) {
-        return ''
-    }
-    
-    if (unique[0]?.Uf_spec.includes('TIS 107')) {
-        if (unique[0]?.sizeIN <= 1.5) {
-            return 'Good'
-        } else {
-            return ''
-        }
-    } 
-
-    if (sizeIN === 0) {
-        return size < 2.5 ? 'Good' : '';
-    }
-
-    if (unique[0]?.sizeIN < 2.5 && unique[0]?.sizeIN > 0) {
-        return 'Good'
-    }
+if (item === 'FL' || item === 'WL') {
     return ''
+}
+
+if (unique[0]?.size.includes('x')) {
+    return ''
+}
+
+if (unique[0]?.Uf_spec.includes('TIS 107')) {
+    if ((sizeIN <= 1.5 || size <= 1.5) && sizeIN > 0) {
+        return 'Good'
+    } else {
+        return ''
+    }
+} 
+
+if (sizeIN === 0) {
+    return size < 2.5 ? 'Good' : '';
+}
+
+if (unique[0]?.sizeIN < 2.5 && unique[0]?.sizeIN > 0) {
+    return 'Good'
+}
+return ''
 }
 
 
