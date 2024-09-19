@@ -252,28 +252,9 @@
                 },
                 {
                 extend: 'excel',
-                exportOptions: {
-                    format: {
-                        header: function ( data, columnIdx, node ) {
-                            var $headers = $('#yourTableId thead tr');
-                            var headerTexts = [];
-                            
-                            $headers.each(function(index) {
-                                var $cells = $(this).find('th');
-                                var cellText = $cells.eq(columnIdx).text().trim();
-                                if (cellText) {
-                                    headerTexts.push(cellText);
-                                }
-                            });
-                            
-                            return headerTexts.join('\n');
-                        }
-                    }
-                },
-                customize: function(xlsx) {
-                    var sheet = xlsx.xl.worksheets['sheet1.xml'];
-                    $('row:first c', sheet).attr('s', '2'); // ตั้งค่า style ให้กับ header
-                }
+                title:"รายงานส่งออก" + StartDate + "_to_" + EndDate,
+                text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+
             }
               ],
               "footerCallback": function (row, data, start, end, display) {

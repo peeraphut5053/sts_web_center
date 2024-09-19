@@ -105,7 +105,7 @@
     <thead>
       <tr>
         <th class="bg-gray">ลำดับที่</th>
-        <th class="bg-gray">วันนำเข้า/นำออก</th>
+        <th class="bg-gray">วันนำเข้า/ส่งออก</th>
         <th class="bg-gray">วันนำเข้าคลังฯ</th>
         <th class="bg-gray">เลขที่ใบขนฯ/ใบขนฯโอนย้าย</th>
         <th class="bg-gray">ประเภทรายการ</th>
@@ -197,6 +197,7 @@
 
             newData.push({
               ...item,
+
               date_stock: item.date_stock === null ? "" : item.date_stock.date,
               total: addCommas(Math.floor(total * 100) / 100),
             });
@@ -269,8 +270,8 @@
                 data: "out_value",
                 className: "text-center",
                 "render": function (data, type, row, meta) {
-                  var ret = addCommas(data);
-                  return ret;
+                  var ret = Math.floor(data * 100) / 100;
+                  return addCommas(ret);;
                 }
               },
               {
