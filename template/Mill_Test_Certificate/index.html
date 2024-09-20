@@ -922,10 +922,7 @@ for (let i = 0; i <= res.length-1; i++) {
 }
 
 //
-
-const size  = unique[0]?.size.replace(/"/g, '');
-const sizeIN = Number(unique[0]?.sizeIN);
-
+const size = parseFloat(unique[0]?.item[8] + '.' + unique[0]?.item[9]);
 const item = unique[0]?.item.slice(0, 2);;
 
 function heat() {
@@ -938,11 +935,7 @@ function heat() {
         return ''
     }
 
-    if (sizeIN === 0) {
-        return size > 4 && unique[0]?.uf_grade === 'B' ? 'Good' : '';
-    }
-
-    if (unique[0]?.sizeIN >= 4 && unique[0]?.uf_grade === 'B') {
+    if (size >= 4 && unique[0]?.uf_grade === 'B') {
         return 'Good'
     }
 
@@ -960,20 +953,17 @@ function flat() {
     }
 
     if (unique[0]?.Uf_spec.includes('TIS 107')) {
-        if (unique[0]?.sizeIN >= 2 || size >= 2) {
+        if (size >= 2) {
             return 'Good'
         } else {
             return ''
         } 
     }
 
-    if (sizeIN === 0) {
-        return size > 2.5 ? 'Good' : '';
-    }
-
-    if (unique[0]?.sizeIN >= 2.5) {
+    if (size >= 2.5) {
         return 'Good'
     }
+    
     return ''
 }
 
@@ -988,20 +978,17 @@ function bend() {
     }
     
     if (unique[0]?.Uf_spec.includes('TIS 107')) {
-        if ((sizeIN <= 1.5 || size <= 1.5) && sizeIN > 0) {
+        if (size <= 1.5) {
             return 'Good'
         } else {
             return ''
         }
     } 
-    
-    if (sizeIN === 0) {
-        return size < 2.5 ? 'Good' : '';
-    }
 
-    if (unique[0]?.sizeIN < 2.5 && unique[0]?.sizeIN > 0) {
+    if (size <= 2) {
         return 'Good'
     }
+    
     return ''
 }
 
@@ -1461,88 +1448,77 @@ for (let i = 0; i <= res.length-1; i++) {
 ]);
 // Add empty rows if needed to fill the table
 }
-
-const size  = unique[0]?.size.replace(/"/g, '');
-const sizeIN = Number(unique[0]?.sizeIN);
-
+  
+const size = parseFloat(unique[0]?.item[8] + '.' + unique[0]?.item[9]);
 const item = unique[0]?.item.slice(0, 2);;
 
 function heat() {
 
-if (item === 'FL' || item === 'WL') {
+    if (item === 'FL' || item === 'WL') {
+        return ''
+    }
+
+    if (unique[0]?.size.includes('x')) {
+        return ''
+    }
+
+    if (size >= 4 && unique[0]?.uf_grade === 'B') {
+        return 'Good'
+    }
+
     return ''
-}
-
-if (unique[0]?.size.includes('x')) {
-    return ''
-}
-
-if (sizeIN === 0) {
-    return size > 4 && unique[0]?.uf_grade === 'B' ? 'Good' : '';
-}
-
-if (unique[0]?.sizeIN >= 4 && unique[0]?.uf_grade === 'B') {
-    return 'Good'
-}
-
-return ''
 }
 
 function flat() {
 
-if (item === 'FL' || item === 'WL') {
-    return ''
-}
-
-if (unique[0]?.size.includes('x')) {
-    return ''
-}
-
-if (unique[0]?.Uf_spec.includes('TIS 107')) {
-    if (unique[0]?.sizeIN >= 2 || size >= 2) {
-        return 'Good'
-    } else {
+    if (item === 'FL' || item === 'WL') {
         return ''
-    } 
-}
+    }
 
-if (sizeIN === 0) {
-    return size > 2.5 ? 'Good' : '';
-}
+    if (unique[0]?.size.includes('x')) {
+        return ''
+    }
 
-if (unique[0]?.sizeIN >= 2.5) {
-    return 'Good'
-}
-return ''
+    if (unique[0]?.Uf_spec.includes('TIS 107')) {
+        if (size >= 2) {
+            return 'Good'
+        } else {
+            return ''
+        } 
+    }
+
+    if (size >= 2.5) {
+        return 'Good'
+    }
+    
+    return ''
 }
 
 function bend() {
 
-if (item === 'FL' || item === 'WL') {
-    return ''
-}
-
-if (unique[0]?.size.includes('x')) {
-    return ''
-}
-
-if (unique[0]?.Uf_spec.includes('TIS 107')) {
-    if ((sizeIN <= 1.5 || size <= 1.5) && sizeIN > 0) {
-        return 'Good'
-    } else {
+    if (item === 'FL' || item === 'WL') {
         return ''
     }
-} 
+  
+    if (unique[0]?.size.includes('x')) {
+        return ''
+    }
+    
+    if (unique[0]?.Uf_spec.includes('TIS 107')) {
+        if (size <= 1.5) {
+            return 'Good'
+        } else {
+            return ''
+        }
+    } 
 
-if (sizeIN === 0) {
-    return size < 2.5 ? 'Good' : '';
+    if (size <= 2) {
+        return 'Good'
+    }
+    
+    return ''
 }
 
-if (unique[0]?.sizeIN < 2.5 && unique[0]?.sizeIN > 0) {
-    return 'Good'
-}
-return ''
-}
 
 
 for (let i = res.length; i < 15; i++) {
