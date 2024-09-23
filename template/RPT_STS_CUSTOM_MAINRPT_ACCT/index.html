@@ -175,7 +175,15 @@
           EndDate: EndDate,
         },
         success: function (data) {
-          const dataVal = data.map
+        
+          const typeTwo = data.filter(item => item.doc_type === 2);
+
+          let totalOut = typeTwo.reduce((acc, cur) => {
+            return acc + Number(cur.in_value);
+          }, 0);
+
+          console.log(totalOut);
+          
             
           let accm = Number(data[0].accum);
           let newData = [];
@@ -190,7 +198,7 @@
 
             if (item.doc_type === 1) {
               total -= Number(item.out_value_H001);
-              console.log(total);
+
             } else {
               total += Number(item.in_value);
             }

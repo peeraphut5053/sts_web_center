@@ -170,7 +170,7 @@
 			$('table tbody tr:eq(0)').remove();
             $('table tbody tr:eq(0)').remove();
 //=========add nre head =========[doc_no]
-            $('table').prepend("<thead> <th>doc_no</th> <th>boatnote</th> <th>date</th> <th class='w-48'>item</th> <th>boat_name</th> <th>boat_no</th> <th>inv_no</th> <th>bundle</th> <th>weight_net</th> <th>weight_gross</th> <th>weight_zinc</th> <th>weight_nonzinc</th> <th>cust_po</th> <th>value</th> <th>pier</th> <th>BL_no</th> <th>loc_name</th>   </tr></thead>");
+            $('table').prepend("<thead> <th>doc_no</th> <th>boatnote</th> <th>date</th> <th class='w-48'>item</th> <th>boat_name</th> <th>boat_no</th> <th>inv_no</th> <th>bundle</th> <th>weight_net</th> <th>weight_gross</th> <th>weight_zinc</th> <th>weight_nonzinc</th> <th>cust_po</th> <th>value</th> <th>pier</th> <th>BL_no</th> <th>loc_name</th> <th>loc_name2</th> <th>loc_name3</th> <th>loc_name4</th>  </tr></thead>");
 			$('table thead').find('tr').each(function(){
 		   });
             var x = 0 ;
@@ -222,8 +222,11 @@
             var pier = [];
             var BL_no = [];
             var loc_name = [];
+            var loc_name2 = [];
+            var loc_name3 = [];
+            var loc_name4 = [];
             
-            
+
             var CountItem = 0;
 
             $("tbody tr").each(function () {
@@ -245,6 +248,9 @@
                     pier.push($(this).find('td:eq(14)').text());
                     BL_no.push($(this).find('td:eq(15)').text());
                     loc_name.push($(this).find('td:eq(16)').text());
+                    loc_name2.push($(this).find('td:eq(17)').text());
+                    loc_name3.push($(this).find('td:eq(18)').text());
+                    loc_name4.push($(this).find('td:eq(19)').text());
                     CountItem++;
                 }
                 i++;
@@ -273,6 +279,9 @@
                     pier : pier,
                     BL_no : BL_no,
                     loc_name : loc_name,
+                    loc_name2 : loc_name2,
+                    loc_name3 : loc_name3,
+                    loc_name4 : loc_name4,
                     
                 },
                 success: function (data) {

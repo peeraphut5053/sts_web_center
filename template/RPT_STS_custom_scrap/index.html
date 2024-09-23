@@ -171,12 +171,22 @@
             EndDate: EndDate,
           },
           success: function (data) {
+
+            var newData = data.map((item) => {
+              let val5 = item.value * 0.05
+              let val7 = (Number(item.value) + val5) * 0.07
+              return {
+                ...item,
+                val5: parseInt(val5),
+                val7: parseInt(val7),
+              }
+            })
             $("#tblReport").DataTable().clear();
             $("#tblReport").append(
               "<tfoot><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></tfoot>"
             );
             $("#tblReport").dataTable({
-              aaData: data,
+              aaData: newData,
               paging: false,
               fixedHeader: true,
               destroy: true,
@@ -212,10 +222,16 @@
                 {
                   data: "weight_KG",
                   className: "text-center",
+                  "render": function (data, type, row, meta) {
+                    return addCommas(data);
+                  }
                 },
                 {
                   data: "value",
                   className: "text-center",
+                  "render": function (data, type, row, meta) {
+                    return addCommas(data);
+                  }
                 },
                 {
                   data: null,
@@ -225,10 +241,11 @@
                   }
                 },
                 {
-                    data: null,
+                    data: 'val5',
                   className: "text-center",
                   "render": function (data, type, row, meta) {
-                    return "-";
+                  
+                    return addCommas(data);
                   }
                 },
                 {
@@ -239,10 +256,10 @@
                   }
                 },
                 {
-                    data: null,
+                    data: 'val7',
                   className: "text-center",
                   "render": function (data, type, row, meta) {
-                    return "-";
+                    return addCommas(data);
                   }
                 },
                 {
@@ -296,11 +313,24 @@
                                 .reduce(function (a, b) {
                                     return intVal(a) + intVal(b);
                                 }, 0);
+                        var totalVal5 = api
+                                .column(7)
+                                .data()
+                                .reduce(function (a, b) {
+                                    return intVal(a) + intVal(b);
+                                }, 0);
+                        var totalVal7 = api
+                                .column(9)
+                                .data()
+                                .reduce(function (a, b) {
+                                    return intVal(a) + intVal(b);
+                                }, 0);
 
                         $(api.column(3).footer()).html("<b>รวม</b>");
                         $(api.column(4).footer()).html(addCommas(totalKG.toFixed(2)));
                         $(api.column(5).footer()).html(addCommas(totalAmt.toFixed(2)));
-
+                        $(api.column(7).footer()).html(addCommas(totalVal5));
+                        $(api.column(9).footer()).html(addCommas(totalVal7));
                     },
             });
             $("#tblReport").loading("stop");

@@ -32,7 +32,10 @@ if ($load == "InsertSTS_Custom_In") {
         $_POST["AD_rate"][$i],
         $_POST["weight_KG"][$i],
         $_POST["value"][$i],
-        $_POST["remark"][$i]
+        $_POST["remark"][$i],
+        $_POST["item"][$i],
+        $_POST["type"][$i]
+
         );
         echo json_encode($doc_no[$i]);    
     }
@@ -62,7 +65,11 @@ if ($load == "InsertSTS_Custom_Out") {
         $_POST["value"][$i],
         $_POST["pier"][$i],
         $_POST["BL_no"][$i],
-        $_POST["loc_name"][$i]
+        $_POST["loc_name"][$i],
+        $_POST["loc_name2"][$i],
+        $_POST["loc_name3"][$i],
+        $_POST["loc_name4"][$i],
+        
         );
         echo json_encode($doc_no[$i]);  
     }

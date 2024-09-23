@@ -108,27 +108,27 @@
     >
       <thead>
         <tr>
-          <th rowspan="3" class="bg-gray">ลำดับที่</th>
-          <th colspan="1" class="bg-gray">เลขที่ใบขนฯ/ใบขนฯ โอนย้าย/</th>
-          <th colspan="1" class="bg-gray">วันที่ส่งออก/</th>
-          <th colspan="2" class="bg-gray">ชื่อสินค้า/รุ่น/แบบ/หน่วย( KGS)</th>
-          <th rowspan="3" class="bg-gray">รวม</th>
-          <th rowspan="3" class="bg-gray">มูลค่า(บาท)</th>
-          <th rowspan="3"  class="bg-gray">หมายเหตุ</th>
-        </tr>
-        <tr>
-          <th class="bg-gray">เลขที่ทำเรื่องทำลาย/บริจาก</th>
-          <th class="bg-gray">ชำระอากร</th>
-          <th class="bg-gray">ท่อเหล็กชุบสังกะสี</th>
-          <th class="bg-gray">ท่อเหล็กชุบสังกะสี</th>
-        </tr>
-        <tr>
-
-          <th class="bg-gray"></th>
-          <th class="bg-gray"></th>
-          <th class="bg-gray">(สูตร 06-4012325/718-1)</th>
-          <th class="bg-gray">(สูตร 06-4012329/718-2)</th>
-        </tr>
+          <th class="bg-gray">ลำดับที่</th>
+          <th class="bg-gray">เลขที่ใบขน</th>
+          <th class="bg-gray">เลข boat note</th>
+          <th class="bg-gray">วันที่</th>
+          <th class="bg-gray">ชื่อสินค้า</th>
+          <th  class="bg-gray">ชื่อเรือ</th>
+          <th  class="bg-gray">วอยเรือ</th>
+          <th   class="bg-gray">STS  INVOICE</th>
+          <th   class="bg-gray">จำนวน (มัด)</th>
+          <th   class="bg-gray">น้ำหนัก N.W. (KG)</th>
+          <th   class="bg-gray">น้ำหนัก G.W. (KG)</th>
+          <th   class="bg-gray">KG_zinc</th>
+          <th   class="bg-gray">KG_non_zinc</th>
+          <th   class="bg-gray">Customer PO.</th>
+          <th   class="bg-gray">มูลค่า (บาท)</th>
+          <th   class="bg-gray">ท่าส่งออก</th>
+          <th   class="bg-gray">B/L No.</th>
+          <th   class="bg-gray">ชื่อเรือฉลอม</th>
+          <th   class="bg-gray"></th>
+          <th   class="bg-gray"></th>
+          <th   class="bg-gray"></th>
       </thead>
       <!--        <tbody id="tblReportList">
                       <tr><td align="center" colspan="12">.... No item search ....</td></tr>
@@ -187,7 +187,7 @@
             })
             $("#tblReport").DataTable().clear();
             $("#tblReport").append(
-              "<tfoot><tr><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th></tr></tfoot>"
+              "<tfoot><tr><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th></tr></tfoot>"
             );
             $("#tblReport").dataTable({
               aaData: newData,
@@ -213,11 +213,43 @@
                   className: "text-center",
                 },
                 {
+                  data: "boatnote",
+                  className: "text-center",
+                },
+                {
                   data: "date.date",
                   className: "text-center",
                   "render": function (data, type, row, meta) {
                     return data.substring(0, 10);
                   }
+                },
+                {
+                  data: "item",
+                  className: "text-center",
+                },
+                {
+                  data: "boat_name",
+                  className: "text-center",
+                },
+                {
+                  data: "boat_no",
+                  className: "text-center",
+                },
+                {
+                  data: "inv_no",
+                  className: "text-center",
+                },
+                {
+                  data: "bundle",
+                  className: "text-center",
+                },
+                {
+                  data: "weight_net",
+                  className: "text-center",
+                },
+                {
+                  data: "weight_gross",
+                  className: "text-center",
                 },
                 {
                   data: "weight_zinc",
@@ -228,7 +260,7 @@
                   className: "text-center",
                 },
                 {
-                  data: "total",
+                  data: "cust_po",
                   className: "text-center",
                 },
                 {
@@ -236,7 +268,27 @@
                   className: "text-center",
                 },
                 {
-                  data: "boatnote",
+                  data: "pier",
+                  className: "text-center",
+                },
+                {
+                  data: "BL_no",
+                  className: "text-center",
+                },
+                {
+                  data: "loc_name",
+                  className: "text-center",
+                },
+                {
+                  data: "loc_name2",
+                  className: "text-center",
+                },
+                {
+                  data: "loc_name3",
+                  className: "text-center",
+                },
+                {
+                  data: "loc_name4",
                   className: "text-center",
                 },
               ],
@@ -266,35 +318,42 @@
                                     typeof i === 'number' ?
                                     i : 0;
                         };
-                        var totalKG = api
-                                .column(3)
+                        var totalNet = api
+                                .column(9)
                                 .data()
                                 .reduce(function (a, b) {
                                     return intVal(a) + intVal(b);
                                 }, 0);
-                        var totalAmt = api
-                                .column(4)
+                        var totalGross = api
+                                .column(10)
                                 .data()
                                 .reduce(function (a, b) {
                                     return intVal(a) + intVal(b);
                                 }, 0);
-                        var total = api
-                                .column(5)
+                        var totalZinc = api
+                                .column(11)
+                                .data()
+                                .reduce(function (a, b) {
+                                    return intVal(a) + intVal(b);
+                                }, 0);
+                        var totalNonzinc = api
+                                .column(12)
                                 .data()
                                 .reduce(function (a, b) {
                                     return intVal(a) + intVal(b);
                                 }, 0);
                         var totalVal = api
-                                .column(6)
+                                .column(14)
                                 .data()
                                 .reduce(function (a, b) {
                                     return intVal(a) + intVal(b);
                                 }, 0);
-                        $(api.column(2).footer()).html("รวม");
-                        $(api.column(3).footer()).html(addCommas(totalKG.toFixed(2)));
-                        $(api.column(4).footer()).html(addCommas(totalAmt.toFixed(2)));
-                        $(api.column(5).footer()).html(addCommas(total.toFixed(2)));
-                        $(api.column(6).footer()).html(addCommas(totalVal.toFixed(2)));
+                        $(api.column(7).footer()).html("รวม");
+                        $(api.column(9).footer()).html(addCommas(totalNet.toFixed(2)));
+                        $(api.column(10).footer()).html(addCommas(totalGross.toFixed(2)));
+                        $(api.column(11).footer()).html(addCommas(totalZinc.toFixed(2)));
+                        $(api.column(12).footer()).html(addCommas(totalNonzinc.toFixed(2)));
+                        $(api.column(14).footer()).html(addCommas(totalVal.toFixed(2)));
                         $('tfoot').css({
         'font-weight': 'bold',
         'font-size': '14px',

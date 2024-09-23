@@ -113,10 +113,19 @@
           <th class="bg-gray">วันนำเข้า</th>
           <th class="bg-gray">วันเข้าคลัง</th>
           <th class="bg-gray">ชื่อวัตถุดิบ</th>
-          <th class="bg-gray">รหัสวัตถุดิบ</th>
+          <th class="bg-gray">บริษัทที่ซื้อเหล็ก</th>
+          <th class="bg-gray">ประเทศ</th>
+          <th class="bg-gray">ภาษีทุ่มตลาด (% AD Rate)</th>
           <th class="bg-gray">จำนวน(กก.)</th>
           <th class="bg-gray">มูลค่า(บาท)</th>
-          <th class="bg-gray">ภาษีอากรรวม</th>
+          <th class="bg-gray">อากร 5% (บาท)</th>
+          <th class="bg-gray">ภาษีมูลค่าเพิ่ม 7% (บาท)</th>
+          <th class="bg-gray">ภาษีอากรรวม (บาท)</th>
+          <th class="bg-gray">ภาษีทุ่มตลาด (บาท)</th>
+          <th class="bg-gray">รวมภาษีทั้งหมด (บาท)</th>
+          <th class="bg-gray">ภาษีต่อหน่วย (บาท/กก.)</th>
+          <th class="bg-gray">ประเภทเหล็ก</th>
+          <th class="bg-gray">หมายเหตุ</th>
         </tr>
       </thead>
       <!--        <tbody id="tblReportList">
@@ -168,12 +177,30 @@
             EndDate: EndDate,
           },
           success: function (data) {
+
+            var newData = data.map((item) => {
+              let val5 = item.value * 0.05
+              let val7 = (Number(item.value) + val5) * 0.07
+              let totalVal = val5 + val7
+              let valMarket = (item.value * item.AD_rate) / 100
+              let total = val5 + val7 + valMarket
+              return {
+                ...item,
+                val5: val5,
+                val7: val7,
+                totalVal: totalVal,
+                valMarket: valMarket,
+                total: total
+
+              }
+            })
+
             $("#tblReport").DataTable().clear();
             $("#tblReport").append(
-              "<tfoot><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></tfoot>"
+              "<tfoot><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></tfoot>"
             );
             $("#tblReport").dataTable({
-              aaData: data,
+              aaData: newData,
               paging: false,
               fixedHeader: true,
               destroy: true,
@@ -210,6 +237,10 @@
                   }
                 },
                 {
+                  data: "item",
+                  className: "text-center",
+                },
+                {
                   data: "supplier",
                   className: "text-center",
                 },
@@ -218,15 +249,76 @@
                   className: "text-center",
                 },
                 {
+                  data: "AD_rate",
+                  className: "text-center",
+                },
+                {
                   data: "weight_KG",
                   className: "text-center",
+                  "render": function (data, type, row, meta) {
+                    return addCommas(data);
+                  }
                 },
                 {
                   data: "value",
                   className: "text-center",
+                  "render": function (data, type, row, meta) {
+                    return addCommas(data);
+                  }
+                },
+                {
+                  data: "val5",
+                  className: "text-center",
+                  "render": function (data, type, row, meta) {
+                    return addCommas(parseFloat(data).toFixed(2));
+                  }
+                },
+                {
+                  data: "val7",
+                  className: "text-center",
+                  "render": function (data, type, row, meta) {
+                    return addCommas(parseFloat(data).toFixed(2));
+                  }
+                },
+                {
+                  data: 'totalVal',
+                  className: "text-center",
+                  "render": function (data, type, row, meta) {
+                    
+                    return addCommas(parseFloat(data).toFixed(2));
+                  }
+                },
+                {
+                  data: "valMarket",
+                  className: "text-center",
+                  "render": function (data, type, row, meta) {
+                    return addCommas(parseFloat(data).toFixed(2));
+                    
+                  }
                 },
                 {
                   data: "total",
+                  className: "text-center",
+                  "render": function (data, type, row, meta) {
+                    return addCommas(parseFloat(data).toFixed(2));
+                    
+                  }
+                },
+                {
+                  data: null,
+                  className: "text-center",
+                  "render": function (data, type, row, meta) {
+                    var avg = row.value / row.weight_KG
+                    return addCommas(parseFloat(avg).toFixed(2));
+                    
+                  }
+                },
+                {
+                  data: "type",
+                  className: "text-center",
+                },
+                {
+                  data: "remark",
                   className: "text-center",
                 },
               ],
@@ -245,7 +337,7 @@
                   footer: true,
                   text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
                   title:
-                    "รายงานของที่นำเข้าเก็บในคลังสินค้าทัณฑ์บนฯ" +
+                    "รายงานนำเข้าตัดบัญชี" +
                     StartDate +
                     "_to_" +
                     EndDate,
@@ -261,21 +353,56 @@
                                     i : 0;
                         };
                         var totalKG = api
-                                .column(6)
+                                .column(8)
                                 .data()
                                 .reduce(function (a, b) {
                                     return intVal(a) + intVal(b);
                                 }, 0);
                         var totalAmt = api
-                                .column(7)
+                                .column(9)
+                                .data()
+                                .reduce(function (a, b) {
+                                    return intVal(a) + intVal(b);
+                                }, 0);
+                        var val5 = api
+                                .column(10)
+                                .data()
+                                .reduce(function (a, b) {
+                                    return intVal(a) + intVal(b);
+                                }, 0);
+                        var val7 = api
+                                .column(11)
+                                .data()
+                                .reduce(function (a, b) {
+                                    return intVal(a) + intVal(b);
+                                }, 0);
+                        var totalVal = api
+                                .column(12)
+                                .data()
+                                .reduce(function (a, b) {
+                                    return intVal(a) + intVal(b);
+                                }, 0);
+                        var valMarket = api
+                                .column(13)
+                                .data()
+                                .reduce(function (a, b) {
+                                    return intVal(a) + intVal(b);
+                                }, 0);
+                        var total = api
+                                .column(14)
                                 .data()
                                 .reduce(function (a, b) {
                                     return intVal(a) + intVal(b);
                                 }, 0);
 
-                        $(api.column(3).footer()).html("<b>รวม</b>");
-                        $(api.column(6).footer()).html(addCommas(totalKG.toFixed(2)));
-                        $(api.column(7).footer()).html(addCommas(totalAmt.toFixed(2)));
+                        $(api.column(5).footer()).html("<b>รวม</b>");
+                        $(api.column(8).footer()).html(addCommas(totalKG.toFixed(2)));
+                        $(api.column(9).footer()).html(addCommas(totalAmt.toFixed(2)));
+                        $(api.column(10).footer()).html(addCommas(val5.toFixed(2)));
+                        $(api.column(11).footer()).html(addCommas(val7.toFixed(2)));
+                        $(api.column(12).footer()).html(addCommas(totalVal.toFixed(2)));
+                        $(api.column(13).footer()).html(addCommas(valMarket.toFixed(2)));
+                        $(api.column(14).footer()).html(addCommas(total.toFixed(2)));
 
                     },
             });
