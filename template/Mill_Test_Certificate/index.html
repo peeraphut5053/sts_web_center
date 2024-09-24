@@ -611,7 +611,7 @@
                     'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
                             "<'row'<'col-md-12'tr>>" +
                             "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
-                    buttons: [
+                   buttons: [
                         {
                             extend: 'print',
                             text: "<i class='fa fa-print'></i>&nbsp;Print",
@@ -757,6 +757,7 @@
                 $('#tblReportR').loading("stop");
                 $("#BtnSearchR").html("<i class='fa fa-search'></i>Search");
             },
+        
             error: function (e) {
                 console.log("There was an error with your request...");
                 console.log("error: " + JSON.stringify(e));
@@ -785,6 +786,12 @@ const logo = () => {
             bold: 'THSarabunNew Bold.ttf',
             italics: 'THSarabunNew-Italic.ttf',
             bolditalics: 'THSarabunNew-BoldItalic.ttf'
+        },
+        Roboto: {
+            normal: 'Roboto-Regular.ttf',
+            bold: 'Roboto-Medium.ttf',
+            italics: 'Roboto-Italic.ttf',
+            bolditalics: 'Roboto-MediumItalic.ttf'
         }
     };
     
@@ -892,31 +899,31 @@ function createData(res,index) {
 )
 for (let i = 0; i <= res.length-1; i++) {
     data.push([
-  { text: `${unique[i]?.uf_typeEnd ? index + 1 : ''}`,bold: true ,alignment: 'center', fontSize: 8 },
-  { text: `${unique[i]?.uf_typeEnd ? unique[i]?.uf_typeEnd : ''}`,bold: true , alignment: 'center', fontSize: 8 },
-  { text: `${unique[i]?.size ? unique[i]?.size : ''}`,bold: true , alignment: 'center', fontSize: 8 },
-  { text: `${unique[i]?.Uf_Schedule ? res[i]?.Uf_Schedule : ''}`,bold: true , alignment: 'center', fontSize: 8 },
-  { text: `${unique[i]?.length? unique[i]?.length : ''}`,bold: true , alignment: 'center', fontSize: 8 },
-  { text: `${unique[i]?.bundle ? unique[i].bundle : ''}`,bold: true , alignment: 'center', fontSize: 8 },
-  { text: `${unique[i]?.piece ? unique[i].piece : ''}`,bold: true , alignment: 'center', fontSize: 8 },
-  { text: `${res[i]?.qa_sts_no ? res[i].qa_sts_no : ''}`,bold: true , alignment: 'center', fontSize: 8 },
-  { text: `${res[i]?.sts_c ? res[i].sts_c : ''}`,bold: true , alignment: 'center', fontSize: 8 },
-  { text: `${res[i]?.sts_si ? res[i].sts_si : ''}`,bold: true , alignment: 'center', fontSize: 8 },
-  { text: `${res[i]?.sts_mn ? res[i].sts_mn : ''}`,bold: true , alignment: 'center', fontSize: 8 },
-  { text: `${res[i]?.sts_p ? res[i].sts_p : ''}`,bold: true , alignment: 'center', fontSize: 8 },
-  { text: `${res[i]?.sts_s ? res[i].sts_s : ''}`,bold: true , alignment: 'center', fontSize: 8 },
-  { text: `${res[i]?.sts_cu ? res[i].sts_cu : ''}`,bold: true , alignment: 'center', fontSize: 8 },
-  { text: `${res[i]?.sts_v ? res[i].sts_v : ''}`,bold: true , alignment: 'center', fontSize: 8 },
-  { text: `${res[i]?.sts_ni ? res[i].sts_ni : ''}`,bold: true , alignment: 'center', fontSize: 8 },
-  { text: `${res[i]?.sts_cr ? res[i].sts_cr : ''}`,bold: true , alignment: 'center', fontSize: 8 },
-  { text: `${res[i]?.sts_mo ? res[i].sts_mo : ''}`,bold: true , alignment: 'center', fontSize: 8 },
-  { text: `${res[i]?.sts_nb ? res[i].sts_nb : ''}`,bold: true , alignment: 'center', fontSize: 8 },
-  { text: `${res[i]?.Mec_test_TS ? res[i].Mec_test_TS : '-'}`,bold: true , alignment: 'center', fontSize: 8 },
-  { text: `${res[i]?.Mec_test_YS ? res[i].Mec_test_YS : '-'}`,bold: true , alignment: 'center', fontSize: 8 },
-  { text: `${res[i]?.Mec_test_EI ? res[i].Mec_test_EI : '-'}`,bold: true , alignment: 'center', fontSize: 8 },
-  { text: `${res[i]?.QC_hydro ? res[i].QC_hydro : '-'}`,bold: true , alignment: 'center', fontSize: 8},
-  { text: `${res[i]?.QC_Pb > 0 ? parseFloat(res[i].QC_Pb) : '-'}`,bold: true , alignment: 'center', fontSize: 8 },
-  { text: `${res[i]?.QC_weight_coat > 0 ? res[i].QC_weight_coat : '-'}`,bold: true , alignment: 'center', fontSize: 8 },
+  { text: `${unique[i]?.uf_typeEnd ? index + 1 : ''}`,bold: true ,alignment: 'center', font: 'Roboto', fontSize: 6 },
+  { text: `${unique[i]?.uf_typeEnd ? unique[i]?.uf_typeEnd : ''}`,bold: true , alignment: 'center', font: 'Roboto', fontSize: 6 },
+  { text: `${unique[i]?.size ? unique[i]?.size : ''}`,bold: true , alignment: 'center', font: 'Roboto', fontSize: 6 },
+  { text: `${unique[i]?.Uf_Schedule ? res[i]?.Uf_Schedule : ''}`,bold: true , alignment: 'center', font: 'Roboto', fontSize: 6 },
+  { text: `${unique[i]?.length? unique[i]?.length : ''}`,bold: true , alignment: 'center', font: 'Roboto', fontSize: 6 },
+  { text: `${unique[i]?.bundle ? unique[i].bundle : ''}`,bold: true , alignment: 'center', font: 'Roboto', fontSize: 6 },
+  { text: `${unique[i]?.piece ? unique[i].piece : ''}`,bold: true , alignment: 'center', font: 'Roboto', fontSize: 6 },
+  { text: `${res[i]?.qa_sts_no ? res[i].qa_sts_no : ''}`,bold: true , alignment: 'center', font: 'Roboto', fontSize: 6 },
+  { text: `${res[i]?.sts_c ? res[i].sts_c : ''}`,bold: true , alignment: 'center', font: 'Roboto', fontSize: 6 },
+  { text: `${res[i]?.sts_si ? res[i].sts_si : ''}`,bold: true , alignment: 'center', font: 'Roboto', fontSize: 6 },
+  { text: `${res[i]?.sts_mn ? res[i].sts_mn : ''}`,bold: true , alignment: 'center', font: 'Roboto', fontSize: 6 },
+  { text: `${res[i]?.sts_p ? res[i].sts_p : ''}`,bold: true , alignment: 'center', font: 'Roboto', fontSize: 6 },
+  { text: `${res[i]?.sts_s ? res[i].sts_s : ''}`,bold: true , alignment: 'center', font: 'Roboto', fontSize: 6 },
+  { text: `${res[i]?.sts_cu ? res[i].sts_cu : ''}`,bold: true , alignment: 'center', font: 'Roboto', fontSize: 6 },
+  { text: `${res[i]?.sts_v ? res[i].sts_v : ''}`,bold: true , alignment: 'center', font: 'Roboto', fontSize: 6 },
+  { text: `${res[i]?.sts_ni ? res[i].sts_ni : ''}`,bold: true , alignment: 'center', font: 'Roboto', fontSize: 6 },
+  { text: `${res[i]?.sts_cr ? res[i].sts_cr : ''}`,bold: true , alignment: 'center', font: 'Roboto', fontSize: 6 },
+  { text: `${res[i]?.sts_mo ? res[i].sts_mo : ''}`,bold: true , alignment: 'center', font: 'Roboto', fontSize: 6 },
+  { text: `${res[i]?.sts_nb ? res[i].sts_nb : ''}`,bold: true , alignment: 'center', font: 'Roboto', fontSize: 6 },
+  { text: `${res[i]?.Mec_test_TS ? res[i].Mec_test_TS : '-'}`,bold: true , alignment: 'center', font: 'Roboto', fontSize: 6 },
+  { text: `${res[i]?.Mec_test_YS ? res[i].Mec_test_YS : '-'}`,bold: true , alignment: 'center', font: 'Roboto', fontSize: 6 },
+  { text: `${res[i]?.Mec_test_EI ? res[i].Mec_test_EI : '-'}`,bold: true , alignment: 'center', font: 'Roboto', fontSize: 6 },
+  { text: `${res[i]?.QC_hydro ? res[i].QC_hydro : '-'}`,bold: true , alignment: 'center', font: 'Roboto', fontSize: 6},
+  { text: `${res[i]?.QC_Pb > 0 ? parseFloat(res[i].QC_Pb) : '-'}`,bold: true , alignment: 'center', font: 'Roboto', fontSize: 6 },
+  { text: `${res[i]?.QC_weight_coat > 0 ? res[i].QC_weight_coat : '-'}`,bold: true , alignment: 'center', font: 'Roboto', fontSize: 6 },
 ]);
 // Add empty rows if needed to fill the table
 }
@@ -994,33 +1001,33 @@ function bend() {
 
 
 
-for (let i = res.length; i < 16; i++) {
+for (let i = res.length; i < 18; i++) {
     data.push([
-  { text: ` `, alignment: 'center', fontSize: 8 },
-  { text: ``, alignment: 'center', fontSize: 8 },
-  { text: ``, alignment: 'center', fontSize: 8 },
-  { text: ``, alignment: 'center', fontSize: 8 },
-  { text: ``, alignment: 'center', fontSize: 8 },
-  { text: ``, alignment: 'center', fontSize: 8 },
-  { text: ``, alignment: 'center', fontSize: 8 },
-  { text: ``, alignment: 'center', fontSize: 8 },
-  { text: ``, alignment: 'center', fontSize: 8 },
-  { text: ``, alignment: 'center', fontSize: 8 },
-  { text: ``, alignment: 'center', fontSize: 8 },
-  { text: ``, alignment: 'center', fontSize: 8 },
-  { text: ``, alignment: 'center', fontSize: 8 },
-  { text: ``, alignment: 'center', fontSize: 8 },
-  { text: ``, alignment: 'center', fontSize: 8 },
-  { text: ``, alignment: 'center', fontSize: 8 },
-  { text: ``, alignment: 'center', fontSize: 8 },
-  { text: ``, alignment: 'center', fontSize: 8 },
-  { text: ``, alignment: 'center', fontSize: 8 },
-  { text: ``, alignment: 'center', fontSize: 8 },
-  { text: ``, alignment: 'center', fontSize: 8 },
-  { text: ``, alignment: 'center', fontSize: 8 },
-  { text: ``, alignment: 'center', fontSize: 8 },
-  { text: ``, alignment: 'center', fontSize: 8 },
-  { text: ``, alignment: 'center', fontSize: 8 },
+  { text: ` `, alignment: 'center', fontSize: 6 },
+  { text: ``, alignment: 'center', fontSize: 6 },
+  { text: ``, alignment: 'center', fontSize: 6 },
+  { text: ``, alignment: 'center', fontSize: 6 },
+  { text: ``, alignment: 'center', fontSize: 6 },
+  { text: ``, alignment: 'center', fontSize: 6 },
+  { text: ``, alignment: 'center', fontSize: 6 },
+  { text: ``, alignment: 'center', fontSize: 6 },
+  { text: ``, alignment: 'center', fontSize: 6 },
+  { text: ``, alignment: 'center', fontSize: 6 },
+  { text: ``, alignment: 'center', fontSize: 6 },
+  { text: ``, alignment: 'center', fontSize: 6 },
+  { text: ``, alignment: 'center', fontSize: 6 },
+  { text: ``, alignment: 'center', fontSize: 6 },
+  { text: ``, alignment: 'center', fontSize: 6 },
+  { text: ``, alignment: 'center', fontSize: 6 },
+  { text: ``, alignment: 'center', fontSize: 6 },
+  { text: ``, alignment: 'center', fontSize: 6 },
+  { text: ``, alignment: 'center', fontSize: 6 },
+  { text: ``, alignment: 'center', fontSize: 6 },
+  { text: ``, alignment: 'center', fontSize: 6 },
+  { text: ``, alignment: 'center', fontSize: 6 },
+  { text: ``, alignment: 'center', fontSize: 6 },
+  { text: ``, alignment: 'center', fontSize: 6 },
+  { text: ``, alignment: 'center', fontSize: 6 },
 ]);
 }
 data.push([
@@ -1239,18 +1246,18 @@ function createTables() {
     const tables = [];
     for (let i = 0; i < filter.length; i++) {
         let res = dataNow.filter((value) => value.item === filter[i].item);
-        for (let j = 0; j < res.length; j += 16) {
+        for (let j = 0; j < res.length; j += 18) {
             // Slice 15 rows at a time
-            const newRes = res.slice(j, j + 16);
+            const newRes = res.slice(j, j + 18);
             tables.push({
                 table: {
                     headerRows: 2,
                     background: 'red',
-                    widths: [15, 25, 25, 25, 25, 30, 30, 30, 25, 22, 22, 22, 22, 22, 22, 22, 22, 25, 25, 20, 20, 20, 25, 25, 30],
+                    widths: [15, 20, 25, 25, 26, 25, 25, 25, 25, 25, 25, 26, 26, 26, 26, 26, 26, 26, 26, 20, 20, 20, 23, 20, 25],
                     body: createData(newRes, i),
                 },
                 // Add a page break after every table except the last one
-                pageBreak: j + 16 < res.length || i < filter.length - 1 ? 'after' : '',
+                pageBreak: j + 18 < res.length || i < filter.length - 1 ? 'after' : '',
                 pageData: newRes
             });
         }
@@ -1790,7 +1797,7 @@ function createTables() {
                 table: {
                     headerRows: 2,
                     background: 'red',
-                    widths: [15, 15, 20, 20, 20, 20, 20, 20, 22, 22, 22, 22, 22, 22, 22, 22, 22, 24, 24, 18, 18, 18,18, 18, 18, 22, 20, 25],
+                    widths: [14, 15, 20, 20, 20, 20, 20, 18, 22, 22, 22, 22, 24, 24, 24, 24, 24, 24, 24, 18, 18, 18,18, 18, 18, 20, 20, 20],
                     body: createData(newRes, i),
                 },
                 // Add a page break after every table except the last one
