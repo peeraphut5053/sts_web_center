@@ -114,5 +114,15 @@ from STS_custom_IN where date_in between '$StartDate' and '$EndDate'";
         return $rs0;
     }
 
+    function GetDataReportRemainPDF($StartDate, $EndDate) {
+        $query = "EXEC [dbo].[STS_custom_mainrpt_acct_remain]
+  @TransactionDateStarting = '$StartDate',
+  @TransactionDateEnding = '$EndDate'";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+
 }
 ?>

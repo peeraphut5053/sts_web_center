@@ -157,38 +157,10 @@
 <div class="m-5 hidden" id="DivTest">   
     <div class="flex">
         <label class="custom-checkbox">
-            <input type="checkbox" name='TestOne' id="TestOne" />
-            <span class="checkmark"></span>
-             NONDESTRUCTIVE TESTING
-        </label>
-        <label class="custom-checkbox">
-            <input type="checkbox" name='TestTwo' id="TestTwo" />
-            <span class="checkmark"></span>
-             HEAT TREATMENT
-        </label>
-        <label class="custom-checkbox">
-            <input type="checkbox" name='TestThree' id="TestThree" />
-            <span class="checkmark"></span>
-             FLATTENING TEST
-        </label>
-        <label class="custom-checkbox">
-            <input type="checkbox" name='TestFour' id="TestFour" />
-            <span class="checkmark"></span>
-             BENDING TEST
-        </label>
-        <label class="custom-checkbox">
-            <input type="checkbox" name='TestFive' id="TestFive" />
-            <span class="checkmark"></span>
-             VISUAL & DIMENSON
-        </label>
-        <label class="custom-checkbox">
             <input type="checkbox" name='Zinc' id="Zinc" />
             <span class="checkmark"></span>
              กำหนดช่องเป็น Zinc Coating Thinness (μm)
         </label>
-        <div class="col-lg-1 col-md-2 col-sm-1 col-xs-6  col-search">
-            <button id="BtnSave" class="btn btn-success"><i class="fa fa-floppy-o p-1" aria-hidden="true"></i>  Save</button>
-        </div>
     </div>
 </div>
     <br>
@@ -285,11 +257,7 @@
                 "do_num":do_num,
             },
             success: function (data) {
-                $("#TestOne").prop("checked", data[0].uf_QC_EDDY ? true : false);
-                $("#TestTwo").prop("checked", data[0].uf_QC_HEAT ? true : false);
-                $("#TestThree").prop("checked", data[0].uf_QC_FLAT ? true : false);
-                $("#TestFour").prop("checked", data[0].uf_QC_BEND ? true : false);
-                $("#TestFive").prop("checked", data[0].uf_QC_VISUAL ? true : false);
+                console.log(data);
             },
             error: function (e) {
                 console.log("error: " + JSON.stringify(e));
@@ -301,7 +269,7 @@
         $("#prod_dateR").datepicker({
         dateFormat: 'yy-mm-dd',
     });
-
+{/*
     $("#BtnSave").click(function(){
         var do_num = $("#do_numR").val();
         var TestOne = $("#TestOne").is(":checked");
@@ -341,7 +309,7 @@
                 console.log("error: " + JSON.stringify(e));
             }
         });
-    });
+    });*/}
 
 
     function ReportAllSearch() {
@@ -836,11 +804,11 @@ const filter = dataNow.filter((value, index, self) =>
     })*/}
 
 
-var testOne = $("input[name='TestOne']:checked").val();
-var testTwo = $("input[name='TestTwo']:checked").val();
-var testThree = $("input[name='TestThree']:checked").val();
-var testFour = $("input[name='TestFour']:checked").val();
-var testFive = $("input[name='TestFive']:checked").val();
+//var testOne = $("input[name='TestOne']:checked").val();
+//var testTwo = $("input[name='TestTwo']:checked").val();
+//var testThree = $("input[name='TestThree']:checked").val();
+//var testFour = $("input[name='TestFour']:checked").val();
+//var testFive = $("input[name='TestFive']:checked").val();
 var zinc = $("input[name='Zinc']:checked").val();
 
 
@@ -1328,11 +1296,11 @@ const filter = dataNow.filter((value, index, self) =>
     })*/}
 
 
-var testOne = $("input[name='TestOne']:checked").val();
-var testTwo = $("input[name='TestTwo']:checked").val();
-var testThree = $("input[name='TestThree']:checked").val();
-var testFour = $("input[name='TestFour']:checked").val();
-var testFive = $("input[name='TestFive']:checked").val();
+//var testOne = $("input[name='TestOne']:checked").val();
+//var testTwo = $("input[name='TestTwo']:checked").val();
+//var testThree = $("input[name='TestThree']:checked").val();
+//var testFour = $("input[name='TestFour']:checked").val();
+//var testFive = $("input[name='TestFive']:checked").val();
 var zinc = $("input[name='Zinc']:checked").val();
 
 
