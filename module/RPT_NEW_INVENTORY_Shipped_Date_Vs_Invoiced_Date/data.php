@@ -1,8 +1,13 @@
 <?php
 
-while (list($key, $data) = each($_GET) OR list($key, $data) = each($_POST)) {
-    ${$key} = trim($data);
+foreach ($_GET as $key => $value) {
+    $$key = trim($value);
 }
+
+foreach ($_POST as $key => $value) {
+    $$key = trim($value);
+}
+
 require_once "../initial.php";
 
 if ($load == "RPT_NEW_INVENTORY_Shipped_Date_Vs_Invoiced_Date") {

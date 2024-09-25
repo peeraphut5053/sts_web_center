@@ -1,7 +1,11 @@
 <?php
 
-while (list($key, $data) = each($_GET) OR list($key, $data) = each($_POST)) {
-    ${$key} = trim($data);
+foreach ($_GET as $key => $value) {
+  $$key = trim($value);
+}
+
+foreach ($_POST as $key => $value) {
+  $$key = trim($value);
 }
 //ini_set('display_errors', 1);
 //ini_set('display_startup_errors', 1);

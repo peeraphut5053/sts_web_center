@@ -15,8 +15,12 @@
 //echo $prj_code ;
 //====================================================
 
-while (list($key, $data) = each($_GET) OR list($key, $data) = each($_POST)) {
-    ${$key} = trim($data);
+foreach ($_GET as $key => $value) {
+    $$key = trim($value);
+}
+
+foreach ($_POST as $key => $value) {
+    $$key = trim($value);
 }
  $SwitchSale = trim($_GET["SwitchSale"]) ;
 // $actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";

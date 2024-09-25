@@ -2,12 +2,18 @@
 
 header("Access-Control-Allow-Origin: *");
 
-while (list($key, $data) = each($_GET) OR list($key, $data) = each($_POST)) {
-    ${$key} = trim($data);
+foreach ($_GET as $key => $value) {
+    $$key = trim($value);
 }
+
+foreach ($_POST as $key => $value) {
+    $$key = trim($value);
+}
+
 require_once "../initial.php";
 $CallModel = new CallModel();
 $CallModel->SyteLine_Models();
+
 if ($load == "ajax") {
     $Do = new DeliveryOrder();
     $Do->setConn($ConnSL);
