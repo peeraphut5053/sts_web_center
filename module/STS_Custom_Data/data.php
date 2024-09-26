@@ -80,9 +80,7 @@ if ($load == "InsertSTS_Custom_Out") {
         $_POST["loc_name"][$i],
         $_POST["loc_name2"][$i],
         $_POST["loc_name3"][$i],
-        $_POST["loc_name4"][$i],
-        
-        );
+        $_POST["loc_name4"][$i]);
         echo json_encode($doc_no[$i]);  
     }
 }
