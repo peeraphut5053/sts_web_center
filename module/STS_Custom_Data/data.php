@@ -34,9 +34,7 @@ if ($load == "InsertSTS_Custom_In") {
         $_POST["value"][$i],
         $_POST["remark"][$i],
         $_POST["item"][$i],
-        $_POST["type"][$i]
-
-        );
+        $_POST["type"][$i]);
         echo json_encode($doc_no[$i]);    
     }
 }

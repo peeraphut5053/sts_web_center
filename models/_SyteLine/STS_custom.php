@@ -41,16 +41,36 @@ class STS_Custom {
         $sql = "SELECT * FROM STS_custom_OUT WHERE doc_no = '$doc_no'";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $sql);
+
         if ($doc_no == $rs0[1]["doc_no"]) {
-            // Write update
-            $query = "UPDATE STS_custom_OUT set boatnote = '$boatnote', date = '$date', item = '$item', boat_name = '$boat_name', boat_no = '$boat_no', inv_no = '$inv_no',bundle = $bundle, weight_net = $weight_net, weight_gross = $weight_gross, weight_zinc = $weight_zinc, weight_nonzinc = $weight_nonzinc, cust_po = '$cust_po', value = $value, pier = '$pier', BL_no = '$BL_no', loc_name = '$loc_name' loc_name2 = '$loc_name2' loc_name3 = '$loc_name3' loc_name4 = '$loc_name4' where doc_no = '$doc_no'";
+            $query = "UPDATE STS_custom_OUT set 
+    boatnote = '$boatnote', 
+    date = '$date', 
+    item = '$item', 
+    boat_name = '$boat_name', 
+    boat_no = '$boat_no', 
+    inv_no = '$inv_no',
+    bundle = $bundle, 
+    weight_net = $weight_net, 
+    weight_gross = $weight_gross, 
+    weight_zinc = " . ($weight_zinc !== '' ? $weight_zinc : "NULL") . ", 
+    weight_nonzinc = " . ($weight_nonzinc !== '' ? $weight_nonzinc : "NULL") . ", 
+    cust_po = '$cust_po', 
+    value = $value, 
+    pier = '$pier', 
+    BL_no = '$BL_no', 
+    loc_name = '$loc_name',
+    loc_name2 = '$loc_name2',
+    loc_name3 = '$loc_name3',
+    loc_name4 = '$loc_name4' 
+    where doc_no = '$doc_no'";
             $cSql = new SqlSrv();
             $rs0 = $cSql->SqlQuery($this->StrConn, $query);
             array_splice($rs0, count($rs0) - 1, 1);
             return $rs0;
         } else {
             $query = "INSERT INTO STS_custom_OUT (doc_no, boatnote, date, item, boat_name, boat_no, inv_no, bundle, weight_net, weight_gross, weight_zinc, weight_nonzinc, cust_po, value, pier, BL_no, loc_name, loc_name2, loc_name3, loc_name4, createdate)
-            VALUES ('$doc_no', '$boatnote', '$date', '$item', '$boat_name', '$boat_no', '$inv_no', $bundle, $weight_net, $weight_gross, $weight_zinc, $weight_nonzinc, '$cust_po', $value, '$pier', '$BL_no', '$loc_name', '$loc_name2', '$loc_name3', '$loc_name4', GETDATE())";
+            VALUES ('$doc_no', '$boatnote', '$date', '$item', '$boat_name', '$boat_no', '$inv_no', $bundle, $weight_net, $weight_gross,  " . ($weight_zinc !== '' ? $weight_zinc : "NULL") . ", " . ($weight_nonzinc !== '' ? $weight_nonzinc : "NULL") . ", '$cust_po', $value, '$pier', '$BL_no', '$loc_name', '$loc_name2', '$loc_name3', '$loc_name4', GETDATE())";
            $cSql = new SqlSrv();
            $rs0 = $cSql->SqlQuery($this->StrConn, $query);
            array_splice($rs0, count($rs0) - 1, 1);
