@@ -134,6 +134,7 @@
 </div>
 <div id="printpopup"></div>
 <script src="https://momentjs.com/downloads/moment.js" />
+<script src=" https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/locale/th.min.js" />
 <script type="text/javascript">
   $("#btnSearch").click(function () {
     ReportItemSearch();
@@ -406,12 +407,18 @@
           EndDate: EndDate,
         },
         success: function (data) {
-          makePDF(data);
-        }
+          console.log(data);
+          
+          makePDF(data,StartDate,EndDate);
+        } ,
+        error: function (e) {
+          console.log("There was an error with your request...");
+          console.log("error: " + JSON.stringify(e));
+        },
     })
   }
 
-  function makePDF(newData) {
+  function makePDF(newData,StartDate,EndDate) {
 
     pdfMake.fonts = {
           THSarabunNew: {
@@ -490,7 +497,7 @@ var docDefinition = {
         stack: [
           {text: "SAHA THAI STEEL PIPE (PUBLIC) CO., LTD. ทะเบียน W0201100000023", fontSize: 16, bold: true, alignment: 'center', margin: [0, 10, 0, 0] },
           {text: "รายงานของคงเหลือประจำงวด", fontSize: 14, alignment: 'center', margin: [0, 0, 0, 0] },
-          {text: "สำหรับงวดบัญชี ระหว่างวันที่ 1 มกราคม 2567 ถึง 30 มิถุนายน 2567", fontSize: 14, alignment: 'center', margin: [0, 0, 0, 0] },
+          {text: `สำหรับงวดบัญชี ระหว่างวันที่ ${moment(StartDate).locale('th').format('D MMMM YYYY')} ถึง ${moment(EndDate).locale('th').format('D MMMM YYYY')}`, fontSize: 14, alignment: 'center', margin: [0, 0, 0, 0] },
         ]
        };
    },
