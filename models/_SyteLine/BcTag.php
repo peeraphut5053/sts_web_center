@@ -53,6 +53,7 @@ class BcTag {
                 $do_num_list = $do_num_list . ",";
             }
         }
+        echo $do_num_list[0];
         $query = "select distinct tag.id, tag.job, tag.lot, tag.item, tag.qty1, preship.do_num, preship.do_line, preship.co_num, preship.co_line from mv_bc_tag tag left join job_mst on tag.job = job_mst.job left join AIT_Preship_Do_Seq preship on job_mst.ord_num = preship.co_num and job_mst.ord_line = preship.co_line "
                 . "where tag.job is not null and tag.id = '$tag_id' and preship.do_num in ( " . $do_num_list . " ) ";
 //        echo $query;
@@ -532,20 +533,21 @@ where STS_qty_move_line.doc_num = '$doc_num' and mv_bc_tag.active=1 and mv_bc_ta
   , STS_QA_LAB.sts_ts
   , STS_QA_LAB.sts_ys
   , STS_QA_LAB.sts_el
+  , job_mst.Uf_remark
 from mv_bc_tag inner join item_mst on item_mst.item = mv_bc_tag.item
       inner join sts_po_qc on sno <> '' and
         ( Ltrim(rtrim(sts_po_qc.sno)) = mv_bc_tag.sts_no 
         or Ltrim(rtrim(sts_po_qc.sno)) = Ltrim(rtrim(mv_bc_tag.sts_no2))
         or Ltrim(rtrim(sts_po_qc.sno)) = Ltrim(rtrim(mv_bc_tag.sts_no3))
          )
-
    inner join matltran_mst on matltran_mst.lot = mv_bc_tag.lot --and matltran_mst.item = mv_bc_tag.item
       and matltran_mst.trans_type='F'
    left join STS_QA_LAB on Ltrim(rtrim(STS_QA_LAB.sts_no)) = Ltrim(rtrim(sts_po_qc.sno)) 
  --  and STS_QA_LAB.c_no = sts_po_qc.c_no 
-   and Ltrim(rtrim(STS_QA_LAB.h_no)) = Ltrim(rtrim(sts_po_qc.h_no))
-   and Ltrim(rtrim(STS_QA_LAB.thick)) = Ltrim(rtrim(sts_po_qc.thick)) 
-   and Ltrim(rtrim(STS_QA_LAB.width)) = Ltrim(rtrim(sts_po_qc.width))
+  and Ltrim(rtrim(STS_QA_LAB.h_no)) = Ltrim(rtrim(sts_po_qc.h_no))
+  and Ltrim(rtrim(STS_QA_LAB.thick)) = Ltrim(rtrim(sts_po_qc.thick)) 
+  and Ltrim(rtrim(STS_QA_LAB.width)) = Ltrim(rtrim(sts_po_qc.width))
+   LEFT JOIN job_mst ON mv_bc_tag.job = job_mst.job 
 where mv_bc_tag.active = 1 and matltran_mst.wc like '%FM%' $wh $date";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);

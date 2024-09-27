@@ -133,6 +133,7 @@
         <!--<th >#</th>-->
         <th class="bg-gray">Remove</th>
         <th class="bg-gray">หมายเลขปฏิบัติการ</th>
+        <th class="bg-gray">Remark</th>
         <th class="bg-gray">Item</th>
         <th class="bg-gray">Lot</th>
         <th class="bg-gray">Tag ID</th>
@@ -303,6 +304,10 @@
                   let ret = `<span hidden>${qc_oper_num}</span><input type='text' class='input-text-value' size='20' id=${row.id} onchange="SaveQc(this.id,value);" value='${qc_oper_num}' />`;
                   return ret;
                 },
+              },
+              {
+                data: "Uf_remark",
+                className: "text-center",
               },
               {
                 data: "item",
