@@ -53,7 +53,6 @@ class BcTag {
                 $do_num_list = $do_num_list . ",";
             }
         }
-        echo $do_num_list[0];
         $query = "select distinct tag.id, tag.job, tag.lot, tag.item, tag.qty1, preship.do_num, preship.do_line, preship.co_num, preship.co_line from mv_bc_tag tag left join job_mst on tag.job = job_mst.job left join AIT_Preship_Do_Seq preship on job_mst.ord_num = preship.co_num and job_mst.ord_line = preship.co_line "
                 . "where tag.job is not null and tag.id = '$tag_id' and preship.do_num in ( " . $do_num_list . " ) ";
 //        echo $query;
