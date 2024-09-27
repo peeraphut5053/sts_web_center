@@ -126,58 +126,15 @@ class JOBORDER {
         $end_date = $this->_end_date;
         $w_c = $this->_w_c;
         $ref_num = $this->_ref_num;
-        $job_type = $this->_job_type;
+        $_item = $this->_item;
         //$lot = "";
 
-        if ($ref_num) {
-            $ref_num = " AND  matl1.ref_num like '%$ref_num%'  ";
-        }
-        if ($job_type) {
-            $job_type = " AND  matl1.ref_num like '%$job_type%'  ";
-        }
-        $criteria_date = " ";
-        if (($start_date) && ($end_date)) {
-            $criteria_date = " AND ( matl1.trans_date BETWEEN '$start_date' AND '$end_date' ) ";
-        }
-        $item = " ";
-        if ($this->_item) {
-            $item = " AND  matl1.item like '%$this->_item%'  ";
-        }
-        $w_c = " ";
-        if ($this->_w_c) {
-            $w_c = " AND  ( matl1.wc like '%$this->_w_c%' or  wc_mst.description like '%$this->_w_c')  ";
-        }
-        $query = "";
-        $query = $query . "select top 100000 convert(varchar, trans_date, 23) as trans_date ,ref_num ,matl1.item, item_mst.description as ItemDesc,item_mst.unit_weight, matl1.trans_type, ";
-        //$query = $query . "(select sum(qty) from matltran_mst where (RIGHT(loc, 1) <> 'B' or RIGHT(loc, 1) <> 'C') "
-        $query = $query . "(select sum(qty) from matltran_mst where RIGHT(loc, 1) = 'A' "
-                . "and ref_num = matl1.ref_num "
-                . "and trans_date = matl1.trans_date "
-                . "and item = matl1.item "
-                . "and trans_type = matl1.trans_type "
-                . "and wc = matl1.wc ) as qty_a, ";
-        $query = $query . "(select sum(qty) from matltran_mst where RIGHT(loc, 1) = 'B' "
-                . "and ref_num = matl1.ref_num "
-                . "and trans_date = matl1.trans_date "
-                . "and item = matl1.item "
-                . "and trans_type = matl1.trans_type "
-                . "and wc = matl1.wc ) as qty_b, ";
-        $query = $query . "(select sum(qty) from matltran_mst where RIGHT(loc, 1) = 'C' "
-                . "and ref_num = matl1.ref_num "
-                . "and trans_date = matl1.trans_date "
-                . "and item = matl1.item "
-                . "and trans_type = matl1.trans_type "
-                . "and wc = matl1.wc ) as qty_c ";
-        $query = $query . ", matl1.wc "
-                . ", wc_mst.description as wc_name , isnull(sts_remark_line_report.remark,'') as remark,CONCAT(item_mst.Uf_NPS,item_mst.Uf_spec,'(',item_mst.Uf_Schedule,')x',item_mst.Uf_length) as size_spec,item_mst.Uf_thick_Min,item_mst.uf_width   ";
-        $query = $query . " from matltran_mst as matl1 left join item_mst on matl1.item = item_mst.item left join wc_mst on matl1.wc = wc_mst.wc left join sts_remark_line_report on matl1.ref_num = sts_remark_line_report.job ";
-        $query = $query . "where 1 = 1 and trans_type = 'F'  ";
-        $query = $query . $ref_num;
-        $query = $query . $criteria_date;
-        $query = $query . $item;
-        $query = $query . $w_c;
-        $query = $query . " group by trans_date, ref_num, matl1.item, item_mst.description,item_mst.unit_weight, matl1.trans_type, matl1.wc, wc_mst.description,sts_remark_line_report.remark,item_mst.Uf_NPS,item_mst.Uf_spec,item_mst.Uf_Schedule,item_mst.Uf_length,item_mst.Uf_thick_Min,item_mst.uf_width,item_mst.Uf_weight_Max  order by ref_num, trans_date ";
-//and (LEFT(matl1.ref_num, 2) in ('FM', 'HT', 'GL', 'BC', 'TH', 'RG', 'CT', 'PT', 'PK', 'US', 'PN'))
+        $query = "EXEC [dbo].[STS_Manufacturing_report]
+  @startDate = N'$start_date',
+  @endDate = N'$end_date',
+  @item = '$_item',
+  @ref = '$ref_num',
+  @wc = '$w_c'";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);
