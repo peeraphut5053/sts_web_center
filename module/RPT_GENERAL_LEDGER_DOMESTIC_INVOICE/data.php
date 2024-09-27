@@ -1,17 +1,13 @@
 <?php
 header("Access-Control-Allow-Origin: *");
-
-foreach ($_GET as $key => $value) {
-    $$key = trim($value);
+while (list($key, $data) = each($_GET) OR list($key, $data) = each($_POST)) {
+    ${$key} = trim($data);
 }
-
-foreach ($_POST as $key => $value) {
-    $$key = trim($value);
-}
-
 include "../../initial.php";
 
-if ($load == "ajax") {
+if ($load == "form") {
+    
+} else if ($load == "ajax") {
     $CM = new CallModel();
     $CM->SyteLine_Models();
     $AT = new Factory();

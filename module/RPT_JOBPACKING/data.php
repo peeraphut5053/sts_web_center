@@ -2,12 +2,9 @@
 
 header("Access-Control-Allow-Origin: *");
 
-foreach ($_GET as $key => $value) {
-    $$key = trim($value);
-}
 
-foreach ($_POST as $key => $value) {
-    $$key = trim($value);
+while (list($key, $data) = each($_GET) OR list($key, $data) = each($_POST)) {
+    ${$key} = trim($data);
 }
 require_once "../initial.php";
 

@@ -17,14 +17,9 @@ function delete_files($target) {
     }
 }
 
-foreach ($_GET as $key => $value) {
-    $$key = trim($value);
+while (list($key, $data) = each($_GET) OR list($key, $data) = each($_POST)) {
+    ${$key} = trim($data);
 }
-
-foreach ($_POST as $key => $value) {
-    $$key = trim($value);
-}
-
 include "../../initial.php";
 
 header('Content-Type: text/html; charset=utf-8');

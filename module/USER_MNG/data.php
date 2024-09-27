@@ -2,15 +2,9 @@
 <?php
 
 header("Access-Control-Allow-Origin: *");
-
-foreach ($_GET as $key => $value) {
-    $$key = trim($value);
+while (list($key, $data) = each($_GET) OR list($key, $data) = each($_POST)) {
+    ${$key} = trim($data);
 }
-
-foreach ($_POST as $key => $value) {
-    $$key = trim($value);
-}
-
 require_once "../initial.php";
 
 if ($load == "form") {
@@ -28,7 +22,7 @@ if ($load == "form") {
     $CallModel = null;
     echo json_encode($UserList);
 } else if ($load == "GetUserAuthorize") {
-    {/*$CallModel = new CallModel();
+    $CallModel = new CallModel();
     $CallModel->WebApp_Models();
     $UserModel = new User();
     $UserModel->setConn($ConnWebApp);
@@ -36,7 +30,7 @@ if ($load == "form") {
     $PrjList = $UserModel->GetProjDectListById2();
     $UserModel = null;
     $CallModel = null;
-    echo json_encode($PrjList);*/}
+    echo json_encode($PrjList);
 } else if ($load == "ToggleAction") {
     $CallModel = new CallModel();
     $CallModel->WebApp_Models();
