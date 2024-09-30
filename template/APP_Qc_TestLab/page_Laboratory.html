@@ -1,0 +1,330 @@
+<div class="row" style="border-bottom:solid 1px #e8e8e8;">
+  <div class="row">
+    <h3 style="padding-left:5px;">Laboratory Data Analysis</h3>
+  </div>
+</div>
+
+<div class="row flex">
+  <div class="row col-xs-2">
+    <div class="input-group">
+      <div class="input-group-addon">StartMonth</div>
+      <input type="text" class="form-control" id="StartDate_Lab" autocomplete="off" />
+    </div>
+  </div>
+  <div class="row col-xs-2">
+    <div class="input-group">
+      <div class="input-group-addon">EndMonth</div>
+      <input type="text" class="form-control" id="EndDate_Lab" autocomplete="off" />
+    </div>
+  </div>
+  <div class="col-lg-1 col-md-2 col-sm-1 col-xs-6  col-search">
+    <button id="BtnSearchLab" class="btn btn-info"><i class="fa fa-search"></i>Search</button>
+  </div>
+</div>
+
+<br>
+
+<div class="row" id="divReportM">
+  <table class="table table-condensed table-bordered table-striped" width="100%" id="tblReportLab">
+    <thead>
+      <tr>
+        <th class="bg-gray">trans_date</th>
+        <th class="bg-gray">item</th>
+        <th class="bg-gray">ItemDesc</th>
+        <th class="bg-gray">wc</th>
+        <th class="bg-gray">wc_name</th>
+        <th class="bg-gray">qty_a</th>
+        <th class="bg-gray">count_oper</th>
+      </tr>
+  </table>
+</div>
+<div id="divCountLab" class="text-center font-bold text-md hidden">จำนวนรายการทั้งหมด : <span id="countLab"></span>
+  รายการ
+</div>
+<hr />
+<div class="input-group hidden mx-auto p-8" id="divWc">
+  <div class="input-group-addon">Work Center</div>
+  <select class="form-control" id="wc"></select>
+</div>
+<div class="flex">
+  <div class="m-auto text-red-500 text-3xl hidden" id="textCount">จำนวนชิ้นทดสอบ</div>
+  <canvas class="mx-auto hidden" id="myChartLab" style="width:100%;max-width:1000px"></canvas>
+  <div class="m-auto text-blue-500 text-3xl hidden" id="textCount2">จำนวนผลิต/เส้น</div>
+</div>
+
+<script type="text/javascript">
+  let newData = [];
+  var filterData;
+
+
+  let data2 = {
+    labels: newData.map(item => item.wc),
+    datasets: [{
+      label: 'จำนวนชิ้นทดสอบ',
+      data: newData.map(item => item.count_oper),
+      backgroundColor: 'rgba(255, 99, 132, 0.2)',
+      borderColor: 'rgb(255, 99, 132)',
+      borderWidth: 1,
+      maxBarThickness: 50,
+      barPercentage: 0.7,
+      yAxisID: 'bar1'
+    },
+    {
+      label: 'จำนวนผลิต/เส้น',
+      data: newData.map(item => parseFloat(item.qty_a)),
+      backgroundColor: 'rgba(54, 162, 235, 0.2)',
+      borderColor: 'rgb(54, 162, 235)',
+      borderWidth: 1,
+      maxBarThickness: 40,
+      barPercentage: 0.5,
+      yAxisID: 'bar2'
+    }]
+  };
+
+  const options = {
+    plugins: {
+      datalabels: {
+        display: false
+      }
+    },
+    scales: {
+      x: {
+        title: {
+          display: true,
+          text: 'ชื่อแกน X ของคุณ',
+          font: {
+            size: 14
+          }
+        }
+      },
+      y: {
+        stacked: true, // <--- Set this to true
+        type: 'linear',
+        position: 'left', // <--- Set this to 'left'
+        display: true,
+        title: {
+          display: true,
+          text: 'Month',
+          color: '#911',
+          font: {
+            family: 'Comic Sans MS',
+            size: 20,
+            weight: 'bold',
+            lineHeight: 1.2,
+          },
+          padding: { top: 20, left: 0, right: 0, bottom: 0 }
+        }
+      },
+      yAxes: [{
+        id: 'bar1',
+        type: 'linear',
+        position: 'left',
+        ticks: {
+          beginAtZero: true,
+          max: 10,
+          stepSize: 1
+        }
+      }, {
+        id: 'bar2',
+        type: 'linear',
+        display: true,
+        position: 'right',
+        ticks: {
+          beginAtZero: true,
+        },
+        barPercentage: 0.4,
+        title: {
+          display: true,
+          text: 'จำนวนผลิต/เส้น'
+        }
+
+      }],
+      xAxes: [{
+        stacked: true
+      }],
+    },
+
+  };
+
+  const myChart = new Chart("myChartLab", {
+    type: "bar",
+    data: data2,
+    options: options
+  });
+  console.log(newData);
+  $("#wc").change(function () {
+    var wc = $("#wc").val();
+
+    if (wc == "All") {
+      $("#tblReportLab").DataTable().clear().rows.add(newData).draw();
+      myChart.data.labels = newData.map(item => item.wc);
+      myChart.data.datasets[0].data = newData.map(item => item.count_oper);
+      myChart.data.datasets[1].data = newData.map(item => parseFloat(item.qty_a));
+      myChart.update();
+
+    } else {
+      filterData = newData.filter(item => item.wc == wc);
+      $("#tblReportLab").DataTable().clear().rows.add(filterData).draw();
+      myChart.data.labels = filterData.map(item => item.wc);
+      myChart.data.datasets[0].data = filterData.map(item => item.count_oper);
+      myChart.data.datasets[1].data = filterData.map(item => parseFloat(item.qty_a));
+      myChart.update();
+    }
+
+  })
+
+  $("#BtnSearchLab").click(function () {
+    ReportAllSearch();
+
+  });
+
+  $("#StartDate_Lab,#EndDate_Lab").datepicker({
+    dateFormat: "yy-mm-dd",
+  });
+
+  function ReportAllSearch() {
+
+    var OldHtml = $("#BtnSearchM").html();
+    $.ajax({
+      type: 'POST',
+      url: "././module/APP_Qc_TestLab/data.php",
+      dataType: 'json',
+      beforeSend: function () {
+        $("#BtnSearchM").html("<i class='fa fa-spinner fa-spin'>");
+      },
+      data: {
+        "load": "Laboratory",
+        StartDate: $("#StartDate_Lab").val(),
+        EndDate: $("#EndDate_Lab").val(),
+
+      },
+      success: function (data) {
+        $("#myChartLab").removeClass("hidden");
+        myChart.data.labels = data.map(item => item.wc);
+        myChart.data.datasets[0].data = data.map(item => item.count_oper);
+        myChart.data.datasets[1].data = data.map(item => parseFloat(item.qty_a));
+        myChart.update();
+        $("#divWc").removeClass("hidden");
+        $("#textCount").removeClass("hidden");
+        $("#textCount2").removeClass("hidden");
+
+        var wcSelect = $("#wc");
+        wcSelect.empty(); // ล้างตัวเลือกเดิมทั้งหมด
+
+        // เพิ่มตัวเลือกแรกเป็น "เลือกทั้งหมด" หรือตามที่ต้องการ
+        wcSelect.append($('<option>', {
+          value: 'All',
+          text: 'All'
+        }));
+
+        const uniqueWc = [...new Set(data.map(item => item.wc))];
+        var selected = data.filter(item => item.wc);
+
+        // เพิ่มตัวเลือกจากข้อมูลที่ได้รับ
+        $.each(uniqueWc, function (index, item) {
+          wcSelect.append($('<option>', {
+            value: item,
+            text: item
+          }));
+        });
+        newData = data;
+        filterData = data;
+
+        $("#divCountLab").removeClass("hidden");
+        $("#countLab").html(data.length);
+        $("#tblReportLab").dataTable().fnDestroy();
+        $("#tblReportLab").append(
+              "<tfoot><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></tfoot>"
+            );
+        var table = $('#tblReportLab').DataTable({
+          scrollCollapse: true,
+     
+          scrollY: "500px",
+          "aaData": filterData,
+          "paging": false,
+          "searching": false,
+          "bInfo": false,
+
+          "columns": [
+            {
+              "data": "item",
+              "className": "text-center",
+
+            },
+            {
+              "data": "item",
+              "className": "text-center",
+            },
+            {
+              "data": "ItemDesc",
+              "className": "text-center",
+            },
+            {
+              "data": "wc",
+              "className": "text-center",
+            },
+            {
+              "data": "wc_name",
+              "className": "text-center",
+            },
+            {
+              "data": "qty_a",
+              "className": "text-center",
+              "render": function (data, type, row, meta) {
+                return parseFloat(data);
+              }
+            },
+            {
+              "data": "count_oper",
+              "className": "text-center",
+            },
+          ],
+          'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+            "<'row'<'col-md-12'tr>>" +
+            "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+          buttons: [
+            {
+              extend: 'print',
+              text: "<i class='fa fa-print'></i>&nbsp;Print",
+              title: ''
+            },
+            {
+              extend: 'excel',
+              text: "<i class='fa fa-file-excel'></i>&nbsp;Excel&nbsp;",
+              title: `Laboratory Report`,
+              customize: function (xlsx) {
+                var sheet = xlsx.xl.worksheets['sheet1.xml'];
+                var numrows = 2;
+              }
+            },
+          ],
+          "footerCallback": function (row, data, start, end, display) {
+                        var api = this.api(),
+                                data;
+                        var intVal = function (i) {
+                            return typeof i === 'string' ?
+                                    i.replace(/[\$,]/g, '') * 1 :
+                                    typeof i === 'number' ?
+                                    i : 0;
+                        };
+                        var total = api
+                                .column(6)
+                                .data()
+                                .reduce(function (a, b) {
+                                    return intVal(a) + intVal(b);
+                                }, 0);
+                        $(api.column(5).footer()).html("<b>รวม</b>");
+                        $(api.column(6).footer()).html((total));
+                    },
+        });
+
+        $('#tblReportZ').loading("stop");
+        $("#BtnSearchZ").html("<i class='fa fa-search'></i>Search");
+      },
+      error: function (e) {
+        console.log("There was an error with your request...");
+        console.log("error: " + JSON.stringify(e));
+      }
+    });
+  }
+</script>

@@ -328,6 +328,14 @@ if ($load == 'InsertExcelZinc') {
        }
 }
 
+if ($load == 'Laboratory') {
+    $CallModel = new CallModel();
+    $CallModel->SyteLine_Models();
+    $QcTestLab = new QcTestLab();
+    $QcTestLab->setConn($ConnSL);
+    $QcTestLab = $QcTestLab->GetLaboratory($StartDate, $EndDate);
+    echo json_encode($QcTestLab);
+}
 
 
 
