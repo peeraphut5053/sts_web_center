@@ -53,8 +53,13 @@ class BcTag {
                 $do_num_list = $do_num_list . ",";
             }
         }
-        $query = "select distinct tag.id, tag.job, tag.lot, tag.item, tag.qty1, preship.do_num, preship.do_line, preship.co_num, preship.co_line from mv_bc_tag tag left join job_mst on tag.job = job_mst.job left join AIT_Preship_Do_Seq preship on job_mst.ord_num = preship.co_num and job_mst.ord_line = preship.co_line "
-                . "where tag.job is not null and tag.id = '$tag_id' and preship.do_num in ( " . $do_num_list . " ) ";
+        $query = "select distinct tag.id, tag.job, tag.lot, tag.item, tag.qty1, preship.do_num, preship.do_line
+  , preship.co_num --, preship.co_line 
+from mv_bc_tag tag 
+  inner join job_mst on tag.job = job_mst.job and tag.item=job_mst.item
+  left join AIT_Preship_Do_Seq preship on job_mst.ord_num = preship.co_num 
+    --and job_mst.ord_line = preship.co_line 
+where tag.job is not null and job_mst.item = tag.item and tag.id = '$tag_id' and preship.do_num in ( " . $do_num_list . " ) ";
 //        echo $query;
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
