@@ -24,3 +24,23 @@ if ($load == "reportPDF") {
     $rs = $STS_Custom->GetDataReportRemainPDF($StartDate, $EndDate);
     echo json_encode($rs);
 }
+
+if ($load == "reportMovingPDF") {
+    $CallModel = new CallModel();
+    $CallModel->SyteLine_Models();
+
+    $STS_Custom = new STS_Custom();
+    $STS_Custom->setConn($ConnSL);
+    $rs = $STS_Custom->GetDataReportMoving($StartDate, $EndDate, $StartDate2, $EndDate2);
+    echo json_encode($rs);
+}
+
+if ($load == "reportSummaryPDF") {
+    $CallModel = new CallModel();
+    $CallModel->SyteLine_Models();
+
+    $STS_Custom = new STS_Custom();
+    $STS_Custom->setConn($ConnSL);
+    $rs = $STS_Custom->GetDataReportSummary($StartDate, $EndDate, $StartDate2, $EndDate2);
+    echo json_encode($rs);
+}   

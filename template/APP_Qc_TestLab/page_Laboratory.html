@@ -8,13 +8,13 @@
   <div class="row col-xs-2">
     <div class="input-group">
       <div class="input-group-addon">StartMonth</div>
-      <input type="text" class="form-control" id="StartDate_Lab" autocomplete="off" />
+      <input type="text" class="form-control" id="StartDate_Labo" autocomplete="off" />
     </div>
   </div>
   <div class="row col-xs-2">
     <div class="input-group">
       <div class="input-group-addon">EndMonth</div>
-      <input type="text" class="form-control" id="EndDate_Lab" autocomplete="off" />
+      <input type="text" class="form-control" id="EndDate_Labo" autocomplete="off" />
     </div>
   </div>
   <div class="col-lg-1 col-md-2 col-sm-1 col-xs-6  col-search">
@@ -53,11 +53,11 @@
 </div>
 
 <script type="text/javascript">
-  let newData = [];
+  var newData = [];
   var filterData;
 
 
-  let data2 = {
+  var data2 = {
     labels: newData.map(item => item.wc),
     datasets: [{
       label: 'จำนวนชิ้นทดสอบ',
@@ -81,7 +81,7 @@
     }]
   };
 
-  const options = {
+  var options = {
     plugins: {
       datalabels: {
         display: false
@@ -146,7 +146,7 @@
 
   };
 
-  const myChart = new Chart("myChartLab", {
+  var myChart = new Chart("myChartLab", {
     type: "bar",
     data: data2,
     options: options
@@ -178,7 +178,7 @@
 
   });
 
-  $("#StartDate_Lab,#EndDate_Lab").datepicker({
+  $("#StartDate_Labo,#EndDate_Labo").datepicker({
     dateFormat: "yy-mm-dd",
   });
 
@@ -194,8 +194,8 @@
       },
       data: {
         "load": "Laboratory",
-        StartDate: $("#StartDate_Lab").val(),
-        EndDate: $("#EndDate_Lab").val(),
+        StartDate: $("#StartDate_Labo").val(),
+        EndDate: $("#EndDate_Labo").val(),
 
       },
       success: function (data) {

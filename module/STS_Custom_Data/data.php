@@ -57,8 +57,6 @@ if ($load == "InsertSTS_Custom_Out") {
         $_POST["bundle"][$i],
         $_POST["weight_net"][$i],
         $_POST["weight_gross"][$i],
-        $_POST["weight_zinc"][$i],
-        $_POST["weight_nonzinc"][$i],
         $_POST["cust_po"][$i],
         $_POST["value"][$i],
         $_POST["pier"][$i],

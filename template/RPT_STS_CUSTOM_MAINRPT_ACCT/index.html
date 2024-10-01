@@ -3,6 +3,7 @@
     padding-left: 3px;
     padding-right: 3px;
   }
+
   /*    table.dataTable thead .sorting:after,
           table.dataTable thead .sorting:before,
           table.dataTable thead .sorting_asc:after,
@@ -27,38 +28,47 @@
   #tblReport tbody tr td a {
     cursor: pointer;
   }
+
   table.dataTable.fixedHeader-floating,
   table.dataTable.fixedHeader-locked {
     background-color: white;
     margin-top: 50px !important;
     margin-bottom: 0 !important;
   }
+
   @media print {
     table th:nth-child(0) {
       width: 200px;
       word-break: break-all;
       white-space: pre-line;
     }
+
     table td:nth-child(0) {
       width: 200px;
       word-break: break-all;
       white-space: pre-line;
     }
   }
+
   .text-header {
     font-weight: bold;
     font-size: 20px;
   }
+
   .text-wrap {
     white-space: normal;
   }
+
   .width-200 {
     width: 200px;
   }
+
   input[type="checkbox"] {
     margin-left: 5px;
     margin-right: 5px;
-  } /*
+  }
+
+  /*
       .cb_lb{
           margin-top:-5px;
       }*/
@@ -98,21 +108,14 @@
     <button class="btn btn-success" id="btnReport">
       รายงานของคงเหลือประจำงวด
     </button>
-    <button class="btn bg-red-400 text-white mt-2" id="btnReport2">
-      รายงานการเคลื่อนไหวของวัตถุดิบ												
-    </button>
-    <button class="btn bg-orange-500 text-white mt-2" id="btnReport3">
-      รายงานแบบสรุป											
+    <button type="button" class="btn bg-red-400 text-white mt-2" id="btnReport2" data-toggle="modal" data-target="#exampleModal">
+      รายงานการเคลื่อนไหวของวัตถุดิบ / รายงานแบบสรุป
     </button>
   </div>
 </div>
 
 <div class="row" id="rowResultTable">
-  <table
-    class="table table-condensed table-bordered table-striped"
-    width="100%"
-    id="tblReport"
-  >
+  <table class="table table-condensed table-bordered table-striped" width="100%" id="tblReport">
     <thead>
       <tr>
         <th class="bg-gray">ลำดับที่</th>
@@ -132,16 +135,63 @@
      </tbody>-->
   </table>
 </div>
-<div id="printpopup"></div>
-<script src="https://momentjs.com/downloads/moment.js" />
-<script src=" https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/locale/th.min.js" />
+ <!-- Modal -->
+ <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">เลือกเดือนยอดยกมา</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          <div class="flex gap-6">
+            <div class="row">
+              <div class="input-group">
+                <div class="input-group-addon">Year</div>
+                <select class="form-control" id="selYearOld"></select>
+              </div>
+            </div>
+            <div class="row">
+              <div class="input-group">
+                <div class="input-group-addon">Start Month</div>
+                <select class="form-control" id="selMonthOld"></select>
+              </div>
+            </div>
+            <div class="row">
+              <div class="input-group">
+                <div class="input-group-addon">End Month</div>
+                <select class="form-control" id="selMonth2Old"></select>
+              </div>
+            </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="btnSave" onclick="btnSave(1)">รายงานการเคลื่อนไหวของวัตถุดิบ</button>
+        <button type="button" class="btn btn-warning" id="btnSave2" onclick="btnSave(2)">รายงานแบบสรุป</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script type="text/javascript">
+  
   $("#btnSearch").click(function () {
     ReportItemSearch();
   });
 
   GetYearMonth("selYear", "selMonth");
   GetYearMonth("selYear", "selMonth2");
+  GetYearMonth("selYearOld", "selMonthOld");
+  GetYearMonth("selYearOld", "selMonth2Old");
+
+  $("#StartDate_Moving,#EndDate_Moving").datepicker({
+      dateFormat: "yy-mm-dd",
+      changeMonth: true,
+      changeYear: true,
+  });
 
   $("#btnRemove").click(function () {
     $("#tblReport").DataTable().clear().destroy();
@@ -187,16 +237,14 @@
           EndDate: EndDate,
         },
         success: function (data) {
-        
+
           const typeTwo = data.filter(item => item.doc_type === 2);
 
           let totalOut = typeTwo.reduce((acc, cur) => {
             return acc + Number(cur.in_value);
           }, 0);
 
-          console.log(totalOut);
-          
-            
+
           let accm = Number(data[0].accum);
           let newData = [];
 
@@ -276,7 +324,7 @@
                   var ret = addCommas(ret);
                   return ret;
                 }
-             },
+              },
               {
                 data: "in_value",
                 className: "text-center",
@@ -299,7 +347,7 @@
                 className: "text-center",
                 "render": function (data, type, row, meta) {
                   var ret = Math.floor(data * 100) / 100;
-                  
+
                   return addCommas(ret);
                 }
               },
@@ -336,8 +384,8 @@
                 return typeof i === "string"
                   ? i.replace(/[\$,]/g, "") * 1
                   : typeof i === "number"
-                  ? i
-                  : 0;
+                    ? i
+                    : 0;
               };
               var totalKG = api
                 .column(6)
@@ -351,7 +399,7 @@
                 .reduce(function (a, b) {
                   return intVal(a) + intVal(b);
                 }, 0);
-                var totalH001 = api
+              var totalH001 = api
                 .column(8)
                 .data()
                 .reduce(function (a, b) {
@@ -378,14 +426,141 @@
   }
 
   $("#btnReport").click(function () {
+    moment.locale("th");
     ReportPDF();
   });
-  $("#btnReport2").click(function () {
-    makePDF2();
-  });
-  $("#btnReport3").click(function () {
-    makePDF3();
-  });
+
+
+  function btnSave(type) {
+   
+    var Year = $("#selYear").val();
+    var Month = $("#selMonth").val();
+    var Month2 = $("#selMonth2").val();
+    var YearOld = $("#selYearOld").val();
+    var MonthOld = $("#selMonthOld").val();
+    var Month2Old = $("#selMonth2Old").val();
+
+    // get first day of month and last day of month use moment.js
+    var StartDate = moment(Year + "-" + Month + "-01").format("YYYY-MM-DD");
+    var EndDate = moment(Year + "-" + Month2 + "-01")
+      .endOf("month")
+      .format("YYYY-MM-DD");
+
+    var StartDate2 = moment(YearOld + "-" + MonthOld + "-01").format("YYYY-MM-DD");
+    var EndDate2 = moment(YearOld + "-" + Month2Old + "-01")
+      .endOf("month")
+      .format("YYYY-MM-DD");
+    
+
+    if (StartDate2 == '' || EndDate2 == '') {
+      alert("กรุณากรอกข้อมูลให้ครบ");
+      return false;
+    }
+
+    if (type == 2) {
+       reportSummary(StartDate, EndDate, StartDate2, EndDate2);
+       return false;
+    }
+
+    $.ajax({
+      type: "POST",
+      url: "././module/RPT_STS_CUSTOM_MAINRPT_ACCT/data.php",
+      dataType: "json",
+      data: {
+        load: "reportMovingPDF",
+        StartDate: StartDate,
+        EndDate: EndDate,
+        StartDate2: StartDate2,
+        EndDate2: EndDate2
+      },
+      success: function (data) {
+        const data1 = data[0];
+        const data2 = data[1];
+        const data3 = data[2];
+        const data4 = data[3];
+
+        const totalRemainOld = data1[0].totremain;
+        const totalValueOld = data1.reduce((total, item) => total + Number(item.value), 0).toFixed(2);
+        const totalTaxOld = data1.reduce((total, item) => total + Number(item.tax), 0).toFixed(2);
+        const totalRemain = data4[0].totremain;
+        const totalValue = data4.reduce((total, item) => total + Number(item.value), 0).toFixed(2);
+        const totalTax = data4.reduce((total, item) => total + Number(item.tax), 0).toFixed(2);
+
+        const totalH001 = data3.reduce((total, item) => total + Number(item.out_value_H001), 0).toFixed(2);
+
+        const Weight = data2.reduce((total, item) => total + Number(item.weight_KG), 0).toFixed(2);
+        const Value = data2.reduce((total, item) => total + Number(item.value), 0).toFixed(2);
+
+        const val5 = Value * 0.05;
+        const val7 = (Number(Value) + val5) * 0.07;
+        
+        const totalTaxIN = Number(val5) + Number(val7);
+        const newTotalTaxIN = totalTaxIN.toFixed(2);
+
+        makePDF2(totalRemainOld, totalValueOld, totalTaxOld, totalRemain, totalValue, totalTax, totalH001, Weight, Value, newTotalTaxIN, StartDate, EndDate);
+
+      },
+      error: function (e) {
+        console.log("There was an error with your request...");
+        console.log("error: " + JSON.stringify(e));
+        alert("ไม่สามารถดึงข้อมูลได้");
+      },
+    })
+  }
+
+  function reportSummary(StartDate, EndDate, StartDate2, EndDate2) {
+    $.ajax({
+      type: "POST",
+      url: "././module/RPT_STS_CUSTOM_MAINRPT_ACCT/data.php",
+      dataType: "json",
+      data: {
+        load: "reportSummaryPDF",
+        StartDate: StartDate,
+        EndDate: EndDate,
+        StartDate2: StartDate2,
+        EndDate2: EndDate2
+      },
+      success: function (data) {
+        const data1 = data[0];
+        const data2 = data[1];
+        const data3 = data[2];
+        const data4 = data[3];
+        const data5 = data[4];
+
+        const totalValueOld = data1.reduce((total, item) => total + Number(item.value), 0).toFixed(2);
+        const totalTaxOld = data1.reduce((total, item) => total + Number(item.tax), 0).toFixed(2);
+
+        const totalValue = data5.reduce((total, item) => total + Number(item.value), 0).toFixed(2);
+        const totalTax = data5.reduce((total, item) => total + Number(item.tax), 0).toFixed(2);
+
+        const Weight = data2.reduce((total, item) => total + Number(item.weight_KG), 0).toFixed(2);
+        const Value = data2.reduce((total, item) => total + Number(item.value), 0).toFixed(2);
+        const data_IN = data2.length;
+
+        const val5 = Value * 0.05;
+        const val7 = (Number(Value) + val5) * 0.07;
+        
+        const totalTaxIN = Number(val5) + Number(val7);
+        const newTotalTaxIN = totalTaxIN.toFixed(2);
+
+
+        const data_OUT = data3.length;
+        const Value_OUT = data2.reduce((total, item) => total + Number(item.value), 0).toFixed(2);
+
+        const data_Scrap = data4.length;
+        const totalValue_Scrap = data4.reduce((total, item) => total + Number(item.value), 0).toFixed(2);
+        const totalTax_Scrap = totalValue_Scrap * 0.07;
+
+        makePDF3(totalValueOld, totalTaxOld, totalValue, totalTax, data_IN, Value, newTotalTaxIN, data_OUT, Value_OUT,data_Scrap,totalValue_Scrap, totalTax_Scrap, StartDate, EndDate);
+
+      },
+      error: function (e) {
+        console.log("There was an error with your request...");
+        console.log("error: " + JSON.stringify(e));
+        alert("ไม่สามารถดึงข้อมูลได้");
+      },
+    })
+  }
 
   function ReportPDF() {
     var Year = $("#selYear").val();
@@ -398,573 +573,629 @@
       .endOf("month")
       .format("YYYY-MM-DD");
     $.ajax({
-        type: "POST",
-        url: "././module/RPT_STS_CUSTOM_MAINRPT_ACCT/data.php",
-        dataType: "json",
-        data: {
-          load: "reportPDF",
-          StartDate: StartDate,
-          EndDate: EndDate,
-        },
-        success: function (data) {
-          console.log(data);
-          
-          makePDF(data,StartDate,EndDate);
-        } ,
-        error: function (e) {
-          console.log("There was an error with your request...");
-          console.log("error: " + JSON.stringify(e));
-        },
+      type: "POST",
+      url: "././module/RPT_STS_CUSTOM_MAINRPT_ACCT/data.php",
+      dataType: "json",
+      data: {
+        load: "reportPDF",
+        StartDate: StartDate,
+        EndDate: EndDate,
+      },
+      success: function (data) {
+        console.log(data);
+
+        makePDF(data, StartDate, EndDate);
+      },
+      error: function (e) {
+        console.log("There was an error with your request...");
+        console.log("error: " + JSON.stringify(e));
+      },
     })
   }
 
-  function makePDF(newData,StartDate,EndDate) {
+  function makePDF(newData, StartDate, EndDate) {
 
     pdfMake.fonts = {
-          THSarabunNew: {
-            normal: 'THSarabunNew.ttf',
-            bold: 'THSarabunNew Bold.ttf',
-            italics: 'THSarabunNew-Italic.ttf',
-            bolditalics: 'THSarabunNew-BoldItalic.ttf'
-           }
-     };
-      
-
-const data = []
-data.push([
-   { text: `ลำดับที่`, fontSize: 10, alignment: 'center', style: 'header' },
-   { text: "ชื่อวัตถุดิบ", fontSize: 11, alignment: 'center', style: 'header' },
-   { text: "รหัสวัตถุดิบ", fontSize: 11, alignment: 'center', style: 'header' },
-   { text: "หน่วย", fontSize: 11, alignment: 'center', style: 'header' },
-   { text: "คงเหลือรวม", fontSize: 11, alignment: 'center', style: 'header' },
-   { text: "จำนวนคงเหลือ", fontSize: 11, alignment: 'center', style: 'header' },
-   { text: "เลขที่ใบขนฯ/ใบขนฯ โอนย้าย", fontSize: 11, alignment: 'center', style: 'header' },
-   { text: "ประเภทรายการ", fontSize: 11, alignment: 'center', style: 'header' },
-   { text: "วันนำเข้า", fontSize: 11, alignment: 'center', style: 'header' },
-   { text: "วันเข้าคลังฯ", fontSize: 11, alignment: 'center', style: 'header' },
-   { text: "มูลค่า(บาท)", fontSize: 11, alignment: 'center', style: 'header', },
-   { text: "อากรรวม", fontSize: 11, alignment: 'center', style: 'header', },
-]);
-
-
-for (let i = 0; i < newData.length; i++) {
-  const newValue = (Number(newData[i].value)).toFixed(2);
-  const newTax = (Number(newData[i].tax)).toFixed(2);
-   data.push([
-       { text: `${i === 0 ? i+1 : ''}`, fontSize: 11, alignment: 'center' },
-       { text: `${i === 0 ? 'HOT ROLLED STEEL SHEET IN COIL' : ''}`, fontSize: 11, alignment: 'center' },
-       { text: `${i === 0 ? 'H0001' : ''}`, fontSize: 11, alignment: 'center' },
-       { text: `${i === 0 ? 'KGS' : ''}`, fontSize: 11, alignment: 'center' },
-       { text: `${i === 0 ? addCommas(newData[i].totremain) : ''}`, fontSize: 11, alignment: 'center' },
-       { text: `${addCommas(newData[i].remain)}`, fontSize: 11, alignment: 'center' },
-       { text: `${newData[i].doc_no}`, fontSize: 11, alignment: 'center' },
-       { text: ``, fontSize: 11, alignment: 'center' },
-       { text: `${moment(newData[i].date_in.date).format('DD.MM.YYYY')}`, fontSize: 11, alignment: 'center' },
-       { text: `${moment(newData[i].date_stock.date).format('DD.MM.YYYY')}`, fontSize: 11, alignment: 'center' },
-       { text: `${addCommas(newValue)}`, fontSize: 11, alignment: 'center' },
-       { text: `${addCommas(newTax)}`, fontSize: 11, alignment: 'center' },
-   ])
-
-   if (i == newData.length-1) {
-       const totalValue = newData.reduce((total, item) => total + Number(item.value), 0).toFixed(2);
-       const totalTax = newData.reduce((total, item) => total + Number(item.tax), 0).toFixed(2);
-       data.push([
-       { text: 'รวม', colSpan: 3, fontSize: 11, alignment: 'center', colSpan:4 },
-       { text: '', fontSize: 11, alignment: 'center' },
-       { text: '', fontSize: 11, alignment: 'center' },
-       { text: '', fontSize: 11, alignment: 'center' },
-       { text: '', fontSize: 11, alignment: 'center' },
-       { text: `${addCommas(newData[0].totremain)}`, fontSize: 11, alignment: 'center' },
-       { text: '', fontSize: 11, alignment: 'center' },
-       { text: '', fontSize: 11, alignment: 'center' },
-       { text: '', fontSize: 11, alignment: 'center' },
-       { text: '', fontSize: 11, alignment: 'center' },
-       { text: `${addCommas(totalValue)}`, fontSize: 11, alignment: 'center' },
-       { text: `${addCommas(totalTax)}`, fontSize: 11, alignment: 'center' },
-   ])
-   }
-   
-}
-
-
-var docDefinition = {
-   pageSize: 'A4',
-   pageOrientation: 'landscape',
-   pageMargins: [10, 100, 50, 50],
-   header: function (currentPage, pageCount, pageSize) {
-       return {
-        margin: [30, 10, 20, 10],
-        stack: [
-          {text: "SAHA THAI STEEL PIPE (PUBLIC) CO., LTD. ทะเบียน W0201100000023", fontSize: 16, bold: true, alignment: 'center', margin: [0, 10, 0, 0] },
-          {text: "รายงานของคงเหลือประจำงวด", fontSize: 14, alignment: 'center', margin: [0, 0, 0, 0] },
-          {text: `สำหรับงวดบัญชี ระหว่างวันที่ ${moment(StartDate).locale('th').format('D MMMM YYYY')} ถึง ${moment(EndDate).locale('th').format('D MMMM YYYY')}`, fontSize: 14, alignment: 'center', margin: [0, 0, 0, 0] },
-        ]
-       };
-   },
-   content: [
-       {
-           margin: [0, 0, 0, 0],
-           columns: [
-               {
-
-                   table: {
-                       widths: [20, 150, 40, 20, 60, 60, 100, 50, 40, 40, 65, 65],
-                       headerRows: 1,
-                       body: data,
-                   },
-               },
-           ],
-       }
-   ],
-   defaultStyle: {
-       font: 'THSarabunNew',
-   },
-};
-
-pdfMake.createPdf(docDefinition).open()
-}
-
-function makePDF2(newData) {
-
-pdfMake.fonts = {
       THSarabunNew: {
         normal: 'THSarabunNew.ttf',
         bold: 'THSarabunNew Bold.ttf',
         italics: 'THSarabunNew-Italic.ttf',
         bolditalics: 'THSarabunNew-BoldItalic.ttf'
-       }
- };
-  
-
-const data = []
-data.push([
-{ text: `ลำดับ`, fontSize: 10, alignment: 'center', style: 'header',rowSpan: 2 },
-{ text: "ชื่อวัตถุดิบ", fontSize: 11, alignment: 'center', style: 'header',rowSpan: 2 },
-{ text: "รหัส  วัตถุดิบ", fontSize: 11, alignment: 'center', style: 'header',rowSpan: 2 },
-{ text: "หน่วย", fontSize: 11, alignment: 'center', style: 'header',rowSpan: 2 },
-{ text: "ยอดยกมา", fontSize: 11, alignment: 'center', style: 'header', colSpan: 3 },
-{},
-{},
-{ text: "นำเข้าคลังสินค้าทัณฑ์บนฯ", fontSize: 11, alignment: 'center', style: 'header', colSpan: 3 },
-{},
-{},
-{ text: "ปริมาณนำ", fontSize: 11, alignment: 'center', style: 'header' },
-{ text: "ยอดคงเหลือยกไป", fontSize: 11, alignment: 'center', style: 'header', colSpan: 3 },
-{},
-{}
-],
-[
-  {},
-  {},
-  {},
-  {},
-  {text: "ปริมาณ", fontSize: 11, alignment: 'center'},
-  {text: "มูลค่า(บาท)", fontSize: 11, alignment: 'center'},
-  {text: "ภาษีอากร", fontSize: 11, alignment: 'center'},
-  {text: "ปริมาณ", fontSize: 11, alignment: 'center'},
-  {text: "มูลค่า(บาท)", fontSize: 11, alignment: 'center'},
-  {text: "ภาษีอากร", fontSize: 11, alignment: 'center'},
-  {text: "ออกจากคลังฯ", fontSize: 11, alignment: 'center'},
-  {text: "ปริมาณ", fontSize: 11, alignment: 'center'},
-  {text: "มูลค่า(บาท)", fontSize: 11, alignment: 'center'},
-  {text: "ภาษีอากร", fontSize: 11, alignment: 'center'},
-]
-);
+      }
+    };
 
 
-for (let i = 0; i <= 10; i++) {
-
-if (i == 0) {
-  data.push([
-   { text: `${i === 0 ? i+1 : ''}`, fontSize: 11, alignment: 'center' },
-   { text: `${i === 0 ? 'HOT ROLLED STEEL SHEET IN COIL' : ''}`, fontSize: 11, alignment: 'center' },
-   { text: `${i === 0 ? 'H0001' : ''}`, fontSize: 11, alignment: 'center' },
-   { text: `${i === 0 ? 'KGS' : ''}`, fontSize: 11, alignment: 'center' },
-   { text: `44,647,647.37`, fontSize: 11, alignment: 'center' },
-   { text: `933,180,180.00`, fontSize: 11, alignment: 'center' },
-   { text: `115,247,752.25`, fontSize: 11, alignment: 'center' },
-   { text: `45,911,781.00 `, fontSize: 11, alignment: 'center' },
-   { text: `941,338,066.71`, fontSize: 11, alignment: 'center' },
-   { text: `116,255,251.26`, fontSize: 11, alignment: 'center' },
-   { text: `40,617,394.72`, fontSize: 11, alignment: 'center' },
-   { text: `49,942,033.65`, fontSize: 11, alignment: 'center' },
-   { text: `1,024,980,602.42`, fontSize: 11, alignment: 'center' },
-   { text: `126,585,104.42`, fontSize: 11, alignment: 'center' },
-])
-}
-
-data.push([
-   { text: ` `, fontSize: 11, alignment: 'center' },
-   { text: ``, fontSize: 11, alignment: 'center' },
-   { text: ``, fontSize: 11, alignment: 'center' },
-   { text: ``, fontSize: 11, alignment: 'center' },
-   { text: ``, fontSize: 11, alignment: 'center' },
-   { text: ``, fontSize: 11, alignment: 'center' },
-   { text: ``, fontSize: 11, alignment: 'center' },
-   { text: ``, fontSize: 11, alignment: 'center' },
-   { text: ``, fontSize: 11, alignment: 'center' },
-   { text: ``, fontSize: 11, alignment: 'center' },
-   { text: ``, fontSize: 11, alignment: 'center' },
-   { text: ``, fontSize: 11, alignment: 'center' },
-   { text: ``, fontSize: 11, alignment: 'center' },
-   { text: ``, fontSize: 11, alignment: 'center' },
-])
-
-if (i == 10) {
-  data.push([
-   { text: `${i === 0 ? i+1 : ''}`, fontSize: 11, alignment: 'center' },
-   { text: `รวม`, fontSize: 11, alignment: 'center' },
-   { text: `${i === 0 ? 'H0001' : ''}`, fontSize: 11, alignment: 'center' },
-   { text: `${i === 0 ? 'KGS' : ''}`, fontSize: 11, alignment: 'center' },
-   { text: `44,647,647.37`, fontSize: 11, alignment: 'center' },
-   { text: `933,180,180.00`, fontSize: 11, alignment: 'center' },
-   { text: `115,247,752.25`, fontSize: 11, alignment: 'center' },
-   { text: `45,911,781.00 `, fontSize: 11, alignment: 'center' },
-   { text: `941,338,066.71`, fontSize: 11, alignment: 'center' },
-   { text: `116,255,251.26`, fontSize: 11, alignment: 'center' },
-   { text: `40,617,394.72`, fontSize: 11, alignment: 'center' },
-   { text: `49,942,033.65`, fontSize: 11, alignment: 'center' },
-   { text: `1,024,980,602.42`, fontSize: 11, alignment: 'center' },
-   { text: `126,585,104.42`, fontSize: 11, alignment: 'center' },
-])
-}
-
-}
+    const data = []
+    data.push([
+      { text: `ลำดับที่`, fontSize: 10, alignment: 'center', style: 'header' },
+      { text: "ชื่อวัตถุดิบ", fontSize: 11, alignment: 'center', style: 'header' },
+      { text: "รหัสวัตถุดิบ", fontSize: 11, alignment: 'center', style: 'header' },
+      { text: "หน่วย", fontSize: 11, alignment: 'center', style: 'header' },
+      { text: "คงเหลือรวม", fontSize: 11, alignment: 'center', style: 'header' },
+      { text: "จำนวนคงเหลือ", fontSize: 11, alignment: 'center', style: 'header' },
+      { text: "เลขที่ใบขนฯ/ใบขนฯ โอนย้าย", fontSize: 11, alignment: 'center', style: 'header' },
+      { text: "ประเภทรายการ", fontSize: 11, alignment: 'center', style: 'header' },
+      { text: "วันนำเข้า", fontSize: 11, alignment: 'center', style: 'header' },
+      { text: "วันเข้าคลังฯ", fontSize: 11, alignment: 'center', style: 'header' },
+      { text: "มูลค่า(บาท)", fontSize: 11, alignment: 'center', style: 'header', },
+      { text: "อากรรวม", fontSize: 11, alignment: 'center', style: 'header', },
+    ]);
 
 
-var docDefinition = {
-pageSize: 'A4',
-pageOrientation: 'landscape',
-pageMargins: [10, 100, 50, 50],
-header: function (currentPage, pageCount, pageSize) {
-   return {
-    margin: [30, 10, 20, 10],
-    stack: [
-      {text: "SAHA THAI STEEL PIPE (PUBLIC) CO., LTD. ทะเบียน W0201100000023", fontSize: 16, bold: true, alignment: 'center', margin: [0, 10, 0, 0] },
-      {text: "รายงานการเคลื่อนไหวของวัตถุดิบ", fontSize: 14, alignment: 'center', margin: [0, 0, 0, 0] },
-      {text: "สำหรับงวดบัญชี ระหว่างวันที่ 1 มกราคม 2567 ถึง 30 มิถุนายน 2567", fontSize: 14, alignment: 'center', margin: [0, 0, 0, 0] },
-    ]
-   };
-},
-content: [
-   {
-       margin: [0, 0, 0, 0],
-       columns: [
-           {
+    for (let i = 0; i < newData.length; i++) {
+      const newValue = (Number(newData[i].value)).toFixed(2);
+      const newTax = (Number(newData[i].tax)).toFixed(2);
+      data.push([
+        { text: `${i === 0 ? i + 1 : ''}`, fontSize: 11, alignment: 'center' },
+        { text: `${i === 0 ? 'HOT ROLLED STEEL SHEET IN COIL' : ''}`, fontSize: 11, alignment: 'center' },
+        { text: `${i === 0 ? 'H0001' : ''}`, fontSize: 11, alignment: 'center' },
+        { text: `${i === 0 ? 'KGS' : ''}`, fontSize: 11, alignment: 'center' },
+        { text: `${i === 0 ? addCommas(newData[i].totremain) : ''}`, fontSize: 11, alignment: 'center' },
+        { text: `${addCommas(newData[i].remain)}`, fontSize: 11, alignment: 'center' },
+        { text: `${newData[i].doc_no}`, fontSize: 11, alignment: 'center' },
+        { text: ``, fontSize: 11, alignment: 'center' },
+        { text: `${moment(newData[i].date_in.date).format('DD.MM.YYYY')}`, fontSize: 11, alignment: 'center' },
+        { text: `${moment(newData[i].date_stock.date).format('DD.MM.YYYY')}`, fontSize: 11, alignment: 'center' },
+        { text: `${addCommas(newValue)}`, fontSize: 11, alignment: 'center' },
+        { text: `${addCommas(newTax)}`, fontSize: 11, alignment: 'center' },
+      ])
 
-               table: {
-                   widths: [20, 120, 25, 20, 50, 50, 50, 50, 50, 50, 50, 50,60,50],
-                   headerRows: 1,
-                   body: data,
-               },
-           },
-       ],
-   }
-],
-defaultStyle: {
-   font: 'THSarabunNew',
-},
-};
+      if (i == newData.length - 1) {
+        const valueFix = newData.map(item => Number(Number(item.value).toFixed(2)));
+        const totalValue = valueFix.reduce((total, item) => total + Number(item), 0)
+        const taxFixNumbers = newData.map(item => Number(Number(item.tax).toFixed(2)));
+        const totalTax = taxFixNumbers.reduce((total, item) => total + Number(item), 0)
+        data.push([
+          { text: 'รวม', colSpan: 3, fontSize: 11, alignment: 'center', colSpan: 4 },
+          { text: '', fontSize: 11, alignment: 'center' },
+          { text: '', fontSize: 11, alignment: 'center' },
+          { text: '', fontSize: 11, alignment: 'center' },
+          { text: '', fontSize: 11, alignment: 'center' },
+          { text: `${addCommas(newData[0].totremain)}`, fontSize: 11, alignment: 'center' },
+          { text: '', fontSize: 11, alignment: 'center' },
+          { text: '', fontSize: 11, alignment: 'center' },
+          { text: '', fontSize: 11, alignment: 'center' },
+          { text: '', fontSize: 11, alignment: 'center' },
+          { text: `${addCommas(totalValue.toFixed(2))}`, fontSize: 11, alignment: 'center' },
+          { text: `${addCommas(totalTax.toFixed(2))}`, fontSize: 11, alignment: 'center' },
+        ])
+      }
 
-pdfMake.createPdf(docDefinition).open()
-}
+    }
 
-function makePDF3() {
 
-pdfMake.fonts = {
+    var docDefinition = {
+      pageSize: 'A4',
+      pageOrientation: 'landscape',
+      pageMargins: [10, 100, 50, 50],
+      header: function (currentPage, pageCount, pageSize) {
+        return {
+          margin: [30, 10, 20, 10],
+          stack: [
+            { text: "SAHA THAI STEEL PIPE (PUBLIC) CO., LTD. ทะเบียน W0201100000023", fontSize: 16, bold: true, alignment: 'center', margin: [0, 10, 0, 0] },
+            { text: "รายงานของคงเหลือประจำงวด", fontSize: 14, alignment: 'center', margin: [0, 0, 0, 0] },
+            { text: `สำหรับงวดบัญชี ระหว่างวันที่ ${moment(StartDate).locale('th').format('D MMMM YYYY')} ถึง ${moment(EndDate).locale('th').format('D MMMM YYYY')}`, fontSize: 14, alignment: 'center', margin: [0, 0, 0, 0] },
+          ]
+        };
+      },
+      content: [
+        {
+          margin: [0, 0, 0, 0],
+          columns: [
+            {
+
+              table: {
+                widths: [20, 150, 40, 20, 60, 60, 100, 50, 40, 40, 65, 65],
+                headerRows: 1,
+                body: data,
+              },
+            },
+          ],
+        }
+      ],
+      defaultStyle: {
+        font: 'THSarabunNew',
+      },
+    };
+
+    pdfMake.createPdf(docDefinition).open()
+  }
+
+  function makePDF2(totalRemainOld, totalValueOld, totalTaxOld, totalRemain, totalValue, totalTax, totalH001, Weight, Value, newTotalTaxIN, StartDate, EndDate) {
+
+    pdfMake.fonts = {
       THSarabunNew: {
         normal: 'THSarabunNew.ttf',
         bold: 'THSarabunNew Bold.ttf',
         italics: 'THSarabunNew-Italic.ttf',
         bolditalics: 'THSarabunNew-BoldItalic.ttf'
-       }
- };
-  
-
-const data = []
-data.push([
-{ text: `รายการ`, fontSize: 10, alignment: 'center', style: 'header' },
-{ text: "มูลค่า", fontSize: 10, alignment: 'center', style: 'header'},
-{ text: "ภาษีอากรรวม", fontSize: 10, alignment: 'center', style: 'header' },
-]);
+      }
+    };
 
 
-for (let i = 0; i <= 40; i++) {
-
-if (i == 0) {
-  data.push([
-   { text: `1.วัตถุดิบคงเหลือต้นงวด`, fontSize: 8, alignment: 'left' },
-   { text: `933,180,180.00`, fontSize: 8, alignment: 'center' },
-   { text: `126,585,104.42`, fontSize: 8, alignment: 'center' },
-])}
-
-if (i == 1) {
-  data.push([
-   { text: `2.รายการนำวัตถุดิบเข้าคลังฯ`, fontSize: 8, alignment: 'left' },
-   { text: ``, fontSize: 8, alignment: 'center' },
-   { text: ``, fontSize: 8, alignment: 'center' },
-])}
-
-if (i == 2) {
-  data.push([
-   { text: `2.1 นำเข้า		                                                                                                              จำนวน	10	ฉบับ`, fontSize: 8, alignment: 'left', margin: [10, 0, 0, 0] },
-   { text: `933,180,180.00`, fontSize: 8, alignment: 'center' },
-   { text: `126,585,104.42`, fontSize: 8, alignment: 'center' },
-])}
-
-if (i == 3) {
-  data.push([
-   { text: `2.2 รับโอน`, fontSize: 8, alignment: 'left', margin: [10, 0, 0, 0] },
-   { text: ``, fontSize: 8, alignment: 'center' },
-   { text: ``, fontSize: 8, alignment: 'center' },
-])}
-
-if (i == 4) {
-  data.push([
-   { text: `- คลังฯ	                                                                                                               จำนวน	-	ฉบับ`, fontSize: 8, alignment: 'center' },
-   { text: ``, fontSize: 8, alignment: 'center' },
-   { text: ``, fontSize: 8, alignment: 'center' },
-])}
-if (i == 5) {
-  data.push([
-   { text: ` - 19 ทวิ	                                                                                                           	จำนวน	-	ฉบับ`, fontSize: 8, alignment: 'center' },
-   { text: ``, fontSize: 8, alignment: 'center' },
-   { text: ``, fontSize: 8, alignment: 'center' },
-])}
-if (i == 6) {
-  data.push([
-   { text: `- FZ	                                                                                                           	    จำนวน	-	ฉบับ`, fontSize: 8, alignment: 'center' },
-   { text: ``, fontSize: 8, alignment: 'center' },
-   { text: ``, fontSize: 8, alignment: 'center' },
-])}
-if (i == 7) {
-  data.push([
-   { text: `- EPZ	                                                                                                           	   จำนวน	-	ฉบับ`, fontSize: 8, alignment: 'center' },
-   { text: ``, fontSize: 8, alignment: 'center' },
-   { text: ``, fontSize: 8, alignment: 'center' },
-])}
-if (i == 8) {
-  data.push([
-   { text: `- BOI	                                                                                                           	   จำนวน	-	ฉบับ`, fontSize: 8, alignment: 'center' },
-   { text: ``, fontSize: 8, alignment: 'center' },
-   { text: ``, fontSize: 8, alignment: 'center' },
-])}
-if (i == 9) {
-  data.push([
-   { text: `- อื่นๆ	                                                                                                           	   จำนวน	-	ฉบับ`, fontSize: 8, alignment: 'center' },
-   { text: ``, fontSize: 8, alignment: 'center' },
-   { text: ``, fontSize: 8, alignment: 'center' },
-])}
-
-if (i == 10) {
-  data.push([
-   { text: `รวมการนำวัตถุดิบเข้าคลังฯ ( รวม 2.1 - 2.2 )`, fontSize: 8, alignment: 'center' },
-   { text: `941,338,066.71`, fontSize: 8, alignment: 'center' },
-   { text: `116,255,251.26`, fontSize: 8, alignment: 'center' },
-])}
-
-if (i == 11) {
-  data.push([
-   { text: `3.รายการนำวัตถุดิบออกจากคลังฯ`, fontSize: 8, alignment: 'left' },
-   { text: ``, fontSize: 8, alignment: 'center' },
-   { text: ``, fontSize: 8, alignment: 'center' },
-])}
-
-if (i == 12) {
-  data.push([
-   { text: `3.1 ส่งออก		                                                                                                              	จำนวน	190	ฉบับ`, fontSize: 8, alignment: 'left' },
-   { text: ``, fontSize: 8, alignment: 'center' },
-   { text: ``, fontSize: 8, alignment: 'center' },
-])}
-if (i == 13) {
-  data.push([
-   { text: `3.2 โอนออก		                                                                                                                 จำนวน	-	ฉบับ`, fontSize: 8, alignment: 'left' },
-   { text: ``, fontSize: 8, alignment: 'center' },
-   { text: ``, fontSize: 8, alignment: 'center' },
-])}
-if (i == 14) {
-  data.push([
-   { text: `3.3 ชำระภาษี		                                                                                                               จำนวน	10	ฉบับ`, fontSize: 8, alignment: 'left' },
-   { text: ``, fontSize: 8, alignment: 'center' },
-   { text: ``, fontSize: 8, alignment: 'center' },
-])}
-if (i == 15) {
-  data.push([
-   { text: `3.4 ทำลาย		                                                                                                              	 จำนวน	-	ฉบับ`, fontSize: 8, alignment: 'left' },
-   { text: ``, fontSize: 8, alignment: 'center' },
-   { text: ``, fontSize: 8, alignment: 'center' },
-])}
-if (i == 16) {
-  data.push([
-   { text: `3.5 บริจาก		                                                                                                              	 จำนวน	-	ฉบับ`, fontSize: 8, alignment: 'left' },
-   { text: ``, fontSize: 8, alignment: 'center' },
-   { text: ``, fontSize: 8, alignment: 'center' },
-])}
-if (i == 17) {
-  data.push([
-   { text: `3.6 อื่นๆ		                                                                                                              		จำนวน	-	ฉบับ`, fontSize: 8, alignment: 'left' },
-   { text: ``, fontSize: 8, alignment: 'center' },
-   { text: ``, fontSize: 8, alignment: 'center' },
-])}
-if (i == 18) {
-  data.push([
-   { text: `รวมการนำวัตถุดิบออกจากคลังฯ ( รวม 3.1 - 3.6 )`, fontSize: 8, alignment: 'left' },
-   { text: `1,058,311,534.69`, fontSize: 8, alignment: 'center' },
-   { text: `2,048,239.00`, fontSize: 8, alignment: 'center' },
-])}
-if (i == 19) {
-  data.push([
-   { text: `รายการ`, fontSize: 8, alignment: 'center' },
-   { text: `มูลค่า`, fontSize: 8, alignment: 'center' },
-   { text: `ภาษีอากรรวม`, fontSize: 8, alignment: 'center' },
-])}
-if (i == 20) {
-  data.push([
-   { text: `4.วัตถุดิบคงเหลือปลายงวด`, fontSize: 8, alignment: 'left' },
-   { text: `1,024,980,602.42`, fontSize: 8, alignment: 'center' },
-   { text: `126,585,104.42`, fontSize: 8, alignment: 'center' },
-])}
-if (i == 21) {
-  data.push([
-   { text: `5.รายการปรับปรุงบัญชี`, fontSize: 9, alignment: 'left' },
-   { text: `-`, fontSize: 9, alignment: 'center' },
-   { text: `-`, fontSize: 9, alignment: 'center' },
-])}
-if (i == 22) {
-  data.push([
-   { text: `6.วัตถุดิบคงเหลือปลายงวดหลังปรับปรุงบัญชี`, fontSize: 9, alignment: 'left' },
-   { text: `1,024,980,602.42`, fontSize: 9, alignment: 'center' },
-   { text: `126,585,104.42`, fontSize: 9, alignment: 'center' },
-])}
-
-if (i == 23) {
-  data.push([
-   { border: [false, false, false, false], text: `1.2  กรมศุลกากรกำหนดให้วางประกัน 10 % ของค่าภาษีอากรวัตถุดิบคงเหลือปลายงวดเป็นจำนวน  12,658,510.44 บาท`, fontSize: 10, alignment: 'left', colSpan: 3 },
-])}
-
-if (i == 24) {
-  data.push([
-   { border: [false, false, false, false], text: `บริษัทฯ วางค้ำประกันไว้แล้วจำนวน 43,650,000.00 บาท ตามหลักทรัพย์ดังนี้`, fontSize: 10, alignment: 'left', colSpan: 3 },
-])}
-if (i == 25) {
-  data.push([
-   { border: [false, false, false, false], text: `1.2.1 หนังสือธนาคารค้ำประกัน จำนวน 3 ฉบับ มูลค่า 43,650,000.00 บาท`, fontSize: 10, alignment: 'left', colSpan: 3 },
-])}
-if (i == 26) {
-  data.push([
-   { border: [false, false, false, false], text: `1.2.2 อื่นๆ (ระบุหลักทรัพย์) จำนวน - ฉบับ มูลค่า    -    บาท`, fontSize: 10, alignment: 'left', colSpan: 3 },
-])}
-if (i == 27) {
-  data.push([
-   { border: [false, false, false, false], text: `บริษัทฯ  ต้องวางหลักทรัพย์ค้ำประกันเพิ่มขึ้น/ลดลง  จำนวน                           -   บาท`, fontSize: 10, alignment: 'left', colSpan: 3 },
-])}
-if (i == 28) {
-  data.push([
-   { border: [false, false, false, false], text: `1.3 วัตถุดิบดงเหลือเก็บไว้ในคลังฯ เกินกำหนด 2 ปี จำนวน - ฉบับ (ใบขนฯ) มูลค่ - บาท ค่าภาษีอากรรวม - บาท`, fontSize: 10, alignment: 'left', colSpan: 3 },
-])}
-if (i == 29) {
-  data.push([
-   { border: [false, false, false, false], text: `\uf046 อยู่ระหว่างดำเนินการชำระค่าภาษีอากร`, fontSize: 10, alignment: 'left', colSpan: 3 },
-])}
-if (i == 30) {
-  data.push([
-   { border: [false, false, false, false], text: `\uf046 ชำระค่าภาษีอากรเรียนร้อยแล้ว ตามใบเสร็จเลขที่….…….………`, fontSize: 10, alignment: 'left', colSpan: 3 },
-])}
-if (i == 31) {
-  data.push([
-   { border: [false, false, false, false], text: `\uf046 อื่น ๆ ….….………………………………………………………….`, fontSize: 10, alignment: 'left', colSpan: 3 },
-])}
-if (i == 32) {
-  data.push([
-   { border: [false, false, false, false], text: `2. รายงานเครื่องจักร ส่วนประกอบ และอุปกรณ์ประกอบของเครื่องจักร ที่ได้รับยกเว้นอากรตามประกาศกระทรวง การคลัง ที่ ศก. 1/2531 ข้อ 2.3.10 บริษัทฯ มีเครื่องจักรที่ได้รับยกเว้นภาษีอากร		
-`, fontSize: 10, alignment: 'left', colSpan: 3 },
-])}
-if (i == 33) {
-  data.push([
-   { text: `รายการ`, fontSize: 10, alignment: 'center' },
-   { text: `มูลค่า`, fontSize: 10, alignment: 'center' },
-   { text: `ภาษีอากรรวม`, fontSize: 10, alignment: 'center' },
-])}
-if (i == 34) {
-  data.push([
-   { text: `ยอดยกมา`, fontSize: 8, alignment: 'left' },
-   { text: `-`, fontSize: 8, alignment: 'center' },
-   { text: `-`, fontSize: 8, alignment: 'center' },
-])}
-if (i == 35) {
-  data.push([
-   { text: `นำเข้า    จำนวน …………ฉบับ`, fontSize: 8, alignment: 'left' },
-   { text: `-`, fontSize: 8, alignment: 'center' },
-   { text: `-`, fontSize: 8, alignment: 'center' },
-])}
-if (i == 36) {
-  data.push([
-   { text: `หัก รายการที่ได้รับอนุมัติให้ตัดออกจากบัญชี`, fontSize: 9, alignment: 'left' },
-   { text: `-`, fontSize: 8, alignment: 'center' },
-   { text: `-`, fontSize: 8, alignment: 'center' },
-])}
-if (i == 37) {
-  data.push([
-   { text: `คงเหลือ`, fontSize: 8, alignment: 'left' },
-   { text: `-`, fontSize: 8, alignment: 'center' },
-   { text: `-`, fontSize: 8, alignment: 'center' },
-])}
-
-if (i == 38) {
-  data.push([
-   {border: [false, false, false, false], text: `บริษัทฯ  ได้แนบแผ่น CD  ชนิดอ่านข้อมูลได้อย่างเดียว  ซึ่งบันทึกข้อมูลรายงานทุกประเภท มาพร้อมนี้แล้ว จึงเรียนมาเพื่อโปรดพิจารณา	
-`, fontSize: 10, alignment: 'left', colSpan: 3, margin: [10, 0, 0, 0] },
-])}
-
-if (i == 39) {
-  data.push([
-   {border: [false, false, false, false], text: `( นายยอดชาย  ลมลอย )`, fontSize: 10, alignment: 'center', colSpan: 3, margin: [0, 0, 0, 0] },
-])}
-
-if (i == 40) {
-  data.push([
-   {border: [false, false, false, false], text: `ผู้จัดการ`, fontSize: 10, alignment: 'center', colSpan: 3, margin: [0, 0, 0, 0] },
-])}
+    const data = []
+    data.push([
+      { text: `ลำดับ`, fontSize: 10, alignment: 'center', style: 'header', rowSpan: 2 },
+      { text: "ชื่อวัตถุดิบ", fontSize: 11, alignment: 'center', style: 'header', rowSpan: 2 },
+      { text: "รหัส  วัตถุดิบ", fontSize: 11, alignment: 'center', style: 'header', rowSpan: 2 },
+      { text: "หน่วย", fontSize: 11, alignment: 'center', style: 'header', rowSpan: 2 },
+      { text: "ยอดยกมา", fontSize: 11, alignment: 'center', style: 'header', colSpan: 3 },
+      {},
+      {},
+      { text: "นำเข้าคลังสินค้าทัณฑ์บนฯ", fontSize: 11, alignment: 'center', style: 'header', colSpan: 3 },
+      {},
+      {},
+      { text: "ปริมาณนำ", fontSize: 11, alignment: 'center', style: 'header' },
+      { text: "ยอดคงเหลือยกไป", fontSize: 11, alignment: 'center', style: 'header', colSpan: 3 },
+      {},
+      {}
+    ],
+      [
+        {},
+        {},
+        {},
+        {},
+        { text: "ปริมาณ", fontSize: 11, alignment: 'center' },
+        { text: "มูลค่า(บาท)", fontSize: 11, alignment: 'center' },
+        { text: "ภาษีอากร", fontSize: 11, alignment: 'center' },
+        { text: "ปริมาณ", fontSize: 11, alignment: 'center' },
+        { text: "มูลค่า(บาท)", fontSize: 11, alignment: 'center' },
+        { text: "ภาษีอากร", fontSize: 11, alignment: 'center' },
+        { text: "ออกจากคลังฯ", fontSize: 11, alignment: 'center', margin: [7, 0, 0, 0] },
+        { text: "ปริมาณ", fontSize: 11, alignment: 'center' },
+        { text: "มูลค่า(บาท)", fontSize: 11, alignment: 'center' },
+        { text: "ภาษีอากร", fontSize: 11, alignment: 'center' },
+      ]
+    );
 
 
-}
+    for (let i = 0; i <= 10; i++) {
+
+      if (i == 0) {
+        data.push([
+          { text: `${i === 0 ? i + 1 : ''}`, fontSize: 11, alignment: 'center' },
+          { text: `${i === 0 ? 'HOT ROLLED STEEL SHEET IN COIL' : ''}`, fontSize: 11, alignment: 'center' },
+          { text: `${i === 0 ? 'H0001' : ''}`, fontSize: 11, alignment: 'center' },
+          { text: `${i === 0 ? 'KGS' : ''}`, fontSize: 11, alignment: 'center' },
+          { text: `${addCommas(totalRemainOld)}`, fontSize: 11, alignment: 'center' },
+          { text: `${addCommas(totalValueOld)}`, fontSize: 11, alignment: 'center' },
+          { text: `${addCommas(totalTaxOld)}`, fontSize: 11, alignment: 'center' },
+          { text: `${addCommas(Weight)}`, fontSize: 11, alignment: 'center' },
+          { text: `${addCommas(Value)}`, fontSize: 11, alignment: 'center' },
+          { text: `${addCommas(newTotalTaxIN)}`, fontSize: 11, alignment: 'center' },
+          { text: `${addCommas(totalH001)}`, fontSize: 11, alignment: 'center' },
+          { text: `${addCommas(totalRemain)}`, fontSize: 11, alignment: 'center' },
+          { text: `${addCommas(totalValue)}`, fontSize: 11, alignment: 'center' },
+          { text: `${addCommas(totalTax)}`, fontSize: 11, alignment: 'center' },
+        ])
+      }
+
+      data.push([
+        { text: ` `, fontSize: 11, alignment: 'center' },
+        { text: ``, fontSize: 11, alignment: 'center' },
+        { text: ``, fontSize: 11, alignment: 'center' },
+        { text: ``, fontSize: 11, alignment: 'center' },
+        { text: ``, fontSize: 11, alignment: 'center' },
+        { text: ``, fontSize: 11, alignment: 'center' },
+        { text: ``, fontSize: 11, alignment: 'center' },
+        { text: ``, fontSize: 11, alignment: 'center' },
+        { text: ``, fontSize: 11, alignment: 'center' },
+        { text: ``, fontSize: 11, alignment: 'center' },
+        { text: ``, fontSize: 11, alignment: 'center' },
+        { text: ``, fontSize: 11, alignment: 'center' },
+        { text: ``, fontSize: 11, alignment: 'center' },
+        { text: ``, fontSize: 11, alignment: 'center' },
+      ])
+
+      if (i == 10) {
+        data.push([
+          { text: `${i === 0 ? i + 1 : ''}`, fontSize: 11, alignment: 'center' },
+          { text: `รวม`, fontSize: 11, alignment: 'center' },
+          { text: `${i === 0 ? 'H0001' : ''}`, fontSize: 11, alignment: 'center' },
+          { text: `${i === 0 ? 'KGS' : ''}`, fontSize: 11, alignment: 'center' },
+          { text: `${addCommas(totalRemainOld)}`, fontSize: 11, alignment: 'center' },
+          { text: `${addCommas(totalValueOld)}`, fontSize: 11, alignment: 'center' },
+          { text: `${addCommas(totalTaxOld)}`, fontSize: 11, alignment: 'center' },
+          { text: `${addCommas(Weight)}`, fontSize: 11, alignment: 'center' },
+          { text: `${addCommas(Value)}`, fontSize: 11, alignment: 'center' },
+          { text: `${addCommas(newTotalTaxIN)}`, fontSize: 11, alignment: 'center' },
+          { text: `${addCommas(totalH001)}`, fontSize: 11, alignment: 'center' },
+          { text: `${addCommas(totalRemain)}`, fontSize: 11, alignment: 'center' },
+          { text: `${addCommas(totalValue)}`, fontSize: 11, alignment: 'center' },
+          { text: `${addCommas(totalTax)}`, fontSize: 11, alignment: 'center' },
+        ])
+      }
+
+    }
 
 
-var docDefinition = {
-pageSize: 'A4',
-pageMargins: [15, 100, 50, 50],
-header: function (currentPage, pageCount, pageSize) {
-   return {
-    margin: [30, 5, 20, 10],
-    stack: [
-      {text: "วันที่ 24 กันยายน 2567", fontSize: 12, bold: true, alignment: 'right', margin: [0, 0, 0, 0] },
-      {text: "เรียน  ผู้อำนวยการส่วนตรวจสอบคลังสินค้าทัณฑ์บน", fontSize: 10, alignment: 'left', margin: [0, 0, 0, 0] },
-      {text: "      ข้าพเจ้าบริษัท สหไทยสตีลไพพ์ จำกัด (มหาชน) เลขประจำตัวผู้เสียภาษีอากร 3271001394 ได้รับอนุมัติให้จัดตั้งคลังสินค้าทัณฑ์บนประเภทโรงผลิตสินค้า เพื่อทำการผลิตสินค้าประเภทท่อเหล็กชุบสังกะสีและ	\n ไม่ชุบสังกะสี เลขทะเบียนสิทธิประโยชน์ทางภาษีอากรเลขที่ W0201100000023 ตั้งอยู่ ณ เลขที่ 78 หมู่ 3 ต.บางหญ้าแพรก ถนนปู่เจ้าสมิงพราย อ.พระประแดง จ.สมุทรปราการ ขอยื่นแบบสรุปการใช้วัตถุดิบประจำงวด บัญชีที่ 1/2567(ระหว่างวันที่ 1 มกราคม 2567 ถึง 30 มิถุนายน 2567) มีรายละเอียดดังนี้", fontSize: 10, alignment: 'left', margin: [0, 0, 0, 0] },
-      {text: '1.รายงานการใช้วัตถุดิบ',fontSize: 10, bold: true, alignment: 'left', margin: [0, 0, 0, 0] },
-      {text: '        1.1 รายละเอียดการใช้วัตถุดิบ',fontSize: 10, bold: true, alignment: 'left', margin: [10, 0, 0, 0] }
-    ]
-   };
-},
-content: [
-   {
-       margin: [0, 0, 0, 0],
-       columns: [
-           {
+    var docDefinition = {
+      pageSize: 'A4',
+      pageOrientation: 'landscape',
+      pageMargins: [10, 100, 50, 50],
+      header: function (currentPage, pageCount, pageSize) {
+        return {
+          margin: [30, 10, 20, 10],
+          stack: [
+            { text: "SAHA THAI STEEL PIPE (PUBLIC) CO., LTD. ทะเบียน W0201100000023", fontSize: 16, bold: true, alignment: 'center', margin: [0, 10, 0, 0] },
+            { text: "รายงานการเคลื่อนไหวของวัตถุดิบ", fontSize: 14, alignment: 'center', margin: [0, 0, 0, 0] },
+            { text: `สำหรับงวดบัญชี ระหว่างวันที่ ${moment(StartDate).locale('th').format('D MMMM YYYY')} ถึง ${moment(EndDate).locale('th').format('D MMMM YYYY')}`, fontSize: 14, alignment: 'center', margin: [0, 0, 0, 0] },
+          ]
+        };
+      },
+      content: [
+        {
+          margin: [0, 0, 0, 0],
+          columns: [
+            {
 
-               table: {
-                   widths: [300, 120,120],
-                   headerRows: 1,
-                   body: data,
-               },
-           },
-       ],
-   }
-],
-defaultStyle: {
-   font: 'THSarabunNew',
-},
-};
+              table: {
+                widths: [20, 120, 25, 20, 50, 50, 50, 50, 50, 50, 50, 50, 60, 50],
+                headerRows: 1,
+                body: data,
+              },
+            },
+          ],
+        }
+      ],
+      defaultStyle: {
+        font: 'THSarabunNew',
+      },
+    };
 
-pdfMake.createPdf(docDefinition).open()
-}
+    pdfMake.createPdf(docDefinition).open()
+  }
+
+  function makePDF3(totalValueOld, totalTaxOld, totalValue, totalTax, data_IN, Value, newTotalTaxIN, data_OUT, Value_OUT,data_Scrap,totalValue_Scrap, totalTax_Scrap, StartDate, EndDate) {
+
+    pdfMake.fonts = {
+      THSarabunNew: {
+        normal: 'THSarabunNew.ttf',
+        bold: 'THSarabunNew Bold.ttf',
+        italics: 'THSarabunNew-Italic.ttf',
+        bolditalics: 'THSarabunNew-BoldItalic.ttf'
+      }
+    };
+
+
+   // how to cal 10% from totalTax
+
+    const ten = (totalTax * 10) / 100;
+    const tenPercent = parseFloat(ten).toFixed(2);
+    const Out_Scrap = Value + totalValue_Scrap;
+    const totalOut_Scrap = parseFloat(Out_Scrap).toFixed(2);
+
+
+    const data = []
+    data.push([
+      { text: `รายการ`, fontSize: 10, alignment: 'center', style: 'header' },
+      { text: "มูลค่า", fontSize: 10, alignment: 'center', style: 'header' },
+      { text: "ภาษีอากรรวม", fontSize: 10, alignment: 'center', style: 'header' },
+    ]);
+
+
+    for (let i = 0; i <= 40; i++) {
+
+      if (i == 0) {
+        data.push([
+          { text: `1.วัตถุดิบคงเหลือต้นงวด`, fontSize: 8, alignment: 'left' },
+          { text: `${addCommas(totalValueOld)}`, fontSize: 8, alignment: 'center' },
+          { text: `${addCommas(totalTaxOld)}`, fontSize: 8, alignment: 'center' },
+        ])
+      }
+
+      if (i == 1) {
+        data.push([
+          { text: `2.รายการนำวัตถุดิบเข้าคลังฯ`, fontSize: 8, alignment: 'left' },
+          { text: ``, fontSize: 8, alignment: 'center' },
+          { text: ``, fontSize: 8, alignment: 'center' },
+        ])
+      }
+
+      if (i == 2) {
+        data.push([
+          { text: `2.1 นำเข้า		                                                                                                              จำนวน	${data_IN}	ฉบับ`, fontSize: 8, alignment: 'left', margin: [10, 0, 0, 0] },
+          { text: `${addCommas(Value)}`, fontSize: 8, alignment: 'center' },
+          { text: `${addCommas(newTotalTaxIN)}`, fontSize: 8, alignment: 'center' },
+        ])
+      }
+
+      if (i == 3) {
+        data.push([
+          { text: `2.2 รับโอน`, fontSize: 8, alignment: 'left', margin: [10, 0, 0, 0] },
+          { text: ``, fontSize: 8, alignment: 'center' },
+          { text: ``, fontSize: 8, alignment: 'center' },
+        ])
+      }
+
+      if (i == 4) {
+        data.push([
+          { text: `- คลังฯ	                                                                                                               จำนวน	-	ฉบับ`, fontSize: 8, alignment: 'center' },
+          { text: ``, fontSize: 8, alignment: 'center' },
+          { text: ``, fontSize: 8, alignment: 'center' },
+        ])
+      }
+      if (i == 5) {
+        data.push([
+          { text: ` - 19 ทวิ	                                                                                                           	จำนวน	-	ฉบับ`, fontSize: 8, alignment: 'center' },
+          { text: ``, fontSize: 8, alignment: 'center' },
+          { text: ``, fontSize: 8, alignment: 'center' },
+        ])
+      }
+      if (i == 6) {
+        data.push([
+          { text: `- FZ	                                                                                                           	    จำนวน	-	ฉบับ`, fontSize: 8, alignment: 'center' },
+          { text: ``, fontSize: 8, alignment: 'center' },
+          { text: ``, fontSize: 8, alignment: 'center' },
+        ])
+      }
+      if (i == 7) {
+        data.push([
+          { text: `- EPZ	                                                                                                           	   จำนวน	-	ฉบับ`, fontSize: 8, alignment: 'center' },
+          { text: ``, fontSize: 8, alignment: 'center' },
+          { text: ``, fontSize: 8, alignment: 'center' },
+        ])
+      }
+      if (i == 8) {
+        data.push([
+          { text: `- BOI	                                                                                                           	   จำนวน	-	ฉบับ`, fontSize: 8, alignment: 'center' },
+          { text: ``, fontSize: 8, alignment: 'center' },
+          { text: ``, fontSize: 8, alignment: 'center' },
+        ])
+      }
+      if (i == 9) {
+        data.push([
+          { text: `- อื่นๆ	                                                                                                           	   จำนวน	-	ฉบับ`, fontSize: 8, alignment: 'center' },
+          { text: ``, fontSize: 8, alignment: 'center' },
+          { text: ``, fontSize: 8, alignment: 'center' },
+        ])
+      }
+
+      if (i == 10) {
+        data.push([
+          { text: `รวมการนำวัตถุดิบเข้าคลังฯ ( รวม 2.1 - 2.2 )`, fontSize: 8, alignment: 'center' },
+          { text: `${addCommas(Value)}`, fontSize: 8, alignment: 'center' },
+          { text: `${addCommas(newTotalTaxIN)}`, fontSize: 8, alignment: 'center' },
+        ])
+      }
+
+      if (i == 11) {
+        data.push([
+          { text: `3.รายการนำวัตถุดิบออกจากคลังฯ`, fontSize: 8, alignment: 'left' },
+          { text: ``, fontSize: 8, alignment: 'center' },
+          { text: ``, fontSize: 8, alignment: 'center' },
+        ])
+      }
+
+      if (i == 12) {
+        data.push([
+          { text: `3.1 ส่งออก		                                                                                                              	จำนวน	${data_OUT}	ฉบับ`, fontSize: 8, alignment: 'left' },
+          { text: `${addCommas(Value_OUT)}`, fontSize: 8, alignment: 'center' },
+          { text: `-`, fontSize: 8, alignment: 'center' },
+        ])
+      }
+      if (i == 13) {
+        data.push([
+          { text: `3.2 โอนออก		                                                                                                                 จำนวน	-	ฉบับ`, fontSize: 8, alignment: 'left' },
+          { text: `-`, fontSize: 8, alignment: 'center' },
+          { text: `-`, fontSize: 8, alignment: 'center' },
+        ])
+      }
+      if (i == 14) {
+        data.push([
+          { text: `3.3 ชำระภาษี		                                                                                                               จำนวน	${data_Scrap}	ฉบับ`, fontSize: 8, alignment: 'left' },
+          { text: `${addCommas(totalValue_Scrap)}`, fontSize: 8, alignment: 'center' },
+          { text: `${addCommas(totalTax_Scrap)}`, fontSize: 8, alignment: 'center' },
+        ])
+      }
+      if (i == 15) {
+        data.push([
+          { text: `3.4 ทำลาย		                                                                                                              	 จำนวน	-	ฉบับ`, fontSize: 8, alignment: 'left' },
+          { text: ``, fontSize: 8, alignment: 'center' },
+          { text: ``, fontSize: 8, alignment: 'center' },
+        ])
+      }
+      if (i == 16) {
+        data.push([
+          { text: `3.5 บริจาก		                                                                                                              	 จำนวน	-	ฉบับ`, fontSize: 8, alignment: 'left' },
+          { text: ``, fontSize: 8, alignment: 'center' },
+          { text: ``, fontSize: 8, alignment: 'center' },
+        ])
+      }
+      if (i == 17) {
+        data.push([
+          { text: `3.6 อื่นๆ		                                                                                                              		จำนวน	-	ฉบับ`, fontSize: 8, alignment: 'left' },
+          { text: ``, fontSize: 8, alignment: 'center' },
+          { text: ``, fontSize: 8, alignment: 'center' },
+        ])
+      }
+      if (i == 18) {
+        data.push([
+          { text: `รวมการนำวัตถุดิบออกจากคลังฯ ( รวม 3.1 - 3.6 )`, fontSize: 8, alignment: 'left' },
+          { text: `${addCommas(totalOut_Scrap)}`, fontSize: 8, alignment: 'center' },
+          { text: `${addCommas(totalTax_Scrap)}`, fontSize: 8, alignment: 'center' },
+        ])
+      }
+      if (i == 19) {
+        data.push([
+          { text: `รายการ`, fontSize: 8, alignment: 'center' },
+          { text: `มูลค่า`, fontSize: 8, alignment: 'center' },
+          { text: `ภาษีอากรรวม`, fontSize: 8, alignment: 'center' },
+        ])
+      }
+      if (i == 20) {
+        data.push([
+          { text: `4.วัตถุดิบคงเหลือปลายงวด`, fontSize: 8, alignment: 'left' },
+          { text: `${addCommas(totalValue)}`, fontSize: 8, alignment: 'center' },
+          { text: `${addCommas(totalTax)}`, fontSize: 8, alignment: 'center' },
+        ])
+      }
+      if (i == 21) {
+        data.push([
+          { text: `5.รายการปรับปรุงบัญชี`, fontSize: 9, alignment: 'left' },
+          { text: `-`, fontSize: 9, alignment: 'center' },
+          { text: `-`, fontSize: 9, alignment: 'center' },
+        ])
+      }
+      if (i == 22) {
+        data.push([
+          { text: `6.วัตถุดิบคงเหลือปลายงวดหลังปรับปรุงบัญชี`, fontSize: 9, alignment: 'left' },
+          { text: `${addCommas(totalValue)}`, fontSize: 8, alignment: 'center' },
+          { text: `${addCommas(totalTax)}`, fontSize: 8, alignment: 'center' },
+        ])
+      }
+
+      if (i == 23) {
+        data.push([
+          { border: [false, false, false, false], text: `1.2  กรมศุลกากรกำหนดให้วางประกัน 10 % ของค่าภาษีอากรวัตถุดิบคงเหลือปลายงวดเป็นจำนวน ${addCommas(tenPercent)} บาท`, fontSize: 10, alignment: 'left', colSpan: 3 },
+        ])
+      }
+
+      if (i == 24) {
+        data.push([
+          { border: [false, false, false, false], text: `บริษัทฯ วางค้ำประกันไว้แล้วจำนวน 43,650,000.00 บาท ตามหลักทรัพย์ดังนี้`, fontSize: 10, alignment: 'left', colSpan: 3 },
+        ])
+      }
+      if (i == 25) {
+        data.push([
+          { border: [false, false, false, false], text: `1.2.1 หนังสือธนาคารค้ำประกัน จำนวน 3 ฉบับ มูลค่า 43,650,000.00 บาท`, fontSize: 10, alignment: 'left', colSpan: 3 },
+        ])
+      }
+      if (i == 26) {
+        data.push([
+          { border: [false, false, false, false], text: `1.2.2 อื่นๆ (ระบุหลักทรัพย์) จำนวน - ฉบับ มูลค่า    -    บาท`, fontSize: 10, alignment: 'left', colSpan: 3 },
+        ])
+      }
+      if (i == 27) {
+        data.push([
+          { border: [false, false, false, false], text: `บริษัทฯ  ต้องวางหลักทรัพย์ค้ำประกันเพิ่มขึ้น/ลดลง  จำนวน                           -   บาท`, fontSize: 10, alignment: 'left', colSpan: 3 },
+        ])
+      }
+      if (i == 28) {
+        data.push([
+          { border: [false, false, false, false], text: `1.3 วัตถุดิบดงเหลือเก็บไว้ในคลังฯ เกินกำหนด 2 ปี จำนวน - ฉบับ (ใบขนฯ) มูลค่ - บาท ค่าภาษีอากรรวม - บาท`, fontSize: 10, alignment: 'left', colSpan: 3 },
+        ])
+      }
+      if (i == 29) {
+        data.push([
+          { border: [false, false, false, false], text: `\uf046 อยู่ระหว่างดำเนินการชำระค่าภาษีอากร`, fontSize: 10, alignment: 'left', colSpan: 3 },
+        ])
+      }
+      if (i == 30) {
+        data.push([
+          { border: [false, false, false, false], text: `\uf046 ชำระค่าภาษีอากรเรียนร้อยแล้ว ตามใบเสร็จเลขที่….…….………`, fontSize: 10, alignment: 'left', colSpan: 3 },
+        ])
+      }
+      if (i == 31) {
+        data.push([
+          { border: [false, false, false, false], text: `\uf046 อื่น ๆ ….….………………………………………………………….`, fontSize: 10, alignment: 'left', colSpan: 3 },
+        ])
+      }
+      if (i == 32) {
+        data.push([
+          {
+            border: [false, false, false, false], text: `2. รายงานเครื่องจักร ส่วนประกอบ และอุปกรณ์ประกอบของเครื่องจักร ที่ได้รับยกเว้นอากรตามประกาศกระทรวง การคลัง ที่ ศก. 1/2531 ข้อ 2.3.10 บริษัทฯ มีเครื่องจักรที่ได้รับยกเว้นภาษีอากร		
+`, fontSize: 10, alignment: 'left', colSpan: 3
+          },
+        ])
+      }
+      if (i == 33) {
+        data.push([
+          { text: `รายการ`, fontSize: 10, alignment: 'center' },
+          { text: `มูลค่า`, fontSize: 10, alignment: 'center' },
+          { text: `ภาษีอากรรวม`, fontSize: 10, alignment: 'center' },
+        ])
+      }
+      if (i == 34) {
+        data.push([
+          { text: `ยอดยกมา`, fontSize: 8, alignment: 'left' },
+          { text: `-`, fontSize: 8, alignment: 'center' },
+          { text: `-`, fontSize: 8, alignment: 'center' },
+        ])
+      }
+      if (i == 35) {
+        data.push([
+          { text: `นำเข้า    จำนวน …………ฉบับ`, fontSize: 8, alignment: 'left' },
+          { text: `-`, fontSize: 8, alignment: 'center' },
+          { text: `-`, fontSize: 8, alignment: 'center' },
+        ])
+      }
+      if (i == 36) {
+        data.push([
+          { text: `หัก รายการที่ได้รับอนุมัติให้ตัดออกจากบัญชี`, fontSize: 9, alignment: 'left' },
+          { text: `-`, fontSize: 8, alignment: 'center' },
+          { text: `-`, fontSize: 8, alignment: 'center' },
+        ])
+      }
+      if (i == 37) {
+        data.push([
+          { text: `คงเหลือ`, fontSize: 8, alignment: 'left' },
+          { text: `-`, fontSize: 8, alignment: 'center' },
+          { text: `-`, fontSize: 8, alignment: 'center' },
+        ])
+      }
+
+      if (i == 38) {
+        data.push([
+          {
+            border: [false, false, false, false], text: `บริษัทฯ  ได้แนบแผ่น CD  ชนิดอ่านข้อมูลได้อย่างเดียว  ซึ่งบันทึกข้อมูลรายงานทุกประเภท มาพร้อมนี้แล้ว จึงเรียนมาเพื่อโปรดพิจารณา	
+`, fontSize: 10, alignment: 'left', colSpan: 3, margin: [10, 0, 0, 0]
+          },
+        ])
+      }
+
+      if (i == 39) {
+        data.push([
+          { border: [false, false, false, false], text: `( นายยอดชาย  ลมลอย )`, fontSize: 10, alignment: 'center', colSpan: 3, margin: [0, 0, 0, 0] },
+        ])
+      }
+
+      if (i == 40) {
+        data.push([
+          { border: [false, false, false, false], text: `ผู้จัดการ`, fontSize: 10, alignment: 'center', colSpan: 3, margin: [0, 0, 0, 0] },
+        ])
+      }
+
+
+    }
+
+
+    var docDefinition = {
+      pageSize: 'A4',
+      pageMargins: [15, 100, 50, 50],
+      header: function (currentPage, pageCount, pageSize) {
+        return {
+          margin: [30, 5, 20, 10],
+          stack: [
+            { text: `${moment().locale('th').format('D MMMM YYYY')}`, fontSize: 12, bold: true, alignment: 'right', margin: [0, 0, 0, 0] },
+            { text: "เรียน  ผู้อำนวยการส่วนตรวจสอบคลังสินค้าทัณฑ์บน", fontSize: 10, alignment: 'left', margin: [0, 0, 0, 0] },
+            { text: `      ข้าพเจ้าบริษัท สหไทยสตีลไพพ์ จำกัด (มหาชน) เลขประจำตัวผู้เสียภาษีอากร 3271001394 ได้รับอนุมัติให้จัดตั้งคลังสินค้าทัณฑ์บนประเภทโรงผลิตสินค้า เพื่อทำการผลิตสินค้าประเภทท่อเหล็กชุบสังกะสีและ	\n ไม่ชุบสังกะสี เลขทะเบียนสิทธิประโยชน์ทางภาษีอากรเลขที่ W0201100000023 ตั้งอยู่ ณ เลขที่ 78 หมู่ 3 ต.บางหญ้าแพรก ถนนปู่เจ้าสมิงพราย อ.พระประแดง จ.สมุทรปราการ ขอยื่นแบบสรุปการใช้วัตถุดิบประจำงวด บัญชีที่ 1/2567(ระหว่างวันที่ ${moment(StartDate).locale('th').format('D MMMM YYYY')} ถึง ${moment(EndDate).locale('th').format('D MMMM YYYY')}) มีรายละเอียดดังนี้`, fontSize: 10, alignment: 'left', margin: [0, 0, 0, 0] },
+            { text: '1.รายงานการใช้วัตถุดิบ', fontSize: 10, bold: true, alignment: 'left', margin: [0, 0, 0, 0] },
+            { text: '        1.1 รายละเอียดการใช้วัตถุดิบ', fontSize: 10, bold: true, alignment: 'left', margin: [10, 0, 0, 0] }
+          ]
+        };
+      },
+      content: [
+        {
+          margin: [0, 0, 0, 0],
+          columns: [
+            {
+
+              table: {
+                widths: [300, 120, 120],
+                headerRows: 1,
+                body: data,
+              },
+            },
+          ],
+        }
+      ],
+      defaultStyle: {
+        font: 'THSarabunNew',
+      },
+    };
+
+    pdfMake.createPdf(docDefinition).open()
+  }
+
 </script>

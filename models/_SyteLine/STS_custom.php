@@ -36,7 +36,7 @@ class STS_Custom {
         }
     }
 
-    function InsertSTS_Custom_Out($doc_no, $boatnote, $date, $item, $boat_name, $boat_no, $inv_no, $bundle, $weight_net, $weight_gross, $weight_zinc, $weight_nonzinc, $cust_po, $value, $pier, $BL_no, $loc_name,$loc_name2,$loc_name3,$loc_name4) {
+    function InsertSTS_Custom_Out($doc_no, $boatnote, $date, $item, $boat_name, $boat_no, $inv_no, $bundle, $weight_net, $weight_gross, $cust_po, $value, $pier, $BL_no, $loc_name,$loc_name2,$loc_name3,$loc_name4) {
 
         $sql = "SELECT * FROM STS_custom_OUT WHERE doc_no = '$doc_no'";
         $cSql = new SqlSrv();
@@ -53,8 +53,6 @@ class STS_Custom {
     bundle = $bundle, 
     weight_net = $weight_net, 
     weight_gross = $weight_gross, 
-    weight_zinc = " . ($weight_zinc !== '' ? $weight_zinc : "NULL") . ", 
-    weight_nonzinc = " . ($weight_nonzinc !== '' ? $weight_nonzinc : "NULL") . ", 
     cust_po = '$cust_po', 
     value = $value, 
     pier = '$pier', 
@@ -70,7 +68,7 @@ class STS_Custom {
             return $rs0;
         } else {
             $query = "INSERT INTO STS_custom_OUT (doc_no, boatnote, date, item, boat_name, boat_no, inv_no, bundle, weight_net, weight_gross, weight_zinc, weight_nonzinc, cust_po, value, pier, BL_no, loc_name, loc_name2, loc_name3, loc_name4, createdate)
-            VALUES ('$doc_no', '$boatnote', '$date', '$item', '$boat_name', '$boat_no', '$inv_no', $bundle, $weight_net, $weight_gross,  " . ($weight_zinc !== '' ? $weight_zinc : "NULL") . ", " . ($weight_nonzinc !== '' ? $weight_nonzinc : "NULL") . ", '$cust_po', $value, '$pier', '$BL_no', '$loc_name', '$loc_name2', '$loc_name3', '$loc_name4', GETDATE())";
+            VALUES ('$doc_no', '$boatnote', '$date', '$item', '$boat_name', '$boat_no', '$inv_no', $bundle, $weight_net, $weight_gross, '$cust_po', $value, '$pier', '$BL_no', '$loc_name', '$loc_name2', '$loc_name3', '$loc_name4', GETDATE())";
            $cSql = new SqlSrv();
            $rs0 = $cSql->SqlQuery($this->StrConn, $query);
            array_splice($rs0, count($rs0) - 1, 1);
@@ -142,6 +140,81 @@ from STS_custom_IN where date_in between '$StartDate' and '$EndDate'";
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);
         return $rs0;
+    }
+
+    function GetDataReportMoving($StartDate, $EndDate, $StartDate2, $EndDate2) {
+        $query = "EXEC [dbo].[STS_custom_mainrpt_acct_remain]
+        @TransactionDateStarting = '$StartDate2',
+        @TransactionDateEnding = '$EndDate2'";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+
+        $query2 = "select *, total = (value * 0.05) + ( (value + (value * 0.05)) * 0.07 )
+        from STS_custom_IN where date_in between '$StartDate' and '$EndDate'";
+
+        $cSql = new SqlSrv();
+        $rs1 = $cSql->SqlQuery($this->StrConn, $query2);
+        array_splice($rs1, count($rs1) - 1, 1);
+
+        $query3 = "EXEC [dbo].STS_custom_mainrpt_acct
+@TransactionDateStarting = '$StartDate',
+@TransactionDateEnding = '$EndDate'";
+
+        $cSql = new SqlSrv();
+        $rs2 = $cSql->SqlQuery($this->StrConn, $query3);
+        array_splice($rs2, count($rs2) - 1, 1);
+
+        $query4 = "EXEC [dbo].[STS_custom_mainrpt_acct_remain]
+        @TransactionDateStarting = '$StartDate',
+        @TransactionDateEnding = '$EndDate'";
+
+        $cSql = new SqlSrv();
+        $rs3 = $cSql->SqlQuery($this->StrConn, $query4);
+        array_splice($rs3, count($rs3) - 1, 1);
+
+        return [$rs0, $rs1, $rs2, $rs3];
+
+    }
+
+    function GetDataReportSummary($StartDate, $EndDate, $StartDate2, $EndDate2) {
+        $query = "EXEC [dbo].[STS_custom_mainrpt_acct_remain]
+        @TransactionDateStarting = '$StartDate2',
+        @TransactionDateEnding = '$EndDate2'";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+
+        $query2 = "select *, total = (value * 0.05) + ( (value + (value * 0.05)) * 0.07 )
+        from STS_custom_IN where date_in between '$StartDate' and '$EndDate'";
+
+        $cSql = new SqlSrv();
+        $rs1 = $cSql->SqlQuery($this->StrConn, $query2);
+        array_splice($rs1, count($rs1) - 1, 1);
+
+        $query3 = "select value from STS_custom_OUT where date between '$StartDate' and '$EndDate'";
+
+        $cSql = new SqlSrv();
+        $rs2 = $cSql->SqlQuery($this->StrConn, $query3);
+        array_splice($rs2, count($rs2) - 1, 1);
+
+        $query4 = "select value from STS_custom_scrap where item = 'เศษเหล็ก' and date between '$StartDate' and '$EndDate'";
+
+        $cSql = new SqlSrv();
+        $rs3 = $cSql->SqlQuery($this->StrConn, $query4);
+        array_splice($rs3, count($rs3) - 1, 1);
+
+        
+        $query5 = "EXEC [dbo].[STS_custom_mainrpt_acct_remain]
+        @TransactionDateStarting = '$StartDate',
+        @TransactionDateEnding = '$EndDate'";
+
+        $cSql = new SqlSrv();
+        $rs4 = $cSql->SqlQuery($this->StrConn, $query5);
+        array_splice($rs4, count($rs4) - 1, 1);
+
+        return [$rs0, $rs1, $rs2, $rs3 , $rs4];
+
     }
 
 }
