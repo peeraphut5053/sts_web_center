@@ -371,31 +371,31 @@
                                 .column(10)
                                 .data()
                                 .reduce(function (a, b) {
-                                    return intVal(a) + intVal(b);
+                                    return intVal(a.toFixed(2)) + intVal(b.toFixed(2));
                                 }, 0);
                         var val7 = api
                                 .column(11)
                                 .data()
                                 .reduce(function (a, b) {
-                                    return intVal(a) + intVal(b);
+                                    return intVal(a.toFixed(2)) + intVal(b.toFixed(2));
                                 }, 0);
                         var totalVal = api
                                 .column(12)
                                 .data()
                                 .reduce(function (a, b) {
-                                    return intVal(a) + intVal(b);
+                                    return intVal(a.toFixed(2)) + intVal(b.toFixed(2));
                                 }, 0);
                         var valMarket = api
                                 .column(13)
                                 .data()
                                 .reduce(function (a, b) {
-                                    return intVal(a) + intVal(b);
+                                    return intVal(a.toFixed(2)) + intVal(b.toFixed(2));
                                 }, 0);
                         var total = api
                                 .column(14)
                                 .data()
                                 .reduce(function (a, b) {
-                                    return intVal(a) + intVal(b);
+                                    return intVal(a.toFixed(2)) + intVal(b.toFixed(2));
                                 }, 0);
 
                         $(api.column(5).footer()).html("<b>รวม</b>");

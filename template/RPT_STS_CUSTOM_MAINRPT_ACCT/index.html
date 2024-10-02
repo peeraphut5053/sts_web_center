@@ -481,21 +481,27 @@
 
         const totalRemainOld = data1[0].totremain;
         const totalValueOld = data1.reduce((total, item) => total + Number(item.value), 0).toFixed(2);
-        const totalTaxOld = data1.reduce((total, item) => total + Number(item.tax), 0).toFixed(2);
+        const taxOld = data1.map((item) => Number(item.tax).toFixed(2));
+        const totalTaxOld = taxOld.reduce((total, item) => total + Number(item), 0).toFixed(2);
         const totalRemain = data4[0].totremain;
         const totalValue = data4.reduce((total, item) => total + Number(item.value), 0).toFixed(2);
-        const totalTax = data4.reduce((total, item) => total + Number(item.tax), 0).toFixed(2);
+        const tax = data4.map((item) => Number(item.tax));
+        const totalTax = tax.reduce((total, item) => total + Number(item.toFixed(2)), 0).toFixed(2);
 
         const totalH001 = data3.reduce((total, item) => total + Number(item.out_value_H001), 0).toFixed(2);
 
         const Weight = data2.reduce((total, item) => total + Number(item.weight_KG), 0).toFixed(2);
-        const Value = data2.reduce((total, item) => total + Number(item.value), 0).toFixed(2);
+        const Value = data2.reduce((total, item) => total + Number(item.value), 0)
 
-        const val5 = Value * 0.05;
-        const val7 = (Number(Value) + val5) * 0.07;
-        
-        const totalTaxIN = Number(val5) + Number(val7);
-        const newTotalTaxIN = totalTaxIN.toFixed(2);
+        const val = data2.map((item) => {
+              let val5 = item.value * 0.05
+              let val7 = (Number(item.value) + val5) * 0.07
+              let totalVal = val5 + val7
+              return {
+                totalVal,
+              }
+        });
+        const newTotalTaxIN = val.reduce((total, item) => total + Number(item.totalVal.toFixed(2)), 0)
 
         makePDF2(totalRemainOld, totalValueOld, totalTaxOld, totalRemain, totalValue, totalTax, totalH001, Weight, Value, newTotalTaxIN, StartDate, EndDate);
 
@@ -528,28 +534,41 @@
         const data5 = data[4];
 
         const totalValueOld = data1.reduce((total, item) => total + Number(item.value), 0).toFixed(2);
-        const totalTaxOld = data1.reduce((total, item) => total + Number(item.tax), 0).toFixed(2);
+        const taxOld = data1.map((item) => Number(item.tax).toFixed(2));
+        const totalTaxOld = taxOld.reduce((total, item) => total + Number(item), 0).toFixed(2);
 
         const totalValue = data5.reduce((total, item) => total + Number(item.value), 0).toFixed(2);
-        const totalTax = data5.reduce((total, item) => total + Number(item.tax), 0).toFixed(2);
+        const tax = data5.map((item) => Number(item.tax).toFixed(2));
+        const totalTax = tax.reduce((total, item) => total + Number(item), 0).toFixed(2);
 
         const Weight = data2.reduce((total, item) => total + Number(item.weight_KG), 0).toFixed(2);
         const Value = data2.reduce((total, item) => total + Number(item.value), 0).toFixed(2);
         const data_IN = data2.length;
 
-        const val5 = Value * 0.05;
-        const val7 = (Number(Value) + val5) * 0.07;
-        
-        const totalTaxIN = Number(val5) + Number(val7);
-        const newTotalTaxIN = totalTaxIN.toFixed(2);
+        const val = data2.map((item) => {
+              let val5 = item.value * 0.05
+              let val7 = (Number(item.value) + val5) * 0.07
+              let totalVal = val5 + val7
+              return {
+                totalVal,
+              }
+        });
+        const newTotalTaxIN = val.reduce((total, item) => total + Number(item.totalVal.toFixed(2)), 0)
 
 
         const data_OUT = data3.length;
         const Value_OUT = data2.reduce((total, item) => total + Number(item.value), 0).toFixed(2);
 
         const data_Scrap = data4.length;
-        const totalValue_Scrap = data4.reduce((total, item) => total + Number(item.value), 0).toFixed(2);
-        const totalTax_Scrap = totalValue_Scrap * 0.07;
+        const totalValue_Scrap = data4.map((item) => Number(item.value)).reduce((total, item) => total + Number(item), 0).toFixed(2);
+        const tax_out = data4.map((item) => {
+          let val7 = item.value * 0.07
+          return {
+            val7: parseInt(val7)
+          }
+        });
+     
+        const totalTax_Scrap = tax_out.reduce((total, item) => total + Number(item.val7), 0).toFixed(2);
 
         makePDF3(totalValueOld, totalTaxOld, totalValue, totalTax, data_IN, Value, newTotalTaxIN, data_OUT, Value_OUT,data_Scrap,totalValue_Scrap, totalTax_Scrap, StartDate, EndDate);
 

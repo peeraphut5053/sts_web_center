@@ -176,11 +176,9 @@
           success: function (data) {
 
             var newData = data.map((item) => {
-              let val5 = item.value * 0.05
-              let val7 = (Number(item.value) + val5) * 0.07
+              let val7 = item.value * 0.07
               return {
                 ...item,
-                val5: parseInt(val5),
                 val7: parseInt(val7),
               }
             })
@@ -244,7 +242,7 @@
                   }
                 },
                 {
-                    data: 'val5',
+                    data: 'val7',
                   className: "text-center",
                   "render": function (data, type, row, meta) {
                   
