@@ -217,5 +217,30 @@ from STS_custom_IN where date_in between '$StartDate' and '$EndDate'";
 
     }
 
+    function GetDataReport($StartDate, $EndDate) {
+      
+        $query2 = "select *, total = (value * 0.05) + ( (value + (value * 0.05)) * 0.07 )
+        from STS_custom_IN where date_in between '$StartDate' and '$EndDate'";
+
+        $cSql = new SqlSrv();
+        $rs1 = $cSql->SqlQuery($this->StrConn, $query2);
+        array_splice($rs1, count($rs1) - 1, 1);
+
+        $query3 = "select value, weight_net from STS_custom_OUT where date between '$StartDate' and '$EndDate'";
+
+        $cSql = new SqlSrv();
+        $rs2 = $cSql->SqlQuery($this->StrConn, $query3);
+        array_splice($rs2, count($rs2) - 1, 1);
+
+        $query4 = "select value, weight_KG from STS_custom_scrap where item = 'เศษเหล็ก' and date between '$StartDate' and '$EndDate'";
+
+        $cSql = new SqlSrv();
+        $rs3 = $cSql->SqlQuery($this->StrConn, $query4);
+        array_splice($rs3, count($rs3) - 1, 1);
+
+        return [$rs1, $rs2, $rs3];
+
+    }
+
 }
 ?>

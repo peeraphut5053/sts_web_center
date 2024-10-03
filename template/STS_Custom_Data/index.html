@@ -10,7 +10,7 @@
         <button class="btn btn-success" id="btnPrint">&nbsp;พิมพ์ใบขนย้ายรายสัปดาห์</button>
         <button class="btn btn-success" id="btnPrint2">&nbsp;พิมพ์ใบสรุปสินค้านอกคลัง</button>
         <button class="btn btn-success" id="btnPrint3">&nbsp;พิมพ์ใบขนชำระอากร</button>
-        <button class="btn btn-success" id="btnPrint4">&nbsp;พิมพ์ใบคลังสินค้าทัณฑ์บนประเภทโรงผลิต</button>
+        <button class="btn btn-success"  data-toggle="modal" data-target="#exampleModal">&nbsp;พิมพ์ใบคลังสินค้าทัณฑ์บนประเภทโรงผลิต</button>
       </div>
        <div class="flex flex-col justify-center items-center w-5/6 mx-auto border-4 border-b-blue-400 border-white  shadow-2xl p-10">
         <div class="row col-xs-12">
@@ -69,7 +69,38 @@
        </div>
     </div>
 </div>
-
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">เลือกเดือนยอดยกมา</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div class="flex justify-center gap-6">
+              <div class="row">
+                <div class="input-group">
+                  <div class="input-group-addon">Year</div>
+                  <select class="form-control" id="selYearEX"></select>
+                </div>
+              </div>
+              <div class="row">
+                <div class="input-group">
+                  <div class="input-group-addon">Month</div>
+                  <select class="form-control" id="selMonthEX"></select>
+                </div>
+              </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" id="btnPrintReport">พิมพ์</button>
+        </div>
+      </div>
+    </div>
+  </div>
 <script type="text/javascript" src="js/main.js"></script>
 <script type="text/javascript">
 
@@ -77,6 +108,8 @@
     $("#InvFromDate , #InvToDate").datepicker({
         dateFormat: 'yy-mm-dd',
     });
+
+    GetYearMonth("selYearEX", "selMonthEX");
 
     $("#btnSave").click(function () {
         var StartDate = $("#InvFromDate").val();
@@ -137,9 +170,55 @@
     $("#btnPrint3").click(function () {
         printReport3();
     });
-    $("#btnPrint4").click(function () {
-        printReport4();
+    $("#btnPrintReport").click(function () {
+        getDataReport4();
     });
+
+    function getDataReport4() {
+        var Year = $("#selYearEX").val();
+        var Month = $("#selMonthEX").val();
+        
+        // get first day of month and last day of month use moment.js
+        var StartDate = moment().year(Year).month(Month).startOf('month').format('YYYY-MM-DD');
+        var EndDate = moment().year(Year).month(Month).endOf('month').format('YYYY-MM-DD');
+
+        $.ajax({
+        type: "POST",
+        url: "././module/STS_Custom_Data/data.php",
+        dataType: "json",
+        data: {
+        load: "reportPDF",
+        StartDate: StartDate,
+        EndDate: EndDate,
+        },
+        success: function (data) {
+            const data1 = data[0];
+            const data2 = data[1];
+            const data3 = data[2];
+
+            const data_IN = data1.length;
+            const totalWeightIN = data1.reduce((accumulator, object) => accumulator + Number(object.weight_KG), 0).toFixed(2);
+            const totalValueIN = data1.reduce((accumulator, object) => accumulator + Number(object.value), 0).toFixed(2);
+
+            const data_OUT = data2.length;
+            const totalWeightOUT = data2.reduce((accumulator, object) => accumulator + Number(object.weight_net), 0).toFixed(2);
+            const totalValueOUT = data2.reduce((accumulator, object) => accumulator + Number(object.value), 0).toFixed(2);
+
+            const data_ALL = data3.length;
+            const totalWeightALL = data3.reduce((accumulator, object) => accumulator + Number(object.weight_KG), 0);
+            const totalValueALL = data3.reduce((accumulator, object) => accumulator + Number(object.value), 0);
+          
+            const tax = (totalValueALL * 0.07)
+
+            printReport4(totalWeightIN, totalValueIN, totalWeightOUT, totalValueOUT, totalWeightALL, totalValueALL, tax, Month, data_IN, data_OUT, data_ALL,Month,Year);
+        },
+        error: function (e) {
+        alert("ดึงข้อมูลไม่สําเร็จ");
+        console.log("There was an error with your request...");
+        console.log("error: " + JSON.stringify(e));
+        },
+       });
+    }
 
     pdfMake.fonts = {
           THSarabunNew: {
@@ -669,7 +748,7 @@ var docDefinition = {
 pdfMake.createPdf(docDefinition).open()
 }
 
-function printReport4(params) {
+function printReport4(totalWeightIN, totalValueIN, totalWeightOUT, totalValueOUT, totalWeightALL, totalValueALL, tax,Month, data_IN, data_OUT, data_ALL,Month,Year) {
 
       
 
@@ -723,9 +802,9 @@ for (let i = 0; i <= 27; i++) {
  if (i === 3) {
      data.push([
      { text: '- ใบขนฯขาเข้า PAPERLESS', fontSize: 10, alignment: 'left' },
-     { text: '3', fontSize: 10, alignment: 'center' },
-     { text: '5,444,412.00', fontSize: 10, alignment: 'center' },
-     { text: `100,681,573.89`, fontSize: 10, alignment: 'center' },
+     { text: `${data_IN}`, fontSize: 10, alignment: 'center' },
+     { text: `${addCommas(totalWeightIN)}`, fontSize: 10, alignment: 'center' },
+     { text: `${addCommas(totalValueIN)}`, fontSize: 10, alignment: 'center' },
      { text: `-`, fontSize: 10, alignment: 'center' },
      { text: `-`, fontSize: 10, alignment: 'center' },
      { text: `-`, fontSize: 10, alignment: 'center' },
@@ -736,9 +815,9 @@ for (let i = 0; i <= 27; i++) {
  if (i === 4) {
      data.push([
      { text: 'รวม', fontSize: 10, bold: true, alignment: 'center' },
-     { text: '3', fontSize: 10, alignment: 'center' },
-     { text: '5,444,412.00', fontSize: 10, alignment: 'center' },
-     { text: `100,681,573.89`, fontSize: 10, alignment: 'center' },
+     { text: `${data_IN}`, fontSize: 10, alignment: 'center' },
+     { text: `${addCommas(totalWeightIN)}`, fontSize: 10, alignment: 'center' },
+     { text: `${addCommas(totalValueIN)}`, fontSize: 10, alignment: 'center' },
      { text: `-`, fontSize: 10, alignment: 'center' },
      { text: `-`, fontSize: 10, alignment: 'center' },
      { text: `-`, fontSize: 10, alignment: 'center' },
@@ -781,9 +860,9 @@ for (let i = 0; i <= 27; i++) {
  if (i === 8) {
      data.push([
      { text: '- ใบขนฯขาออก PAPERLESS', fontSize: 10, alignment: 'left' },
-     { text: '3', fontSize: 10, alignment: 'center' },
-     { text: '5,444,412.00', fontSize: 10, alignment: 'center' },
-     { text: `100,681,573.89`, fontSize: 10, alignment: 'center' },
+     { text: `${data_OUT}`, fontSize: 10, alignment: 'center' },
+     { text: `${addCommas(totalWeightOUT)}`, fontSize: 10, alignment: 'center' },
+     { text: `${addCommas(totalValueOUT)}`, fontSize: 10, alignment: 'center' },
      { text: `-`, fontSize: 10, alignment: 'center' },
      { text: `-`, fontSize: 10, alignment: 'center' },
      { text: `-`, fontSize: 10, alignment: 'center' },
@@ -794,9 +873,9 @@ for (let i = 0; i <= 27; i++) {
  if (i === 9) {
      data.push([
      { text: 'รวม', fontSize: 10, bold: true, alignment: 'center' },
-     { text: '3', fontSize: 10, alignment: 'center' },
-     { text: '5,444,412.00', fontSize: 10, alignment: 'center' },
-     { text: `100,681,573.89`, fontSize: 10, alignment: 'center' },
+     { text: `${data_OUT}`, fontSize: 10, alignment: 'center' },
+     { text: `${addCommas(totalWeightOUT)}`, fontSize: 10, alignment: 'center' },
+     { text: `${addCommas(totalValueOUT)}`, fontSize: 10, alignment: 'center' },
      { text: `-`, fontSize: 10, alignment: 'center' },
      { text: `-`, fontSize: 10, alignment: 'center' },
      { text: `-`, fontSize: 10, alignment: 'center' },
@@ -826,9 +905,9 @@ for (let i = 0; i <= 27; i++) {
  if (i === 12) {
      data.push([
      { text: '- ใบขนฯขาเข้า PAPERLESS', fontSize: 10, alignment: 'left' },
-     { text: '3', fontSize: 10, alignment: 'center' },
-     { text: '5,444,412.00', fontSize: 10, alignment: 'center' },
-     { text: `100,681,573.89`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
      { text: `-`, fontSize: 10, alignment: 'center' },
      { text: `-`, fontSize: 10, alignment: 'center' },
      { text: `-`, fontSize: 10, alignment: 'center' },
@@ -839,9 +918,9 @@ for (let i = 0; i <= 27; i++) {
  if (i === 14) {
      data.push([
      { text: 'รวม', fontSize: 10, bold: true, alignment: 'center' },
-     { text: '3', fontSize: 10, alignment: 'center' },
-     { text: '5,444,412.00', fontSize: 10, alignment: 'center' },
-     { text: `100,681,573.89`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
      { text: `-`, fontSize: 10, alignment: 'center' },
      { text: `-`, fontSize: 10, alignment: 'center' },
      { text: `-`, fontSize: 10, alignment: 'center' },
@@ -865,9 +944,9 @@ for (let i = 0; i <= 27; i++) {
  if (i === 16) {
      data.push([
      { text: '- ใบขนฯขาออก PAPERLESS', fontSize: 10, alignment: 'left' },
-     { text: '3', fontSize: 10, alignment: 'center' },
-     { text: '5,444,412.00', fontSize: 10, alignment: 'center' },
-     { text: `100,681,573.89`, fontSize: 10, alignment: 'center' },
+     { text: '-', fontSize: 10, alignment: 'center' },
+     { text: '-', fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
      { text: `-`, fontSize: 10, alignment: 'center' },
      { text: `-`, fontSize: 10, alignment: 'center' },
      { text: `-`, fontSize: 10, alignment: 'center' },
@@ -878,9 +957,9 @@ for (let i = 0; i <= 27; i++) {
  if (i === 17) {
      data.push([
      { text: 'รวม', fontSize: 10, bold: true, alignment: 'center' },
-     { text: '3', fontSize: 10, alignment: 'center' },
-     { text: '5,444,412.00', fontSize: 10, alignment: 'center' },
-     { text: `100,681,573.89`, fontSize: 10, alignment: 'center' },
+     { text: '-', fontSize: 10, alignment: 'center' },
+     { text: '-', fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
      { text: `-`, fontSize: 10, alignment: 'center' },
      { text: `-`, fontSize: 10, alignment: 'center' },
      { text: `-`, fontSize: 10, alignment: 'center' },
@@ -910,9 +989,9 @@ for (let i = 0; i <= 27; i++) {
  if (i === 20) {
      data.push([
      { text: '- ใบขนฯขาเข้า PAPERLESS', fontSize: 10, alignment: 'left' },
-     { text: '3', fontSize: 10, alignment: 'center' },
-     { text: '5,444,412.00', fontSize: 10, alignment: 'center' },
-     { text: `100,681,573.89`, fontSize: 10, alignment: 'center' },
+     { text: '-', fontSize: 10, alignment: 'center' },
+     { text: '-', fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
      { text: `-`, fontSize: 10, alignment: 'center' },
      { text: `-`, fontSize: 10, alignment: 'center' },
      { text: `-`, fontSize: 10, alignment: 'center' },
@@ -923,9 +1002,9 @@ for (let i = 0; i <= 27; i++) {
  if (i === 21) {
      data.push([
      { text: 'รวม', fontSize: 10, bold: true, alignment: 'center' },
-     { text: '3', fontSize: 10, alignment: 'center' },
-     { text: '5,444,412.00', fontSize: 10, alignment: 'center' },
-     { text: `100,681,573.89`, fontSize: 10, alignment: 'center' },
+     { text: '-', fontSize: 10, alignment: 'center' },
+     { text: '-', fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
      { text: `-`, fontSize: 10, alignment: 'center' },
      { text: `-`, fontSize: 10, alignment: 'center' },
      { text: `-`, fontSize: 10, alignment: 'center' },
@@ -949,9 +1028,9 @@ for (let i = 0; i <= 27; i++) {
  if (i === 23) {
      data.push([
      { text: '- ใบขนฯขาออก PAPERLESS', fontSize: 10, alignment: 'left' },
-     { text: '3', fontSize: 10, alignment: 'center' },
-     { text: '5,444,412.00', fontSize: 10, alignment: 'center' },
-     { text: `100,681,573.89`, fontSize: 10, alignment: 'center' },
+     { text: '-', fontSize: 10, alignment: 'center' },
+     { text: '-', fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
      { text: `-`, fontSize: 10, alignment: 'center' },
      { text: `-`, fontSize: 10, alignment: 'center' },
      { text: `-`, fontSize: 10, alignment: 'center' },
@@ -962,9 +1041,9 @@ for (let i = 0; i <= 27; i++) {
  if (i === 24) {
      data.push([
      { text: 'รวม', fontSize: 10, bold: true, alignment: 'center' },
-     { text: '3', fontSize: 10, alignment: 'center' },
-     { text: '5,444,412.00', fontSize: 10, alignment: 'center' },
-     { text: `100,681,573.89`, fontSize: 10, alignment: 'center' },
+     { text: '-', fontSize: 10, alignment: 'center' },
+     { text: '-', fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
      { text: `-`, fontSize: 10, alignment: 'center' },
      { text: `-`, fontSize: 10, alignment: 'center' },
      { text: `-`, fontSize: 10, alignment: 'center' },
@@ -981,11 +1060,11 @@ for (let i = 0; i <= 27; i++) {
  if (i === 26) {
      data.push([
      { text: '- ใบขนฯขาเข้า PAPERLESS', fontSize: 10, alignment: 'left' },
-     { text: '6', fontSize: 10, alignment: 'center' },
-     { text: '1,271,845.00', fontSize: 10, alignment: 'center' },
-     { text: `16,186,308.00`, fontSize: 10, alignment: 'center' },
+     { text: `${data_ALL}`, fontSize: 10, alignment: 'center' },
+     { text: `${addCommas(parseInt(totalWeightALL).toFixed(2))}`, fontSize: 10, alignment: 'center' },
+     { text: `${addCommas(parseInt(totalValueALL).toFixed(2))}`, fontSize: 10, alignment: 'center' },
      { text: `-`, fontSize: 10, alignment: 'center' },
-     { text: `1,133,039.00`, fontSize: 10, alignment: 'center' },
+     { text: `${addCommas(parseInt(tax).toFixed(2))}`, fontSize: 10, alignment: 'center' },
      { text: `-`, fontSize: 10, alignment: 'center' },
      { text: '-', fontSize: 10, alignment: 'center' },
  ],)
@@ -994,18 +1073,19 @@ for (let i = 0; i <= 27; i++) {
  if (i === 27) {
      data.push([
      { text: 'รวม', fontSize: 10, bold: true, alignment: 'center' },
-     { text: '6', fontSize: 10, alignment: 'center' },
-     { text: '1,271,845.00', fontSize: 10, alignment: 'center' },
-     { text: `16,186,308.00`, fontSize: 10, alignment: 'center' },
+     { text: `${data_ALL}`, fontSize: 10, alignment: 'center' },
+     { text: `${addCommas(parseInt(totalWeightALL).toFixed(2))}`, fontSize: 10, alignment: 'center' },
+     { text: `${addCommas(parseInt(totalValueALL).toFixed(2))}`, fontSize: 10, alignment: 'center' },
      { text: `-`, fontSize: 10, alignment: 'center' },
-     { text: `1,133,039.00`, fontSize: 10, alignment: 'center' },
-     { text: `0`, fontSize: 10, alignment: 'center' },
+     { text: `${addCommas(parseInt(tax).toFixed(2))}`, fontSize: 10, alignment: 'center' },
+     { text: `-`, fontSize: 10, alignment: 'center' },
      { text: '-', fontSize: 10, alignment: 'center' },
  ],)
  }
    
 }
 
+const newYear = Number(Year) + 543
 
 var docDefinition = {
    pageSize: 'A4',
@@ -1018,7 +1098,7 @@ var docDefinition = {
            { text: `เรื่อง  รายงานมูลค่าสินค้านำเข้า-ส่งออก และการดำเนินงานคลังสินค้าทัณฑ์บน`, fontSize: 13, alignment: 'left', margin: [20, 0, 0, 0] },
            { text: `เรียน  หัวหน้าฝ่ายบริการศุลกากรที่ 2 สพจ. สกท.`, fontSize: 13, alignment: 'left',  margin: [20, 0, 0, 0] },
            { text: `เจ้าหน้าที่กรมศุลกากรประจำคลังสินค้าทัณฑ์บนขอรายงามมูลค่าสินค้านำเข้า-ส่งออก และ`, fontSize: 13, alignment: 'left',  margin: [44, 0, 0, 0] },
-           { text: `การดำเนินงานของคลังสินค้าทัณฑ์บน ประจำเดือน กรกฎาคม พ.ศ.2567 มีรายงานดังต่อไปนี้`, fontSize: 13, alignment: 'left',  margin: [44, 0, 0, 0] },
+           { text: `การดำเนินงานของคลังสินค้าทัณฑ์บน ประจำเดือน ${moment(Month).format("MMMM")} พ.ศ.${newYear} มีรายงานดังต่อไปนี้`, fontSize: 13, alignment: 'left',  margin: [44, 0, 0, 0] },
            ]
           
        };

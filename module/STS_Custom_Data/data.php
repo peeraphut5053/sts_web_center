@@ -82,3 +82,13 @@ if ($load == "InsertSTS_Custom_Scrap") {
     }
 }
 
+if ($load == "reportPDF") {
+    $CallModel = new CallModel();
+    $CallModel->SyteLine_Models();
+    $STS_Custom = new STS_Custom();
+    $STS_Custom->setConn($ConnSL);
+    $rs = $STS_Custom->GetDataReport($StartDate, $EndDate);
+    echo json_encode($rs);
+   
+}
+
