@@ -17,7 +17,7 @@ if ($load == "ajax") {
     $CM->SyteLine_Models();
     $Mv_Bc_Tag = new BcTag();
     $Mv_Bc_Tag->setConn($ConnSL);
-    $rs = $Mv_Bc_Tag->getDataChart($StartDate, $EndDate, $StartLastMonth, $EndLastMonth);
+    $rs = $Mv_Bc_Tag->getDataChart($StartDate, $EndDate);
     echo json_encode($rs);
 } elseif ($load == 'group') {
     $CM = new CallModel();

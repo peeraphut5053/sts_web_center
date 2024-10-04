@@ -513,22 +513,16 @@ where STS_qty_move_line.doc_num = '$doc_num' and mv_bc_tag.active=1 and mv_bc_ta
         return $rs;
     }
 
-    function getDataChart($StartDate, $EndDate, $StartLastMonth, $EndLastMonth) {
-        $query = "select wcGroup,  sum(sumA) as sumA, sum(sumB) as sumB, sum(sumC) as sumC
+    function getDataChart($StartDate, $EndDate) {
+        $query = "select  month([date]) as [month],
+  wcGroup,  sum(sumA) as sumA, sum(sumB + sumC) as sumBC
 from V_STS_PROD_TIME_REPORT
 where [date] between '$StartDate' and '$EndDate'
-group by  wcGroup";
-$query1 = "select wcGroup,  sum(sumA) as sumA, sum(sumB) as sumB, sum(sumC) as sumC
-from V_STS_PROD_TIME_REPORT
-where [date] between '$StartLastMonth' and '$EndLastMonth'
-group by  wcGroup";
+group by  month([date]), wcGroup";
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
-        $rs1 = $cSql->SqlQuery($this->StrConn, $query1);
-
         array_splice($rs, count($rs) - 1, 1);
-        array_splice($rs1, count($rs1) - 1, 1);
-        return array($rs,$rs1);
+        return array($rs);
     }
 
     function getGroupChart($StartDate, $EndDate, $StartLastMonth, $EndLastMonth, $GroupBy) {
