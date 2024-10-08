@@ -559,7 +559,7 @@
 
 
         const data_OUT = data3.length;
-        const Value_OUT = data2.reduce((total, item) => total + Number(item.value), 0).toFixed(2);
+        const Value_OUT = data3.reduce((total, item) => total + Number(item.value), 0).toFixed(2);
 
         const data_Scrap = data4.length;
         const totalValue_Scrap = data4.map((item) => Number(item.value)).reduce((total, item) => total + Number(item), 0).toFixed(2);

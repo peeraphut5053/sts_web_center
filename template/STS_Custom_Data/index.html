@@ -177,10 +177,11 @@
     function getDataReport4() {
         var Year = $("#selYearEX").val();
         var Month = $("#selMonthEX").val();
+        console.log(Year, Month);
         
         // get first day of month and last day of month use moment.js
-        var StartDate = moment().year(Year).month(Month).startOf('month').format('YYYY-MM-DD');
-        var EndDate = moment().year(Year).month(Month).endOf('month').format('YYYY-MM-DD');
+        var StartDate = moment().year(Year).month(Month-1).startOf('month').format('YYYY-MM-DD');
+        var EndDate = moment().year(Year).month(Month-1).endOf('month').format('YYYY-MM-DD');
 
         $.ajax({
         type: "POST",
