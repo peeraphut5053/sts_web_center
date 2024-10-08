@@ -183,8 +183,12 @@
           },
           success: function (data) {
             var newData = data.map((item) => {
+              const zinc = item.weight_zinc > 0 ? item.weight_zinc : 0.00;
+              const nonzinc = item.weight_non_zinc > 0 ? item.weight_non_zinc : 0.00;
               return {
                 ...item,
+                weight_zinc: Number(zinc).toFixed(2),
+                weight_nonzinc: Number(nonzinc).toFixed(2),
                 total: (Number(item.weight_zinc) + Number(item.weight_nonzinc)).toFixed(2),
               };
             })
@@ -259,7 +263,7 @@
                   className: "text-center",
                 },
                 {
-                  data: "weight_non_zinc",
+                  data: "weight_nonzinc",
                   className: "text-center",
                 },
                 {
@@ -340,14 +344,20 @@
                                 .reduce(function (a, b) {
                                     return intVal(a) + intVal(b);
                                 }, 0);
-                        var totalNonzinc = api
+                        var totalVal = api
                                 .column(14)
                                 .data()
                                 .reduce(function (a, b) {
                                     return intVal(a) + intVal(b);
                                 }, 0);
-                        var totalVal = api
-                                .column(14)
+                        var totalWeight_Zinc = api
+                                .column(11)
+                                .data()
+                                .reduce(function (a, b) {
+                                    return intVal(a) + intVal(b);
+                                }, 0);
+                        var totalWeight_Non_Zinc = api
+                                .column(12)
                                 .data()
                                 .reduce(function (a, b) {
                                     return intVal(a) + intVal(b);
@@ -355,8 +365,9 @@
                         $(api.column(7).footer()).html("รวม");
                         $(api.column(9).footer()).html(addCommas(totalNet.toFixed(2)));
                         $(api.column(10).footer()).html(addCommas(totalGross.toFixed(2)));
-                
-                        $(api.column(14).footer()).html(addCommas(totalNonzinc.toFixed(2)));
+                        $(api.column(11).footer()).html(addCommas(totalWeight_Zinc.toFixed(2)));
+                        $(api.column(12).footer()).html(addCommas(totalWeight_Non_Zinc.toFixed(2)));
+                        $(api.column(14).footer()).html(addCommas(totalVal.toFixed(2)));
                    
                         $('tfoot').css({
         'font-weight': 'bold',
