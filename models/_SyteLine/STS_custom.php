@@ -53,8 +53,8 @@ class STS_Custom {
     bundle = $bundle, 
     weight_net = $weight_net, 
     weight_gross = $weight_gross, 
-    weight_zinc = " . ($weight_zinc !== '' ? $weight_zinc : "NULL") . ", 
-    weight_nonzinc = " . ($weight_nonzinc !== '' ? $weight_nonzinc : "NULL") . ", 
+    weight_zinc = " . ($weight_zinc !== '' ? $weight_zinc : 0.00) . ", 
+    weight_non_zinc = " . ($weight_nonzinc !== '' ? $weight_nonzinc : 0.00) . ", 
     cust_po = '$cust_po', 
     value = $value, 
     pier = '$pier', 
@@ -69,8 +69,8 @@ class STS_Custom {
             array_splice($rs0, count($rs0) - 1, 1);
             return $rs0;
         } else {
-            $query = "INSERT INTO STS_custom_OUT (doc_no, boatnote, date, item, boat_name, boat_no, inv_no, bundle, weight_net, weight_gross, weight_zinc, weight_nonzinc, cust_po, value, pier, BL_no, loc_name, loc_name2, loc_name3, loc_name4, createdate)
-                    VALUES ('$doc_no', '$boatnote', '$date', '$item', '$boat_name', '$boat_no', '$inv_no', $bundle, $weight_net, $weight_gross,  " . ($weight_zinc !== '' ? $weight_zinc : "NULL") . ", " . ($weight_nonzinc !== '' ? $weight_nonzinc : "NULL") . ", '$cust_po', $value, '$pier', '$BL_no', '$loc_name', '$loc_name2', '$loc_name3', '$loc_name4', GETDATE())";
+            $query = "INSERT INTO STS_custom_OUT (doc_no, boatnote, date, item, boat_name, boat_no, inv_no, bundle, weight_net, weight_gross, weight_zinc, weight_non_zinc, cust_po, value, pier, BL_no, loc_name, loc_name2, loc_name3, loc_name4, createdate)
+                    VALUES ('$doc_no', '$boatnote', '$date', '$item', '$boat_name', '$boat_no', '$inv_no', $bundle, $weight_net, $weight_gross,  " . ($weight_zinc !== '' ? $weight_zinc : 0.00) . ", " . ($weight_nonzinc !== '' ? $weight_nonzinc : 0.00) . ", '$cust_po', $value, '$pier', '$BL_no', '$loc_name', '$loc_name2', '$loc_name3', '$loc_name4', GETDATE())";
            $cSql = new SqlSrv();
            $rs0 = $cSql->SqlQuery($this->StrConn, $query);
            array_splice($rs0, count($rs0) - 1, 1);
