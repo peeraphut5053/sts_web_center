@@ -630,6 +630,15 @@ order by V_STS_PROD_TIME_REPORT_HOURLY.[date],V_STS_PROD_TIME_REPORT_HOURLY.wc";
         return array($rs);
     }
 
+    function getParetoData($StartDate, $EndDate) {
+        $query = "select STS_forming_reason_description.reason_description as reason_id, STS_forming_reason_description_detail.description as reason_detail_id,convert(varchar, time_stopped, 20) as time_stopped,time_used, w_c,ref_num,convert(varchar, create_date, 20) as create_date,remark FROM STS_forming_reason LEFT JOIN STS_forming_reason_description ON STS_forming_reason.reason_id = STS_forming_reason_description.reason_id LEFT JOIN STS_forming_reason_description_detail ON STS_forming_reason.reason_detail_id = STS_forming_reason_description_detail.reason_detail_id  where (time_stopped between '$StartDate' and '$EndDate')";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return array($rs);
+        
+    }
+
  
 	
 }

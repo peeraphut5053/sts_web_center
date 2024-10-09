@@ -46,7 +46,15 @@ if ($load == "ajax") {
     $Mv_Bc_Tag->setConn($ConnSL);
     $rs = $Mv_Bc_Tag->getDailyWorkCenter($StartDate, $EndDate, $wc,$type);
     echo json_encode($rs);
-} else {
+} elseif ($load == 'paretoData') {
+    $CM = new CallModel();
+    $CM->SyteLine_Models();
+    $Mv_Bc_Tag = new BcTag();
+    $Mv_Bc_Tag->setConn($ConnSL);
+    $rs = $Mv_Bc_Tag->getParetoData($StartDate, $EndDate);
+    echo json_encode($rs);
+}
+else {
     $CM = new CallModel();
     $CM->SyteLine_Models();
     $Mv_Bc_Tag = new BcTag();
