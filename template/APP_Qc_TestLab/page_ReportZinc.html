@@ -50,24 +50,51 @@
     </div>
  <div id="divCountZ" class="text-center font-bold text-md hidden">จำนวนรายการทั้งหมด : <span id="countZ"></span> รายการ</div>
  <hr />
- <canvas class="ml-auto" id="myChart" style="width:100%;max-width:500px"></canvas>
- 
+<div class="flex justify-center">
+    <div class="flex flex-col items-center" style="width:100%;max-width:700px"> 
+        <h3 class="text-center m-5"><span id="start"></span> - <span id="end"></span></h1>
+        <div>
+            <div class="font-bold m-4">TOTAL TEST RESULT : <span id="records"></span> RECORDS <span class="text-green-500" id="pass"></span><span class="text-red-500" id="fail"></span></div>
+        </div>
+        <canvas class="m-auto" id="myChart2" style="width:100%;max-width:500px"></canvas>
+    </div>
+       <div class="flex flex-col justify-center items-center mt-12" style="width:100%;max-width:700px">
+        <h3 class="text-center font-bold">TEST RESULTS</h3>
+        <canvas class="mt-12" id="myChart" style="max-width:500px"></canvas>
+       </div>
+</div>
+
 <script type="text/javascript">
 
     ReportAllSearch();
   
     $("#BtnSearchZ").click(function () {
-            ReportAllSearch();
+        var month =  $("#selMonth").val();
+        var month2 =  $("#selMonth2").val();
+        var year =  $("#selYear").val();
+        $("#start").html(moment(year + "/" + month + "/01").format("YYYY/MM/DD"));
+        $("#end").html(moment(year + "/" + month2 + "/01").endOf("month").format("YYYY/MM/DD"));
+            ReportAllSearch(1);
     });
 
     GetYearMonth("selYear", "selMonth");
 
     GetYearMonth("selYear", "selMonth2");
         
-    function ReportAllSearch() {
+    function ReportAllSearch(type) {
     var month =  $("#selMonth").val();
     var month2 =  $("#selMonth2").val();
     var year =  $("#selYear").val();
+
+    var currentMonth = new Date().getMonth() + 1;
+    var currentYear = new Date().getFullYear();
+    
+    if (type !== 1) {
+        // get first day of month and last day of month use moment.js
+    $("#start").html(moment(currentYear + "/" + currentMonth + "/01").format("YYYY/MM/DD"));
+    // get last day of month
+    $("#end").html(moment(currentYear + "/" + currentMonth + "/01").endOf("month").format("YYYY/MM/DD"));
+    }
 
     if (month == null || month == null) {
         var d = new Date();
@@ -95,6 +122,11 @@
             success: function (data) {
                 const pass = data.filter(item => item.Test_result == "Pass");
                 const fail = data.filter(item => item.Test_result == "Fail");
+                $("#pass").html("Pass : " + (pass.length * 100 / (pass.length + fail.length)).toFixed(2) + "%");
+                $("#fail").html(" Fail : " + (fail.length * 100 / (pass.length + fail.length)).toFixed(2) + "%");
+                const LeadOne = data.filter(item => item.LeadTime == 1);
+                const LeadTwo = data.filter(item => item.LeadTime == 2);
+                const LeadThree = data.filter(item => item.LeadTime == 3);
                 const data2 = {
   labels: ['Pass', 'Fail'],
   datasets: [{
@@ -102,6 +134,15 @@
     data: [pass.length, fail.length],
     borderWidth: 1,
     backgroundColor: ['#7FFF00', '#F08080'],
+  }]
+};
+const dataLeadTime = {
+  labels: ['1 วัน', '2 วัน', '3 วัน'],
+  datasets: [{
+    label: 'Test Result',
+    data: [LeadOne.length, LeadTwo.length, LeadThree.length],
+    borderWidth: 1,
+    backgroundColor: ['#85e0e0', '#df80ff', '#ffb3ff'],
   }]
 };
 var options = {
@@ -129,8 +170,15 @@ var options = {
      options: options,
      plugins: [ChartDataLabels],
     });
+    const myChart2 = new Chart("myChart2", {
+     type: "doughnut",
+     data: dataLeadTime,
+     options: options,
+     plugins: [ChartDataLabels],
+    });
                 $("#divCountZ").removeClass("hidden");
                 $("#countZ").html(data.length);
+                $("#records").html(data.length);
                 $("#tblReportZ").dataTable().fnDestroy();
                 var table = $('#tblReportZ').DataTable({
                   
@@ -150,10 +198,10 @@ var options = {
                             "render": function (data, type, row, meta) {
                             var ret = parseFloat(data);
                             if (ret > 0.030){
-                                var ret = `<div style="background-color: #F08080;">${(data)}</div>`
+                                var ret = `<div style="color: #F08080; font-weight: bold;">${(data)}</div>`
                             }
                             else{
-                                var ret = `<div style="background-color: #7FFF00;">${(data)}</div>`
+                                var ret = `<div style="color: black; font-weight: bold;">${(data)}</div>`
                             }
                             return ret;
                             }
@@ -175,10 +223,10 @@ var options = {
                             "render": function (data, type, row, meta) {
                             var ret = data;
                             if (ret == "Fail"){
-                                var ret = `<div style="background-color: #F08080;">${(data)}</div>`
+                                var ret = `<div style="color: #F08080; font-weight: bold;">${(data)}</div>`
                             }
                             else{
-                                var ret = `<div style="background-color: #7FFF00;">${(data)}</div>`
+                                var ret = `<div style="color: #00cc00; font-weight: bold;">${(data)}</div>`
                             }
                             return ret;
                             }
