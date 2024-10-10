@@ -1,0 +1,1069 @@
+<div class="row">
+    <div>
+        <h1 class="text-center">รายงานใบผ่าน</h1>
+    </div> 
+    <!--    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4 " >
+            <div class="input-group">
+                <div class="input-group-addon">Year</div>
+                <select class="form-control" id="RepByGroupYear">
+    
+                </select>
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4 " >
+            <div class="input-group">
+                <div class="input-group-addon">Month</div>
+                <select class="form-control" id="RepByGroupMonth">
+    
+                </select>
+            </div>
+        </div>-->
+    <div class="col-lg-2" >   
+        <div class="input-group">
+            <div class="input-group-addon">From Date</div>
+            <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtFromDate">
+        </div>
+    </div>
+    <div class="col-lg-2">   
+        <div class="input-group">
+            <div class="input-group-addon">To date</div>
+            <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtToDate">
+        </div>
+    </div>
+    <div class="col-lg-2">   
+        <div class="input-group">
+            <div class="input-group-addon">doc no</div>
+            <input type="text" class="form-control txt-filter" id="doc">
+        </div>
+    </div> 
+    <div class="col-lg-2">   
+        <div class="input-group">
+            <div class="input-group-addon">Department </div>
+            <select class="form-control txt-filter" id="type">
+                <option value="out">รายการนำออก</option>
+                <option value="in">รายการนำเข้า</option>
+            </select>
+        </div>
+    </div> 
+
+    <div class="col-lg-4">   
+        <button id="btnSearch" class="btn btn-info"><i class="fa fa-searh"></i>&nbsp;ค้นหา</button>
+        <button id="btnPrint" class="btn btn-success"><i class="fa fa-searh"></i>พิมพ์ใบผ่าน</button>
+        <button id="btnAdd" class="btn btn-success" data-toggle="modal" data-target="#exampleModal2"><i class="fa fa-searh" ></i>เพิ่มข้อมูลรายการออก</button>
+        <button id="btnAdd" class="btn btn-success" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-searh" ></i>เพิ่มข้อมูลรายการเข้า</button>
+    </div>
+</div>
+
+<div class="row hidden" id="divReport" >
+    <table class="table table-condensed table-bordered table-striped" id="tblReport" style="width:100%;">
+        <thead>
+            <tr>
+                <th>doc_no</th>
+                <th>item_out</th>
+                <th>date_out</th>
+                <th>po</th>
+                <th>dept</th>
+                <th>company</th>
+                <th>car</th>
+                <th>detail</th>
+                <th>user</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+<div class="row hidden" id="divReport2" >
+    <table class="table table-condensed table-bordered table-striped" id="tblReport2" style="width:100%;">
+        <thead>
+            <tr>
+                <th>doc_no</th>
+                <th>item_in</th>
+                <th>date_in</th>
+                <th>remark</th>
+                <th>user</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+<!-- Modal -->
+<div class="modal fade bd-example-modal-lg" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="exampleModalLabel">เพิ่มข้อมูลรายการนำเข้า</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                <div class="input-group basis-2/4">
+                    <div class="input-group-addon">doc no</div>
+                    <input type="text" autocomplete="off"  class="form-control" id="doc_no_in">
+                </div>
+                <div class="input-group basis-2/4">
+                    <div class="input-group-addon">date in</div>
+                    <input type="text" autocomplete="off"  class="form-control" id="date_in">
+                </div>
+            </div>
+            <div class="flex justify-start items-center mb-5">
+                <div class="input-group basis-full gap-6">
+                    <div class="input-group-addon">remark</div>
+                    <input type="text" autocomplete="off"  class="form-control" id="remark">
+                </div>
+            </div>
+            <div class="flex justify-start items-center mb-5">
+                <h5 class="m-4 underline">รายการที่นำของออก</h1>
+            </div>
+            <div class="flex flex-col mb-5">
+                <div class="input-group basis-full gap-6 mb-4">
+                    <div class="input-group-addon">1</div>
+                    <input type="text" autocomplete="off"  class="form-control" id="itemIn1">
+                </div>
+                <div class="input-group basis-full gap-6 mb-4">
+                    <div class="input-group-addon">2</div>
+                    <input type="text" autocomplete="off"  class="form-control" id="itemIn2">
+                </div>
+                <div class="input-group basis-full gap-6 mb-4">
+                    <div class="input-group-addon">3</div>
+                    <input type="text" autocomplete="off"  class="form-control" id="itemIn3">
+                </div>
+                <div class="input-group basis-full gap-6 mb-4">
+                    <div class="input-group-addon">4</div>
+                    <input type="text" autocomplete="off"  class="form-control" id="itemIn4">
+                </div>
+                <div class="input-group basis-full gap-6 mb-4">
+                    <div class="input-group-addon">5</div>
+                    <input type="text" autocomplete="off"  class="form-control" id="itemIn5">
+                </div>
+                <div class="input-group basis-full gap-6 mb-4">
+                    <div class="input-group-addon">6</div>
+                    <input type="text" autocomplete="off"  class="form-control" id="itemIn6">
+                </div>
+            </div>
+        </div>
+       
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" id="btnSave2">บันทึก</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Modal -->
+<div class="modal fade bd-example-modal-lg" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="exampleModalLabel">เพิ่มข้อมูลรายการนำออก</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                <div class="input-group basis-2/4">
+                    <div class="input-group-addon">doc no</div>
+                    <input type="text" autocomplete="off"  class="form-control" id="doc_no">
+                </div>
+                <div class="input-group basis-2/4">
+                    <div class="input-group-addon">date out</div>
+                    <input type="text" autocomplete="off"  class="form-control" id="dateout">
+                </div>
+            </div>
+            <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                <div class="input-group basis-2/4">
+                    <div class="input-group-addon">po</div>
+                    <input type="text" autocomplete="off"  class="form-control" id="po">
+                </div>
+                <div class="input-group basis-2/4">
+                    <div class="input-group-addon">dept</div>
+                    <input type="text" autocomplete="off"  class="form-control" id="dept">
+                </div>
+            </div>
+            <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                <div class="input-group basis-2/4">
+                    <div class="input-group-addon">company</div>
+                    <input type="text" autocomplete="off"  class="form-control" id="company">
+                </div>
+                <div class="input-group basis-2/4">
+                    <div class="input-group-addon">car</div>
+                    <input type="text" autocomplete="off"  class="form-control" id="car">
+                </div>
+            </div>
+            <div class="flex justify-start items-center mb-5">
+                <div class="input-group basis-full gap-6">
+                    <div class="input-group-addon">detail</div>
+                    <input type="text" autocomplete="off"  class="form-control" id="detail">
+                </div>
+            </div>
+            <div class="flex justify-start items-center mb-5">
+                <h5 class="m-4 underline">รายการที่นำของออก</h1>
+            </div>
+            <div class="flex flex-col mb-5">
+                <div class="input-group basis-full gap-6 mb-4">
+                    <div class="input-group-addon">1</div>
+                    <input type="text" autocomplete="off"  class="form-control" id="item1">
+                </div>
+                <div class="input-group basis-full gap-6 mb-4">
+                    <div class="input-group-addon">2</div>
+                    <input type="text" autocomplete="off"  class="form-control" id="item2">
+                </div>
+                <div class="input-group basis-full gap-6 mb-4">
+                    <div class="input-group-addon">3</div>
+                    <input type="text" autocomplete="off"  class="form-control" id="item3">
+                </div>
+                <div class="input-group basis-full gap-6 mb-4">
+                    <div class="input-group-addon">4</div>
+                    <input type="text" autocomplete="off"  class="form-control" id="item4">
+                </div>
+                <div class="input-group basis-full gap-6 mb-4">
+                    <div class="input-group-addon">5</div>
+                    <input type="text" autocomplete="off"  class="form-control" id="item5">
+                </div>
+                <div class="input-group basis-full gap-6 mb-4">
+                    <div class="input-group-addon">6</div>
+                    <input type="text" autocomplete="off"  class="form-control" id="item6">
+                </div>
+            </div>
+        </div>
+       
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" id="btnSave">บันทึก</button>
+        </div>
+      </div>
+    </div>
+  </div>
+<script type="text/javascript">
+
+    GetYearMonth("RepByGroupYear", "RepByGroupMonth");
+
+    $("#txtFromDate,#txtToDate,#dateout,#date_in").datepicker({
+        dateFormat: 'yy-mm-dd',
+    });
+    $("#txtFromDate,#txtToDate").val(GetToday());
+
+    $("#btnSearch").click(function () {
+        var department = $("#type").val();
+        if (department == "out") {
+            ReportItemSearch();
+        } else {
+            ReportItemSearch2();
+        }
+    });
+
+    function ReportItemSearch() {
+      var OldHtml = $("#btnSearch").html();
+      var StartDate = $("#txtFromDate").val();
+      var EndDate = $("#txtToDate").val();
+        $("#btnSearch").html("<i class='fa fa-spinner fa-spin'></i>");
+        $("#tblReport").loading();
+        $("#tblReport tfoot").remove();
+        $.ajax({
+          type: "POST",
+          url: "././module/STS_STORE_PASS/data.php",
+          dataType: "json",
+          beforeSend: function () {
+            $("#btnSearch").html("<i class='fa fa-spinner fa-spin'>");
+          },
+          data: {
+            load: "loadOut",
+            StartDate: StartDate,
+            EndDate: EndDate,
+            doc_no: $("#doc").val(),
+          },
+          success: function (data) {
+            $("#divReport2").addClass("hidden");
+            $("#divReport").removeClass("hidden");
+            $("#tblReport").DataTable().clear();
+            $("#tblReport").dataTable({
+              aaData: data,
+              paging: false,
+              fixedHeader: true,
+              destroy: true,
+              processing: true,
+              scrollY: "65vh",
+              scrollCollapse: true,
+              scrollX: true,
+              select: false,
+              columns: [
+              {
+            "data": "doc_no",
+            "className": "text-center",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "item_out",
+            "className": "text-center",
+            "render": function (data, type, row, meta) {
+                            let valdata = data;
+                            let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='60' id=${row.item_out} onchange="SaveDetailOut('${row.doc_no}',value,'item_out');" value='${(valdata)}' />`;
+                            return ret;
+           }
+        },
+
+        {
+            "data": "date_out.date",
+            "className": "text-center",
+            "render": function (data, type, row, meta) {
+                            let valdata = moment(data).format("YYYY-MM-DD");
+                            $(`#${row.doc_no}`).datepicker({
+                               dateFormat: 'yy-mm-dd',
+                            });
+                            let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='20' id=${row.doc_no} onchange="SaveDetailOut('${row.doc_no}',value,'date_out');" value='${(valdata)}' />`;
+                            return ret;
+           }
+        },
+        {
+            "data": "po",
+            "className": "text-center",
+            "render": function (data, type, row, meta) {
+                            let valdata = data;
+                            let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='20' id=${row.po} onchange="SaveDetailOut('${row.doc_no}',value,'po');" value='${(valdata)}' />`;
+                            return ret;
+           }
+        },
+        {
+            "data": "dept",
+            "className": "text-center",
+            "render": function (data, type, row, meta) {
+                            let valdata = data;
+                            let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='20' id=${row.dept} onchange="SaveDetailOut('${row.doc_no}',value,'dept');" value='${(valdata)}' />`;
+                            return ret;
+           }
+        },
+
+        {
+            "data": "company",
+            "className": "text-center",
+            "render": function (data, type, row, meta) {
+                            let valdata = data;
+                            let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='20' id=${row.company} onchange="SaveDetailOut('${row.doc_no}',value,'company');" value='${(valdata)}' />`;
+                            return ret;
+           }
+        },
+        {
+            "data": "car",
+            "className": "text-center",
+            "render": function (data, type, row, meta) {
+                            let valdata = data;
+                            let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='20' id=${row.car} onchange="SaveDetailOut('${row.doc_no}',value,'car');" value='${(valdata)}' />`;
+                            return ret;
+           }
+        },
+        {
+            "data": "detail",
+            "className": "text-center",
+            "render": function (data, type, row, meta) {
+                            let valdata = data;
+                            let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='20' id=${row.detail} onchange="SaveDetailOut('${row.doc_no}',value,'detail');" value='${(valdata)}' />`;
+                            return ret;
+           }
+        },
+        {
+            "data": "user",
+            "className": "text-center",
+            "render": function (data, type, row) {
+                var ret = data;
+                return ret;
+            }
+        },
+              ],
+              dom:
+                "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                "<'row'<'col-md-12'tr>>" +
+                "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+              buttons: [
+                {
+                  extend: "print",
+                  text: "<i class='fa fa-print'></i>&nbsp;Print",
+                  title: "",
+                },
+                {
+                  extend: "excel",
+                  footer: true,
+                  text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                  title:
+                    "รายงานการนำออก" +
+                    StartDate +
+                    "_to_" +
+                    EndDate,
+                },
+              ]
+            });
+            $("#tblReport").loading("stop");
+            $("#btnSearch").html(OldHtml);
+          },
+
+          error: function (e) {
+            $("#tblReport").loading("stop");
+            $("#btnSearch").html(OldHtml);
+            console.log("There was an error with your request...");
+            console.log("error: " + JSON.stringify(e));
+          },
+        });
+    };
+
+    function ReportItemSearch2() {
+      var OldHtml = $("#btnSearch").html();
+      var StartDate = $("#txtFromDate").val();
+      var EndDate = $("#txtToDate").val();
+        $("#btnSearch").html("<i class='fa fa-spinner fa-spin'></i>");
+        $("#tblReport").loading();
+        $("#tblReport tfoot").remove();
+        $.ajax({
+          type: "POST",
+          url: "././module/STS_STORE_PASS/data.php",
+          dataType: "json",
+          beforeSend: function () {
+            $("#btnSearch").html("<i class='fa fa-spinner fa-spin'>");
+          },
+          data: {
+            load: "loadIn",
+            StartDate: StartDate,
+            EndDate: EndDate,
+            doc_no: $("#doc").val(),
+          },
+          success: function (data) {
+            $("#divReport").addClass("hidden");
+            $("#divReport2").removeClass("hidden");
+            $("#tblReport2").DataTable().clear();
+            $("#tblReport2").dataTable({
+              aaData: data,
+              paging: false,
+              fixedHeader: true,
+              destroy: true,
+              processing: true,
+              scrollY: "65vh",
+              scrollCollapse: true,
+              scrollX: true,
+              select: false,
+              columns: [
+              {
+            "data": "doc_no",
+            "className": "text-center",
+            "render": function (data, type, row, meta) {
+                var ret = data;
+                return ret;
+            }
+        },
+        {
+            "data": "item_in",
+            "className": "text-center",
+            "render": function (data, type, row, meta) {
+                            let valdata = data;
+                    
+                            let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='60' id=${row.item_in} onchange="SaveDetail('${row.doc_no}',value,'item_in');" value='${(valdata)}' />`;
+                            return ret;
+           }
+        },
+
+        {
+            "data": "date_in.date",
+            "className": "text-center",
+
+            "render": function (data, type, row, meta) {
+                            let valdata = moment(data).format("YYYY-MM-DD");
+                            $(`#${row.doc_no}`).datepicker({
+                               dateFormat: 'yy-mm-dd',
+                            });
+                            let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='20' id=${row.doc_no} onchange="SaveDetail('${row.doc_no}',value,'date_in');" value='${(valdata)}' />`;
+                            return ret;
+           }
+        },
+        {
+            "data": "remark",
+            "className": "text-center",
+            "render": function (data, type, row, meta) {
+                            let valdata = data;
+                            let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='60' id=${row.remark} onchange="SaveDetail('${row.doc_no}',value,'remark');" value='${(valdata)}' />`;
+                            return ret;
+           }
+        },
+        {
+            "data": "user",
+            "className": "text-center",
+        },
+              ],
+              dom:
+                "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                "<'row'<'col-md-12'tr>>" +
+                "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+              buttons: [
+                {
+                  extend: "print",
+                  text: "<i class='fa fa-print'></i>&nbsp;Print",
+                  title: "",
+                },
+                {
+                  extend: "excel",
+                  footer: true,
+                  text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                  title:
+                    "รายงานการนำออก" +
+                    StartDate +
+                    "_to_" +
+                    EndDate,
+                },
+              ]
+            });
+            $("#tblReport").loading("stop");
+            $("#btnSearch").html(OldHtml);
+          },
+
+          error: function (e) {
+            $("#tblReport").loading("stop");
+            $("#btnSearch").html(OldHtml);
+            console.log("There was an error with your request...");
+            console.log("error: " + JSON.stringify(e));
+          },
+        });
+    };
+
+  $('#btnPrint').click(function () {
+    makePDF();
+  })
+
+  $('#btnSave').click(function () {
+    var username_session = GetUserProp("login_username");
+    $(".username_session").html(username_session);
+    var doc_no = $("#doc_no").val();
+    var date_out = $("#dateout").val();
+    var po = $("#po").val();
+    var dept = $("#dept").val();
+    var company = $("#company").val();
+    var car = $("#car").val();
+    var detail = $("#detail").val();
+
+    var item1 = $("#item1").val();
+    var item2 = $("#item2").val();
+    var item3 = $("#item3").val();
+    var item4 = $("#item4").val();
+    var item5 = $("#item5").val();
+    var item6 = $("#item6").val();
+
+    if (doc_no == "") {
+      alert("กรุณากรอกเลขที่เอกสาร");
+      return false;
+    }
+
+    if (date_out == "") {
+      alert("กรุณากรอกวันที่นำของออก");
+      return false;
+    }
+
+    if (item1 == "") {
+      alert("กรุณากรอกข้อมูลรายการที่นำของออกอย่างน้อย 1 รายการ");
+      return false;
+    }
+
+     var items = [item1, item2, item3, item4, item5, item6].filter(function(item) {
+      return item.trim() !== ""; // ตรวจสอบว่าไม่ใช่ค่าว่าง
+     });
+
+      // เชื่อมต่อข้อความด้วยคอมม่า
+     var combinedItems = items.join(", ");
+
+     $.ajax({
+      type: "POST",
+      url: "././module/STS_STORE_PASS/data.php",
+      dataType: "json",
+      data: {
+        load: "save",
+        doc_no: doc_no,
+        item_out: combinedItems,
+        date_out: date_out,
+        po: po,
+        dept: dept,
+        company: company,
+        car: car,
+        detail: detail,
+        user: username_session,
+      },
+      success: function (data) {
+        alert("บันทึกสําเร็จ");
+        $("#doc_no").val('');
+        $("#dateout").val('');
+        $("#po").val('');
+        $("#dept").val('');
+        $("#company").val('');
+        $("#car").val('');
+        $("#detail").val('');
+        $("#item1").val('');
+        $("#item2").val('');
+        $("#item3").val('');
+        $("#item4").val('');
+        $("#item5").val('');
+        $("#item6").val('');
+      }
+    })
+  })
+
+  $('#btnSave2').click(function () {
+    var username_session = GetUserProp("login_username");
+    $(".username_session").html(username_session);
+    var doc_no_in = $("#doc_no_in").val();
+    var date_in = $("#date_in").val();
+    var remark = $("#remark").val();
+
+    var itemIn1 = $("#itemIn1").val();
+    var itemIn2 = $("#itemIn2").val();
+    var itemIn3 = $("#itemIn3").val();
+    var itemIn4 = $("#itemIn4").val();
+    var itemIn5 = $("#itemIn5").val();
+    var itemIn6 = $("#itemIn6").val();
+
+
+    if (doc_no_in == "") {
+      alert("กรุณากรอกเลขที่เอกสาร");
+      return false;
+    }
+
+    if (date_in == "") {
+      alert("กรุณากรอกวันที่นำของออก");
+      return false;
+    }
+
+    if (itemIn1 == "") {
+      alert("กรุณากรอกข้อมูลรายการที่นำของออกอย่างน้อย 1 รายการ");
+      return false;
+    }
+
+     var itemsIn = [itemIn1, itemIn2, itemIn3, itemIn4, itemIn5, itemIn6].filter(function(item) {
+      return item.trim() !== ""; // ตรวจสอบว่าไม่ใช่ค่าว่าง
+     });
+
+      // เชื่อมต่อข้อความด้วยคอมม่า
+     var combinedItemsIn = itemsIn.join(", ");
+
+     $.ajax({
+      type: "POST",
+      url: "././module/STS_STORE_PASS/data.php",
+      dataType: "json",
+      data: {
+        load: "saveIN",
+        doc_no: doc_no_in,
+        item_in: combinedItemsIn,
+        date_in: date_in,
+        remark: remark,
+        user: username_session,
+      },
+      success: function (data) {
+        alert("บันทึกสําเร็จ");
+        $("#doc_no_in").val('');
+        $("#date_in").val('');
+        $("#remark").val('');
+        $("#itemIn1").val('');
+        $("#itemIn2").val('');
+        $("#itemIn3").val('');
+        $("#itemIn4").val('');
+        $("#itemIn5").val('');
+        $("#itemIn6").val('');
+      }
+    })
+  })
+
+  function SaveDetail(doc_no,value,type) {
+    $.ajax({
+      type: "POST",
+      url: "././module/STS_STORE_PASS/data.php",
+      dataType: "json",
+      data: {
+        load: "saveExtraIN",
+        doc_no: doc_no,
+        data: value,
+        type: type
+      },
+      success: function (data) {
+       
+      }
+    })
+  }
+
+  function SaveDetailOut(doc_no,value,type) {
+    $.ajax({
+      type: "POST",
+      url: "././module/STS_STORE_PASS/data.php",
+      dataType: "json",
+      data: {
+        load: "saveExtraOut",
+        doc_no: doc_no,
+        data: value,
+        type: type
+      },
+      success: function (data) {
+       
+      }
+    })
+  }
+
+  function makePDF() {
+
+pdfMake.fonts = {
+  THSarabunNew: {
+    normal: 'THSarabunNew.ttf',
+    bold: 'THSarabunNew Bold.ttf',
+    italics: 'THSarabunNew-Italic.ttf',
+    bolditalics: 'THSarabunNew-BoldItalic.ttf'
+  }
+};
+
+const logo = () => {
+    let img =  'data:image/jpeg;base64,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'
+    return  img;
+}
+// how to cal 10% from totalTax
+
+
+
+
+const data = []
+
+for (let i = 0; i <= 5; i++) {
+
+  if (i == 1) {
+    data.push(
+          [
+            { image: logo(), width: 150, fontSize: 16, alignment: 'center', style: 'header', colSpan: 2, rowSpan: 3, margin: [0, 10, 0, 0] },
+            { text: ``, fontSize: 11, alignment: 'center', style: 'header' },
+            { text: `เอกสารนำวัสดุ เข้า-ออก นอกโรงงาน`, fontSize: 11, alignment: 'center', style: 'header',colSpan: 5 },
+            { text: ``, fontSize: 11, alignment: 'center', style: 'header' },
+            { text: ``, fontSize: 11, alignment: 'center', style: 'header' },
+            { text: ``, fontSize: 11, alignment: 'center', style: 'header' },
+            { text: ``, fontSize: 11, alignment: 'center', style: 'header' },
+          ],
+          [
+            {},
+            {},
+            { text: `เรียน`, fontSize: 11, alignment: 'center', style: 'header' },
+            { text: `ฝ่ายบุกคล, ฉป., และฟันเกี่ยวข้อง`, fontSize: 11, alignment: 'center', style: 'header' },
+            { text: `เลขที่เอกสาร`, fontSize: 11, alignment: 'center', style: 'header', colSpan: 2 },
+            {},
+            { text: `วันที่`, fontSize: 11, alignment: 'center', style: 'header' },
+          ],
+          [
+            {},
+            {},
+            { text: `จาก`, fontSize: 11, alignment: 'center', style: 'header' },
+            { text: ``, fontSize: 11, alignment: 'center', style: 'header' },
+            { text: ``, fontSize: 11, alignment: 'center', style: 'header', colSpan: 2 },
+            {},
+            { text: ``, fontSize: 11, alignment: 'right', style: 'header' },
+          ],
+          [
+            { text: `หน่วยงานที่นำออก`, fontSize: 11, alignment: 'center', style: 'header', colSpan: 2 },
+            {},
+            { text: `เพื่อคำเนินการ`, fontSize: 11, alignment: 'center', style: 'header', colSpan: 2 },
+            {},
+            { text: `วัสดุรานตามเลขที่ PR ขอซื้อ`, fontSize: 11, alignment: 'center', style: 'header', colSpan: 3 },
+            {},
+            {},
+          ],
+          [
+            { text: `บริษัท`, fontSize: 11, alignment: 'center', style: 'header' },
+            { text: `บ.สหไทยสตีลไพพ์`, fontSize: 11, alignment: 'center', style: 'header' },
+            { text: `\uf046 ชิ้นงานตัวอย่างจัดจ้าง`, fontSize: 11, alignment: 'left', style: 'header', colSpan: 2 },
+            {},
+            { text: `เลขที่ PR`, fontSize: 11, alignment: 'center', style: 'header' },
+            { text: ``, fontSize: 11, alignment: 'center', style: 'header', colSpan: 2 },
+            { },
+          ],
+          [
+            { text: `ประเภทรถ`, fontSize: 11, alignment: 'center', style: 'header' },
+            { text: `\uf046 รถยนต์ \uf046 รถบรรทุก`, fontSize: 11, alignment: 'center', style: 'header' },
+            { text: `\uf046 ดำเนินการทิ้ง`, fontSize: 11, alignment: 'left', style: 'header', colSpan: 2 },
+            {},
+            { text: ``, fontSize: 11, alignment: 'center', style: 'header', colSpan: 3 },
+            {},
+            {},
+          ],
+          [
+            { text: `เลขทะเบียน`, fontSize: 11, alignment: 'center', style: 'header' },
+            { text: ``, fontSize: 11, alignment: 'center', style: 'header' },
+            { text: `\uf046 อื่นๆ ........................................................................`, fontSize: 11, alignment: 'left', style: 'header', colSpan: 2 },
+            {},
+            { text: ``, fontSize: 11, alignment: 'center', style: 'header', colSpan: 3 },
+            {},
+            {},
+          ],
+          [
+            { border: [true, false, true, false], text: `รายละเอียดงาน`, decoration: 'underline', bold: true, fontSize: 11, alignment: 'left', style: 'header', colSpan: 7, margin: [20, 10, 0, 10] },
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+          ],
+          [
+            {border: [true, false, true, false], text: `.......................................................................................................................................................................................................................................................................................................`,  fontSize: 11, alignment: 'center', style: 'header', colSpan: 7, margin: [0, 0, 0, 10] },
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+          ],
+          [
+            {border: [true, false, true, false], text: `.......................................................................................................................................................................................................................................................................................................`,  fontSize: 11, alignment: 'center', style: 'header', colSpan: 7, margin: [0, 0, 0, 15] },
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+          ],
+          [
+            {border: [true, false, true, false], text: ``,  fontSize: 11, alignment: 'center', style: 'header', colSpan: 7 },
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+          ],
+          [
+            { border: [true, true, true, false], text: `รายการที่นำของออก`, decoration: 'underline', bold: true, fontSize: 11, alignment: 'left', style: 'header', colSpan: 7, margin: [20, 10, 0, 0] },
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+          ],
+          [
+            {border: [true, false, true, false], text: `1 .......................................................................................................................................................................................................................................................................................................`,  fontSize: 11, alignment: 'center', style: 'header', colSpan: 7, margin: [0, 10, 0, 0] },
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+          ],
+          [
+            {border: [true, false, true, false], text: `2 .......................................................................................................................................................................................................................................................................................................`,  fontSize: 11, alignment: 'center', style: 'header', colSpan: 7 },
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+          ],
+          [
+            {border: [true, false, true, false], text: `3 .......................................................................................................................................................................................................................................................................................................`,  fontSize: 11, alignment: 'center', style: 'header', colSpan: 7 },
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+          ],
+          [
+            {border: [true, false, true, false], text: `4 .......................................................................................................................................................................................................................................................................................................`,  fontSize: 11, alignment: 'center', style: 'header', colSpan: 7 },
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+          ],
+          [
+            {border: [true, false, true, false], text: `5 .......................................................................................................................................................................................................................................................................................................`,  fontSize: 11, alignment: 'center', style: 'header', colSpan: 7 },
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+          ],
+          [
+            {border: [true, false, true, false], text: `6 .......................................................................................................................................................................................................................................................................................................`,  fontSize: 11, alignment: 'center', style: 'header', colSpan: 7 },
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+          ],
+          [
+            { border: [true, false, true, false], text: `รายการที่นำของเข้า`, decoration: 'underline', bold: true, fontSize: 11, alignment: 'left', style: 'header', colSpan: 7, margin: [20, 10, 0, 0] },
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+          ],
+          [
+            {border: [true, false, true, false], text: `1 .......................................................................................................................................................................................................................................................................................................`,  fontSize: 11, alignment: 'center', style: 'header', colSpan: 7, margin: [0, 10, 0, 0] },
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+          ],
+          [
+            {border: [true, false, true, false], text: `2 .......................................................................................................................................................................................................................................................................................................`,  fontSize: 11, alignment: 'center', style: 'header', colSpan: 7 },
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+          ],
+          [
+            {border: [true, false, true, false], text: `3 .......................................................................................................................................................................................................................................................................................................`,  fontSize: 11, alignment: 'center', style: 'header', colSpan: 7 },
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+          ],
+          [
+            {border: [true, false, true, false], text: `4 .......................................................................................................................................................................................................................................................................................................`,  fontSize: 11, alignment: 'center', style: 'header', colSpan: 7 },
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+          ],
+          [
+            {border: [true, false, true, false], text: `5 .......................................................................................................................................................................................................................................................................................................`,  fontSize: 11, alignment: 'center', style: 'header', colSpan: 7 },
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+          ],
+          [
+            {border: [true, false, true, false], text: `6 .......................................................................................................................................................................................................................................................................................................`,  fontSize: 11, alignment: 'center', style: 'header', colSpan: 7 },
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+          ],
+          [
+            { border: [true, false, true, false], text: ``, fontSize: 11, alignment: 'left', style: 'header', colSpan: 7, margin: [0, 10, 0, 0] },
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+          ],
+          [
+            { border: [true, false, true, false], text: `จึงเรียนมาเพื่อทราบ`, fontSize: 11, alignment: 'left', style: 'header', colSpan: 7, margin: [40, 0, 0, 0] },
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+          ],
+          [
+            { border: [true, false, false, false], text: `..............................................................................................`, fontSize: 11, alignment: 'left', style: 'header', colSpan: 2, margin: [10, 20, 0, 0] },
+            {},
+            { border: [false, false, false, false], text: `....................................................................................`, fontSize: 11, alignment: 'center', style: 'header', colSpan: 2, margin: [0, 20, 0, 0] },
+            {},
+            { border: [false, false, true, false], text: `..............................................................................................`, fontSize: 11, alignment: 'center', style: 'header', colSpan: 3, margin: [0, 20, 0, 0] },
+            {},
+            {},
+          ],
+          [
+            { border: [true, false, false, false], text: `ผู้ขออนุญาต (ผู้นำออก)`, fontSize: 11, alignment: 'center', style: 'header', colSpan: 2, margin: [0, 0, 0, 20] },
+            {},
+            { border: [false, false, false, false], text: `ผู้ขออนุญาตให้นำออก (สหไทย)`, fontSize: 11, alignment: 'center', style: 'header', colSpan: 2, margin: [0, 0, 0, 0] },
+            {},
+            { border: [false, false, true, false], text: `ฝ่ายตรวจสอบ (รปภ. สหไทย)`, fontSize: 11, alignment: 'center', style: 'header', colSpan: 3, margin: [0, 0, 0, 0] },
+            {},
+            {},
+          ],
+          [
+            {border: [true, true, true, false],text: `กรณีส่งกลับ`, decoration: 'underline', bold: true, fontSize: 11, alignment: 'left', style: 'header', colSpan: 7, margin: [20, 0, 0, 0] },
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+          ],
+          [
+            { border: [true, false, false, false], text: `..............................................................................................`, fontSize: 11, alignment: 'left', style: 'header', colSpan: 3, margin: [40, 10, 0, 0] },
+            {},
+            {},
+            {border: [false, false, false, false], text: ``, fontSize: 11, alignment: 'center', style: 'header',  margin: [0, 20, 0, 0] },
+            { border: [false, false, true, false], text: `..............................................................................................`, fontSize: 11, alignment: 'left', style: 'header', colSpan: 3, margin: [0, 10, 0, 0] },
+            {},
+            {},
+          ],
+          [
+            { border: [true, false, false, false], text: `ผู้ส่งกลับ (ผู้นำออก)`, fontSize: 11, alignment: 'center', style: 'header', colSpan: 3, margin: [0, 5, 0, 0] },
+            {},
+            {},
+            {border: [false, false, false, false], text: ``, fontSize: 11, alignment: 'center', style: 'header',  margin: [0, 20, 0, 0] },
+            { border: [false, false, true, false], text: `ผู้รับ (สหไทย)`, fontSize: 11, alignment: 'center', style: 'header', colSpan: 3, margin: [0, 5, 0, 0] },
+            {},
+            {},
+          ],
+          [
+            { border: [true, false, false, true], text: `วันที่............../............../................`, fontSize: 11, alignment: 'center', style: 'header', colSpan: 3, margin: [0, 5, 0, 0] },
+            {},
+            {},
+            {border: [false, false, false, true], text: ``, fontSize: 11, alignment: 'center', style: 'header',  margin: [0, 20, 0, 0] },
+            { border: [false, false, true, true], text: `วันที่............../............../................`, fontSize: 11, alignment: 'center', style: 'header', colSpan: 3, margin: [0, 5, 0, 30] },
+            {},
+            {},
+          ],
+        
+          [
+            {border: [false, false, false, false],text: `FOMSIT-01/23-DEC-1`, bold: true, fontSize: 11, alignment: 'right', style: 'header', colSpan: 7, margin: [20, 0, 0, 0] },
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+          ],
+
+
+    )
+  }
+
+}
+
+
+var docDefinition = {
+  pageSize: 'A4',
+  pageMargins: [0, 0, 0, 0],
+  content: [
+    {
+      margin: [10, 10, 0, 0],
+      columns: [
+        {
+
+          table: {
+            widths: [50, 150, 50,100, 50, 50, 60],
+            headerRows: 1,
+            body: data,
+          },
+        },
+      ],
+    }
+  ],
+  defaultStyle: {
+    font: 'THSarabunNew',
+  },
+};
+
+pdfMake.createPdf(docDefinition).open()
+}
+</script>

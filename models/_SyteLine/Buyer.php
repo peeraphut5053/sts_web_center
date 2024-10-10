@@ -52,4 +52,69 @@ class Buyer {
         return $rs0;
     }
 
+    function Save_store_pass_hdr($doc_no,$item_out,$date_out,$po,$dept,$company,$car,$detail,$user) {
+        $query = "INSERT INTO STS_store_pass_hdr (doc_no,item_out,date_out,po,dept,company,car,detail,[user]) VALUES ('$doc_no','$item_out','$date_out','$po','$dept','$company','$car','$detail','$user')";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+    function Save_store_pass_line($doc_no,$item_in,$date_in,$remark,$user) {
+        $query = "INSERT INTO STS_store_pass_line (doc_no,item_in,date_in,remark,[user]) VALUES ('$doc_no','$item_in','$date_in','$remark','$user')";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+
+    function Get_store_pass_hdr($StartDate, $EndDate,$doc_no) {
+        $where = "";
+
+        if ($doc_no !== "") {
+            $where = " and doc_no = '$doc_no'";
+        }
+
+        if ($StartDate !== "") {
+            $where = $where . " and date_out between '$StartDate' and '$EndDate'";
+        }
+
+        $query = "SELECT * FROM STS_store_pass_hdr where 1=1 $where";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+
+    function Get_store_pass_line($StartDate, $EndDate,$doc_no) {
+
+        $where = "";
+        if ($doc_no !== "") {
+            $where = " and doc_no = '$doc_no'";
+        }
+
+        if ($StartDate !== "") {
+            $where = $where . " and date_in between '$StartDate' and '$EndDate'";
+        }
+        $query = "SELECT * FROM STS_store_pass_line where 1=1 $where";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+
+    function SaveExtra_store_pass_line($doc_no,$data,$type) {
+        $query = "UPDATE STS_store_pass_line SET $type = '$data' WHERE doc_no = '$doc_no'";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+    function SaveExtra_store_pass_hdr($doc_no,$data,$type) {
+        $query = "UPDATE STS_store_pass_hdr SET $type = '$data' WHERE doc_no = '$doc_no'";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+
 }
