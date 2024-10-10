@@ -18,7 +18,6 @@ foreach ($_POST as $key => $value) {
 
 include "../../initial.php";
 
-
 if ($load == 'ajax') {
     $CallModel = new CallModel();
     $CallModel->MGT_Models();
@@ -143,7 +142,7 @@ if ($load == 'ReportSub') {
 }
 
 if ($load == 'InsertQcTestLab_Main') {
-    $sts_no = $_POST["sts_no"] ;
+    $sts_no = $_POST["sts_no"];
  for ($i=0;$i<count($sts_no);$i++){
     $CallModel = new CallModel();
     $CallModel->SyteLine_Models();
@@ -212,7 +211,7 @@ if ($load == 'InsertQcTestLab_Main') {
     }
 }
 if ($load == 'InsertQcTestLab_Sub') {
-    $sts_no = is_array($_POST["sts_no"]);
+    $sts_no = $_POST["sts_no"];
  for ($i=0;$i<count($sts_no);$i++){
     $CallModel = new CallModel();
     $CallModel->SyteLine_Models();
