@@ -100,6 +100,9 @@
                     <th class="bg-gray">Quantity</th>
                     <th class="bg-gray">TagStatus</th>
                     <th class="bg-gray" width="300px">Detail</th>
+                    <th class="bg-gray" width="300px">Inspector</th>
+                    <th class="bg-gray" width="300px">Inspec_date</th>
+                    <th class="bg-gray" width="300px">Comp_name</th>
                 </tr>
         </table>
 
@@ -329,6 +332,26 @@
                             let ret = `<span hidden>${(valdata) }</span><input type='text' class='input-text-value' size='45' id=${row.id} onchange="SaveDetail(this.id,value);" value='${(valdata)}' />`;
                             return ret;
                         }
+                    },
+                    {
+                        "data": "inspector",
+                        "className": "text-center",
+                        "render": function (data, type, row, meta) {
+                            let ret = data ? covertName(data) : "ยังไม่ตวรจ";
+                            return ret;
+                        }
+                    },
+                    {
+                        "data": "inspec_date.date",
+                        "className": "text-center",
+                        "render": function (data, type, row, meta) {
+                            let ret = data ? moment(data).format("DD/MM/YYYY HH:mm:ss") : "-";
+                            return ret;
+                        }
+                    },
+                    {
+                        "data": "comp_name",
+                        "className": "text-center",
                     }
                     ],
                 });
@@ -379,5 +402,28 @@
             }
         });
     }
-    
+
+    function covertName(Pass) {
+        if (Pass == 5404) {
+            return "นายณฐพงศ์ ถนอมพันธ์"
+          } else if (Pass == 8105) {
+            return "นายศุภชัย ทนสุวรรณ"
+          } else if (Pass == 8113) {
+            return "นายกิตติ แดงสกุล"
+          } else if (Pass == 8139) {
+            return "นายพันธ์พจน์ บุญอยู่"
+          } else if (Pass == 8192) {
+            return "นายวุฒิชัย เพี้ยนสำอางค์"
+          } else if (Pass == 8202) {
+            return "นายภีมพันธ์ วุฒิประภา"
+          } else if (Pass == 8222) {
+           return "นายเอกรัตน์ วงษ์จอม"
+          } else if (Pass == 8236) {
+            return "นายสุรยุทธ บุญหว่าน"
+          } else if (Pass == 8237) {
+            return "นายอนุสรณ์ แสนคำฟู"
+          } else if (Pass == 8238) {
+            return "นายพีรพัฒน์ วิเศษชิต"
+          } 
+    }
 </script>
