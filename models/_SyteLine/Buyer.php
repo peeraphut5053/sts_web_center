@@ -52,8 +52,8 @@ class Buyer {
         return $rs0;
     }
 
-    function Save_store_pass_hdr($doc_no,$item_out,$date_out,$po,$dept,$company,$car,$detail,$user) {
-        $query = "INSERT INTO STS_store_pass_hdr (doc_no,item_out,date_out,po,dept,company,car,detail,[user]) VALUES ('$doc_no','$item_out','$date_out','$po','$dept','$company','$car','$detail','$user')";
+    function Save_store_pass_hdr($doc_no,$item_out,$date_out,$po,$dept,$company,$car,$detail,$purpose,$user) {
+        $query = "INSERT INTO STS_store_pass_hdr (doc_no,item_out,date_out,po,dept,company,car,detail,purpose,[user]) VALUES ('$doc_no','$item_out','$date_out','$po','$dept','$company','$car','$detail', '$purpose','$user')";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);
@@ -111,6 +111,17 @@ class Buyer {
     }
     function SaveExtra_store_pass_hdr($doc_no,$data,$type) {
         $query = "UPDATE STS_store_pass_hdr SET $type = '$data' WHERE doc_no = '$doc_no'";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+
+    function GetDataReportPDF($doc_no) {
+        $query = "SELECT * 
+FROM STS_store_pass_hdr h
+LEFT JOIN STS_store_pass_line l ON h.doc_no = l.doc_no 
+WHERE h.doc_no = '$doc_no'";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);
