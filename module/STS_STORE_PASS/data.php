@@ -45,7 +45,7 @@ if ($load == "loadOut") {
 
     $STS_Custom = new Buyer();
     $STS_Custom->setConn($ConnSL);
-    $rs = $STS_Custom->Get_store_pass_hdr($StartDate, $EndDate,$doc_no);
+    $rs = $STS_Custom->Get_store_pass_hdr($StartDate, $EndDate,$doc_no,$purpose);
     echo json_encode($rs);
 }
 

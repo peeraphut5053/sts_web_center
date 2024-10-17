@@ -45,13 +45,26 @@
       </select>
     </div>
   </div>
-
   <div class="col-lg-4">
     <button id="btnSearch" class="btn btn-info"><i class="fa fa-searh"></i>&nbsp;ค้นหา</button>
     <button id="btnAdd" class="btn btn-success" data-toggle="modal" data-target="#exampleModal2"><i
         class="fa fa-searh"></i>เพิ่มข้อมูลรายการออก</button>
-    <button id="btnAdd" class="btn btn-success" data-toggle="modal" data-target="#exampleModal"><i
+    <button id="btnAddIN" class="btn btn-success hidden" data-toggle="modal" data-target="#exampleModal"><i
         class="fa fa-searh"></i>เพิ่มข้อมูลรายการเข้า</button>
+  </div>
+  <div class="col-lg-4">
+    <div class="input-group">
+      <div class="input-group-addon">purpose</div>
+      <select class="form-control txt-filter" id="mypurpose">
+        <option selected disabled>ทุกวัตถุประสงค์</option>
+        <option value="1">นำไปซ่อม - ส่งกลับ STS</option>
+        <option value="2">นำเหล็กออกแปรรูป - ส่งกลับ STS</option>
+        <option value="3">นำออกวัสดุสิ้นเปลือง (งานจัดจ้าง)</option>
+        <option value="4">ท่อตัวอย่าง</option>
+        <option value="5">กำจัดทิ้ง</option>
+        <option value="6">อื่นๆ</option>
+      </select>
+    </div>
   </div>
 </div>
 
@@ -68,6 +81,7 @@
         <th>company</th>
         <th>car</th>
         <th>detail</th>
+        <th>purpose</th>
         <th>purpose</th>
         <th>user</th>
       </tr>
@@ -102,7 +116,7 @@
         <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
           <div class="input-group basis-2/4">
             <div class="input-group-addon">doc no</div>
-            <input type="text" autocomplete="off" class="form-control" id="doc_no_in">
+            <input type="text" autocomplete="off" disabled class="form-control" id="doc_no_in">
           </div>
           <div class="input-group basis-2/4">
             <div class="input-group-addon">date in</div>
@@ -112,7 +126,7 @@
         <div class="flex justify-start items-center mb-5">
           <div class="input-group basis-full gap-6">
             <div class="input-group-addon">remark</div>
-            <input type="text" autocomplete="off" class="form-control" id="remark">
+            <input type="text" autocomplete="off" class="form-control" id="remark_in">
           </div>
         </div>
         <div class="flex justify-start items-center mb-5">
@@ -264,8 +278,10 @@
   $("#btnSearch").click(function () {
     var department = $("#type").val();
     if (department == "out") {
+      $("#btnAddIN").addClass("hidden");
       ReportItemSearch();
     } else {
+      $("#btnAddIN").removeClass("hidden");
       ReportItemSearch2();
     }
   });
@@ -274,6 +290,8 @@
     var OldHtml = $("#btnSearch").html();
     var StartDate = $("#txtFromDate").val();
     var EndDate = $("#txtToDate").val();
+    var purpose = $("#mypurpose").val();
+
     $("#btnSearch").html("<i class='fa fa-spinner fa-spin'></i>");
     $("#tblReport").loading();
     $("#tblReport tfoot").remove();
@@ -289,6 +307,7 @@
         StartDate: StartDate,
         EndDate: EndDate,
         doc_no: $("#doc").val(),
+        purpose: purpose
       },
       success: function (data) {
         myData = data;
@@ -305,8 +324,8 @@
           scrollCollapse: true,
           scrollX: true,
           select: {
-                style: 'single',
-                selector: 'td:nth-child(2)' // กำหนดให้คลิกได้เฉพาะคอลัมน์ที่ 2
+            style: 'single',
+            selector: 'td:nth-child(2)' // กำหนดให้คลิกได้เฉพาะคอลัมน์ที่ 2
           },
           columns: [
             {
@@ -317,7 +336,7 @@
                 var valdata = data == 1 ? true : false;
 
                 // วิธีที่ 1: ใช้เงื่อนไขในการเพิ่ม/ไม่เพิ่ม checked attribute
-                let ret = `<span class=${valdata ? 'text-green-500' : 'text-red-500'}>${valdata ? "อนุมัติแล้ว" : "รออนุมัติ"}</span><button class='btn btn-primary' size='60' id='${row.approve}' onclick="SaveApprove('${row.doc_no}','${row.approve}','approve');">เปลี่ยน</button>`;
+                let ret = `<span class=${valdata ? 'text-green-500' : 'text-red-500'}>${valdata ? "ตรวจสอบแล้ว" : "รอตรวจสอบ"}</span><button class='btn btn-primary' size='60' id='${row.approve}' onclick="SaveApprove('${row.doc_no}','${row.approve}','approve');">เปลี่ยน</button>`;
 
                 return ret;
               }
@@ -428,6 +447,23 @@
               }
             },
             {
+              "data": "purpose",
+              "className": "text-center",
+              "render": function (data, type, row) {
+                var select_status =
+                  ["กรุณาเลือกวัตถุประสงค์",
+                    "นำไปซ่อม - ส่งกลับ STS",
+                    "นำเหล็กออกแปรรูป- ส่งกลับ STS",
+                    "นำออกวัสดุสิ้นเปลือง (งานจัดจ้าง)",
+                    "ท่อตัวอย่าง",
+                    "กำจัดทิ้ง",
+                    "อื่นๆ"
+                  ];
+                var ret = select_status[Number(data)];
+                return ret;
+              }
+            },
+            {
               "data": "user",
               "className": "text-center",
               "render": function (data, type, row) {
@@ -445,6 +481,9 @@
               extend: "print",
               text: "<i class='fa fa-print'></i>&nbsp;Print",
               title: "",
+              exportOptions: {
+                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 11],
+              },
             },
             {
               extend: "excel",
@@ -455,20 +494,29 @@
                 StartDate +
                 "_to_" +
                 EndDate,
+              exportOptions: {
+                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 11],
+              },
             },
             {
-                           text: `<button type="button" class="btn btn-info">พิมพ์ใบผ่าน</button>`,
-                           action: function (e, dt, node, config ) {
-                            // on selected
-                            let selected = Array.from(dt.rows('.selected').data());
-                            if (selected.length == 0) {
-                              alert("กรุณาเลือกเลขที่เอกสารที่ต้องการพิมพ์");
-                              return false;
-                            }
-                            getReportData(selected[0].doc_no);
-                            
-                        }
-          }
+              text: `<button type="button" class="btn btn-info">พิมพ์ใบผ่าน</button>`,
+              action: function (e, dt, node, config) {
+                // on selected
+                let selected = Array.from(dt.rows('.selected').data());
+                if (selected.length == 0) {
+                  alert("กรุณาเลือกเลขที่เอกสารที่ต้องการพิมพ์");
+                  return false;
+                }
+                getReportData(selected[0].doc_no);
+
+              }
+            }
+          ],
+          columnDefs: [
+            {
+              targets: [10],  // คอลัมน์ที่ต้องการซ่อนในมุมมองปกติ
+              visible: false  // ซ่อนคอลัมน์ที่ index 12 ในหน้าปกติ แต่จะถูก export
+            }
           ]
         });
         $("#tblReport").loading("stop");
@@ -491,7 +539,7 @@
       buttons: {
         confirm: function checked() {
           var Pass = $("#Pass").val();
-         
+
           let val;
 
           if (value == 1 || value == null) {
@@ -499,9 +547,9 @@
           } else {
             val = 1;
           }
-          
-          console.log('P ',val);
-          
+
+          console.log('P ', val);
+
           if (Pass == 1234) {
             // updated approve in myData
             $.ajax({
@@ -511,20 +559,20 @@
               data: {
                 load: "saveExtraOut",
                 doc_no: doc_no,
-                data: val,  
+                data: val,
                 type: name
               },
               success: function (data) {
 
-              const index = myData.findIndex(item => item.doc_no === doc_no);
-if (index !== -1) {
-    if (myData[index][name] === null || myData[index][name] === 0) {
-        myData[index][name] = 1;
-    } else {
-        myData[index][name] = 0;
-    }
-}
-          
+                const index = myData.findIndex(item => item.doc_no === doc_no);
+                if (index !== -1) {
+                  if (myData[index][name] === null || myData[index][name] === 0) {
+                    myData[index][name] = 1;
+                  } else {
+                    myData[index][name] = 0;
+                  }
+                }
+
                 $("#tblReport").DataTable().clear().rows.add(myData).draw();
               },
               error: function (e) {
@@ -580,8 +628,8 @@ if (index !== -1) {
           scrollCollapse: true,
           scrollX: true,
           select: {
-                style: 'single',
-                selector: 'td:nth-child(1)' // กำหนดให้คลิกได้เฉพาะคอลัมน์ที่ 2
+            style: 'single',
+            selector: 'td:nth-child(1)' // กำหนดให้คลิกได้เฉพาะคอลัมน์ที่ 2
           },
           columns: [
             {
@@ -608,11 +656,12 @@ if (index !== -1) {
               "className": "text-center",
 
               "render": function (data, type, row, meta) {
-                let valdata = moment(data).format("YYYY-MM-DD");
-                $(`#${row.doc_no}`).datepicker({
+                let valdata = data ? moment(data).format("YYYY-MM-DD") : "";
+                $(".input_date_in").datepicker({
                   dateFormat: 'yy-mm-dd',
                 });
-                let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='20' id=${row.doc_no} onchange="SaveDetail('${row.doc_no}',value,'date_in');" value='${(valdata)}' />`;
+               
+                let ret = `<span hidden>${(valdata)}</span><input autocomplete='off' type='text' class='input-text-value input_date_in' size='20' onchange="SaveDetail('${row.doc_no}',value,'date_in');" value='${(valdata)}' />`;
                 return ret;
               }
             },
@@ -645,26 +694,26 @@ if (index !== -1) {
               footer: true,
               text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
               title:
-                "รายงานการนำออก" +
+                "รายงานการนำเข้า" +
                 StartDate +
                 "_to_" +
                 EndDate,
             },
             {
-                           text: `<button type="button" class="btn btn-info">พิมพ์ใบผ่าน</button>`,
-                           action: function (e, dt, node, config ) {
-                            // on selected
-                            let selected = Array.from(dt.rows('.selected').data());
+              text: `<button type="button" class="btn btn-info">พิมพ์ใบผ่าน</button>`,
+              action: function (e, dt, node, config) {
+                // on selected
+                let selected = Array.from(dt.rows('.selected').data());
 
-                            if (selected.length == 0) {
-                              alert("กรุณาเลือกเลขที่เอกสารที่ต้องการพิมพ์");
-                              return false;
-                            }
+                if (selected.length == 0) {
+                  alert("กรุณาเลือกเลขที่เอกสารที่ต้องการพิมพ์");
+                  return false;
+                }
 
-                            getReportData(selected[0].doc_no);
-                            
-                        }
-          }
+                getReportData(selected[0].doc_no);
+
+              }
+            }
           ]
         });
         $("#tblReport").loading("stop");
@@ -681,7 +730,7 @@ if (index !== -1) {
   };
 
   function getReportData(doc_no) {
-   
+
     $.ajax({
       type: "POST",
       url: "././module/STS_STORE_PASS/data.php",
@@ -717,10 +766,7 @@ if (index !== -1) {
     var item5 = $("#item5").val();
     var item6 = $("#item6").val();
 
-    if (doc_no == "") {
-      alert("กรุณากรอกเลขที่เอกสาร");
-      return false;
-    }
+  
 
     if (item1 == "") {
       alert("กรุณากรอกข้อมูลรายการที่นำของออกอย่างน้อย 1 รายการ");
@@ -770,12 +816,32 @@ if (index !== -1) {
     })
   })
 
+  $('#btnAddIN').click(function () {
+    var selected = Array.from($('#tblReport2').DataTable().rows('.selected').data());
+
+    if (selected.length == 0) {
+      alert("กรุณาเลือกเลขที่เอกสาร");
+      return false;
+    }
+
+    var itemIn = selected[0].item_in.split(',');
+    $("#doc_no_in").val(selected[0].doc_no);
+    $("#date_in").val(moment(selected[0].date_in?.date).format('YYYY-MM-DD'));
+    $("#remark_in").val(selected[0].remark);
+    $("#itemIn1").val($.trim(itemIn[0]));
+    $("#itemIn2").val($.trim(itemIn[1]));
+    $("#itemIn3").val($.trim(itemIn[2]));
+    $("#itemIn4").val($.trim(itemIn[3]));
+    $("#itemIn5").val($.trim(itemIn[4]));
+    $("#itemIn6").val($.trim(itemIn[5]));
+  })
+
   $('#btnSave2').click(function () {
     var username_session = GetUserProp("login_username");
     $(".username_session").html(username_session);
     var doc_no_in = $("#doc_no_in").val();
     var date_in = $("#date_in").val();
-    var remark = $("#remark").val();
+    var remark = $("#remark_in").val();
 
     var itemIn1 = $("#itemIn1").val();
     var itemIn2 = $("#itemIn2").val();
@@ -818,13 +884,16 @@ if (index !== -1) {
         alert("บันทึกสําเร็จ");
         $("#doc_no_in").val('');
         $("#date_in").val('');
-        $("#remark").val('');
+        $("#remark_in").val('');
         $("#itemIn1").val('');
         $("#itemIn2").val('');
         $("#itemIn3").val('');
         $("#itemIn4").val('');
         $("#itemIn5").val('');
         $("#itemIn6").val('');
+        $("#exampleModal").modal("hide");
+        ReportItemSearch2();
+        
       }
     })
   })
@@ -887,8 +956,8 @@ if (index !== -1) {
     // how to cal 10% from totalTax
 
 
-    const options = ["นำไปซ่อม - ส่งกลับ STS","นำเหล็กออกแปรรูป - ส่งกลับ STS","นำออกวัสดุสิ้นเปลือง (งานจัดจ้าง)","ท่อตัวอย่าง","กำจัดทิ้ง","อื่นๆ"]
-      
+    const options = ["นำไปซ่อม - ส่งกลับ STS", "นำเหล็กออกแปรรูป - ส่งกลับ STS", "นำออกวัสดุสิ้นเปลือง (งานจัดจ้าง)", "ท่อตัวอย่าง", "กำจัดทิ้ง", "อื่นๆ"]
+
     const data = []
 
     for (let i = 0; i <= 5; i++) {
@@ -896,321 +965,61 @@ if (index !== -1) {
       if (i == 1) {
         data.push(
           [
-            { image: logo(), width: 150, fontSize: 16, alignment: 'center', style: 'header', colSpan: 2, rowSpan: 3, margin: [0, 10, 0, 0] },
-            { text: ``, fontSize: 11, alignment: 'center', style: 'header' },
-            { text: `เอกสารนำวัสดุ เข้า-ออก นอกโรงงาน`, bold: true, fontSize: 11, alignment: 'center', style: 'header', colSpan: 5 },
-            { text: ``, fontSize: 11, alignment: 'center', style: 'header' },
-            { text: ``, fontSize: 11, alignment: 'center', style: 'header' },
-            { text: ``, fontSize: 11, alignment: 'center', style: 'header' },
-            { text: ``, fontSize: 11, alignment: 'center', style: 'header' },
+            { border: [true, true, true, false], text: `รายการที่นำออก`, decoration: 'underline', bold: true, fontSize: 16, alignment: 'center', style: 'header', colSpan: 2, margin: [0, 20, 0, 0] },
+            {},
+            { border: [true, true, true, false], text: `รายการที่นำเข้า`, decoration: 'underline', bold: true, fontSize: 16, alignment: 'center', style: 'header', margin: [0, 20, 0, 0]},
           ],
           [
+            { border: [true, false, true, false], text: `1. ${itemOut[0] ? itemOut[0] : ''}`, fontSize: 16, alignment: 'left', style: 'header', colSpan: 2, margin: [20, 10, 0, 0] },
             {},
-            {},
-            { text: `เรียน`, bold: true, fontSize: 11, alignment: 'center', style: 'header' },
-            { text: `ฝ่ายบุกคล, ฉป., และฝ่ายเกี่ยวข้อง`, bold: true, fontSize: 11, alignment: 'center', style: 'header' },
-            { text: `เลขที่เอกสาร`, bold: true, fontSize: 11, alignment: 'center', style: 'header', colSpan: 2 },
-            {},
-            { text: `วันที่`, bold: true, fontSize: 11, alignment: 'center', style: 'header' },
+            { border: [true, false, true, false], text: `1. ${itemIn[0] ? itemIn[0] : ''}`,  fontSize: 16, alignment: 'left', style: 'header', margin: [20, 10, 0, 0]},
           ],
           [
+            { border: [true, false, true, false], text: `2. ${itemOut[1] ? itemOut[1] : ''}`, fontSize: 16, alignment: 'left', style: 'header', colSpan: 2, margin: [20, 10, 0, 0] },
             {},
-            {},
-            { text: `แผนก`, fontSize: 11, bold: true, alignment: 'center', style: 'header',  margin: [20, 0, 0, 0] },
-            { text: `${newData.dept}`, fontSize: 11, alignment: 'center', style: 'header' },
-            { text: `${newData.doc_no}`, fontSize: 11, alignment: 'center', style: 'header', colSpan: 2 },
-            {},
-            { text: `${moment(newData.date_out.date).locale('th').format(' DD MMMM YYYY')}`, fontSize: 11, alignment: 'right', style: 'header' },
+            { border: [true, false, true, false], text: `2. ${itemIn[1] ? itemIn[1] : ''}`,  fontSize: 16, alignment: 'left', style: 'header', margin: [20, 10, 0, 0]},
           ],
           [
-            { text: `หน่วยงานที่นำออก`, bold: true, fontSize: 11, alignment: 'center', style: 'header', colSpan: 2 },
+            { border: [true, false, true, false], text: `3. ${itemOut[2] ? itemOut[2] : ''}`, fontSize: 16, alignment: 'left', style: 'header', colSpan: 2, margin: [20, 10, 0, 0] },
             {},
-            { text: `เพื่อดำเนินการ`, bold: true, fontSize: 11, alignment: 'center', style: 'header', colSpan: 2 },
-            {},
-            { text: `วัสดุรานตามเลขที่ PO ขอซื้อ`, bold: true, fontSize: 11, alignment: 'center', style: 'header', colSpan: 3 },
-            {},
-            {},
+            { border: [true, false, true, false], text: `3. ${itemIn[2] ? itemIn[2] : ''}`,  fontSize: 16, alignment: 'left', style: 'header', margin: [20, 10, 0, 0]},
           ],
           [
-            { text: `บริษัท`, bold: true, fontSize: 11, alignment: 'center', style: 'header' },
-            { text: `${newData.company}`, fontSize: 11, alignment: 'center', style: 'header' },
-            { text: `- ${options[newData.purpose - 1]}`, width: 15, fontSize: 11, alignment: 'left', style: 'header', colSpan: 2 },
+            { border: [true, false, true, false], text: `4. ${itemOut[3] ? itemOut[3] : ''}`, fontSize: 16, alignment: 'left', style: 'header', colSpan: 2, margin: [20, 10, 0, 0] },
             {},
-            { text: `เลขที่ PO`, bold: true, fontSize: 11, alignment: 'center', style: 'header' },
-            { text: `${newData.po}`, fontSize: 11, alignment: 'center', style: 'header', colSpan: 2 },
-            {},
+            { border: [true, false, true, false], text: `4. ${itemIn[3] ? itemIn[3] : ''}`,  fontSize: 16, alignment: 'left', style: 'header', margin: [20, 10, 0, 0]},
           ],
           [
-            { text: `เลขทะเบียน`, bold: true, fontSize: 11, alignment: 'center', style: 'header' },
-            { text: `${newData.car}`, fontSize: 11, alignment: 'center', style: 'header' },
-            { text: ``, fontSize: 11, alignment: 'left', style: 'header', colSpan: 2 },
+            { border: [true, false, true, false], text: `5. ${itemOut[4] ? itemOut[4] : ''}`, fontSize: 16, alignment: 'left', style: 'header', colSpan: 2, margin: [20, 10, 0, 0] },
             {},
-            { text: ``, fontSize: 11, alignment: 'left', style: 'header', colSpan: 3 },
-            {},
-            {},
+            { border: [true, false, true, false], text: `5. ${itemIn[4] ? itemIn[4] : ''}`,  fontSize: 16, alignment: 'left', style: 'header', margin: [20, 10, 0, 0]},
           ],
           [
-            { border: [true, true, true, false], text: `รายการที่นำของออก`, decoration: 'underline', bold: true, fontSize: 11, alignment: 'left', style: 'header', colSpan: 7, margin: [20, 10, 0, 0] },
+            { border: [true, false, true, false], text: `6. ${itemOut[5] ? itemOut[5] : ''}`, fontSize: 16, alignment: 'left', style: 'header', colSpan: 2, margin: [20, 10, 0, 30] },
             {},
-            {},
-            {},
-            {},
-            {},
-            {},
+            { border: [true, false, true, false], text: `6. ${itemIn[5] ? itemIn[5] : ''}`,  fontSize: 16, alignment: 'left', style: 'header', margin: [20, 10, 0, 30]},
           ],
           [
-            { border: [true, false, true, false], text: `1. ${itemOut[0] ? itemOut[0].trim() : ''} `, fontSize: 11, alignment: 'left', style: 'header', colSpan: 7, margin: [20, 0, 0, 0] },
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
+            { border: [true, true, false, false], text: `..............................................`, fontSize: 16, alignment: 'center', style: 'header', margin: [0, 30, 0, 0] },
+            { border: [false, true, false, false], text: `..............................................`, fontSize: 16, alignment: 'center', style: 'header', margin: [0, 30, 0, 0]},
+            { border: [true, true, true, false], text: `..............................................`, fontSize: 16, alignment: 'center', style: 'header', margin: [0, 30, 0, 0]},
           ],
           [
-            { border: [true, false, true, false], text: `2. ${itemOut[1] ? itemOut[1].trim() : ''} `, fontSize: 11, alignment: 'left', style: 'header', colSpan: 7, margin: [20, 0, 0, 0] },
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
+            { border: [true, false, false, false], text: `ผู้ขออนุญาติ (ผู้ส่งออก)`, fontSize: 14, alignment: 'center', style: 'header', margin: [0, 0, 0, 0] },
+            { border: [false, false, false, false], text: `ผจก.โรงงาน / หรือผู้จัดการฝ่าย`, fontSize: 14, alignment: 'center', style: 'header', margin: [0, 0, 0, 0]},
+            { border: [true, false, true, false], text: `ผู้รับสินค้า`, fontSize: 14, alignment: 'center', style: 'header', margin: [0, 0, 0, 0]},
           ],
           [
-            { border: [true, false, true, false], text: `3. ${itemOut[2] ? itemOut[2].trim() : ''} `, fontSize: 11, alignment: 'left', style: 'header', colSpan: 7, margin: [20, 0, 0, 0] },
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
+            { border: [true, false, false, false], text: `..............................................`, fontSize: 16, alignment: 'center', style: 'header', margin: [0, 30, 0, 0] },
+            { border: [false, false, false, false], text: `..............................................`, fontSize: 16, alignment: 'center', style: 'header', margin: [0, 30, 0, 0]},
+            { border: [true, false, true, false], text: `..............................................`, fontSize: 16, alignment: 'center', style: 'header', margin: [0, 30, 0, 0]},
           ],
           [
-            { border: [true, false, true, false], text: `4. ${itemOut[3] ? itemOut[3].trim() : ''} `, fontSize: 11, alignment: 'left', style: 'header', colSpan: 7, margin: [20, 0, 0, 0] },
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
+            { border: [true, false, false, true], text: `ผู้ตวรจสอบ / แผนกสโตร์`, fontSize: 14, alignment: 'center', style: 'header', margin: [0, 0, 0, 40] },
+            { border: [false, false, false, true], text: `ฝ่ายบุคคล / รปภ.`, fontSize: 14, alignment: 'center', style: 'header', margin: [0, 0, 0, 40]},
+            { border: [true, false, true, true], text: `ฝ่ายบุคคล / รปภ.`, fontSize: 14, alignment: 'center', style: 'header', margin: [0, 0, 0, 40]},
           ],
-          [
-            { border: [true, false, true, false], text: `5. ${itemOut[4] ? itemOut[4].trim() : ''} `, fontSize: 11, alignment: 'left', style: 'header', colSpan: 7, margin: [20, 0, 0, 0] },
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-          ],
-          [
-            { border: [true, false, true, false], text: `6. ${itemOut[5] ? itemOut[5].trim() : ''} `, fontSize: 11, alignment: 'left', style: 'header', colSpan: 7, margin: [20, 0, 0, 0] },
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-          ],
-          [
-            { border: [true, false, true, false], text: `รายการที่นำของเข้า`, decoration: 'underline', bold: true, fontSize: 11, alignment: 'left', style: 'header', colSpan: 7, margin: [20, 0, 0, 0] },
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-          ],
-          [
-            { border: [true, false, true, false], text: `1. ${itemIn[0] ? itemIn[0].trim() : ''} `, fontSize: 11, alignment: 'left', style: 'header', colSpan: 7, margin: [20, 0, 0, 0] },
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-          ],
-          [
-            { border: [true, false, true, false], text: `2. ${itemIn[1] ? itemIn[1].trim() : ''} `, fontSize: 11, alignment: 'left', style: 'header', colSpan: 7, margin: [20, 0, 0, 0] },
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-          ],
-          [
-            { border: [true, false, true, false], text: `3. ${itemIn[2] ? itemIn[2].trim() : ''} `, fontSize: 11, alignment: 'left', style: 'header', colSpan: 7, margin: [20, 0, 0, 0] },
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-          ],
-          [
-            { border: [true, false, true, false], text: `4. ${itemIn[3] ? itemIn[3].trim() : ''} `, fontSize: 11, alignment: 'left', style: 'header', colSpan: 7, margin: [20, 0, 0, 0] },
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-          ],
-          [
-            { border: [true, false, true, false], text: `5. ${itemIn[4] ? itemIn[4].trim() : ''} `, fontSize: 11, alignment: 'left', style: 'header', colSpan: 7, margin: [20, 0, 0, 0] },
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-          ],
-          [
-            { border: [true, false, true, false], text: `6. ${itemIn[5] ? itemIn[5].trim() : ''} `, fontSize: 11, alignment: 'left', style: 'header', colSpan: 7, margin: [20, 0, 0, 0] },
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-          ],
-          [
-            { border: [true, false, true, false], text: ``, fontSize: 11, alignment: 'left', style: 'header', colSpan: 7, margin: [0, 10, 0, 0] },
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-          ],
-          [
-            { border: [true, false, true, false], text: `รายละเอียดงาน`, decoration: 'underline', bold: true, fontSize: 11, alignment: 'left', style: 'header', colSpan: 7, margin: [20, 0, 0, 0] },
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-          ],
-          [
-            { border: [true, false, true, false], text: `${newData.detail}`, fontSize: 11, alignment: 'left', style: 'header', colSpan: 7, margin: [20, 0, 0, 0] },
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-          ],
-          [
-            { border: [true, false, true, false], text: `หมายเหตุ`, decoration: 'underline', bold: true, fontSize: 11, alignment: 'left', style: 'header', colSpan: 7, margin: [20, 0, 0, 0] },
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-          ],
-          [
-            { border: [true, false, true, false], text: `${newData.remark}`, fontSize: 11, alignment: 'left', style: 'header', colSpan: 7, margin: [20, 0, 0, 0] },
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-          ],
-          [
-            { border: [true, false, true, false], text: ``, fontSize: 11, alignment: 'center', style: 'header', colSpan: 7 },
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-          ],
-          [
-            { border: [true, false, false, false], text: `..............................................................................................`, fontSize: 11, alignment: 'left', style: 'header', colSpan: 2, margin: [10, 20, 0, 0] },
-            {},
-            { border: [false, false, false, false], text: `....................................................................................`, fontSize: 11, alignment: 'center', style: 'header', colSpan: 2, margin: [0, 20, 0, 0] },
-            {},
-            { border: [false, false, true, false], text: `..............................................................................................`, fontSize: 11, alignment: 'center', style: 'header', colSpan: 3, margin: [0, 20, 0, 0] },
-            {},
-            {},
-          ],
-          [
-            { border: [true, false, false, false], text: `ผู้ขออนุญาต (ผู้นำออก)`, fontSize: 11, alignment: 'center', style: 'header', colSpan: 2, margin: [0, 0, 0, 20] },
-            {},
-            { border: [false, false, false, false], text: `ผู้ขออนุญาตให้นำออก (สหไทย)`, fontSize: 11, alignment: 'center', style: 'header', colSpan: 2, margin: [0, 0, 0, 0] },
-            {},
-            { border: [false, false, true, false], text: `ฝ่ายตรวจสอบ (รปภ. สหไทย)`, fontSize: 11, alignment: 'center', style: 'header', colSpan: 3, margin: [0, 0, 0, 0] },
-            {},
-            {},
-          ],
-          [
-            { border: [true, false, false, false], text: ``, fontSize: 11, alignment: 'left', style: 'header', colSpan: 2, margin: [10, 0, 0, 0] },
-            {},
-            { border: [false, false, false, false], text: `....................................................................................`, fontSize: 11, alignment: 'center', style: 'header', colSpan: 2, margin: [0, 0, 0, 0] },
-            {},
-            { border: [false, false, true, false], text: ``, fontSize: 11, alignment: 'center', style: 'header', colSpan: 3, margin: [0, 0, 0, 0] },
-            {},
-            {},
-          ],
-          [
-            { border: [true, false, false, false], text: ``, fontSize: 11, alignment: 'center', style: 'header', colSpan: 2, margin: [0, 0, 0, 20] },
-            {},
-            { border: [false, false, false, false], text: `แผนกสโตร์`, fontSize: 11, alignment: 'center', style: 'header', colSpan: 2, margin: [0, 0, 0, 0] },
-            {},
-            { border: [false, false, true, false], text: ``, fontSize: 11, alignment: 'center', style: 'header', colSpan: 3, margin: [0, 0, 0, 0] },
-            {},
-            {},
-          ],
-          [
-            { border: [true, true, true, false], text: `กรณีส่งกลับ`, decoration: 'underline', bold: true, fontSize: 11, alignment: 'left', style: 'header', colSpan: 7, margin: [20, 10, 0, 0] },
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-          ],
-          [
-            { border: [true, false, false, false], text: `..............................................................................................`, fontSize: 11, alignment: 'left', style: 'header', colSpan: 3, margin: [40, 10, 0, 0] },
-            {},
-            {},
-            { border: [false, false, false, false], text: ``, fontSize: 11, alignment: 'center', style: 'header', margin: [0, 20, 0, 0] },
-            { border: [false, false, true, false], text: `..............................................................................................`, fontSize: 11, alignment: 'left', style: 'header', colSpan: 3, margin: [0, 10, 0, 0] },
-            {},
-            {},
-          ],
-          [
-            { border: [true, false, false, false], text: `ผู้ส่งกลับ (ผู้นำออก)`, fontSize: 11, alignment: 'center', style: 'header', colSpan: 3, margin: [0, 5, 0, 0] },
-            {},
-            {},
-            { border: [false, false, false, false], text: ``, fontSize: 11, alignment: 'center', style: 'header', margin: [0, 20, 0, 0] },
-            { border: [false, false, true, false], text: `ผู้รับ (สหไทย)`, fontSize: 11, alignment: 'center', style: 'header', colSpan: 3, margin: [0, 5, 0, 0] },
-            {},
-            {},
-          ],
-          [
-            { border: [true, false, false, true], text: `วันที่............../............../................`, fontSize: 11, alignment: 'center', style: 'header', colSpan: 3, margin: [0, 5, 0, 0] },
-            {},
-            {},
-            { border: [false, false, false, true], text: ``, fontSize: 11, alignment: 'center', style: 'header', margin: [0, 20, 0, 0] },
-            { border: [false, false, true, true], text: `วันที่............../............../................`, fontSize: 11, alignment: 'center', style: 'header', colSpan: 3, margin: [0, 5, 0, 30] },
-            {},
-            {},
-          ],
-
-          [
-            { border: [false, false, false, false], text: `FOMSIT-01/23-DEC-1`, bold: true, fontSize: 11, alignment: 'right', style: 'header', colSpan: 7, margin: [20, 0, 0, 0] },
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-          ],
+        
 
 
         )
@@ -1221,18 +1030,66 @@ if (index !== -1) {
 
     var docDefinition = {
       pageSize: 'A4',
-      pageMargins: [0, 0, 0, 0],
+      pageMargins: [10, 190, 50, 50],
+      header: function (currentPage, pageCount, pageSize) {
+        return {
+          margin: [15, 20, 20, 10],
+          stack: [
+            {
+              columns: [
+                { image: logo(), width: 150, fontSize: 16, bold: true, alignment: 'left', margin: [0, 10, 0, 0] },
+                { text: "ใบผ่าน", fontSize: 30, bold: true, alignment: 'left', margin: [100, 10, 0, 0] },
+              ],
+              margin: [0, 10, 0, 0]
+            },
+            { text: "(เอกสารนำสิ่งของเข้า - ออกนอกโรงงาน)", fontSize: 20, bold: true, alignment: 'center', margin: [0, 10, 0, 0] },
+            {columns: [
+                { text: `เรื่อง : ${options[newData.purpose - 1]}`, fontSize: 16, bold: true, alignment: 'left',margin: [0, 10, 0, 0] },
+                { text: `วันที่ : ${new Date().toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' })}`, fontSize: 16, bold: true, alignment: 'right', margin: [0, 10, 0, 0] },
+              ]
+            },
+            {columns: [
+                { text: `อ้างอิงเลขที่ PO : ${newData.po}`, fontSize: 16, bold: true, alignment: 'left', margin: [0, 10, 0, 0] },
+                { text: `เลขที่ : ${newData.doc_no}`, fontSize: 16, bold: true, alignment: 'right', margin: [0, 10, 0, 0] },
+              ]
+            }
+          ]
+        };
+      },
       content: [
         {
-          margin: [10, 10, 0, 0],
+          margin: [0, 0, 0, 0],
           columns: [
             {
 
               table: {
-                widths: [50, 150, 40, 110, 50, 50, 60],
+                widths: [135,135, 270],
                 headerRows: 1,
                 body: data,
               },
+              layout: {
+        // เส้นแนวนอน
+        hLineWidth: function(i, node) {
+          // เส้นบนสุดและล่างสุด
+          if (i === 0 || i === node.table.body.length) {
+            return 3;
+          }
+          // เส้นแนวนอนอื่นๆ
+          return 0.5;
+        },
+        // เส้นแนวตั้ง
+        vLineWidth: function(i, node) {
+          return 3;
+        },
+        // สีเส้นแนวนอน
+        hLineColor: function(i, node) {
+          return 'black';
+        },
+        // สีเส้นแนวตั้ง
+        vLineColor: function(i, node) {
+          return 'black';
+        },
+      }
             },
           ],
         }

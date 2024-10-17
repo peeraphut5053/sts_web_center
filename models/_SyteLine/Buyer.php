@@ -53,25 +53,30 @@ class Buyer {
     }
 
     function Save_store_pass_hdr($doc_no,$item_out,$date_out,$po,$dept,$company,$car,$detail,$purpose,$user) {
-        $query = "INSERT INTO STS_store_pass_hdr (doc_no,item_out,date_out,po,dept,company,car,detail,purpose,[user]) VALUES ('$doc_no','$item_out','$date_out','$po','$dept','$company','$car','$detail', '$purpose','$user')";
+        $query = "INSERT INTO STS_store_pass_hdr (doc_no,item_out,date_out,po,dept,company,car,detail,purpose,[user]) VALUES ('$doc_no','$item_out','$date_out','$po','$dept','$company','$car','$detail', '$purpose','$user')
+        INSERT INTO STS_store_pass_line (doc_no,item_in) VALUES ('$doc_no','')";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);
         return $rs0;
     }
     function Save_store_pass_line($doc_no,$item_in,$date_in,$remark,$user) {
-        $query = "INSERT INTO STS_store_pass_line (doc_no,item_in,date_in,remark,[user]) VALUES ('$doc_no','$item_in','$date_in','$remark','$user')";
+        $query = "UPDATE STS_store_pass_line SET item_in = '$item_in',date_in = '$date_in',remark = '$remark', [user] = '$user' WHERE doc_no = '$doc_no'";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);
         return $rs0;
     }
 
-    function Get_store_pass_hdr($StartDate, $EndDate,$doc_no) {
+    function Get_store_pass_hdr($StartDate, $EndDate,$doc_no,$purpose) {
         $where = "";
 
         if ($doc_no !== "") {
             $where = " and doc_no = '$doc_no'";
+        }
+
+        if ($purpose !== "") {
+            $where = $where . " and purpose = '$purpose'";
         }
 
         if ($StartDate !== "") {
