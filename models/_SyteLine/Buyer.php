@@ -1,6 +1,7 @@
 <?php
 
-class Buyer {
+class Buyer
+{
 
     var $StrConn = "";
     public $_start_Jobdate = ""; //
@@ -17,11 +18,13 @@ class Buyer {
     public $_u_m = ""; //
     public $_w_c = ""; //
 
-    function setConn($c) {
+    function setConn($c)
+    {
         $this->StrConn = $c;
     }
 
-    function RPT_BUYER_METERIAL($txtFromDate, $txtToDate, $item, $DepartmentName) {
+    function RPT_BUYER_METERIAL($txtFromDate, $txtToDate, $item, $DepartmentName)
+    {
         $searchDepartmentName = "";
         if ($item == "") {
             $searchItem = "";
@@ -34,16 +37,16 @@ class Buyer {
 
         $query = "";
         $query = $query . " select distinct convert(date,mat.trans_date) as trans_date , trans_type_mst.trans_description, mat.item, item_mst.description as item_description, abs(mat.qty) as qty,mat.cost, mat.loc, loc.description as location_name ,mat.reason_code as department, reason_mst.description as department_name , mat.createdby , mat.document_num , mat.emp_num, emp.name as emp_name from matltran_mst mat left join item_mst on mat.item = item_mst.item left join location_mst loc on mat.loc = loc.loc left join reason_mst on mat.reason_code = reason_mst.reason_code "
-                . " left join employee_mst emp on emp.emp_num = mat.emp_num "
-                . " left join trans_type_mst on mat.trans_type = trans_type_mst.trans_type "
-                . "where 1=1 "
-                . $searchItem
-                . $searchDepartmentName
-                . " and (mat.trans_type = 'G' or (mat.trans_type = 'M' and qty > 0)) and (mat.item like 'ST%' or mat.item like 'RCA%' or mat.item like 'RCB%' or mat.item like 'RZI%')  "
-                . " and ( mat.trans_date between '$txtFromDate' and '$txtToDate') ";
+            . " left join employee_mst emp on emp.emp_num = mat.emp_num "
+            . " left join trans_type_mst on mat.trans_type = trans_type_mst.trans_type "
+            . "where 1=1 "
+            . $searchItem
+            . $searchDepartmentName
+            . " and (mat.trans_type = 'G' or (mat.trans_type = 'M' and qty > 0)) and (mat.item like 'ST%' or mat.item like 'RCA%' or mat.item like 'RCB%' or mat.item like 'RZI%')  "
+            . " and ( mat.trans_date between '$txtFromDate' and '$txtToDate') ";
 
 
-//and ( month(mat.trans_date) = '$month' and year(mat.trans_date) = '$year')
+        //and ( month(mat.trans_date) = '$month' and year(mat.trans_date) = '$year')
 
 
         $cSql = new SqlSrv();
@@ -52,15 +55,34 @@ class Buyer {
         return $rs0;
     }
 
-    function Save_store_pass_hdr($doc_no,$item_out,$date_out,$po,$dept,$company,$car,$detail,$purpose,$user) {
-        $query = "INSERT INTO STS_store_pass_hdr (doc_no,item_out,date_out,po,dept,company,car,detail,purpose,[user]) VALUES ('$doc_no','$item_out','$date_out','$po','$dept','$company','$car','$detail', '$purpose','$user')
-        INSERT INTO STS_store_pass_line (doc_no,item_in) VALUES ('$doc_no','')";
-        $cSql = new SqlSrv();
-        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
-        array_splice($rs0, count($rs0) - 1, 1);
-        return $rs0;
+    function Save_store_pass_hdr($item_out, $date_out, $po, $dept, $company, $car, $detail, $purpose, $user){
+            $year = date('y');
+            $cSql = new SqlSrv();
+            $sql = "SELECT TOP 1 doc_no FROM STS_store_pass_hdr WHERE doc_no LIKE 'A$year%' ORDER BY doc_no DESC";
+            $cSql = new SqlSrv();
+            $result = $cSql->SqlQuery($this->StrConn, $sql);
+            array_splice($result, count($result) - 1, 1);
+     
+            if (count($result) > 0) {
+                $row = $result[0];
+                $lastDoc = $row['doc_no'];
+                // ดึงเลขลำดับจากเลขเอกสารล่าสุด (A2400001 -> 00001)
+                $lastNumber = intval(substr($lastDoc, -5));
+                $newNumber = $lastNumber + 1;
+            } else {
+                // ถ้าไม่มีเลขของปีนี้ เริ่มที่ 1
+                $newNumber = 1;
+            }
+            // สร้างเลขเอกสารใหม่
+            $docNumber = sprintf("A%s%05d", $year, $newNumber);
+            $query = "INSERT INTO STS_store_pass_hdr (doc_no,item_out,date_out,po,dept,company,car,detail,purpose,[user]) OUTPUT inserted.* VALUES ('$docNumber','$item_out','$date_out','$po','$dept','$company','$car','$detail', '$purpose','$user')
+            INSERT INTO STS_store_pass_line (doc_no,item_in) VALUES ('$docNumber','')";
+            $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+            array_splice($rs0, count($rs0) - 1, 1);
+            return $rs0;
     }
-    function Save_store_pass_line($doc_no,$item_in,$date_in,$remark,$user) {
+    function Save_store_pass_line($doc_no, $item_in, $date_in, $remark, $user)
+    {
         $query = "UPDATE STS_store_pass_line SET item_in = '$item_in',date_in = '$date_in',remark = '$remark', [user] = '$user' WHERE doc_no = '$doc_no'";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
@@ -68,7 +90,8 @@ class Buyer {
         return $rs0;
     }
 
-    function Get_store_pass_hdr($StartDate, $EndDate,$doc_no,$purpose) {
+    function Get_store_pass_hdr($StartDate, $EndDate, $doc_no, $purpose)
+    {
         $where = "";
 
         if ($doc_no !== "") {
@@ -83,14 +106,15 @@ class Buyer {
             $where = $where . " and date_out between '$StartDate' and '$EndDate'";
         }
 
-        $query = "SELECT * FROM STS_store_pass_hdr where 1=1 $where";
+        $query = "SELECT *, h.[user] as user_out,  l.[user] as user_in FROM STS_store_pass_hdr h left join STS_store_pass_line l on h.doc_no = l.doc_no where 1=1 $where";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);
         return $rs0;
     }
 
-    function Get_store_pass_line($StartDate, $EndDate,$doc_no) {
+    function Get_store_pass_line($StartDate, $EndDate, $doc_no)
+    {
 
         $where = "";
         if ($doc_no !== "") {
@@ -100,21 +124,27 @@ class Buyer {
         if ($StartDate !== "") {
             $where = $where . " and date_in between '$StartDate' and '$EndDate'";
         }
-        $query = "SELECT * FROM STS_store_pass_line where 1=1 $where";
+        $query = "SELECT *,l.[user] as user_in, h.[user] as user_out
+FROM STS_store_pass_hdr l
+LEFT JOIN STS_store_pass_line h 
+ON l.doc_no = h.doc_no  -- Replace 'some_column' with the actual column used for joining
+WHERE h.date_in IS NULL; $where";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);
         return $rs0;
     }
 
-    function SaveExtra_store_pass_line($doc_no,$data,$type) {
+    function SaveExtra_store_pass_line($doc_no, $data, $type)
+    {
         $query = "UPDATE STS_store_pass_line SET $type = '$data' WHERE doc_no = '$doc_no'";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);
         return $rs0;
     }
-    function SaveExtra_store_pass_hdr($doc_no,$data,$type) {
+    function SaveExtra_store_pass_hdr($doc_no, $data, $type)
+    {
         $query = "UPDATE STS_store_pass_hdr SET $type = '$data' WHERE doc_no = '$doc_no'";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
@@ -122,7 +152,8 @@ class Buyer {
         return $rs0;
     }
 
-    function GetDataReportPDF($doc_no) {
+    function GetDataReportPDF($doc_no)
+    {
         $query = "SELECT * 
 FROM STS_store_pass_hdr h
 LEFT JOIN STS_store_pass_line l ON h.doc_no = l.doc_no 
@@ -132,5 +163,4 @@ WHERE h.doc_no = '$doc_no'";
         array_splice($rs0, count($rs0) - 1, 1);
         return $rs0;
     }
-
 }

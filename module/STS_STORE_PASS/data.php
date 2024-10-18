@@ -25,7 +25,7 @@ if ($load == "save") {
 
     $STS_Custom = new Buyer();
     $STS_Custom->setConn($ConnSL);
-    $rs = $STS_Custom->Save_store_pass_hdr($doc_no,$item_out,$date_out,$po,$dept,$company,$car,$detail ,$purpose,$user);
+    $rs = $STS_Custom->Save_store_pass_hdr($item_out,$date_out,$po,$dept,$company,$car,$detail ,$purpose,$user);
     echo json_encode($rs);
 }
 

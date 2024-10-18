@@ -40,8 +40,8 @@
     <div class="input-group">
       <div class="input-group-addon">Type</div>
       <select class="form-control txt-filter" id="type">
-        <option value="out">รายการนำออก</option>
-        <option value="in">รายการนำเข้า</option>
+        <option value="out">ทุกรายการ</option>
+        <option value="in">รายการเข้า ที่ยังไม่ได้นำเข้า</option>
       </select>
     </div>
   </div>
@@ -49,7 +49,7 @@
     <button id="btnSearch" class="btn btn-info"><i class="fa fa-searh"></i>&nbsp;ค้นหา</button>
     <button id="btnAdd" class="btn btn-success" data-toggle="modal" data-target="#exampleModal2"><i
         class="fa fa-searh"></i>เพิ่มข้อมูลรายการออก</button>
-    <button id="btnAddIN" class="btn btn-success hidden" data-toggle="modal" data-target="#exampleModal"><i
+    <button id="btnAddIN" class="btn btn-success" data-toggle="modal" data-target="#exampleModal"><i
         class="fa fa-searh"></i>เพิ่มข้อมูลรายการเข้า</button>
   </div>
   <div class="col-lg-4">
@@ -72,31 +72,22 @@
   <table class="table table-condensed table-bordered table-striped" id="tblReport" style="width:100%;">
     <thead>
       <tr>
-        <th>approve</th>
-        <th>doc_no</th>
-        <th>item_out</th>
-        <th>date_out</th>
+        <th>Approve</th>
+        <th>No.</th>
+        <th>หน่วยงานนำออก</th>
+        <th>ผู้นำออก</th>
+        <th>purpose</th>
+        <th>purpose</th>
+        <th>วันที่ออก</th>
+        <th>รายการออก</th>
+        <th>วันที่เข้า</th>
+        <th>รายการเข้า</th>
+        <th>ผู้รับ</th>
         <th>po</th>
-        <th>dept</th>
         <th>company</th>
-        <th>car</th>
+        <th>ทะเบียนรถ</th>
         <th>detail</th>
-        <th>purpose</th>
-        <th>purpose</th>
-        <th>user</th>
-      </tr>
-    </thead>
-  </table>
-</div>
-<div class="row hidden" id="divReport2">
-  <table class="table table-condensed table-bordered table-striped" id="tblReport2" style="width:100%;">
-    <thead>
-      <tr>
-        <th>doc_no</th>
-        <th>item_in</th>
-        <th>date_in</th>
         <th>remark</th>
-        <th>user</th>
       </tr>
     </thead>
   </table>
@@ -180,10 +171,6 @@
       </div>
       <div class="modal-body">
         <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
-          <div class="input-group basis-2/4">
-            <div class="input-group-addon">doc no</div>
-            <input type="text" autocomplete="off" class="form-control" id="doc_no">
-          </div>
           <div class="input-group basis-2/4">
             <div class="input-group-addon">date out</div>
             <input type="text" autocomplete="off" class="form-control" id="dateout">
@@ -276,14 +263,7 @@
   });
 
   $("#btnSearch").click(function () {
-    var department = $("#type").val();
-    if (department == "out") {
-      $("#btnAddIN").addClass("hidden");
-      ReportItemSearch();
-    } else {
-      $("#btnAddIN").removeClass("hidden");
-      ReportItemSearch2();
-    }
+    ReportItemSearch();
   });
 
   function ReportItemSearch() {
@@ -291,7 +271,7 @@
     var StartDate = $("#txtFromDate").val();
     var EndDate = $("#txtToDate").val();
     var purpose = $("#mypurpose").val();
-
+    var department = $("#type").val();
     $("#btnSearch").html("<i class='fa fa-spinner fa-spin'></i>");
     $("#tblReport").loading();
     $("#tblReport tfoot").remove();
@@ -303,7 +283,7 @@
         $("#btnSearch").html("<i class='fa fa-spinner fa-spin'>");
       },
       data: {
-        load: "loadOut",
+        load: department == "out" ? "loadOut" : "loadIn",
         StartDate: StartDate,
         EndDate: EndDate,
         doc_no: $("#doc").val(),
@@ -311,6 +291,8 @@
       },
       success: function (data) {
         myData = data;
+        console.log(myData);
+        
         $("#divReport2").addClass("hidden");
         $("#divReport").removeClass("hidden");
         $("#tblReport").DataTable().clear();
@@ -330,7 +312,7 @@
           columns: [
             {
               "data": "approve",
-              "className": "text-center flex justify-center items-center gap-4",
+              "className": "text-center",
               "width": "100px",
               "render": function (data, type, row, meta) {
                 var valdata = data == 1 ? true : false;
@@ -339,7 +321,8 @@
                 let ret = `<span class=${valdata ? 'text-green-500' : 'text-red-500'}>${valdata ? "ตรวจสอบแล้ว" : "รอตรวจสอบ"}</span><button class='btn btn-primary' size='60' id='${row.approve}' onclick="SaveApprove('${row.doc_no}','${row.approve}','approve');">เปลี่ยน</button>`;
 
                 return ret;
-              }
+              },
+  
             },
             {
               "data": "doc_no",
@@ -350,70 +333,19 @@
               }
             },
             {
-              "data": "item_out",
-              "className": "text-center",
-              "render": function (data, type, row, meta) {
-                let valdata = data;
-                let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='60' id=${row.item_out} onchange="SaveDetailOut('${row.doc_no}',value,'item_out');" value='${(valdata)}' />`;
-                return ret;
-              }
-            },
-
-            {
-              "data": "date_out.date",
-              "className": "text-center",
-              "render": function (data, type, row, meta) {
-                let valdata = moment(data).format("YYYY-MM-DD");
-                $(`#${row.doc_no}`).datepicker({
-                  dateFormat: 'yy-mm-dd',
-                });
-                let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='20' id=${row.doc_no} onchange="SaveDetailOut('${row.doc_no}',value,'date_out');" value='${(valdata)}' />`;
-                return ret;
-              }
-            },
-            {
-              "data": "po",
-              "className": "text-center",
-              "render": function (data, type, row, meta) {
-                let valdata = data;
-                let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='20' id=${row.po} onchange="SaveDetailOut('${row.doc_no}',value,'po');" value='${(valdata)}' />`;
-                return ret;
-              }
-            },
-            {
               "data": "dept",
               "className": "text-center",
               "render": function (data, type, row, meta) {
                 let valdata = data;
-                let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='20' id=${row.dept} onchange="SaveDetailOut('${row.doc_no}',value,'dept');" value='${(valdata)}' />`;
-                return ret;
-              }
-            },
-
-            {
-              "data": "company",
-              "className": "text-center",
-              "render": function (data, type, row, meta) {
-                let valdata = data;
-                let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='20' id=${row.company} onchange="SaveDetailOut('${row.doc_no}',value,'company');" value='${(valdata)}' />`;
+                let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='20' onchange="SaveDetailOut('${row.doc_no}',value,'dept');" value='${(valdata)}' />`;
                 return ret;
               }
             },
             {
-              "data": "car",
+              "data": "user_out",
               "className": "text-center",
-              "render": function (data, type, row, meta) {
-                let valdata = data;
-                let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='20' id=${row.car} onchange="SaveDetailOut('${row.doc_no}',value,'car');" value='${(valdata)}' />`;
-                return ret;
-              }
-            },
-            {
-              "data": "detail",
-              "className": "text-center",
-              "render": function (data, type, row, meta) {
-                let valdata = data;
-                let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='20' id=${row.detail} onchange="SaveDetailOut('${row.doc_no}',value,'detail');" value='${(valdata)}' />`;
+              "render": function (data, type, row) {
+                var ret = data;
                 return ret;
               }
             },
@@ -464,10 +396,97 @@
               }
             },
             {
-              "data": "user",
+              "data": "date_out.date",
+              "className": "text-center",
+              "render": function (data, type, row, meta) {
+                let valdata = moment(data).format("YYYY-MM-DD");
+                $(`.input_date_out`).datepicker({
+                  dateFormat: 'yy-mm-dd',
+                });
+                let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value input_date_out' size='20' onchange="SaveDetailOut('${row.doc_no}',value,'date_out');" value='${(valdata)}' />`;
+                return ret;
+              }
+            },
+            {
+              "data": "item_out",
+              "className": "text-center",
+              "render": function (data, type, row, meta) {
+                let valdata = data;
+                let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='60' id=${row.item_out} onchange="SaveDetailOut('${row.doc_no}',value,'item_out');" value='${(valdata)}' />`;
+                return ret;
+              }
+            },
+            {
+              "data": "date_in.date",
+              "className": "text-center",
+              "render": function (data, type, row, meta) {
+                let valdata =  data ? moment(data).format("YYYY-MM-DD") : "";
+                $(`.input_date_in`).datepicker({
+                  dateFormat: 'yy-mm-dd',
+                });
+                let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value input_date_in' size='20' id=${row.doc_no} onchange="SaveDetail('${row.doc_no}',value,'date_in');" value='${(valdata)}' />`;
+                return ret;
+              }
+            },
+            {
+              "data": "item_in",
+              "className": "text-center",
+              "render": function (data, type, row, meta) {
+                let valdata = data;
+                let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='60' onchange="SaveDetail('${row.doc_no}',value,'item_in');" value='${(valdata)}' />`;
+                return ret;
+              }
+            },
+            {
+              "data": "user_in",
               "className": "text-center",
               "render": function (data, type, row) {
                 var ret = data;
+                return ret;
+              }
+            },
+            {
+              "data": "po",
+              "className": "text-center",
+              "render": function (data, type, row, meta) {
+                let valdata = data;
+                let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='20' onchange="SaveDetailOut('${row.doc_no}',value,'po');" value='${(valdata)}' />`;
+                return ret;
+              }
+            },
+            {
+              "data": "company",
+              "className": "text-center",
+              "render": function (data, type, row, meta) {
+                let valdata = data;
+                let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='20' onchange="SaveDetailOut('${row.doc_no}',value,'company');" value='${(valdata)}' />`;
+                return ret;
+              }
+            },
+            {
+              "data": "car",
+              "className": "text-center",
+              "render": function (data, type, row, meta) {
+                let valdata = data;
+                let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='20' onchange="SaveDetailOut('${row.doc_no}',value,'car');" value='${(valdata)}' />`;
+                return ret;
+              }
+            },
+            {
+              "data": "detail",
+              "className": "text-center",
+              "render": function (data, type, row, meta) {
+                let valdata = data;
+                let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='20' onchange="SaveDetailOut('${row.doc_no}',value,'detail');" value='${(valdata)}' />`;
+                return ret;
+              }
+            },
+            {
+              "data": "remark",
+              "className": "text-center",
+              "render": function (data, type, row, meta) {
+                let valdata = data;
+                let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='20' onchange="SaveDetail('${row.doc_no}',value,'remark');" value='${(valdata)}' />`;
                 return ret;
               }
             },
@@ -482,7 +501,7 @@
               text: "<i class='fa fa-print'></i>&nbsp;Print",
               title: "",
               exportOptions: {
-                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 11],
+                columns: [1, 2, 3, 5, 6, 7, 8, 9,10]
               },
             },
             {
@@ -495,7 +514,7 @@
                 "_to_" +
                 EndDate,
               exportOptions: {
-                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 11],
+                columns: [0, 1, 2, 3, 5, 6, 7, 8, 10, 11,12,13,14,15],
               },
             },
             {
@@ -514,7 +533,7 @@
           ],
           columnDefs: [
             {
-              targets: [10],  // คอลัมน์ที่ต้องการซ่อนในมุมมองปกติ
+              targets: [5],  // คอลัมน์ที่ต้องการซ่อนในมุมมองปกติ
               visible: false  // ซ่อนคอลัมน์ที่ index 12 ในหน้าปกติ แต่จะถูก export
             }
           ]
@@ -594,141 +613,6 @@
     });
   }
 
-  function ReportItemSearch2() {
-    var OldHtml = $("#btnSearch").html();
-    var StartDate = $("#txtFromDate").val();
-    var EndDate = $("#txtToDate").val();
-    $("#btnSearch").html("<i class='fa fa-spinner fa-spin'></i>");
-    $("#tblReport").loading();
-    $("#tblReport tfoot").remove();
-    $.ajax({
-      type: "POST",
-      url: "././module/STS_STORE_PASS/data.php",
-      dataType: "json",
-      beforeSend: function () {
-        $("#btnSearch").html("<i class='fa fa-spinner fa-spin'>");
-      },
-      data: {
-        load: "loadIn",
-        StartDate: StartDate,
-        EndDate: EndDate,
-        doc_no: $("#doc").val(),
-      },
-      success: function (data) {
-        $("#divReport").addClass("hidden");
-        $("#divReport2").removeClass("hidden");
-        $("#tblReport2").DataTable().clear();
-        $("#tblReport2").dataTable({
-          aaData: data,
-          paging: false,
-          fixedHeader: true,
-          destroy: true,
-          processing: true,
-          scrollY: "65vh",
-          scrollCollapse: true,
-          scrollX: true,
-          select: {
-            style: 'single',
-            selector: 'td:nth-child(1)' // กำหนดให้คลิกได้เฉพาะคอลัมน์ที่ 2
-          },
-          columns: [
-            {
-              "data": "doc_no",
-              "className": "text-center",
-              "render": function (data, type, row, meta) {
-                var ret = data;
-                return ret;
-              }
-            },
-            {
-              "data": "item_in",
-              "className": "text-center",
-              "render": function (data, type, row, meta) {
-                let valdata = data;
-
-                let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='60' id=${row.item_in} onchange="SaveDetail('${row.doc_no}',value,'item_in');" value='${(valdata)}' />`;
-                return ret;
-              }
-            },
-
-            {
-              "data": "date_in.date",
-              "className": "text-center",
-
-              "render": function (data, type, row, meta) {
-                let valdata = data ? moment(data).format("YYYY-MM-DD") : "";
-                $(".input_date_in").datepicker({
-                  dateFormat: 'yy-mm-dd',
-                });
-               
-                let ret = `<span hidden>${(valdata)}</span><input autocomplete='off' type='text' class='input-text-value input_date_in' size='20' onchange="SaveDetail('${row.doc_no}',value,'date_in');" value='${(valdata)}' />`;
-                return ret;
-              }
-            },
-            {
-              "data": "remark",
-              "className": "text-center",
-              "render": function (data, type, row, meta) {
-                let valdata = data;
-                let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='60' id=${row.remark} onchange="SaveDetail('${row.doc_no}',value,'remark');" value='${(valdata)}' />`;
-                return ret;
-              }
-            },
-            {
-              "data": "user",
-              "className": "text-center",
-            },
-          ],
-          dom:
-            "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
-            "<'row'<'col-md-12'tr>>" +
-            "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
-          buttons: [
-            {
-              extend: "print",
-              text: "<i class='fa fa-print'></i>&nbsp;Print",
-              title: "",
-            },
-            {
-              extend: "excel",
-              footer: true,
-              text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
-              title:
-                "รายงานการนำเข้า" +
-                StartDate +
-                "_to_" +
-                EndDate,
-            },
-            {
-              text: `<button type="button" class="btn btn-info">พิมพ์ใบผ่าน</button>`,
-              action: function (e, dt, node, config) {
-                // on selected
-                let selected = Array.from(dt.rows('.selected').data());
-
-                if (selected.length == 0) {
-                  alert("กรุณาเลือกเลขที่เอกสารที่ต้องการพิมพ์");
-                  return false;
-                }
-
-                getReportData(selected[0].doc_no);
-
-              }
-            }
-          ]
-        });
-        $("#tblReport").loading("stop");
-        $("#btnSearch").html(OldHtml);
-      },
-
-      error: function (e) {
-        $("#tblReport").loading("stop");
-        $("#btnSearch").html(OldHtml);
-        console.log("There was an error with your request...");
-        console.log("error: " + JSON.stringify(e));
-      },
-    });
-  };
-
   function getReportData(doc_no) {
 
     $.ajax({
@@ -748,7 +632,6 @@
   $('#btnSave').click(function () {
     var username_session = GetUserProp("login_username");
     $(".username_session").html(username_session);
-    var doc_no = $("#doc_no").val();
     var date_out = $("#dateout").val();
     var po = $("#po").val();
     var dept = $("#dept").val();
@@ -766,6 +649,11 @@
     var item5 = $("#item5").val();
     var item6 = $("#item6").val();
 
+
+    if (purpose == "กรุณาเลือกวัตถุประสงค์") {
+      alert("กรุณาเลือกวัตถุประสงค์");
+      return false;
+    }
   
 
     if (item1 == "") {
@@ -780,13 +668,14 @@
     // เชื่อมต่อข้อความด้วยคอมม่า
     var combinedItems = items.join(", ");
 
+    $("#btnSave").attr("disabled", true);
+
     $.ajax({
       type: "POST",
       url: "././module/STS_STORE_PASS/data.php",
       dataType: "json",
       data: {
         load: "save",
-        doc_no: doc_no,
         item_out: combinedItems,
         date_out: date_out,
         po: po,
@@ -812,21 +701,33 @@
         $("#item4").val('');
         $("#item5").val('');
         $("#item6").val('');
+        $("#exampleModal2").modal("hide");
+        ReportItemSearch();
+        $("#btnSave").attr("disabled", false);
+      },
+      error: function (e) {
+        $("#exampleModal2").modal("hide");
+        $("#btnSave").attr("disabled", false);
       }
     })
   })
 
   $('#btnAddIN').click(function () {
-    var selected = Array.from($('#tblReport2').DataTable().rows('.selected').data());
+    var selected = Array.from($('#tblReport').DataTable().rows('.selected').data());
 
     if (selected.length == 0) {
       alert("กรุณาเลือกเลขที่เอกสาร");
       return false;
     }
 
+    if (selected[0].date_in?.date) {
+      alert("เลขที่เอกสารนี้นำของเข้าไปแล้ว");
+      return false;
+    }
+
     var itemIn = selected[0].item_in.split(',');
     $("#doc_no_in").val(selected[0].doc_no);
-    $("#date_in").val(moment(selected[0].date_in?.date).format('YYYY-MM-DD'));
+    $("#date_in").val();
     $("#remark_in").val(selected[0].remark);
     $("#itemIn1").val($.trim(itemIn[0]));
     $("#itemIn2").val($.trim(itemIn[1]));
@@ -856,8 +757,13 @@
       return false;
     }
 
+    if (date_in == "") {
+      alert("กรุณากรอกวันที่นำของเข้า");
+      return false;
+    }
+
     if (itemIn1 == "") {
-      alert("กรุณากรอกข้อมูลรายการที่นำของออกอย่างน้อย 1 รายการ");
+      alert("กรุณากรอกข้อมูลรายการที่นำของเข้าอย่างน้อย 1 รายการ");
       return false;
     }
 
@@ -867,6 +773,8 @@
 
     // เชื่อมต่อข้อความด้วยคอมม่า
     var combinedItemsIn = itemsIn.join(", ");
+
+    $("#btnSave2").attr("disabled", true);
 
     $.ajax({
       type: "POST",
@@ -892,8 +800,13 @@
         $("#itemIn5").val('');
         $("#itemIn6").val('');
         $("#exampleModal").modal("hide");
-        ReportItemSearch2();
+        ReportItemSearch();
+        $("#btnSave2").attr("disabled", false);
         
+      },
+      error: function (e) {
+        $("#btnSave2").attr("disabled", false);
+        $("#exampleModal").modal("hide");
       }
     })
   })
@@ -967,7 +880,7 @@
           [
             { border: [true, true, true, false], text: `รายการที่นำออก`, decoration: 'underline', bold: true, fontSize: 16, alignment: 'center', style: 'header', colSpan: 2, margin: [0, 20, 0, 0] },
             {},
-            { border: [true, true, true, false], text: `รายการที่นำเข้า`, decoration: 'underline', bold: true, fontSize: 16, alignment: 'center', style: 'header', margin: [0, 20, 0, 0]},
+            { border: [true, true, true, false], text: `รายการที่นำเข้า ${newData.date_in ? (new Date(newData.date_in?.date).toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' })) : ''}`, decoration: 'underline', bold: true, fontSize: 16, alignment: 'center', style: 'header', margin: [0, 20, 0, 0]},
           ],
           [
             { border: [true, false, true, false], text: `1. ${itemOut[0] ? itemOut[0] : ''}`, fontSize: 16, alignment: 'left', style: 'header', colSpan: 2, margin: [20, 10, 0, 0] },
@@ -975,29 +888,29 @@
             { border: [true, false, true, false], text: `1. ${itemIn[0] ? itemIn[0] : ''}`,  fontSize: 16, alignment: 'left', style: 'header', margin: [20, 10, 0, 0]},
           ],
           [
-            { border: [true, false, true, false], text: `2. ${itemOut[1] ? itemOut[1] : ''}`, fontSize: 16, alignment: 'left', style: 'header', colSpan: 2, margin: [20, 10, 0, 0] },
+            { border: [true, true, true, false], text: `2. ${itemOut[1] ? itemOut[1] : ''}`, fontSize: 16, alignment: 'left', style: 'header', colSpan: 2, margin: [20, 10, 0, 0] },
             {},
-            { border: [true, false, true, false], text: `2. ${itemIn[1] ? itemIn[1] : ''}`,  fontSize: 16, alignment: 'left', style: 'header', margin: [20, 10, 0, 0]},
+            { border: [true, true, true, false], text: `2. ${itemIn[1] ? itemIn[1] : ''}`,  fontSize: 16, alignment: 'left', style: 'header', margin: [20, 10, 0, 0]},
           ],
           [
-            { border: [true, false, true, false], text: `3. ${itemOut[2] ? itemOut[2] : ''}`, fontSize: 16, alignment: 'left', style: 'header', colSpan: 2, margin: [20, 10, 0, 0] },
+            { border: [true, true, true, false], text: `3. ${itemOut[2] ? itemOut[2] : ''}`, fontSize: 16, alignment: 'left', style: 'header', colSpan: 2, margin: [20, 10, 0, 0] },
             {},
-            { border: [true, false, true, false], text: `3. ${itemIn[2] ? itemIn[2] : ''}`,  fontSize: 16, alignment: 'left', style: 'header', margin: [20, 10, 0, 0]},
+            { border: [true, true, true, false], text: `3. ${itemIn[2] ? itemIn[2] : ''}`,  fontSize: 16, alignment: 'left', style: 'header', margin: [20, 10, 0, 0]},
           ],
           [
-            { border: [true, false, true, false], text: `4. ${itemOut[3] ? itemOut[3] : ''}`, fontSize: 16, alignment: 'left', style: 'header', colSpan: 2, margin: [20, 10, 0, 0] },
+            { border: [true, true, true, false], text: `4. ${itemOut[3] ? itemOut[3] : ''}`, fontSize: 16, alignment: 'left', style: 'header', colSpan: 2, margin: [20, 10, 0, 0] },
             {},
-            { border: [true, false, true, false], text: `4. ${itemIn[3] ? itemIn[3] : ''}`,  fontSize: 16, alignment: 'left', style: 'header', margin: [20, 10, 0, 0]},
+            { border: [true, true, true, false], text: `4. ${itemIn[3] ? itemIn[3] : ''}`,  fontSize: 16, alignment: 'left', style: 'header', margin: [20, 10, 0, 0]},
           ],
           [
-            { border: [true, false, true, false], text: `5. ${itemOut[4] ? itemOut[4] : ''}`, fontSize: 16, alignment: 'left', style: 'header', colSpan: 2, margin: [20, 10, 0, 0] },
+            { border: [true, true, true, false], text: `5. ${itemOut[4] ? itemOut[4] : ''}`, fontSize: 16, alignment: 'left', style: 'header', colSpan: 2, margin: [20, 10, 0, 0] },
             {},
-            { border: [true, false, true, false], text: `5. ${itemIn[4] ? itemIn[4] : ''}`,  fontSize: 16, alignment: 'left', style: 'header', margin: [20, 10, 0, 0]},
+            { border: [true, true, true, false], text: `5. ${itemIn[4] ? itemIn[4] : ''}`,  fontSize: 16, alignment: 'left', style: 'header', margin: [20, 10, 0, 0]},
           ],
           [
-            { border: [true, false, true, false], text: `6. ${itemOut[5] ? itemOut[5] : ''}`, fontSize: 16, alignment: 'left', style: 'header', colSpan: 2, margin: [20, 10, 0, 30] },
+            { border: [true, true, true, false], text: `6. ${itemOut[5] ? itemOut[5] : ''}`, fontSize: 16, alignment: 'left', style: 'header', colSpan: 2, margin: [20, 10, 0, 0] },
             {},
-            { border: [true, false, true, false], text: `6. ${itemIn[5] ? itemIn[5] : ''}`,  fontSize: 16, alignment: 'left', style: 'header', margin: [20, 10, 0, 30]},
+            { border: [true, true, true, false], text: `6. ${itemIn[5] ? itemIn[5] : ''}`,  fontSize: 16, alignment: 'left', style: 'header', margin: [20, 10, 0,0]},
           ],
           [
             { border: [true, true, false, false], text: `..............................................`, fontSize: 16, alignment: 'center', style: 'header', margin: [0, 30, 0, 0] },
@@ -1019,9 +932,21 @@
             { border: [false, false, false, true], text: `ฝ่ายบุคคล / รปภ.`, fontSize: 14, alignment: 'center', style: 'header', margin: [0, 0, 0, 40]},
             { border: [true, false, true, true], text: `ฝ่ายบุคคล / รปภ.`, fontSize: 14, alignment: 'center', style: 'header', margin: [0, 0, 0, 40]},
           ],
-        
-
-
+          [
+            { border: [true, false, true, false], text: `Remark`, decoration: 'underline', fontSize: 16, alignment: 'left', bold: true, decoration: 'underline', style: 'header', colSpan: 3, margin: [20, 10, 0, 15] },
+            {},
+            {},
+          ],
+          [
+            { border: [true, false, true, false], text: ` ${ newData.remark ? newData.remark : ''}`, fontSize: 16, alignment: 'left', style: 'header', colSpan: 3, margin: [20, 0, 0, 0] },
+            {},
+            {},
+          ],
+          [
+            { border: [true, false, true, true], text: `..........................................................................................................................................................................................................`, fontSize: 16, alignment: 'left', style: 'header', colSpan: 3, margin: [20, -20, 0, 20] },
+            {},
+            {},
+          ],
         )
       }
 
@@ -1030,7 +955,7 @@
 
     var docDefinition = {
       pageSize: 'A4',
-      pageMargins: [10, 190, 50, 50],
+      pageMargins: [10, 200, 50, 50],
       header: function (currentPage, pageCount, pageSize) {
         return {
           margin: [15, 20, 20, 10],
@@ -1045,12 +970,13 @@
             { text: "(เอกสารนำสิ่งของเข้า - ออกนอกโรงงาน)", fontSize: 20, bold: true, alignment: 'center', margin: [0, 10, 0, 0] },
             {columns: [
                 { text: `เรื่อง : ${options[newData.purpose - 1]}`, fontSize: 16, bold: true, alignment: 'left',margin: [0, 10, 0, 0] },
-                { text: `วันที่ : ${new Date().toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' })}`, fontSize: 16, bold: true, alignment: 'right', margin: [0, 10, 0, 0] },
+                { text: `วันที่ : ${new Date(newData.date_out?.date).toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' })}`, fontSize: 16, bold: true, alignment: 'right', margin: [0, 10, 0, 0] },
               ]
             },
             {columns: [
                 { text: `อ้างอิงเลขที่ PO : ${newData.po}`, fontSize: 16, bold: true, alignment: 'left', margin: [0, 10, 0, 0] },
-                { text: `เลขที่ : ${newData.doc_no}`, fontSize: 16, bold: true, alignment: 'right', margin: [0, 10, 0, 0] },
+                { text: `เลขที่ :`, fontSize: 16, bold: true, alignment: 'right', margin: [0, 10, -112, 0] },
+                { text: `${newData.doc_no}`, fontSize: 16, bold: true, alignment: 'right', margin: [0, 10, 0, 0] },
               ]
             }
           ]
