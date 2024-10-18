@@ -21,7 +21,7 @@ if ($load == "SearchTagStatus") {
     if (isset($job) AND $job != '') $wh .= " and job LIKE '".$job."%'";
     else $job = "";
     
-    if (isset($item) AND $item != '') $wh .= " and item LIKE '".$item."%'";
+    if (isset($item) AND $item != '') $wh .= " AND item.item LIKE '".$item."%'";
     else $item = "";
     
     if (isset($lot) AND $lot != '') $wh .= " and lot LIKE '".$lot."%'";
