@@ -125,10 +125,10 @@ class Buyer
             $where = $where . " and date_in between '$StartDate' and '$EndDate'";
         }
         $query = "SELECT *,l.[user] as user_in, h.[user] as user_out
-FROM STS_store_pass_hdr l
-LEFT JOIN STS_store_pass_line h 
+FROM STS_store_pass_hdr h
+LEFT JOIN STS_store_pass_line l
 ON l.doc_no = h.doc_no  -- Replace 'some_column' with the actual column used for joining
-WHERE h.date_in IS NULL; $where";
+WHERE l.date_in IS NULL; $where";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);
