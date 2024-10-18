@@ -53,6 +53,13 @@ if ($load == "ajax") {
     $Mv_Bc_Tag->setConn($ConnSL);
     $rs = $Mv_Bc_Tag->getParetoData($StartDate, $EndDate);
     echo json_encode($rs);
+} elseif ($load == 'paretoData2') {
+    $CM = new CallModel();
+    $CM->SyteLine_Models();
+    $Mv_Bc_Tag = new BcTag();
+    $Mv_Bc_Tag->setConn($ConnSL);
+    $rs = $Mv_Bc_Tag->getParetoDataFinishing($StartDate, $EndDate);
+    echo json_encode($rs);
 }
 else {
     $CM = new CallModel();
