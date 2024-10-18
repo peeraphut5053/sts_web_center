@@ -1376,9 +1376,9 @@ where lot.loc like 'cl%'  and tag.active=1 and qty1 <> 0
         return $rs0;
     }
 
-    function CreateNewReasonFinishing($reason_id, $time_stopped, $down_time, $w_c,$remark) {
-        $query = " insert into STS_finishing_reason (reason_id,time_stopped,down_time,w_c,remark,create_date) "
-                . "VALUES ('$reason_id','$time_stopped','$down_time','$w_c','$remark',GETDATE())";
+    function CreateNewReasonFinishing($reason_id, $time_stopped, $down_time, $w_c,$remark,$time_end) {
+        $query = " insert into STS_finishing_reason (reason_id,time_stopped,down_time,w_c,remark,create_date,time_end) "
+                . "VALUES ('$reason_id','$time_stopped','$down_time','$w_c','$remark',GETDATE(),'$time_end') ";
         $cSql = new SqlSrv();
         $cSql->SqlQuery($this->StrConn, $query);
         return $query;
