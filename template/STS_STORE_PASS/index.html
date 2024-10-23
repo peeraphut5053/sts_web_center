@@ -878,9 +878,9 @@
       if (i == 1) {
         data.push(
           [
-            { border: [true, true, true, false], text: `รายการที่นำออก`, decoration: 'underline', bold: true, fontSize: 16, alignment: 'center', style: 'header', colSpan: 2, margin: [0, 20, 0, 0] },
+            { border: [true, true, true, true], text: `รายการที่นำออก`, decoration: 'underline', bold: true, fontSize: 16, alignment: 'center', style: 'header', colSpan: 2, margin: [0, 20, 0, 15] },
             {},
-            { border: [true, true, true, false], text: `รายการที่นำเข้า ${newData.date_in ? (new Date(newData.date_in?.date).toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' })) : ''}`, decoration: 'underline', bold: true, fontSize: 16, alignment: 'center', style: 'header', margin: [0, 20, 0, 0]},
+            { border: [true, true, true, true], text: `รายการที่นำเข้า ${newData.date_in ? (new Date(newData.date_in?.date).toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' })) : ''}`, decoration: 'underline', bold: true, fontSize: 16, alignment: 'center', style: 'header', margin: [0, 20, 0, 15] },
           ],
           [
             { border: [true, false, true, false], text: `1. ${itemOut[0] ? itemOut[0] : ''}`, fontSize: 16, alignment: 'left', style: 'header', colSpan: 2, margin: [20, 10, 0, 0] },
@@ -888,29 +888,29 @@
             { border: [true, false, true, false], text: `1. ${itemIn[0] ? itemIn[0] : ''}`,  fontSize: 16, alignment: 'left', style: 'header', margin: [20, 10, 0, 0]},
           ],
           [
-            { border: [true, true, true, false], text: `2. ${itemOut[1] ? itemOut[1] : ''}`, fontSize: 16, alignment: 'left', style: 'header', colSpan: 2, margin: [20, 10, 0, 0] },
+            { border: [true, true, true, false], text: `2.${itemOut[1] ? itemOut[1] : ''}`, fontSize: 16, alignment: 'left', style: 'header', colSpan: 2, margin: [20, 10, 0, 0] },
             {},
-            { border: [true, true, true, false], text: `2. ${itemIn[1] ? itemIn[1] : ''}`,  fontSize: 16, alignment: 'left', style: 'header', margin: [20, 10, 0, 0]},
+            { border: [true, true, true, false], text: `2.${itemIn[1] ? itemIn[1] : ''}`,  fontSize: 16, alignment: 'left', style: 'header', margin: [20, 10, 0, 0]},
           ],
           [
-            { border: [true, true, true, false], text: `3. ${itemOut[2] ? itemOut[2] : ''}`, fontSize: 16, alignment: 'left', style: 'header', colSpan: 2, margin: [20, 10, 0, 0] },
+            { border: [true, true, true, false], text: `3.${itemOut[2] ? itemOut[2] : ''}`, fontSize: 16, alignment: 'left', style: 'header', colSpan: 2, margin: [20, 10, 0, 0] },
             {},
-            { border: [true, true, true, false], text: `3. ${itemIn[2] ? itemIn[2] : ''}`,  fontSize: 16, alignment: 'left', style: 'header', margin: [20, 10, 0, 0]},
+            { border: [true, true, true, false], text: `3.${itemIn[2] ? itemIn[2] : ''}`,  fontSize: 16, alignment: 'left', style: 'header', margin: [20, 10, 0, 0]},
           ],
           [
-            { border: [true, true, true, false], text: `4. ${itemOut[3] ? itemOut[3] : ''}`, fontSize: 16, alignment: 'left', style: 'header', colSpan: 2, margin: [20, 10, 0, 0] },
+            { border: [true, true, true, false], text: `4.${itemOut[3] ? itemOut[3] : ''}`, fontSize: 16, alignment: 'left', style: 'header', colSpan: 2, margin: [20, 10, 0, 0] },
             {},
-            { border: [true, true, true, false], text: `4. ${itemIn[3] ? itemIn[3] : ''}`,  fontSize: 16, alignment: 'left', style: 'header', margin: [20, 10, 0, 0]},
+            { border: [true, true, true, false], text: `4.${itemIn[3] ? itemIn[3] : ''}`,  fontSize: 16, alignment: 'left', style: 'header', margin: [20, 10, 0, 0]},
           ],
           [
-            { border: [true, true, true, false], text: `5. ${itemOut[4] ? itemOut[4] : ''}`, fontSize: 16, alignment: 'left', style: 'header', colSpan: 2, margin: [20, 10, 0, 0] },
+            { border: [true, true, true, false], text: `5.${itemOut[4] ? itemOut[4] : ''}`, fontSize: 16, alignment: 'left', style: 'header', colSpan: 2, margin: [20, 10, 0, 0] },
             {},
-            { border: [true, true, true, false], text: `5. ${itemIn[4] ? itemIn[4] : ''}`,  fontSize: 16, alignment: 'left', style: 'header', margin: [20, 10, 0, 0]},
+            { border: [true, true, true, false], text: `5.${itemIn[4] ? itemIn[4] : ''}`,  fontSize: 16, alignment: 'left', style: 'header', margin: [20, 10, 0, 0]},
           ],
           [
-            { border: [true, true, true, false], text: `6. ${itemOut[5] ? itemOut[5] : ''}`, fontSize: 16, alignment: 'left', style: 'header', colSpan: 2, margin: [20, 10, 0, 0] },
+            { border: [true, true, true, false], text: `6.${itemOut[5] ? itemOut[5] : ''}`, fontSize: 16, alignment: 'left', style: 'header', colSpan: 2, margin: [20, 10, 0, 0] },
             {},
-            { border: [true, true, true, false], text: `6. ${itemIn[5] ? itemIn[5] : ''}`,  fontSize: 16, alignment: 'left', style: 'header', margin: [20, 10, 0,0]},
+            { border: [true, true, true, false], text: `6.${itemIn[5] ? itemIn[5] : ''}`,  fontSize: 16, alignment: 'left', style: 'header', margin: [20, 10, 0,0]},
           ],
           [
             { border: [true, true, false, false], text: `..............................................`, fontSize: 16, alignment: 'center', style: 'header', margin: [0, 30, 0, 0] },
@@ -928,7 +928,7 @@
             { border: [true, false, true, false], text: `..............................................`, fontSize: 16, alignment: 'center', style: 'header', margin: [0, 30, 0, 0]},
           ],
           [
-            { border: [true, false, false, true], text: `ผู้ตวรจสอบ / แผนกสโตร์`, fontSize: 14, alignment: 'center', style: 'header', margin: [0, 0, 0, 40] },
+            { border: [true, false, false, true], text: `ผู้ตรวจสอบ / แผนกสโตร์`, fontSize: 14, alignment: 'center', style: 'header', margin: [0, 0, 0, 40] },
             { border: [false, false, false, true], text: `ฝ่ายบุคคล / รปภ.`, fontSize: 14, alignment: 'center', style: 'header', margin: [0, 0, 0, 40]},
             { border: [true, false, true, true], text: `ฝ่ายบุคคล / รปภ.`, fontSize: 14, alignment: 'center', style: 'header', margin: [0, 0, 0, 40]},
           ],
@@ -958,7 +958,7 @@
       pageMargins: [10, 200, 50, 50],
       header: function (currentPage, pageCount, pageSize) {
         return {
-          margin: [15, 20, 20, 10],
+          margin: [20, 20, 20, 10],
           stack: [
             {
               columns: [
@@ -984,12 +984,12 @@
       },
       content: [
         {
-          margin: [0, 0, 0, 0],
+          margin: [10, 0, 0, 0],
           columns: [
             {
 
               table: {
-                widths: [135,135, 270],
+                widths: [130,130, 260],
                 headerRows: 1,
                 body: data,
               },
@@ -997,9 +997,10 @@
         // เส้นแนวนอน
         hLineWidth: function(i, node) {
           // เส้นบนสุดและล่างสุด
-          if (i === 0 || i === node.table.body.length) {
+          if (i === 0 || i === 1 || i === 7 || i === 11 || i === node.table.body.length) {
             return 3;
           }
+          
           // เส้นแนวนอนอื่นๆ
           return 0.5;
         },
