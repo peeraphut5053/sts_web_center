@@ -920,7 +920,7 @@
           [
             { border: [true, false, false, false], text: `ผู้ขออนุญาติ (ผู้ส่งออก)`, fontSize: 14, alignment: 'center', style: 'header', margin: [0, 0, 0, 0] },
             { border: [false, false, false, false], text: `ผจก.โรงงาน / หรือผู้จัดการฝ่าย`, fontSize: 14, alignment: 'center', style: 'header', margin: [0, 0, 0, 0]},
-            { border: [true, false, true, false], text: `ผู้รับสินค้า`, fontSize: 14, alignment: 'center', style: 'header', margin: [0, 0, 0, 0]},
+            { border: [true, false, true, false], text: `ผู้รับสินค้าเข้า`, fontSize: 14, alignment: 'center', style: 'header', margin: [0, 0, 0, 0]},
           ],
           [
             { border: [true, false, false, false], text: `..............................................`, fontSize: 16, alignment: 'center', style: 'header', margin: [0, 30, 0, 0] },
@@ -933,8 +933,8 @@
             { border: [true, false, true, true], text: `ฝ่ายบุคคล / รปภ.`, fontSize: 14, alignment: 'center', style: 'header', margin: [0, 0, 0, 40]},
           ],
           [
-            { border: [true, false, true, false], text: `Remark`, decoration: 'underline', fontSize: 16, alignment: 'left', bold: true, decoration: 'underline', style: 'header', colSpan: 3, margin: [20, 10, 0, 15] },
-            {},
+            { border: [true, false, false, false], text: `Remark`, decoration: 'underline', fontSize: 16, alignment: 'left', bold: true, decoration: 'underline', style: 'header', colSpan: 1, margin: [20, 10, 0, 15] },
+            { border: [false, false, true, false], text: `ทะเบียนรถ ...........................`, fontSize: 16, alignment: 'left', bold: true, style: 'header', colSpan: 2, margin: [0, 10, 0, 15] },
             {},
           ],
           [
@@ -965,20 +965,23 @@
                 { image: logo(), width: 150, fontSize: 16, bold: true, alignment: 'left', margin: [0, 10, 0, 0] },
                 { text: "ใบผ่าน", fontSize: 30, bold: true, alignment: 'left', margin: [100, 10, 0, 0] },
               ],
-              margin: [0, 10, 0, 0]
+              margin: [0, 5, 0, 0]
             },
-            { text: "(เอกสารนำสิ่งของเข้า - ออกนอกโรงงาน)", fontSize: 20, bold: true, alignment: 'center', margin: [0, 10, 0, 0] },
+            { text: "(เอกสารนำสิ่งของเข้า - ออกนอกโรงงาน)", fontSize: 20, bold: true, alignment: 'center', margin: [0, 5, 0, 0] },
             {columns: [
-                { text: `เรื่อง : ${options[newData.purpose - 1]}`, fontSize: 16, bold: true, alignment: 'left',margin: [0, 10, 0, 0] },
-                { text: `วันที่ : ${new Date(newData.date_out?.date).toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' })}`, fontSize: 16, bold: true, alignment: 'right', margin: [0, 10, 0, 0] },
+                { text: `เรื่อง : ${options[newData.purpose - 1]}`, fontSize: 16, bold: true, alignment: 'left',margin: [0, 5, 0, 0] },
+                { text: `วันที่ : ${new Date(newData.date_out?.date).toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' })}`, fontSize: 16, bold: true, alignment: 'right', margin: [0, 5, 0, 0] },
               ]
             },
             {columns: [
-                { text: `อ้างอิงเลขที่ PO : ${newData.po}`, fontSize: 16, bold: true, alignment: 'left', margin: [0, 10, 0, 0] },
-                { text: `เลขที่ :`, fontSize: 16, bold: true, alignment: 'right', margin: [0, 10, -112, 0] },
-                { text: `${newData.doc_no}`, fontSize: 16, bold: true, alignment: 'right', margin: [0, 10, 0, 0] },
+                { text: `อ้างอิงเลขที่ PO : ${newData.po}`, fontSize: 16, bold: true, alignment: 'left', margin: [0, 5, 0, 0] },
+                { text: `เลขที่ :`, fontSize: 16, bold: true, alignment: 'right', margin: [0, 5, -112, 0] },
+                { text: `${newData.doc_no}`, fontSize: 16, bold: true, alignment: 'right', margin: [0, 5, 0, 0] },
               ]
-            }
+            },
+            { text: `บริษัทผู้รับเหมา : ${newData.company}`, fontSize: 16, bold: true, alignment: 'left', margin: [0, 5, 0, 0] },
+           
+            
           ]
         };
       },
