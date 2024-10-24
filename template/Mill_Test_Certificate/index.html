@@ -819,7 +819,6 @@ function createData(res,index) {
         t.item === value.item
     ))
     ); 
-    console.log(unique, 'unique');
     
     let titleZinc = zinc == undefined ? 'Zinc Coating Weight                 (g/m2)' : 'Zinc Coating Thinness (um)';
 
@@ -886,8 +885,8 @@ for (let i = 0; i <= res.length-1; i++) {
   { text: `${res[i]?.sts_cr ? res[i].sts_cr : ''}`,bold: true , alignment: 'center', font: 'Roboto', fontSize: 6 },
   { text: `${res[i]?.sts_mo ? res[i].sts_mo : ''}`,bold: true , alignment: 'center', font: 'Roboto', fontSize: 6 },
   { text: `${res[i]?.sts_nb ? res[i].sts_nb : ''}`,bold: true , alignment: 'center', font: 'Roboto', fontSize: 6 },
-  { text: `${res[i]?.Mec_test_TS ? res[i].Mec_test_TS : '-'}`,bold: true , alignment: 'center', font: 'Roboto', fontSize: 6 },
-  { text: `${res[i]?.Mec_test_YS ? res[i].Mec_test_YS : '-'}`,bold: true , alignment: 'center', font: 'Roboto', fontSize: 6 },
+  { text: `${res[i]?.Mec_test_TS ? type == 'out' ? (Number(res[i].Mec_test_TS) * 145.0377).toFixed(2) : res[i].Mec_test_TS : '-'}`,bold: true , alignment: 'center', font: 'Roboto', fontSize: 6 },
+  { text: `${res[i]?.Mec_test_YS ? type == 'out' ? (Number(res[i].Mec_test_YS) * 145.0377).toFixed(2) : res[i].Mec_test_YS : '-'}`,bold: true , alignment: 'center', font: 'Roboto', fontSize: 6 },
   { text: `${res[i]?.Mec_test_EI ? res[i].Mec_test_EI : '-'}`,bold: true , alignment: 'center', font: 'Roboto', fontSize: 6 },
   { text: `${res[i]?.QC_hydro ? res[i].QC_hydro : '-'}`,bold: true , alignment: 'center', font: 'Roboto', fontSize: 6},
   { text: `${res[i]?.QC_Pb > 0 ? parseFloat(res[i].QC_Pb) : '-'}`,bold: true , alignment: 'center', font: 'Roboto', fontSize: 6 },
