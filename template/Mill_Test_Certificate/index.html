@@ -407,51 +407,164 @@
                         },
                         {"data": "sts_c",
                         "className": "text-left",
+                        "render": function (data, type, row, meta) {
+                                var ret = Number(data).toFixed(4);
+                                return ret;       
+                        }
                         },
                         {"data": "sts_si",
                             "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                var ret = Number(data).toFixed(4);
+                                return ret;       
+                        }
                         },
                         {"data": "sts_mn",
-                            "className": "text-left",                          
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                var ret = Number(data).toFixed(4);
+                                return ret;       
+                        }                          
                         },
                         {"data": "sts_p", 
-                            "className": "text-left",                           
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                var ret = Number(data).toFixed(4);
+                                return ret;       
+                        }                        
                         },
                         {"data": "sts_s",
                             "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                var ret = Number(data).toFixed(4);
+                                return ret;       
+                        }
                         },
                         {"data": "sts_cu",
                             "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                var ret = Number(data).toFixed(4);
+                                return ret;       
+                        }
                         },
                         {"data": "sts_v",
-                            "className": "text-left",                          
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                var ret = Number(data).toFixed(4);
+                                return ret;       
+                        }                        
                         },
                         {"data": "sts_ni",
-                            "className": "text-left",                           
+                            "className": "text-left",    
+                            "render": function (data, type, row, meta) {
+                                var ret = Number(data).toFixed(4);
+                                return ret;       
+                        }                       
                         },
                         {"data": "sts_cr",
-                            "className": "text-left",                          
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                var ret = Number(data).toFixed(4);
+                                return ret;       
+                        }                      
                         },
                         {"data": "sts_mo",
-                            "className": "text-left",                           
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let check = data.includes("<");
+                                let ret;
+                                if (check == true){
+                                    ret = data;
+                                } 
+                                else{
+                                    ret = Number(data).toFixed(4);
+                                }
+                                return ret;       
+                        }                           
                         },
                         {"data": "sts_ti",
-                            "className": "text-left",                         
+                            "className": "text-left",   
+                            "render": function (data, type, row, meta) {
+                                let check = data.includes("<");
+                                let ret;
+                                if (check == true){
+                                    ret = data;
+                                } 
+                                else{
+                                    ret = Number(data).toFixed(4);
+                                }
+                                return ret;       
+                        }                         
                         },
                         {"data": "sts_nb",
                             "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let check = data.includes("<");
+                                let ret;
+                                if (check == true){
+                                    ret = data;
+                                } 
+                                else{
+                                    ret = Number(data).toFixed(4);
+                                }
+                                return ret;       
+                        }    
                         },
                         {"data": "sts_al",
                             "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let check = data.includes("<");
+                                let ret;
+                                if (check == true){
+                                    ret = data;
+                                } 
+                                else{
+                                    ret = Number(data).toFixed(4);
+                                }
+                                return ret;       
+                        }    
                         },
                         {"data": "sts_b", 
                             "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let check = data.includes("<");
+                                let ret;
+                                if (check == true){
+                                    ret = data;
+                                } 
+                                else{
+                                    ret = Number(data).toFixed(4);
+                                }
+                                return ret;       
+                        }    
                         },
                         {"data": "sts_co", 
                             "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let check = data.includes("<");
+                                let ret;
+                                if (check == true){
+                                    ret = data;
+                                } 
+                                else{
+                                    ret = Number(data).toFixed(4);
+                                }
+                                return ret;       
+                        }    
                         },
                         {"data": "sts_pb", 
                             "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let check = data.includes("<");
+                                let ret;
+                                if (check == true){
+                                    ret = data;
+                                } 
+                                else{
+                                    ret = Number(data).toFixed(4);
+                                }
+                                return ret;       
+                        }    
                         },
                         {"data": "sts_fe",
                             "className": "text-left",
@@ -1220,7 +1333,7 @@ function createTables() {
                 table: {
                     headerRows: 2,
                     background: 'red',
-                    widths: [15, 20, 25, 25, 26, 25, 25, 25, 25, 25, 25, 26, 26, 26, 26, 26, 26, 26, 26, 20, 20, 20, 23, 20, 25],
+                    widths: [15, 20, 25, 25, 26, 27, 25, 23, 25, 25, 25, 26, 26, 26, 26, 26, 26, 26, 26, 20, 20, 20, 23, 20, 25],
                     body: createData(newRes, i),
                 },
                 // Add a page break after every table except the last one
