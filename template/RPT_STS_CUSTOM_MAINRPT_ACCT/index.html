@@ -695,7 +695,7 @@
           stack: [
             { text: "SAHA THAI STEEL PIPE (PUBLIC) CO., LTD. ทะเบียน W0201100000023", fontSize: 16, bold: true, alignment: 'center', margin: [0, 10, 0, 0] },
             { text: "รายงานของคงเหลือประจำงวด", fontSize: 14, alignment: 'center', margin: [0, 0, 0, 0] },
-            { text: `สำหรับงวดบัญชี ระหว่างวันที่ ${moment(StartDate).locale('th').format('D MMMM YYYY')} ถึง ${moment(EndDate).locale('th').format('D MMMM YYYY')}`, fontSize: 14, alignment: 'center', margin: [0, 0, 0, 0] },
+            { text: `สำหรับงวดบัญชี ระหว่างวันที่ ${new Date(StartDate).toLocaleDateString("th-TH", { year: 'numeric', month: 'long', day: 'numeric' })} ถึง ${new Date(EndDate).toLocaleDateString("th-TH", { year: 'numeric', month: 'long', day: 'numeric' })}`, fontSize: 14, alignment: 'center', margin: [0, 0, 0, 0] },
           ]
         };
       },
@@ -840,7 +840,7 @@
           stack: [
             { text: "SAHA THAI STEEL PIPE (PUBLIC) CO., LTD. ทะเบียน W0201100000023", fontSize: 16, bold: true, alignment: 'center', margin: [0, 10, 0, 0] },
             { text: "รายงานการเคลื่อนไหวของวัตถุดิบ", fontSize: 14, alignment: 'center', margin: [0, 0, 0, 0] },
-            { text: `สำหรับงวดบัญชี ระหว่างวันที่ ${moment(StartDate).locale('th').format('D MMMM YYYY')} ถึง ${moment(EndDate).locale('th').format('D MMMM YYYY')}`, fontSize: 14, alignment: 'center', margin: [0, 0, 0, 0] },
+            { text: `สำหรับงวดบัญชี ระหว่างวันที่ ${new Date(StartDate).toLocaleDateString("th-TH", { year: 'numeric', month: 'long', day: 'numeric' })} ถึง ${new Date(EndDate).toLocaleDateString("th-TH", { year: 'numeric', month: 'long', day: 'numeric' })}`, fontSize: 14, alignment: 'center', margin: [0, 0, 0, 0] },
           ]
         };
       },

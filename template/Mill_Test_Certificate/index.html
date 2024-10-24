@@ -1001,7 +1001,7 @@ for (let i = res.length; i < 18; i++) {
 data.push([
                 { text: `SUB TOTAL `,bold: true , fontSize: 10, alignment: 'center', style: 'header', colSpan: 2 },
                 { text: "", fontSize: 10, alignment: 'center' },
-                { text: `${res[0].cust_po}`,bold: true , fontSize: 10, alignment: 'center', style: 'header', colSpan: 3 },
+                { text: `${res[0]?.cust_po ? res[0].cust_po : ''}`,bold: true , fontSize: 10, alignment: 'center', style: 'header', colSpan: 3 },
                 { text: "", fontSize: 10, alignment: 'center' },
                 { text: "", fontSize: 10, alignment: 'center' },
                 { text: `${unique[0]?.bundle ? unique[0]?.bundle : 0}`,bold: true , fontSize: 10, alignment: 'center' },
@@ -1159,7 +1159,7 @@ var docDefinition = {
           { text: `CERTIFICATE NO.              : ${dataNow[0].cer_no}`, fontSize: 10, bold: true, margin: [0, 20, 0, 0] },
           { text: `DATE                              : ${moment().format('DD-MMM-YYYY')} `, fontSize: 10,bold: true, margin: [0, 0, 0, 0] },
           { text: `CUSTOMER                     : ${dataNow[0].cust}`, fontSize: 10,bold: true, margin: [0, 0, 0, 0] },
-          { text: `CONTRACT (P/O) No.       : ${filter[currentPage - 1].cust_po} `, fontSize: 10, bold: true,margin: [0, 0, 0, 0] },
+          { text: `CONTRACT (P/O) No.       : ${filter[currentPage - 1]?.cust_po ? filter[currentPage - 1].cust_po : ''} `, fontSize: 10, bold: true,margin: [0, 0, 0, 0] },
           { text: `INSPECTION CERTIFICATE  : ACCORDING TO EN 10204 : 2005 TYPE 3.1`, fontSize: 10, bold: true,margin: [0, 0, 0, 0] },
           { text: `COMMODITY                   : NEWLY PRODUCED, PRIME QUALITY ERW STEEL PIPE`, fontSize: 10,bold: true, margin: [0, 0, 0, 0] },
         ]
@@ -1183,7 +1183,7 @@ var docDefinition = {
         ],
        
       },
-      { text: `SPECIFICATION                : ${filter[currentPage -1]?.Uf_spec} `,alignment: 'left', fontSize: 10,bold: true, margin: [-802, 98, 0, 0] },
+      { text: `SPECIFICATION                : ${filter[currentPage -1]?.Uf_spec ? filter[currentPage -1].Uf_spec : ''} `,alignment: 'left', fontSize: 10,bold: true, margin: [-802, 98, 0, 0] },
     ]
     
         };
@@ -1531,7 +1531,7 @@ for (let i = res.length; i < 15; i++) {
 data.push([
                 { text: `SUB TOTAL `,bold: true , fontSize: 10, alignment: 'center', style: 'header', colSpan: 2 },
                 { text: "", fontSize: 10, alignment: 'center' },
-                { text: `${res[0].cust_po}`,bold: true , fontSize: 10, alignment: 'center', style: 'header', colSpan: 3 },
+                { text: `${res[0]?.cust_po ? res[0].cust_po : ''}`,bold: true , fontSize: 10, alignment: 'center', style: 'header', colSpan: 3 },
                 { text: "", fontSize: 10, alignment: 'center' },
                 { text: "", fontSize: 10, alignment: 'center' },
                 { text: `${unique[0]?.bundle ? unique[0]?.bundle : 0}`,bold: true , fontSize: 10, alignment: 'center' },
@@ -1703,7 +1703,7 @@ var docDefinition = {
           { text: `CERTIFICATE NO.              : ${dataNow[0].cer_no}`, fontSize: 10, bold: true, margin: [0, 20, 0, 0] },
           { text: `DATE                              : ${moment().format('DD-MMM-YYYY')} `, fontSize: 10,bold: true, margin: [0, 0, 0, 0] },
           { text: `CUSTOMER                     : ${dataNow[0].cust}`, fontSize: 10,bold: true, margin: [0, 0, 0, 0] },
-          { text: `CONTRACT (P/O) No.       : ${filter[currentPage - 1].cust_po} `, fontSize: 10, bold: true,margin: [0, 0, 0, 0] },
+          { text: `CONTRACT (P/O) No.       : ${filter[currentPage - 1]?.cust_po ? filter[currentPage - 1].cust_po : ''} `, fontSize: 10, bold: true,margin: [0, 0, 0, 0] },
           { text: `INSPECTION CERTIFICATE  : ACCORDING TO EN 10204 : 2005 TYPE 3.1`, fontSize: 10, bold: true,margin: [0, 0, 0, 0] },
           { text: `COMMODITY                   : NEWLY PRODUCED, PRIME QUALITY ERW STEEL PIPE`, fontSize: 10,bold: true, margin: [0, 0, 0, 0] }
         ]
@@ -1727,7 +1727,7 @@ var docDefinition = {
         ],
        
       },
-      { text: `SPECIFICATION                : ${filter[currentPage -1]?.Uf_spec} `,alignment: 'left', fontSize: 10,bold: true, margin: [-802, 98, 0, 0] },
+      { text: `SPECIFICATION                : ${filter[currentPage -1]?.Uf_spec ? filter[currentPage -1].Uf_spec : ''} `,alignment: 'left', fontSize: 10,bold: true, margin: [-802, 98, 0, 0] },
     ]
     
         };
