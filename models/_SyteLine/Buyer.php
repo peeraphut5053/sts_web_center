@@ -75,15 +75,14 @@ class Buyer
             }
             // สร้างเลขเอกสารใหม่
             $docNumber = sprintf("A%s%05d", $year, $newNumber);
-            $query = "INSERT INTO STS_store_pass_hdr (doc_no,item_out,date_out,po,dept,company,car,detail,purpose,[user]) OUTPUT inserted.* VALUES ('$docNumber','$item_out','$date_out','$po','$dept','$company','$car','$detail', '$purpose','$user')
-            INSERT INTO STS_store_pass_line (doc_no,item_in) VALUES ('$docNumber','')";
+            $query = "INSERT INTO STS_store_pass_hdr (doc_no,item_out,date_out,po,dept,company,car,detail,purpose,[user]) OUTPUT inserted.* VALUES ('$docNumber','$item_out','$date_out','$po','$dept','$company','$car','$detail', '$purpose','$user')";
             $rs0 = $cSql->SqlQuery($this->StrConn, $query);
             array_splice($rs0, count($rs0) - 1, 1);
             return $rs0;
     }
     function Save_store_pass_line($doc_no, $item_in, $date_in, $remark, $user)
     {
-        $query = "UPDATE STS_store_pass_line SET item_in = '$item_in',date_in = '$date_in',remark = '$remark', [user] = '$user' WHERE doc_no = '$doc_no'";
+        $query = "INSERT INTO STS_store_pass_line (doc_no,item_in,date_in,remark,[user]) VALUES ('$doc_no','$item_in','$date_in','$remark','$user')";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);
@@ -95,18 +94,20 @@ class Buyer
         $where = "";
 
         if ($doc_no !== "") {
-            $where = " and doc_no = '$doc_no'";
+            $where = " and t1.doc_no = '$doc_no'";
         }
 
         if ($purpose !== "") {
-            $where = $where . " and purpose = '$purpose'";
+            $where = $where . " and t1.purpose = '$purpose'";
         }
 
         if ($StartDate !== "") {
-            $where = $where . " and date_out between '$StartDate' and '$EndDate'";
+            $where = $where . " and t1.date_out between '$StartDate' and '$EndDate'";
         }
 
-        $query = "SELECT *, h.[user] as user_out,  l.[user] as user_in FROM STS_store_pass_hdr h left join STS_store_pass_line l on h.doc_no = l.doc_no where 1=1 $where";
+        $query = "SELECT *,t1.[user] as user_out, t2.[user] as user_in,t1.doc_no
+FROM STS_store_pass_hdr AS t1
+LEFT JOIN STS_store_pass_line AS t2 ON t1.doc_no = t2.doc_no where 1=1 $where";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);
@@ -124,11 +125,10 @@ class Buyer
         if ($StartDate !== "") {
             $where = $where . " and date_in between '$StartDate' and '$EndDate'";
         }
-        $query = "SELECT *,l.[user] as user_in, h.[user] as user_out
-FROM STS_store_pass_hdr h
-LEFT JOIN STS_store_pass_line l
-ON l.doc_no = h.doc_no  -- Replace 'some_column' with the actual column used for joining
-WHERE l.date_in IS NULL; $where";
+        $query = "SELECT *,t1.[user] as user_out, t2.[user] as user_in,t1.doc_no
+FROM STS_store_pass_hdr AS t1
+LEFT JOIN STS_store_pass_line AS t2 ON t1.doc_no = t2.doc_no  -- Replace 'some_column' with the actual column used for joining
+WHERE t2.date_in IS NULL; $where";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);
