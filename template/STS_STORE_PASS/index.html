@@ -972,23 +972,23 @@
               ],
               margin: [0, 5, 0, 0]
             },
-            { text: "(เอกสารนำสิ่งของเข้า - ออกนอกโรงงาน)", fontSize: 20, bold: true, alignment: 'center', margin: [0, 5, 0, 0] },
+            { text: "(เอกสารนำสิ่งของเข้า - ออกนอกโรงงาน)", fontSize: 20, bold: true, alignment: 'center', margin: [0, 2, 0, 0] },
             {columns: [
-                { text: `เรื่อง : ${options[newData.purpose - 1]}`, fontSize: 16, bold: true, alignment: 'left',margin: [0, 5, 0, 0] },
-                { text: `วันที่ : ${new Date(newData.date_out?.date).toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' })}`, fontSize: 16, bold: true, alignment: 'right', margin: [0, 5, 0, 0] },
+                { text: `เรื่อง : ${options[newData.purpose - 1]}`, fontSize: 16, bold: true, alignment: 'left',margin: [0, 2, 0, 0] },
+                { text: `วันที่ : ${new Date(newData.date_out?.date).toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' })}`, fontSize: 16, bold: true, alignment: 'right', margin: [0, 2, 0, 0] },
               ]
             },
             {columns: [
-                { text: `อ้างอิงเลขที่ PO : ${newData.po}`, fontSize: 16, bold: true, alignment: 'left', margin: [0, 5, 0, 0] },
-                { text: `เลขที่ :`, fontSize: 16, bold: true, alignment: 'right', margin: [0, 5, -112, 0] },
-                { text: `${newData.doc_no}`, fontSize: 16, bold: true, alignment: 'right', margin: [0, 5, 0, 0] },
+                { text: `อ้างอิงเลขที่ PO : ${newData.po}`, fontSize: 16, bold: true, alignment: 'left', margin: [0, 2, 0, 0] },
+                { text: `เลขที่ :`, fontSize: 16, bold: true, alignment: 'right', margin: [0, 2, -112, 0] },
+                { text: `${newData.doc_no}`, fontSize: 16, bold: true, alignment: 'right', margin: [0, 2, 0, 0] },
               ]
             },
-            {columns: [
-                { text: `บริษัทผู้รับเหมา : ${newData.company}`, fontSize: 16, bold: true, alignment: 'left', margin: [0, 5, 0, 0] },
-                { text: `ชื่อ : .............................`, fontSize: 16, bold: true, alignment: 'right', margin: [0, 5, 0, 0] },
-              ]
-            },
+           
+                { text: `บริษัทผู้รับเหมา : ${newData.company}`, fontSize: 16, bold: true, alignment: 'left', margin: [0, 2, 0, 0] },
+                { text: `ชื่อ : ......................................`, fontSize: 16, bold: true, alignment: 'left', margin: [0, 2, 0, 0] },
+          
+            
           ]
         };
       },
