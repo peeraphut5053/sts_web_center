@@ -62,7 +62,8 @@
         <option value="3">นำออกวัสดุสิ้นเปลือง (งานจัดจ้าง)</option>
         <option value="4">ท่อตัวอย่าง</option>
         <option value="5">กำจัดทิ้ง</option>
-        <option value="6">อื่นๆ</option>
+        <option value="6">ขายของเก่า</option>
+        <option value="7">อื่นๆ</option>
       </select>
     </div>
   </div>
@@ -210,7 +211,8 @@
             <option value="3">นำออกวัสดุสิ้นเปลือง (งานจัดจ้าง)</option>
             <option value="4">ท่อตัวอย่าง</option>
             <option value="5">กำจัดทิ้ง</option>
-            <option value="6">อื่นๆ</option>
+            <option value="6">ขายของเก่า</option>
+            <option value="7">อื่นๆ</option>
           </select>
 
         </div>
@@ -360,6 +362,7 @@
                     "นำออกวัสดุสิ้นเปลือง (งานจัดจ้าง)",
                     "ท่อตัวอย่าง",
                     "กำจัดทิ้ง",
+                    "ขายของเก่า",
                     "อื่นๆ"
                   ];
                 var $select = $("<select id='" + row.doc_no + "' value='" + data + "' onchange='SaveDetailOut(\"" + row.doc_no + "\",value,\"purpose\");'></select>", {
@@ -389,6 +392,7 @@
                     "นำออกวัสดุสิ้นเปลือง (งานจัดจ้าง)",
                     "ท่อตัวอย่าง",
                     "กำจัดทิ้ง",
+                    "ขายของเก่า",
                     "อื่นๆ"
                   ];
                 var ret = select_status[Number(data)];
@@ -860,7 +864,7 @@
     // how to cal 10% from totalTax
 
 
-    const options = ["นำไปซ่อม - ส่งกลับ STS", "นำเหล็กออกแปรรูป - ส่งกลับ STS", "นำออกวัสดุสิ้นเปลือง (งานจัดจ้าง)", "ท่อตัวอย่าง", "กำจัดทิ้ง", "อื่นๆ"]
+    const options = ["นำไปซ่อม - ส่งกลับ STS", "นำเหล็กออกแปรรูป - ส่งกลับ STS", "นำออกวัสดุสิ้นเปลือง (งานจัดจ้าง)", "ท่อตัวอย่าง", "กำจัดทิ้ง", "ขายของเก่า", "อื่นๆ"]
 
     const data = []
 
