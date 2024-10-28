@@ -952,6 +952,12 @@
             {},
             {},
           ],
+          [
+             // how add link
+            { border: [false, false, false, false], text: `สามารถพิมพ์รายงานได้ที่นี่ http://172.18.1.194/sts_web_center/#`, color: 'red', fontSize: 16, alignment: 'center', style: 'header', colSpan: 3, margin: [0, 0, 0, 0] ,link: 'http://172.18.1.194/sts_web_center/#'},
+            {},
+            {},
+          ]
         )
       }
 
@@ -960,7 +966,7 @@
 
     var docDefinition = {
       pageSize: 'A4',
-      pageMargins: [10, 200, 50, 50],
+      pageMargins: [10, 200, 50, 0],
       header: function (currentPage, pageCount, pageSize) {
         return {
           margin: [20, 20, 20, 10],
