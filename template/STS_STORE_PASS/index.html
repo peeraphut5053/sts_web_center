@@ -56,7 +56,7 @@
     <div class="input-group">
       <div class="input-group-addon">purpose</div>
       <select class="form-control txt-filter" id="mypurpose">
-        <option selected disabled>ทุกวัตถุประสงค์</option>
+        <option selected disabled>ทุกวัตถุประสงค์*</option>
         <option value="1">นำไปซ่อม - ส่งกลับ STS</option>
         <option value="2">นำเหล็กออกแปรรูป - ส่งกลับ STS</option>
         <option value="3">นำออกวัสดุสิ้นเปลือง (งานจัดจ้าง)</option>
@@ -111,7 +111,7 @@
             <input type="text" autocomplete="off" disabled class="form-control" id="doc_no_in">
           </div>
           <div class="input-group basis-2/4">
-            <div class="input-group-addon">date in</div>
+            <div  style="color: red;" class="input-group-addon">date in *</div>
             <input type="text" autocomplete="off" class="form-control" id="date_in">
           </div>
         </div>
@@ -126,7 +126,7 @@
         </div>
         <div class="flex flex-col mb-5">
           <div class="input-group basis-full gap-6 mb-4">
-            <div class="input-group-addon">1</div>
+            <div style="color: red;" class="input-group-addon">1 *</div>
             <input type="text" autocomplete="off" class="form-control" id="itemIn1">
           </div>
           <div class="input-group basis-full gap-6 mb-4">
@@ -173,7 +173,7 @@
       <div class="modal-body">
         <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
           <div class="input-group basis-2/4">
-            <div class="input-group-addon">date out</div>
+            <div style="color: red;" class="input-group-addon">date out *</div>
             <input type="text" autocomplete="off" class="form-control" id="dateout">
           </div>
         </div>
@@ -204,8 +204,8 @@
           </div>
         </div>
         <div class="flex justify-start items-center mb-5">
-          <select class="form-control" id="purpose" aria-label="Default select example">
-            <option selected>กรุณาเลือกวัตถุประสงค์</option>
+          <select style="color: rgb(245, 16, 16);"  class="form-control" id="purpose" aria-label="Default select example">
+            <option>กรุณาเลือกวัตถุประสงค์ *</option>
             <option value="1">นำไปซ่อม - ส่งกลับ STS</option>
             <option value="2">นำเหล็กออกแปรรูป - ส่งกลับ STS</option>
             <option value="3">นำออกวัสดุสิ้นเปลือง (งานจัดจ้าง)</option>
@@ -221,7 +221,7 @@
         </div>
         <div class="flex flex-col mb-5">
           <div class="input-group basis-full gap-6 mb-4">
-            <div class="input-group-addon">1</div>
+            <div style="color: red;" class="input-group-addon">1 *</div>
             <input type="text" autocomplete="off" class="form-control" id="item1">
           </div>
           <div class="input-group basis-full gap-6 mb-4">
