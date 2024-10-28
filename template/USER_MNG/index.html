@@ -30,6 +30,7 @@
                 <th>Detail</th>
                 <th>Edit</th>       
                 <th>Authorize</th>   
+                <th>Delete</th>   
             </tr>
         </thead>
     </table>
@@ -96,6 +97,13 @@
                             "render": function (data, type, row, meta) {
                                 return "<a id='UserAuth!!" + row["id"] + "' OnClick='UserAuth(this.id)'><i class='fa fa-check-circle'></i></a>";
                             }},
+                            {
+                data: "id",
+                className: "text-center",
+                render: function (data) {
+                   return '<button onclick="removeUserById('+data+')" class="btn btn-danger"><i class="fa fa-trash"></button>'
+                }
+              },
                     ],
                     'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
                             "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
@@ -275,5 +283,38 @@
                 console.log("error: " + JSON.stringify(e));
             }
         });
+    }
+
+    function removeUserById(data) {
+        // alert confirm
+        $.confirm({
+            title: "Confirm",
+            content: "Are you sure you want to delete this user ?",
+            buttons: {
+                confirm: function () {
+                    $.ajax({
+                        url: "././module/USER_MNG/data.php",
+                        type: 'POST',
+                        beforeSend: function () {
+                        },
+                        data: {
+                            load: 'DeleteUser',
+                            user_id: data
+                        },
+                        success: function (data) {
+                        window.location.reload();
+                        },
+                        error: function (e) {
+                            console.log("There was an error with your request...");
+                            console.log("error: " + JSON.stringify(e));
+                        }
+
+                    })
+                },
+                cancel: function () {
+                    
+                }
+            }
+        })
     }
 </script>

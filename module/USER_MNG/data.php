@@ -77,6 +77,13 @@ if ($load == "form") {
     $UserModel = null;
     $CallModel = null;
     echo json_encode($UserList);
+} else if ($load == "DeleteUser") {
+    $CallModel = new CallModel();
+    $CallModel->WebApp_Models();
+    $UserModel = new User();
+    $UserModel->setConn($ConnWebApp);
+    $UserDelete = $UserModel->DeleteUserById($user_id);
+    echo json_encode($UserDelete);
 }
 
 
