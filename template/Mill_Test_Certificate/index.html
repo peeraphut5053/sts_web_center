@@ -471,6 +471,9 @@
                         {"data": "sts_mo",
                             "className": "text-left",
                             "render": function (data, type, row, meta) {
+                                if (!data) {
+                                    return data;
+                                }
                                 let check = data.includes("<");
                                 let ret;
                                 if (check == true){
@@ -485,6 +488,9 @@
                         {"data": "sts_ti",
                             "className": "text-left",   
                             "render": function (data, type, row, meta) {
+                                if (!data) {
+                                    return data;
+                                }
                                 let check = data.includes("<");
                                 let ret;
                                 if (check == true){
@@ -499,6 +505,9 @@
                         {"data": "sts_nb",
                             "className": "text-left",
                             "render": function (data, type, row, meta) {
+                                if (!data) {
+                                    return data;
+                                }
                                 let check = data.includes("<");
                                 let ret;
                                 if (check == true){
@@ -513,6 +522,9 @@
                         {"data": "sts_al",
                             "className": "text-left",
                             "render": function (data, type, row, meta) {
+                                if (!data) {
+                                    return data;
+                                }
                                 let check = data.includes("<");
                                 let ret;
                                 if (check == true){
@@ -527,6 +539,9 @@
                         {"data": "sts_b", 
                             "className": "text-left",
                             "render": function (data, type, row, meta) {
+                                if (!data) {
+                                    return data;
+                                }
                                 let check = data.includes("<");
                                 let ret;
                                 if (check == true){
@@ -541,7 +556,13 @@
                         {"data": "sts_co", 
                             "className": "text-left",
                             "render": function (data, type, row, meta) {
+                                if (!data) {
+                                    return data;
+                                }
                                 let check = data.includes("<");
+                                if (!data) {
+                                    return data;
+                                }
                                 let ret;
                                 if (check == true){
                                     ret = data;
@@ -555,6 +576,9 @@
                         {"data": "sts_pb", 
                             "className": "text-left",
                             "render": function (data, type, row, meta) {
+                                if (!data) {
+                                    return data;
+                                }
                                 let check = data.includes("<");
                                 let ret;
                                 if (check == true){
