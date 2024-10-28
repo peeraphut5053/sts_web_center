@@ -691,7 +691,7 @@
         user: username_session,
       },
       success: function (data) {
-        alert("บันทึกสําเร็จ");
+        alert("บันทึกสําเร็จ : " + data[0].doc_no);
         $("#doc_no").val('');
         $("#dateout").val('');
         $("#po").val('');
