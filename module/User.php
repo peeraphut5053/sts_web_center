@@ -90,7 +90,7 @@ if ($_POST["action"] == "GetPropertiesLogin" || $_GET["action"]) {
         $_SESSION["login_username"] = $User->username;
         $_SESSION["login_cust_num"] = $User->cust_num;
         $_SESSION["login_user_fullname"] = $User->fullname;
-        $_SESSION["login_user_id"] = '123456';
+        $_SESSION["login_user_id"] = $User->id;
         $_SESSION["login_link_cust_num"] = $User->cust_num_sl;
         $_SESSION["login_ms_id"] = $User->measure_id;
         $_SESSION["login_ms_name"] = $User->measure_name;
@@ -101,6 +101,9 @@ if ($_POST["action"] == "GetPropertiesLogin" || $_GET["action"]) {
         $_SESSION["follow_department"] = $User->follow_department;
         $_SESSION["CurrentPageUrl"] = "DASHBOARD";
     }
+    // 1 day expires
+    
+    setcookie("login_info", $logInfo["fullname"], time() + (86400), "/");
     echo json_encode($logInfo);
 }
 
@@ -201,6 +204,13 @@ if ($_POST["action"] == "GetUserAuthRows") {
     }
     $R = array();
     $R = $U->GetAuthorizeList(" WHERE u.id = $uid");
+    echo json_encode($R);
+}
+
+if ($_POST["action"] == "ChangePassword") {
+    $U = new User();
+    $U->setConn($ConnWebApp);
+    $R = $U->UpdatePassword($user_id,$password);
     echo json_encode($R);
 }
 

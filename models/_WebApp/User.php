@@ -754,4 +754,22 @@ class User {
         return $rs0;
     }
 
+    function DeleteUserById($user_id) {
+        $query = "DELETE FROM STS_User WHERE id = $user_id";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+
+    function UpdatePassword($user_id, $password) {
+        $newPassword = md5($password);
+        $query = "UPDATE STS_User SET password = '$newPassword' WHERE id = $user_id";
+
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+
 }
