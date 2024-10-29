@@ -154,7 +154,7 @@ WHERE t2.date_in IS NULL; $where";
 
     function GetDataReportPDF($doc_no)
     {
-        $query = "SELECT * 
+        $query = "SELECT *, h.doc_no as doc
 FROM STS_store_pass_hdr h
 LEFT JOIN STS_store_pass_line l ON h.doc_no = l.doc_no 
 WHERE h.doc_no = '$doc_no'";
