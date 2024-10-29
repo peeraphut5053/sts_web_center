@@ -63,6 +63,8 @@
         <option value="4">ท่อตัวอย่าง</option>
         <option value="5">กำจัดทิ้ง</option>
         <option value="6">ขายของเก่า</option>
+        <option value="8">ส่งทดสอบ</option>
+        <option value="9">ทำชิ้นงานทดสอบ</option>
         <option value="7">อื่นๆ</option>
       </select>
     </div>
@@ -212,6 +214,8 @@
             <option value="4">ท่อตัวอย่าง</option>
             <option value="5">กำจัดทิ้ง</option>
             <option value="6">ขายของเก่า</option>
+            <option value="8">ส่งทดสอบ - สอบเทียบ</option>
+            <option value="9">ทำชิ้นงานทดสอบ</option>
             <option value="7">อื่นๆ</option>
           </select>
 
@@ -363,7 +367,9 @@
                     "ท่อตัวอย่าง",
                     "กำจัดทิ้ง",
                     "ขายของเก่า",
-                    "อื่นๆ"
+                    "อื่นๆ",
+                    "ส่งทดสอบ - สอบเทียบ",
+                    "ทำชิ้นงานทดสอบ"
                   ];
                 var $select = $("<select id='" + row.doc_no + "' value='" + data + "' onchange='SaveDetailOut(\"" + row.doc_no + "\",value,\"purpose\");'></select>", {
                 });
@@ -393,7 +399,9 @@
                     "ท่อตัวอย่าง",
                     "กำจัดทิ้ง",
                     "ขายของเก่า",
-                    "อื่นๆ"
+                    "อื่นๆ",
+                    "ส่งทดสอบ - สอบเทียบ",
+                    "ทำชิ้นงานทดสอบ"
                   ];
                 var ret = select_status[Number(data)];
                 return ret;
@@ -987,7 +995,7 @@
             {columns: [
                 { text: `อ้างอิงเลขที่ PO : ${newData.po}`, fontSize: 16, bold: true, alignment: 'left', margin: [0, 2, 0, 0] },
                 { text: `เลขที่ :`, fontSize: 16, bold: true, alignment: 'right', margin: [0, 2, -112, 0] },
-                { text: `${newData.doc_no}`, fontSize: 16, bold: true, alignment: 'right', margin: [0, 2, 0, 0] },
+                { text: `${newData.doc}`, fontSize: 16, bold: true, alignment: 'right', margin: [0, 2, 0, 0] },
               ]
             },
            
