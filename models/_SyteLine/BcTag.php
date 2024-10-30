@@ -525,60 +525,35 @@ group by  month([date]), wcGroup";
         return array($rs);
     }
 
-    function getGroupChart($StartDate, $EndDate, $StartLastMonth, $EndLastMonth, $GroupBy) {
+    function getGroupChart($StartDate, $EndDate, $GroupBy) {
         $query = "select *
 from V_STS_PROD_TIME_REPORT
 where [date] between '$StartDate' and '$EndDate'
   and wcGroup =  '$GroupBy'
 order by [date]";
-$query1 = "select *
-from V_STS_PROD_TIME_REPORT
-where [date] between '$StartLastMonth' and '$EndLastMonth'
-  and wcGroup = '$GroupBy'
-order by [date]";
+//$query1 = "select *
+//from V_STS_PROD_TIME_REPORT
+//where [date] between '$StartLastMonth' and '$EndLastMonth'
+  //and wcGroup = '$GroupBy'
+//order by [date]";
 
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
-        $rs1 = $cSql->SqlQuery($this->StrConn, $query1);
+        //$rs1 = $cSql->SqlQuery($this->StrConn, $query1);
 
         array_splice($rs, count($rs) - 1, 1);
-        array_splice($rs1, count($rs1) - 1, 1);
-        return array($rs,$rs1);
+        return array($rs);
     }
 
     function getDailyReport($date, $type) {
         if ($type == 'weight') {
-            $query = "select V_STS_PROD_TIME_REPORT.work_hour,V_STS_PROD_TIME_REPORT.stop_hour,V_STS_PROD_TIME_REPORT.TOT_work_hour, V_STS_PROD_TIME_REPORT_HOURLY.wc, V_STS_PROD_TIME_REPORT_HOURLY.[description],V_STS_PROD_TIME_REPORT_HOURLY.[date]
-  , [00:00-04:00] = max(case when V_STS_PROD_TIME_REPORT_HOURLY.work_hour = '00:00-04:00' then sumA_weight else 0 end)
-  , [04:00-08:00] = max(case when V_STS_PROD_TIME_REPORT_HOURLY.work_hour = '04:00-08:00' then sumA_weight else 0 end)
-  , [08:00-12:00] = max(case when V_STS_PROD_TIME_REPORT_HOURLY.work_hour = '08:00-12:00' then sumA_weight else 0 end)
-  , [12:00-13:00] = max(case when V_STS_PROD_TIME_REPORT_HOURLY.work_hour = '12:00-13:00' then sumA_weight else 0 end)
-  , [13:00-17:00] = max(case when V_STS_PROD_TIME_REPORT_HOURLY.work_hour = '13:00-17:00' then sumA_weight else 0 end)
-  , [17:00-17:30] = max(case when V_STS_PROD_TIME_REPORT_HOURLY.work_hour = '17:00-17:30' then sumA_weight else 0 end)
-  , [17:30-18:30] = max(case when V_STS_PROD_TIME_REPORT_HOURLY.work_hour = '17:30-18:30' then sumA_weight else 0 end)
-  , [18:30-21:00] = max(case when V_STS_PROD_TIME_REPORT_HOURLY.work_hour = '18:30-21:00' then sumA_weight else 0 end)
-  , [21:00-24:00] = max(case when V_STS_PROD_TIME_REPORT_HOURLY.work_hour = '21:00-24:00' then sumA_weight else 0 end)
-
-from V_STS_PROD_TIME_REPORT_HOURLY inner join V_STS_PROD_TIME_REPORT on V_STS_PROD_TIME_REPORT.wc = V_STS_PROD_TIME_REPORT_HOURLY.wc and V_STS_PROD_TIME_REPORT.date = V_STS_PROD_TIME_REPORT_HOURLY.date
-where (V_STS_PROD_TIME_REPORT_HOURLY.[date] = '$date')
-group by V_STS_PROD_TIME_REPORT_HOURLY.wc,V_STS_PROD_TIME_REPORT_HOURLY.[description],V_STS_PROD_TIME_REPORT_HOURLY.[date],V_STS_PROD_TIME_REPORT.work_hour,V_STS_PROD_TIME_REPORT.stop_hour,V_STS_PROD_TIME_REPORT.TOT_work_hour
-order by V_STS_PROD_TIME_REPORT_HOURLY.[date],V_STS_PROD_TIME_REPORT_HOURLY.wc";
+            $query = "EXEC [dbo].[STS_PROD_TIME]
+  @DateStarting = '$date',
+  @sumby = '1'";
         } else {
-            $query = "select V_STS_PROD_TIME_REPORT.work_hour,V_STS_PROD_TIME_REPORT.stop_hour,V_STS_PROD_TIME_REPORT.TOT_work_hour, V_STS_PROD_TIME_REPORT_HOURLY.wc, V_STS_PROD_TIME_REPORT_HOURLY.[description],V_STS_PROD_TIME_REPORT_HOURLY.[date]
-  , [00:00-04:00] = max(case when V_STS_PROD_TIME_REPORT_HOURLY.work_hour = '00:00-04:00' then sumA_qty else 0 end)
-  , [04:00-08:00] = max(case when V_STS_PROD_TIME_REPORT_HOURLY.work_hour = '04:00-08:00' then sumA_qty else 0 end)
-  , [08:00-12:00] = max(case when V_STS_PROD_TIME_REPORT_HOURLY.work_hour = '08:00-12:00' then sumA_qty else 0 end)
-  , [12:00-13:00] = max(case when V_STS_PROD_TIME_REPORT_HOURLY.work_hour = '12:00-13:00' then sumA_qty else 0 end)
-  , [13:00-17:00] = max(case when V_STS_PROD_TIME_REPORT_HOURLY.work_hour = '13:00-17:00' then sumA_qty else 0 end)
-  , [17:00-17:30] = max(case when V_STS_PROD_TIME_REPORT_HOURLY.work_hour = '17:00-17:30' then sumA_qty else 0 end)
-  , [17:30-18:30] = max(case when V_STS_PROD_TIME_REPORT_HOURLY.work_hour = '17:30-18:30' then sumA_qty else 0 end)
-  , [18:30-21:00] = max(case when V_STS_PROD_TIME_REPORT_HOURLY.work_hour = '18:30-21:00' then sumA_qty else 0 end)
-  , [21:00-24:00] = max(case when V_STS_PROD_TIME_REPORT_HOURLY.work_hour = '21:00-24:00' then sumA_qty else 0 end)
-
-from V_STS_PROD_TIME_REPORT_HOURLY inner join V_STS_PROD_TIME_REPORT on V_STS_PROD_TIME_REPORT.wc = V_STS_PROD_TIME_REPORT_HOURLY.wc and V_STS_PROD_TIME_REPORT.date = V_STS_PROD_TIME_REPORT_HOURLY.date
-where (V_STS_PROD_TIME_REPORT_HOURLY.[date] = '$date')
-group by V_STS_PROD_TIME_REPORT_HOURLY.wc,V_STS_PROD_TIME_REPORT_HOURLY.[description],V_STS_PROD_TIME_REPORT_HOURLY.[date],V_STS_PROD_TIME_REPORT.work_hour,V_STS_PROD_TIME_REPORT.stop_hour,V_STS_PROD_TIME_REPORT.TOT_work_hour
-order by V_STS_PROD_TIME_REPORT_HOURLY.[date],V_STS_PROD_TIME_REPORT_HOURLY.wc";
+            $query = "EXEC [dbo].[STS_PROD_TIME]
+  @DateStarting = '$date',
+  @sumby = '2'";
         }
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
@@ -640,6 +615,18 @@ order by V_STS_PROD_TIME_REPORT_HOURLY.[date],V_STS_PROD_TIME_REPORT_HOURLY.wc";
 
     function getParetoDataFinishing($StartDate, $EndDate) {
         $query = "select * from STS_finishing_reason where (time_stopped between '$StartDate' and '$EndDate')";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return array($rs);
+    }
+
+    function getTableDataGroup($StartDate, $EndDate, $wc) {
+        $query = "select *
+from V_STS_PROD_TIME_REPORT_itemA
+where [date] between '$StartDate' and '$EndDate'
+  and wcGroup =  '$wc'
+order by [date]";
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);

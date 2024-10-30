@@ -30,7 +30,7 @@ if ($load == "ajax") {
     $CM->SyteLine_Models();
     $Mv_Bc_Tag = new BcTag();
     $Mv_Bc_Tag->setConn($ConnSL);
-    $rs = $Mv_Bc_Tag->getGroupChart($StartDate, $EndDate, $StartLastMonth, $EndLastMonth,$GroupBy);
+    $rs = $Mv_Bc_Tag->getGroupChart($StartDate, $EndDate, $GroupBy);
     echo json_encode($rs);
 } elseif ($load == 'DailyReport') {
     $CM = new CallModel();
@@ -59,6 +59,13 @@ if ($load == "ajax") {
     $Mv_Bc_Tag = new BcTag();
     $Mv_Bc_Tag->setConn($ConnSL);
     $rs = $Mv_Bc_Tag->getParetoDataFinishing($StartDate, $EndDate);
+    echo json_encode($rs);
+} elseif ($load == 'TableDetail') {
+    $CM = new CallModel();
+    $CM->SyteLine_Models();
+    $Mv_Bc_Tag = new BcTag();
+    $Mv_Bc_Tag->setConn($ConnSL);
+    $rs = $Mv_Bc_Tag->getTableDataGroup($StartDate, $EndDate, $wc);
     echo json_encode($rs);
 }
 else {
