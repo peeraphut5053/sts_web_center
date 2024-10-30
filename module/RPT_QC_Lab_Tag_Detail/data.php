@@ -32,6 +32,13 @@ if ($load == "ajax") {
     $Mv_Bc_Tag->setConn($ConnSL);
     $rs = $Mv_Bc_Tag->getGroupChart($StartDate, $EndDate, $GroupBy);
     echo json_encode($rs);
+} elseif ($load == 'group2') {
+    $CM = new CallModel();
+    $CM->SyteLine_Models();
+    $Mv_Bc_Tag = new BcTag();
+    $Mv_Bc_Tag->setConn($ConnSL);
+    $rs = $Mv_Bc_Tag->getGroupChart2($StartDate, $EndDate, $StartLastMonth, $EndLastMonth, $GroupBy);
+    echo json_encode($rs);
 } elseif ($load == 'DailyReport') {
     $CM = new CallModel();
     $CM->SyteLine_Models();
@@ -67,7 +74,7 @@ if ($load == "ajax") {
     $Mv_Bc_Tag->setConn($ConnSL);
     $rs = $Mv_Bc_Tag->getTableDataGroup($StartDate, $EndDate, $wc);
     echo json_encode($rs);
-}
+} 
 else {
     $CM = new CallModel();
     $CM->SyteLine_Models();

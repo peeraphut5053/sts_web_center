@@ -545,6 +545,27 @@ order by [date]";
         return array($rs);
     }
 
+    function getGroupChart2($StartDate, $EndDate, $StartLastMonth, $EndLastMonth, $GroupBy) {
+        $query = "select *
+from V_STS_PROD_TIME_REPORT
+where [date] between '$StartDate' and '$EndDate'
+  and wcGroup =  '$GroupBy'
+order by [date]";
+$query1 = "select *
+from V_STS_PROD_TIME_REPORT
+where [date] between '$StartLastMonth' and '$EndLastMonth'
+  and wcGroup = '$GroupBy'
+order by [date]";
+
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        $rs1 = $cSql->SqlQuery($this->StrConn, $query1);
+
+        array_splice($rs, count($rs) - 1, 1);
+        array_splice($rs1, count($rs1) - 1, 1);
+        return array($rs, $rs1);
+    }
+
     function getDailyReport($date, $type) {
         if ($type == 'weight') {
             $query = "EXEC [dbo].[STS_PROD_TIME]
