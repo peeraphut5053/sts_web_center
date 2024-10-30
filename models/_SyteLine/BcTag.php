@@ -573,14 +573,19 @@ order by [date]";
     }
 
     function getGroupChart2($StartDate, $EndDate, $StartLastMonth, $EndLastMonth, $GroupBy) {
-        $query = "EXEC [dbo].[STS_PROD_TIME]
-  @DateStarting = '$StartDate',
-  @DateEnding = '$EndDate',
-  @sumby = N'1'";
-$query1 = "select *
+        $query = "select wc, wcgroup, [date], start_time, end_time, day_break, work_hour, stop_hour
+       , TOT_work_hour = case when work_hour < stop_hour then work_hour else TOT_work_hour end
+    , stop_reason, sumA, sumB, sumC
+from V_STS_PROD_TIME_REPORT
+where [date] between '$StartDate' and '$EndDate'
+  and wcGroup =  '$GroupBy'
+order by [date]";
+$query1 = "select wc, wcgroup, [date], start_time, end_time, day_break, work_hour, stop_hour
+       , TOT_work_hour = case when work_hour < stop_hour then work_hour else TOT_work_hour end
+    , stop_reason, sumA, sumB, sumC
 from V_STS_PROD_TIME_REPORT
 where [date] between '$StartLastMonth' and '$EndLastMonth'
-  and wcGroup = '$GroupBy'
+  and wcGroup =  '$GroupBy'
 order by [date]";
 
         $cSql = new SqlSrv();
@@ -596,10 +601,12 @@ order by [date]";
         if ($type == 'weight') {
             $query = "EXEC [dbo].[STS_PROD_TIME]
   @DateStarting = '$date',
+  @DateEnding = '$date',
   @sumby = '1'";
         } else {
             $query = "EXEC [dbo].[STS_PROD_TIME]
   @DateStarting = '$date',
+ @DateEnding = '$date',
   @sumby = '2'";
         }
         $cSql = new SqlSrv();
