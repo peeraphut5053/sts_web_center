@@ -573,11 +573,10 @@ order by [date]";
     }
 
     function getGroupChart2($StartDate, $EndDate, $StartLastMonth, $EndLastMonth, $GroupBy) {
-        $query = "select *
-from V_STS_PROD_TIME_REPORT
-where [date] between '$StartDate' and '$EndDate'
-  and wcGroup =  '$GroupBy'
-order by [date]";
+        $query = "EXEC [dbo].[STS_PROD_TIME]
+  @DateStarting = '$StartDate',
+  @DateEnding = '$EndDate',
+  @sumby = N'1'";
 $query1 = "select *
 from V_STS_PROD_TIME_REPORT
 where [date] between '$StartLastMonth' and '$EndLastMonth'
