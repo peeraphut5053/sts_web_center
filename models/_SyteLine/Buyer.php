@@ -119,16 +119,16 @@ LEFT JOIN STS_store_pass_line AS t2 ON t1.doc_no = t2.doc_no where 1=1 $where";
 
         $where = "";
         if ($doc_no !== "") {
-            $where = " and doc_no = '$doc_no'";
+            $where = " and t1.doc_no = '$doc_no'";
         }
 
         if ($StartDate !== "") {
-            $where = $where . " and date_in between '$StartDate' and '$EndDate'";
+            $where = $where . " and t1.date_out between '$StartDate' and '$EndDate'";
         }
         $query = "SELECT *,t1.[user] as user_out, t2.[user] as user_in,t1.doc_no
 FROM STS_store_pass_hdr AS t1
 LEFT JOIN STS_store_pass_line AS t2 ON t1.doc_no = t2.doc_no  -- Replace 'some_column' with the actual column used for joining
-WHERE t2.date_in IS NULL; $where";
+WHERE t2.date_in IS NULL $where";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);

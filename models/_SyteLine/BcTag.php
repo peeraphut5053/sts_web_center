@@ -514,11 +514,38 @@ where STS_qty_move_line.doc_num = '$doc_num' and mv_bc_tag.active=1 and mv_bc_ta
     }
 
     function getDataChart($StartDate, $EndDate) {
-        $query = "select  month([date]) as [month],
-  wcGroup,  sum(sumA) as sumA, sum(sumB + sumC) as sumBC
-from V_STS_PROD_TIME_REPORT
-where [date] between '$StartDate' and '$EndDate'
-group by  month([date]), wcGroup";
+        $query = "WITH Months AS (
+    SELECT 1 AS MonthNum UNION ALL
+    SELECT 2 UNION ALL
+    SELECT 3 UNION ALL
+    SELECT 4 UNION ALL
+    SELECT 5 UNION ALL
+    SELECT 6 UNION ALL
+    SELECT 7 UNION ALL
+    SELECT 8 UNION ALL
+    SELECT 9 UNION ALL
+    SELECT 10 UNION ALL
+    SELECT 11 UNION ALL
+    SELECT 12
+),
+WCGroups AS (
+    SELECT DISTINCT wcGroup 
+    FROM V_STS_PROD_TIME_REPORT
+    WHERE [date] BETWEEN '$StartDate' AND '$EndDate'
+)
+SELECT 
+    m.MonthNum AS [month],
+    w.wcGroup,
+    ISNULL(SUM(v.sumA), 0) as sumA,
+    ISNULL(SUM(v.sumB + v.sumC), 0) as sumBC
+FROM Months m
+CROSS JOIN WCGroups w
+LEFT JOIN V_STS_PROD_TIME_REPORT v 
+    ON m.MonthNum = MONTH(v.[date])
+    AND w.wcGroup = v.wcGroup
+    AND v.[date] BETWEEN '$StartDate' AND '$EndDate'
+GROUP BY m.MonthNum, w.wcGroup
+ORDER BY m.MonthNum, w.wcGroup";
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
