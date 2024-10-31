@@ -446,7 +446,7 @@
               "data": "item_in",
               "className": "text-center",
               "render": function (data, type, row, meta) {
-                let valdata = data;
+                let valdata = data ? data : "";
                 let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='60' onchange="SaveDetail('${row.doc_no}',value,'item_in');" value='${(valdata)}' />`;
                 return ret;
               }
@@ -499,7 +499,7 @@
               "data": "remark",
               "className": "text-center",
               "render": function (data, type, row, meta) {
-                let valdata = data;
+                let valdata = data ? data : "";
                 let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='20' onchange="SaveDetail('${row.doc_no}',value,'remark');" value='${(valdata)}' />`;
                 return ret;
               }
