@@ -70,19 +70,10 @@ if ($action == "Login") {
         $_SESSION["follow_department"] = $User->follow_department;
         $_SESSION["CurrentPageUrl"] = "DASHBOARD";
     }
-    //สร้าง object ข้อมูลสำหรับทำ jwt
-    $payload = array(
-        "user" => $User->username,
-        "exp" => time() + (60 * 60 * 24),
-        "date_time" => date("Y-m-d H:i:s")//กำหนดวันเวลาที่สร้าง
-    );
-    //สร้าง JWT สำหรับ object ข้อมูล
-    $jwt = JWT::encode($payload, $key, 'HS256');
-    //เพื่อความปลาดภัยยิ่งขึ้นเมื่อได้ JWT แล้วควรเข้ารหัสอีกชั้นหนึ่ง
-  
+   
     echo json_encode(array(
         "username" => $logInfo["uname"],
-        "token" => $jwt
+        "token" => 'test'
     ));
 }
 
