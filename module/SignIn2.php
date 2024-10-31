@@ -4,7 +4,7 @@
 // และก่อนการเชื่อมต่อ database
 
 // Allow from specific origin
-header("Access-Control-Allow-Origin: http://172.18.1.194:5000");
+header("Access-Control-Allow-Origin: http://localhost:3000");
 header("Access-Control-Allow-Credentials: true");
 header("Access-Control-Max-Age: 3600");
 header("Content-Type: application/json; charset=UTF-8");
