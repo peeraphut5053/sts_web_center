@@ -1,21 +1,8 @@
 
 <?php
-// ต้องวาง code นี้ก่อน output หรือ echo ใดๆ
-// และก่อนการเชื่อมต่อ database
-
-// Allow from specific origin
-header("Access-Control-Allow-Origin: http://172.18.1.194:5000");
-header("Access-Control-Allow-Credentials: true");
-header("Access-Control-Max-Age: 3600");
-header("Content-Type: application/json; charset=UTF-8");
-
-// Handle preflight request
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
-    header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
-    http_response_code(200);
-    exit(0);
-}
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: *");
+header("Access-Control-Allow-Headers: *");
 
 
 while (list($key, $data) = each($_GET) OR list($key, $data) = each($_POST)) {
@@ -25,9 +12,6 @@ while (list($key, $data) = each($_GET) OR list($key, $data) = each($_POST)) {
 
 //============== Render Page Normal ================//
 include "./initial.php";
-require_once __DIR__ . '/../vendor/autoload.php';
-use \Firebase\JWT\JWT;
-use \Firebase\JWT\Key;
 $CM = new CallModel();
 $CM->WebApp_Models();
 //============== Render Ajax =======================//
@@ -83,19 +67,12 @@ if ($action == "Login") {
         $_SESSION["follow_department"] = $User->follow_department;
         $_SESSION["CurrentPageUrl"] = "DASHBOARD";
     }
-    //สร้าง object ข้อมูลสำหรับทำ jwt
-    $payload = array(
-        "user" => $User->username,
-        "exp" => time() + (60 * 60 * 24),
-        "date_time" => date("Y-m-d H:i:s")//กำหนดวันเวลาที่สร้าง
-    );
-    //สร้าง JWT สำหรับ object ข้อมูล
-    $jwt = JWT::encode($payload, $key, 'HS256');
+ 
     //เพื่อความปลาดภัยยิ่งขึ้นเมื่อได้ JWT แล้วควรเข้ารหัสอีกชั้นหนึ่ง
   
     echo json_encode(array(
         "username" => $logInfo["uname"],
-        "token" => $jwt
+        "token" => 'test'
     ));
 }
 
