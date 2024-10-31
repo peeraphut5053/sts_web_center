@@ -1,9 +1,21 @@
 
 <?php
-header('Access-Control-Allow-Origin: *'); // หรือระบุ domain ที่ต้องการอนุญาต เช่น http://example.com
-header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
-header('Access-Control-Allow-Credentials: true');
+// ต้องวาง code นี้ก่อน output หรือ echo ใดๆ
+// และก่อนการเชื่อมต่อ database
+
+// Allow from specific origin
+header("Access-Control-Allow-Origin: http://172.18.1.194:5000");
+header("Access-Control-Allow-Credentials: true");
+header("Access-Control-Max-Age: 3600");
+header("Content-Type: application/json; charset=UTF-8");
+
+// Handle preflight request
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
+    header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+    http_response_code(200);
+    exit(0);
+}
 
 
 while (list($key, $data) = each($_GET) OR list($key, $data) = each($_POST)) {
