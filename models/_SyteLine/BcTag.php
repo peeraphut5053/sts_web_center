@@ -586,8 +586,8 @@ $query1 = "select wc, wcgroup, [date], start_time, end_time, day_break, work_hou
                    then work_hour else TOT_work_hour end
     , stop_reason, sumA, sumB, sumC
 from V_STS_PROD_TIME_REPORT
-where [date] between '2024-10-01' and '2024-10-01'
-  and wcGroup =  'Forming'
+where [date] between '$StartLastMonth' and '$EndLastMonth'
+  and wcGroup =  '$GroupBy'
 order by [date]";
 
         $cSql = new SqlSrv();
