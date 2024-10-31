@@ -5,7 +5,7 @@
         'type' => 'template',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => 'ab9b85218aa0d3a7c19418d20c41218a9caf683b',
+        'reference' => '583a565915f589bbb36569067f8e35228edcb69a',
         'name' => 'almasaeed2010/adminlte',
         'dev' => true,
     ),
@@ -16,7 +16,7 @@
             'type' => 'template',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => 'ab9b85218aa0d3a7c19418d20c41218a9caf683b',
+            'reference' => '583a565915f589bbb36569067f8e35228edcb69a',
             'dev_requirement' => false,
         ),
         'bower-asset/jquery' => array(
