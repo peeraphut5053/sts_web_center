@@ -1,8 +1,9 @@
 
 <?php
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: *");
-header("Access-Control-Allow-Headers: *");
+header('Access-Control-Allow-Origin: *'); // หรือระบุ domain ที่ต้องการอนุญาต เช่น http://example.com
+header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
+header('Access-Control-Allow-Credentials: true');
 
 
 while (list($key, $data) = each($_GET) OR list($key, $data) = each($_POST)) {
@@ -12,7 +13,9 @@ while (list($key, $data) = each($_GET) OR list($key, $data) = each($_POST)) {
 
 //============== Render Page Normal ================//
 include "./initial.php";
-
+require_once __DIR__ . '/../vendor/autoload.php';
+use \Firebase\JWT\JWT;
+use \Firebase\JWT\Key;
 $CM = new CallModel();
 $CM->WebApp_Models();
 //============== Render Ajax =======================//
@@ -68,14 +71,32 @@ if ($action == "Login") {
         $_SESSION["follow_department"] = $User->follow_department;
         $_SESSION["CurrentPageUrl"] = "DASHBOARD";
     }
-   
+    //สร้าง object ข้อมูลสำหรับทำ jwt
+    $payload = array(
+        "user" => $User->username,
+        "exp" => time() + (60 * 60 * 24),
+        "date_time" => date("Y-m-d H:i:s")//กำหนดวันเวลาที่สร้าง
+    );
+    //สร้าง JWT สำหรับ object ข้อมูล
+    $jwt = JWT::encode($payload, $key, 'HS256');
+    //เพื่อความปลาดภัยยิ่งขึ้นเมื่อได้ JWT แล้วควรเข้ารหัสอีกชั้นหนึ่ง
+  
     echo json_encode(array(
         "username" => $logInfo["uname"],
-        "token" => 'test'
+        "token" => $jwt
     ));
 }
 
-
+if ($action == "CheckAuth") {
+    try {
+        // ถอดรหัส JWT และตรวจสอบความถูกต้อง
+        $decoded = JWT::decode($token, new Key($key, 'HS256'));
+        echo json_encode($decoded);
+    } catch (Exception $e) {
+        // หากโทเคนไม่ถูกต้องหรือหมดอายุ
+        echo json_encode(false);
+    }
+}
 
 
 
