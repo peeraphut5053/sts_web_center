@@ -12,9 +12,7 @@ while (list($key, $data) = each($_GET) OR list($key, $data) = each($_POST)) {
 
 //============== Render Page Normal ================//
 include "./initial.php";
-require_once __DIR__ . '/../vendor/autoload.php';
-use \Firebase\JWT\JWT;
-use \Firebase\JWT\Key;
+
 $CM = new CallModel();
 $CM->WebApp_Models();
 //============== Render Ajax =======================//
@@ -77,16 +75,7 @@ if ($action == "Login") {
     ));
 }
 
-if ($action == "CheckAuth") {
-    try {
-        // ถอดรหัส JWT และตรวจสอบความถูกต้อง
-        $decoded = JWT::decode($token, new Key($key, 'HS256'));
-        echo json_encode($decoded);
-    } catch (Exception $e) {
-        // หากโทเคนไม่ถูกต้องหรือหมดอายุ
-        echo json_encode(false);
-    }
-}
+
 
 
 
