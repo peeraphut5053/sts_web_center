@@ -574,18 +574,20 @@ order by [date]";
 
     function getGroupChart2($StartDate, $EndDate, $StartLastMonth, $EndLastMonth, $GroupBy) {
         $query = "select wc, wcgroup, [date], start_time, end_time, day_break, work_hour, stop_hour
-       , TOT_work_hour = case when work_hour < stop_hour then work_hour else TOT_work_hour end
+       , TOT_work_hour = case when format(cast(work_hour as datetime), 'HH:mm') < format(cast(stop_hour as datetime), 'HH:mm')
+                   then work_hour else TOT_work_hour end
     , stop_reason, sumA, sumB, sumC
 from V_STS_PROD_TIME_REPORT
 where [date] between '$StartDate' and '$EndDate'
   and wcGroup =  '$GroupBy'
 order by [date]";
 $query1 = "select wc, wcgroup, [date], start_time, end_time, day_break, work_hour, stop_hour
-       , TOT_work_hour = case when work_hour < stop_hour then work_hour else TOT_work_hour end
+       , TOT_work_hour = case when format(cast(work_hour as datetime), 'HH:mm') < format(cast(stop_hour as datetime), 'HH:mm')
+                   then work_hour else TOT_work_hour end
     , stop_reason, sumA, sumB, sumC
 from V_STS_PROD_TIME_REPORT
-where [date] between '$StartLastMonth' and '$EndLastMonth'
-  and wcGroup =  '$GroupBy'
+where [date] between '2024-10-01' and '2024-10-01'
+  and wcGroup =  'Forming'
 order by [date]";
 
         $cSql = new SqlSrv();
