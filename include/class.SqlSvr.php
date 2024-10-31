@@ -60,5 +60,8 @@ class SqlSrv {
 		}
 	}
 	//*************************************************//
+
+	// create fuction for sql server query
+
 }
 ?>

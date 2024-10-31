@@ -65,7 +65,7 @@ if ($load == "ajax") {
     $CM->SyteLine_Models();
     $Mv_Bc_Tag = new BcTag();
     $Mv_Bc_Tag->setConn($ConnSL);
-    $rs = $Mv_Bc_Tag->getParetoDataFinishing($StartDate, $EndDate);
+    $rs = $Mv_Bc_Tag->getParetoDataFinishing($StartDate, $EndDate,$GroupBy);
     echo json_encode($rs);
 } elseif ($load == 'TableDetail') {
     $CM = new CallModel();
