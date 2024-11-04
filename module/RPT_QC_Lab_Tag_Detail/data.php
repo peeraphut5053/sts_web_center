@@ -32,6 +32,13 @@ if ($load == "ajax") {
     $Mv_Bc_Tag->setConn($ConnSL);
     $rs = $Mv_Bc_Tag->getGroupChart($StartDate, $EndDate, $GroupBy);
     echo json_encode($rs);
+} elseif ($load == 'work') {
+    $CM = new CallModel();
+    $CM->SyteLine_Models();
+    $Mv_Bc_Tag = new BcTag();
+    $Mv_Bc_Tag->setConn($ConnSL);
+    $rs = $Mv_Bc_Tag->getWorkCenters($StartDate, $EndDate);
+    echo json_encode($rs);
 } elseif ($load == 'group2') {
     $CM = new CallModel();
     $CM->SyteLine_Models();

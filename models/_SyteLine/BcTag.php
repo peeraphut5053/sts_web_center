@@ -572,6 +572,25 @@ order by [date]";
         return array($rs);
     }
 
+    function getWorkCenters($StartDate, $EndDate) {
+        $query = "select *
+from V_STS_PROD_TIME_REPORT
+where [date] between '$StartDate' and '$EndDate'
+order by [date]";
+//$query1 = "select *
+//from V_STS_PROD_TIME_REPORT
+//where [date] between '$StartLastMonth' and '$EndLastMonth'
+  //and wcGroup = '$GroupBy'
+//order by [date]";
+
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        //$rs1 = $cSql->SqlQuery($this->StrConn, $query1);
+
+        array_splice($rs, count($rs) - 1, 1);
+        return array($rs);
+    }
+
     function getGroupChart2($StartDate, $EndDate, $StartLastMonth, $EndLastMonth, $GroupBy) {
         $query = "select wc, wcgroup, [date], start_time, end_time, day_break, work_hour, stop_hour
        , TOT_work_hour = case when format(cast(work_hour as datetime), 'HH:mm') < format(cast(stop_hour as datetime), 'HH:mm')
