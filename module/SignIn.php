@@ -29,13 +29,6 @@ if ($action == "Login") {
     $User->_password = $password;
     $ResultLogin = $User->Login();
 
-    $payload = [
-        'username' => $username,
-        'iat' => time(),
-        'exp' => time() + (60 * 60 * 24), // 1 day
-        'token' => bin2hex(random_bytes(16)) // token id
-    ];
-
     $logInfo = array();
     if ($ResultLogin != 1) {
         $logInfo["state"] = 0;
