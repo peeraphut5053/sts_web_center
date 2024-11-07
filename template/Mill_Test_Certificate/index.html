@@ -1296,7 +1296,7 @@ var docDefinition = {
           { text: `CERTIFICATE NO.              : ${dataNow[0].cer_no}`, fontSize: 10, bold: true, margin: [0, 20, 0, 0] },
           { text: `DATE                              : ${moment().format('DD-MMM-YYYY')} `, fontSize: 10,bold: true, margin: [0, 0, 0, 0] },
           { text: `CUSTOMER                     : ${dataNow[0].cust}`, fontSize: 10,bold: true, margin: [0, 0, 0, 0] },
-          { text: `CONTRACT (P/O) No.       : ${filter[currentPage - 1]?.cust_po ? filter[currentPage - 1].cust_po : ''} `, fontSize: 10, bold: true,margin: [0, 0, 0, 0] },
+          { text: `CONTRACT (P/O) No.       : ${pageData[currentPage - 1][0]?.cust_po ? pageData[currentPage - 1][0].cust_po : ''} `, fontSize: 10, bold: true,margin: [0, 0, 0, 0] },
           { text: `INSPECTION CERTIFICATE  : ACCORDING TO EN 10204 : 2005 TYPE 3.1`, fontSize: 10, bold: true,margin: [0, 0, 0, 0] },
           { text: `COMMODITY                   : NEWLY PRODUCED, PRIME QUALITY ERW STEEL PIPE`, fontSize: 10,bold: true, margin: [0, 0, 0, 0] },
         ]
@@ -1320,11 +1320,11 @@ var docDefinition = {
         ],
        
       },
-      { text: `SPECIFICATION                : ${filter[currentPage -1]?.Uf_spec ? filter[currentPage -1].Uf_spec : ''} `,alignment: 'left', fontSize: 10,bold: true, margin: [-802, 98, 0, 0] },
+      { text: `SPECIFICATION                : ${pageData[currentPage -1][0]?.Uf_spec ? pageData[currentPage -1][0].Uf_spec : ''} `,alignment: 'left', fontSize: 10,bold: true, margin: [-802, 98, 0, 0] },
     ]
     
         };
-    }.bind({ pageData: createTables().map(table => table.pageData) }),
+    }.bind({ pageData: createTables().map(table => table.pageData)}),
     footer: function (currentPage, pageCount) {
         return {
             margin: [20, 15, 80, 10],
@@ -1363,7 +1363,7 @@ function createTables() {
                 },
                 // Add a page break after every table except the last one
                 pageBreak: j + 18 < res.length || i < filter.length - 1 ? 'after' : '',
-                pageData: newRes
+                pageData: newRes,
             });
         }
     }
