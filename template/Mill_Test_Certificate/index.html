@@ -1286,6 +1286,7 @@ var docDefinition = {
     pageMargins: [10, 125, 10, 50],
     header: function (currentPage, pageCount, pageSize) {
         const pageData = this.pageData || {};
+        
         return {
             headerRows: 4,
             margin: [20, 5, 20, 5],
@@ -1840,7 +1841,7 @@ var docDefinition = {
           { text: `CERTIFICATE NO.              : ${dataNow[0].cer_no}`, fontSize: 10, bold: true, margin: [0, 20, 0, 0] },
           { text: `DATE                              : ${moment().format('DD-MMM-YYYY')} `, fontSize: 10,bold: true, margin: [0, 0, 0, 0] },
           { text: `CUSTOMER                     : ${dataNow[0].cust}`, fontSize: 10,bold: true, margin: [0, 0, 0, 0] },
-          { text: `CONTRACT (P/O) No.       : ${filter[currentPage - 1]?.cust_po ? filter[currentPage - 1].cust_po : ''} `, fontSize: 10, bold: true,margin: [0, 0, 0, 0] },
+          { text: `CONTRACT (P/O) No.       : ${pageData[currentPage - 1][0]?.cust_po ? pageData[currentPage - 1][0].cust_po : ''} `, fontSize: 10, bold: true,margin: [0, 0, 0, 0] },
           { text: `INSPECTION CERTIFICATE  : ACCORDING TO EN 10204 : 2005 TYPE 3.1`, fontSize: 10, bold: true,margin: [0, 0, 0, 0] },
           { text: `COMMODITY                   : NEWLY PRODUCED, PRIME QUALITY ERW STEEL PIPE`, fontSize: 10,bold: true, margin: [0, 0, 0, 0] }
         ]
@@ -1864,7 +1865,7 @@ var docDefinition = {
         ],
        
       },
-      { text: `SPECIFICATION                : ${filter[currentPage -1]?.Uf_spec ? filter[currentPage -1].Uf_spec : ''} `,alignment: 'left', fontSize: 10,bold: true, margin: [-802, 98, 0, 0] },
+      { text: `SPECIFICATION                : ${pageData[currentPage - 1][0]?.Uf_spec ? pageData[currentPage - 1][0].Uf_spec : ''} `,alignment: 'left', fontSize: 10,bold: true, margin: [-802, 98, 0, 0] },
     ]
     
         };
