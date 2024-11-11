@@ -170,7 +170,7 @@
 			$('table tbody tr:eq(0)').remove();
             $('table tbody tr:eq(0)').remove();
 //=========add nre head =========[doc_no]
-            $('table').prepend("<thead> <th>doc_no</th> <th>boatnote</th> <th>date</th> <th class='w-48'>item</th> <th>boat_name</th> <th>boat_no</th> <th>inv_no</th> <th>bundle</th> <th>weight_net</th> <th>weight_gross</th> <th>weight_zinc</th> <th>weight_nonzinc</th> <th>cust_po</th> <th>value</th> <th>pier</th> <th>BL_no</th> <th>loc_name</th> <th>loc_name2</th> <th>loc_name3</th> <th>loc_name4</th>  </tr></thead>");
+            $('table').prepend("<thead> <th>doc_no</th> <th>boatnote</th> <th>date</th> <th>date_submit</th> <th class='w-48'>item</th> <th>boat_name</th> <th>boat_no</th> <th>inv_no</th> <th>bundle</th> <th>weight_net</th> <th>weight_gross</th> <th>weight_zinc</th> <th>weight_nonzinc</th> <th>cust_po</th> <th>value</th> <th>pier</th> <th>BL_no</th> <th>loc_name</th> <th>loc_name2</th> <th>loc_name3</th> <th>loc_name4</th>  </tr></thead>");
 			$('table thead').find('tr').each(function(){
 		   });
             var x = 0 ;
@@ -208,6 +208,7 @@
             var doc_no = [];
             var boatnote = [];
             var date = [];
+            var date_submit = [];
             var item = [];
             var boat_name = [];
             var boat_no = [];
@@ -234,23 +235,24 @@
 					doc_no.push($(this).find('td:eq(0)').text());
                     boatnote.push($(this).find('td:eq(1)').text());
                     date.push($(this).find('td:eq(2)').text());
-                    item.push($(this).find('td:eq(3)').text());
-                    boat_name.push($(this).find('td:eq(4)').text());
-                    boat_no.push($(this).find('td:eq(5)').text());
-                    inv_no.push($(this).find('td:eq(6)').text());
-                    bundle.push($(this).find('td:eq(7)').text());
-                    weight_net.push($(this).find('td:eq(8)').text());
-                    weight_gross.push($(this).find('td:eq(9)').text());
-                    weight_zinc.push($(this).find('td:eq(10)').text());
-                    weight_nonzinc.push($(this).find('td:eq(11)').text());
-                    cust_po.push($(this).find('td:eq(12)').text());
-                    value.push($(this).find('td:eq(13)').text());
-                    pier.push($(this).find('td:eq(14)').text());
-                    BL_no.push($(this).find('td:eq(15)').text());
-                    loc_name.push($(this).find('td:eq(16)').text());
-                    loc_name2.push($(this).find('td:eq(17)').text());
-                    loc_name3.push($(this).find('td:eq(18)').text());
-                    loc_name4.push($(this).find('td:eq(19)').text());
+                    date_submit.push($(this).find('td:eq(3)').text());
+                    item.push($(this).find('td:eq(4)').text());
+                    boat_name.push($(this).find('td:eq(5)').text());
+                    boat_no.push($(this).find('td:eq(6)').text());
+                    inv_no.push($(this).find('td:eq(7)').text());
+                    bundle.push($(this).find('td:eq(8)').text());
+                    weight_net.push($(this).find('td:eq(9)').text());
+                    weight_gross.push($(this).find('td:eq(10)').text());
+                    weight_zinc.push($(this).find('td:eq(11)').text());
+                    weight_nonzinc.push($(this).find('td:eq(12)').text());
+                    cust_po.push($(this).find('td:eq(13)').text());
+                    value.push($(this).find('td:eq(14)').text());
+                    pier.push($(this).find('td:eq(15)').text());
+                    BL_no.push($(this).find('td:eq(16)').text());
+                    loc_name.push($(this).find('td:eq(17)').text());
+                    loc_name2.push($(this).find('td:eq(18)').text());
+                    loc_name3.push($(this).find('td:eq(19)').text());
+                    loc_name4.push($(this).find('td:eq(20)').text());
                   
                     CountItem++;
                 }
@@ -266,6 +268,7 @@
                     doc_no : doc_no,
                     boatnote : boatnote,
                     date : date,
+                    date_submit : date_submit,
                     item : item,
                     boat_name : boat_name,
                     boat_no : boat_no,

@@ -62,6 +62,7 @@ if ($load == "InsertSTS_Custom_Out") {
         $STSCustom[$i] = $STSCustom[$i]->InsertSTS_Custom_Out($_POST["doc_no"][$i],
         $_POST["boatnote"][$i],
         $_POST["date"][$i],
+        $_POST["date_submit"][$i],
         $_POST["item"][$i],
         $_POST["boat_name"][$i],
         $_POST["boat_no"][$i],
@@ -101,7 +102,7 @@ if ($load == "reportPDF") {
     $CallModel->SyteLine_Models();
     $STS_Custom = new STS_Custom();
     $STS_Custom->setConn($ConnSL);
-    $rs = $STS_Custom->GetDataReport($StartDate, $EndDate);
+    $rs = $STS_Custom->GetDataReport($StartDate, $EndDate,$date_submit);
     echo json_encode($rs);
    
 }

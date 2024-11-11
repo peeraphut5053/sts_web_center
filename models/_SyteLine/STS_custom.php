@@ -36,7 +36,7 @@ class STS_Custom {
         }
     }
 
-    function InsertSTS_Custom_Out($doc_no, $boatnote, $date, $item, $boat_name, $boat_no, $inv_no, $bundle, $weight_net, $weight_gross,$weight_zinc,$weight_nonzinc, $cust_po, $value, $pier, $BL_no, $loc_name,$loc_name2,$loc_name3,$loc_name4) {
+    function InsertSTS_Custom_Out($doc_no, $boatnote, $date, $date_submit, $item, $boat_name, $boat_no, $inv_no, $bundle, $weight_net, $weight_gross,$weight_zinc,$weight_nonzinc, $cust_po, $value, $pier, $BL_no, $loc_name,$loc_name2,$loc_name3,$loc_name4) {
 
         $sql = "SELECT * FROM STS_custom_OUT WHERE doc_no = '$doc_no'";
         $cSql = new SqlSrv();
@@ -45,7 +45,8 @@ class STS_Custom {
         if ($doc_no == $rs0[1]["doc_no"]) {
             $query = "UPDATE STS_custom_OUT set 
     boatnote = '$boatnote', 
-    date = '$date', 
+    date = '$date',
+    date_submit = '$date_submit',
     item = '$item', 
     boat_name = '$boat_name', 
     boat_no = '$boat_no', 
@@ -69,8 +70,8 @@ class STS_Custom {
             array_splice($rs0, count($rs0) - 1, 1);
             return $rs0;
         } else {
-            $query = "INSERT INTO STS_custom_OUT (doc_no, boatnote, date, item, boat_name, boat_no, inv_no, bundle, weight_net, weight_gross, weight_zinc, weight_non_zinc, cust_po, value, pier, BL_no, loc_name, loc_name2, loc_name3, loc_name4, createdate)
-                    VALUES ('$doc_no', '$boatnote', '$date', '$item', '$boat_name', '$boat_no', '$inv_no', $bundle, $weight_net, $weight_gross,  " . ($weight_zinc !== '' ? $weight_zinc : 0.00) . ", " . ($weight_nonzinc !== '' ? $weight_nonzinc : 0.00) . ", '$cust_po', $value, '$pier', '$BL_no', '$loc_name', '$loc_name2', '$loc_name3', '$loc_name4', GETDATE())";
+            $query = "INSERT INTO STS_custom_OUT (doc_no, boatnote, date, date_submit, item, boat_name, boat_no, inv_no, bundle, weight_net, weight_gross, weight_zinc, weight_non_zinc, cust_po, value, pier, BL_no, loc_name, loc_name2, loc_name3, loc_name4, createdate)
+                    VALUES ('$doc_no', '$boatnote', '$date', '$date_submit', '$item', '$boat_name', '$boat_no', '$inv_no', $bundle, $weight_net, $weight_gross,  " . ($weight_zinc !== '' ? $weight_zinc : 0.00) . ", " . ($weight_nonzinc !== '' ? $weight_nonzinc : 0.00) . ", '$cust_po', $value, '$pier', '$BL_no', '$loc_name', '$loc_name2', '$loc_name3', '$loc_name4', GETDATE())";
            $cSql = new SqlSrv();
            $rs0 = $cSql->SqlQuery($this->StrConn, $query);
            array_splice($rs0, count($rs0) - 1, 1);
@@ -116,12 +117,23 @@ from STS_custom_IN where date_in between '$StartDate' and '$EndDate'";
         return $rs0;
     }
 
-    function GetSTS_Custom_Out($StartDate, $EndDate) {
-        $query = "select * from STS_custom_OUT where date between '$StartDate' and '$EndDate'";
-        $cSql = new SqlSrv();
-        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
-        array_splice($rs0, count($rs0) - 1, 1);
-        return $rs0;
+
+    function GetSTS_Custom_Out($StartDate, $EndDate, $date_submit) {
+
+        if ($date_submit === 'true') {
+            $query = "select * from STS_custom_OUT where date_submit between '$StartDate' and '$EndDate'";
+            $cSql = new SqlSrv();
+            $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+            array_splice($rs0, count($rs0) - 1, 1);
+            return $rs0;
+        } else {
+            $query2 = "select * from STS_custom_OUT where date between '$StartDate' and '$EndDate'";
+            $cSql = new SqlSrv();
+            $rs0 = $cSql->SqlQuery($this->StrConn, $query2);
+            array_splice($rs0, count($rs0) - 1, 1);
+            return $rs0;
+        }
+
     }
 
     function GetSTS_custom_mainrpt_acct($StartDate, $EndDate) {
@@ -219,7 +231,7 @@ from STS_custom_IN where date_in between '$StartDate' and '$EndDate'";
 
     }
 
-    function GetDataReport($StartDate, $EndDate) {
+    function GetDataReport($StartDate, $EndDate,$date_submit) {
       
         $query2 = "select *, total = (value * 0.05) + ( (value + (value * 0.05)) * 0.07 )
         from STS_custom_IN where date_in between '$StartDate' and '$EndDate'";
@@ -228,7 +240,13 @@ from STS_custom_IN where date_in between '$StartDate' and '$EndDate'";
         $rs1 = $cSql->SqlQuery($this->StrConn, $query2);
         array_splice($rs1, count($rs1) - 1, 1);
 
-        $query3 = "select value, weight_net from STS_custom_OUT where date between '$StartDate' and '$EndDate'";
+        $query3 = "";
+
+        if ($date_submit === 'true') {
+           $query3 = "select * from STS_custom_OUT where date_submit between '$StartDate' and '$EndDate'";
+        } else {
+           $query3 = "select * from STS_custom_OUT where date between '$StartDate' and '$EndDate'";
+        }
 
         $cSql = new SqlSrv();
         $rs2 = $cSql->SqlQuery($this->StrConn, $query3);

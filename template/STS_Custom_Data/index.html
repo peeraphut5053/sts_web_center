@@ -1,3 +1,59 @@
+<style>
+               /* ซ่อน Checkbox ดั้งเดิม */
+.custom-checkbox input[type="checkbox"] {
+    display: none;
+}
+
+/* ตำแหน่งและขนาดของ Checkbox */
+.custom-checkbox {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 3px;
+}
+
+/* สไตล์สำหรับ Checkmark */
+.custom-checkbox .checkmark {
+    width: 20px;
+    height: 20px;
+    background-color: #ccc;
+    border-radius: 4px;
+    display: inline-block;
+    margin-right: 10px;
+    position: relative;
+    transition: background-color 0.3s;
+}
+
+/* สไตล์สำหรับ Checkbox เมื่อถูกเลือก */
+.custom-checkbox input[type="checkbox"]:checked + .checkmark {
+    background-color: #4CAF50;
+}
+
+/* สไตล์สำหรับเครื่องหมายถูก */
+.custom-checkbox .checkmark::after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+/* แสดงเครื่องหมายถูกเมื่อ Checkbox ถูกเลือก */
+.custom-checkbox input[type="checkbox"]:checked + .checkmark::after {
+    display: block;
+}
+
+/* รูปแบบของเครื่องหมายถูก */
+.custom-checkbox .checkmark::after {
+    left: 8px;
+    top: 3px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    transform: rotate(45deg);
+}
+</style>
+
 <div class="row">
     <div class="row" >
         <div class="text-center" >
@@ -92,6 +148,13 @@
                   <select class="form-control" id="selMonthEX"></select>
                 </div>
               </div>
+              <div class="row">
+                <label class="custom-checkbox">
+                    <input type="checkbox" name='Zinc' id="date_submit" />
+                    <span class="checkmark"></span>
+                     by date submit
+                </label>
+              </div>
             </div>
         </div>
         <div class="modal-footer">
@@ -177,7 +240,7 @@
     function getDataReport4() {
         var Year = $("#selYearEX").val();
         var Month = $("#selMonthEX").val();
-        console.log(Year, Month);
+        var date_submit = $("#date_submit").is(":checked");
         
         // get first day of month and last day of month use moment.js
         var StartDate = moment().year(Year).month(Month-1).startOf('month').format('YYYY-MM-DD');
@@ -191,6 +254,7 @@
         load: "reportPDF",
         StartDate: StartDate,
         EndDate: EndDate,
+        date_submit: date_submit
         },
         success: function (data) {
             const data1 = data[0];

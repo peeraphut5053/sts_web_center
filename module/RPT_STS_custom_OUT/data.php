@@ -16,6 +16,6 @@ if ($load == "ajax") {
 
     $STS_Custom = new STS_Custom();
     $STS_Custom->setConn($ConnSL);
-    $rs = $STS_Custom->GetSTS_Custom_Out($StartDate, $EndDate);
+    $rs = $STS_Custom->GetSTS_Custom_Out($StartDate, $EndDate, $date_submit);
     echo json_encode($rs);
 }

@@ -66,6 +66,59 @@
       display: flex;
       justify-content: center;
     }
+            /* ซ่อน Checkbox ดั้งเดิม */
+.custom-checkbox input[type="checkbox"] {
+    display: none;
+}
+
+/* ตำแหน่งและขนาดของ Checkbox */
+.custom-checkbox {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 3px;
+}
+
+/* สไตล์สำหรับ Checkmark */
+.custom-checkbox .checkmark {
+    width: 20px;
+    height: 20px;
+    background-color: #ccc;
+    border-radius: 4px;
+    display: inline-block;
+    margin-right: 10px;
+    position: relative;
+    transition: background-color 0.3s;
+}
+
+/* สไตล์สำหรับ Checkbox เมื่อถูกเลือก */
+.custom-checkbox input[type="checkbox"]:checked + .checkmark {
+    background-color: #4CAF50;
+}
+
+/* สไตล์สำหรับเครื่องหมายถูก */
+.custom-checkbox .checkmark::after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+/* แสดงเครื่องหมายถูกเมื่อ Checkbox ถูกเลือก */
+.custom-checkbox input[type="checkbox"]:checked + .checkmark::after {
+    display: block;
+}
+
+/* รูปแบบของเครื่องหมายถูก */
+.custom-checkbox .checkmark::after {
+    left: 8px;
+    top: 3px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    transform: rotate(45deg);
+}
   </style>
   <div class="row">
     <h4 class="text-header text-center">รายงานส่งออก</h4>
@@ -93,12 +146,17 @@
         />
       </div>
     </div>
+    <label class="custom-checkbox">
+      <input type="checkbox" name='Zinc' id="date_submit_out" />
+      <span class="checkmark"></span>
+       by date submit
+  </label>
     <div class="col-lg-1 col-md-1 col-sm-6 col-xs-6 text-left">
       <div class="flex">
         <button class="btn btn-info" id="btnSearch">
           <i class="fa fa-search"></i>&nbsp; Search
         </button>
-        <a class="btn btn-success ml-56" href="module/STS_Custom_Data/Import_Excel_Out.php"  id="btnTransfer">&nbsp;Import Excel (OUT)</a>
+        <a class="btn btn-success ml-36" href="module/STS_Custom_Data/Import_Excel_Out.php"  id="btnTransfer">&nbsp;Import Excel (OUT)</a>
       </div>
     </div>
   </div>
@@ -156,7 +214,9 @@
       var OldHtml = $("#btnSearch").html();
       var StartDate = $("#txtStartDate").val();
       var EndDate = $("#txtEndDate").val();
-  
+
+      var date_submit_out = $("#date_submit_out").is(":checked");
+
       if (StartDate != "" && EndDate == "" || StartDate == "" && EndDate != "") {
           $.alert("กรุณาเลือกวันที่เริ่มต้นและสิ้นสุดให้ครบถ้วน");
           return false;
@@ -180,6 +240,7 @@
             load: "ajax",
             StartDate: StartDate,
             EndDate: EndDate,
+            date_submit: date_submit_out
           },
           success: function (data) {
             var newData = data.map((item) => {
