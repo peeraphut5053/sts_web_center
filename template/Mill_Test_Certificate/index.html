@@ -924,7 +924,7 @@ var logo = () => {
 // filter duplicate size
 const filter = dataNow.filter((value, index, self) =>
     index === self.findIndex((t) => (
-        t.item === value.item
+        t.ref_num + t.ref_line_suf === value.ref_num + value.ref_line_suf
     ))
 ); 
   {/*let spec = new Set();
@@ -1351,7 +1351,7 @@ var docDefinition = {
 function createTables() {
     const tables = [];
     for (let i = 0; i < filter.length; i++) {
-        let res = dataNow.filter((value) => value.item === filter[i].item);
+        let res = dataNow.filter((value) => value.ref_num + value.ref_line_suf === filter[i].ref_num + filter[i].ref_line_suf);
         for (let j = 0; j < res.length; j += 18) {
             // Slice 15 rows at a time
             const newRes = res.slice(j, j + 18);
@@ -1416,7 +1416,7 @@ function makePDF2(dataPDF,type) {
 // filter duplicate size
 const filter = dataNow.filter((value, index, self) =>
     index === self.findIndex((t) => (
-        t.item === value.item
+        t.ref_num + t.ref_line_suf === value.ref_num + value.ref_line_suf
     ))
 ); 
   {/*let spec = new Set();
@@ -1895,7 +1895,7 @@ var docDefinition = {
 function createTables() {
     const tables = [];
     for (let i = 0; i < filter.length; i++) {
-        let res = dataNow.filter((value) => value.item === filter[i].item);
+        let res = dataNow.filter((value) => value.ref_num + value.ref_line_suf === filter[i].ref_num + filter[i].ref_line_suf);
         for (let j = 0; j < res.length; j += 15) {
             // Slice 15 rows at a time
             const newRes = res.slice(j, j + 15);
