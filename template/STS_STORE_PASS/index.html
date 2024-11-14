@@ -663,6 +663,11 @@
     var item5 = $("#item5").val();
     var item6 = $("#item6").val();
 
+    // company limit 30 char
+    if (company.length > 30) {
+      alert("ชื่อบริษัทยาวเกินกำหนด");
+      return false;
+    }
 
     if (purpose == "กรุณาเลือกวัตถุประสงค์") {
       alert("กรุณาเลือกวัตถุประสงค์");

@@ -361,12 +361,23 @@ where STS_qty_move_line.doc_num = '$doc_num' and mv_bc_tag.active=1 and mv_bc_ta
 	Function SearchTagStatus($wh) {
         $cSql = new SqlSrv();
         $query = "select top 2000 mv_bc_tag.*, item.[description]
-                from mv_bc_tag inner join item_mst item on item.item = mv_bc_tag.item
-                where id <> ''".$wh." 
-                order by id desc";
+   , wc.[description] as wc
+   , item.unit_weight, TotalWeight = (isnull(mv_bc_tag.NC_QTY,0) * item.unit_weight) / 1000
+from mv_bc_tag 
+ inner join item_mst item on item.item = mv_bc_tag.item
+ inner join jobroute_mst job on job.job = mv_bc_tag.job and job.oper_num = 10
+ inner join wc_mst wc on job.wc = wc.wc
+where id <> ''".$wh."
+order by id desc";
         $rs = $cSql->SqlQuery($this->StrConn, $query);
+        $query2 = "select * from STS_QA_TAG_ISSUE";
+        $rs2 = $cSql->SqlQuery($this->StrConn, $query2);
+        $query3 = "select * from STS_QA_TAG_Minor";
+        $rs3 = $cSql->SqlQuery($this->StrConn, $query3);
         array_splice($rs, count($rs) - 1, 1);
-        return $rs;
+        array_splice($rs2, count($rs2) - 1, 1);
+        array_splice($rs3, count($rs3) - 1, 1);
+        return array($rs,$rs2,$rs3);
     }
 
     Function UpdateTagStatus($id,$status_value) {
@@ -702,6 +713,46 @@ from V_STS_PROD_TIME_REPORT_itemA
 where [date] between '$StartDate' and '$EndDate'
   and wcGroup =  '$wc'
 order by [date]";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return array($rs);
+    }
+
+    function UpdateIssue($id, $issue_value) {
+        $query = "update mv_bc_tag set issue = '".$issue_value."' where id = '".$id."' ";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return array($rs);
+    }
+
+    function UpdateMinor($id, $minor_value) {
+        $query = "update mv_bc_tag set Minor_cause = '".$minor_value."' where id = '".$id."' ";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return array($rs);
+    }
+
+    function UpdateMain($id, $main_value) {
+        $query = "update mv_bc_tag set Main_cause = '".$main_value."' where id = '".$id."' ";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return array($rs);
+    }
+
+    function UpdateNC($id, $nc_value) {
+        $query = "update mv_bc_tag set NC_QTY = '".$nc_value."' where id = '".$id."' ";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return array($rs);
+    }
+
+    function UpdateRecordDate($id, $record_date) {
+        $query = "update mv_bc_tag set QA_RecordDate = '".$record_date."' where id = '".$id."' ";
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);

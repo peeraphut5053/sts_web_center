@@ -1,4 +1,4 @@
-<div class="row" style="border-bottom:solid 1px #e8e8e8;">  
+<div class="row" style="border-bottom:solid 1px #e8e8e8;">
     <div class="row">
         <h3 class="text-center">Tag Status</h3>
     </div>
@@ -29,7 +29,7 @@
     <div class="col-lg-3 col-md-2 col-sm-2 col-xs-2  col-search">
         <div class="input-group">
             <div class="input-group-addon">item</div>
-            <input type="text"  class="form-control txt-filter" id="item">
+            <input type="text" class="form-control txt-filter" id="item">
         </div>
     </div>
 
@@ -39,7 +39,7 @@
     <div class="col-lg-3 col-md-2 col-sm-2 col-xs-2  col-search">
         <div class="input-group">
             <div class="input-group-addon">Lot</div>
-            <input type="text"  class="form-control txt-filter" id="lot">
+            <input type="text" class="form-control txt-filter" id="lot">
         </div>
     </div>
 
@@ -48,10 +48,12 @@
             <div class="input-group-addon">Status</div>
             <select id="tag_status" class="form-control">
                 <option selected value="">---- &nbsp; please select &nbsp; ----&nbsp;</option>
-                <option value='Good' > Good </option>
+                <option value='Good'> Good </option>
                 <option value='OnHold'> OnHold </option>
                 <option value='Follow'> Follow </option>
                 <option value='Reject'> Reject </option>
+                <option value='Fix'> Fix </option>
+                <option value='Nc Accept'> Nc Accept </option>
             </select>
         </div>
     </div>
@@ -59,7 +61,7 @@
     <div class="col-lg-3 col-md-2 col-sm-2 col-xs-2  col-search">
         <div class="input-group">
             <div class="input-group-addon">Date</div>
-            <input type="text"  class="form-control txt-filter" id="mfg_date">
+            <input type="text" class="form-control txt-filter" id="mfg_date">
         </div>
     </div>
 
@@ -68,48 +70,66 @@
     </div>
 </div>
 
-    <div class="row" id="divReportM">
-        <table class="table table-condensed table-bordered table-striped" id="tblReportHidden"  hidden>
-            <thead>
-               
-                <tr>
-                    <th class="bg-gray" width="65px">Tag id</th>
-                    <th class="bg-gray">sts no</th>
-                    <th class="bg-gray"width="45px">Job</th>
-                    <th class="bg-gray" width="200px">item</th>
-                    <th class="bg-gray" width="230px">Description</th>
-                    <th class="bg-gray" width="90px">Lot</th>
-                    <th class="bg-gray" width="90px">Old Lot</th>
-                    <th class="bg-gray">Quantity</th>
-                    <th class="bg-gray">TagStatus</th>
-                    <th class="bg-gray" width="300px">Detail</th>
-                    <th class="bg-gray" width="300px">Inspector</th>
-                    <th class="bg-gray" width="300px">Inspec_date</th>
-                    <th class="bg-gray" width="300px">Comp_name</th>
-                </tr>
-        </table>
+<div class="row" id="divReportM">
+    <table class="table table-condensed table-bordered table-striped" id="tblReportHidden" hidden>
+        <thead>
 
-        <table class="table table-condensed table-bordered table-striped" id="tblReportShow">
-            <thead>
-               
-                <tr>
-                    <th class="bg-gray" width="65px">Tag id</th>
-                    <th class="bg-gray">sts no</th>
-                    <th class="bg-gray"width="45px">Job</th>
-                    <th class="bg-gray" width="200px">item</th>
-                    <th class="bg-gray" width="230px">Description</th>
-                    <th class="bg-gray" width="90px">Lot</th>
-                    <th class="bg-gray" width="90px">Old Lot</th>
-                    <th class="bg-gray">Quantity</th>
-                    <th class="bg-gray">TagStatus</th>
-                    <th class="bg-gray" width="300px">Detail</th>
-                    <th class="bg-gray" width="300px">Inspector</th>
-                    <th class="bg-gray" width="300px">Inspec_date</th>
-                    <th class="bg-gray" width="300px">Comp_name</th>
-                </tr>
-        </table>
+            <tr>
+                <th class="bg-gray" width="65px">Record Date</th>
+                <th class="bg-gray" width="65px">Date</th>
+                <th class="bg-gray" width="65px">Work Center</th>
+                <th class="bg-gray" width="65px">Tag id</th>
+                <th class="bg-gray">sts no</th>
+                <th class="bg-gray" width="45px">Job</th>
+                <th class="bg-gray" width="200px">item</th>
+                <th class="bg-gray" width="230px">Description</th>
+                <th class="bg-gray" width="90px">Lot</th>
+                <th class="bg-gray" width="90px">Old Lot</th>
+                <th class="bg-gray">Quantity</th>
+                <th class="bg-gray">NC Quantity</th>
+                <th class="bg-gray">Unit weight</th>
+                <th class="bg-gray">total weight (ton)</th>
+                <th class="bg-gray">TagStatus</th>
+                <th class="bg-gray">Issue</th>
+                <th class="bg-gray">Minor_cause</th>
+                <th class="bg-gray">Main_cause</th>
+                <th class="bg-gray" width="300px">Detail</th>
+                <th class="bg-gray" width="300px">Inspector</th>
+                <th class="bg-gray" width="300px">Inspec_date</th>
+                <th class="bg-gray" width="300px">Comp_name</th>
+            </tr>
+    </table>
 
-    </div>
+    <table class="table table-condensed table-bordered table-striped" id="tblReportShow">
+        <thead>
+
+            <tr>
+                <th class="bg-gray" width="65px">Record Date</th>
+                <th class="bg-gray" width="65px">Date</th>
+                <th class="bg-gray" width="65px">Work Center</th>
+                <th class="bg-gray" width="65px">Tag id</th>
+                <th class="bg-gray">sts no</th>
+                <th class="bg-gray" width="45px">Job</th>
+                <th class="bg-gray" width="200px">item</th>
+                <th class="bg-gray" width="230px">Description</th>
+                <th class="bg-gray" width="90px">Lot</th>
+                <th class="bg-gray" width="90px">Old Lot</th>
+                <th class="bg-gray">Quantity</th>
+                <th class="bg-gray">NC Quantity</th>
+                <th class="bg-gray">Unit weight</th>
+                <th class="bg-gray">total weight (ton)</th>
+                <th class="bg-gray">TagStatus</th>
+                <th class="bg-gray">Issue</th>
+                <th class="bg-gray">Minor_cause</th>
+                <th class="bg-gray">Main_cause</th>
+                <th class="bg-gray" width="300px">Detail</th>
+                <th class="bg-gray" width="300px">Inspector</th>
+                <th class="bg-gray" width="300px">Inspec_date</th>
+                <th class="bg-gray" width="300px">Comp_name</th>
+            </tr>
+    </table>
+
+</div>
 
 <script type="text/javascript">
 
@@ -120,287 +140,558 @@
     // $("#mfg_date").val(GetToday());
 
     $("#BtnSearchM").click(function () {
-            ReportAllSearchHidden();
-            ReportAllSearchShow();
-        });
-    
-        var select_status = [
-            "-- select --",
-            "Good",
-            "OnHold",
-            "Follow",
-            "Reject"
+        ReportAllSearchHidden();
+        ReportAllSearchShow();
+    });
+
+    var select_status = [
+        "-- select --",
+        "Good",
+        "OnHold",
+        "Follow",
+        "Reject",
+        "Fix",
+        "Nc Accept"
     ];
 
-    function ReportAllSearchHidden() {
-    var OldHtml = $("#BtnSearchM").html();
-    var tag_id = $("#tag_id").val();
-    var sts_no = $("#sts_no").val();
-    var job = $("#job").val();
-    var item = $("#item").val();
-    var lot = $("#lot").val();
-    var tag_status = $("#tag_status").val();
-    var mfg_date = $("#mfg_date").val();
-    if ((tag_id == "") && (sts_no == "") && (job == "") && (item == "") && (lot == "") && (tag_status == "") && (mfg_date == "")) {
-        $.alert("กรุณาป้อนรายละเอียดเพื่อกรองข้อมูล");
-    } else {
-        $.ajax({
-            type: 'POST',
-            url: "././module/REPORT_TagStatus/data.php",
-            dataType: 'json',
-            beforeSend: function () {
-                $("#BtnSearchM").html("<i class='fa fa-spinner fa-spin'>");
-            },
-            data: {
-                "load": "SearchTagStatus",
-                "tag_id": tag_id,
-                "sts_no": sts_no,
-                "job": job,
-                "item": item,
-                "lot": lot,
-                "tag_status": tag_status,
-                "mfg_date": mfg_date
-            },
-            success: function (data) {
-                console.log(data)
-                $("#tblReportHidden").dataTable().fnDestroy();
-                var table = $('#tblReportHidden').DataTable({
-                    scrollY: "60vh",
-                    "scrollX": true,
-                    scrollCollapse: true,
-                    "aaData": data,
-                    "paging": false,
-//                        fixedColumns: {
-//                            leftColumns: 1,
-//                        },
-                    "searching": false,
-                    "bInfo": false,
+    var main = [
+        { id: "SL", name: "Slitting" },
+        { id: "FO", name: "Forming" },
+        { id: "FI", name: "Finishing" },
+        { id: "Ma", name: "Maintenance" },
+        { id: "Wa", name: "Warehouse" },
+        { id: "Ot", name: "Other" }
+    ]
 
-                    "columns": [
-                        {"data": "id",
-                            "className": "text-left",
-                        },
-                        {"data": "sts_no",
-                            "className": "text-left",
-                        },
-                        {"data": "job",
-                        "className": "text-left",
-                        },
-                        {"data": "item",
-                            "className": "text-left",
-                        },
-                        {"data": "description",
-                            "className": "text-left",
-                        },
-                        {"data": "lot",
-                            "className": "text-left",                          
-                        },
-                        {"data": "old_lot",
-                            "className": "text-left",                          
-                        },
-                        {"data": "qty1", 
-                            "className": "text-left",                           
-                        },
-                        {"data": "tag_status",
-                            "className": "text-left",
-                        }, 
-                        {"data": "detail",
-                            "className": "text-left",
-                        },
-                        {
-                        "data": "inspector",
-                        "className": "text-center",
-                        "render": function (data, type, row, meta) {
-                            let ret = data ? covertName(data) : "ยังไม่ตวรจ";
-                            return ret;
-                        }
-                    },
-                    {
-                        "data": "inspec_date.date",
-                        "className": "text-center",
-                        "render": function (data, type, row, meta) {
-                            let ret = data ? moment(data).format("DD/MM/YYYY HH:mm:ss") : "-";
-                            return ret;
-                        }
-                    },
-                    {
-                        "data": "comp_name",
-                        "className": "text-center",
-                    }
-                    ],
-                    'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+    function ReportAllSearchHidden() {
+        var OldHtml = $("#BtnSearchM").html();
+        var tag_id = $("#tag_id").val();
+        var sts_no = $("#sts_no").val();
+        var job = $("#job").val();
+        var item = $("#item").val();
+        var lot = $("#lot").val();
+        var tag_status = $("#tag_status").val();
+        var mfg_date = $("#mfg_date").val();
+        if ((tag_id == "") && (sts_no == "") && (job == "") && (item == "") && (lot == "") && (tag_status == "") && (mfg_date == "")) {
+            $.alert("กรุณาป้อนรายละเอียดเพื่อกรองข้อมูล");
+        } else {
+            $.ajax({
+                type: 'POST',
+                url: "././module/REPORT_TagStatus/data.php",
+                dataType: 'json',
+                beforeSend: function () {
+                    $("#BtnSearchM").html("<i class='fa fa-spinner fa-spin'>");
+                },
+                data: {
+                    "load": "SearchTagStatus",
+                    "tag_id": tag_id,
+                    "sts_no": sts_no,
+                    "job": job,
+                    "item": item,
+                    "lot": lot,
+                    "tag_status": tag_status,
+                    "mfg_date": mfg_date
+                },
+                success: function (data) {
+                    var issue = data[1];
+                    var minor = data[2];
+                    $("#tblReportHidden").dataTable().fnDestroy();
+                    var table = $('#tblReportHidden').DataTable({
+                        scrollY: "60vh",
+                        "scrollX": true,
+                        scrollCollapse: true,
+                        "aaData": data[0],
+                        "paging": false,
+                        //                        fixedColumns: {
+                        //                            leftColumns: 1,
+                        //                        },
+                        "searching": false,
+                        "bInfo": false,
+
+                        "columns": [
+                            {
+                                "data": "QA_RecordDate.date",
+                                "className": "text-left",
+                                "render": function (data, type, row, meta) {
+                                    if (!data) {
+                                        return "";
+                                    }
+                                    return moment(data).format("YYYY-MM-DD");
+                                }
+                            },
+                            {
+                                "data": "print_date.date",
+                                "className": "text-left",
+                                "render": function (data, type, row, meta) {
+                                    return moment(data).format("YYYY-MM-DD");
+                                }
+                            },
+                            {
+                                "data": "wc",
+                                "className": "text-left",
+                            },
+                            {
+                                "data": "id",
+                                "className": "text-left",
+                            },
+                            {
+                                "data": "sts_no",
+                                "className": "text-left",
+                            },
+                            {
+                                "data": "job",
+                                "className": "text-left",
+                            },
+                            {
+                                "data": "item",
+                                "className": "text-left",
+                            },
+                            {
+                                "data": "description",
+                                "className": "text-left",
+                            },
+                            {
+                                "data": "lot",
+                                "className": "text-left",
+                            },
+                            {
+                                "data": "old_lot",
+                                "className": "text-left",
+                            },
+                            {
+                                "data": "qty1",
+                                "className": "text-left",
+                            },
+                            {
+                                "data": "NC_QTY",
+                                "className": "text-left",
+                            },
+                            {
+                                "data": "unit_weight",
+                                "className": "text-left",
+                            },
+                            {
+                                "data": "TotalWeight",
+                                "className": "text-left",
+                            },
+                            {
+                                "data": "tag_status",
+                                "className": "text-left",
+                            },
+                            {
+                                "data": "issue",
+                                "className": "text-left",
+                                "render": function (data, type, row, meta) {
+                                    if (!data) {
+                                        return "";
+                                    }
+                                    let ret = issue[data - 1].issue ? issue[data - 1].issue : "";
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "Minor_cause",
+                                "className": "text-left",
+                                "render": function (data, type, row, meta) {
+                                    if (!data) {
+                                        return "";
+                                    }
+                                    let ret = minor[data - 1].cause ? minor[data - 1].cause : "";
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "Main_cause",
+                                "className": "text-left",
+                                "render": function (data, type, row, meta) {
+                                    if (!data) {
+                                        return "";
+                                    }
+                                    let ret = main.filter(item => item.id == data)[0].name;
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "detail",
+                                "className": "text-left",
+                            },
+                            {
+                                "data": "inspector",
+                                "className": "text-center",
+                                "render": function (data, type, row, meta) {
+                                    let ret = data ? covertName(data) : "ยังไม่ตวรจ";
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "inspec_date.date",
+                                "className": "text-center",
+                                "render": function (data, type, row, meta) {
+                                    let ret = data ? moment(data).format("DD/MM/YYYY HH:mm:ss") : "-";
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "comp_name",
+                                "className": "text-center",
+                            }
+                        ],
+                        'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
                             "<'row'<'col-md-12'tr>>" +
                             "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
-                    buttons: [
-                        // {
-                        //     extend: 'print',
-                        //     text: "<i class='fa fa-print'></i>&nbsp;Print",
-                        //     title: ''
-                        // },
-                        {
-                            extend: 'excel',
-                            text: "<i class='fa fa-file-excel'></i>&nbsp;Excel&nbsp;",
-                            title: "Report TagStatus",
-                            // `ReportMain sts_no ${from_stsno}-${to_stsno}`,
-                            customize: function (xlsx) {
-                                var sheet = xlsx.xl.worksheets['sheet1.xml'];
-                                var numrows = 2;
-                            }
-                        },
-                    ],
-                });
+                        buttons: [
+                            // {
+                            //     extend: 'print',
+                            //     text: "<i class='fa fa-print'></i>&nbsp;Print",
+                            //     title: ''
+                            // },
+                            {
+                                extend: 'excel',
+                                text: "<i class='fa fa-file-excel'></i>&nbsp;Excel&nbsp;",
+                                title: "Report TagStatus",
+                                // `ReportMain sts_no ${from_stsno}-${to_stsno}`,
+                                customize: function (xlsx) {
+                                    var sheet = xlsx.xl.worksheets['sheet1.xml'];
+                                    var numrows = 2;
+                                }
+                            },
+                        ],
+                    });
 
-                $('#tblReportHidden').loading("stop");
-                $("#BtnSearchM").html("<i class='fa fa-search'></i>&nbsp; Search");
-            },
-            error: function (e) {
-                console.log("There was an error with your request...");
-                console.log("error: " + JSON.stringify(e));
-            }
-        });
+                    $('#tblReportHidden').loading("stop");
+                    $("#BtnSearchM").html("<i class='fa fa-search'></i>&nbsp; Search");
+                },
+                error: function (e) {
+                    console.log("There was an error with your request...");
+                    console.log("error: " + JSON.stringify(e));
+                }
+            });
+        }
     }
-}
 
-    function ReportAllSearchShow() {
-    var OldHtml = $("#BtnSearchM").html();
-    var tag_id = $("#tag_id").val();
-    var sts_no = $("#sts_no").val();
-    var job = $("#job").val();
-    var item = $("#item").val();
-    var lot = $("#lot").val();
-    var tag_status = $("#tag_status").val();
-    var mfg_date = $("#mfg_date").val();
-    if ((tag_id == "") && (sts_no == "") && (job == "") && (item == "") && (lot == "") && (tag_status == "") && (mfg_date == "")) {
-        // $.alert("กรุณาป้อนรายละเอียดเพื่อกรองข้อมูล");
-    } else {
+    async function ReportAllSearchShow() {
+        var OldHtml = $("#BtnSearchM").html();
+        var tag_id = $("#tag_id").val();
+        var sts_no = $("#sts_no").val();
+        var job = $("#job").val();
+        var item = $("#item").val();
+        var lot = $("#lot").val();
+        var tag_status = $("#tag_status").val();
+        var mfg_date = $("#mfg_date").val();
+
+        if ((tag_id == "") && (sts_no == "") && (job == "") && (item == "") && (lot == "") && (tag_status == "") && (mfg_date == "")) {
+            // $.alert("กรุณาป้อนรายละเอียดเพื่อกรองข้อมูล");
+        } else {
+            $.ajax({
+                type: 'POST',
+                url: "././module/REPORT_TagStatus/data.php",
+                dataType: 'json',
+                beforeSend: function () {
+                    $("#BtnSearchM").html("<i class='fa fa-spinner fa-spin'>");
+                },
+                data: {
+                    "load": "SearchTagStatus",
+                    "tag_id": tag_id,
+                    "sts_no": sts_no,
+                    "job": job,
+                    "item": item,
+                    "lot": lot,
+                    "tag_status": tag_status,
+                    "mfg_date": mfg_date
+                },
+                success: function (data) {
+                    var issue = data[1];
+                    var minor = data[2];
+                    $("#tblReportShow").dataTable().fnDestroy();
+                    var table = $('#tblReportShow').DataTable({
+                        scrollY: "60vh",
+                        "scrollX": true,
+                        scrollCollapse: true,
+                        "aaData": data[0],
+                        "paging": false,
+                        //                        fixedColumns: {
+                        //                            leftColumns: 1,
+                        //                        },
+                        "searching": false,
+                        "bInfo": false,
+
+                        "columns": [
+                            {
+                                "data": "QA_RecordDate.date",
+                                "className": "text-left",
+                                "render": function (data, type, row, meta) {
+                                    let valdata = data ? moment(data).format("YYYY-MM-DD") : "";
+                                    $(`.input_date_in`).datepicker({
+                                        dateFormat: 'yy-mm-dd',
+                                    });
+                                    let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value input_date_in' size='20' id=${row.id} onchange="SaveRecordDate('${row.id}',value,'date_in');" value='${(valdata)}' />`;
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "print_date.date",
+                                "className": "text-left",
+                                "render": function (data, type, row, meta) {
+                                    return moment(data).format("YYYY-MM-DD");
+                                }
+                            },
+                            {
+                                "data": "wc",
+                                "className": "text-left",
+                            },
+                            {
+                                "data": "id",
+                                "className": "text-left",
+                            },
+                            {
+                                "data": "sts_no",
+                                "className": "text-left",
+                            },
+                            {
+                                "data": "job",
+                                "className": "text-left",
+                            },
+                            {
+                                "data": "item",
+                                "className": "text-left",
+                            },
+                            {
+                                "data": "description",
+                                "className": "text-left",
+                            },
+                            {
+                                "data": "lot",
+                                "className": "text-left",
+                            },
+                            {
+                                "data": "old_lot",
+                                "className": "text-left",
+                            },
+                            {
+                                "data": "qty1",
+                                "className": "text-left",
+                            },
+                            {
+                                "data": "NC_QTY",
+                                "className": "text-center",
+                                "render": function (data, type, row, meta) {
+                                    let valdata = data ? data : "";
+                                    let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='15' id=${row.id} onchange="SaveNC(this.id,value);" value='${(valdata)}' />`;
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "unit_weight",
+                                "className": "text-center",
+                            },
+                            {
+                                "data": "TotalWeight",
+                                "className": "text-center",
+                                "render": function (data, type, row, meta) {
+                                    let valdata = data;
+                                    return Number(valdata).toFixed(5);
+                                }
+                            },
+                            {
+                                "data": "tag_status",
+                                "className": "text-center",
+                                "render": function (data, type, row, meta) {
+                                    var $select = $("<select id='" + row.id + "' value='" + data + "'  onchange='UpdateStatus(this.id,value)'></select>", {
+                                    });
+                                    $.each(select_status, function (k, v) {
+                                        var $option = $("<option></option>", {
+                                            "text": v,
+                                            "value": v
+                                        });
+                                        if (data === v) {
+                                            $option.attr("selected", "selected")
+                                        }
+                                        $select.append($option);
+                                    });
+                                    return $select.prop("outerHTML");
+                                }
+                            },
+                            {
+                                data: "issue",
+                                width: "300px",
+                                className: "text-center",
+                                render: function (data, type, row) {
+                                    if (type !== 'display') {
+                                        return data;
+                                    }
+
+                                    // สร้าง select พื้นฐาน
+                                    return `<select class="form-control select2-dropdown" style="width: 100%">
+                                             <option value=""></option>
+                                             ${issue.map(item =>
+                                        `<option value="${item.id}" ${data === Number(item.id) ? 'selected' : ''}>${item.issue}</option>`).join('')}
+                                             </select>`;
+                                },
+                                createdCell: function (td, cellData, rowData, row, col) {
+                                    // รอให้ DOM สร้างเสร็จก่อนค่อย init select2
+
+                                    const $select = $(td).find('select');
+                                    if (!$select.hasClass('select2-hidden-accessible')) {
+                                        $select.select2({
+                                            placeholder: 'เลือกรายการ issue',
+                                            allowClear: true,
+                                            width: '100%',
+                                            language: {
+
+                                                noResults: function () {
+                                                    return "ไม่พบข้อมูล";
+                                                }
+                                            }
+                                        }).on('select2:select', function (e) {
+                                            UpdateIssue(rowData.id, e.target.value);
+                                        });
+                                    }
+                                }
+                            },
+                            {
+                                "data": "Minor_cause",
+                                "width": "300px",
+                                "className": "text-center",
+                                render: function (data, type, row) {
+                                    if (type !== 'display') {
+                                        return data;
+                                    }
+
+                                    // สร้าง select พื้นฐาน
+                                    return `<select class="form-control select2-dropdown" style="width: 100%">
+                                             <option value=""></option>
+                                             ${minor.map(item =>
+                                        `<option value="${item.id}" ${data === Number(item.id) ? 'selected' : ''}>${item.cause}</option>`).join('')}
+                                             </select>`;
+                                },
+                                createdCell: function (td, cellData, rowData, row, col) {
+                                    // รอให้ DOM สร้างเสร็จก่อนค่อย init select2
+
+                                    const $select = $(td).find('select');
+                                    if (!$select.hasClass('select2-hidden-accessible')) {
+                                        $select.select2({
+                                            placeholder: 'เลือกรายการ minor cause',
+                                            allowClear: true,
+                                            width: '100%',
+                                            language: {
+
+                                                noResults: function () {
+                                                    return "ไม่พบข้อมูล";
+                                                }
+                                            }
+                                        }).on('select2:select', function (e) {
+                                            UpdateMinor(rowData.id, e.target.value);
+                                        });
+                                    }
+                                }
+                            },
+                            {
+                                "data": "Main_cause",
+                                "width": "300px",
+                                "className": "text-center",
+                                render: function (data, type, row) {
+                                    if (type !== 'display') {
+                                        return data;
+                                    }
+
+                                    // สร้าง select พื้นฐาน
+                                    return `<select class="form-control select2-dropdown" style="width: 100%">
+                                             <option value=""></option>
+                                             ${main.map(item =>
+                                        `<option value="${item.id}" ${data === item.id ? 'selected' : ''}>${item.name}</option>`).join('')}
+                                             </select>`;
+                                },
+                                createdCell: function (td, cellData, rowData, row, col) {
+                                    // รอให้ DOM สร้างเสร็จก่อนค่อย init select2
+
+                                    const $select = $(td).find('select');
+                                    if (!$select.hasClass('select2-hidden-accessible')) {
+                                        $select.select2({
+                                            placeholder: 'เลือกรายการ main cause',
+                                            allowClear: true,
+                                            width: '100%',
+                                            language: {
+
+                                                noResults: function () {
+                                                    return "ไม่พบข้อมูล";
+                                                }
+                                            }
+                                        }).on('select2:select', function (e) {
+                                            UpdateMain(rowData.id, e.target.value);
+                                        });
+                                    }
+                                }
+                            },
+                            {
+                                "data": "detail",
+                                "className": "text-center",
+                                "render": function (data, type, row, meta) {
+                                    let valdata = data;
+                                    let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='45' id=${row.id} onchange="SaveDetail(this.id,value);" value='${(valdata)}' />`;
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "inspector",
+                                "className": "text-center",
+                                "render": function (data, type, row, meta) {
+                                    let ret = data ? covertName(data) : "ยังไม่ตวรจ";
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "inspec_date.date",
+                                "className": "text-center",
+                                "render": function (data, type, row, meta) {
+                                    let ret = data ? moment(data).format("DD/MM/YYYY HH:mm:ss") : "-";
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "comp_name",
+                                "className": "text-center",
+                            }
+                        ],
+                    });
+
+                    $('#tblReportShow').loading("stop");
+                    $("#BtnSearchM").html("<i class='fa fa-search'></i>&nbsp; Search");
+                },
+                error: function (e) {
+                    console.log("There was an error with your request...");
+                    console.log("error: " + JSON.stringify(e));
+                }
+            });
+        }
+    }
+
+    function UpdateStatus(id, status_value) {
+        // console.log(id)
+        console.log(status_value, 'status_value')
         $.ajax({
-            type: 'POST',
-            url: "././module/REPORT_TagStatus/data.php",
-            dataType: 'json',
-            beforeSend: function () {
-                $("#BtnSearchM").html("<i class='fa fa-spinner fa-spin'>");
-            },
-            data: {
-                "load": "SearchTagStatus",
-                "tag_id": tag_id,
-                "sts_no": sts_no,
-                "job": job,
-                "item": item,
-                "lot": lot,
-                "tag_status": tag_status,
-                "mfg_date": mfg_date
-            },
-            success: function (data) {
-                console.log(data)
-                $("#tblReportShow").dataTable().fnDestroy();
-                var table = $('#tblReportShow').DataTable({
-                    scrollY: "60vh",
-                    "scrollX": true,
-                    scrollCollapse: true,
-                    "aaData": data,
-                    "paging": false,
-//                        fixedColumns: {
-//                            leftColumns: 1,
-//                        },
-                    "searching": false,
-                    "bInfo": false,
-
-                    "columns": [
-                        {"data": "id",
-                            "className": "text-left",
-                        },
-                        {"data": "sts_no",
-                            "className": "text-left",
-                        },
-                        {"data": "job",
-                        "className": "text-left",
-                        },
-                        {"data": "item",
-                            "className": "text-left",
-                        },
-                        {"data": "description",
-                            "className": "text-left",
-                        },
-                        {"data": "lot",
-                            "className": "text-left",                          
-                        },
-                        {"data": "old_lot",
-                            "className": "text-left",                          
-                        },
-                        {"data": "qty1", 
-                            "className": "text-left",                           
-                        },
-                        {"data": "tag_status",
-                            "className": "text-center",
-                            "render": function(data, type, row, meta){
-                            var $select = $("<select id='"+ row.id +"' value='"+data+"'  onchange='UpdateStatus(this.id,value)'></select>", {
-                        });
-                        $.each(select_status, function(k,v){
-                            var $option = $("<option></option>", {
-                                "text": v,
-                                "value": v
-                            });
-                            if(data === v){
-                                $option.attr("selected", "selected")
-                            }
-                            $select.append($option);
-                        });
-                        return $select.prop("outerHTML");
-                    }
-                        }, 
-                        {"data": "detail",
-                            "className": "text-center",
-                            "render": function (data, type, row, meta) {
-                            let valdata = data;
-                            let ret = `<span hidden>${(valdata) }</span><input type='text' class='input-text-value' size='45' id=${row.id} onchange="SaveDetail(this.id,value);" value='${(valdata)}' />`;
-                            return ret;
-                        }
-                    },
-                    {
-                        "data": "inspector",
-                        "className": "text-center",
-                        "render": function (data, type, row, meta) {
-                            let ret = data ? covertName(data) : "ยังไม่ตวรจ";
-                            return ret;
-                        }
-                    },
-                    {
-                        "data": "inspec_date.date",
-                        "className": "text-center",
-                        "render": function (data, type, row, meta) {
-                            let ret = data ? moment(data).format("DD/MM/YYYY HH:mm:ss") : "-";
-                            return ret;
-                        }
-                    },
-                    {
-                        "data": "comp_name",
-                        "className": "text-center",
-                    }
-                    ],
-                });
-
-                $('#tblReportShow').loading("stop");
-                $("#BtnSearchM").html("<i class='fa fa-search'></i>&nbsp; Search");
-            },
-            error: function (e) {
-                console.log("There was an error with your request...");
-                console.log("error: " + JSON.stringify(e));
-            }
-        });
-    }
-}
-
-    function UpdateStatus(id,status_value) {
-    // console.log(id)
-    console.log(status_value, 'status_value')
-    $.ajax({
             url: "././module/REPORT_TagStatus/data.php",
             type: 'get',
             // processData: false,
             data: {
-            "load": "update_status",
-            "id": id,
-            "status_value": status_value
+                "load": "update_status",
+                "id": id,
+                "status_value": status_value
+            },
+            success: function () {
+                // alert("true");
+            }
+        });
+    }
+    function UpdateIssue(id, issue_value) {
+        // console.log(id)
+        $.ajax({
+            url: "././module/REPORT_TagStatus/data.php",
+            type: 'get',
+            // processData: false,
+            data: {
+                "load": "update_issue",
+                "id": id,
+                "issue_value": issue_value
             },
             success: function () {
                 // alert("true");
@@ -408,17 +699,90 @@
         });
     }
 
-    function SaveDetail(detail_id,detail_value) {
-    // console.log(detail_id)
-    // console.log(detail_value)
-    $.ajax({
+    function UpdateMinor(id, minor_value) {
+        // console.log(id)
+        $.ajax({
             url: "././module/REPORT_TagStatus/data.php",
             type: 'get',
             // processData: false,
             data: {
-            "load": "save_detail",
-            "detail_id": detail_id,
-            "detail_value": detail_value
+                "load": "update_minor",
+                "id": id,
+                "minor_value": minor_value
+            },
+            success: function () {
+                // alert("true");
+            }
+        });
+
+    }
+
+    function UpdateMain(id, main_value) {
+        // console.log(id)
+        $.ajax({
+            url: "././module/REPORT_TagStatus/data.php",
+            type: 'get',
+            // processData: false,
+            data: {
+                "load": "update_main",
+                "id": id,
+                "main_value": main_value
+            },
+            success: function () {
+                // alert("true");
+            }
+        });
+
+    }
+
+
+    function SaveDetail(detail_id, detail_value) {
+        // console.log(detail_id)
+        // console.log(detail_value)
+        $.ajax({
+            url: "././module/REPORT_TagStatus/data.php",
+            type: 'get',
+            // processData: false,
+            data: {
+                "load": "save_detail",
+                "detail_id": detail_id,
+                "detail_value": detail_value
+            },
+            success: function () {
+                // alert("true");
+            }
+        });
+    }
+
+    function SaveNC(id, nc_value) {
+        // console.log(detail_id)
+        // console.log(detail_value)
+        $.ajax({
+            url: "././module/REPORT_TagStatus/data.php",
+            type: 'get',
+            // processData: false,
+            data: {
+                "load": "save_nc",
+                "id": id,
+                "nc_value": nc_value
+            },
+            success: function () {
+                // alert("true");
+            }
+        });
+    }
+
+    function SaveRecordDate(id, record_date) {
+        // console.log(detail_id)
+        // console.log(detail_value)
+        $.ajax({
+            url: "././module/REPORT_TagStatus/data.php",
+            type: 'get',
+            // processData: false,
+            data: {
+                "load": "save_record_date",
+                "id": id,
+                "record_date": record_date
             },
             success: function () {
                 // alert("true");
@@ -429,36 +793,36 @@
     function covertName(Pass) {
         if (Pass == 5404) {
             return "นายณฐพงศ์ ถนอมพันธ์"
-          } else if (Pass == 8105) {
+        } else if (Pass == 8105) {
             return "นายศุภชัย ทนสุวรรณ"
-          } else if (Pass == 8113) {
+        } else if (Pass == 8113) {
             return "นายกิตติ แดงสกุล"
-          } else if (Pass == 8139) {
+        } else if (Pass == 8139) {
             return "นายพันธ์พจน์ บุญอยู่"
-          } else if (Pass == 8192) {
+        } else if (Pass == 8192) {
             return "นายวุฒิชัย เพี้ยนสำอางค์"
-          } else if (Pass == 8202) {
+        } else if (Pass == 8202) {
             return "นายภีมพันธ์ วุฒิประภา"
-          } else if (Pass == 8222) {
-           return "นายเอกรัตน์ วงษ์จอม"
-          } else if (Pass == 8236) {
+        } else if (Pass == 8222) {
+            return "นายเอกรัตน์ วงษ์จอม"
+        } else if (Pass == 8236) {
             return "นายสุรยุทธ บุญหว่าน"
-          } else if (Pass == 8237) {
+        } else if (Pass == 8237) {
             return "นายอนุสรณ์ แสนคำฟู"
-          } else if (Pass == 8238) {
+        } else if (Pass == 8238) {
             return "นายพีรพัฒน์ วิเศษชิต"
-          }  else if (Pass == 2048) {
+        } else if (Pass == 2048) {
             return "นายสุริยะกานต์ สิงค์คำพุด"
-          } else if (Pass == 8117) {
+        } else if (Pass == 8117) {
             return "นายสงกรานต์ พิศนอก"
-          } else if (Pass == 8155) {
+        } else if (Pass == 8155) {
             return "น.ส. กัญธิกา วุ่นอภัย"
-          } else if (Pass == 8157) {
+        } else if (Pass == 8157) {
             return "นายศักดา วุ่นอภัย"
-          } else if (Pass == 9743) {
+        } else if (Pass == 9743) {
             return "น.ส. อนัญญา คงฮวด"
-          } else if (Pass == 10218) {
+        } else if (Pass == 10218) {
             return "นายฐาปนา แสงสิทธิ์"
-          }
+        }
     }
 </script>

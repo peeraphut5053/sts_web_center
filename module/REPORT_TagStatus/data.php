@@ -46,3 +46,28 @@ if ($load == "save_detail") {
     $mv_bc_tag = $CallModelObj->SaveDetail($detail_id,$detail_value);
     echo json_encode($mv_bc_tag);
 }
+
+if ($load == "update_issue") {
+    $mv_bc_tag = $CallModelObj->UpdateIssue($id, $issue_value);
+    echo json_encode($mv_bc_tag);
+}
+
+if ($load == "update_minor") {
+    $mv_bc_tag = $CallModelObj->UpdateMinor($id, $minor_value);
+    echo json_encode($mv_bc_tag);
+}
+
+if ($load == "update_main") {
+    $mv_bc_tag = $CallModelObj->UpdateMain($id, $main_value);
+    echo json_encode($mv_bc_tag);
+}
+
+if ($load == "save_nc") {
+    $mv_bc_tag = $CallModelObj->UpdateNC($id, $nc_value);
+    echo json_encode($mv_bc_tag);
+}
+
+if ($load == "save_record_date") {
+    $mv_bc_tag = $CallModelObj->UpdateRecordDate($id, $record_date);
+    echo json_encode($mv_bc_tag);
+}
