@@ -366,7 +366,20 @@
               "className": "text-center",
               "render": function (data, type, row, meta) {
                 if (row.approve == 1) {
-                  return data;
+                  var select_status =
+                  ["กรุณาเลือกวัตถุประสงค์",
+                    "นำไปซ่อม - ส่งกลับ STS",
+                    "นำเหล็กออกแปรรูป- ส่งกลับ STS",
+                    "นำออกวัสดุสิ้นเปลือง (งานจัดจ้าง)",
+                    "ท่อตัวอย่าง",
+                    "กำจัดทิ้ง",
+                    "ขายของเก่า",
+                    "อื่นๆ",
+                    "ส่งทดสอบ - สอบเทียบ",
+                    "ทำชิ้นงานทดสอบ"
+                  ];
+                var ret = select_status[Number(data)];
+                return ret;
                 }
                 var select_status =
                   ["กรุณาเลือกวัตถุประสงค์",
