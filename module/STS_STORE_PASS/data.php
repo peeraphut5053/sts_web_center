@@ -91,3 +91,14 @@ if ($load == "reportPDF") {
     $rs = $STS_Custom->GetDataReportPDF($doc_no);
     echo json_encode($rs);
 }
+
+if ($load == "approve") {
+    $CallModel = new CallModel();
+    $CallModel->SyteLine_Models();
+
+    $STS_Custom = new Buyer();
+    $STS_Custom->setConn($ConnSL);
+
+    $rs = $STS_Custom->SaveApproval($doc_no,$data,$type,$userApprover);
+    echo json_encode($rs);
+}

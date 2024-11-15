@@ -325,8 +325,9 @@
                 if (valdata) {
                   return "<span class='text-green-500 text-2xl'>ตรวจสอบแล้ว</span>";
                 }
+                
                 // วิธีที่ 1: ใช้เงื่อนไขในการเพิ่ม/ไม่เพิ่ม checked attribute
-                let ret = `<span class=${valdata ? 'text-green-500' : 'text-red-500'}>${valdata ? "ตรวจสอบแล้ว" : "รอตรวจสอบ"}</span><button class='btn btn-primary' size='60' id='${row.approve}' onclick="SaveApprove('${row.doc_no}','${row.approve}','approve');">เปลี่ยน</button>`;
+                let ret = `<span class=${valdata ? 'text-green-500' : 'text-red-500'}>${valdata ? "ตรวจสอบแล้ว" : "รอตรวจสอบ"}</span><button class='btn btn-primary' size='60' id='${row.approve}' onclick="SaveApprove('${row.doc_no}','${row.approve}','approve','${row.item_in}');">เปลี่ยน</button>`;
 
                 return ret;
               },
@@ -344,6 +345,9 @@
               "data": "dept",
               "className": "text-center",
               "render": function (data, type, row, meta) {
+                if (row.approve == 1) {
+                  return data;
+                }
                 let valdata = data;
                 let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='20' onchange="SaveDetailOut('${row.doc_no}',value,'dept');" value='${(valdata)}' />`;
                 return ret;
@@ -361,6 +365,9 @@
               "data": "purpose",
               "className": "text-center",
               "render": function (data, type, row, meta) {
+                if (row.approve == 1) {
+                  return data;
+                }
                 var select_status =
                   ["กรุณาเลือกวัตถุประสงค์",
                     "นำไปซ่อม - ส่งกลับ STS",
@@ -414,6 +421,9 @@
               "className": "text-center",
               "render": function (data, type, row, meta) {
                 let valdata = moment(data).format("YYYY-MM-DD");
+                if (row.approve == 1) {
+                  return valdata;
+                }
                 $(`.input_date_out`).datepicker({
                   dateFormat: 'yy-mm-dd',
                 });
@@ -425,6 +435,9 @@
               "data": "item_out",
               "className": "text-center",
               "render": function (data, type, row, meta) {
+                if (row.approve == 1) {
+                  return data;
+                }
                 let valdata = data;
                 let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='60' id=${row.item_out} onchange="SaveDetailOut('${row.doc_no}',value,'item_out');" value='${(valdata)}' />`;
                 return ret;
@@ -435,6 +448,9 @@
               "className": "text-center",
               "render": function (data, type, row, meta) {
                 let valdata =  data ? moment(data).format("YYYY-MM-DD") : "";
+                if (row.approve == 1) {
+                  return valdata;
+                }
                 $(`.input_date_in`).datepicker({
                   dateFormat: 'yy-mm-dd',
                 });
@@ -446,6 +462,9 @@
               "data": "item_in",
               "className": "text-center",
               "render": function (data, type, row, meta) {
+                if (row.approve == 1) {
+                  return data;
+                }
                 let valdata = data ? data : "";
                 let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='60' onchange="SaveDetail('${row.doc_no}',value,'item_in');" value='${(valdata)}' />`;
                 return ret;
@@ -463,6 +482,9 @@
               "data": "po",
               "className": "text-center",
               "render": function (data, type, row, meta) {
+                if (row.approve == 1) {
+                  return data;
+                }
                 let valdata = data;
                 let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='20' onchange="SaveDetailOut('${row.doc_no}',value,'po');" value='${(valdata)}' />`;
                 return ret;
@@ -472,6 +494,9 @@
               "data": "company",
               "className": "text-center",
               "render": function (data, type, row, meta) {
+                if (row.approve == 1) {
+                  return data;
+                }
                 let valdata = data;
                 let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='20' onchange="SaveDetailOut('${row.doc_no}',value,'company');" value='${(valdata)}' />`;
                 return ret;
@@ -481,6 +506,9 @@
               "data": "car",
               "className": "text-center",
               "render": function (data, type, row, meta) {
+                if (row.approve == 1) {
+                  return data;
+                }
                 let valdata = data;
                 let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='20' onchange="SaveDetailOut('${row.doc_no}',value,'car');" value='${(valdata)}' />`;
                 return ret;
@@ -490,6 +518,9 @@
               "data": "detail",
               "className": "text-center",
               "render": function (data, type, row, meta) {
+                if (row.approve == 1) {
+                  return data;
+                }
                 let valdata = data;
                 let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='20' onchange="SaveDetailOut('${row.doc_no}',value,'detail');" value='${(valdata)}' />`;
                 return ret;
@@ -499,6 +530,9 @@
               "data": "remark",
               "className": "text-center",
               "render": function (data, type, row, meta) {
+                if (row.approve == 1) {
+                  return data;
+                }
                 let valdata = data ? data : "";
                 let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='20' onchange="SaveDetail('${row.doc_no}',value,'remark');" value='${(valdata)}' />`;
                 return ret;
@@ -564,7 +598,16 @@
       },
     });
   };
-  function SaveApprove(doc_no, value, name) {
+  function SaveApprove(doc_no, value, name, item_in) {
+
+    var username_session = GetUserProp("login_username");
+    $(".username_session").html(username_session);
+
+    if (item_in == 'null') {
+      alert("กรุณากรอกข้อมูลรายการที่นำของเข้าก่อนอนุมัติการตรวจสอบเอกสารนี้");
+      return false;
+    }
+
     $.confirm({
       title: 'กรุณาใส่ Password',
       theme: 'modern',
@@ -581,8 +624,6 @@
             val = 1;
           }
 
-          console.log('P ', val);
-
           if (Pass == "sts1234") {
             // updated approve in myData
             $.ajax({
@@ -590,10 +631,11 @@
               url: "././module/STS_STORE_PASS/data.php",
               dataType: "json",
               data: {
-                load: "saveExtraOut",
+                load: "approve",
                 doc_no: doc_no,
                 data: val,
-                type: name
+                type: name,
+                userApprover: username_session
               },
               success: function (data) {
 
