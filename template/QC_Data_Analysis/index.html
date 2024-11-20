@@ -1,0 +1,262 @@
+<div class="row" style="border-bottom:solid 1px #e8e8e8;">
+    <div class="row">
+        <h3 class="text-center" style="padding-left:5px;">QA&QC Data Analysis</h3>
+    </div>
+</div>
+
+<div class="row flex">
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+        <div class="input-group">
+            <div class="input-group-addon">Start Date</div>
+            <input type="text" class="form-control" id="StartDate_QC" autocomplete="off" />
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+        <div class="input-group">
+            <div class="input-group-addon">End Date</div>
+            <input type="text" class="form-control" id="EndDate_QC" autocomplete="off" />
+        </div>
+    </div>
+    <div class="col-lg-2">
+        <div class="input-group">
+            <div class="input-group-addon">Type</div>
+            <select class="form-control txt-filter" id="type">
+                <option value="sum">SUM</option>
+                <option value="Forming">Forming</option>
+                <option value="Finishing">Finishing</option>
+                <option value="Other">Other</option>
+            </select>
+        </div>
+    </div>
+    <div class="col-lg-1 col-md-2 col-sm-1 col-xs-6  col-search">
+        <button id="BtnSearchZ" class="btn btn-info"><i class="fa fa-search"></i>Search</button>
+    </div>
+</div>
+
+<br>
+
+<div class="row" id="divReportM">
+    <table class="table table-condensed table-bordered table-striped" width="100%" id="tblReportZ">
+        <thead>
+            <tr>
+                <th class="bg-gray">Main_Cause</th>
+                <th id="thMinor" class="bg-gray">Minor_Cause</th>
+                <th class="bg-gray">Total NC Product</th>
+                <th class="bg-gray">Reject</th>
+                <th class="bg-gray">Fix</th>
+                <th class="bg-gray">Nc Accept</th>
+                <th class="bg-gray">In Process</th>
+            </tr>
+    </table>
+</div>
+<hr />
+<div class="flex justify-center">
+    <div class="flex flex-col items-center" style="width:100%;max-width:700px">
+        <h3 class="text-center m-5 font-bold"><span id="start"></span> - <span id="end"></span></h1>
+            <div>
+                <div class="font-bold m-4 text-3xl">NC SUM PROCESS</div>
+            </div>
+            <div class="w-full m-4">
+                <canvas class="m-auto" id="QcChart" style="width:100%;max-width:500px"></canvas>
+            </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    let QcChart;
+
+    $("#BtnSearchZ").click(function () {
+        var type = $("#type").val();
+        if (QcChart) {
+            console.log("destroy");
+            
+        QcChart.destroy(); // ลบกราฟเก่า
+    }
+        ReportAllSearch(type);
+    });
+
+    $("#StartDate_QC, #EndDate_QC").datepicker({
+        dateFormat: "yy-mm-dd",
+    });
+
+    function ReportAllSearch(type) {
+        var StartDate = $("#StartDate_QC").val();
+        var EndDate = $("#EndDate_QC").val();
+        var OldHtml = $("#BtnSearchM").html();
+        $("#tblReportZ").loading();
+        $("#tblReportZ tfoot").remove();
+        $.ajax({
+            type: 'POST',
+            url: "././module/QC_Data_Analysis/data.php",
+            dataType: 'json',
+            beforeSend: function () {
+                $("#BtnSearchM").html("<i class='fa fa-spinner fa-spin'>");
+            },
+            data: {
+                "load": type,
+                "StartDate": StartDate,
+                "EndDate": EndDate
+
+            },
+            success: function (data) {
+                let labels = [];
+                if (type == "sum") {
+                    labels = data.map((item) => item.Main_cause);
+                } else {
+                    labels = data.map((item) => item.Minor_cause);
+                }
+                const data_chart = data.map((item) => item.Total);
+
+                const sum = data_chart.reduce((accumulator, value) => accumulator + Number(value), 0).toFixed(2);
+        
+                
+
+                const dataLeadTime = {
+                    labels: labels.map((item, index) => `${item} (${(data[index].Total * 100 / sum).toFixed(2)}%)`),
+                    datasets: [{
+                        label: 'Test Result',
+                        data: data_chart,
+                        borderWidth: 1,
+                        backgroundColor: ['#85e0e0', '#ffc266', '#d1e0e0', '#ffff99', '#9999ff', '#80ff80', '#d966ff', '#ff6666', '#b380ff', '#000066', '#993333'],
+                    }]
+                };
+                var options = {
+                    legend: {
+                        display: true,
+                        position: 'right',
+                    },
+                    tooltips: {
+                    },
+                    plugins: {
+                        datalabels: {
+                            display: false
+                        }
+                    },
+
+                };
+
+                 QcChart = new Chart("QcChart", {
+                    type: "doughnut",
+                    data: dataLeadTime,
+                    options: options,
+                    plugins: [ChartDataLabels],
+                });
+                $("#tblReportZ").DataTable().clear();
+            $("#tblReportZ").append(
+              "<tfoot><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></tfoot>"
+            );
+            $("#tblReportZ").dataTable({
+              aaData: data,
+              paging: false,
+              fixedHeader: true,
+              destroy: true,
+              processing: true,
+              scrollY: "65vh",
+              scrollCollapse: true,
+              scrollX: true,
+              select: true,
+              columns: [
+              {
+                            "data": "Main_cause",
+                            "className": "text-center",
+                        },
+                        {
+                            "data": "Minor_cause",
+                            "defaultContent": "-", 
+                            "className": "text-center"
+                        },
+                        {
+                            "data": "Total",
+                            "className": "text-center",
+                            "render": function (data, type, row) {
+                                let ret = Number(data);
+                                return ret.toFixed(2);
+                            }
+                        },
+                        {
+                            "data": "REJECT",
+                            "className": "text-center",
+                            "render": function (data, type, row) {
+                                let ret = Number(data);
+                                return ret.toFixed(2);
+                            }
+                        },
+                        {
+                            "data": "FIX",
+                            "className": "text-center",
+                            "render": function (data, type, row) {
+                                let ret = Number(data);
+                                return ret.toFixed(2);
+                            }
+                        },
+                        {
+                            "data": "NC ACCEPT",
+                            "className": "text-center",
+                            "render": function (data, type, row) {
+                                let ret = Number(data);
+                                return ret.toFixed(2);
+                            }
+                        },
+                        {
+                            "data": "in PROCESS",
+                            "className": "text-center",
+                            "render": function (data, type, row) {
+                                let ret = Number(data);
+                                return ret.toFixed(2);
+                            }
+                        },
+              ],
+              dom:
+                "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                "<'row'<'col-md-12'tr>>" +
+                "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+              buttons: [
+                {
+                  extend: "print",
+                  text: "<i class='fa fa-print'></i>&nbsp;Print",
+                  title: "",
+                },
+                {
+                  extend: "excel",
+                  footer: true,
+                  text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                  title:
+                    "QC_Data_Analysis" +
+                    StartDate +
+                    "_to_" +
+                    EndDate,
+                },
+              ],
+              "footerCallback": function (row, data, start, end, display) {
+                        var api = this.api(),
+                                data;
+                        var intVal = function (i) {
+                            return typeof i === 'string' ?
+                                    i.replace(/[\$,]/g, '') * 1 :
+                                    typeof i === 'number' ?
+                                    i : 0;
+                        };
+
+                        var total = api
+                                .column(2)
+                                .data()
+                                .reduce(function (a, b) {
+                                    return intVal(a) + intVal(b);
+                                }, 0).toFixed(2);
+                        
+                        $(api.column(1).footer()).html("<b>รวม</b>");
+                        $(api.column(2).footer()).html("<b>" + total + "</b>");
+                
+                    },
+            });
+            $("#tblReportZ").loading("stop");
+            $("#btnSearch").html(OldHtml);
+            },
+            error: function (e) {
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+    }
+</script>

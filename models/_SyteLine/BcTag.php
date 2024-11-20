@@ -762,6 +762,63 @@ order by [date]";
         return array($rs);
     }
 
+    function GetQcDataAnalysisSummary($StartDate, $EndDate) {
+        $query = "select Main_cause
+   , Total=sum(total), REJECT=sum(REJECT), FIX=sum(FIX)
+   , [NC ACCEPT]= sum([NC ACCEPT]), [in PROCESS]=sum([in PROCESS])
+from V_STS_QA_TAG_MAIN_minor
+where QA_RecordDate between '$StartDate' and '$EndDate'
+group by Main_cause";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+    function GetQcDataAnalysisSummaryGroup($StartDate, $EndDate,$load) {
+        $query = "select Main_cause, Minor_cause
+   , Total=sum(total), REJECT=sum(REJECT), FIX=sum(FIX)
+   , [NC ACCEPT]= sum([NC ACCEPT]), [in PROCESS]=sum([in PROCESS])
+from V_STS_QA_TAG_MAIN_minor
+where QA_RecordDate between '$StartDate'and '$EndDate'
+   and main_cause = '$load'
+group by Main_cause, Minor_cause";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+    function getWorkCentersStatus($date, $wc) {
+        $query = "SELECT * FROM STS_machine_record 
+WHERE CAST(start_date AS DATE) = '$date' 
+AND wc = '$wc'";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+    function SaveWorkCentersStatus($wc) {
+        // insert into STS_machine_record then return result of insert
+        $query = "INSERT INTO STS_machine_record(wc, start_date) 
+OUTPUT inserted.*
+VALUES('$wc', GETDATE());";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+    function SaveWorkCentersStatusClose($id) {
+        // insert into STS_machine_record then return result of insert
+        $query = "UPDATE STS_machine_record SET end_date = GETDATE() WHERE id = $id ";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
  
 	
 }
