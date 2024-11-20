@@ -4,7 +4,7 @@
     </div>
 </div>
 
-<div class="row flex">
+<div style="margin-top: 20px;" class="row flex">
     <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
         <div class="input-group">
             <div class="input-group-addon">Start Date</div>
@@ -244,9 +244,36 @@
                                 .reduce(function (a, b) {
                                     return intVal(a) + intVal(b);
                                 }, 0).toFixed(2);
-                        
+                        var reject = api
+                                .column(3)
+                                .data()
+                                .reduce(function (a, b) {
+                                    return intVal(a) + intVal(b);
+                                }, 0).toFixed(2);
+                        var fix = api
+                                .column(4)
+                                .data()
+                                .reduce(function (a, b) {
+                                    return intVal(a) + intVal(b);
+                                }, 0).toFixed(2);
+                        var nc = api
+                                .column(5)
+                                .data()
+                                .reduce(function (a, b) {
+                                    return intVal(a) + intVal(b);
+                                }, 0).toFixed(2);
+                        var inProcess = api
+                                .column(6)
+                                .data()
+                                .reduce(function (a, b) {
+                                    return intVal(a) + intVal(b);
+                                }, 0).toFixed(2);
                         $(api.column(1).footer()).html("<b>รวม</b>");
                         $(api.column(2).footer()).html("<b>" + total + "</b>");
+                        $(api.column(3).footer()).html("<b>" + reject + "</b>");
+                        $(api.column(4).footer()).html("<b>" + fix + "</b>");
+                        $(api.column(5).footer()).html("<b>" + nc + "</b>");
+                        $(api.column(6).footer()).html("<b>" + inProcess + "</b>");
                 
                     },
             });
