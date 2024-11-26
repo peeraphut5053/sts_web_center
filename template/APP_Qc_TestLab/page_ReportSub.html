@@ -192,10 +192,10 @@
                         {"data": "opr_no",
                             "className": "text-center",
                             "render": function (data, type, row, meta) {
-                                if (data == "NOT"){
+                                if (data == "NOT" || data == "NOT-1"){
                                     var ret = `<span style="color: red;">${(data)}</span>`
                                 }
-                                else{
+                                else {
                                     var ret = `<span>${(data)}</span>`
                                 }
                             return ret;
