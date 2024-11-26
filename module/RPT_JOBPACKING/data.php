@@ -372,7 +372,7 @@ if ($load == "CreateForming") {
     $CallModel->SyteLine_Models();
     $Trans = new JobOrder();
     $Trans->setConn($ConnSL);
-    $Trans = $Trans->CreateForming($reason_id, $reason_detail_id, $time_stopped, $time_used, $w_c, $remark, $times_count);
+    $Trans = $Trans->CreateForming($reason_id, $reason_detail_id, $time_stopped, $w_c, $remark, $times_count);
     echo json_encode($Trans);
 }
 
@@ -523,6 +523,15 @@ if ($load == "AddNewReasonFinishing") {
     $Trans = new JobOrder();
     $Trans->setConn($ConnSL);
     $Trans = $Trans->CreateNewReasonFinishing($reason_id, $time_stopped, $down_time, $w_c,$remark, $time_end);
+    echo json_encode($Trans);
+}
+
+if ($load == "UpdateReasonFinishing") {
+    $CallModel = new CallModel();
+    $CallModel->SyteLine_Models();
+    $Trans = new JobOrder();
+    $Trans->setConn($ConnSL);
+    $Trans = $Trans->UpdateReasonFinishing($id,$time_stopped);
     echo json_encode($Trans);
 }
 

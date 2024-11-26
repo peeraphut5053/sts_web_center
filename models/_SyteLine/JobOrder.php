@@ -1016,7 +1016,7 @@ class JOBORDER {
         if ($w_c != "") {
             $searchw_c = "and w_c = '$w_c' ";
         }
-        $query = " select id,STS_forming_reason_description.reason_description as reason_id, STS_forming_reason_description_detail.description as reason_detail_id,convert(varchar, time_stopped, 20) as time_stopped,time_used, w_c,ref_num,convert(varchar, create_date, 20) as create_date,remark FROM STS_forming_reason LEFT JOIN STS_forming_reason_description ON STS_forming_reason.reason_id = STS_forming_reason_description.reason_id LEFT JOIN STS_forming_reason_description_detail ON STS_forming_reason.reason_detail_id = STS_forming_reason_description_detail.reason_detail_id  where 1=1  ";
+        $query = " select id,STS_forming_reason_description.reason_description as reason_id,times_count, STS_forming_reason_description_detail.description as reason_detail_id,convert(varchar, time_stopped, 20) as time_stopped,time_used, w_c,ref_num,convert(varchar, create_date, 20) as create_date,remark FROM STS_forming_reason LEFT JOIN STS_forming_reason_description ON STS_forming_reason.reason_id = STS_forming_reason_description.reason_id LEFT JOIN STS_forming_reason_description_detail ON STS_forming_reason.reason_detail_id = STS_forming_reason_description_detail.reason_detail_id  where 1=1  ";
         $query = $query . $searchDate;
         $query = $query . $searchItem;
         $query = $query . $searchRefnum;
@@ -1028,20 +1028,19 @@ class JOBORDER {
         return $rs0;
     }
 
-    function CreateForming($reason_id, $reason_detail_id, $time_stopped, $time_used, $w_c, $remark, $times_count) {
-        $query = " insert into STS_forming_reason (reason_id,reason_detail_id,time_stopped,time_used,create_date,w_c,remark,times_count) "
-                . "VALUES ('$reason_id','$reason_detail_id','$time_stopped','$time_used',GETDATE(),'$w_c','$remark','$times_count')";
+    function CreateForming($reason_id, $reason_detail_id, $time_stopped, $w_c, $remark, $times_count) {
+        $query = " insert into STS_forming_reason (reason_id,reason_detail_id,time_stopped,create_date,w_c,remark,times_count) "
+                . "VALUES ('$reason_id','$reason_detail_id',GETDATE(),GETDATE(),'$w_c','$remark','$times_count')";
         $cSql = new SqlSrv();
         $cSql->SqlQuery($this->StrConn, $query);
         return $query;
     }
 
     function UpdateForming($id, $reason_id, $time_stopped, $time_used, $w_c) {
-        $query = " update STS_forming_reason set "
-                . " reason_id = '$reason_id',"
-                . " time_stopped = '$time_stopped',"
-                . " time_used = '$time_used' "
-                . " where id = '$id' ";
+        $query = "UPDATE STS_forming_reason 
+SET time_end = GETDATE(), 
+    time_used = DATEDIFF(MINUTE, '$time_stopped', GETDATE()) 
+WHERE id = '$id' ";
         $cSql = new SqlSrv();
         $cSql->SqlQuery($this->StrConn, $query);
         return $query;
@@ -1377,8 +1376,18 @@ where lot.loc like 'cl%'  and tag.active=1 and qty1 <> 0
     }
 
     function CreateNewReasonFinishing($reason_id, $time_stopped, $down_time, $w_c,$remark,$time_end) {
-        $query = " insert into STS_finishing_reason (reason_id,time_stopped,down_time,w_c,remark,create_date,time_end) "
-                . "VALUES ('$reason_id','$time_stopped','$down_time','$w_c','$remark',GETDATE(),'$time_end') ";
+        $query = " insert into STS_finishing_reason (reason_id,time_stopped,w_c,remark,create_date) "
+                . "VALUES ('$reason_id',GETDATE(),'$w_c','$remark',GETDATE()) ";
+        $cSql = new SqlSrv();
+        $cSql->SqlQuery($this->StrConn, $query);
+        return $query;
+    }
+
+    function UpdateReasonFinishing($id, $time_stopped) {
+        $query = "UPDATE STS_finishing_reason 
+SET time_end = GETDATE(), 
+    down_time = DATEDIFF(MINUTE, '$time_stopped', GETDATE()) 
+WHERE id = '$id' ";
         $cSql = new SqlSrv();
         $cSql->SqlQuery($this->StrConn, $query);
         return $query;
