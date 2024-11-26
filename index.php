@@ -97,6 +97,10 @@ if (!empty($uri[1])) {
             $DepId = $rr["dep_id"];
             $DepName = $rr["dep_name"];
             $DepIcon = $rr["dep_icon"];
+              // ตรวจสอบว่า DepName เป็น "IT" หรือไม่
+            if ($DepName === "IT" && $_SESSION["login_username"] !== "admin") {
+                continue; 
+            }
             $AllDeps .= ' <li class="treeview" width=2000>
           <a href="#">
             <i class="' . $DepIcon . '"></i>
