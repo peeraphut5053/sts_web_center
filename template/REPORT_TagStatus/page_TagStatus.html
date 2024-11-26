@@ -285,7 +285,7 @@
                                     if (!data) {
                                         return "";
                                     }
-                                    let ret = issue[data - 1].issue ? issue[data - 1].issue : "";
+                                    let ret = issue[data - 1]?.issue ? issue[data - 1].issue : "";
                                     return ret;
                                 }
                             },
