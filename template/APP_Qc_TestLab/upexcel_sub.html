@@ -149,6 +149,131 @@
                     $('#ReaderExcelSub').empty();
                     $('#ReaderExcelSub')[0].innerHTML += htmlstr;
                     $('#ReaderExcelSub table').addClass('table table-striped table-bordered table-condensed');
+                   
+                   
+                    $("tbody tr").each(function() {
+                    let row = $(this);
+                    let hasASTM = row.find("td:eq(5)").text().indexOf("ASTM") !== -1;
+                    let hasJIS = row.find("td:eq(5)").text().indexOf("JIS") !== -1;
+                    let hasBS = row.find("td:eq(5)").text().indexOf("BS") !== -1;
+                    let hasTIS107 = row.find("td:eq(5)").text().indexOf("TIS.107") !== -1;
+                    let hasTIS276 = row.find("td:eq(5)").text().indexOf("TIS.276") !== -1;
+                    let hasTIS1228 = row.find("td:eq(5)").text().indexOf("TIS.1228") !== -1;
+                    let hasEN = row.find("td:eq(5)").text().indexOf("EN") !== -1;
+                    let hasSTS_S = row.find("td:eq(5)").text().indexOf("STS-S") !== -1;
+                    let hasSTS_M = row.find("td:eq(5)").text().indexOf("STS-M") !== -1;
+                    let hasMK = row.find("td:eq(5)").text().indexOf("MK") !== -1;
+                    let hasMTO = row.find("td:eq(5)").text().indexOf("MTO") !== -1;
+    
+                    if (hasASTM) {
+                        // ASTM 330-520
+                       if (row.find("td:eq(8)").text() < 330 || row.find("td:eq(8)").text() > 520) {
+                           row.find("td:eq(8)").css("color", "red");
+                       }
+
+                       if (row.find("td:eq(9)").text() < 205) {
+                           row.find("td:eq(9)").css("color", "red");
+                       }
+                       
+                       if (row.find("td:eq(10)").text() < 24) {
+                           row.find("td:eq(10)").css("color", "red");
+                       }
+                    }
+
+                    if (hasJIS) {
+                        // JIS 350-510
+                        if (row.find("td:eq(8)").text() < 350 || row.find("td:eq(8)").text() > 510) {
+                           row.find("td:eq(8)").css("color", "red");
+                        }
+
+                        if (row.find("td:eq(9)").text() < 215 || row.find("td:eq(9)").text() > 400) {
+                           row.find("td:eq(9)").css("color", "red");
+                        }
+                        
+                        if (row.find("td:eq(10)").text() < 15) {
+                           row.find("td:eq(10)").css("color", "red");
+                        }
+                        
+                    }
+
+                    if (hasBS) {
+                        // BS 350-510
+                        if (row.find("td:eq(8)").text() < 320 || row.find("td:eq(8)").text() > 460) {
+                           row.find("td:eq(8)").css("color", "red");
+                        }
+
+                        if (row.find("td:eq(9)").text() < 195) {
+                           row.find("td:eq(9)").css("color", "red");
+                        }
+                        
+                        if (row.find("td:eq(10)").text() < 20) {
+                           row.find("td:eq(10)").css("color", "red");
+                        }
+                    }
+
+                    if (hasTIS107 || hasTIS276) {
+                        // TIS 350-510
+                        if (row.find("td:eq(8)").text() < 320 || row.find("td:eq(8)").text() > 520) {
+                           row.find("td:eq(8)").css("color", "red");
+                        }
+
+                        if (row.find("td:eq(9)").text() < 195) {
+                           row.find("td:eq(9)").css("color", "red");
+                        }
+                        
+                        if (row.find("td:eq(10)").text() < 20) {
+                           row.find("td:eq(10)").css("color", "red");
+                        }
+                    }
+
+                    if (hasTIS1228) {
+                        // TIS 350-510
+                        if (row.find("td:eq(8)").text() < 400 || row.find("td:eq(8)").text() > 510) {
+                           row.find("td:eq(8)").css("color", "red");
+                        }
+
+                        if (row.find("td:eq(9)").text() < 245) {
+                           row.find("td:eq(9)").css("color", "red");
+                        }
+                        
+                        if (row.find("td:eq(10)").text() < 17) {
+                           row.find("td:eq(10)").css("color", "red");
+                        }
+                    }
+
+                    if (hasEN) {    
+                        if (row.find("td:eq(8)").text() < 330 || row.find("td:eq(8)").text() > 520) {
+                           row.find("td:eq(8)").css("color", "red");
+                        }
+
+                        if (row.find("td:eq(9)").text() < 195 || row.find("td:eq(9)").text() > 400) {
+                           row.find("td:eq(9)").css("color", "red");
+                        }
+                        
+                        if (row.find("td:eq(10)").text() < 20) {
+                           row.find("td:eq(10)").css("color", "red");
+                        }
+
+                    }
+
+                    if (hasSTS_S || hasSTS_M || hasMK || hasMTO) {
+                        if (row.find("td:eq(8)").text() < 320 || row.find("td:eq(8)").text() > 460) {
+                           row.find("td:eq(8)").css("color", "red");
+                        }
+                        
+                        if (row.find("td:eq(10)").text() < 20) {
+                           row.find("td:eq(10)").css("color", "red");
+                        }
+                        
+                    }
+
+                    });
+
+        
+                            
+                           
+                     
+                    
 	//========== remove head =========
 			$('table tbody tr:eq(0)').remove();
             $('table tbody tr:eq(0)').remove();
@@ -159,6 +284,8 @@
 		   });
             var x = 0 ;
             var i=0 ;
+
+            $('td:eq(8)', this).addClass('bg-danger');  
 		    var CountTr = $("tbody tr").length ;
 			
 			var LastStsId = $('#LastStsId').text().trim();
