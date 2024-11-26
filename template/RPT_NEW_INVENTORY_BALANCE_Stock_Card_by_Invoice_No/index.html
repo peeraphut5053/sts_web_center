@@ -164,7 +164,6 @@
                     <th>Date</th>
                     <th>Item Number</th>
                     <th>Item Name</th>
-                    <th>Unit Weight</th>
                     <th>Ref. Type</th>
                     <th>Tran. Type</th>
                     <!--                    <th>Ref. No.</th>
@@ -339,14 +338,6 @@
                                 }
                             },
                             {
-                                "data": "unit_weight",
-                                "className": "text-right",
-                                "render": function (data, type, row, meta) {
-                                    var ret = data;
-                                    return ret;
-                                }
-                            },
-                            {
                                 "data": "ref_type",
                                 "className": "text-right",
                                 "render": function (data, type, row, meta) {
@@ -467,14 +458,15 @@
 //                                    doc.content[0].table.widths = ['*', 'auto', 100, '*'];
 
                                     var rowCount = document.getElementById("tblReport").rows.length;
-                                    console.log(0000)
-                                    console.log(rowCount)
+                                
 
                                     for (i = 1; i < rowCount; i++) {
                                         console.log(i)
                                         console.log(doc.content[0])
                                         doc.content[0].table.body[i][3].alignment = 'right';
-                                        doc.content[0].table.body[i][7].alignment = 'right';
+                                      
+                                    
+
 //                                        doc.content[0].table.body[i][1].widths  = ["500", "%", "%"];
 //                                        doc.content[0].table.body[i][8].alignment = 'right';
 //                                        doc.content[0].table.body[i][8].fontFamily = 'Libre Barcode 39';
@@ -580,10 +572,10 @@
                                         return '#aaa';
                                     };
                                     objLayout['paddingLeft'] = function (i) {
-                                        return 5;
+                                        return 8;
                                     };
                                     objLayout['paddingRight'] = function (i) {
-                                        return 5;
+                                        return 8;
                                     };
                                     doc.content[doc.content.length - 1].layout = objLayout;
 
