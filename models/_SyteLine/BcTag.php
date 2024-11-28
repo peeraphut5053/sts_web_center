@@ -591,20 +591,21 @@ order by [date]";
 from V_STS_PROD_TIME_REPORT
 where [date] between '$StartDate' and '$EndDate'
 order by [date]";
-//$query1 = "select *
-//from V_STS_PROD_TIME_REPORT
-//where [date] between '$StartLastMonth' and '$EndLastMonth'
-  //and wcGroup = '$GroupBy'
-//order by [date]";
+$query1 = "select *
+from V_STS_PROD_TIME_REPORT
+where [date] between '2024-11-01' and '2024-11-30'
+order by [date]";
         $query2 = 'select * from V_STS_machine_status';
 
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         $rs1 = $cSql->SqlQuery($this->StrConn, $query2);
+        $rs2 = $cSql->SqlQuery($this->StrConn, $query1);
 
         array_splice($rs, count($rs) - 1, 1);
         array_splice($rs1, count($rs1) - 1, 1);
-        return array($rs, $rs1);
+        array_splice($rs2, count($rs2) - 1, 1);
+        return array($rs, $rs1, $rs2);
     }
 
     function getGroupChart2($StartDate, $EndDate, $StartLastMonth, $EndLastMonth, $GroupBy) {
