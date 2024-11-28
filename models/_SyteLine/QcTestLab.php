@@ -126,6 +126,15 @@ from STS_QA_LAB inner join sts_po_qc
         return $rs0;
     }
 
+    function makeReportCanada($do_num){
+        $query = "EXEC [dbo].[STS_QA_MILLCERT_CANADA]
+ @DONumStarting = N'$do_num'";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+
     function makePDF_Header($do_num){
         $query = "EXEC [dbo].[STS_QA_MILLCERT_HEAD]
   @donum = '$do_num'";
@@ -312,6 +321,15 @@ where trans_type = 'F'
         array_splice($rs0, count($rs0) - 1, 1);
         return $rs0;
     }
+
+    function SaveDataQA_LAB_SUB($item, $sts_no, $size, $length, $prod_FM_no, $prod_Date, $val, $type) {
+        $query = "UPDATE STS_QA_LAB_SUB set $type = '$val' where item = '$item' and sts_no = '$sts_no' and size = '$size' and length = '$length' and prod_FM_no = '$prod_FM_no' and convert(date,prod_date) = '$prod_Date'";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+
 
 }
 ?>

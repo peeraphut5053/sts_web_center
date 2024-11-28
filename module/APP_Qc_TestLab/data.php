@@ -243,6 +243,15 @@ if ($load == 'makePDF') {
     echo json_encode($QcTestLab); 
 }
 
+if ($load == 'Canada') {
+    $CallModel = new CallModel();
+    $CallModel->SyteLine_Models();
+    $QcTestLab = new QcTestLab();
+    $QcTestLab->setConn($ConnSL);
+    $QcTestLab = $QcTestLab->makeReportCanada($do_num);
+    echo json_encode($QcTestLab); 
+}
+
 if ($load == 'makePDF_Header') {
     $CallModel = new CallModel();
     $CallModel->SyteLine_Models();
@@ -345,6 +354,15 @@ if ($load == 'Laboratory') {
     $QcTestLab = new QcTestLab();
     $QcTestLab->setConn($ConnSL);
     $QcTestLab = $QcTestLab->GetLaboratory($StartDate, $EndDate);
+    echo json_encode($QcTestLab);
+}
+
+if ($load == 'SaveData') {
+    $CallModel = new CallModel();
+    $CallModel->SyteLine_Models();
+    $QcTestLab = new QcTestLab();
+    $QcTestLab->setConn($ConnSL);
+    $QcTestLab = $QcTestLab->SaveDataQA_LAB_SUB($item, $sts_no, $size, $length, $prod_FM_no, $prod_Date, $val, $type);
     echo json_encode($QcTestLab);
 }
 
