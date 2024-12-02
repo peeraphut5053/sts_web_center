@@ -298,8 +298,6 @@
       },
       success: function (data) {
         myData = data;
-        console.log(myData);
-        
         $("#divReport2").addClass("hidden");
         $("#divReport").removeClass("hidden");
         $("#tblReport").DataTable().clear();
@@ -584,7 +582,7 @@
                 "_to_" +
                 EndDate,
               exportOptions: {
-                columns: [0, 1, 2, 3, 5, 6, 7, 8, 10, 11,12,13,14,15,16],
+                columns: [0, 1, 2, 3, 4, 6, 7, 8, 10, 11,12,13,14,15,16],
               },
             },
             {
@@ -603,7 +601,7 @@
           ],
           columnDefs: [
             {
-              targets: [5],  // คอลัมน์ที่ต้องการซ่อนในมุมมองปกติ
+              targets: [6],  // คอลัมน์ที่ต้องการซ่อนในมุมมองปกติ
               visible: false  // ซ่อนคอลัมน์ที่ index 12 ในหน้าปกติ แต่จะถูก export
             }
           ]
