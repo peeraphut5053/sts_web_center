@@ -164,9 +164,9 @@ WHERE h.doc_no = '$doc_no'";
         return $rs0;
     }
 
-    function SaveApproval($doc_no, $data, $type, $userApprover)
+    function SaveApproval($doc_no, $data, $type, $userApprover, $reason)
     {
-        $query = "UPDATE STS_store_pass_hdr SET $type = '$data' , approver = '$userApprover' WHERE doc_no = '$doc_no'";
+        $query = "UPDATE STS_store_pass_hdr SET $type = '$data', approver = '$userApprover', reasonAppr = '$reason' WHERE doc_no = '$doc_no'";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);

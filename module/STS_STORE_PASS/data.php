@@ -99,6 +99,6 @@ if ($load == "approve") {
     $STS_Custom = new Buyer();
     $STS_Custom->setConn($ConnSL);
 
-    $rs = $STS_Custom->SaveApproval($doc_no,$data,$type,$userApprover);
+    $rs = $STS_Custom->SaveApproval($doc_no,$data,$type,$userApprover,$reason);
     echo json_encode($rs);
 }

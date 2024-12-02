@@ -76,6 +76,7 @@
     <thead>
       <tr>
         <th>Approve</th>
+        <th>Reason</th>
         <th>No.</th>
         <th>หน่วยงานนำออก</th>
         <th>ผู้นำออก</th>
@@ -334,6 +335,14 @@
   
             },
             {
+              "data": "reasonAppr",
+              "className": "text-center",
+              "render": function (data, type, row, meta) {
+                var ret = data;
+                return ret;
+              }
+            },
+            {
               "data": "doc_no",
               "className": "text-center",
               "render": function (data, type, row, meta) {
@@ -562,7 +571,7 @@
               text: "<i class='fa fa-print'></i>&nbsp;Print",
               title: "",
               exportOptions: {
-                columns: [1, 2, 3, 5, 6, 7, 8, 9,10]
+                columns: [2, 3, 5, 6, 7, 8, 9,10,11]
               },
             },
             {
@@ -575,7 +584,7 @@
                 "_to_" +
                 EndDate,
               exportOptions: {
-                columns: [0, 1, 2, 3, 5, 6, 7, 8, 10, 11,12,13,14,15],
+                columns: [0, 1, 2, 3, 5, 6, 7, 8, 10, 11,12,13,14,15,16],
               },
             },
             {
@@ -622,19 +631,24 @@
     }
 
     $.confirm({
-      title: 'กรุณาใส่ Password',
+      title: 'กรุณาใส่ Password และเหตุผล',
       theme: 'modern',
-      content: '<input placeholder="" type="password" id="Pass" class="form-control" name="Pass" autofocus>',
+      content: '<input placeholder="Password" type="password" id="Pass" class="form-control my-2" name="Pass" autofocus><input placeholder="เหตุผล" type="text" id="Reason" class="form-control" name="Reason" autofocus>',
       buttons: {
         confirm: function checked() {
           var Pass = $("#Pass").val();
-
+          var Reason = $("#Reason").val();
           let val;
 
           if (value == 1 || value == null) {
             val = 0;
           } else {
             val = 1;
+          }
+
+          if (Reason == "" || Reason.length < 3) {
+             alert("กรุณากรอกเหตุผลอย่างน้อย 3 ตัวอักษรขึ้นไป");
+             return false;
           }
 
           if (Pass == "sts1234") {
@@ -648,7 +662,8 @@
                 doc_no: doc_no,
                 data: val,
                 type: name,
-                userApprover: username_session
+                userApprover: username_session,
+                reason: Reason
               },
               success: function (data) {
 
