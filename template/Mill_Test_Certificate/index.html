@@ -913,7 +913,7 @@ var logo = () => {
             url: "././module/APP_Qc_TestLab/data.php",
             dataType: 'json',
             data: {
-                "load": "Canada",
+                "load": load === 'Canada' ? "Canada" : 'makePDF',
                 "do_num": dataPDF[0].do_num,
             },
             beforeSend: function () {
