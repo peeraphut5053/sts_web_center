@@ -608,7 +608,7 @@
                   return data;
                 }
                 let valdata = data;
-                let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='60' id=${row.item_out} onchange="SaveDetailOut('${row.doc_no}',value,'item_out');" value='${(valdata)}' />`;
+                let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='60' onchange="SaveDetailOut('${row.doc_no}',value,'item_out');" value='${(valdata)}' />`;
                 return ret;
               }
             },
@@ -1061,6 +1061,8 @@
   }
 
   function SaveDetailOut(doc_no, value, type) {
+    console.log(value);
+    
     $.ajax({
       type: "POST",
       url: "././module/STS_STORE_PASS/data.php",
