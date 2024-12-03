@@ -69,7 +69,7 @@ from STS_QA_LAB inner join sts_po_qc
         $cSql = new SqlSrv();
         $rsSelect = $cSql->SqlQuery($this->StrConn, $qSelect);
 
-        if ( $opr_no == isset($rsSelect[1]["opr_no"]) && $sts_no == isset($rsSelect[1]["sts_no"]) && $prod_FM_no == isset($rsSelect[1]["prod_FM_no"]) && $length == isset($rsSelect[1]["length"]) && $prod_date == isset($rsSelect[1]["prod_date"])){
+        if ($item == isset($rsSelect[1]["item"]) && $size == isset($rsSelect[1]["size"]) && $opr_no == isset($rsSelect[1]["opr_no"]) && $sts_no == isset($rsSelect[1]["sts_no"]) && $prod_FM_no == isset($rsSelect[1]["prod_FM_no"]) && $length == isset($rsSelect[1]["length"]) && $prod_date == isset($rsSelect[1]["prod_date"])){
             $query ="UPDATE STS_QA_LAB_SUB SET item = '$item', opr_no = '$opr_no', size= '$size', Uf_Schedule= '$schedule', length= '$length', standard_sub= '$standard', Uf_Grade= '$grade', sts_no= '$sts_no', 
                     Mec_test_TS= '$Mec_test_TS', Mec_test_YS= '$Mec_test_YS', Mec_test_EI = '$Mec_test_EI', Mec_test_TS_2 = '$Mec_test_TS_2', Mec_test_YS_2 = '$Mec_test_YS_2', Mec_test_EL_2 = '$Mec_test_EL_2', 
                     Not_Mec_test_TS = '$Not_Mec_test_TS', Not_Mec_test_YS = '$Not_Mec_test_YS', Not_Mec_test_EI = '$Not_Mec_test_EI', Not_Mec_test_TS_2 = '$Not_Mec_test_TS_2', Not_Mec_test_YS_2 = '$Not_Mec_test_YS_2', Not_Mec_test_EL_2 = '$Not_Mec_test_EL_2', 
