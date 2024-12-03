@@ -66,7 +66,7 @@
         <option value="6">ขายของเก่า</option>
         <option value="8">ส่งทดสอบ</option>
         <option value="9">ทำชิ้นงานทดสอบ</option>
-        <option value="10">ส่งงานตัวอย่าง</option>
+        <option value="10">ส่งงานตัวอย่าง - ส่งกลับ STS</option>
         <option value="7">อื่นๆ</option>
       </select>
     </div>
@@ -223,7 +223,7 @@
             <option value="6">ขายของเก่า</option>
             <option value="8">ส่งทดสอบ - สอบเทียบ</option>
             <option value="9">ทำชิ้นงานทดสอบ</option>
-            <option value="10">ส่งงานตัวอย่าง</option>
+            <option value="10">ส่งงานตัวอย่าง - ส่งกลับ STS</option>
             <option value="7">อื่นๆ</option>
           </select>
 
@@ -530,7 +530,7 @@
                       "อื่นๆ",
                       "ส่งทดสอบ - สอบเทียบ",
                       "ทำชิ้นงานทดสอบ",
-                      "ส่งงานตัวอย่าง"
+                      "ส่งงานตัวอย่าง - ส่งกลับ STS"
                     ];
                   var ret = select_status[Number(data)];
                   return ret;
@@ -546,7 +546,7 @@
                     "อื่นๆ",
                     "ส่งทดสอบ - สอบเทียบ",
                     "ทำชิ้นงานทดสอบ",
-                    "ส่งงานตัวอย่าง"
+                    "ส่งงานตัวอย่าง - ส่งกลับ STS"
                   ];
                 var $select = $("<select id='" + row.doc_no + "' value='" + data + "' onchange='SaveDetailOut(\"" + row.doc_no + "\",value,\"purpose\");'></select>", {
                 });
@@ -579,7 +579,7 @@
                     "อื่นๆ",
                     "ส่งทดสอบ - สอบเทียบ",
                     "ทำชิ้นงานทดสอบ",
-                    "ส่งงานตัวอย่าง"
+                    "ส่งงานตัวอย่าง - ส่งกลับ STS"
                   ];
                 var ret = select_status[Number(data)];
                 return ret;
@@ -623,7 +623,7 @@
                 $(`.input_date_in`).datepicker({
                   dateFormat: 'yy-mm-dd',
                 });
-                let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value input_date_in' size='20' id=${row.doc_no} onchange="SaveDetail('${row.doc_no}',value,'date_in');" value='${(valdata)}' />`;
+                let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value input_date_in' size='20' onchange="SaveDetail('${row.doc_no}',value,'date_in');" value='${(valdata)}' />`;
                 return ret;
               }
             },
