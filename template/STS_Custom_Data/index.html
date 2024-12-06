@@ -66,7 +66,7 @@
         <button class="btn btn-success" id="btnPrint">&nbsp;พิมพ์ใบขนย้ายรายสัปดาห์</button>
         <button class="btn btn-success" id="btnPrint2">&nbsp;พิมพ์ใบสรุปสินค้านอกคลัง</button>
         <button class="btn btn-success" id="btnPrint3">&nbsp;พิมพ์ใบขนชำระอากร</button>
-        <button class="btn btn-success"  data-toggle="modal" data-target="#exampleModal">&nbsp;พิมพ์ใบคลังสินค้าทัณฑ์บนประเภทโรงผลิต</button>
+        <button onclick="loadSTS_Custom_WH()" class="btn btn-success"  data-toggle="modal" data-target="#exampleModal">&nbsp;พิมพ์ใบคลังสินค้าทัณฑ์บนประเภทโรงผลิต</button>
       </div>
        <div class="flex flex-col justify-center items-center w-5/6 mx-auto border-4 border-b-blue-400 border-white  shadow-2xl p-10">
         <div class="row col-xs-12">
@@ -139,13 +139,13 @@
               <div class="row">
                 <div class="input-group">
                   <div class="input-group-addon">Year</div>
-                  <select class="form-control" id="selYearEX"></select>
+                  <select onchange="loadSTS_Custom_WH()" class="form-control" id="selYearEX"></select>
                 </div>
               </div>
               <div class="row">
                 <div class="input-group">
                   <div class="input-group-addon">Month</div>
-                  <select class="form-control" id="selMonthEX"></select>
+                  <select onchange="loadSTS_Custom_WH()" class="form-control" id="selMonthEX"></select>
                 </div>
               </div>
               <div class="row">
@@ -187,6 +187,31 @@
     });
 
     GetYearMonth("selYearEX", "selMonthEX");
+
+    function loadSTS_Custom_WH() {
+        var selYearEX = $("#selYearEX").val();
+        var selMonthEX = $("#selMonthEX").val();
+
+        $.ajax({
+        type: "GET",
+        url: "././module/STS_Custom_Data/data.php",
+        dataType: "json",
+        data: {
+        load: "select_WH",
+        Year: selYearEX,
+        Month: selMonthEX
+        },
+        success: function (data) {
+           if (data.length > 0) {
+            $("#totalOut").val(data[0].qty);
+            $("#totalOutWeight").val(data[0].weight_KG);
+           } else {
+            $("#totalOut").val(0);
+            $("#totalOutWeight").val(0);
+           }
+        }
+        });
+    }
 
     $("#btnSave").click(function () {
         var StartDate = $("#InvFromDate").val();
@@ -248,7 +273,28 @@
         printReport3();
     });
     $("#btnPrintReport").click(function () {
-        getDataReport4();
+        var selYearEX = $("#selYearEX").val();
+        var selMonthEX = $("#selMonthEX").val();
+        var qty = $("#totalOut").val();
+        var weight = $("#totalOutWeight").val();
+        $.ajax({
+        type: "POST",
+        url: "././module/STS_Custom_Data/data.php",
+        dataType: "json",
+        data: {
+        load: "saveData_WH",
+        Year: selYearEX,
+        Month: selMonthEX,
+        qty: qty,
+        weight_KG: weight
+        },
+        success: function (data) {
+           getDataReport4();
+        },
+        error: function (e) {
+        console.log("บันทึกไม่สําเร็จ");
+        },
+        })
     });
 
     function getDataReport4() {

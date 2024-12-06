@@ -104,6 +104,23 @@ if ($load == "reportPDF") {
     $STS_Custom->setConn($ConnSL);
     $rs = $STS_Custom->GetDataReport($StartDate, $EndDate,$date_submit);
     echo json_encode($rs);
-   
+}
+
+if ($load == "select_WH") {
+    $CallModel = new CallModel();
+    $CallModel->SyteLine_Models();
+    $STS_Custom = new STS_Custom();
+    $STS_Custom->setConn($ConnSL);
+    $rs = $STS_Custom->GetSTS_custom_WH($Year, $Month);
+    echo json_encode($rs);
+}
+
+if ($load == "saveData_WH") {
+    $CallModel = new CallModel();
+    $CallModel->SyteLine_Models();
+    $STS_Custom = new STS_Custom();
+    $STS_Custom->setConn($ConnSL);
+    $rs = $STS_Custom->SaveDataSTS_custom_WH($Year, $Month, $qty, $weight_KG);
+    echo json_encode($rs);
 }
 

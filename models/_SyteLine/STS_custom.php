@@ -262,5 +262,31 @@ from STS_custom_IN where date_in between '$StartDate' and '$EndDate' Order by da
 
     }
 
+    function GetSTS_custom_WH($Year, $Month) {
+        $query = "select * from STS_custom_WH where year = '$Year' and month = '$Month'";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+    function SaveDataSTS_custom_WH($Year, $Month, $qty, $weight_KG) {
+        $select = "select * from STS_custom_WH where year = '$Year' and month = '$Month'";
+
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $select);
+        array_splice($rs, count($rs) - 1, 1);
+        if (count($rs) > 0) {
+            $query = "update STS_custom_WH set qty = $qty, weight_KG = $weight_KG where year = '$Year' and month = '$Month'";
+        } else {
+            $query = "insert into STS_custom_WH (year, month, qty, weight_KG) values ('$Year', '$Month', $qty, $weight_KG)";
+        }
+
+        $cSql = new SqlSrv();
+        $rs1 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs1, count($rs1) - 1, 1);
+        return $rs1;
+    }
+
 }
 ?>
