@@ -293,6 +293,20 @@
                     "_to_" +
                     EndDate,
                 },
+                {
+                text: `<button type="button" class="btn btn-info">พิมพ์รายงานประจำเดือน</button>`,
+                action: function (e, dt, node, config) {
+                  var data = dt.rows().data().toArray();
+                  printReport(data, StartDate);
+                }
+              },
+              {
+                text: `<button type="button" class="btn btn-info">พิมพ์รายงานประจำปี</button>`,
+                action: function (e, dt, node, config) {
+                  var data = dt.rows().data().toArray();
+                  printReport2(data, StartDate, EndDate);
+                }
+              },
               ],
               "footerCallback": function (row, data, start, end, display) {
                         var api = this.api(),
@@ -348,5 +362,262 @@
         });
       }
     }
+
+    function printReport(newData, StartDate) {
+    pdfMake.fonts = {
+        THSarabunNew: {
+            normal: 'THSarabunNew.ttf',
+            bold: 'THSarabunNew Bold.ttf',
+            italics: 'THSarabunNew-Italic.ttf',
+            bolditalics: 'THSarabunNew-BoldItalic.ttf'
+        },
+        Roboto: {
+            normal: 'Roboto-Regular.ttf',
+            bold: 'Roboto-Medium.ttf',
+            italics: 'Roboto-Italic.ttf',
+            bolditalics: 'Roboto-MediumItalic.ttf'
+        }
+    };
+
+    const data = []
+    data.push([
+      { text: `ลำดับที่`, fontSize: 12, bold: true, alignment: 'center', style: 'header' },
+      { text: "เลขที่ใบขนฯ/ใบขนฯ โอนย้าย/เลขที่ทำเรื่องทำลาย/บริจาก", fontSize: 12,bold: true,  alignment: 'center', style: 'header' },
+      { text: "วันที่ส่งออก/ชำระอากร", fontSize: 12,bold: true,  alignment: 'center', style: 'header' },
+      { text: "ชื่อสินค้า/รุ่น/แบบ", fontSize: 12,bold: true,  alignment: 'center', style: 'header' },
+      { text: "จำนวน(กก.)", fontSize: 12, bold: true, alignment: 'center', style: 'header' },
+      { text: "มูลค่า(บาท)", fontSize: 12,bold: true,  alignment: 'center', style: 'header' },
+      { text: "ภาษีอากร", fontSize: 12,bold: true,  alignment: 'center', style: 'header' },
+      { text: "ภาษีมูลค่าเพิ่ม", fontSize: 12,bold: true,  alignment: 'center', style: 'header' },
+      { text: "ภาษีและค่าธรรมเนียมอื่นๆ", fontSize: 12,bold: true,  alignment: 'center', style: 'header' },
+      { text: "ภาษีอากรรวม", fontSize: 12,bold: true,  alignment: 'center', style: 'header' },
+      { text: "หมายเหตุใบขนฯอ้างอิง", fontSize: 12,bold: true,  alignment: 'center', style: 'header' },
+    ])
+
+    for (let i = 0; i < newData.length ; i++) {
+      data.push([
+        { text: i + 1, fontSize: 12, alignment: 'center' },
+        { text: newData[i].doc_no, fontSize: 12, alignment: 'center' },
+        { text: moment(newData[i].date.date).format('DD/MM/YYYY'), fontSize: 12, alignment: 'center' },
+        { text: newData[i].item, fontSize: 12, alignment: 'center' },
+        { text: addCommas(newData[i].weight_KG), fontSize: 12, alignment: 'center' },
+        { text: addCommas(newData[i].value), fontSize: 12, alignment: 'center' },
+        { text: '-', fontSize: 12, alignment: 'center' },
+        { text: addCommas(newData[i].val7.toFixed(2)), fontSize: 12, alignment: 'center' },
+        { text: '-', fontSize: 12, alignment: 'center' },
+        { text: addCommas(newData[i].val7.toFixed(2)), fontSize: 12, alignment: 'center' },
+        { text: newData[i].ref_doc_no, fontSize: 12, alignment: 'center' },
+      ],)
+
+      if (i == newData.length - 1) {
+        data.push([
+        { text: 'รวม', fontSize: 12, bold: true, alignment: 'center', colSpan: 4 },
+        { text: '', fontSize: 12, alignment: 'center' },
+        { text: '', fontSize: 12, alignment: 'center' },
+        { text: '', fontSize: 12, alignment: 'center' },
+        { text: addCommas(newData.reduce((a, b) => a + Number(b.weight_KG), 0)), fontSize: 12,bold: true, alignment: 'center' },
+        { text: addCommas(newData.reduce((a, b) => a + Number(b.value), 0)), fontSize: 12,bold: true, alignment: 'center' },
+        { text: '', fontSize: 12, alignment: 'center' },
+        { text: addCommas(newData.reduce((a, b) => a + Number(b.val7), 0)), fontSize: 12,bold: true, alignment: 'center' },
+        { text: '', fontSize: 12, alignment: 'center' },
+        { text: addCommas(newData.reduce((a, b) => a + Number(b.val7), 0)), fontSize: 12,bold: true, alignment: 'center' },
+        { text: '', fontSize: 12, alignment: 'center' },
+        ],)
+      }
+
+    }
+
+
+    var docDefinition = {
+      pageSize: 'A4',
+      pageOrientation: 'landscape',
+      pageMargins: [25, 70, 50, 50],
+      header: function (currentPage, pageCount, pageSize) {
+        return {
+          margin: [20, 5, 20, 10],
+          table: {
+            widths: [800],
+            body: [
+              [
+                {
+                  border: [false, false, false, false],
+                  fontSize: 18,
+                  text: `รายงานข้อมูลใบขนสินค้าขาเข้า ประจำ เดือน ${new Date(StartDate).toLocaleDateString("th-TH", { month: 'long' })} ${new Date(StartDate).toLocaleDateString("th-TH", { year: 'numeric' })}`,
+                  alignment: 'center',
+
+                },
+              ],
+              [
+                {
+                  border: [false, false, false, false], text: `คลังสินค้าทัณฑ์บน บริษัท สหไทยสตีลไพพ์ จำกัด (มหาชน)`, fontSize: 16, alignment: 'center', margin: [0, 0, 0, 0]
+                },
+              ],
+            ],
+          },
+        };
+      },
+      content: [
+        {
+          margin: [0, 0, 0, 0],
+          columns: [
+            {
+
+              table: {
+                widths: [30, 100, 50, 60, 50, 55, 60, 55, 90, 60, 80],
+                headerRows: 1,
+                body: data,
+              },
+            },
+          ],
+        }
+      ],
+      defaultStyle: {
+        font: 'THSarabunNew',
+      },
+    };
+
+    pdfMake.createPdf(docDefinition).open()
+  }
+
+  function printReport2(newData, StartDate, EndDate) {
+    pdfMake.fonts = {
+        THSarabunNew: {
+            normal: 'THSarabunNew.ttf',
+            bold: 'THSarabunNew Bold.ttf',
+            italics: 'THSarabunNew-Italic.ttf',
+            bolditalics: 'THSarabunNew-BoldItalic.ttf'
+        },
+        Roboto: {
+            normal: 'Roboto-Regular.ttf',
+            bold: 'Roboto-Medium.ttf',
+            italics: 'Roboto-Italic.ttf',
+            bolditalics: 'Roboto-MediumItalic.ttf'
+        }
+    };
+
+    const data = []
+    data.push([
+      { text: `ลำดับที่`, fontSize: 12, bold: true, alignment: 'center', style: 'header' },
+      { text: "เลขที่ใบขนฯ/ใบขนฯ โอนย้าย/เลขที่ทำเรื่องทำลาย/บริจาก", fontSize: 12,bold: true,  alignment: 'center', style: 'header' },
+      { text: "วันที่ส่งออก/ชำระอากร", fontSize: 12,bold: true,  alignment: 'center', style: 'header' },
+      { text: "ชื่อสินค้า/รุ่น/แบบ", fontSize: 12,bold: true,  alignment: 'center', style: 'header' },
+      { text: "หน่วย", fontSize: 12,bold: true,  alignment: 'center', style: 'header' },
+      { text: "จำนวน(กก.)", fontSize: 12, bold: true, alignment: 'center', style: 'header' },
+      { text: "มูลค่า(บาท)", fontSize: 12,bold: true,  alignment: 'center', style: 'header' },
+      { text: "ภาษีอากร", fontSize: 12,bold: true,  alignment: 'center', style: 'header' },
+      { text: "ภาษีมูลค่าเพิ่ม", fontSize: 12,bold: true,  alignment: 'center', style: 'header' },
+      { text: "ภาษีและค่าธรรมเนียมอื่นๆ", fontSize: 12,bold: true,  alignment: 'center', style: 'header' },
+      { text: "ภาษีอากรรวม", fontSize: 12,bold: true,  alignment: 'center', style: 'header' },
+      { text: "เลขที่สูตรการผลิต/เลขที่ชำระอากร", fontSize: 12,bold: true,  alignment: 'center', style: 'header' },
+      { text: "หมายเหตุ \n ใบขนฯอ้างอิง", fontSize: 12,bold: true,  alignment: 'center', style: 'header' },
+    ])
+
+    for (let i = 0; i < newData.length ; i++) {
+      data.push([
+        { text: i + 1, fontSize: 12, alignment: 'center' },
+        { text: newData[i].doc_no, fontSize: 12, alignment: 'center' },
+        { text: moment(newData[i].date.date).format('DD/MM/YYYY'), fontSize: 12, alignment: 'center' },
+        { text: newData[i].item, fontSize: 12, alignment: 'center' },
+        { text: 'KGS', fontSize: 12, alignment: 'center' },
+        { text: addCommas(newData[i].weight_KG), fontSize: 12, alignment: 'center' },
+        { text: addCommas(newData[i].value), fontSize: 12, alignment: 'center' },
+        { text: '-', fontSize: 12, alignment: 'center' },
+        { text: addCommas(newData[i].val7.toFixed(2)), fontSize: 12, alignment: 'center' },
+        { text: '-', fontSize: 12, alignment: 'center' },
+        { text: addCommas(newData[i].val7.toFixed(2)), fontSize: 12, alignment: 'center' },
+        { text: newData[i].stamp_no, fontSize: 12, alignment: 'center' },
+        { text: newData[i].ref_doc_no, fontSize: 12, alignment: 'center' },
+      ],)
+
+      if (i == newData.length - 1) {
+        data.push([
+        { text: 'รวม', fontSize: 12, bold: true, alignment: 'center', colSpan: 5 },
+        { text: '', fontSize: 12, alignment: 'center' },
+        { text: '', fontSize: 12, alignment: 'center' },
+        { text: '', fontSize: 12, alignment: 'center' },
+        { text: '', fontSize: 12, alignment: 'center' },
+        { text: addCommas(newData.reduce((a, b) => a + Number(b.weight_KG), 0)),  fontSize: 12, bold: true, alignment: 'center' },
+        { text: addCommas(newData.reduce((a, b) => a + Number(b.value), 0)), fontSize: 12, bold: true, alignment: 'center' },
+        { text: '', fontSize: 12, alignment: 'center' },
+        { text: addCommas(newData.reduce((a, b) => a + Number(b.value), 0)), fontSize: 12, bold: true, alignment: 'center' },
+        { text: '', fontSize: 12, alignment: 'center' },
+        { text: addCommas(newData.reduce((a, b) => a + Number(b.val7), 0)), fontSize: 12, bold: true, alignment: 'center' },
+        { text: '', fontSize: 12, alignment: 'center' },
+        { text: '', fontSize: 12, alignment: 'center' },
+        ],)
+      }
+
+    }
+
+
+    var docDefinition = {
+      pageSize: 'A4',
+      pageOrientation: 'landscape',
+      pageMargins: [25, 110, 50, 50],
+      header: function (currentPage, pageCount, pageSize) {
+        return {
+          margin: [20, 5, 20, 10],
+          table: {
+            widths: [800],
+            body: [
+            [
+                {
+                  border: [false, false, false, false],
+                  fontSize: 16,
+                  bold: true,
+                  text: "SAHA THAI STEEL PIPE (PUBLIC) CO., LTD. ทะเบียน W0201100000023",
+                  alignment: 'center',
+            
+                },
+              ],
+              [
+                {
+                  border: [false, false, false, false],
+                  fontSize: 14,
+                  text: "รายงานของที่นำออกจากคลังสินค้าทัณฑ์บนฯ",
+                  alignment: 'center',
+              
+                },
+              ],
+              [
+                {
+                  border: [false, false, false, false],
+                  fontSize: 14,
+                  text: "ชำระภาษีอากร",
+                  alignment: 'center',
+              
+                },
+              ],
+              [
+                {
+                  border: [false, false, false, false], text: `สำหรับงวดบัญชี ระหว่างวันที่ ${new Date(StartDate).toLocaleDateString("th-TH", { year: 'numeric', month: 'long', day: 'numeric' })} ถึง ${new Date(EndDate).toLocaleDateString("th-TH", { year: 'numeric', month: 'long', day: 'numeric' })}`, fontSize: 14, alignment: 'center', margin: [0, 0, 0, 0]
+                },
+              ],
+            ],
+          },
+        };
+      },
+      content: [
+        {
+          margin: [0, 0, 0, 0],
+          columns: [
+            {
+
+              table: {
+                widths: [25, 80, 50, 60, 30, 50, 60, 40, 60, 40, 50,60,70],
+                headerRows: 1,
+                body: data,
+              },
+            },
+          ],
+        }
+      ],
+      defaultStyle: {
+        font: 'THSarabunNew',
+      },
+    };
+
+    pdfMake.createPdf(docDefinition).open()
+  }
 
   </script>

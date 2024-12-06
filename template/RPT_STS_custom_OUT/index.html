@@ -1,9 +1,10 @@
 <style>
-    .col-search {
-      padding-left: 3px;
-      padding-right: 3px;
-    }
-    /*    table.dataTable thead .sorting:after,
+  .col-search {
+    padding-left: 3px;
+    padding-right: 3px;
+  }
+
+  /*    table.dataTable thead .sorting:after,
           table.dataTable thead .sorting:before,
           table.dataTable thead .sorting_asc:after,
           table.dataTable thead .sorting_asc:before,
@@ -15,73 +16,83 @@
           table.dataTable thead .sorting_desc_disabled:before {
               bottom: .5em;
           }*/
-    .table thead th {
-      text-align: center;
-    }
-  
-    .col-flt-page {
-      padding-top: 10px;
-      font-weight: bold;
-    }
-  
-    #tblReport tbody tr td a {
-      cursor: pointer;
-    }
-    table.dataTable.fixedHeader-floating,
-    table.dataTable.fixedHeader-locked {
-      background-color: white;
-      margin-top: 50px !important;
-      margin-bottom: 0 !important;
-    }
-    @media print {
-      table th:nth-child(0) {
-        width: 200px;
-        word-break: break-all;
-        white-space: pre-line;
-      }
-      table td:nth-child(0) {
-        width: 200px;
-        word-break: break-all;
-        white-space: pre-line;
-      }
-    }
-    .text-header {
-      font-weight: bold;
-      font-size: 20px;
-    }
-    .text-wrap {
-      white-space: normal;
-    }
-    .width-200 {
+  .table thead th {
+    text-align: center;
+  }
+
+  .col-flt-page {
+    padding-top: 10px;
+    font-weight: bold;
+  }
+
+  #tblReport tbody tr td a {
+    cursor: pointer;
+  }
+
+  table.dataTable.fixedHeader-floating,
+  table.dataTable.fixedHeader-locked {
+    background-color: white;
+    margin-top: 50px !important;
+    margin-bottom: 0 !important;
+  }
+
+  @media print {
+    table th:nth-child(0) {
       width: 200px;
+      word-break: break-all;
+      white-space: pre-line;
     }
-    input[type="checkbox"] {
-      margin-left: 5px;
-      margin-right: 5px;
-    } /*
+
+    table td:nth-child(0) {
+      width: 200px;
+      word-break: break-all;
+      white-space: pre-line;
+    }
+  }
+
+  .text-header {
+    font-weight: bold;
+    font-size: 20px;
+  }
+
+  .text-wrap {
+    white-space: normal;
+  }
+
+  .width-200 {
+    width: 200px;
+  }
+
+  input[type="checkbox"] {
+    margin-left: 5px;
+    margin-right: 5px;
+  }
+
+  /*
       .cb_lb{
           margin-top:-5px;
       }*/
-    .item-center {
-      display: flex;
-      justify-content: center;
-    }
-            /* ซ่อน Checkbox ดั้งเดิม */
-.custom-checkbox input[type="checkbox"] {
-    display: none;
-}
+  .item-center {
+    display: flex;
+    justify-content: center;
+  }
 
-/* ตำแหน่งและขนาดของ Checkbox */
-.custom-checkbox {
+  /* ซ่อน Checkbox ดั้งเดิม */
+  .custom-checkbox input[type="checkbox"] {
+    display: none;
+  }
+
+  /* ตำแหน่งและขนาดของ Checkbox */
+  .custom-checkbox {
     display: inline-flex;
     align-items: center;
     cursor: pointer;
     font-size: 16px;
     margin: 3px;
-}
+  }
 
-/* สไตล์สำหรับ Checkmark */
-.custom-checkbox .checkmark {
+  /* สไตล์สำหรับ Checkmark */
+  .custom-checkbox .checkmark {
     width: 20px;
     height: 20px;
     background-color: #ccc;
@@ -90,27 +101,27 @@
     margin-right: 10px;
     position: relative;
     transition: background-color 0.3s;
-}
+  }
 
-/* สไตล์สำหรับ Checkbox เมื่อถูกเลือก */
-.custom-checkbox input[type="checkbox"]:checked + .checkmark {
+  /* สไตล์สำหรับ Checkbox เมื่อถูกเลือก */
+  .custom-checkbox input[type="checkbox"]:checked+.checkmark {
     background-color: #4CAF50;
-}
+  }
 
-/* สไตล์สำหรับเครื่องหมายถูก */
-.custom-checkbox .checkmark::after {
+  /* สไตล์สำหรับเครื่องหมายถูก */
+  .custom-checkbox .checkmark::after {
     content: "";
     position: absolute;
     display: none;
-}
+  }
 
-/* แสดงเครื่องหมายถูกเมื่อ Checkbox ถูกเลือก */
-.custom-checkbox input[type="checkbox"]:checked + .checkmark::after {
+  /* แสดงเครื่องหมายถูกเมื่อ Checkbox ถูกเลือก */
+  .custom-checkbox input[type="checkbox"]:checked+.checkmark::after {
     display: block;
-}
+  }
 
-/* รูปแบบของเครื่องหมายถูก */
-.custom-checkbox .checkmark::after {
+  /* รูปแบบของเครื่องหมายถูก */
+  .custom-checkbox .checkmark::after {
     left: 8px;
     top: 3px;
     width: 5px;
@@ -118,339 +129,638 @@
     border: solid white;
     border-width: 0 3px 3px 0;
     transform: rotate(45deg);
-}
-  </style>
-  <div class="row">
-    <h4 class="text-header text-center">รายงานส่งออก</h4>
+  }
+</style>
+<div class="row">
+  <h4 class="text-header text-center">รายงานส่งออก</h4>
+</div>
+<div class="row item-center">
+  <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+    <div class="input-group">
+      <div class="input-group-addon">Start Date</div>
+      <input type="text" class="form-control" id="txtStartDate" autocomplete="off" />
+    </div>
   </div>
-  <div class="row item-center">
-    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
-      <div class="input-group">
-        <div class="input-group-addon">Start Date</div>
-        <input
-          type="text"
-          class="form-control"
-          id="txtStartDate"
-          autocomplete="off"
-        />
-      </div>
+  <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+    <div class="input-group">
+      <div class="input-group-addon">End Date</div>
+      <input type="text" class="form-control" id="txtEndDate" autocomplete="off" />
     </div>
-    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
-      <div class="input-group">
-        <div class="input-group-addon">End Date</div>
-        <input
-          type="text"
-          class="form-control"
-          id="txtEndDate"
-          autocomplete="off"
-        />
-      </div>
-    </div>
-    <label class="custom-checkbox">
-      <input type="checkbox" name='Zinc' id="date_submit_out" />
-      <span class="checkmark"></span>
-       by date submit
+  </div>
+  <label class="custom-checkbox">
+    <input type="checkbox" name='Zinc' id="date_submit_out" />
+    <span class="checkmark"></span>
+    by date submit
   </label>
-    <div class="col-lg-1 col-md-1 col-sm-6 col-xs-6 text-left">
-      <div class="flex">
-        <button class="btn btn-info" id="btnSearch">
-          <i class="fa fa-search"></i>&nbsp; Search
-        </button>
-        <a class="btn btn-success ml-36" href="module/STS_Custom_Data/Import_Excel_Out.php"  id="btnTransfer">&nbsp;Import Excel (OUT)</a>
-      </div>
+  <div class="col-lg-1 col-md-1 col-sm-6 col-xs-6 text-left">
+    <div class="flex">
+      <button class="btn btn-info" id="btnSearch">
+        <i class="fa fa-search"></i>&nbsp; Search
+      </button>
+      <a class="btn btn-success ml-36" href="module/STS_Custom_Data/Import_Excel_Out.php" id="btnTransfer">&nbsp;Import
+        Excel (OUT)</a>
     </div>
   </div>
-  
-  <div class="row" id="rowResultTable">
-    <table
-      class="table table-condensed table-bordered table-striped"
-      width="100%"
-      id="tblReport"
-    >
-      <thead>
-        <tr>
-          <th class="bg-gray">ลำดับที่</th>
-          <th class="bg-gray">เลขที่ใบขน</th>
-          <th class="bg-gray">เลข boat note</th>
-          <th class="bg-gray">วันที่</th>
-          <th class="bg-gray">ชื่อสินค้า</th>
-          <th  class="bg-gray">ชื่อเรือ</th>
-          <th  class="bg-gray">วอยเรือ</th>
-          <th   class="bg-gray">STS  INVOICE</th>
-          <th   class="bg-gray">จำนวน (มัด)</th>
-          <th   class="bg-gray">น้ำหนัก N.W. (KG)</th>
-          <th   class="bg-gray">น้ำหนัก G.W. (KG)</th>
-          <th   class="bg-gray">KG_zinc</th>
-          <th   class="bg-gray">KG_non_zinc</th>
-          <th   class="bg-gray">Customer PO.</th>
-          <th   class="bg-gray">มูลค่า (บาท)</th>
-          <th   class="bg-gray">ท่าส่งออก</th>
-          <th   class="bg-gray">B/L No.</th>
-          <th   class="bg-gray">ชื่อเรือฉลอม</th>
-          <th   class="bg-gray"></th>
-          <th   class="bg-gray"></th>
-          <th   class="bg-gray"></th>
-      </thead>
-      <!--        <tbody id="tblReportList">
+</div>
+
+<div class="row" id="rowResultTable">
+  <table class="table table-condensed table-bordered table-striped" width="100%" id="tblReport">
+    <thead>
+      <tr>
+        <th class="bg-gray">ลำดับที่</th>
+        <th class="bg-gray">เลขที่ใบขน</th>
+        <th class="bg-gray">เลข boat note</th>
+        <th class="bg-gray">วันที่</th>
+        <th class="bg-gray">ชื่อสินค้า</th>
+        <th class="bg-gray">ชื่อเรือ</th>
+        <th class="bg-gray">วอยเรือ</th>
+        <th class="bg-gray">STS INVOICE</th>
+        <th class="bg-gray">จำนวน (มัด)</th>
+        <th class="bg-gray">น้ำหนัก N.W. (KG)</th>
+        <th class="bg-gray">น้ำหนัก G.W. (KG)</th>
+        <th class="bg-gray">KG_zinc</th>
+        <th class="bg-gray">KG_non_zinc</th>
+        <th class="bg-gray">Customer PO.</th>
+        <th class="bg-gray">มูลค่า (บาท)</th>
+        <th class="bg-gray">ท่าส่งออก</th>
+        <th class="bg-gray">B/L No.</th>
+        <th class="bg-gray">ชื่อเรือฉลอม</th>
+        <th class="bg-gray"></th>
+        <th class="bg-gray"></th>
+        <th class="bg-gray"></th>
+    </thead>
+    <!--        <tbody id="tblReportList">
                       <tr><td align="center" colspan="12">.... No item search ....</td></tr>
      </tbody>-->
-    </table>
-  </div>
-  <script type="text/javascript">
- 
-    $("#btnSearch").click(function () {
-      ReportItemSearch();
-    });
-           
-    $("#txtStartDate,#txtEndDate").datepicker({
-      dateFormat: "yy-mm-dd",
-    });
-    
-    $("#btnRemove").click(function () {
-      $("#tblReport").DataTable().clear().destroy();
-    });
-  
-    function ReportItemSearch() {
-      var OldHtml = $("#btnSearch").html();
-      var StartDate = $("#txtStartDate").val();
-      var EndDate = $("#txtEndDate").val();
+  </table>
+</div>
+<script type="text/javascript">
 
-      var date_submit_out = $("#date_submit_out").is(":checked");
+  $("#btnSearch").click(function () {
+    ReportItemSearch();
+  });
 
-      if (StartDate != "" && EndDate == "" || StartDate == "" && EndDate != "") {
-          $.alert("กรุณาเลือกวันที่เริ่มต้นและสิ้นสุดให้ครบถ้วน");
-          return false;
-      }
-  
-      if (StartDate == "" && EndDate == "") {
-        $.alert("กรุณากรอกข้อมูลอย่างน้อย 1 ช่อง");
-        return false;
-      } else {
-        $("#btnSearch").html("<i class='fa fa-spinner fa-spin'></i>");
-        $("#tblReport").loading();
-        $("#tblReport tfoot").remove();
-        $.ajax({
-          type: "POST",
-          url: "././module/RPT_STS_custom_OUT/data.php",
-          dataType: "json",
-          beforeSend: function () {
-            $("#btnSearch").html("<i class='fa fa-spinner fa-spin'>");
-          },
-          data: {
-            load: "ajax",
-            StartDate: StartDate,
-            EndDate: EndDate,
-            date_submit: date_submit_out
-          },
-          success: function (data) {
-            var newData = data.map((item) => {
-              const zinc = item.weight_zinc > 0 ? item.weight_zinc : 0.00;
-              const nonzinc = item.weight_non_zinc > 0 ? item.weight_non_zinc : 0.00;
-              return {
-                ...item,
-                weight_zinc: Number(zinc).toFixed(2),
-                weight_nonzinc: Number(nonzinc).toFixed(2),
-                total: (Number(item.weight_zinc) + Number(item.weight_nonzinc)).toFixed(2),
-              };
-            })
-            $("#tblReport").DataTable().clear();
-            $("#tblReport").append(
-              "<tfoot><tr><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th></tr></tfoot>"
-            );
-            $("#tblReport").dataTable({
-              aaData: newData,
-              paging: false,
-              fixedHeader: true,
-              destroy: true,
-              processing: true,
-              scrollY: "65vh",
-              scrollCollapse: true,
-              scrollX: true,
-              select: true,
-              columns: [
-                 {
+  $("#txtStartDate,#txtEndDate").datepicker({
+    dateFormat: "yy-mm-dd",
+  });
+
+  $("#btnRemove").click(function () {
+    $("#tblReport").DataTable().clear().destroy();
+  });
+
+  function ReportItemSearch() {
+    var OldHtml = $("#btnSearch").html();
+    var StartDate = $("#txtStartDate").val();
+    var EndDate = $("#txtEndDate").val();
+
+    var date_submit_out = $("#date_submit_out").is(":checked");
+
+    if (StartDate != "" && EndDate == "" || StartDate == "" && EndDate != "") {
+      $.alert("กรุณาเลือกวันที่เริ่มต้นและสิ้นสุดให้ครบถ้วน");
+      return false;
+    }
+
+    if (StartDate == "" && EndDate == "") {
+      $.alert("กรุณากรอกข้อมูลอย่างน้อย 1 ช่อง");
+      return false;
+    } else {
+      $("#btnSearch").html("<i class='fa fa-spinner fa-spin'></i>");
+      $("#tblReport").loading();
+      $("#tblReport tfoot").remove();
+      $.ajax({
+        type: "POST",
+        url: "././module/RPT_STS_custom_OUT/data.php",
+        dataType: "json",
+        beforeSend: function () {
+          $("#btnSearch").html("<i class='fa fa-spinner fa-spin'>");
+        },
+        data: {
+          load: "ajax",
+          StartDate: StartDate,
+          EndDate: EndDate,
+          date_submit: date_submit_out
+        },
+        success: function (data) {
+          var newData = data.map((item) => {
+            const zinc = item.weight_zinc > 0 ? item.weight_zinc : 0.00;
+            const nonzinc = item.weight_non_zinc > 0 ? item.weight_non_zinc : 0.00;
+            return {
+              ...item,
+              weight_zinc: Number(zinc).toFixed(2),
+              weight_nonzinc: Number(nonzinc).toFixed(2),
+              total: (Number(item.weight_zinc) + Number(item.weight_nonzinc)).toFixed(2),
+            };
+          })
+          $("#tblReport").DataTable().clear();
+          $("#tblReport").append(
+            "<tfoot><tr><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th></tr></tfoot>"
+          );
+          $("#tblReport").dataTable({
+            aaData: newData,
+            paging: false,
+            fixedHeader: true,
+            destroy: true,
+            processing: true,
+            scrollY: "65vh",
+            scrollCollapse: true,
+            scrollX: true,
+            select: true,
+            columns: [
+              {
                 "targets": 0, // คอลัมน์ที่จะแสดง index
                 "data": null,
                 className: "text-center",
                 "render": function (data, type, row, meta) {
-                    return meta.row + 1; // แสดงลำดับแถว +1 เนื่องจาก index เริ่มที่ 0
-                  }
-                },
-                {
-                  data: "doc_no",
-                  className: "text-center",
-                },
-                {
-                  data: "boatnote",
-                  className: "text-center",
-                },
-                {
-                  data: "date.date",
-                  className: "text-center",
-                  "render": function (data, type, row, meta) {
-                    return data.substring(0, 10);
-                  }
-                },
-                {
-                  data: "item",
-                  className: "text-center",
-                },
-                {
-                  data: "boat_name",
-                  className: "text-center",
-                },
-                {
-                  data: "boat_no",
-                  className: "text-center",
-                },
-                {
-                  data: "inv_no",
-                  className: "text-center",
-                },
-                {
-                  data: "bundle",
-                  className: "text-center",
-                },
-                {
-                  data: "weight_net",
-                  className: "text-center",
-                },
-                {
-                  data: "weight_gross",
-                  className: "text-center",
-                },
-                {
-                  data: "weight_zinc",
-                  className: "text-center",
-                },
-                {
-                  data: "weight_nonzinc",
-                  className: "text-center",
-                },
-                {
-                  data: "cust_po",
-                  className: "text-center",
-                },
-                {
-                  data: "value",
-                  className: "text-center",
-                },
-                {
-                  data: "pier",
-                  className: "text-center",
-                },
-                {
-                  data: "BL_no",
-                  className: "text-center",
-                },
-                {
-                  data: "loc_name",
-                  className: "text-center",
-                },
-                {
-                  data: "loc_name2",
-                  className: "text-center",
-                },
-                {
-                  data: "loc_name3",
-                  className: "text-center",
-                },
-                {
-                  data: "loc_name4",
-                  className: "text-center",
-                },
-              ],
-              dom:
-                "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
-                "<'row'<'col-md-12'tr>>" +
-                "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
-              buttons: [
-                {
-                  extend: "print",
-                  text: "<i class='fa fa-print'></i>&nbsp;Print",
-                  title: "",
-                },
-                {
+                  return meta.row + 1; // แสดงลำดับแถว +1 เนื่องจาก index เริ่มที่ 0
+                }
+              },
+              {
+                data: "doc_no",
+                className: "text-center",
+              },
+              {
+                data: "boatnote",
+                className: "text-center",
+              },
+              {
+                data: "date.date",
+                className: "text-center",
+                "render": function (data, type, row, meta) {
+                  return data.substring(0, 10);
+                }
+              },
+              {
+                data: "item",
+                className: "text-center",
+              },
+              {
+                data: "boat_name",
+                className: "text-center",
+              },
+              {
+                data: "boat_no",
+                className: "text-center",
+              },
+              {
+                data: "inv_no",
+                className: "text-center",
+              },
+              {
+                data: "bundle",
+                className: "text-center",
+              },
+              {
+                data: "weight_net",
+                className: "text-center",
+              },
+              {
+                data: "weight_gross",
+                className: "text-center",
+              },
+              {
+                data: "weight_zinc",
+                className: "text-center",
+              },
+              {
+                data: "weight_nonzinc",
+                className: "text-center",
+              },
+              {
+                data: "cust_po",
+                className: "text-center",
+              },
+              {
+                data: "value",
+                className: "text-center",
+              },
+              {
+                data: "pier",
+                className: "text-center",
+              },
+              {
+                data: "BL_no",
+                className: "text-center",
+              },
+              {
+                data: "loc_name",
+                className: "text-center",
+              },
+              {
+                data: "loc_name2",
+                className: "text-center",
+              },
+              {
+                data: "loc_name3",
+                className: "text-center",
+              },
+              {
+                data: "loc_name4",
+                className: "text-center",
+              },
+            ],
+            dom:
+              "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+              "<'row'<'col-md-12'tr>>" +
+              "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+            buttons: [
+              {
+                extend: "print",
+                text: "<i class='fa fa-print'></i>&nbsp;Print",
+                title: "",
+              },
+              {
                 extend: 'excel',
                 footer: true,
-                title:"รายงานส่งออก" + StartDate + "_to_" + EndDate,
+                title: "รายงานส่งออก" + StartDate + "_to_" + EndDate,
                 text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+              },
+              {
+                text: `<button type="button" class="btn btn-info">พิมพ์รายงานประจำเดือน</button>`,
+                action: function (e, dt, node, config) {
+                  var data = dt.rows().data().toArray();
+                  printReport(data, StartDate);
+                }
+              },
+              {
+                text: `<button type="button" class="btn btn-info">พิมพ์รายงานประจำปี</button>`,
+                action: function (e, dt, node, config) {
+                  var data = dt.rows().data().toArray();
+                  printReport2(data, StartDate, EndDate);
+                }
+              },
+            ],
+            "footerCallback": function (row, data, start, end, display) {
+              var api = this.api(),
+                data;
+              var intVal = function (i) {
+                return typeof i === 'string' ?
+                  i.replace(/[\$,]/g, '') * 1 :
+                  typeof i === 'number' ?
+                    i : 0;
+              };
+              var totalNet = api
+                .column(9)
+                .data()
+                .reduce(function (a, b) {
+                  return intVal(a) + intVal(b);
+                }, 0);
+              var totalGross = api
+                .column(10)
+                .data()
+                .reduce(function (a, b) {
+                  return intVal(a) + intVal(b);
+                }, 0);
+              var totalZinc = api
+                .column(11)
+                .data()
+                .reduce(function (a, b) {
+                  return intVal(a) + intVal(b);
+                }, 0);
+              var totalVal = api
+                .column(14)
+                .data()
+                .reduce(function (a, b) {
+                  return intVal(a) + intVal(b);
+                }, 0);
+              var totalWeight_Zinc = api
+                .column(11)
+                .data()
+                .reduce(function (a, b) {
+                  return intVal(a) + intVal(b);
+                }, 0);
+              var totalWeight_Non_Zinc = api
+                .column(12)
+                .data()
+                .reduce(function (a, b) {
+                  return intVal(a) + intVal(b);
+                }, 0);
+              $(api.column(7).footer()).html("รวม");
+              $(api.column(9).footer()).html(addCommas(totalNet.toFixed(2)));
+              $(api.column(10).footer()).html(addCommas(totalGross.toFixed(2)));
+              $(api.column(11).footer()).html(addCommas(totalWeight_Zinc.toFixed(2)));
+              $(api.column(12).footer()).html(addCommas(totalWeight_Non_Zinc.toFixed(2)));
+              $(api.column(14).footer()).html(addCommas(totalVal.toFixed(2)));
 
-            }
-              ],
-              "footerCallback": function (row, data, start, end, display) {
-                        var api = this.api(),
-                                data;
-                        var intVal = function (i) {
-                            return typeof i === 'string' ?
-                                    i.replace(/[\$,]/g, '') * 1 :
-                                    typeof i === 'number' ?
-                                    i : 0;
-                        };
-                        var totalNet = api
-                                .column(9)
-                                .data()
-                                .reduce(function (a, b) {
-                                    return intVal(a) + intVal(b);
-                                }, 0);
-                        var totalGross = api
-                                .column(10)
-                                .data()
-                                .reduce(function (a, b) {
-                                    return intVal(a) + intVal(b);
-                                }, 0);
-                        var totalZinc = api
-                                .column(11)
-                                .data()
-                                .reduce(function (a, b) {
-                                    return intVal(a) + intVal(b);
-                                }, 0);
-                        var totalVal = api
-                                .column(14)
-                                .data()
-                                .reduce(function (a, b) {
-                                    return intVal(a) + intVal(b);
-                                }, 0);
-                        var totalWeight_Zinc = api
-                                .column(11)
-                                .data()
-                                .reduce(function (a, b) {
-                                    return intVal(a) + intVal(b);
-                                }, 0);
-                        var totalWeight_Non_Zinc = api
-                                .column(12)
-                                .data()
-                                .reduce(function (a, b) {
-                                    return intVal(a) + intVal(b);
-                                }, 0);
-                        $(api.column(7).footer()).html("รวม");
-                        $(api.column(9).footer()).html(addCommas(totalNet.toFixed(2)));
-                        $(api.column(10).footer()).html(addCommas(totalGross.toFixed(2)));
-                        $(api.column(11).footer()).html(addCommas(totalWeight_Zinc.toFixed(2)));
-                        $(api.column(12).footer()).html(addCommas(totalWeight_Non_Zinc.toFixed(2)));
-                        $(api.column(14).footer()).html(addCommas(totalVal.toFixed(2)));
-                   
-                        $('tfoot').css({
-        'font-weight': 'bold',
-        'font-size': '14px',
-        'text-transform': 'uppercase'
-    });
-                        
+              $('tfoot').css({
+                'font-weight': 'bold',
+                'font-size': '14px',
+                'text-transform': 'uppercase'
+              });
 
-                    },
-            });
-            $("#tblReport").loading("stop");
-            $("#btnSearch").html(OldHtml);
-          },
 
-          error: function (e) {
-            $("#tblReport").loading("stop");
-            $("#btnSearch").html(OldHtml);
-            console.log("There was an error with your request...");
-            console.log("error: " + JSON.stringify(e));
-          },
-        });
+            },
+          });
+          $("#tblReport").loading("stop");
+          $("#btnSearch").html(OldHtml);
+        },
+
+        error: function (e) {
+          $("#tblReport").loading("stop");
+          $("#btnSearch").html(OldHtml);
+          console.log("There was an error with your request...");
+          console.log("error: " + JSON.stringify(e));
+        },
+      });
+    }
+  }
+
+
+  function printReport(newData, StartDate) {
+    pdfMake.fonts = {
+        THSarabunNew: {
+            normal: 'THSarabunNew.ttf',
+            bold: 'THSarabunNew Bold.ttf',
+            italics: 'THSarabunNew-Italic.ttf',
+            bolditalics: 'THSarabunNew-BoldItalic.ttf'
+        },
+        Roboto: {
+            normal: 'Roboto-Regular.ttf',
+            bold: 'Roboto-Medium.ttf',
+            italics: 'Roboto-Italic.ttf',
+            bolditalics: 'Roboto-MediumItalic.ttf'
+        }
+    };
+
+    const data = []
+    data.push([
+      { text: `ลำดับที่`, fontSize: 12, bold: true, alignment: 'center', style: 'header' },
+      { text: "เลขที่ใบขน", fontSize: 12,bold: true,  alignment: 'center', style: 'header' },
+      { text: "วันที่", fontSize: 12,bold: true,  alignment: 'center', style: 'header' },
+      { text: "ชื่อสินค้า", fontSize: 12,bold: true,  alignment: 'center', style: 'header' },
+      { text: "STS INVOICE", fontSize: 12, bold: true, alignment: 'center', style: 'header' },
+      { text: "น้ำหนัก N.W.(KG)", fontSize: 12,bold: true,  alignment: 'center', style: 'header' },
+      { text: "มูลค่า(บาท)", fontSize: 12,bold: true,  alignment: 'center', style: 'header' },
+      { text: "ท่าส่งออก", fontSize: 12,bold: true,  alignment: 'center', style: 'header' },
+      { text: "หมายเหตุ", fontSize: 12,bold: true,  alignment: 'center', style: 'header' },
+    ])
+
+    for (let i = 0; i < newData.length ; i++) {
+      data.push([
+        { text: i + 1, fontSize: 12, alignment: 'center' },
+        { text: newData[i].doc_no, fontSize: 12, alignment: 'center' },
+        { text: moment(newData[i].date.date).format('DD/MM/YYYY'), fontSize: 12, alignment: 'center' },
+        { text: newData[i].item, fontSize: 12, alignment: 'center' },
+        { text: newData[i].inv_no, fontSize: 12, alignment: 'center' },
+        { text: addCommas(newData[i].weight_net), fontSize: 12, alignment: 'center' },
+        { text: addCommas(newData[i].value), fontSize: 12, alignment: 'center' },
+        { text: newData[i].pier, fontSize: 12, alignment: 'center' },
+        { text: newData[i].boatnote, fontSize: 12, alignment: 'center' },
+      ],)
+
+      if (i == newData.length - 1) {
+        data.push([
+          { text: 'รวม', colSpan: 3, fontSize: 11, bold: true, alignment: 'center', colSpan: 5 },
+          { text: '', fontSize: 11, alignment: 'center' },
+          { text: '', fontSize: 11, alignment: 'center' },
+          { text: '', fontSize: 11, alignment: 'center' },
+          { text: '', fontSize: 11, alignment: 'center' },
+          { text: addCommas(newData.reduce((a, b) => a + Number(b.weight_net), 0).toFixed(2)), fontSize: 11, bold: true, alignment: 'center' },
+          { text: addCommas(newData.reduce((a, b) => a + Number(b.value), 0).toFixed(2)), fontSize: 11, bold: true, alignment: 'center' },
+          { text: '', fontSize: 11, alignment: 'center' },
+          { text: '', fontSize: 11, alignment: 'center' },
+        ],)
       }
+
     }
 
-  </script>
+
+    var docDefinition = {
+      pageSize: 'A4',
+      pageOrientation: 'landscape',
+      pageMargins: [25, 70, 50, 50],
+      header: function (currentPage, pageCount, pageSize) {
+        return {
+          margin: [20, 5, 20, 10],
+          table: {
+            widths: [800],
+            body: [
+              [
+                {
+                  border: [false, false, false, false],
+                  fontSize: 18,
+                  text: `รายงานข้อมูลใบขนสินค้าขาเข้า ประจำ เดือน ${new Date(StartDate).toLocaleDateString("th-TH", { month: 'long' })} ${new Date(StartDate).toLocaleDateString("th-TH", { year: 'numeric' })}`,
+                  alignment: 'center',
+
+                },
+              ],
+              [
+                {
+                  border: [false, false, false, false], text: `คลังสินค้าทัณฑ์บน บริษัท สหไทยสตีลไพพ์ จำกัด (มหาชน)`, fontSize: 16, alignment: 'center', margin: [0, 0, 0, 0]
+                },
+              ],
+            ],
+          },
+        };
+      },
+      content: [
+        {
+          margin: [0, 0, 0, 0],
+          columns: [
+            {
+
+              table: {
+                widths: [30, 70, 60, 150, 60, 80, 100, 60, 100],
+                headerRows: 1,
+                body: data,
+              },
+            },
+          ],
+        }
+      ],
+      defaultStyle: {
+        font: 'THSarabunNew',
+      },
+    };
+
+    pdfMake.createPdf(docDefinition).open()
+  }
+
+  function printReport2(newData, StartDate, EndDate) {
+    pdfMake.fonts = {
+        THSarabunNew: {
+            normal: 'THSarabunNew.ttf',
+            bold: 'THSarabunNew Bold.ttf',
+            italics: 'THSarabunNew-Italic.ttf',
+            bolditalics: 'THSarabunNew-BoldItalic.ttf'
+        },
+        Roboto: {
+            normal: 'Roboto-Regular.ttf',
+            bold: 'Roboto-Medium.ttf',
+            italics: 'Roboto-Italic.ttf',
+            bolditalics: 'Roboto-MediumItalic.ttf'
+        }
+    };
+
+    const data = []
+    data.push([
+      { text: `ลำดับที่`, fontSize: 12, bold: true, alignment: 'center', style: 'header', rowSpan: 2 },
+      { text: "เลขที่ใบขนฯ/ใบขนฯ โอนย้าย/เลขที่ทำเรื่องทำลาย/บริจาก", fontSize: 12,bold: true,  alignment: 'center', style: 'header', rowSpan: 2  },
+      { text: "วันที่ส่งออก/ชำระอากร", fontSize: 12,bold: true,  alignment: 'center', style: 'header', rowSpan: 2  },
+      { text: "ชื่อสินค้า/รุ่น/แบบ/หน่วย(KGS)", fontSize: 12,bold: true,  alignment: 'center', style: 'header', colSpan: 2 },
+      {},
+      { text: "รวม", fontSize: 12, bold: true, alignment: 'center', style: 'header', rowSpan: 2  },
+      { text: "มูลค่า(บาท)", fontSize: 12,bold: true,  alignment: 'center', style: 'header', rowSpan: 2  },
+      { text: "หมายเหตุ", fontSize: 12,bold: true,  alignment: 'center', style: 'header' , rowSpan: 2 },
+    ],[
+      { text: '', fontSize: 12, alignment: 'center' },
+      { text: '', fontSize: 12, alignment: 'center' },
+      { text: '', fontSize: 12, alignment: 'center' },
+      { text: 'ท่อเหล็กชุบสังกะสี \n    (สูตร 06-4012325/718-1)', fontSize: 12, bold: true, alignment: 'center',style: 'header' },
+      { text: 'ท่อเหล็กชไม่ชุบสังกะสี \n    (สูตร 06-4012329/718-2)', fontSize: 12,bold: true, alignment: 'center',style: 'header' },
+      { text: '', fontSize: 12, alignment: 'center' },
+      { text: '', fontSize: 12, alignment: 'center' },
+      { text: '', fontSize: 12, alignment: 'center' },
+    ])
+
+    for (let i = 0; i < newData.length ; i++) {
+      data.push([
+        { text: i + 1, fontSize: 12, alignment: 'center' },
+        { text: newData[i].doc_no, fontSize: 12, alignment: 'center' },
+        { text: moment(newData[i].date.date).format('DD/MM/YYYY'), fontSize: 12, alignment: 'center' },
+        { text: addCommas(newData[i].weight_zinc), fontSize: 12, alignment: 'center' },
+        { text: addCommas(newData[i].weight_nonzinc), fontSize: 12, alignment: 'center' },
+        { text: addCommas((Number(newData[i].weight_zinc) + Number(newData[i].weight_nonzinc)).toFixed(2)), fontSize: 12, alignment: 'center' },
+        { text: addCommas(newData[i].value), fontSize: 12, alignment: 'center' },
+        { text: newData[i].boatnote, fontSize: 12, alignment: 'center' },
+      ],)
+
+      if (i == newData.length - 1) {
+        data.push([
+          { text: 'รวม', colSpan: 3, fontSize: 11, bold: true, alignment: 'center', colSpan: 3 },
+          { text: '', fontSize: 11, alignment: 'center' },
+          { text: '', fontSize: 11, alignment: 'center' },
+          { text: addCommas(newData.reduce((a, b) => a + Number(b.weight_zinc), 0).toFixed(2)), fontSize: 11, alignment: 'center' },
+          { text: addCommas(newData.reduce((a, b) => a + Number(b.weight_nonzinc), 0).toFixed(2)), fontSize: 11, alignment: 'center' },
+          { text: addCommas(newData.reduce((a, b) => a + Number(b.weight_zinc) + Number(b.weight_nonzinc), 0).toFixed(2)), fontSize: 11, alignment: 'center' },
+          { text: addCommas(newData.reduce((a, b) => a + Number(b.value), 0).toFixed(2)), fontSize: 11, bold: true, alignment: 'center' },
+          { text: '', fontSize: 11, alignment: 'center' },
+        ],)
+      }
+
+    }
+
+
+    var docDefinition = {
+      pageSize: 'A4',
+      pageOrientation: 'landscape',
+      pageMargins: [25, 110, 50, 50],
+      header: function (currentPage, pageCount, pageSize) {
+        return {
+          margin: [20, 5, 20, 10],
+          table: {
+            widths: [800],
+            body: [
+            [
+                {
+                  border: [false, false, false, false],
+                  fontSize: 16,
+                  bold: true,
+                  text: "SAHA THAI STEEL PIPE (PUBLIC) CO., LTD. ทะเบียน W0201100000023",
+                  alignment: 'center',
+            
+                },
+              ],
+              [
+                {
+                  border: [false, false, false, false],
+                  fontSize: 14,
+                  text: "รายงานของที่นำออกจากคลังสินค้าทัณฑ์บนฯ",
+                  alignment: 'center',
+              
+                },
+              ],
+              [
+                {
+                  border: [false, false, false, false],
+                  fontSize: 14,
+                  text: "ส่งออกต่างประเทศ",
+                  alignment: 'center',
+              
+                },
+              ],
+              [
+                {
+                  border: [false, false, false, false], text: `สำหรับงวดบัญชี ระหว่างวันที่ ${new Date(StartDate).toLocaleDateString("th-TH", { year: 'numeric', month: 'long', day: 'numeric' })} ถึง ${new Date(EndDate).toLocaleDateString("th-TH", { year: 'numeric', month: 'long', day: 'numeric' })}`, fontSize: 14, alignment: 'center', margin: [0, 0, 0, 0]
+                },
+              ],
+            ],
+          },
+        };
+      },
+      content: [
+        {
+          margin: [0, 0, 0, 0],
+          columns: [
+            {
+
+              table: {
+                widths: [30, 100, 60, 120, 120, 100, 100, 90],
+                headerRows: 2,
+                body: data,
+              },
+            },
+          ],
+        }
+      ],
+      defaultStyle: {
+        font: 'THSarabunNew',
+      },
+    };
+
+    pdfMake.createPdf(docDefinition).open()
+  }
+
+{/*
+    [
+  {
+    border: [false, false, false, false],
+    columns: [
+      {
+        canvas: [
+          {
+            type: 'rect',
+            x: 0,
+            y: 0,
+            w: 10,
+            h: 10,
+            color: 'black',
+          },
+        ],
+        width: 20
+      },
+      {
+        text: `สำหรับงวดบัญชี ระหว่างวันที่ 1 กรกฎาคม พ.ศ. 2567 ถึง 31 กรกฎาคม พ.ศ. 2567`,
+  
+      }
+    ],
+    columnGap: 5,
+    fontSize: 14,
+    margin: [0, 0, 0, 0],
+  },
+  {
+    border: [false, false, false, false],
+    columns: [
+      {
+        canvas: [
+          {
+            type: 'rect',
+            x: 0,
+            y: 0,
+            w: 10,
+            h: 10,
+            color: 'black',
+          },
+        ],
+        width: 20
+      },
+      {
+        text: `\u25A0 สำหรับงวดบัญชี ระหว่างวันที่ 1 กรกฎาคม พ.ศ. 2567 ถึง 31 กรกฎาคม พ.ศ. 2567`,
+      }
+    ],
+    columnGap: 5,
+    fontSize: 14,
+    margin: [0, 0, 0, 0],
+  }
+]
+*/}
+</script>

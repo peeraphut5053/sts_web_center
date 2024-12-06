@@ -156,6 +156,20 @@
                 </label>
               </div>
             </div>
+           <div class="flex justify-center gap-3">
+            <div class="row">
+                <div class="input-group">
+                  <div class="input-group-addon">จำนวน</div>
+                  <input type="text" class="form-control" id="totalOut">
+                </div>
+              </div>
+              <div class="row">
+                <div class="input-group">
+                  <div class="input-group-addon">น้ำหนัก</div>
+                  <input type="text" class="form-control" id="totalOutWeight">
+                </div>
+              </div>
+           </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
@@ -1151,6 +1165,8 @@ for (let i = 0; i <= 27; i++) {
 }
 
 const newYear = Number(Year) + 543
+var totalOut = document.getElementById("totalOut").value;
+var totalOutWeight = document.getElementById("totalOutWeight").value;
 
 var docDefinition = {
    pageSize: 'A4',
@@ -1172,14 +1188,14 @@ var docDefinition = {
             return {
                 margin: [20, -160, 50, 10],
                 stack: [
-           { text: `6) คำร้องขอนำวัตถุดิบออกไปผ่านกรรมวิธีตามขั้นตอน ณ ที่อื่นชั่วคราว                  จำนวน….5…..ฉบับ   น้ำหนัก..28,579,883.74.....กิโลกรัม`, fontSize: 14, alignment: 'left', margin: [0, 5, 0, 0] },
-           { text: `7) คำร้องขอนำวัตถุดิบกลับเข้าคลัง					                                         จำนวน….-…..ฉบับ   น้ำหนัก……………-………กิโลกรัม`, fontSize: 14, alignment: 'left', margin: [0, 0, 0, 0] },
-           { text: `8) การทำลายเศษวัตถุดิบในสูตรการผลิต					                                  จำนวน….-…..ฉบับ   น้ำหนัก……………-………กิโลกรัม`, fontSize: 14, alignment: 'left', margin: [0, 0, 0, 0] },
-           { text: `9) คำร้องขอทำลายเศษวัตถุดิบนอกสูตรการผลิต					                         จำนวน….-…..ฉบับ   น้ำหนัก……………-………กิโลกรัม`, fontSize: 14, alignment: 'left', margin: [0, 0, 0, 0] },
-           { text: `10)คำร้องขอบริจากวัตถุดิบหรือของที่ด้อยคุณภาพ					                       จำนวน….-…..ฉบับ   น้ำหนัก……………-………กิโลกรัม`, fontSize: 14, alignment: 'left', margin: [0, 0, 0, 0] },
-           { text: `11)คำร้องขอลดอัตราอากรเศษและ/หรือของที่ด้อยคุณภาพ					            จำนวน.....-.….ฉบับ   น้ำหนัก……….…....……....กิโลกรัม`, fontSize: 14, alignment: 'left', margin: [0, 0, 0, 0] },
-           { text: `12)คำร้องขอนำของที่ผลิตในคลังฯ ออกจำหน่ายภายในประเทศ					        จำนวน….-…..ฉบับ   น้ำหนัก……………-………กิโลกรัม`, fontSize: 14, alignment: 'left', margin: [0, 0, 0, 0] },
-           { text: `13)คำร้องขอนำวัตถุดิบในคลังฯ ออกจำหน่ายภายในประเทศ					           จำนวน….-…..ฉบับ   น้ำหนัก……………-………กิโลกรัม`, fontSize: 14, alignment: 'left', margin: [0, 0, 0, 0] },
+           { text: `6) คำร้องขอนำวัตถุดิบออกไปผ่านกรรมวิธีตามขั้นตอน ณ ที่อื่นชั่วคราว                   จำนวน….${totalOut}….ฉบับ   น้ำหนัก..${addCommas(Number(totalOutWeight).toFixed(2))}..กิโลกรัม`, fontSize: 14, alignment: 'left', margin: [0, 5, 0, 0] },
+           { text: `7) คำร้องขอนำวัตถุดิบกลับเข้าคลัง					                                          จำนวน….-…..ฉบับ    น้ำหนัก……………-………กิโลกรัม`, fontSize: 14, alignment: 'left', margin: [0, 0, 0, 0] },
+           { text: `8) การทำลายเศษวัตถุดิบในสูตรการผลิต					                                   จำนวน….-…..ฉบับ    น้ำหนัก……………-………กิโลกรัม`, fontSize: 14, alignment: 'left', margin: [0, 0, 0, 0] },
+           { text: `9) คำร้องขอทำลายเศษวัตถุดิบนอกสูตรการผลิต					                          จำนวน….-…..ฉบับ    น้ำหนัก……………-………กิโลกรัม`, fontSize: 14, alignment: 'left', margin: [0, 0, 0, 0] },
+           { text: `10) คำร้องขอบริจากวัตถุดิบหรือของที่ด้อยคุณภาพ					                      จำนวน….-…..ฉบับ    น้ำหนัก……………-………กิโลกรัม`, fontSize: 14, alignment: 'left', margin: [0, 0, 0, 0] },
+           { text: `11) คำร้องขอลดอัตราอากรเศษและ/หรือของที่ด้อยคุณภาพ					            จำนวน…${data_ALL > 0 ? data_ALL : '-'}….ฉบับ    ${totalWeightALL > 0 ? `น้ำหนัก..${addCommas(parseInt(totalWeightALL).toFixed(2))}..กิโลกรัม` : 'น้ำหนัก……………-………กิโลกรัม'}`, fontSize: 14, alignment: 'left', margin: [0, 0, 0, 0] },
+           { text: `12) คำร้องขอนำของที่ผลิตในคลังฯ ออกจำหน่ายภายในประเทศ					       จำนวน….-…..ฉบับ    น้ำหนัก……………-………กิโลกรัม`, fontSize: 14, alignment: 'left', margin: [0, 0, 0, 0] },
+           { text: `13) คำร้องขอนำวัตถุดิบในคลังฯ ออกจำหน่ายภายในประเทศ					          จำนวน….-…..ฉบับ    น้ำหนัก……………-………กิโลกรัม`, fontSize: 14, alignment: 'left', margin: [0, 0, 0, 0] },
            { text: `14) จำนวนคนงานของบริษัทฯ……400….คน`, fontSize: 14, alignment: 'left', margin: [0, 0, 0, 0] },
            { text: `จึงเรียนมาเพื่อโปรดทราบ`, fontSize: 14, alignment: 'left', margin: [50, 0, 0, 0] },
            { text: `ลงชื่อ……………………………………………………..`, fontSize: 14, alignment: 'right', margin: [0, -10, 0, 0] },

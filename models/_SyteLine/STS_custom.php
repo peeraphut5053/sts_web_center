@@ -102,7 +102,7 @@ class STS_Custom {
 
     function GetSTS_Custom_In($StartDate, $EndDate) {
         $query = "select *, total = (value * 0.05) + ( (value + (value * 0.05)) * 0.07 )
-from STS_custom_IN where date_in between '$StartDate' and '$EndDate'";
+from STS_custom_IN where date_in between '$StartDate' and '$EndDate' Order by date_in";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);
@@ -110,7 +110,7 @@ from STS_custom_IN where date_in between '$StartDate' and '$EndDate'";
     }
 
     function GetSTS_Custom_scrap($StartDate, $EndDate) {
-        $query = "select *, total = 0 from STS_custom_scrap where date between '$StartDate' and '$EndDate'";
+        $query = "select *, total = 0 from STS_custom_scrap where date between '$StartDate' and '$EndDate' Order by date";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);
@@ -121,13 +121,13 @@ from STS_custom_IN where date_in between '$StartDate' and '$EndDate'";
     function GetSTS_Custom_Out($StartDate, $EndDate, $date_submit) {
 
         if ($date_submit === 'true') {
-            $query = "select * from STS_custom_OUT where date_submit between '$StartDate' and '$EndDate'";
+            $query = "select * from STS_custom_OUT where date_submit between '$StartDate' and '$EndDate' Order by date_submit";
             $cSql = new SqlSrv();
             $rs0 = $cSql->SqlQuery($this->StrConn, $query);
             array_splice($rs0, count($rs0) - 1, 1);
             return $rs0;
         } else {
-            $query2 = "select * from STS_custom_OUT where date between '$StartDate' and '$EndDate'";
+            $query2 = "select * from STS_custom_OUT where date between '$StartDate' and '$EndDate' Order by date";
             $cSql = new SqlSrv();
             $rs0 = $cSql->SqlQuery($this->StrConn, $query2);
             array_splice($rs0, count($rs0) - 1, 1);
