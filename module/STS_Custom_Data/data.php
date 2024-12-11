@@ -124,3 +124,12 @@ if ($load == "saveData_WH") {
     echo json_encode($rs);
 }
 
+if ($load == "SaveCustomLog") {
+    $CallModel = new CallModel();
+    $CallModel->SyteLine_Models();
+    $STS_Custom = new STS_Custom();
+    $STS_Custom->setConn($ConnSL);
+    $rs = $STS_Custom->SaveCustomLog($table, $doc_no, $oldValue, $newValue, $field, $users);
+    echo json_encode($rs);
+}
+

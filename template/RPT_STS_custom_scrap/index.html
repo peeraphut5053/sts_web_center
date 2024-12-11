@@ -94,11 +94,13 @@
       </div>
     </div>
     <div class="col-lg-1 col-md-1 col-sm-6 col-xs-6 text-left">
-      <div class="flex">
+      <div class="flex gap-16">
         <button class="btn btn-info" id="btnSearch">
           <i class="fa fa-search"></i>&nbsp; Search
         </button>
-        <a class="btn btn-success ml-56" href="module/STS_Custom_Data/Import_Excel_Scrap.php"  id="btnTransfer">&nbsp;Import Excel (Scrap)</a>
+        <button id="btnAdd" class="btn btn-success" data-toggle="modal" data-target="#ModalCustomScrap"><i
+          class="fa fa-searh"></i>เพิ่มข้อมูลรายงานชำระภาษี</button>
+        <!-- <a class="btn btn-success ml-56" href="module/STS_Custom_Data/Import_Excel_Scrap.php"  id="btnTransfer">&nbsp;Import Excel (Scrap)</a> -->
       </div>
     </div>
   </div>
@@ -130,14 +132,70 @@
      </tbody>-->
     </table>
   </div>
+  <!-- Modal -->
+<div class="modal fade bd-example-modal-lg" id="ModalCustomScrap" role="dialog" aria-labelledby="myLargeModalLabel"
+aria-hidden="true">
+<div class="modal-dialog modal-lg">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title text-center" id="exampleModalLabel">เพิ่มข้อมูลรายการชำระภาษี</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+      <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+        <div class="input-group basis-2/4">
+          <div class="input-group-addon">เลขที่ใบขน *</div>
+          <input type="text" autocomplete="off" class="form-control" id="doc_no_scrap">
+        </div>
+        <div class="input-group basis-2/4">
+          <div class="input-group-addon">วันที่ *</div>
+          <input type="text" autocomplete="off" class="form-control" id="date_scrap">
+        </div>
+      </div>
+      <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+        <div class="input-group basis-2/4">
+          <div class="input-group-addon">ชื่อสินค้า *</div>
+          <input type="text" autocomplete="off" class="form-control" id="item_scrap">
+        </div>
+        <div class="input-group basis-2/4">
+          <div class="input-group-addon">เลขที่สูตรการผลิต *</div>
+          <input type="text" autocomplete="off" class="form-control" id="stamp_no">
+        </div>
+      </div>
+      <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+        <div class="input-group basis-2/4">
+          <div class="input-group-addon">จำนวน (กก.) *</div>
+          <input type="number" autocomplete="off" class="form-control" id="weight_KG_scrap">
+        </div>
+        <div class="input-group basis-2/4">
+          <div class="input-group-addon">มูลค่า (บาท) *</div>
+          <input type="number" autocomplete="off" class="form-control" id="value_scrap">
+        </div>
+      </div>
+      <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+        <div class="input-group basis-2/4">
+          <div class="input-group-addon">ใบขนฯอ้างอิง *</div>
+          <input type="text" autocomplete="off" class="form-control" id="ref_doc_no">
+        </div>
+      </div>
+    </div>
 
+    <div class="modal-footer">
+      <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+      <button type="button" class="btn btn-primary" id="SaveCustomScrap" onclick="SaveCustomScrap()">บันทึก</button>
+    </div>
+  </div>
+</div>
+</div>
   <script type="text/javascript">
  
     $("#btnSearch").click(function () {
       ReportItemSearch();
     });
            
-    $("#txtStartDate,#txtEndDate").datepicker({
+    $("#txtStartDate,#txtEndDate, #date_scrap").datepicker({
       dateFormat: "yy-mm-dd",
     });
     
@@ -196,7 +254,7 @@
               scrollY: "65vh",
               scrollCollapse: true,
               scrollX: true,
-              select: true,
+              select: false,
               columns: [
                  {
                 "targets": 0, // คอลัมน์ที่จะแสดง index
@@ -220,6 +278,11 @@
                 {
                   data: "item",
                   className: "text-center",
+                  "render": function (data, type, row, meta) {
+                    let valdata = data;
+                    let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='20' onchange="SaveEdit('${row.doc_no}', value, 'item');" value='${(valdata)}' />`;
+                    return ret;
+                  }
                 },
                 {
                   data: "weight_KG",
@@ -267,10 +330,20 @@
                 {
                   data: "stamp_no",
                   className: "text-center",
+                  "render": function (data, type, row, meta) {
+                    let valdata = data;
+                    let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='20' onchange="SaveEdit('${row.doc_no}', value, 'stamp_no');" value='${(valdata)}' />`;
+                    return ret;
+                  }
                 },
                 {
                   data: "ref_doc_no",
                   className: "text-center",
+                  "render": function (data, type, row, meta) {
+                    let valdata = data;
+                    let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='20' onchange="SaveEdit('${row.doc_no}', value, 'ref_doc_no');" value='${(valdata)}' />`;
+                    return ret;
+                  }
                 },
               ],
               dom:
@@ -361,6 +434,87 @@
           },
         });
       }
+    }
+
+    function SaveCustomScrap() {
+      var doc_no = $("#doc_no_scrap").val();
+      var date = $("#date_scrap").val();
+      var item = $("#item_scrap").val();
+      var stamp_no = $("#stamp_no").val();
+      var weight_KG = $("#weight_KG_scrap").val();
+      var value = $("#value_scrap").val();
+      var ref_doc_no = $("#ref_doc_no").val();
+
+
+     if (doc_no == "" || date == "" || item == "" || stamp_no == "" || weight_KG == "" || value == "" || ref_doc_no == "") {
+        alert("กรุณากรอกข้อมูลให้ครบ");
+        return false;
+     }
+
+     $.ajax({
+      type: "POST",
+      url: "././module/RPT_STS_custom_scrap/data.php",
+      dataType: "json",
+      data: {
+        load: "InsertCustomScrap",
+        doc_no: doc_no,
+        date: date,
+        item: item,
+        stamp_no: stamp_no,
+        weight_KG: weight_KG,
+        value_scrap: value,
+        ref_doc_no: ref_doc_no
+      },
+      success: function (data) {
+        alert("บันทึกข้อมูลสําเร็จ");
+        $("#doc_no_scrap").val("");
+        $("#date_scrap").val("");
+        $("#item_scrap").val("");
+        $("#stamp_no").val("");
+        $("#weight_KG_scrap").val("");
+        $("#value_scrap").val("");
+        $("#ref_doc_no").val("");
+        $("#ModalCustomScrap").modal("hide");
+      },
+      error: function (e) {
+        alert("บันทึกข้อมูลไม่สําเร็จ");
+      },
+    });
+    }
+
+    function SaveEdit(doc_no, newValue, field) {
+      var username_session = GetUserProp("login_username");
+      $(".username_session").html(username_session);
+      $.ajax({
+        type: "POST",
+        url: "././module/RPT_STS_custom_scrap/data.php",
+        dataType: "json",
+        data: {
+          load: "update_sts_custom_scrap",
+          doc_no: doc_no,
+          newValue: newValue,
+          field: field,
+        },
+        success: function (data) {
+          $.ajax({
+            type: "POST",
+            url: "././module/STS_Custom_Data/data.php",
+            dataType: "json",
+            data: {
+              load: "SaveCustomLog",
+              table: "STS_custom_scrap",
+              doc_no: doc_no,
+              oldValue: data,
+              newValue: newValue,
+              field: field,
+              users: username_session
+            },
+            success: function (data) {
+              console.log(data);
+            }
+          })
+        }
+      });
     }
 
     function printReport(newData, StartDate) {

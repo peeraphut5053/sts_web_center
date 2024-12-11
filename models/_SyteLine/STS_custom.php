@@ -277,5 +277,81 @@ from STS_custom_IN where date_in between '$StartDate' and '$EndDate' Order by da
         return $rs1;
     }
 
+    function AddSTS_Custom_In($doc_no, $date_in, $date_stock, $supplier, $country, $AD_rate, $weight_KG, $value_in, $remark, $item,  $type) {
+        $query = "INSERT INTO STS_custom_IN (doc_no, date_in, date_stock, supplier, country, AD_rate, weight_KG, value, remark, item, type, createdate)
+        VALUES ('$doc_no', '$date_in', '$date_stock', '$supplier', '$country', $AD_rate, $weight_KG, $value_in, '$remark', '$item', $type, GETDATE())";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+    function UpdateSTS_Custom_In($doc_no, $field, $newValue) {
+        $selectQuery = "select * from STS_custom_IN where doc_no = '$doc_no'";
+        $cSql = new SqlSrv();
+        $select = $cSql->SqlQuery($this->StrConn, $selectQuery);
+        $oldValue = $select[1][$field];
+   
+        $query = "update STS_custom_IN set $field = '$newValue' where doc_no = '$doc_no'";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $oldValue;
+    }
+
+    function AddSTS_Custom_Out($doc_no, $boatnote, $date, $item, $boat_name, $boat_no, $inv_no, $bundle, $weight_net, $weight_gross,$weight_zinc,$weight_nonzinc, $cust_po, $value_out, $pier, $BL_no, $loc_name,$loc_name2,$loc_name3,$loc_name4) {
+        $query = "INSERT INTO STS_custom_OUT (doc_no, boatnote, date, item, boat_name, boat_no, inv_no, bundle, weight_net, weight_gross, weight_zinc, weight_non_zinc, cust_po, value, pier, BL_no, loc_name, loc_name2, loc_name3, loc_name4, createdate)
+                    VALUES ('$doc_no', '$boatnote', '$date', '$item', '$boat_name', '$boat_no', '$inv_no', $bundle, $weight_net, $weight_gross,  " . ($weight_zinc !== '' ? $weight_zinc : 0.00) . ", " . ($weight_nonzinc !== '' ? $weight_nonzinc : 0.00) . ", '$cust_po', $value_out, '$pier', '$BL_no', '$loc_name', '$loc_name2', '$loc_name3', '$loc_name4', GETDATE())";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+    function UpdateSTS_Custom_Out($doc_no, $field, $newValue) {
+        $selectQuery = "select * from STS_custom_OUT where doc_no = '$doc_no'";
+        $cSql = new SqlSrv();
+        $select = $cSql->SqlQuery($this->StrConn, $selectQuery);
+        $oldValue = $select[1][$field];
+   
+        $query = "update STS_custom_OUT set $field = '$newValue' where doc_no = '$doc_no'";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $oldValue;
+    }
+
+    function AddSTS_Custom_Scrap($doc_no, $date, $item, $weight_KG, $value_scrap, $stamp_no, $ref_doc_no) {
+        $query = "INSERT INTO STS_custom_scrap (doc_no, date, item, weight_KG, value, stamp_no, ref_doc_no, createdate)
+                    VALUES ('$doc_no', '$date', '$item', $weight_KG, $value_scrap, '$stamp_no', '$ref_doc_no', GETDATE())";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+    function UpdateSTS_Custom_Scrap($doc_no, $field, $newValue) {
+        $selectQuery = "select * from STS_custom_scrap where doc_no = '$doc_no'";
+        $cSql = new SqlSrv();
+        $select = $cSql->SqlQuery($this->StrConn, $selectQuery);
+        $oldValue = $select[1][$field];
+   
+        $query = "update STS_custom_scrap set $field = '$newValue' where doc_no = '$doc_no'";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $oldValue;
+    }
+
+    function SaveCustomLog($table, $doc_no, $oldValue, $newValue, $field, $users) {
+        $query = "INSERT INTO STS_custom_log ([table], doc_no, old_value, new_value, field, updatedate, users) VALUES ('$table', '$doc_no', '$oldValue', '$newValue', '$field', GETDATE(), '$users')";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+
+
 }
 ?>

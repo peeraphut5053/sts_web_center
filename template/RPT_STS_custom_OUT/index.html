@@ -153,12 +153,14 @@
     by date submit
   </label>
   <div class="col-lg-1 col-md-1 col-sm-6 col-xs-6 text-left">
-    <div class="flex">
+    <div class="flex gap-16">
       <button class="btn btn-info" id="btnSearch">
         <i class="fa fa-search"></i>&nbsp; Search
       </button>
-      <a class="btn btn-success ml-36" href="module/STS_Custom_Data/Import_Excel_Out.php" id="btnTransfer">&nbsp;Import
-        Excel (OUT)</a>
+      <button id="btnAdd" class="btn btn-success" data-toggle="modal" data-target="#ModalCustomOut"><i
+        class="fa fa-searh"></i>เพิ่มข้อมูลรายงานส่งออก</button>
+      <!-- <a class="btn btn-success ml-36" href="module/STS_Custom_Data/Import_Excel_Out.php" id="btnTransfer">&nbsp;Import
+        Excel (OUT)</a> -->
     </div>
   </div>
 </div>
@@ -188,19 +190,141 @@
         <th class="bg-gray"></th>
         <th class="bg-gray"></th>
         <th class="bg-gray"></th>
+        <th class="bg-gray">date submit</th>
     </thead>
     <!--        <tbody id="tblReportList">
                       <tr><td align="center" colspan="12">.... No item search ....</td></tr>
      </tbody>-->
   </table>
 </div>
+ <!-- Modal -->
+ <div class="modal fade bd-example-modal-lg" id="ModalCustomOut" role="dialog" aria-labelledby="myLargeModalLabel"
+ aria-hidden="true">
+ <div class="modal-dialog modal-lg">
+   <div class="modal-content">
+     <div class="modal-header">
+       <h4 class="modal-title text-center" id="exampleModalLabel">เพิ่มข้อมูลรายการส่งออก</h5>
+         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+           <span aria-hidden="true">&times;</span>
+         </button>
+     </div>
+     <div class="modal-body">
+       <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+         <div class="input-group basis-2/4">
+           <div class="input-group-addon">เลขที่ใบขน *</div>
+           <input type="text" autocomplete="off" class="form-control" id="doc_no_out">
+         </div>
+         <div class="input-group basis-2/4">
+           <div class="input-group-addon">วันที่ *</div>
+           <input type="text" autocomplete="off" class="form-control" id="date_out">
+         </div>
+       </div>
+       <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+         <div class="input-group basis-2/4">
+           <div class="input-group-addon">เลข boat note</div>
+           <input type="text" autocomplete="off" class="form-control" id="boatnote">
+         </div>
+         <div class="input-group basis-2/4">
+           <div class="input-group-addon">ชื่อสินค้า *</div>
+           <input type="text" autocomplete="off" class="form-control" id="item_name">
+         </div>
+       </div>
+       <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+         <div class="input-group basis-2/4">
+           <div class="input-group-addon">ชื่อเรือ *</div>
+           <input type="text" autocomplete="off" class="form-control" id="boat_name">
+         </div>
+         <div class="input-group basis-2/4">
+           <div class="input-group-addon">วอยเรือ *</div>
+           <input type="text" autocomplete="off" class="form-control" id="boat_no">
+         </div>
+       </div>
+       <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+         <div class="input-group basis-2/4">
+           <div class="input-group-addon">STS INVOICE *</div>
+           <input type="text" autocomplete="off" class="form-control" id="inv_no">
+         </div>
+         <div class="input-group basis-2/4">
+           <div class="input-group-addon">จํานวน (มัด) *</div>
+           <input type="number" autocomplete="off" class="form-control" id="bundle">
+         </div>
+       </div>
+       <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+         <div class="input-group basis-2/4">
+           <div class="input-group-addon">นํ้าหนัก N.W. *</div>
+           <input type="number" autocomplete="off" class="form-control" id="weight_net">
+         </div>
+         <div class="input-group basis-2/4">
+           <div class="input-group-addon">นํ้าหนัก G.W. *</div>
+           <input type="number" autocomplete="off" class="form-control" id="weight_gross">
+         </div>
+       </div>
+       <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+        <div class="input-group basis-2/4">
+          <div class="input-group-addon">KG_zinc *</div>
+          <input type="number" autocomplete="off" class="form-control" id="KG_zinc">
+        </div>
+        <div class="input-group basis-2/4">
+          <div class="input-group-addon">KG_non_zinc *</div>
+          <input type="number" autocomplete="off" class="form-control" id="KG_non_zinc">
+        </div>
+      </div>
+      <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+        <div class="input-group basis-2/4">
+          <div class="input-group-addon">มูลค่า (บาท) *</div>
+          <input type="number" autocomplete="off" class="form-control" id="value_out">
+        </div>
+        <div class="input-group basis-2/4">
+          <div class="input-group-addon">ท่าส่งออก *</div>
+          <input type="text" autocomplete="off" class="form-control" id="pier">
+        </div>
+      </div>
+      <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+        <div class="input-group basis-2/4">
+          <div class="input-group-addon">Customer PO. *</div>
+          <input type="text" autocomplete="off" class="form-control" id="cust_po">
+        </div>
+        <div class="input-group basis-2/4">
+          <div class="input-group-addon">B/L No. *</div>
+          <input type="text" autocomplete="off" class="form-control" id="bl_no">
+        </div>
+      </div>
+      <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+        <div class="input-group basis-2/4">
+          <div class="input-group-addon">ชื่อเรือฉลอม 1</div>
+          <input type="text" autocomplete="off" class="form-control" id="loc_name">
+        </div>
+        <div class="input-group basis-2/4">
+          <div class="input-group-addon">ชื่อเรือฉลอม 2</div>
+          <input type="text" autocomplete="off" class="form-control" id="loc_name2">
+        </div>
+      </div>
+      <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+        <div class="input-group basis-2/4">
+          <div class="input-group-addon">ชื่อเรือฉลอม 3</div>
+          <input type="text" autocomplete="off" class="form-control" id="loc_name3">
+        </div>
+        <div class="input-group basis-2/4">
+          <div class="input-group-addon">ชื่อเรือฉลอม 4</div>
+          <input type="text" autocomplete="off" class="form-control" id="loc_name4">
+        </div>
+      </div>
+     </div>
+ 
+     <div class="modal-footer">
+       <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+       <button type="button" class="btn btn-primary" id="SaveCustomOut" onclick="SaveCustomOut()">บันทึก</button>
+     </div>
+   </div>
+ </div>
+ </div>
 <script type="text/javascript">
 
   $("#btnSearch").click(function () {
     ReportItemSearch();
   });
 
-  $("#txtStartDate,#txtEndDate").datepicker({
+  $("#txtStartDate,#txtEndDate, #date_out").datepicker({
     dateFormat: "yy-mm-dd",
   });
 
@@ -264,7 +388,7 @@
             scrollY: "65vh",
             scrollCollapse: true,
             scrollX: true,
-            select: true,
+            select: false,
             columns: [
               {
                 "targets": 0, // คอลัมน์ที่จะแสดง index
@@ -281,6 +405,11 @@
               {
                 data: "boatnote",
                 className: "text-center",
+                "render": function (data, type, row, meta) {
+                    let valdata = data;
+                    let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='20' onchange="SaveEdit('${row.doc_no}', value, 'boatnote');" value='${(valdata)}' />`;
+                    return ret;
+                  }
               },
               {
                 data: "date.date",
@@ -292,18 +421,38 @@
               {
                 data: "item",
                 className: "text-center",
+                "render": function (data, type, row, meta) {
+                    let valdata = data;
+                    let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='20' onchange="SaveEdit('${row.doc_no}', value, 'item');" value='${(valdata)}' />`;
+                    return ret;
+                }
               },
               {
                 data: "boat_name",
                 className: "text-center",
+                "render": function (data, type, row, meta) {
+                    let valdata = data;
+                    let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='20' onchange="SaveEdit('${row.doc_no}', value, 'boat_name');" value='${(valdata)}' />`;
+                    return ret;
+                  }
               },
               {
                 data: "boat_no",
                 className: "text-center",
+                "render": function (data, type, row, meta) {
+                    let valdata = data;
+                    let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='20' onchange="SaveEdit('${row.doc_no}', value, 'boat_no');" value='${(valdata)}' />`;
+                    return ret;
+                  }
               },
               {
                 data: "inv_no",
                 className: "text-center",
+                "render": function (data, type, row, meta) {
+                    let valdata = data;
+                    let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='20' onchange="SaveEdit('${row.doc_no}', value, 'inv_no');" value='${(valdata)}' />`;
+                    return ret;
+                  }
               },
               {
                 data: "bundle",
@@ -328,6 +477,11 @@
               {
                 data: "cust_po",
                 className: "text-center",
+                "render": function (data, type, row, meta) {
+                    let valdata = data;
+                    let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='20' onchange="SaveEdit('${row.doc_no}', value, 'cust_po');" value='${(valdata)}' />`;
+                    return ret;
+                  }
               },
               {
                 data: "value",
@@ -336,27 +490,70 @@
               {
                 data: "pier",
                 className: "text-center",
+                "render": function (data, type, row, meta) {
+                    let valdata = data;
+                    let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='20' onchange="SaveEdit('${row.doc_no}', value, 'pier');" value='${(valdata)}' />`;
+                    return ret;
+                  }
               },
               {
                 data: "BL_no",
                 className: "text-center",
+                "render": function (data, type, row, meta) {
+                    let valdata = data;
+                    let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='20' onchange="SaveEdit('${row.doc_no}', value, 'BL_no');" value='${(valdata)}' />`;
+                    return ret;
+                  }
               },
               {
                 data: "loc_name",
                 className: "text-center",
+                "render": function (data, type, row, meta) {
+                    let valdata = data;
+                    let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='20' onchange="SaveEdit('${row.doc_no}', value, 'loc_name');" value='${(valdata)}' />`;
+                    return ret;
+                  }
               },
               {
                 data: "loc_name2",
                 className: "text-center",
+                "render": function (data, type, row, meta) {
+                    let valdata = data;
+                    let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='20' onchange="SaveEdit('${row.doc_no}', value, 'loc_name2');" value='${(valdata)}' />`;
+                    return ret;
+                  }
               },
               {
                 data: "loc_name3",
                 className: "text-center",
+                "render": function (data, type, row, meta) {
+                    let valdata = data;
+                    let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='20' onchange="SaveEdit('${row.doc_no}', value, 'loc_name3');" value='${(valdata)}' />`;
+                    return ret;
+                  }
               },
               {
                 data: "loc_name4",
                 className: "text-center",
+                "render": function (data, type, row, meta) {
+                    let valdata = data;
+                    let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='20' onchange="SaveEdit('${row.doc_no}', value, 'loc_name4');" value='${(valdata)}' />`;
+                    return ret;
+                  }
               },
+              {
+                data: "date_submit",
+                className: "text-center",
+                "render": function (data, type, row, meta) {
+                  let valdata = data ? moment(data.date).format("YYYY-MM-DD") : "";
+                $(`.input_date_submit`).datepicker({
+                  dateFormat: 'yy-mm-dd',
+                });
+                let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value input_date_submit' size='20' onchange="SaveEdit('${row.doc_no}', value, 'date_submit');" value='${(valdata)}' />`;
+                return ret;
+
+                }
+              }
             ],
             dom:
               "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
@@ -463,6 +660,130 @@
       });
     }
   }
+
+  function SaveCustomOut() {
+      var doc_no = $("#doc_no_out").val();
+      // declare variable in ModalCustomOut
+      var date = $("#date_out").val();
+      var item = $("#item_name").val();
+      var boatnote = $("#boatnote").val();
+      var boat_name = $("#boat_name").val();
+      var boat_no = $("#boat_no").val();
+      var inv_no = $("#inv_no").val();
+      var bundle = $("#bundle").val();
+      var weight_net = $("#weight_net").val();
+      var weight_gross = $("#weight_gross").val();
+      var weight_zinc = $("#KG_zinc").val();
+      var weight_nonzinc = $("#KG_non_zinc").val();
+      var cust_po = $("#cust_po").val();
+      var value_out = $("#value_out").val();
+      var pier = $("#pier").val();
+      var BL_no = $("#bl_no").val();
+      var loc_name = $("#loc_name").val();
+      var loc_name2 = $("#loc_name2").val();
+      var loc_name3 = $("#loc_name3").val();
+      var loc_name4 = $("#loc_name4").val();
+
+     if (doc_no == '' || date == '' || item == '' || boat_name == '' || boat_no == '' || inv_no == '' || bundle == '' || weight_net == '' || weight_gross == '' || weight_zinc == '' || weight_nonzinc == '' || cust_po == '' || value_out == '' || pier == '' || BL_no == '') {
+        alert("กรุณากรอกข้อมูลให้ครบ");
+        return false;
+     }
+
+     $.ajax({
+      type: "POST",
+      url: "././module/RPT_STS_custom_OUT/data.php",
+      dataType: "json",
+      data: {
+        load: "InsertCustomOut",
+        doc_no: doc_no,
+        date: date,
+        item: item,
+        boatnote: boatnote,
+        boat_name: boat_name,
+        boat_no: boat_no,
+        inv_no: inv_no,
+        bundle: bundle,
+        weight_net: weight_net,
+        weight_gross: weight_gross,
+        weight_zinc: weight_zinc,
+        weight_nonzinc: weight_nonzinc,
+        cust_po: cust_po,
+        value_out: value_out,
+        pier: pier,
+        BL_no: BL_no,
+        loc_name: loc_name,
+        loc_name2: loc_name2,
+        loc_name3: loc_name3,
+        loc_name4: loc_name4,
+      },
+      success: function (data) {
+        alert("บันทึกข้อมูลสําเร็จ");
+        $("#doc_no_out").val("");
+        $("#date_out").val("");
+        $("#item_name").val("");
+        $("#boatnote").val("");
+        $("#boat_name").val("");
+        $("#boat_no").val("");
+        $("#inv_no").val("");
+        $("#bundle").val("");
+        $("#weight_net").val("");
+        $("#weight_gross").val("");
+        $("#KG_zinc").val("");
+        $("#KG_non_zinc").val("");
+        $("#cust_po").val("");
+        $("#value_out").val("");
+        $("#pier").val("");
+        $("#bl_no").val("");
+        $("#loc_name").val("");
+        $("#loc_name2").val("");
+        $("#loc_name3").val("");
+        $("#loc_name4").val("");
+        $("#ModalCustomOut").modal("hide");
+      },
+      error: function (e) {
+        alert("บันทึกข้อมูลไม่สําเร็จ");
+      },
+    });
+    }
+  
+    function SaveEdit(doc_no, newValue, field) {
+      var username_session = GetUserProp("login_username");
+      $(".username_session").html(username_session);
+      $.ajax({
+        type: "POST",
+        url: "././module/RPT_STS_custom_OUT/data.php",
+        dataType: "json",
+        data: {
+          load: "update_sts_custom_out",
+          doc_no: doc_no,
+          newValue: newValue,
+          field: field,
+        },
+        success: function (data) {
+          if (field == "date_submit") {
+            data = moment(data.date).format("YYYY-MM-DD");
+          }
+     
+          $.ajax({
+            type: "POST",
+            url: "././module/STS_Custom_Data/data.php",
+            dataType: "json",
+            data: {
+              load: "SaveCustomLog",
+              table: "STS_custom_OUT",
+              doc_no: doc_no,
+              oldValue: data,
+              newValue: newValue,
+              field: field,
+              users: username_session
+            },
+            success: function (data) {
+              console.log(data);
+            }
+          })
+        }
+      });
+    }
 
 
   function printReport(newData, StartDate) {

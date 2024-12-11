@@ -94,11 +94,13 @@
       </div>
     </div>
     <div class="col-lg-1 col-md-1 col-sm-6 col-xs-6 text-left">
-      <div class="flex gap-28">
+      <div class="flex gap-16">
         <button class="btn btn-info" id="btnSearch">
           <i class="fa fa-search"></i>&nbsp; Search
         </button>
-        <a class="btn btn-success ml-32" href="module/STS_Custom_Data/Import_Excel_In.php"  id="btnTransfer">&nbsp;Import Excel (IN)</a>
+        <button id="btnAdd" class="btn btn-success" data-toggle="modal" data-target="#ModalCustomIn"><i
+          class="fa fa-searh"></i>เพิ่มข้อมูลรายงานนำเข้า</button>
+        <!-- <a class="btn btn-success ml-32" href="module/STS_Custom_Data/Import_Excel_In.php"  id="btnTransfer">&nbsp;Import Excel (IN)</a> -->
       </div>
     </div>
   </div>
@@ -135,14 +137,92 @@
      </tbody>-->
     </table>
   </div>
+  <!-- Modal -->
+<div class="modal fade bd-example-modal-lg" id="ModalCustomIn" role="dialog" aria-labelledby="myLargeModalLabel"
+aria-hidden="true">
+<div class="modal-dialog modal-lg">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title text-center" id="exampleModalLabel">เพิ่มข้อมูลรายการนำเข้า</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+      <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+        <div class="input-group basis-2/4">
+          <div class="input-group-addon">เลขที่ใบขน *</div>
+          <input type="text" autocomplete="off" class="form-control" id="doc_no_in">
+        </div>
+        <div class="input-group basis-2/4">
+          <div class="input-group-addon">วันนำเข้า *</div>
+          <input type="text" autocomplete="off" class="form-control" id="date_in">
+        </div>
+      </div>
+      <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+        <div class="input-group basis-2/4">
+          <div class="input-group-addon">ชื่อวัตถุดิบ *</div>
+          <input type="text" autocomplete="off" class="form-control" id="item_in">
+        </div>
+        <div class="input-group basis-2/4">
+          <div class="input-group-addon">วันเข้าคลัง *</div>
+          <input type="text" autocomplete="off" class="form-control" id="date_stock">
+        </div>
+      </div>
+      <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+        <div class="input-group basis-2/4">
+          <div class="input-group-addon">บริษัทที่ซื้อเหล็ก *</div>
+          <input type="text" autocomplete="off" class="form-control" id="supplier">
+        </div>
+        <div class="input-group basis-2/4">
+          <div class="input-group-addon">ประเทศ *</div>
+          <input type="text" autocomplete="off" class="form-control" id="country">
+        </div>
+      </div>
+      <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+        <div class="input-group basis-2/4">
+          <div class="input-group-addon">AD Rate *</div>
+          <input type="number" autocomplete="off" class="form-control" id="ad_rate">
+        </div>
+        <div class="input-group basis-2/4">
+          <div class="input-group-addon">จํานวน (กก.) *</div>
+          <input type="number" autocomplete="off" class="form-control" id="weight_KG_in">
+        </div>
+      </div>
+      <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+        <div class="input-group basis-2/4">
+          <div class="input-group-addon">มูลค่า (บาท) *</div>
+          <input type="number" autocomplete="off" class="form-control" id="value_in">
+        </div>
+        <div class="input-group basis-2/4">
+          <div class="input-group-addon">หมายเหตุ</div>
+          <input type="text" autocomplete="off" class="form-control" id="remark_in">
+        </div>
+      </div>
+      <div class="flex justify-start items-center mb-5">
+        <select class="form-control" id="type_in"
+          aria-label="Default select example">
+          <option>กรุณาเลือกประเภทเหล็ก *</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+        </select>
+      </div>
+    </div>
 
+    <div class="modal-footer">
+      <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+      <button type="button" class="btn btn-primary" id="SaveCustomIn" onclick="SaveCustomIn()">บันทึก</button>
+    </div>
+  </div>
+</div>
+</div>
   <script type="text/javascript">
  
     $("#btnSearch").click(function () {
       ReportItemSearch();
     });
            
-    $("#txtStartDate_IN,#txtEndDate_IN").datepicker({
+    $("#txtStartDate_IN,#txtEndDate_IN,#date_in ,#date_stock").datepicker({
       dateFormat: "yy-mm-dd",
     });
     
@@ -211,7 +291,7 @@
               scrollY: "65vh",
               scrollCollapse: true,
               scrollX: true,
-              select: true,
+              select: false,
               columns: [
                  {
                 "targets": 0, // คอลัมน์ที่จะแสดง index
@@ -242,6 +322,11 @@
                 {
                   data: "item",
                   className: "text-center",
+                  "render": function (data, type, row, meta) {
+                    let valdata = data;
+                    let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='20' onchange="SaveEdit('${row.doc_no}', value, 'item');" value='${(valdata)}' />`;
+                    return ret;
+                  }
                 },
                 {
                   data: "supplier",
@@ -319,10 +404,20 @@
                 {
                   data: "type",
                   className: "text-center",
+                  "render": function (data, type, row, meta) {
+                    let valdata = data;
+                    let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='20' onchange="SaveEdit('${row.doc_no}', value, 'type');" value='${(valdata)}' />`;
+                    return ret;
+                  }
                 },
                 {
                   data: "remark",
                   className: "text-center",
+                  "render": function (data, type, row, meta) {
+                    let valdata = data;
+                    let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='40' onchange="SaveEdit('${row.doc_no}', value, 'remark');" value='${(valdata)}' />`;
+                    return ret;
+                  }
                 },
               ],
               dom:
@@ -436,6 +531,98 @@
       }
     }
 
+    function SaveCustomIn() {
+      var doc_no = $("#doc_no_in").val();
+      var date_in = $("#date_in").val();
+      var date_stock = $("#date_stock").val();
+      var item = $("#item_in").val();
+      var supplier = $("#supplier").val();
+      var country = $("#country").val();
+      var ad_rate = $("#ad_rate").val();
+      var weight_KG = $("#weight_KG_in").val();
+      var value = $("#value_in").val();
+      var remark = $("#remark_in").val();
+      var type = $("#type_in").val();
+
+     if (doc_no == "" || date_in == "" || date_stock == "" || item == "" || supplier == "" || country == "" || ad_rate == "" || weight_KG == "" || value == "" || type == "กรุณาเลือกประเภทเหล็ก *") {
+        alert("กรุณากรอกข้อมูลให้ครบ");
+        return false;
+     }
+
+     $.ajax({
+      type: "POST",
+      url: "././module/RPT_STS_custom_IN/data.php",
+      dataType: "json",
+      data: {
+        load: "insert_sts_custom_in",
+        doc_no: doc_no,
+        date_in: date_in,
+        date_stock: date_stock,
+        item: item,
+        supplier: supplier,
+        country: country,
+        AD_rate: ad_rate,
+        weight_KG: weight_KG,
+        value_in: value,
+        remark: remark,
+        type: type
+      },
+      success: function (data) {
+        alert("บันทึกข้อมูลสําเร็จ");
+        $("#doc_no_in").val("");
+        $("#date_in").val("");
+        $("#date_stock").val("");
+        $("#item_in").val("");
+        $("#supplier").val("");
+        $("#country").val("");
+        $("#ad_rate").val("");
+        $("#weight_KG_in").val("");
+        $("#value_in").val("");
+        $("#remark_in").val("");
+        $("#type_in").val("กรุณาเลือกประเภทเหล็ก *");
+        $("#ModalCustomIn").modal("hide");
+      },
+      error: function (e) {
+        alert("บันทึกข้อมูลไม่สําเร็จ");
+      },
+    });
+    }
+
+    function SaveEdit(doc_no, newValue, field) {
+      var username_session = GetUserProp("login_username");
+      $(".username_session").html(username_session);
+      $.ajax({
+        type: "POST",
+        url: "././module/RPT_STS_custom_IN/data.php",
+        dataType: "json",
+        data: {
+          load: "update_sts_custom_in",
+          doc_no: doc_no,
+          newValue: newValue,
+          field: field,
+        },
+        success: function (data) {
+          $.ajax({
+            type: "POST",
+            url: "././module/STS_Custom_Data/data.php",
+            dataType: "json",
+            data: {
+              load: "SaveCustomLog",
+              table: "STS_custom_IN",
+              doc_no: doc_no,
+              oldValue: data,
+              newValue: newValue,
+              field: field,
+              users: username_session
+            },
+            success: function (data) {
+              console.log(data);
+            }
+          })
+        }
+      });
+    }
+
     function printReport(newData, StartDate) {
     pdfMake.fonts = {
         THSarabunNew: {
@@ -495,7 +682,7 @@
         { text: addCommas(newData.reduce((total, item) => total + Number(item.value), 0).toFixed(2)), fontSize: 12,bold: true, alignment: 'center' },
         { text: addCommas(newData.reduce((total, item) => total + Number(item.val5), 0).toFixed(2)), fontSize: 12,bold: true, alignment: 'center' },
         { text: addCommas(newData.reduce((total, item) => total + Number(item.val7), 0).toFixed(2)), fontSize: 12,bold: true, alignment: 'center' },
-        { text: addCommas(newData.reduce((total, item) => total + Number(item.totalVal), 0).toFixed(2)), fontSize: 12,bold: true, alignment: 'center' },
+        { text: addCommas(newData.reduce((total, item) => total + Number(item.totalVal.toFixed(2)), 0).toFixed(2)), fontSize: 12,bold: true, alignment: 'center' },
         { text: addCommas(newData.reduce((total, item) => total + Number(item.total), 0).toFixed(2)), fontSize: 12,bold: true, alignment: 'center' },
         { text: '', fontSize: 12, alignment: 'center' },
         ],)
