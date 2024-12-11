@@ -300,8 +300,8 @@ from STS_custom_IN where date_in between '$StartDate' and '$EndDate' Order by da
     }
 
     function AddSTS_Custom_Out($doc_no, $boatnote, $date, $item, $boat_name, $boat_no, $inv_no, $bundle, $weight_net, $weight_gross,$weight_zinc,$weight_nonzinc, $cust_po, $value_out, $pier, $BL_no, $loc_name,$loc_name2,$loc_name3,$loc_name4) {
-        $query = "INSERT INTO STS_custom_OUT (doc_no, boatnote, date, item, boat_name, boat_no, inv_no, bundle, weight_net, weight_gross, weight_zinc, weight_non_zinc, cust_po, value, pier, BL_no, loc_name, loc_name2, loc_name3, loc_name4, createdate)
-                    VALUES ('$doc_no', '$boatnote', '$date', '$item', '$boat_name', '$boat_no', '$inv_no', $bundle, $weight_net, $weight_gross,  " . ($weight_zinc !== '' ? $weight_zinc : 0.00) . ", " . ($weight_nonzinc !== '' ? $weight_nonzinc : 0.00) . ", '$cust_po', $value_out, '$pier', '$BL_no', '$loc_name', '$loc_name2', '$loc_name3', '$loc_name4', GETDATE())";
+        $query = "INSERT INTO STS_custom_OUT (doc_no, boatnote, date, item, boat_name, boat_no, inv_no, bundle, weight_net, weight_gross, weight_zinc, weight_non_zinc, cust_po, value, pier, BL_no, loc_name, loc_name2, loc_name3, loc_name4, createdate, date_submit)
+                    VALUES ('$doc_no', '$boatnote', '$date', '$item', '$boat_name', '$boat_no', '$inv_no', $bundle, $weight_net, $weight_gross,  " . ($weight_zinc !== '' ? $weight_zinc : 0.00) . ", " . ($weight_nonzinc !== '' ? $weight_nonzinc : 0.00) . ", '$cust_po', $value_out, '$pier', '$BL_no', '$loc_name', '$loc_name2', '$loc_name3', '$loc_name4', GETDATE(), '$date')";
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
