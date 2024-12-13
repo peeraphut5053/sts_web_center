@@ -108,9 +108,8 @@
     <button class="btn btn-success" id="btnReport">
       รายงานของคงเหลือประจำงวด
     </button>
-    <button type="button" class="btn bg-red-400 text-white mt-2" id="btnReport2" data-toggle="modal" data-target="#exampleModal">
-      รายงานการเคลื่อนไหวของวัตถุดิบ / รายงานแบบสรุป
-    </button>
+    <button type="button" class="btn btn-primary  mt-4" id="btnSave" onclick="btnSave(1)">รายงานการเคลื่อนไหวของวัตถุดิบ</button>
+    <button type="button" class="btn btn-warning  mt-4" id="btnSave2" onclick="btnSave(2)">รายงานแบบสรุป</button>
   </div>
 </div>
 
@@ -135,47 +134,6 @@
      </tbody>-->
   </table>
 </div>
- <!-- Modal -->
- <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">เลือกเดือนยอดยกมา</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-          <div class="flex gap-6">
-            <div class="row">
-              <div class="input-group">
-                <div class="input-group-addon">Year</div>
-                <select class="form-control" id="selYearOld"></select>
-              </div>
-            </div>
-            <div class="row">
-              <div class="input-group">
-                <div class="input-group-addon">Start Month</div>
-                <select class="form-control" id="selMonthOld"></select>
-              </div>
-            </div>
-            <div class="row">
-              <div class="input-group">
-                <div class="input-group-addon">End Month</div>
-                <select class="form-control" id="selMonth2Old"></select>
-              </div>
-            </div>
-          </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" id="btnSave" onclick="btnSave(1)">รายงานการเคลื่อนไหวของวัตถุดิบ</button>
-        <button type="button" class="btn btn-warning" id="btnSave2" onclick="btnSave(2)">รายงานแบบสรุป</button>
-      </div>
-    </div>
-  </div>
-</div>
-
 <script type="text/javascript">
 
   moment.locale("th");
@@ -186,8 +144,6 @@
 
   GetYearMonth("selYear", "selMonth");
   GetYearMonth("selYear", "selMonth2");
-  GetYearMonth("selYearOld", "selMonthOld");
-  GetYearMonth("selYearOld", "selMonth2Old");
 
   $("#StartDate_Moving,#EndDate_Moving").datepicker({
       dateFormat: "yy-mm-dd",
@@ -438,9 +394,6 @@
     var Year = $("#selYear").val();
     var Month = $("#selMonth").val();
     var Month2 = $("#selMonth2").val();
-    var YearOld = $("#selYearOld").val();
-    var MonthOld = $("#selMonthOld").val();
-    var Month2Old = $("#selMonth2Old").val();
 
     // get first day of month and last day of month use moment.js
     var StartDate = moment(Year + "-" + Month + "-01").format("YYYY-MM-DD");
@@ -448,17 +401,9 @@
       .endOf("month")
       .format("YYYY-MM-DD");
 
-    var StartDate2 = moment(YearOld + "-" + MonthOld + "-01").format("YYYY-MM-DD");
-    var EndDate2 = moment(YearOld + "-" + Month2Old + "-01")
-      .endOf("month")
-      .format("YYYY-MM-DD");
+    var StartDate2 = '2023-01-01';
+    var EndDate2 = moment(StartDate).subtract(1, 'months').endOf('month').format("YYYY-MM-DD");
     
-
-    if (StartDate2 == '' || EndDate2 == '') {
-      alert("กรุณากรอกข้อมูลให้ครบ");
-      return false;
-    }
-
     if (type == 2) {
        reportSummary(StartDate, EndDate, StartDate2, EndDate2);
        return false;
@@ -782,7 +727,7 @@
           { text: `${addCommas(totalValueOld)}`, fontSize: 11, alignment: 'center' },
           { text: `${addCommas(totalTaxOld)}`, fontSize: 11, alignment: 'center' },
           { text: `${addCommas(Weight)}`, fontSize: 11, alignment: 'center' },
-          { text: `${addCommas(Value)}`, fontSize: 11, alignment: 'center' },
+          { text: `${addCommas((Value).toFixed(2))}`, fontSize: 11, alignment: 'center' },
           { text: `${addCommas(newTotalTaxIN)}`, fontSize: 11, alignment: 'center' },
           { text: `${addCommas(totalH001)}`, fontSize: 11, alignment: 'center' },
           { text: `${addCommas(totalRemain)}`, fontSize: 11, alignment: 'center' },
@@ -818,7 +763,7 @@
           { text: `${addCommas(totalValueOld)}`, fontSize: 11, alignment: 'center' },
           { text: `${addCommas(totalTaxOld)}`, fontSize: 11, alignment: 'center' },
           { text: `${addCommas(Weight)}`, fontSize: 11, alignment: 'center' },
-          { text: `${addCommas(Value)}`, fontSize: 11, alignment: 'center' },
+          { text: `${addCommas((Value).toFixed(2))}`, fontSize: 11, alignment: 'center' },
           { text: `${addCommas(newTotalTaxIN)}`, fontSize: 11, alignment: 'center' },
           { text: `${addCommas(totalH001)}`, fontSize: 11, alignment: 'center' },
           { text: `${addCommas(totalRemain)}`, fontSize: 11, alignment: 'center' },
@@ -851,7 +796,7 @@
             {
 
               table: {
-                widths: [20, 120, 25, 20, 50, 50, 50, 50, 50, 50, 50, 50, 60, 50],
+                widths: [15, 120, 25, 20, 50, 55, 50, 50, 50, 50, 50, 50, 60, 50],
                 headerRows: 1,
                 body: data,
               },
