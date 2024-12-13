@@ -109,6 +109,13 @@ if ($load == "ajax") {
     $Mv_Bc_Tag->setConn($ConnSL);
     $rs = $Mv_Bc_Tag->SaveWorkCentersStatusCancel($id);
     echo json_encode($rs);
+} elseif ($load == 'MachineReport') {
+    $CM = new CallModel();
+    $CM->SyteLine_Models();
+    $Mv_Bc_Tag = new BcTag();
+    $Mv_Bc_Tag->setConn($ConnSL);
+    $rs = $Mv_Bc_Tag->getMachineReport($StartDate, $EndDate);
+    echo json_encode($rs);
 } else {
     $CM = new CallModel();
     $CM->SyteLine_Models();
