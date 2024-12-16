@@ -824,8 +824,15 @@ VALUES('$wc', GETDATE());";
         return $rs;
     }
 
-    function getMachineReport($StartDate, $EndDate) {
-        $query = "select * from STS_machine_record where start_date between '$StartDate' and '$EndDate'";
+    function getMachineReport($StartDate, $EndDate, $w_c, $type) {
+        $query = "";
+
+        if ($type == 2) {
+            $query = "select * from STS_machine_record where start_date between '$StartDate' and '$EndDate'";
+        } else {
+            $query = "select * from STS_machine_record where start_date between '$StartDate' and '$EndDate' and wc = '$w_c'";
+        }
+
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);

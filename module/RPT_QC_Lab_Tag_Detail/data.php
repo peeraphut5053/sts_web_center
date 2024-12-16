@@ -114,7 +114,7 @@ if ($load == "ajax") {
     $CM->SyteLine_Models();
     $Mv_Bc_Tag = new BcTag();
     $Mv_Bc_Tag->setConn($ConnSL);
-    $rs = $Mv_Bc_Tag->getMachineReport($StartDate, $EndDate);
+    $rs = $Mv_Bc_Tag->getMachineReport($StartDate, $EndDate, $w_c, $type);
     echo json_encode($rs);
 } else {
     $CM = new CallModel();
