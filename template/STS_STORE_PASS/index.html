@@ -469,8 +469,10 @@
                   return "<span class='text-green-500 text-2xl'>ตรวจสอบแล้ว</span>";
                 }
 
+                var item_in = row.item_in == null ? true : false;
+        
                 // วิธีที่ 1: ใช้เงื่อนไขในการเพิ่ม/ไม่เพิ่ม checked attribute
-                let ret = `<span class=${valdata ? 'text-green-500' : 'text-red-500'}>${valdata ? "ตรวจสอบแล้ว" : "รอตรวจสอบ"}</span><button class='btn btn-primary' size='60' id='${row.approve}' onclick="SaveApprove('${row.doc_no}','${row.approve}','approve');">เปลี่ยน</button>`;
+                let ret = `<span class=${valdata ? 'text-green-500' : 'text-red-500'}>${valdata ? "ตรวจสอบแล้ว" : "รอตรวจสอบ"}</span><button class='btn btn-primary' size='60' id='${row.approve}' onclick="SaveApprove('${row.doc_no}','${row.approve}','approve','${item_in}');">เปลี่ยน</button>`;
 
                 return ret;
               },
@@ -767,12 +769,15 @@
       },
     });
   };
-  function SaveApprove(doc_no, value, name) {
+  function SaveApprove(doc_no, value, name, item_in) {
 
-  
     var username_session = GetUserProp("login_username");
     $(".username_session").html(username_session);
 
+    if (item_in == 'true') {
+      alert("กรุณากรอกข้อมูลรายการที่นำของเข้าก่อนอนุมัติการตรวจสอบเอกสารนี้");
+      return false;
+    }
 
     $.confirm({
       title: 'กรุณาใส่ Password และเหตุผล',
