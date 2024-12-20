@@ -568,7 +568,7 @@ ORDER BY m.MonthNum, w.wcGroup";
 
     function getGroupChart($StartDate, $EndDate, $GroupBy) {
         $query = "select *
-from V_STS_PROD_TIME_REPORT
+from V_STS_PROD_machine_stat
 where [date] between '$StartDate' and '$EndDate'
   and wcGroup =  '$GroupBy'
 order by [date]";
