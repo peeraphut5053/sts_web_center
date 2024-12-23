@@ -1029,6 +1029,22 @@ class JOBORDER {
     }
 
     function CreateForming($reason_id, $reason_detail_id, $time_stopped, $w_c, $remark, $times_count) {
+
+        $date = date("Y-m-d");
+
+        $select = "select top 1 w_c ,time_stopped, time_end
+from STS_forming_reason
+where w_c = '$w_c'and CONVERT(DATE, time_stopped) = '$date' 
+order by time_stopped desc";
+$cSql = new SqlSrv();
+$rs = $cSql->SqlQuery($this->StrConn, $select);
+
+      array_splice($rs, count($rs) - 1, 1);
+
+      if ($rs[0] && $rs[0]["time_end"] == null) { 
+        return http_response_code(400); 
+      }
+
         $query = " insert into STS_forming_reason (reason_id,reason_detail_id,time_stopped,create_date,w_c,remark,times_count) "
                 . "VALUES ('$reason_id','$reason_detail_id',GETDATE(),GETDATE(),'$w_c','$remark','$times_count')";
         $cSql = new SqlSrv();
@@ -1376,11 +1392,26 @@ where lot.loc like 'cl%'  and tag.active=1 and qty1 <> 0
     }
 
     function CreateNewReasonFinishing($reason_id, $time_stopped, $w_c,$remark) {
+        $date = date("Y-m-d");
+
+        $select = "select top 1 w_c ,time_stopped, time_end
+from STS_finishing_reason
+where w_c = '$w_c' and CONVERT(DATE, time_stopped) = '$date'
+order by time_stopped desc";
+$cSql = new SqlSrv();
+$rs = $cSql->SqlQuery($this->StrConn, $select);
+
+      array_splice($rs, count($rs) - 1, 1);
+
+      if ($rs[0] && $rs[0]["time_end"] == null) { 
+        return http_response_code(400); 
+      }
+
         $query = " insert into STS_finishing_reason (reason_id,time_stopped,w_c,remark,create_date) "
                 . "VALUES ('$reason_id',GETDATE(),'$w_c','$remark',GETDATE()) ";
         $cSql = new SqlSrv();
-        $cSql->SqlQuery($this->StrConn, $query);
-        return $query;
+        $result = $cSql->SqlQuery($this->StrConn, $query);
+        return $result;
     }
 
     function UpdateReasonFinishing($id, $time_stopped) {

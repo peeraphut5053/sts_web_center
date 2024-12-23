@@ -550,8 +550,7 @@ WCGroups AS (
 SELECT 
     m.MonthNum AS [month],
     w.wcGroup,
-    ISNULL(SUM(v.sumA), 0) as sumA,
-    ISNULL(SUM(v.sumB + v.sumC), 0) as sumBC
+    ISNULL(SUM(v.sumA), 0) as sumA
 FROM Months m
 CROSS JOIN WCGroups w
 LEFT JOIN V_STS_PROD_TIME_REPORT v 
