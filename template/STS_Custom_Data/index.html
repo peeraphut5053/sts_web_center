@@ -334,7 +334,7 @@
             const totalValueALL = data3.reduce((accumulator, object) => accumulator + Number(object.value), 0);
 
             const tax = data3.map(item => parseInt(item.value * 0.07)).reduce((acc, curr) => acc + curr, 0).toFixed(2);
-        
+
             printReport4(totalWeightIN, totalValueIN, totalWeightOUT, totalValueOUT, totalWeightALL, totalValueALL, tax, Month, data_IN, data_OUT, data_ALL,Month,Year);
         },
         error: function (e) {
@@ -1186,7 +1186,7 @@ for (let i = 0; i <= 27; i++) {
      data.push([
      { text: '- ใบขนฯขาเข้า PAPERLESS', fontSize: 10, alignment: 'left' },
      { text: `${data_ALL}`, fontSize: 10, alignment: 'center' },
-     { text: `${addCommas(parseInt(totalWeightALL).toFixed(2))}`, fontSize: 10, alignment: 'center' },
+     { text: `${addCommas(Number(totalWeightALL).toFixed(2))}`, fontSize: 10, alignment: 'center' },
      { text: `${addCommas(Number(totalValueALL).toFixed(2))}`, fontSize: 10, alignment: 'center' },
      { text: `-`, fontSize: 10, alignment: 'center' },
      { text: `${addCommas(parseInt(tax).toFixed(2))}`, fontSize: 10, alignment: 'center' },
@@ -1199,7 +1199,7 @@ for (let i = 0; i <= 27; i++) {
      data.push([
      { text: 'รวม', fontSize: 10, bold: true, alignment: 'center' },
      { text: `${data_ALL}`, fontSize: 10, alignment: 'center' },
-     { text: `${addCommas(parseInt(totalWeightALL).toFixed(2))}`, fontSize: 10, alignment: 'center' },
+     { text: `${addCommas(Number(totalWeightALL).toFixed(2))}`, fontSize: 10, alignment: 'center' },
      { text: `${addCommas(Number(totalValueALL).toFixed(2))}`, fontSize: 10, alignment: 'center' },
      { text: `-`, fontSize: 10, alignment: 'center' },
      { text: `${addCommas(parseInt(tax).toFixed(2))}`, fontSize: 10, alignment: 'center' },
