@@ -29,7 +29,7 @@
         </div>
     </div>
     <div class="col-lg-1 col-md-2 col-sm-1 col-xs-6  col-search">
-        <button id="BtnSearchZ" class="btn btn-info"><i class="fa fa-search"></i>Search</button>
+        <button id="BtnSearchZ" class="btn btn-info"><i class="fa fa-search"></i> Search</button>
     </div>
 </div>
 
@@ -83,7 +83,7 @@
     function ReportAllSearch(type) {
         var StartDate = $("#StartDate_QC").val();
         var EndDate = $("#EndDate_QC").val();
-        var OldHtml = $("#BtnSearchM").html();
+        var OldHtml = $("#BtnSearchZ").html();
         $("#tblReportZ").loading();
         $("#tblReportZ tfoot").remove();
         $.ajax({
@@ -91,7 +91,7 @@
             url: "././module/QC_Data_Analysis/data.php",
             dataType: 'json',
             beforeSend: function () {
-                $("#BtnSearchM").html("<i class='fa fa-spinner fa-spin'>");
+                $("#BtnSearchZ").html("<i class='fa fa-spinner fa-spin'>");
             },
             data: {
                 "load": type,
@@ -278,11 +278,12 @@
                     },
             });
             $("#tblReportZ").loading("stop");
-            $("#btnSearch").html(OldHtml);
+            $("#BtnSearchZ").html(OldHtml);
             },
             error: function (e) {
                 console.log("There was an error with your request...");
                 console.log("error: " + JSON.stringify(e));
+                $("#BtnSearchZ").html(OldHtml);
             }
         });
     }

@@ -191,7 +191,7 @@
       url: "././module/APP_Qc_TestLab/data.php",
       dataType: 'json',
       beforeSend: function () {
-        $("#BtnSearchM").html("<i class='fa fa-spinner fa-spin'>");
+        $("#BtnSearchLab").html("<i class='fa fa-spinner fa-spin'>");
       },
       data: {
         "load": "Laboratory",
@@ -324,11 +324,12 @@
         });
 
         $('#tblReportZ').loading("stop");
-        $("#BtnSearchZ").html("<i class='fa fa-search'></i>Search");
+        $("#BtnSearchLab").html("<i class='fa fa-search'></i>Search");
       },
       error: function (e) {
         console.log("There was an error with your request...");
         console.log("error: " + JSON.stringify(e));
+        $("#BtnSearchLab").html("<i class='fa fa-search'></i>Search");
       }
     });
   }

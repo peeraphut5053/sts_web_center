@@ -250,7 +250,7 @@
          </div>
        </div>
        <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
-         <div class="input-group basis-2/4">
+         <div id="input_weight_net" class="input-group basis-2/4">
            <div class="input-group-addon">นํ้าหนัก N.W. *</div>
            <input type="number" autocomplete="off" class="form-control" id="weight_net">
          </div>
@@ -262,11 +262,11 @@
        <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
         <div class="input-group basis-2/4">
           <div class="input-group-addon">KG_zinc *</div>
-          <input type="number" autocomplete="off" class="form-control" id="KG_zinc">
+          <input onchange="ZincValidate()" type="number" autocomplete="off" class="form-control" id="KG_zinc">
         </div>
         <div class="input-group basis-2/4">
           <div class="input-group-addon">KG_non_zinc *</div>
-          <input type="number" autocomplete="off" class="form-control" id="KG_non_zinc">
+          <input onchange="ZincValidate()" type="number" autocomplete="off" class="form-control" id="KG_non_zinc">
         </div>
       </div>
       <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
@@ -331,6 +331,25 @@
   $("#btnRemove").click(function () {
     $("#tblReport").DataTable().clear().destroy();
   });
+
+  function ZincValidate() {
+    var weight_net = $("#weight_net").val();
+    var weight_zinc = $("#KG_zinc").val();
+    var weight_nonzinc = $("#KG_non_zinc").val();
+
+    if (weight_zinc == "" || weight_nonzinc == "") {
+      return false;
+    } 
+    // weight_net = weight_zinc + weight_nonzinc;
+    if (weight_net != Number(weight_zinc) + Number(weight_nonzinc)) {
+      alert("น้ำหนัก KG_zinc + KG_non_zinc ไม่ตรงกับน้ำหนัก N.W. กรุณาตรวจสอบ");
+      $("#input_weight_net").addClass("has-error");
+      return false;
+    } else {
+      $("#input_weight_net").removeClass("has-error");
+      return true;
+    }
+  }
 
   function ReportItemSearch() {
     var OldHtml = $("#btnSearch").html();
@@ -686,6 +705,10 @@
 
      if (doc_no == '' || date == '' || item == '' || boat_name == '' || boat_no == '' || inv_no == '' || bundle == '' || weight_net == '' || weight_gross == '' || weight_zinc == '' || weight_nonzinc == '' || cust_po == '' || value_out == '' || pier == '' || BL_no == '') {
         alert("กรุณากรอกข้อมูลให้ครบ");
+        return false;
+     }
+
+     if (!ZincValidate()) {
         return false;
      }
 
