@@ -334,6 +334,13 @@
                   "_to_" +
                   EndDate,
               },
+              {
+                text: `<button type="button" class="btn btn-info">พิมพ์รายงานประจำปี</button>`,
+                action: function (e, dt, node, config) {
+                  var data = dt.rows().data().toArray();
+                  printReport(newData, StartDate, EndDate);
+                }
+               },
             ],
             footerCallback: function (row, data, start, end, display) {
               var api = this.api(),
@@ -1149,6 +1156,152 @@
 
               table: {
                 widths: [300, 120, 120],
+                headerRows: 1,
+                body: data,
+              },
+            },
+          ],
+        }
+      ],
+      defaultStyle: {
+        font: 'THSarabunNew',
+      },
+    };
+
+    pdfMake.createPdf(docDefinition).open()
+  }
+
+  function printReport(info, StartDate, EndDate) {
+
+    console.log(info);
+    
+    // sort arr by date
+    const newData = info.sort((a, b) => new Date(a.date_in.date) - new Date(b.date_in.date));
+    
+    pdfMake.fonts = {
+        THSarabunNew: {
+            normal: 'THSarabunNew.ttf',
+            bold: 'THSarabunNew Bold.ttf',
+            italics: 'THSarabunNew-Italic.ttf',
+            bolditalics: 'THSarabunNew-BoldItalic.ttf'
+        },
+        Roboto: {
+            normal: 'Roboto-Regular.ttf',
+            bold: 'Roboto-Medium.ttf',
+            italics: 'Roboto-Italic.ttf',
+            bolditalics: 'Roboto-MediumItalic.ttf'
+        }
+    };
+
+    const data = []
+    data.push([
+      { text: `ลำดับที่`, fontSize: 12, bold: true, alignment: 'center', style: 'header' },
+      { text: "วันนำเข้า/ส่งออก", fontSize: 12,bold: true,  alignment: 'center', style: 'header' },
+      { text: "วันนำเข้าคลังฯ", fontSize: 12,bold: true,  alignment: 'center', style: 'header' },
+      { text: "เลขที่ใบขนฯ/ใบขนฯโอนย้าย", fontSize: 12,bold: true,  alignment: 'center', style: 'header' },
+      { text: "ประเภทรายการ", fontSize: 12, bold: true, alignment: 'center', style: 'header' },
+      { text: "ยอดยกมา", fontSize: 12, bold: true, alignment: 'center', style: 'header' },
+      { text: "นำเข้า", fontSize: 12, bold: true, alignment: 'center', style: 'header' },
+      { text: "ส่งออก", fontSize: 12,bold: true,  alignment: 'center', style: 'header' },
+      { text: "ส่งออก", fontSize: 12,bold: true,  alignment: 'center', style: 'header' },
+      { text: "ยอดคงเหลือ", fontSize: 12,bold: true,  alignment: 'center', style: 'header' },
+    ])
+
+    for (let i = 0; i < newData.length ; i++) {
+      data.push([
+        { text: i + 1, fontSize: 12, alignment: 'center' },
+        { text: moment(newData[i].date_in.date).format('DD/MM/YYYY'), fontSize: 12, alignment: 'center' },
+        { text: moment(newData[i]?.date_stock?.date).format('DD/MM/YYYY'), fontSize: 12, alignment: 'center' },
+        { text: newData[i].doc_no, fontSize: 12, alignment: 'center' },
+        { text: newData[i].doc_type, fontSize: 12, alignment: 'center' },
+        { text: newData[i].accum > 0 ? addCommas(Math.floor(newData[i].accum * 100) / 100) : 0, fontSize: 12, alignment: 'center' },
+        { text: newData[i].in_value > 0 ? addCommas(Math.floor(newData[i].in_value * 100) / 100) : 0, fontSize: 12, alignment: 'center' },
+        { text: newData[i].out_value > 0 ? addCommas(Math.floor(newData[i].out_value * 100) / 100) : 0, fontSize: 12, alignment: 'center' },
+        { text: newData[i].out_value_H001 > 0 ? addCommas((Math.floor(newData[i].out_value_H001 * 100) / 100).toFixed(2)) : 0, fontSize: 12, alignment: 'center' },
+        { text: newData[i].total, fontSize: 12, alignment: 'center' },
+      ],)
+
+    if (i == newData.length - 1) {
+        data.push([
+        { text: 'รวม', fontSize: 12, bold: true, alignment: 'center', colSpan: 6 },
+        { text: '', fontSize: 12, alignment: 'center' },
+        { text: '', fontSize: 12, alignment: 'center' },
+        { text: '', fontSize: 12, alignment: 'center' },
+        { text: '', fontSize: 12, alignment: 'center' },
+        { text: '', fontSize: 12, alignment: 'center' },
+        { text: addCommas(newData.reduce((total, item) => total + Number(item.in_value), 0).toFixed(2)), fontSize: 12, bold: true,alignment: 'center' },
+        { text: addCommas(newData.reduce((total, item) => total + Number(item.out_value), 0).toFixed(2)), fontSize: 12,bold: true, alignment: 'center' },
+        { text: addCommas(newData.reduce((total, item) => total + Number(item.out_value_H001), 0).toFixed(2)), bold: true,fontSize: 12, alignment: 'center' },
+        { text: '', fontSize: 12, alignment: 'center' },
+        ],)
+      }
+
+    }
+
+    if (newData.length == 0) {
+      for (let i = 0; i < 5; i++) {
+        data.push([
+        { text: ' ', fontSize: 12, alignment: 'center' },
+        { text: '', fontSize: 12, alignment: 'center' },
+        { text: '', fontSize: 12, alignment: 'center' },
+        { text: '', fontSize: 12, alignment: 'center' },
+        { text: '', fontSize: 12, alignment: 'center' },
+        { text: '', fontSize: 12, alignment: 'center' },
+        { text: '', fontSize: 12, alignment: 'center' },
+        { text: '', fontSize: 12, alignment: 'center' },
+        { text: '', fontSize: 12, alignment: 'center' },
+        { text: '', fontSize: 12, alignment: 'center' },
+      ])
+      }
+    }
+
+
+    var docDefinition = {
+      pageSize: 'A4',
+      pageOrientation: 'landscape',
+      pageMargins: [25, 90, 50, 50],
+      header: function (currentPage, pageCount, pageSize) {
+        return {
+          margin: [20, 5, 20, 10],
+          table: {
+            widths: [800],
+            body: [
+            [
+                {
+                  border: [false, false, false, false],
+                  fontSize: 16,
+                  bold: true,
+                  text: "SAHA THAI STEEL PIPE (PUBLIC) CO., LTD. ทะเบียน W0201100000023",
+                  alignment: 'center',
+
+                },
+              ],
+              [
+                {
+                  border: [false, false, false, false],
+                  fontSize: 14,
+                  text: "รายงานบัญชีแยกประเภท",
+                  alignment: 'center',
+
+                },
+              ],
+              [
+                {
+                  border: [false, false, false, false], text: `สำหรับงวดบัญชี ระหว่างวันที่ ${new Date(StartDate).toLocaleDateString("th-TH", { year: 'numeric', month: 'long', day: 'numeric' })} ถึง ${new Date(EndDate).toLocaleDateString("th-TH", { year: 'numeric', month: 'long', day: 'numeric' })}`, fontSize: 14, alignment: 'center', margin: [0, 0, 0, 0]
+                },
+              ],
+            ],
+          },
+        };
+      },
+      content: [
+        {
+          margin: [0, 0, 0, 0],
+          columns: [
+            {
+
+              table: {
+                widths: [30, 60, 60, 90, 60,80,80,80,80,80],
                 headerRows: 1,
                 body: data,
               },
