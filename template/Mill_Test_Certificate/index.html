@@ -450,8 +450,18 @@
                         {"data": "sts_v",
                             "className": "text-left",
                             "render": function (data, type, row, meta) {
-                                var ret = Number(data).toFixed(4);
-                                return ret;       
+                                if (!data) {
+                                    return data;
+                                }
+                                let check = data.includes("<");
+                                let ret;
+                                if (check == true){
+                                    ret = data;
+                                } 
+                                else{
+                                    ret = Number(data).toFixed(4);
+                                }
+                                return ret;         
                         }                        
                         },
                         {"data": "sts_ni",
