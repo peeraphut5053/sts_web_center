@@ -609,22 +609,12 @@ from V_STS_PROD_TIME_REPORT
 where [date] between '$StartDate' and '$EndDate'
   and wcGroup =  '$GroupBy'
 order by [date]";
-$query1 = "select wc, wcgroup, [date], start_time, end_time, day_break, work_hour, stop_hour
-       , TOT_work_hour = case when format(cast(work_hour as datetime), 'HH:mm') < format(cast(stop_hour as datetime), 'HH:mm')
-                   then work_hour else TOT_work_hour end
-    , stop_reason, sumA, sumB, sumC
-from V_STS_PROD_TIME_REPORT
-where [date] between '$StartLastMonth' and '$EndLastMonth'
-  and wcGroup =  '$GroupBy'
-order by [date]";
 
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
-        $rs1 = $cSql->SqlQuery($this->StrConn, $query1);
 
         array_splice($rs, count($rs) - 1, 1);
-        array_splice($rs1, count($rs1) - 1, 1);
-        return array($rs, $rs1);
+        return array($rs);
     }
 
     function getDailyReport($date, $type) {
