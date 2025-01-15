@@ -688,7 +688,7 @@ order by V_STS_PROD_TIME_REPORT_HOURLY.[date],V_STS_PROD_TIME_REPORT_HOURLY.wc";
     }
 
     function getParetoDataFinishing($StartDate, $EndDate,$GroupBy) {
-        $query = "select * from STS_finishing_reason where (time_stopped between '$StartDate' and '$EndDate') and w_c in ($GroupBy)"; ;
+        $query = "select convert(varchar, create_date, 20) as created_date,* from STS_finishing_reason where (time_stopped between '$StartDate' and '$EndDate') and w_c in ($GroupBy)"; ;
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
