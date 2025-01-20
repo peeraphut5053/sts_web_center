@@ -412,7 +412,7 @@
     var EndDate2 = moment(StartDate).subtract(1, 'months').endOf('month').format("YYYY-MM-DD");
     
     if (type == 2) {
-       reportSummary(StartDate, EndDate, StartDate2, EndDate2);
+       reportSummary(StartDate, EndDate, StartDate2, EndDate2,Year);
        return false;
     }
 
@@ -468,7 +468,7 @@
     })
   }
 
-  function reportSummary(StartDate, EndDate, StartDate2, EndDate2) {
+  function reportSummary(StartDate, EndDate, StartDate2, EndDate2,Year) {
     $.ajax({
       type: "POST",
       url: "././module/RPT_STS_CUSTOM_MAINRPT_ACCT/data.php",
@@ -524,7 +524,7 @@
      
         const totalTax_Scrap = tax_out.reduce((total, item) => total + Number(item.val7), 0).toFixed(2);
 
-        makePDF3(totalValueOld, totalTaxOld, totalValue, totalTax, data_IN, Value, newTotalTaxIN, data_OUT, Value_OUT,data_Scrap,totalValue_Scrap, totalTax_Scrap, StartDate, EndDate);
+        makePDF3(totalValueOld, totalTaxOld, totalValue, totalTax, data_IN, Value, newTotalTaxIN, data_OUT, Value_OUT,data_Scrap,totalValue_Scrap, totalTax_Scrap, StartDate, EndDate,Year);
 
       },
       error: function (e) {
@@ -819,7 +819,7 @@
     pdfMake.createPdf(docDefinition).open()
   }
 
-  function makePDF3(totalValueOld, totalTaxOld, totalValue, totalTax, data_IN, Value, newTotalTaxIN, data_OUT, Value_OUT,data_Scrap,totalValue_Scrap, totalTax_Scrap, StartDate, EndDate) {
+  function makePDF3(totalValueOld, totalTaxOld, totalValue, totalTax, data_IN, Value, newTotalTaxIN, data_OUT, Value_OUT,data_Scrap,totalValue_Scrap, totalTax_Scrap, StartDate, EndDate,Year) {
 
     pdfMake.fonts = {
       THSarabunNew: {
@@ -1131,7 +1131,7 @@
 
 
     }
-
+    
 
     var docDefinition = {
       pageSize: 'A4',
@@ -1140,9 +1140,9 @@
         return {
           margin: [30, 5, 20, 10],
           stack: [
-            { text: `${moment().locale('th').format('D MMMM YYYY')}`, fontSize: 12, bold: true, alignment: 'right', margin: [0, 0, 0, 0] },
+            { text: `${new Date().toLocaleDateString("th-TH", { year: 'numeric', month: 'long', day: 'numeric' })}`, fontSize: 12, bold: true, alignment: 'right', margin: [0, 0, 0, 0] },
             { text: "เรียน  ผู้อำนวยการส่วนตรวจสอบคลังสินค้าทัณฑ์บน", fontSize: 10, alignment: 'left', margin: [0, 0, 0, 0] },
-            { text: `      ข้าพเจ้าบริษัท สหไทยสตีลไพพ์ จำกัด (มหาชน) เลขประจำตัวผู้เสียภาษีอากร 3271001394 ได้รับอนุมัติให้จัดตั้งคลังสินค้าทัณฑ์บนประเภทโรงผลิตสินค้า เพื่อทำการผลิตสินค้าประเภทท่อเหล็กชุบสังกะสีและ	\n ไม่ชุบสังกะสี เลขทะเบียนสิทธิประโยชน์ทางภาษีอากรเลขที่ W0201100000023 ตั้งอยู่ ณ เลขที่ 78 หมู่ 3 ต.บางหญ้าแพรก ถนนปู่เจ้าสมิงพราย อ.พระประแดง จ.สมุทรปราการ ขอยื่นแบบสรุปการใช้วัตถุดิบประจำงวด บัญชีที่ 1/2567(ระหว่างวันที่ ${moment(StartDate).locale('th').format('D MMMM YYYY')} ถึง ${moment(EndDate).locale('th').format('D MMMM YYYY')}) มีรายละเอียดดังนี้`, fontSize: 10, alignment: 'left', margin: [0, 0, 0, 0] },
+            { text: `      ข้าพเจ้าบริษัท สหไทยสตีลไพพ์ จำกัด (มหาชน) เลขประจำตัวผู้เสียภาษีอากร 3271001394 ได้รับอนุมัติให้จัดตั้งคลังสินค้าทัณฑ์บนประเภทโรงผลิตสินค้า เพื่อทำการผลิตสินค้าประเภทท่อเหล็กชุบสังกะสีและ	\n ไม่ชุบสังกะสี เลขทะเบียนสิทธิประโยชน์ทางภาษีอากรเลขที่ W0201100000023 ตั้งอยู่ ณ เลขที่ 78 หมู่ 3 ต.บางหญ้าแพรก ถนนปู่เจ้าสมิงพราย อ.พระประแดง จ.สมุทรปราการ ขอยื่นแบบสรุปการใช้วัตถุดิบประจำงวด บัญชีที่ ${moment(StartDate).format('M') > 6 ? '2' : '1'}/${Number(Year) + 543}(ระหว่างวันที่ ${new Date(StartDate).toLocaleDateString("th-TH", { year: 'numeric', month: 'long', day: 'numeric' })} ถึง ${new Date(EndDate).toLocaleDateString("th-TH", { year: 'numeric', month: 'long', day: 'numeric' })}) มีรายละเอียดดังนี้`, fontSize: 10, alignment: 'left', margin: [0, 0, 0, 0] },
             { text: '1.รายงานการใช้วัตถุดิบ', fontSize: 10, bold: true, alignment: 'left', margin: [0, 0, 0, 0] },
             { text: '        1.1 รายละเอียดการใช้วัตถุดิบ', fontSize: 10, bold: true, alignment: 'left', margin: [10, 0, 0, 0] }
           ]
