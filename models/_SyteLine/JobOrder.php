@@ -1392,6 +1392,11 @@ where lot.loc like 'cl%'  and tag.active=1 and qty1 <> 0
     }
 
     function CreateNewReasonFinishing($reason_id, $time_stopped, $w_c,$remark) {
+
+        if ($w_c == "" || $w_c == null) {
+            return http_response_code(401);
+        }
+
         $date = date("Y-m-d");
 
         $select = "select top 1 w_c ,time_stopped, time_end
