@@ -26,7 +26,7 @@ if ($load == "insert_sts_custom_in") {
 
     $STS_Custom = new STS_Custom();
     $STS_Custom->setConn($ConnSL);
-    $rs = $STS_Custom->AddSTS_Custom_In($doc_no, $date_in, $date_stock, $supplier, $country, $AD_rate, $weight_KG, $value_in, $remark, $item,  $type);
+    $rs = $STS_Custom->AddSTS_Custom_In($doc_no, $date_in, $date_stock, $supplier, $country, $AD_rate, $weight_KG, $value_in, $forValue, $currency, $remark, $item,  $type);
     echo json_encode($rs);
 }
 

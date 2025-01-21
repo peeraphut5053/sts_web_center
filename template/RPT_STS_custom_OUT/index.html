@@ -184,6 +184,8 @@
         <th class="bg-gray">KG_non_zinc</th>
         <th class="bg-gray">Customer PO.</th>
         <th class="bg-gray">มูลค่า (บาท)</th>
+        <th class="bg-gray">มูลค่า (ต่างประเทศ)</th>
+        <th class="bg-gray">Currency</th>
         <th class="bg-gray">ท่าส่งออก</th>
         <th class="bg-gray">B/L No.</th>
         <th class="bg-gray">ชื่อเรือฉลอม</th>
@@ -277,6 +279,20 @@
         <div class="input-group basis-2/4">
           <div class="input-group-addon">ท่าส่งออก *</div>
           <input type="text" autocomplete="off" class="form-control" id="pier">
+        </div>
+      </div>
+      <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+        <div class="input-group basis-2/4">
+          <div class="input-group-addon">มูลค่า (ต่างประเทศ)*</div>
+          <input type="number" autocomplete="off" class="form-control" id="forValue">
+        </div>
+        <div class="input-group basis-2/4">
+          <div class="input-group-addon">Currency</div>
+          <select onchange="loadSTS_Custom_WH()" class="form-control" id="Currency">
+              <option value="USD">USD</option>
+              <option value="EUR">EUR</option>
+              <option value="CNY">CNY</option>
+          </select>
         </div>
       </div>
       <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
@@ -396,7 +412,7 @@
           })
           $("#tblReport").DataTable().clear();
           $("#tblReport").append(
-            "<tfoot><tr><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th></tr></tfoot>"
+            "<tfoot><tr><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th></tr></tfoot>"
           );
           $("#tblReport").dataTable({
             aaData: newData,
@@ -504,6 +520,14 @@
               },
               {
                 data: "value",
+                className: "text-center",
+              },
+              {
+                data: "forValue",
+                className: "text-center",
+              },
+              {
+                data: "currency",
                 className: "text-center",
               },
               {
@@ -697,13 +721,15 @@
       var cust_po = $("#cust_po").val();
       var value_out = $("#value_out").val();
       var pier = $("#pier").val();
+      var forValue = $("#forValue").val();
+      var currency = $("#Currency").val();
       var BL_no = $("#bl_no").val();
       var loc_name = $("#loc_name").val();
       var loc_name2 = $("#loc_name2").val();
       var loc_name3 = $("#loc_name3").val();
       var loc_name4 = $("#loc_name4").val();
 
-     if (doc_no == '' || date == '' || item == '' || boat_name == '' || boat_no == '' || inv_no == '' || bundle == '' || weight_net == '' || weight_gross == '' || weight_zinc == '' || weight_nonzinc == '' || cust_po == '' || value_out == '' || pier == '' || BL_no == '') {
+     if (doc_no == '' || date == '' || item == '' || boat_name == '' || boat_no == '' || inv_no == '' || bundle == '' || weight_net == '' || weight_gross == '' || weight_zinc == '' || weight_nonzinc == '' || cust_po == '' || value_out == '' || pier == '' || forValue == '' || BL_no == '') {
         alert("กรุณากรอกข้อมูลให้ครบ");
         return false;
      }
@@ -733,6 +759,8 @@
         cust_po: cust_po,
         value_out: value_out,
         pier: pier,
+        forValue: forValue,
+        currency: currency,
         BL_no: BL_no,
         loc_name: loc_name,
         loc_name2: loc_name2,
@@ -756,6 +784,8 @@
         $("#cust_po").val("");
         $("#value_out").val("");
         $("#pier").val("");
+        $("#forValue").val("");
+        $("#Currency").val("");
         $("#bl_no").val("");
         $("#loc_name").val("");
         $("#loc_name2").val("");

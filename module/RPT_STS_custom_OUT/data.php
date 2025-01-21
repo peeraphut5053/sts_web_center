@@ -26,7 +26,7 @@ if ($load == "InsertCustomOut") {
 
     $STS_Custom = new STS_Custom();
     $STS_Custom->setConn($ConnSL);
-    $rs = $STS_Custom->AddSTS_Custom_Out($doc_no, $boatnote, $date, $item, $boat_name, $boat_no, $inv_no, $bundle, $weight_net, $weight_gross,$weight_zinc,$weight_nonzinc, $cust_po, $value_out, $pier, $BL_no, $loc_name,$loc_name2,$loc_name3,$loc_name4);
+    $rs = $STS_Custom->AddSTS_Custom_Out($doc_no, $boatnote, $date, $item, $boat_name, $boat_no, $inv_no, $bundle, $weight_net, $weight_gross,$weight_zinc,$weight_nonzinc, $cust_po, $value_out, $pier, $forValue, $currency, $BL_no, $loc_name,$loc_name2,$loc_name3,$loc_name4);
     echo json_encode($rs);
 }   
 
