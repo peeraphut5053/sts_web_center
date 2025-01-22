@@ -348,6 +348,13 @@
     $("#tblReport").DataTable().clear().destroy();
   });
 
+  var select_status = [
+        "-- select --",
+        "USD",
+        "EUR",
+        "CNY"
+    ];
+
   function ZincValidate() {
     var weight_net = $("#weight_net").val();
     var weight_zinc = $("#KG_zinc").val();
@@ -523,13 +530,33 @@
                 className: "text-center",
               },
               {
-                data: "forValue",
-                className: "text-center",
-              },
-              {
-                data: "currency",
-                className: "text-center",
-              },
+                  data: "forValue",
+                  className: "text-center",
+                  "render": function (data, type, row, meta) {
+                    let valdata = data ? data : '';
+                    let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='20' onchange="SaveEdit('${row.doc_no}', value, 'forValue');" value='${(valdata)}' />`;
+                    return ret;
+                  }
+                },
+                {
+                  data: "currency",
+                  className: "text-center",
+                  "render": function (data, type, row, meta) {
+                    var $select = $(`<select id='" + row.id + "' value='" + data + "' onchange="SaveEdit('${row.doc_no}', value, 'currency');"></select>`, {
+                                    });
+                                    $.each(select_status, function (k, v) {
+                                        var $option = $("<option></option>", {
+                                            "text": v,
+                                            "value": v
+                                        });
+                                        if (data === v) {
+                                            $option.attr("selected", "selected")
+                                        }
+                                        $select.append($option);
+                                    });
+                                    return $select.prop("outerHTML");
+                  }
+                },
               {
                 data: "pier",
                 className: "text-center",
