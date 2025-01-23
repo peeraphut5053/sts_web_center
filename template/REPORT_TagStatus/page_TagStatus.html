@@ -544,7 +544,9 @@
                                             }
                                         }).on('select2:select', function (e) {
                                             UpdateIssue(rowData.id, e.target.value);
-                                        });
+                                        }).on('select2:close', function (e) {
+                                            UpdateIssue(rowData.id, null);
+                                        });;
                                     }
                                 }
                             },
@@ -581,6 +583,8 @@
                                             }
                                         }).on('select2:select', function (e) {
                                             UpdateMinor(rowData.id, e.target.value);
+                                        }).on('select2:close', function (e) {
+                                            UpdateMinor(rowData.id, null);
                                         });
                                     }
                                 }
@@ -618,6 +622,8 @@
                                             }
                                         }).on('select2:select', function (e) {
                                             UpdateMain(rowData.id, e.target.value);
+                                        }).on('select2:close', function (e) {
+                                            UpdateMain(rowData.id, null);
                                         });
                                     }
                                 }
@@ -683,7 +689,7 @@
         });
     }
     function UpdateIssue(id, issue_value) {
-        // console.log(id)
+        console.log(issue_value)
         $.ajax({
             url: "././module/REPORT_TagStatus/data.php",
             type: 'get',
