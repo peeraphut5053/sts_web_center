@@ -544,6 +544,8 @@
                                             }
                                         }).on('select2:select', function (e) {
                                             UpdateIssue(rowData.id, e.target.value);
+                                        }).on('select2:unselecting', function (e) {
+                                            UpdateIssue(rowData.id, null);
                                         });
                                     }
                                 }
@@ -581,6 +583,8 @@
                                             }
                                         }).on('select2:select', function (e) {
                                             UpdateMinor(rowData.id, e.target.value);
+                                        }).on('select2:unselecting', function (e) {
+                                            UpdateMinor(rowData.id, null);
                                         });
                                     }
                                 }
@@ -618,6 +622,8 @@
                                             }
                                         }).on('select2:select', function (e) {
                                             UpdateMain(rowData.id, e.target.value);
+                                        }).on('select2:unselecting', function (e) {
+                                            UpdateMain(rowData.id, null);
                                         });
                                     }
                                 }
