@@ -1,0 +1,882 @@
+<style>
+    .col-search {
+      padding-left: 3px;
+      padding-right: 3px;
+    }
+    /*    table.dataTable thead .sorting:after,
+          table.dataTable thead .sorting:before,
+          table.dataTable thead .sorting_asc:after,
+          table.dataTable thead .sorting_asc:before,
+          table.dataTable thead .sorting_asc_disabled:after,
+          table.dataTable thead .sorting_asc_disabled:before,
+          table.dataTable thead .sorting_desc:after,
+          table.dataTable thead .sorting_desc:before,
+          table.dataTable thead .sorting_desc_disabled:after,
+          table.dataTable thead .sorting_desc_disabled:before {
+              bottom: .5em;
+          }*/
+    .table thead th {
+      text-align: center;
+    }
+  
+    .col-flt-page {
+      padding-top: 10px;
+      font-weight: bold;
+    }
+  
+    #tblReport tbody tr td a {
+      cursor: pointer;
+    }
+    table.dataTable.fixedHeader-floating,
+    table.dataTable.fixedHeader-locked {
+      background-color: white;
+      margin-top: 50px !important;
+      margin-bottom: 0 !important;
+    }
+   
+    .text-header {
+      font-weight: bold;
+      font-size: 20px;
+    }
+    .text-wrap {
+      white-space: normal;
+    }
+    .width-200 {
+      width: 200px;
+    }
+    input[type="checkbox"] {
+      margin-left: 5px;
+      margin-right: 5px;
+    } /*
+      .cb_lb{
+          margin-top:-5px;
+      }*/
+    .item-center {
+      display: flex;
+      justify-content: center;
+    }
+  </style>
+  <div class="row">
+    <h4 class="text-header text-center">Calibration Plan</h4>
+  </div>
+  <div class="row item-center">
+    <div class="col-lg-1 col-md-1 col-sm-6 col-xs-6 text-left">
+      <div class="flex gap-16">
+        <button id="btnAdd" class="btn btn-success" data-toggle="modal" data-target="#ModalCalibration"><i
+          class="fa fa-searh"></i>เพิ่มข้อมูลรายงาน</button>
+        <!-- <a class="btn btn-success ml-32" href="module/STS_Custom_Data/Import_Excel_In.php"  id="btnTransfer">&nbsp;Import Excel (IN)</a> -->
+      </div>
+    </div>
+  </div>
+  <div class="row" id="rowResultTable">
+    <table
+      class="table table-condensed table-bordered table-striped"
+      id="tblReport"
+    >
+      <thead>
+        <tr>
+          <th rowspan="2" class="bg-gray">Measuring Equipment and Testing</th>
+          <th rowspan="2" class="bg-gray">Code no.</th>
+          <th rowspan="2" class="bg-gray">S/N</th>
+          <th rowspan="2" class="bg-gray">Manufacturer</th>
+          <th rowspan="2" class="bg-gray">Model</th>
+          <th rowspan="2"class="bg-gray">Range of Equipment</th>
+          <th rowspan="2"class="bg-gray">Range of Calibration</th>
+          <th rowspan="2"class="bg-gray">Acceptance Criteria</th>
+          <th colspan="2" class="bg-gray">Schedule</th>
+          <th  colspan="2"  class="bg-gray">Performed</th>
+          <th rowspan="2" class="bg-gray">External          </th>
+          <th rowspan="2" class="bg-gray">Internal          </th>
+          <th rowspan="2" class="bg-gray">Frequency          </th>
+          <th rowspan="2" class="bg-gray">Location of equipment STBa</th>
+          <th rowspan="2" class="bg-gray">OnlyExternal Report no.</th>
+        </tr>
+        <tr>
+            <th class="bg-gray">Cal. date</th>
+            <th class="bg-gray">Due date</th>
+            <th class="bg-gray">Actual cal.</th>
+            <th class="bg-gray">Next cal.</th>
+          </tr>
+      </thead>
+      <!--        <tbody id="tblReportList">
+                      <tr><td align="center" colspan="12">.... No item search ....</td></tr>
+     </tbody>-->
+    </table>
+  </div>
+  <!-- Modal -->
+<div class="modal fade bd-example-modal-lg" id="ModalCalibration"  role="dialog" aria-labelledby="myLargeModalLabel"
+aria-hidden="true">
+ <div class="modal-dialog modal-lg">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title text-center" id="exampleModalLabel">เพิ่มข้อมูลรายการ</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+      <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+        <div class="input-group basis-2/4">
+          <div class="input-group-addon">Measuring Equipment</div>
+          <input type="text" autocomplete="off" class="form-control" id="Measuring">
+        </div>
+        <div class="input-group basis-2/4">
+          <div class="input-group-addon">Code no.</div>
+          <input type="text" autocomplete="off" class="form-control" id="code_no">
+        </div>
+      </div>
+      <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+        <div class="input-group basis-2/4">
+          <div class="input-group-addon">S/N</div>
+          <input type="text" autocomplete="off" class="form-control" id="s_n">
+        </div>
+        <div class="input-group basis-2/4">
+          <div class="input-group-addon">Manufacturer</div>
+          <input type="text" autocomplete="off" class="form-control" id="Manufacturer">
+        </div>
+      </div>
+      <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+        <div class="input-group basis-2/4">
+          <div class="input-group-addon">Model</div>
+          <input type="text" autocomplete="off" class="form-control" id="Model">
+        </div>
+        <div class="input-group basis-2/4">
+          <div class="input-group-addon">Range of equipment</div>
+          <input type="text" size="80" autocomplete="off" class="form-control" id="range">
+        </div>
+      </div>
+      <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+        <div class="input-group basis-2/4">
+          <div class="input-group-addon">Range of calibration</div>
+          <input type="text" autocomplete="off" class="form-control" id="range_cal">
+        </div>
+        <div class="input-group basis-2/4">
+          <div class="input-group-addon">Acceptance  Criteria</div>
+          <input type="text" autocomplete="off" class="form-control" id="Acceptance">
+        </div>
+      </div>
+      <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+        <div class="input-group basis-2/4">
+          <div class="input-group-addon">Cal. date</div>
+          <input type="text" autocomplete="off" class="form-control" id="cal_date">
+        </div>
+        <div class="input-group basis-2/4">
+          <div class="input-group-addon">Due date</div>
+          <input type="text" autocomplete="off" class="form-control" id="due_date">
+        </div>
+      </div>
+      <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+        <div class="input-group basis-2/4">
+          <div class="input-group-addon">Actual cal.</div>
+          <input type="text" autocomplete="off" class="form-control" id="actual_cal">
+        </div>
+        <div class="input-group basis-2/4">
+          <div class="input-group-addon">Next cal.</div>
+          <input type="text" autocomplete="off" class="form-control" id="next_cal">
+        </div>
+      </div>
+      <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+        <div class="input-group basis-2/4">
+          <div class="input-group-addon">External          </div>
+          <input type="text" autocomplete="off" class="form-control" id="external">
+        </div>
+        <div class="input-group basis-2/4">
+          <div class="input-group-addon">Internal          </div>
+          <input type="text" autocomplete="off" class="form-control" id="internal">
+        </div>
+      </div>
+      <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+        <div class="input-group basis-2/4">
+          <div class="input-group-addon">Frequency          </div>
+          <input type="text" autocomplete="off" class="form-control" id="frequency">
+        </div>
+        <div class="input-group basis-2/4">
+          <div class="input-group-addon">Location of equipment</div>
+          <input type="text" autocomplete="off" class="form-control" id="loc_equipment">
+        </div>
+      </div>
+      <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+        <div class="input-group basis-2/4">
+          <div class="input-group-addon">OnlyExternal Report no.</div>
+          <input type="text" autocomplete="off" class="form-control" id="onlyexternal">
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+      <button type="button" class="btn btn-primary" id="SaveCalibration" onclick="SaveCalibration()">บันทึก</button>
+    </div>
+   </div>
+  </div>
+</div>
+ <!-- Modal -->
+ <div class="modal fade bd-example-modal-lg" id="ModalCalibrationEdit"  role="dialog" aria-labelledby="myLargeModalLabel"
+ aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+   <div class="modal-content">
+     <div class="modal-header">
+       <h4 class="modal-title text-center" id="exampleModalLabel">แก้ไขข้อมูลรายการ</h5>
+         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+           <span aria-hidden="true">&times;</span>
+         </button>
+     </div>
+     <div class="modal-body">
+       <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+         <div class="input-group basis-2/4">
+           <div class="input-group-addon">Measuring Equipment</div>
+           <input type="text" autocomplete="off" class="form-control" id="measuring_edit">
+         </div>
+         <div class="input-group basis-2/4">
+           <div class="input-group-addon">Code no.</div>
+           <input type="text" autocomplete="off" class="form-control" id="code_no_edit">
+         </div>
+       </div>
+       <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+         <div class="input-group basis-2/4">
+           <div class="input-group-addon">S/N</div>
+           <input type="text" autocomplete="off" class="form-control" id="s_n_edit">
+         </div>
+         <div class="input-group basis-2/4">
+           <div class="input-group-addon">Manufacturer</div>
+           <input type="text" autocomplete="off" class="form-control" id="manufacturer_edit">
+         </div>
+       </div>
+       <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+         <div class="input-group basis-2/4">
+           <div class="input-group-addon">Model</div>
+           <input type="text" autocomplete="off" class="form-control" id="model_edit">
+         </div>
+         <div class="input-group basis-2/4">
+           <div class="input-group-addon">Range of equipment</div>
+           <input type="text" size="80" autocomplete="off" class="form-control" id="range_edit">
+         </div>
+       </div>
+       <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+         <div class="input-group basis-2/4">
+           <div class="input-group-addon">Range of calibration</div>
+           <input type="text" autocomplete="off" class="form-control" id="range_cal_edit">
+         </div>
+         <div class="input-group basis-2/4">
+           <div class="input-group-addon">Acceptance  Criteria</div>
+           <input type="text" autocomplete="off" class="form-control" id="acceptance_edit">
+         </div>
+       </div>
+       <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+         <div class="input-group basis-2/4">
+          <div class="input-group-addon">Cal. date</div>
+          <input type="text" autocomplete="off" class="form-control" id="cal_date_edit">
+        </div>
+         <div class="input-group basis-2/4">
+           <div class="input-group-addon">Due date</div>
+           <input type="text" autocomplete="off" class="form-control" id="due_date_edit">
+         </div>
+       </div>
+       <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+         <div class="input-group basis-2/4">
+           <div class="input-group-addon">Actual cal.</div>
+           <input type="text" autocomplete="off" class="form-control" id="actual_cal_edit">
+         </div>
+         <div class="input-group basis-2/4">
+           <div class="input-group-addon">Next cal.</div>
+           <input type="text" autocomplete="off" class="form-control" id="next_cal_edit">
+         </div>
+       </div>
+       <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+         <div class="input-group basis-2/4">
+           <div class="input-group-addon">External          </div>
+           <input type="text" autocomplete="off" class="form-control" id="external_edit">
+         </div>
+         <div class="input-group basis-2/4">
+           <div class="input-group-addon">Internal          </div>
+           <input type="text" autocomplete="off" class="form-control" id="internal_edit">
+         </div>
+       </div>
+       <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+         <div class="input-group basis-2/4">
+           <div class="input-group-addon">Frequency          </div>
+           <input type="text" autocomplete="off" class="form-control" id="frequency_edit">
+         </div>
+         <div class="input-group basis-2/4">
+           <div class="input-group-addon">Location of equipment</div>
+           <input type="text" autocomplete="off" class="form-control" id="loc_equipment_edit">
+         </div>
+       </div>
+       <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+         <div class="input-group basis-2/4">
+           <div class="input-group-addon">OnlyExternal Report no.</div>
+           <input type="text" autocomplete="off" class="form-control" id="onlyexternal_edit" disabled>
+         </div>
+       </div>
+     </div>
+ 
+     <div class="modal-footer">
+       <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+       <button type="button" class="btn btn-primary" id="SaveCalibration" onclick="SaveEdit()">บันทึก</button>
+     </div>
+    </div>
+   </div>
+ </div>
+<script type="text/javascript">
+ 
+   
+    ReportItemSearch();
+           
+    $("#cal_date,#due_date,#actual_cal ,#next_cal").datepicker({
+      dateFormat: "yy-mm-dd",
+      // add select year 
+      changeYear: true,
+    });
+
+    $("#cal_date_edit,#due_date_edit,#actual_cal_edit ,#next_cal_edit").datepicker({
+      dateFormat: "yy-mm-dd",
+      // add select year 
+      changeYear: true,
+    });
+    
+    $("#btnRemove").click(function () {
+      $("#tblReport").DataTable().clear().destroy();
+    });
+
+
+    function ReportItemSearch() {
+      var OldHtml = $("#btnSearch").html();
+ 
+        $("#btnSearch").html("<i class='fa fa-spinner fa-spin'></i>");
+        $("#tblReport").loading();
+        $("#tblReport tfoot").remove();
+        $.ajax({
+          type: "POST",
+          url: "././module/STS_Calibration_Plan/data.php",
+          dataType: "json",
+          beforeSend: function () {
+            $("#btnSearch").html("<i class='fa fa-spinner fa-spin'>");
+          },
+          data: {
+            load: "GetData",
+          },
+          success: function (data) {
+
+            $("#tblReport").DataTable().clear();
+             $("#tblReport").dataTable({
+              aaData: data,
+              paging: false,
+              fixedHeader: true,
+              destroy: true,
+              processing: true,
+              scrollY: "65vh",
+              scrollCollapse: true,
+              scrollX: true,
+              select: true,
+              columnDefs: [
+                {
+                  targets: [0],
+                  width: 125,
+                },
+                {
+                  targets: [1],
+                  width: 40,
+                },
+                {
+                  targets: [2],
+                  width: 40,
+                },
+                {
+                  targets: [3],
+                  width: 100,
+                },
+                {
+                  targets: [4],
+                  width: 100,
+                },
+                {
+                  targets: [5],
+                  width: 200,
+                },
+                {
+                  targets: [6],
+                  width: 200,
+                },
+                {
+                  targets: [7],
+                  width: 150,
+                },
+              ],
+              columns: [
+                {
+                  data: "Equipment",
+                  className: "text-center",
+                
+                },
+                {
+                  data: "Code",
+                  className: "text-center",
+                
+          
+                },
+                {
+                  data: "SN",
+                  className: "text-center",
+                  
+                },
+                {
+                  data: "Manufac",
+                  className: "text-center",
+                
+          
+                },
+                {
+                  data: "Model",
+                  className: "text-center",
+                
+                },
+                {
+                  data: "RangeEquip",
+                  className: "text-center",
+                  "render": function (data, type, row, meta) {
+                    if (data == null) {
+                      var ret = `<span>-</span>`;
+                    } else {
+                      // replace comma to br
+                      const br = data.replace(/,/g, '<br/>');
+                      var ret = `<span>${br}</span>`;
+                    }
+                    return ret;
+                  }
+                },
+                {
+                  data: "RangeCali",
+                  className: "text-center",
+                  "render": function (data, type, row, meta) {
+                    if (data == null) {
+                      var ret = `<span>-</span>`;
+                    } else {
+                      // replace comma to br
+                      const br = data.replace(/,/g, '<br/>');
+                      var ret = `<span>${br}</span>`;
+                    }
+                    return ret;
+                  }
+                },
+                {
+                  data: "Acc_Cri",
+                  className: "text-center",
+                  "render": function (data, type, row, meta) {
+                    if (data == null) {
+                      var ret = `<span>-</span>`;
+                    } else {
+                      // replace comma to br
+                      const br = data.replace(/,/g, '<br/>');
+                      var ret = `<span>${br}</span>`;
+                    }
+                    return ret;
+                  }
+                },
+                {
+                  data: "SchCalDate.date",
+                  className: "text-center",
+                  "render": function (data, type, row, meta) {
+                    if (data == null) {
+                      var ret = `<span>-</span>`;
+                    } else {
+                      var ret = `<span>${moment(data).format("DD/MM/YYYY")}</span>`;
+                    }
+                    return ret;
+                  }
+                },
+                {
+                  data: "DueDate.date",
+                  className: "text-center",
+                  "render": function (data, type, row, meta) {
+                    if (data == null) {
+                      var ret = `<span>-</span>`;
+                    } else {
+                      var ret = `<span>${moment(data).format("DD/MM/YYYY")}</span>`;
+                    }
+                    return ret;
+                  }
+                },
+                {
+                  data: "ActCalDate.date",
+                  className: "text-center",
+                  "render": function (data, type, row, meta) {
+                    if (data == null) {
+                      var ret = `<span>-</span>`;
+                    } else {
+                      var ret = `<span>${moment(data).format("DD/MM/YYYY")}</span>`;
+                    }
+                    return ret;
+                  }
+                },
+                {
+                  data: "NextCalDate.date",
+                  className: "text-center",
+                  "render": function (data, type, row, meta) {
+                    if (data == null) {
+                      var ret = `<span>-</span>`;
+                    } else {
+                      var ret = `<span>${moment(data).format("DD/MM/YYYY")}</span>`;
+                    }
+                    return ret;
+                  }
+                },
+                {
+                  data: "ExternalComp",
+                  className: "text-center",
+                },
+                {
+                  data: "InternalComp",
+                  className: "text-center",
+                },
+                {
+                  data: "Frequency",
+                  className: "text-center",
+                },
+                {
+                  data: `Location `,
+                  className: "text-center",
+                },
+                {
+                  data: "ExtRptNo",
+                  className: "text-center",
+                },
+               
+              ],
+              dom:
+                "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                "<'row'<'col-md-12'tr>>" +
+                "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+              buttons: [
+                {
+                  extend: "print",
+                  text: "<i class='fa fa-print'></i>&nbsp;Print",
+                  title: "",
+                },
+                {
+                  extend: "excel",
+                  footer: true,
+                  text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                  title:
+                    "รายงาน Calibration Plan" 
+                },
+                {
+              text: `<button type="button" class="btn btn-info">Edit</button>`,
+              action: function (e, dt, node, config) {
+                // on selected
+                let selected = Array.from(dt.rows('.selected').data());
+                if (selected.length == 0) {
+                  alert("กรุณารายการที่ต้องการแก้ไข");
+                  return false;
+                }
+                $("#measuring_edit").val(selected[0].Equipment);
+                $("#code_no_edit").val(selected[0].Code);
+                $("#s_n_edit").val(selected[0].SN);
+                $("#manufacturer_edit").val(selected[0].Manufac);
+                $("#model_edit").val(selected[0].Model);
+                $("#range_edit").val(selected[0].RangeEquip);
+                $("#range_cal_edit").val(selected[0].RangeCali);
+                $("#acceptance_edit").val(selected[0].Acc_Cri);
+                $("#cal_date_edit").val(selected[0].SchCalDate?.date ? moment(selected[0].SchCalDate?.date).format("YYYY-MM-DD") : '');
+                $("#due_date_edit").val(selected[0].DueDate?.date ? moment(selected[0].DueDate?.date).format("YYYY-MM-DD") : '');
+                $("#actual_cal_edit").val(selected[0].ActCalDate?.date ? moment(selected[0].ActCalDate?.date).format("YYYY-MM-DD") : '');
+                $("#next_cal_edit").val(selected[0].NextCalDate?.date ? moment(selected[0].NextCalDate?.date).format("YYYY-MM-DD") : '');
+                $("#external_edit").val(selected[0].ExternalComp);
+                $("#internal_edit").val(selected[0].InternalComp);
+                $("#frequency_edit").val(selected[0].Frequency);
+                $("#loc_equipment_edit").val(selected[0].Location);
+                $("#onlyexternal_edit").val(selected[0].ExtRptNo);
+                $("#ModalCalibrationEdit").modal("show");
+                
+
+              }
+            }
+              ],
+            });
+            $("#tblReport").loading("stop");
+            $("#btnSearch").html(OldHtml);
+          },
+          error: function (e) {
+            $("#tblReport").loading("stop");
+            $("#btnSearch").html(OldHtml);
+            console.log("There was an error with your request...");
+            console.log("error: " + JSON.stringify(e));
+          },
+        });
+      }
+    
+
+    function SaveCalibration() {
+      var measuring = $("#Measuring").val(); // 50 
+      var code_no = $("#code_no").val(); // 7
+      var s_n = $("#s_n").val(); // 15
+      var manufacturer = $("#Manufacturer").val(); // 20
+      var model = $("#Model").val(); // 15
+      var range = $("#range").val(); // 300
+      var range_cal = $("#range_cal").val(); // 60
+      var acceptance = $("#Acceptance").val(); // 80
+      var cal_date = $("#cal_date").val(); 
+      var due_date = $("#due_date").val();
+      var actual_cal = $("#actual_cal").val();
+      var next_cal = $("#next_cal").val();
+      var external = $("#external").val(); // 50
+      var internal = $("#internal").val(); // 50
+      var frequency = $("#frequency").val(); // 10
+      var loc_equipment = $("#loc_equipment").val(); // 10
+      var onlyexternal = $("#onlyexternal").val(); // 20
+
+      if (measuring.length > 50) {
+        alert("Measuring Equipment ไม่เกิน 50 ตัวอักษร" + measuring.length);
+        return false;
+      }
+
+      if (code_no.length > 7) {
+        alert("Code No ไม่เกิน 7 ตัวอักษร" + code_no.length);
+        return false;
+      }
+
+      if (s_n.length > 15) {
+        alert("S/N ไม่เกิน 15 ตัวอักษร" + s_n.length);
+        return false;
+      }
+
+      if (manufacturer.length > 20) { 
+        alert("Manufacturer ไม่เกิน 20 ตัวอักษร" + manufacturer.length);
+        return false;
+      }
+
+      if (model.length > 15) {
+        alert("Model ไม่เกิน 15 ตัวอักษร" + model.length);
+        return false;
+      }
+
+      if (range.length > 300) {
+        alert("Range ไม่เกิน 300 ตัวอักษร" + range.length);
+        return false;
+      }
+
+      if (range_cal.length > 300) {
+        alert("Range Cal ไม่เกิน 300 ตัวอักษร" + range_cal.length);
+        return false;
+      }
+
+      if (acceptance.length > 80) {
+        alert("Acceptance ไม่เกิน 80 ตัวอักษร" + acceptance.length);
+        return false;
+      }
+
+      if (external.length > 50) {
+        alert("External ไม่เกิน 50 ตัวอักษร" + external.length);
+        return false;
+      }
+
+      if (internal.length > 50) {
+        alert("Internal ไม่เกิน 50 ตัวอักษร" + internal.length);
+        return false;
+      }
+
+      if (frequency.length > 10) {
+        alert("Frequency ไม่เกิน 10 ตัวอักษร" + frequency.length);
+        return false;
+      }
+
+      if (loc_equipment.length > 10) {
+        alert("Location Equipment ไม่เกิน 10 ตัวอักษร" + loc_equipment.length);
+        return false;
+      }
+
+      if (onlyexternal.length > 20) {
+        alert("Only External ไม่เกิน 20 ตัวอักษร" + onlyexternal.length);
+        return false;
+      }
+    
+      $.ajax({
+        type: "POST",
+        url: "././module/STS_Calibration_Plan/data.php",
+        dataType: "json",
+        data: {
+          load: "SaveCalibrationPlan",
+          measuring: measuring,
+          code_no: code_no,
+          s_n: s_n,
+          manufacturer: manufacturer,
+          model: model,
+          range: range,
+          range_cal: range_cal,
+          acceptance: acceptance,
+          cal_date: cal_date,
+          due_date: due_date,
+          actual_cal: actual_cal,
+          next_cal: next_cal,
+          external: external,
+          internal: internal,
+          frequency: frequency,
+          loc_equipment: loc_equipment,
+          onlyexternal: onlyexternal
+        },
+        success: function (data) {
+          alert("บันทึกข้อมูลสําเร็จ");
+          $("#Measuring").val("");
+          $("#code_no").val("");
+          $("#s_n").val("");
+          $("#Manufacturer").val("");
+          $("#Model").val("");
+          $("#range").val("");
+          $("#range_cal").val("");
+          $("#Acceptance").val("");
+          $("#cal_date").val("");
+          $("#due_date").val("");
+          $("#actual_cal").val("");
+          $("#next_cal").val("");
+          $("#external").val("");
+          $("#internal").val("");
+          $("#frequency").val("");
+          $("#loc_equipment").val("");
+          $("#onlyexternal").val("");
+          $("#ModalCalibration").modal("hide");
+          ReportItemSearch();
+        },
+        error: function (e) {
+          alert("บันทึกข้อมูลไม่สําเร็จ");
+        },
+      });
+    }
+
+    function SaveEdit() {
+
+      // get all values _edit
+      var measuring = $("#measuring_edit").val();
+      var code_no = $("#code_no_edit").val();
+      var s_n = $("#s_n_edit").val();
+      var manufacturer = $("#manufacturer_edit").val();
+      var model = $("#model_edit").val();
+      var range = $("#range_edit").val();
+      var range_cal = $("#range_cal_edit").val();
+      var acceptance = $("#acceptance_edit").val();
+      var cal_date = $("#cal_date_edit").val();
+      var due_date = $("#due_date_edit").val();
+      var actual_cal = $("#actual_cal_edit").val();
+      var next_cal = $("#next_cal_edit").val();
+      var external = $("#external_edit").val();
+      var internal = $("#internal_edit").val();
+      var frequency = $("#frequency_edit").val();
+      var loc_equipment = $("#loc_equipment_edit").val();
+      var onlyexternal = $("#onlyexternal_edit").val();
+
+      if (measuring.length > 50) {
+        alert("Measuring Equipment ไม่เกิน 50 ตัวอักษร" + measuring.length);
+        return false;
+      }
+
+      if (code_no.length > 7) {
+        alert("Code No ไม่เกิน 7 ตัวอักษร" + code_no.length);
+        return false;
+      }
+
+      if (s_n.length > 15) {
+        alert("S/N ไม่เกิน 15 ตัวอักษร" + s_n.length);
+        return false;
+      }
+
+      if (manufacturer.length > 20) { 
+        alert("Manufacturer ไม่เกิน 20 ตัวอักษร" + manufacturer.length);
+        return false;
+      }
+
+      if (model.length > 15) {
+        alert("Model ไม่เกิน 15 ตัวอักษร" + model.length);
+        return false;
+      }
+
+      if (range.length > 300) {
+        alert("Range ไม่เกิน 300 ตัวอักษร" + range.length);
+        return false;
+      }
+
+      if (range_cal.length > 300) {
+        alert("Range Cal ไม่เกิน 300 ตัวอักษร" + range_cal.length);
+        return false;
+      }
+
+      if (acceptance.length > 80) {
+        alert("Acceptance ไม่เกิน 80 ตัวอักษร" + acceptance.length);
+        return false;
+      }
+
+      if (external.length > 50) {
+        alert("External ไม่เกิน 50 ตัวอักษร" + external.length);
+        return false;
+      }
+
+      if (internal.length > 50) {
+        alert("Internal ไม่เกิน 50 ตัวอักษร" + internal.length);
+        return false;
+      }
+
+      if (frequency.length > 10) {
+        alert("Frequency ไม่เกิน 10 ตัวอักษร" + frequency.length);
+        return false;
+      }
+
+      if (loc_equipment.length > 10) {
+        alert("Location Equipment ไม่เกิน 10 ตัวอักษร" + loc_equipment.length);
+        return false;
+      }
+
+      if (onlyexternal.length > 20) {
+        alert("Only External ไม่เกิน 20 ตัวอักษร" + onlyexternal.length);
+        return false;
+      }
+
+      $.ajax({
+        type: "POST",
+        url: "././module/STS_Calibration_Plan/data.php",
+        dataType: "json",
+        data: {
+          load: "UpdateCalibration",
+          measuring: measuring,
+          code_no: code_no,
+          s_n: s_n,
+          manufacturer: manufacturer,
+          model: model,
+          range: range,
+          range_cal: range_cal,
+          acceptance: acceptance,
+          cal_date: cal_date,
+          due_date: due_date,
+          actual_cal: actual_cal,
+          next_cal: next_cal,
+          external: external,
+          internal: internal,
+          frequency: frequency,
+          loc_equipment: loc_equipment,
+          onlyexternal: onlyexternal
+        },
+        success: function (data) {
+          alert("แก้ไขข้อมูลสำเร็จ");
+          $("#measuring_edit").val("");
+          $("#code_no_edit").val("");
+          $("#s_n_edit").val("");
+          $("#manufacturer_edit").val("");
+          $("#model_edit").val("");
+          $("#range_edit").val("");
+          $("#range_cal_edit").val("");
+          $("#acceptance_edit").val("");
+          $("#cal_date_edit").val("");
+          $("#due_date_edit").val("");
+          $("#actual_cal_edit").val("");
+          $("#next_cal_edit").val("");
+          $("#external_edit").val("");
+          $("#internal_edit").val("");
+          $("#frequency_edit").val("");
+          $("#loc_equipment_edit").val("");
+          $("#onlyexternal_edit").val("");
+          $("#ModalCalibrationEdit").modal("hide");
+          ReportItemSearch();
+        },
+        error: function (e) {
+          alert("แก้ไขข้อมูลไม่สำเร็จ");
+        },
+      });
+    }
+
+  </script>
