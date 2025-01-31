@@ -567,7 +567,7 @@ aria-hidden="true">
                 if (selected.length == 0) {
                   alert("กรุณารายการที่ต้องการแก้ไข");
                   return false;
-                }
+                }          
                 $("#measuring_edit").val(selected[0].Equipment);
                 $("#code_no_edit").val(selected[0].Code);
                 $("#s_n_edit").val(selected[0].SN);
@@ -583,7 +583,7 @@ aria-hidden="true">
                 $("#external_edit").val(selected[0].ExternalComp);
                 $("#internal_edit").val(selected[0].InternalComp);
                 $("#frequency_edit").val(selected[0].Frequency);
-                $("#loc_equipment_edit").val(selected[0].Location);
+                $("#loc_equipment_edit").val(selected[0]?.["Location "] );
                 $("#onlyexternal_edit").val(selected[0].ExtRptNo);
                 $("#ModalCalibrationEdit").modal("show");
                 
