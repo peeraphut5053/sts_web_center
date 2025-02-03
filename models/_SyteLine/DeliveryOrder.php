@@ -556,4 +556,56 @@ class DeliveryOrder {
         }
     }
 
+    function GetDataDeliveryOptions() {
+        $query = "select distinct do_num
+from do_line_mst
+where do_num like 'dx%'
+order by do_num desc";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+
+    function GetDataDeliveryDx($do_num) {
+        $query = "select do_num, do_line, Uf_Container_num, Uf_Container_zeal, Uf_Container_size
+  , Uf_Container_blank_weight, Uf_Container_car_num
+from do_line_mst
+where do_num = '$do_num'";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+    function GetDeliveryReport($do_num_start, $do_num_end, $first_line, $last_line, $customer_start, $customer_end, $inovice_start, $inovice_end) {
+
+        $in_start = $inovice_start == '' ? 'NULL' : "'$inovice_start'";
+        $in_end = $inovice_end == '' ? 'NULL' : "'$inovice_end'";
+        $cus_start = $customer_start == '' ? 'NULL' : "'$customer_start'";
+        $cus_end = $customer_end == '' ? 'NULL' : "'$customer_end'";
+ 
+
+        $query = "EXEC [dbo].[STS_DeliveryReport]
+  @InvNumStarting = $in_start,
+  @InvNumEnding = $in_end,
+  @CustomerStarting = $cus_start,
+  @CustomerEnding = $cus_end,
+  @DONumStarting = N'$do_num_start',
+  @DONumEnding = N'$do_num_end',
+  @DOlineStarting = $first_line,
+  @DOlineEnding = $last_line";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+    
+    function SaveDelivery($do_delivery, $line_delivery, $Uf_Container_num, $Uf_Container_zeal, $Uf_Container_size, $Uf_Container_blank_weight, $Uf_Container_car_num) {
+        $con_size = $Uf_Container_size == '' ? 'NULL' : $Uf_Container_size;
+        $query = "UPDATE do_line_mst set Uf_Container_num = '$Uf_Container_num', Uf_Container_zeal = '$Uf_Container_zeal', Uf_Container_size = $con_size, Uf_Container_blank_weight = $Uf_Container_blank_weight, Uf_Container_car_num = '$Uf_Container_car_num' where do_num = '$do_delivery' and do_line = '$line_delivery' ";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
 }
