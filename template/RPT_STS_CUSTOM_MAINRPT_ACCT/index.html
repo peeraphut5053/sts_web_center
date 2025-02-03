@@ -216,18 +216,15 @@
 
             if (item.doc_type === 1) {
               total -= Number(item.out_value_H001).toFixed(2);
-
             } else {
               total += Number(item.in_value);
-              console.log(Number(item.in_value));
-              
             }
 
             newData.push({
               ...item,
 
               date_stock: item.date_stock === null ? "" : item.date_stock.date,
-              total: addCommas((Math.ceil(Number(total).toFixed(2) * 100).toFixed(2) / 100).toFixed(2)),
+              total: addCommas(Number(total).toFixed(2)),
             });
           }
 
@@ -306,7 +303,7 @@
                 data: "out_value_H001",
                 className: "text-center",
                 "render": function (data, type, row, meta) {
-                  var ret = Math.ceil(data * 100) / 100;
+                  var ret = Number(data).toFixed(2);
 
                   return addCommas(ret);
                 }
