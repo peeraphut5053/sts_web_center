@@ -463,6 +463,7 @@ aria-hidden="true">
     // tblReport
 
    const tables = $("#tblReport").DataTable().data();
+   var username_session = GetUserProp("login_username");
 
    if (do_line_start == "" || do_line_end == "") {
      do_line_start = 1;
@@ -782,7 +783,7 @@ TEL: 02-3859023, 02-3859282-7 FAX: 02-7544100`,
                 border: [false, false, false, false],
                 fontSize: 14,
                 alignment: "right",
-                text: `เวลา ...........................ทะเบียนรถ............................... \n Print Date: ${moment().format('DD/MM/YYYY HH:mm:ss')}`,
+                text: `เวลา ...........................ทะเบียนรถ............................... \n Print Date: ${username_session} ${moment().format('DD/MM/YYYY HH:mm:ss')}`,
                 },
               ],
             ]
@@ -1126,7 +1127,7 @@ TEL: 02-3859023, 02-3859282-7 FAX: 02-7544100`,
                 border: [false, false, false, false],
                 fontSize: 14,
                 alignment: "right",
-                text: `เวลา ...........................ทะเบียนรถ............................... \n Print Date: ${moment().format('DD/MM/YYYY HH:mm:ss')}`,
+                text: `เวลา ...........................ทะเบียนรถ............................... \n Print Date: ${username_session} ${moment().format('DD/MM/YYYY HH:mm:ss')}`,
                 },
               ],
             ]
