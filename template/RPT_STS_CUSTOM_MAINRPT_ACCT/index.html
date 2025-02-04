@@ -155,6 +155,10 @@
     $("#tblReport").DataTable().clear().destroy();
   });
 
+  function roundToTwo(num) {
+    return Math.round((num + 1e-8) * 100) / 100;
+  }
+
   function ReportItemSearch() {
     var OldHtml = $("#btnSearch").html();
     var Year = $("#selYear").val();
@@ -195,13 +199,12 @@
           EndDate: EndDate,
         },
         success: function (data) {
-
+  
           const typeTwo = data.filter(item => item.doc_type === 2);
 
           let totalOut = typeTwo.reduce((acc, cur) => {
             return acc + Number(cur.in_value);
           }, 0);
-
 
           let accm = Number(data[0].accum);
           let newData = [];
@@ -215,7 +218,8 @@
             let item = data[i];
 
             if (item.doc_type === 1) {
-              total -= Number(item.out_value_H001).toFixed(2);
+              total -= roundToTwo(Number(item.out_value_H001));
+  
             } else {
               total += Number(item.in_value);
             }
@@ -224,7 +228,7 @@
               ...item,
 
               date_stock: item.date_stock === null ? "" : item.date_stock.date,
-              total: addCommas(Number(total).toFixed(2)),
+              total: addCommas((total).toFixed(2)),
             });
           }
 
@@ -303,7 +307,7 @@
                 data: "out_value_H001",
                 className: "text-center",
                 "render": function (data, type, row, meta) {
-                  var ret = Number(data).toFixed(2);
+                  var ret = roundToTwo(Number(data)).toFixed(2);
 
                   return addCommas(ret);
                 }
