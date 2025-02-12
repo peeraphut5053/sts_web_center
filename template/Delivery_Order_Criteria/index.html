@@ -592,7 +592,7 @@
                                         {
                                             border: [false, false, false, false],
                                             fontSize: 16,
-                                            text: `วันที่เอกสาร : ${moment().format('DD/MM/YYYY')} \n วันที่ส่งสินค้า : ${moment().format('DD/MM/YYYY')}`,
+                                            text: `วันที่เอกสาร : ${moment(pageData[currentPage - 1]?.[0].do_hdr_date?.date).format('DD/MM/YYYY')} \n วันที่ส่งสินค้า : ${moment(pageData[currentPage - 1]?.[0].pickup_date?.date).format('DD/MM/YYYY')}`,
                                             alignment: 'left',
                                         },
                                     ],
