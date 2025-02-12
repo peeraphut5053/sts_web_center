@@ -98,15 +98,6 @@
                 <input type="text" autocomplete="off" class="form-control" id="item_delivery_e">
             </div>
         </div>
-        <div class="flex justify-start items-center flex-grow gap-6 mb-5">
-            <div class="input-group basis-2/4">
-                <div style="color: red;" class="input-group-addon">Type *</div>
-                <select class="form-control" id="type_cri">
-                    <option value="1">Import</option>
-                    <option value="2">Export</option>
-                </select>
-            </div>
-        </div>
     </div>
     <div>
         <button id="PrintDelivery" class="btn btn-primary p-4 w-96"><i
@@ -152,19 +143,7 @@
 
 
     $("#PrintDelivery").click(function () {
-        var type = $("#type_cri").val();
-
-        // check empty
-
-        
-
-        if (type == 1) {
             PrintDeliveryImport();
-        } else if (type == 2) {
-            PrintDeliveryExport();
-        }
-        
-
     })
 
     function PrintDeliveryImport() {
@@ -199,7 +178,6 @@
             },
             data: {
                 load: "Print",
-                type:  $("#type_cri").val(),
                 do_num_s: $("#doc_cri_s").val(),
                 do_num_e: $("#doc_cri_e").val(),
                 customer_c_s: $("#customer_c_s").val(),
@@ -686,7 +664,6 @@
             dataType: "json",
             data: {
                 load: "Print",
-                type:  $("#type_cri").val(),
                 do_num_s: $("#doc_cri_s").val(),
                 do_num_e: $("#doc_cri_e").val(),
                 customer_c_s: $("#customer_c_s").val(),

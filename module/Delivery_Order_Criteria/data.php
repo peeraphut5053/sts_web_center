@@ -23,6 +23,6 @@ if ($load == "Print") {
 
     $STS_Custom = new DeliveryOrder();
     $STS_Custom->setConn($ConnSL);
-    $rs = $STS_Custom->GetDataDeliveryCriteria($type, $do_num_s, $do_num_e, $customer_c_s, $customer_c_e, $do_date_s, $do_date_e, $pick_date_s, $pick_date_e, $co_no_s, $co_no_e, $item_delivery_s, $item_delivery_e);
+    $rs = $STS_Custom->GetDataDeliveryCriteria( $do_num_s, $do_num_e, $customer_c_s, $customer_c_e, $do_date_s, $do_date_e, $pick_date_s, $pick_date_e, $co_no_s, $co_no_e, $item_delivery_s, $item_delivery_e);
     echo json_encode($rs);
 }

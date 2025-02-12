@@ -609,7 +609,7 @@ where do_num = '$do_num'";
         return $rs0;
     }
 
-    function GetDataDeliveryCriteria($type, $do_num_s, $do_num_e, $customer_c_s, $customer_c_e, $do_date_s, $do_date_e, $pick_date_s, $pick_date_e, $co_no_s, $co_no_e, $item_delivery_s, $item_delivery_e) {
+    function GetDataDeliveryCriteria($do_num_s, $do_num_e, $customer_c_s, $customer_c_e, $do_date_s, $do_date_e, $pick_date_s, $pick_date_e, $co_no_s, $co_no_e, $item_delivery_s, $item_delivery_e) {
         $do_num_s = $do_num_s == '' ? 'NULL' : "'$do_num_s'";
         $do_num_e = $do_num_e == '' ? 'NULL' : "'$do_num_e'";
         $customer_c_s = $customer_c_s == '' ? 'NULL' : "'$customer_c_s'";
@@ -623,9 +623,6 @@ where do_num = '$do_num'";
         $item_delivery_s = $item_delivery_s == '' ? 'NULL' : "'$item_delivery_s'";
         $item_delivery_e = $item_delivery_e == '' ? 'NULL' : "'$item_delivery_e'";
 
-        $query = "";
-
-        if ($type == 1) {
             $query = "EXEC [dbo].[MV_DELIVERY_ORDER_REPORT]
   @DOnumStarting = $do_num_s,
   @DOnumEnding = $do_num_e,
@@ -639,22 +636,7 @@ where do_num = '$do_num'";
   @ItemEnding = $item_delivery_e,
   @TransactionDateStarting1 = $pick_date_e,
   @TransactionDateEnding1 = $pick_date_e";
-        } else if ($type == 2) {
-            $query = "EXEC [dbo].[Rpt_Mv_DeliveryOrderReportExportSp]
- @DOnumStarting = $do_num_s,
-  @DOnumEnding = $do_num_e,
-  @CUSTnumStarting = $customer_c_s,
-  @CUSTnumEnding = $customer_c_e,
-  @TransactionDateStarting = $do_date_s,
-  @TransactionDateEnding = $do_date_e,
-  @COnumStarting = $co_no_s,
-  @COnumEnding = $co_no_e,
-  @ItemStarting = $item_delivery_s,
-  @ItemEnding = $item_delivery_e,
-  @TransactionDateStarting1 = $pick_date_e,
-  @TransactionDateEnding1 = $pick_date_e";
-        }
-
+    
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);
