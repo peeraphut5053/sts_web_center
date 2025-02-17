@@ -1,0 +1,222 @@
+<div class="row">
+    <div>
+      <h1 class="text-center">Forming Speed</h1>
+    </div>
+    <div class="col-lg-2">
+      <div class="input-group">
+        <div class="input-group-addon">Item</div>
+        <input type="text" autocomplete="off" class="form-control txt-filter" id="Item_Speed">
+      </div>
+    </div>
+  
+    <div class="col-lg-2">
+      <div class="input-group">
+        <div class="input-group-addon">Size</div>
+        <input type="text" autocomplete="off" class="form-control txt-filter" id="Size_Speed">
+      </div>
+    </div>
+    <div class="col-lg-2">
+      <div class="input-group">
+        <div class="input-group-addon">Spec</div>
+        <input type="text" class="form-control txt-filter" id="Spec_Speed">
+      </div>
+    </div>
+    <div class="col-lg-2">
+        <div class="input-group">
+          <div class="input-group-addon">Grade</div>
+          <input type="text" class="form-control txt-filter" id="Grade_Speed">
+        </div>
+      </div>
+    <div class="col-lg-4">
+      <button id="btnSearch_Repair_Check" class="btn btn-info"><i class="fa fa-searh"></i>&nbsp;ค้นหา</button>
+    </div>
+    <div class="col-lg-2">
+        <div class="input-group">
+          <div class="input-group-addon">Thick</div>
+          <input type="text" class="form-control txt-filter" id="Thick_Speed">
+        </div>
+      </div>
+  </div>
+  
+  <div class="row" id="divReport">
+    <table class="table table-condensed table-bordered table-striped" id="tblReport">
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Size</th>
+          <th>Spec</th>
+          <th>Grade</th>
+          <th>Thick</th>
+          <th>FM1</th>
+          <th>FM2</th>
+          <th>FM4</th>
+          <th>FM5</th>
+          <th>FM6</th>
+          <th>FM7</th>
+          <th>FM8</th>
+          <th>FM9</th>
+          <th>FM10</th>
+          <th>FM11</th>
+          <th>FMC</th>
+        </tr>
+      </thead>
+    </table>
+  </div>
+  
+  <script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.colVis.min.js"></script> 
+  <script type="text/javascript">
+     ReportItemSearch();
+
+    $("#btnSearch_Repair_Check").click(function () {
+      ReportItemSearch();
+    });
+  
+    function ReportItemSearch() {
+      var OldHtml = $("#btnSearch_Repair_Check").html();
+      var Item = $("#Item_Speed").val();
+      var Size = $("#Size_Speed").val();
+      var Spec = $("#Spec_Speed").val();
+      var Grade = $("#Grade_Speed").val();
+      var Thick = $("#Thick_Speed").val();
+     
+      $("#btnSearch").html("<i class='fa fa-spinner fa-spin'></i>");
+      $("#tblReport").loading();
+      $("#tblReport tfoot").remove();
+      $.ajax({
+        type: "POST",
+        url: "././module/STS_Forming_Speed/data.php",
+        dataType: "json",
+        beforeSend: function () {
+          $("#btnSearch").html("<i class='fa fa-spinner fa-spin'>");
+        },
+        data: {
+          load: 'FormingSpeed',
+          Item: Item,
+          Size: Size,
+          Spec: Spec,
+          Grade: Grade,
+          Thick: Thick
+        },
+        success: function (data) {
+          myData = data;
+          $("#divReport2").addClass("hidden");
+          $("#divReport").removeClass("hidden");
+          $("#tblReport").DataTable().clear();
+          $("#tblReport").dataTable({
+            aaData: myData,
+            paging: false,
+            fixedHeader: true,
+            destroy: true,
+            processing: true,
+            scrollY: "65vh",
+            scrollCollapse: true,
+            scrollX: true,
+            select: true,
+            columnDefs: [
+                  {
+                    targets: [0],
+                    width: 150,
+                  },
+                  {
+                    targets: [2],
+                    width: 100,
+                  },
+            ],
+            columns: [
+              {
+                "data": "item",
+                "className": "text-center",
+              },
+              {
+                "data": "size",
+                "className": "text-center",
+              },
+              {
+                "data": "spec",
+                "className": "text-center",
+              },
+              {
+                "data": "grade",
+                "className": "text-center",
+              },
+              {
+                "data": "thick",
+                "className": "text-center",
+              },
+              {
+                "data": "FM1",
+                "className": "text-center",
+              },
+              {
+                "data": "FM2",
+                "className": "text-center",
+              },
+    
+              {
+                "data": "FM4",
+                "className": "text-center",
+              },
+              {
+                "data": "FM5",
+                "className": "text-center",
+              },
+              {
+                "data": "FM6",
+                "className": "text-center",
+              },
+              {
+                "data": "FM7",
+                "className": "text-center",
+              },
+              {
+                "data": "FM8",
+                "className": "text-center",
+              },
+              {
+                "data": "FM9",
+                "className": "text-center",
+              },
+              {
+                "data": "FM10",
+                "className": "text-center",
+              },
+              {
+                "data": "FM11",
+                "className": "text-center",
+              },
+              {
+                "data": "FMC",
+                "className": "text-center",
+              }
+            ],
+            dom:
+              "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+              "<'row'<'col-md-12'tr>>" +
+              "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+            buttons: [
+              {
+                extend: "print",
+                text: "<i class='fa fa-print'></i>&nbsp;Print",
+                title: "Forming Speed",
+              },
+              {
+                extend: "excel",
+                text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                title: "Forming Speed",
+              },
+            ],
+          });
+          $("#tblReport").loading("stop");
+          $("#btnSearch").html(OldHtml);
+        },
+  
+        error: function (e) {
+          $("#tblReport").loading("stop");
+          $("#btnSearch").html(OldHtml);
+          console.log("There was an error with your request...");
+          console.log("error: " + JSON.stringify(e));
+        },
+      });
+    };
+  
+  </script>

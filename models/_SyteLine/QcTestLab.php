@@ -386,5 +386,40 @@ where trans_type = 'F'
     }
 
 
+    function GetFormingSpeed($Item, $Size, $Spec, $Grade, $Thick) {
+
+        $wh = '';
+
+        if ($Item !== '') {
+            $wh  = ' and fs.item = \'' . $Item . '\'';
+        }
+
+        if ($Size !== '') {
+            $wh  = ' and size = \'' . $Size . '\'';
+        }
+
+        if ($Spec !== '') {
+            $wh  = ' and spec = \'' . $Spec . '\'';
+        }
+
+        if ($Grade !== '') {
+            $wh  = ' and grade = \'' . $Grade . '\'';
+        }
+
+        if ($Thick !== '') {    
+            $wh  = ' and thick = \'' . $Thick . '\'';
+        }
+
+        $query = "select fs.* , size , spec, grade , thick 
+ from STS_forming_speed fs  
+   inner join  (select distinct item = substring(item,6,16),size = uf_NPS, spec= uf_class, grade = isnull(uf_grade,''), thick = isnull(uf_schedule,'')
+       from item_mst 
+      ) item
+ on item.item = fs.item where 1=1 $wh";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
 }
 ?>
