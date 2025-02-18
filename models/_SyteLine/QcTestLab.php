@@ -330,16 +330,15 @@ where trans_type = 'F'
         return $rs0;
     }
 
-    function SaveCalibrationPlan( $measuring, $code_no, $s_n, $manufacturer, $model, $range, $range_cal, $acceptance, $cal_date, $due_date, $actual_cal, $next_cal, $external, $internal, $frequency, $loc_equipment, $onlyexternal) {
+    function SaveCalibrationPlan( $measuring, $code_no, $s_n, $manufacturer, $model, $range, $range_cal, $acceptance, $due_date, $actual_cal, $next_cal, $external, $internal, $frequency, $loc_equipment, $onlyexternal) {
         // STS_QA_LAB_CalPlan
-        $cal_date_value = $cal_date == '' ? 'NULL' : "'$cal_date'";
         $actual_cal_value = $actual_cal == '' ? 'NULL' : "'$actual_cal'";
         $next_cal_value = $next_cal == '' ? 'NULL' : "'$next_cal'";
         $due_date_value = $due_date == '' ? 'NULL' : "'$due_date'";
 
         // how to add N front $range = "'$range'";
 
-        $query = "INSERT INTO STS_QA_LAB_CalPlan (Equipment, Code, SN, Manufac, Model, RangeEquip, RangeCali, Acc_Cri, SchCalDate, DueDate, ActCalDate, NextCalDate, ExternalComp, InternalComp, Frequency, Location, ExtRptNo)  VALUES ('$measuring', '$code_no', '$s_n', '$manufacturer', '$model', N'$range', N'$range_cal', N'$acceptance', $cal_date_value, $due_date_value, $actual_cal_value, $next_cal_value, '$external', '$internal', '$frequency', '$loc_equipment', '$onlyexternal')";
+        $query = "INSERT INTO STS_QA_LAB_CalPlan (Equipment, Code, SN, Manufac, Model, RangeEquip, RangeCali, Acc_Cri, DueDate, ActCalDate, NextCalDate, ExternalComp, InternalComp, Frequency, Location, RptNo)  VALUES ('$measuring', '$code_no', '$s_n', '$manufacturer', '$model', N'$range', N'$range_cal', N'$acceptance', $due_date_value, $actual_cal_value, $next_cal_value, '$external', '$internal', '$frequency', '$loc_equipment', '$onlyexternal')";
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
@@ -354,8 +353,7 @@ where trans_type = 'F'
         array_splice($rs, count($rs) - 1, 1);
         return $rs;
     }
-    function UpdateCalibrationPlan($measuring, $code_no, $s_n, $manufacturer, $model, $range, $range_cal, $acceptance, $cal_date, $due_date, $actual_cal, $next_cal, $external, $internal, $frequency, $loc_equipment, $onlyexternal) {
-        $cal_date_value = $cal_date == '' ? 'NULL' : "'$cal_date'";
+    function UpdateCalibrationPlan($measuring, $code_no, $s_n, $manufacturer, $model, $range, $range_cal, $acceptance, $due_date, $actual_cal, $next_cal, $external, $internal, $frequency, $loc_equipment, $onlyexternal, $old_onlyexternal) {
         $actual_cal_value = $actual_cal == '' ? 'NULL' : "'$actual_cal'";
         $next_cal_value = $next_cal == '' ? 'NULL' : "'$next_cal'";
         $due_date_value = $due_date == '' ? 'NULL' : "'$due_date'";
@@ -369,16 +367,24 @@ where trans_type = 'F'
             RangeEquip = N'$range',
             RangeCali = N'$range_cal',
             Acc_Cri = N'$acceptance',
-            SchCalDate = $cal_date_value,
             DueDate = $due_date_value,
             ActCalDate = $actual_cal_value,
             NextCalDate = $next_cal_value,
             ExternalComp = '$external',
             InternalComp = '$internal',
             Frequency = '$frequency',
-            Location = '$loc_equipment'
+            Location = '$loc_equipment',
+            RptNo = '$onlyexternal'
           WHERE 
-            ExtRptNo = '$onlyexternal'";
+            RptNo = '$old_onlyexternal'";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+    function DeleteCalibrationPlan($RptNo) {
+        $query = "DELETE FROM STS_QA_LAB_CalPlan WHERE RptNo = '$RptNo'";
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
