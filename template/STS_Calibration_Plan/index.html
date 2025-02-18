@@ -196,7 +196,7 @@
         </div>
         <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
           <div class="input-group basis-2/4">
-            <div class="input-group-addon">Report no.</div>
+            <div style="color: red" class="input-group-addon">Report no. *</div>
             <input type="text" autocomplete="off" class="form-control" id="onlyexternal">
           </div>
         </div>
@@ -710,6 +710,11 @@
 
     if (onlyexternal.length > 20) {
       alert("Only External ไม่เกิน 20 ตัวอักษร" + onlyexternal.length);
+      return false;
+    }
+
+    if (onlyexternal == "") {
+      alert('กรุณาใส่ Report No.');
       return false;
     }
 
