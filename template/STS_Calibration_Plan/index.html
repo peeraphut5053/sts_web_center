@@ -89,10 +89,9 @@
         <th rowspan="2" class="bg-gray">Acceptance Criteria</th>
         <th colspan="1" class="bg-gray">Schedule</th>
         <th colspan="2" class="bg-gray">Performed</th>
-        <th rowspan="2" class="bg-gray">External </th>
-        <th rowspan="2" class="bg-gray">Internal </th>
+        <th rowspan="2" class="bg-gray">Company </th>
         <th rowspan="2" class="bg-gray">Frequency </th>
-        <th rowspan="2" class="bg-gray">Location of equipment STBa</th>
+        <th rowspan="2" class="bg-gray">Location</th>
         <th rowspan="2" class="bg-gray">Report no.</th>
       </tr>
       <tr>
@@ -176,12 +175,8 @@
         </div>
         <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
           <div class="input-group basis-2/4">
-            <div class="input-group-addon">External </div>
-            <input type="text" autocomplete="off" class="form-control" id="external">
-          </div>
-          <div class="input-group basis-2/4">
-            <div class="input-group-addon">Internal </div>
-            <input type="text" autocomplete="off" class="form-control" id="internal">
+            <div class="input-group-addon">Company </div>
+            <input type="text" autocomplete="off" class="form-control" id="company">
           </div>
         </div>
         <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
@@ -279,12 +274,8 @@
         </div>
         <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
           <div class="input-group basis-2/4">
-            <div class="input-group-addon">External </div>
-            <input type="text" autocomplete="off" class="form-control" id="external_edit">
-          </div>
-          <div class="input-group basis-2/4">
-            <div class="input-group-addon">Internal </div>
-            <input type="text" autocomplete="off" class="form-control" id="internal_edit">
+            <div class="input-group-addon">Company</div>
+            <input type="text" autocomplete="off" class="form-control" id="company_edit">
           </div>
         </div>
         <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
@@ -398,7 +389,7 @@
               width: 150,
             },
             {
-              targets: [15],
+              targets: [14],
               width: 100,
             },
           ],
@@ -420,7 +411,7 @@
 
             },
             {
-              data: "Manufac",
+              data: "Manu",
               className: "text-center",
 
 
@@ -509,11 +500,7 @@
               }
             },
             {
-              data: "ExternalComp",
-              className: "text-center",
-            },
-            {
-              data: "InternalComp",
+              data: "Company",
               className: "text-center",
             },
             {
@@ -521,7 +508,7 @@
               className: "text-center",
             },
             {
-              data: `Location `,
+              data: `loc`,
               className: "text-center",
             },
             {
@@ -568,8 +555,7 @@
                 $("#due_date_edit").val(selected[0].DueDate?.date ? moment(selected[0].DueDate?.date).format("YYYY-MM-DD") : '');
                 $("#actual_cal_edit").val(selected[0].ActCalDate?.date ? moment(selected[0].ActCalDate?.date).format("YYYY-MM-DD") : '');
                 $("#next_cal_edit").val(selected[0].NextCalDate?.date ? moment(selected[0].NextCalDate?.date).format("YYYY-MM-DD") : '');
-                $("#external_edit").val(selected[0].ExternalComp);
-                $("#internal_edit").val(selected[0].InternalComp);
+                $("#company_edit").val(selected[0].Company);
                 $("#frequency_edit").val(selected[0].Frequency);
                 $("#loc_equipment_edit").val(selected[0]?.["Location "]);
                 $("#onlyexternal_edit").val(selected[0].RptNo);
@@ -642,8 +628,7 @@
     var due_date = $("#due_date").val();
     var actual_cal = $("#actual_cal").val();
     var next_cal = $("#next_cal").val();
-    var external = $("#external").val(); // 50
-    var internal = $("#internal").val(); // 50
+    var company = $("#company").val(); // 50
     var frequency = $("#frequency").val(); // 10
     var loc_equipment = $("#loc_equipment").val(); // 10
     var onlyexternal = $("#onlyexternal").val(); // 20
@@ -688,13 +673,8 @@
       return false;
     }
 
-    if (external.length > 50) {
-      alert("External ไม่เกิน 50 ตัวอักษร" + external.length);
-      return false;
-    }
-
-    if (internal.length > 50) {
-      alert("Internal ไม่เกิน 50 ตัวอักษร" + internal.length);
+    if (company.length > 50) {
+      alert("External ไม่เกิน 50 ตัวอักษร" + company.length);
       return false;
     }
 
@@ -735,8 +715,7 @@
         due_date: due_date,
         actual_cal: actual_cal,
         next_cal: next_cal,
-        external: external,
-        internal: internal,
+        company: company,
         frequency: frequency,
         loc_equipment: loc_equipment,
         onlyexternal: onlyexternal
@@ -754,8 +733,7 @@
         $("#due_date").val("");
         $("#actual_cal").val("");
         $("#next_cal").val("");
-        $("#external").val("");
-        $("#internal").val("");
+        $("#company").val("");
         $("#frequency").val("");
         $("#loc_equipment").val("");
         $("#onlyexternal").val("");
@@ -782,8 +760,7 @@
     var due_date = $("#due_date_edit").val();
     var actual_cal = $("#actual_cal_edit").val();
     var next_cal = $("#next_cal_edit").val();
-    var external = $("#external_edit").val();
-    var internal = $("#internal_edit").val();
+    var company = $("#company_edit").val();
     var frequency = $("#frequency_edit").val();
     var loc_equipment = $("#loc_equipment_edit").val();
     var onlyexternal = $("#onlyexternal_edit").val();
@@ -830,13 +807,8 @@
       return false;
     }
 
-    if (external.length > 50) {
-      alert("External ไม่เกิน 50 ตัวอักษร" + external.length);
-      return false;
-    }
-
-    if (internal.length > 50) {
-      alert("Internal ไม่เกิน 50 ตัวอักษร" + internal.length);
+    if (company.length > 50) {
+      alert("External ไม่เกิน 50 ตัวอักษร" + company.length);
       return false;
     }
 
@@ -872,8 +844,7 @@
         due_date: due_date,
         actual_cal: actual_cal,
         next_cal: next_cal,
-        external: external,
-        internal: internal,
+        company: company,
         frequency: frequency,
         loc_equipment: loc_equipment,
         onlyexternal: onlyexternal,
@@ -892,8 +863,7 @@
         $("#due_date_edit").val("");
         $("#actual_cal_edit").val("");
         $("#next_cal_edit").val("");
-        $("#external_edit").val("");
-        $("#internal_edit").val("");
+        $("#company_edit").val("");
         $("#frequency_edit").val("");
         $("#loc_equipment_edit").val("");
         $("#onlyexternal_edit").val("");
