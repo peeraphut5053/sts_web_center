@@ -24,7 +24,7 @@ if ($load == "SaveCalibrationPlan") {
     $CallModel->SyteLine_Models();
     $QcTestLab = new QcTestLab();
     $QcTestLab->setConn($ConnSL);
-    $rs = $QcTestLab->GetCalibrationPlan();
+    $rs = $QcTestLab->GetCalibrationPlan($StartDate, $EndDate, $ReportNo, $codeno);
     echo json_encode($rs);
 } else if ($load == "UpdateCalibration") {
     $CallModel = new CallModel();

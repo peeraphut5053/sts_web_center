@@ -345,9 +345,24 @@ where trans_type = 'F'
         return $rs;
     }
 
-    function GetCalibrationPlan() {
+    function GetCalibrationPlan($StartDate, $EndDate, $ReportNo, $codeno) {
         // STS_QA_LAB_CalPlan
-        $query = "select * from STS_QA_LAB_CalPlan";
+
+        $wh = '';
+
+        if ($StartDate !== '' && $EndDate !== '') {
+            $wh  = ' and DueDate between \'' . $StartDate . '\' and \'' . $EndDate . '\'';
+        }
+
+        if ($ReportNo !== '') {
+            $wh  = ' and RptNo = \'' . $ReportNo . '\'';
+        }
+
+        if ($codeno !== '') {
+            $wh  = ' and Code = \'' . $codeno . '\'';
+        }
+
+        $query = "select * from STS_QA_LAB_CalPlan where 1=1 $wh";
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);

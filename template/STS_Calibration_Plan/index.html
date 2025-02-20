@@ -67,6 +67,53 @@
   <h4 class="text-header text-center">Calibration Plan</h4>
 </div>
 <div class="row item-center">
+  <div class="col-lg-2 col-md-3 col-sm-6 col-xs-6">
+    <div class="input-group">
+      <div class="input-group-addon">Start Date</div>
+      <input
+        type="text"
+        class="form-control"
+        id="Start_Date_Plan"
+        autocomplete="off"
+      />
+    </div>
+  </div>
+  <div class="col-lg-2 col-md-3 col-sm-6 col-xs-6">
+    <div class="input-group">
+      <div class="input-group-addon">End Date</div>
+      <input
+        type="text"
+        class="form-control"
+        id="End_Date_Plan"
+        autocomplete="off"
+      />
+    </div>
+  </div>
+  <div class="col-lg-2 col-md-3 col-sm-6 col-xs-6">
+    <div class="input-group">
+      <div class="input-group-addon">Report No.</div>
+      <input
+        type="text"
+        class="form-control"
+        id="report_no"
+        autocomplete="off"
+      />
+    </div>
+  </div>
+  <div class="col-lg-2 col-md-3 col-sm-6 col-xs-6">
+    <div class="input-group">
+      <div class="input-group-addon">Code No.</div>
+      <input
+        type="text"
+        class="form-control"
+        id="code_no_search"
+        autocomplete="off"
+      />
+    </div>
+  </div>
+  <div class="col-lg-1 col-md-2 col-sm-1 col-xs-6  col-search">
+    <button id="BtnSearchPlan" class="btn btn-info"><i class="fa fa-search"></i>&nbsp; Search</button>
+  </div>
   <div class="col-lg-1 col-md-1 col-sm-6 col-xs-6 text-left">
     <div class="flex gap-16">
       <button id="btnAdd" class="btn btn-success" data-toggle="modal" data-target="#ModalCalibration"><i
@@ -306,8 +353,13 @@
 </div>
 <script type="text/javascript">
 
+  $("#BtnSearchPlan").click(function () {
+    ReportItemSearch();
+  })
 
-  ReportItemSearch();
+  $("#Start_Date_Plan, #End_Date_Plan").datepicker({
+    dateFormat: "yy-mm-dd",
+  });
 
   $("#due_date,#actual_cal ,#next_cal").datepicker({
     dateFormat: "yy-mm-dd",
@@ -328,6 +380,11 @@
 
   function ReportItemSearch() {
     var OldHtml = $("#btnSearch").html();
+    var StartDate = $("#Start_Date_Plan").val();
+    var EndDate = $("#End_Date_Plan").val();
+
+    var ReportNo = $("#report_no").val();
+    var codeno = $("#code_no_search").val();
 
     $("#btnSearch").html("<i class='fa fa-spinner fa-spin'></i>");
     $("#tblReport").loading();
@@ -341,6 +398,10 @@
       },
       data: {
         load: "GetData",
+        StartDate: StartDate,
+        EndDate: EndDate,
+        ReportNo: ReportNo,
+        codeno: codeno
       },
       success: function (data) {
 
