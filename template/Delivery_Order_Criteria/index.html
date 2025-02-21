@@ -223,8 +223,8 @@
 
                     for (let i = 0; i < newData.length; i++) {
                         data.push([
-                            { text: newData[i].do_line, fontSize: 11,bold: true, font: 'Roboto', alignment: 'center' },
-                            { text: newData[i].do_seq, fontSize: 11,bold: true,font: 'Roboto',  alignment: 'center' },
+                            { text: newData[i].do_line ? newData[i].do_line : '', fontSize: 11,bold: true, font: 'Roboto', alignment: 'center' },
+                            { text: newData[i].do_seq ? newData[i].do_seq : '', fontSize: 11,bold: true,font: 'Roboto',  alignment: 'center' },
                             {
                                 stack: [
                                     { image: generateBarcode(newData[i].item), width: 210, height: 25, alignment: 'center' },
@@ -232,23 +232,23 @@
                                 ], fontSize: 12, alignment: 'center'
                             },
                             { stack: [
-                                { text: `${newData[i].Co_num}`, fontSize: 11,bold: true,font: 'Roboto', alignment: 'left' },
-                                { text: `${newData[i].cust_po}`, fontSize: 11,bold: true,font: 'Roboto', alignment: 'right' },
+                                { text: `${newData[i].Co_num ? newData[i].Co_num : ''}`, fontSize: 11,bold: true,font: 'Roboto', alignment: 'left' },
+                                { text: `${newData[i].cust_po ? newData[i].cust_po : ''}`, fontSize: 11,bold: true,font: 'Roboto', alignment: 'right' },
                             ] },
-                            { text: `[${newData[i].Co_line}]`, fontSize: 11,bold: true,font: 'Roboto', alignment: 'center' },
+                            { text: `[${newData[i].Co_line ? newData[i].Co_line : ''}]`, fontSize: 11,bold: true,font: 'Roboto', alignment: 'center' },
                             { text: newData[i].loc ? newData[i].loc : '', fontSize: 10,bold: true,font: 'Roboto', alignment: 'left' },
-                            { text: `${newData[i].Uf_Pack}`, fontSize: 11,bold: true,font: 'Roboto', alignment: 'center' },
+                            { text: `${newData[i].Uf_Pack ? newData[i].Uf_Pack : ''}`, fontSize: 11,bold: true,font: 'Roboto', alignment: 'center' },
                             { stack: [
-                                { text: `${newData[i].QtyBundle}`, fontSize: 11,bold: true,font: 'Roboto', alignment: 'left' },
-                                { text: `${newData[i].QtyRemainder}`, fontSize: 11,bold: true,font: 'Roboto', alignment: 'right' },
+                                { text: `${newData[i].QtyBundle ? newData[i].QtyBundle : ''}`, fontSize: 11,bold: true,font: 'Roboto', alignment: 'left' },
+                                { text: `${newData[i].QtyRemainder ? newData[i].QtyRemainder : ''}`, fontSize: 11,bold: true,font: 'Roboto', alignment: 'right' },
                             ] },
                             { stack: [
-                                { text: Number(newData[i].Qty).toFixed(0), fontSize: 11,bold: true,font: 'Roboto', alignment: 'center' },
-                                { text: newData[i].S_u_m, fontSize: 11,bold: true,font: 'Roboto', alignment: 'center' },
+                                { text: newData[i].Qty ? Number(newData[i].Qty).toFixed(0) : '', fontSize: 11,bold: true,font: 'Roboto', alignment: 'center' },
+                                { text: newData[i].S_u_m ? newData[i].S_u_m : '', fontSize: 11,bold: true,font: 'Roboto', alignment: 'center' },
                             ] },
-                            { text: newData[i].u_m, fontSize: 11,bold: true,font: 'Roboto', alignment: 'center' },
-                            { text: Number(newData[i].unit_weight).toFixed(2), fontSize: 11,bold: true,font: 'Roboto', alignment: 'center' },
-                            { text: addCommas(Number(newData[i].SumWeight).toFixed(2)), fontSize: 11,bold: true,font: 'Roboto', alignment: 'center' },
+                            { text: newData[i].u_m ? newData[i].u_m : '', fontSize: 11,bold: true,font: 'Roboto', alignment: 'center' },
+                            { text: newData[i].unit_weight ? Number(newData[i].unit_weight).toFixed(2) : '', fontSize: 11,bold: true,font: 'Roboto', alignment: 'center' },
+                            { text: newData[i].SumWeight ? addCommas(Number(newData[i].SumWeight).toFixed(2)) : '', fontSize: 11,bold: true,font: 'Roboto', alignment: 'center' },
                         ],)
                         // how fixed position footer
 
