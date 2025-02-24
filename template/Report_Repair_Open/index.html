@@ -327,7 +327,7 @@
         type: "POST",
         url: "././module/Report_Repair/data.php",
         dataType: "json",
-        data: { load: "Search" },
+        data: { load: "Search", user: username_session },
         success: function (response) {
 
           $.each(response, function (key, value) {

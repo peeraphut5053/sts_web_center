@@ -23,7 +23,7 @@ if ($load == "Search") {
 
     $STS_Custom = new Factory();
     $STS_Custom->setConn($ConnSL);
-    $rs = $STS_Custom->GetDataDocNo();
+    $rs = $STS_Custom->GetDataDocNo($user);
     echo json_encode($rs);
 } else if ($load == "Create") {
     $CallModel = new CallModel();

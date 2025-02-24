@@ -135,11 +135,11 @@ from STS_repair re inner join STS_repair_issue iss
         return $rs0;
     }
 
-    function GetDataDocNo() {
+    function GetDataDocNo($user) {
         $cSql = new SqlSrv();
         $sql = "select distinct DocNo
 from STS_repair
-where DocNo like 'R%'
+where DocNo like 'R%' and Username = '$user'
 order by DocNo desc";
         $rs0 = $cSql->SqlQuery($this->StrConn, $sql);
         array_splice($rs0, count($rs0) - 1, 1);
