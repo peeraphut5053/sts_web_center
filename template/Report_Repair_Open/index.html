@@ -547,9 +547,8 @@
                 const file = files[i];
                 // jpg, png only
                 if (file && (file.type === 'image/jpg' || file.type === 'image/jpeg' || file.type === 'image/png')) {
-                    const resizedFile = await resizeImage(file, 800, 600);
+                    const resizedFile = await resizeImage(file, 1280, 720);
                     formData.append('file[]', resizedFile);
-                
                 } 
                 else {
                     alert('กรุณาเลือกไฟล์ JPG, JPEG  หรือ PNG เท่านั้น');
