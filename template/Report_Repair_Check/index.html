@@ -1,0 +1,503 @@
+<style>
+  .modal-dialog {
+  width: 70%; /* หรือกำหนดเป็น px เช่น 1200px */
+  max-width: 1200px; /* ป้องกันไม่ให้กว้างเกินไป */
+}
+</style>
+<div class="row">
+    <div>
+      <h1 class="text-center">ติดตามสถานะแจ้งซ่อม</h1>
+    </div>
+    <!--    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4 " >
+                <div class="input-group">
+                    <div class="input-group-addon">Year</div>
+                    <select class="form-control" id="RepByGroupYear">
+        
+                    </select>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4 " >
+                <div class="input-group">
+                    <div class="input-group-addon">Month</div>
+                    <select class="form-control" id="RepByGroupMonth">
+        
+                    </select>
+                </div>
+            </div>-->
+    <div class="col-lg-2">
+      <div class="input-group">
+        <div class="input-group-addon">From Date</div>
+        <input type="text" autocomplete="off" class="form-control txt-filter" id="c_FromDate">
+      </div>
+    </div>
+  
+    <div class="col-lg-2">
+      <div class="input-group">
+        <div class="input-group-addon">To date</div>
+        <input type="text" autocomplete="off" class="form-control txt-filter" id="c_ToDate">
+      </div>
+    </div>
+    <div class="col-lg-2">
+      <div class="input-group">
+        <div class="input-group-addon">doc no</div>
+        <input type="text" class="form-control txt-filter" id="c_doc">
+      </div>
+    </div>
+    <div class="col-lg-2">
+      <div class="input-group w-full">
+        <div class="input-group-addon">Type</div>
+        <select class="form-control txt-filter" id="c_types">
+          <option value="all">ทุกรายการ</option>
+          <option value="close">รายการปิดงาน</option>
+          <option value="open">รายการรอดำเนินการ</option>
+        </select>
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <button id="btnSearch_Repair_Check" class="btn btn-info"><i class="fa fa-searh"></i>&nbsp;ค้นหา</button>
+    </div>
+    <div class="col-lg-2">
+      <div class="input-group w-full">
+        <div class="input-group-addon">หน่วยงานซ่อม</div>
+        <select class="form-control txt-filter" id="c_items">
+          <option selected disabled>ทุกหน่วยงาน</option>
+          <option value="ไฟฟ้า">ไฟฟ้า</option>
+          <option value="ซ่อมสร้าง">ซ่อมสร้าง</option>
+          <option value="ห้องกลึง">ห้องกลึง</option>
+          <option value="จัดจ้าง">จัดจ้าง</option>
+          <option value="วิศวกรรม">วิศวกรรม</option>
+        </select>
+      </div>
+    </div>
+    <div class="col-lg-2">
+        <div class="input-group w-full">
+          <div class="input-group-addon">สถานะ</div>
+          <select class="form-control txt-filter" id="c_status">
+            <option selected disabled>ทุกสถานะ</option>
+            <option value="ดำเนินงาน">ดำเนินงาน</option>
+            <option value="รออะไหล่">รออะไหล่</option>
+            <option value="งานต่อเเนื่อง">งานต่อเเนื่อง</option>
+          </select>
+        </div>
+      </div>
+    <div class="col-lg-4">
+        <div class="input-group w-full">
+            <div class="input-group-addon">แผนก</div>
+            <select class="form-control" id="c_department">
+              <option value=""></option>
+            </select>
+        </div>
+      </div>
+  </div>
+  
+  <div class="row" id="divReport">
+    <table class="table table-condensed table-bordered table-striped" id="tblReport">
+      <thead>
+        <tr>
+          <th>Approve</th>
+        <th>เลขที่ใบแจ้ง</th>
+        <th>วันที่</th>
+        <th>เวลาแจ้ง</th>
+        <th>แผนก</th>
+        <th>Remark</th>
+        <th>ลักษณะงาน</th>
+        <th>ชื่อผู้แจ้ง</th>
+        <th>หน่วยงานซ่อม</th>
+        <th>รายละเอียดการแจ้ง</th>
+        <th>รูปภาพ</th>
+        <th>สถานะ</th>
+        <th>รายละเอียดการแก้ไข</th>
+        <th>วันกำหนดเสร็จ </th>
+        <th>วันที่ดำเนินการซ่อม</th>
+        <th>เวลางานเริ่ม</th>
+        <th>วันที่ดำเนินการเสร็จ</th>
+        <th>เวลางานสิ้นสุด</th>
+        <th>รวมระยะเวลางาน</th>
+        <th>รายชื่อช่างซ่อม</th>
+        <th>Remark</th>
+        </tr>
+      </thead>
+    </table>
+  </div>
+  <div class="modal fade bd-example-modal-lg" id="ModalImages" role="dialog" tabindex="-1" aria-labelledby="myLargeModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="exampleModalLabel">รูปภาพ</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+      </div>
+      <div class="modal-body">
+        <div id="imageCarousel" class="carousel slide" data-ride="carousel">
+          <!-- Indicators -->
+          <ol class="carousel-indicators">
+              <li data-target="#imageCarousel" data-slide-to="0" class="active"></li>
+              <li data-target="#imageCarousel" data-slide-to="1"></li>
+              <!-- เพิ่ม indicators ตามจำนวนรูป -->
+          </ol>
+      
+          <!-- Slides -->
+          <div class="carousel-inner">
+              <div class="item active">
+                  <img src="" alt="Image 1">
+              </div>
+              <div class="item">
+                  <img src="" alt="Image 2">
+              </div>
+              <!-- เพิ่ม slides ตามจำนวนรูป -->
+          </div>
+      
+          <!-- Controls -->
+          <a class="left carousel-control" href="#imageCarousel" data-slide="prev">
+              <span class="glyphicon glyphicon-chevron-left"></span>
+          </a>
+          <a class="right carousel-control" href="#imageCarousel" data-slide="next">
+              <span class="glyphicon glyphicon-chevron-right"></span>
+          </a>
+      </div>
+      </div>
+    </div>
+  </div>
+</div>
+  <script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.colVis.min.js"></script> 
+  <script type="text/javascript">
+    var username_session = GetUserProp("login_username");
+    $("#r_name").val(username_session);
+    var myData = [];
+
+    $("#c_FromDate, #c_ToDate").datepicker({
+    dateFormat: 'yy-mm-dd',
+  });
+
+    $(document).ready(function () {
+    $.ajax({
+      type: "POST",
+      url: "././module/Report_Repair/data.php",
+      dataType: "json",
+      data: { load: "Dept" },
+      success: function (response) {
+
+        const options = response.map((item) => ({
+          id: item.wc,
+          text: item.wc + " - " + item.description
+        }))
+        
+        var $select = $("#c_department");
+        $select.select2({
+          placeholder: 'กรุณาเลือกแผนก',
+          allowClear: true,
+          width: '100%',
+          data: options,
+          language: {
+            noResults: function () {
+              return "ไม่พบข้อมูล";
+            }
+          }
+        }).on('select2:select', function (e) {
+        });
+      }
+    });
+    $.ajax({
+      type: "POST",
+      url: "././module/Report_Repair/data.php",
+      dataType: "json",
+      data: { load: "Issue" },
+      success: function (response) {
+        options = response;
+      }
+    });
+  });
+   
+    $("#R_FromDate, #R_ToDate").datepicker({
+      dateFormat: 'yy-mm-dd',
+      // timeFormat: 'HH:mm',
+      // controlType: 'select',
+      // oneLine: true,
+      // timeInput: true
+    });
+  
+    $("#btnSearch_Repair_Check").click(function () {
+      ReportItemSearch();
+    });
+  
+    function ReportItemSearch() {
+      var OldHtml = $("#btnSearch_Repair_Check").html();
+      var StartDate = $("#c_FromDate").val();
+      var EndDate = $("#c_ToDate").val();
+      var doc_no = $("#c_doc").val();
+      var types = $("#c_types").val();
+      var items = $("#c_items").val();
+      $("#btnSearch").html("<i class='fa fa-spinner fa-spin'></i>");
+      $("#tblReport").loading();
+      $("#tblReport tfoot").remove();
+      $.ajax({
+        type: "POST",
+        url: "././module/Report_Repair/data.php",
+        dataType: "json",
+        beforeSend: function () {
+          $("#btnSearch").html("<i class='fa fa-spinner fa-spin'>");
+        },
+        data: {
+          load: 'SearchCheck',
+          StartDate: StartDate,
+          EndDate: EndDate,
+          doc_no: doc_no,
+          types: types,
+          items: items,
+          status: $("#c_status").val(),
+          dept: $("#c_department option:selected").val()
+        },
+        success: function (data) {
+          myData = data;
+        $("#divReport2").addClass("hidden");
+        $("#divReport").removeClass("hidden");
+        $("#tblReport").DataTable().clear();
+        $("#tblReport").dataTable({
+          aaData: myData,
+          paging: false,
+          fixedHeader: true,
+          destroy: true,
+          processing: true,
+          scrollY: "65vh",
+          scrollCollapse: true,
+          scrollX: true,
+          select: true,
+          columnDefs: [
+            {
+              targets: [5],
+              width: 150,
+            },
+            {
+              targets: [9],
+              width: 300,
+            },
+            {
+              targets: [12],
+              width: 300,
+            },
+            {
+              targets: [18],
+              width: 150,
+            },
+
+          ],
+          columns: [
+            {
+              "data": "approve",
+              "className": "text-center",
+              "render": function (data, type, row, meta) {
+                if (data == 1) {
+                  return "<span class='text-green-500 text-2xl'>ปิดงาน</span>";
+                } else {
+                  return "<span class='text-red-500 text-2xl'>ดำเนินการ</span>";
+                }
+              }
+            },
+            {
+              "data": "DocNo",
+              "className": "text-center",
+            },
+            {
+              "data": "DateIssue.date",
+              "className": "text-center",
+              "render": function (data, type, row, meta) {
+                var ret = moment(data).format('DD/MM/YYYY');
+                return ret;
+              }
+            },
+            {
+              "data": "DateIssue.date",
+              "className": "text-center",
+              "render": function (data, type, row, meta) {
+                var ret = moment(data).format('HH:mm');
+                return ret;
+              }
+            },
+            {
+              "data": "Dept",
+              "className": "text-center",
+            },
+            {
+              "data": "Remark1",
+              "className": "text-center",
+            },
+            {
+              "data": "Item",
+              "className": "text-center",
+            },
+            {
+              "data": "Username",
+              "className": "text-center",
+            },
+            {
+              "data": "Type",
+              "className": "text-center",
+            },
+            {
+              "data": "issue",
+              "className": "text-center",
+            },
+            {
+              "data": "path",
+              "className": "text-center",
+              "render": function (data, type, row, meta) {
+             
+
+                  var ret = "<button class='btn btn-info' onclick='btnShowImage(\"" + row.DocNo + "\")'><i class='fa fa-photo'></i></button>";
+                  return ret;
+                
+              }
+            },
+            {
+              "data": "Status",
+              "className": "text-center",
+            },
+            {
+              "data": "DetailRepair",
+              "className": "text-center",
+            },
+            {
+              "data": "DueDate.date",
+              "className": "text-center",
+              "render": function (data, type, row, meta) {
+                if (!data) {
+                  return "";
+                } else {
+                  var ret = moment(data).format('DD/MM/YYYY');
+                  return ret;
+                }
+              }
+            },
+            {
+              "data": "DateRepairStart.date",
+              "className": "text-center",
+              "render": function (data, type, row, meta) {
+                if (!data) {
+                  return "";
+                } else {
+                  var ret = moment(data).format('DD/MM/YYYY');
+                  return ret;
+                }
+              }
+            },
+            {
+              "data": "DateRepairStart.date",
+              "className": "text-center",
+              "render": function (data, type, row, meta) {
+                if (!data) {
+                  return "";
+                } else {
+                  var ret = moment(data).format('HH:mm');
+                  return ret;
+                }
+              }
+            },
+            {
+              "data": "DateRepairEnd.date",
+              "className": "text-center",
+              "render": function (data, type, row, meta) {
+                if (!data) {
+                  return "";
+                } else {
+                  var ret = moment(data).format('DD/MM/YYYY');
+                  return ret;
+                }
+              }
+            },
+            {
+              "data": "DateRepairEnd.date",
+              "className": "text-center",
+              "render": function (data, type, row, meta) {
+                if (!data) {
+                  return "";
+                } else {
+                  var ret = moment(data).format('HH:mm');
+                  return ret;
+                }
+              }
+            },
+            {
+              "data": null,
+              "className": "text-center",
+              "render": function (data, type, row, meta) {
+                var StartDate = row.DateRepairStart?.date;
+                var EndDate = row.DateRepairEnd?.date;
+
+                if (StartDate && EndDate) {
+                  var ret = moment(EndDate).diff(moment(StartDate), 'minutes');
+                  return ret + ' นาที';
+                } else {
+                  return "";
+                }
+              }
+            },
+            {
+              "data": "Repairname",
+              "className": "text-center",
+            },
+            {
+              "data": "Remark2",
+              "className": "text-center",
+            },
+            ],
+          });
+          $("#tblReport").loading("stop");
+          $("#btnSearch").html(OldHtml);
+        },
+  
+        error: function (e) {
+          $("#tblReport").loading("stop");
+          $("#btnSearch").html(OldHtml);
+          console.log("There was an error with your request...");
+          console.log("error: " + JSON.stringify(e));
+        },
+      });
+    };
+
+    function btnShowImage(doc_no) {
+    $.ajax({
+      type: "POST",
+      url: "././module/Report_Repair/data.php",
+      dataType: "json",
+      data: {
+        load: 'showImage',
+        doc_no: doc_no,
+      },
+      success: function (data) {
+
+        if (data.length == 0) {
+          alert("ไม่พบรูปภาพ");
+          return;
+        }
+    
+        
+        $('#ModalImages').modal('show');
+    // Clear existing images
+    $('.carousel-inner').empty();
+    $('.carousel-indicators').empty();
+
+    // Append new images
+    data.forEach((img, index) => {
+        // Add indicator
+        $('.carousel-indicators').append(`
+            <li data-target="#imageCarousel" data-slide-to="${index}" class="${index === 0 ? 'active' : ''}"></li>
+        `);
+
+        // Add slide
+        $('.carousel-inner').append(`
+            <div class="item ${index === 0 ? 'active' : ''}">
+                <img src="module/Report_Repair_Open/upload/${img.path}" alt="Image" style="width: 100%;">
+            </div>
+        `);
+    });
+
+      },
+      error: function (e) {
+       alert("เกิดข้อผิดพลาดในการโหลดรูปภาพ");
+      }
+    })
+}
+  
+  </script>

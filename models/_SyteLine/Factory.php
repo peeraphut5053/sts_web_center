@@ -61,8 +61,199 @@ class Factory {
         return $rs0;
     }
 
-    
-    
+    function InsertReportRepair($r_department, $r_name, $r_item, $remark, $detail_issue) {
+        $year = date('y');
+        $cSql = new SqlSrv();
+        $sql = "SELECT TOP 1 DocNo FROM STS_repair WHERE DocNo LIKE 'R$year%' ORDER BY DocNo DESC";
+        $cSql = new SqlSrv();
+        $result = $cSql->SqlQuery($this->StrConn, $sql);
+        array_splice($result, count($result) - 1, 1);
+ 
+        if (count($result) > 0) {
+            $row = $result[0];
+            $lastDoc = $row['DocNo'];
+            // ดึงเลขลำดับจากเลขเอกสารล่าสุด (A2400001 -> 00001)
+            $lastNumber = intval(substr($lastDoc, -5));
+            $newNumber = $lastNumber + 1;
+        } else {
+            // ถ้าไม่มีเลขของปีนี้ เริ่มที่ 1
+            $newNumber = 1;
+        }
+        // สร้างเลขเอกสารใหม่
+        $docNumber = sprintf("R%s%05d", $year, $newNumber);
+        $query = "INSERT INTO STS_repair (DocNo,approve,DateIssue,Dept,Remark1,Item,Username,DetailIssue) OUTPUT inserted.* VALUES ('$docNumber', 0, GETDATE(),'$r_department','$remark','$r_item','$r_name','$detail_issue')";
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+
+    function GetReportRepair($StartDate, $EndDate, $doc_no, $types, $items) {
+        $cSql = new SqlSrv();
+        $query = "";
+
+        if ($doc_no != "") {
+            $query .= " AND DocNo = '$doc_no'";
+        }
+        if ($types != "") {
+            if ($types == "open") {
+                $query = $query . " and approve = 0";
+            } else if ($types == "close") {
+                $query = $query . " and approve = 1";
+            } else {
+
+            }
+        }
+        if ($items != "") {
+            $query = $query . " AND Type = '$items'";
+        }
+
+        if ($StartDate != "" && $EndDate != "") {
+            $query = $query . " AND FORMAT(DateIssue, 'yyyy-MM-dd') BETWEEN '$StartDate' AND '$EndDate'";
+        }
+        $sql = "select re.* , iss.issue, department = wc.[description]
+from STS_repair re inner join STS_repair_issue iss
+    on iss.issuenum = re.detailissue
+    left join wc_mst wc on wc.wc = re.Dept where 1=1 $query";
+        $rs0 = $cSql->SqlQuery($this->StrConn, $sql);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+
+    function StartRepair($doc_no, $item, $status, $detail_repair, $repair_name, $remark2, $due_date) {
+        $cSql = new SqlSrv();
+        $sql = "UPDATE STS_repair SET Status = '$status', Type = '$item', DetailRepair = '$detail_repair', Repairname = '$repair_name', Remark2 = '$remark2', DueDate = '$due_date' WHERE DocNo = '$doc_no'";
+        $rs0 = $cSql->SqlQuery($this->StrConn, $sql);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+
+    function EndRepair($doc_no, $status, $detail_repair, $repair_name, $remark2) {
+        $cSql = new SqlSrv();
+        $sql = "UPDATE STS_repair SET Status = '$status', DateRepairEnd = GETDATE(), DetailRepair = '$detail_repair', Repairname = '$repair_name', Remark2 = '$remark2', approve = 1 WHERE DocNo = '$doc_no'";
+        $rs0 = $cSql->SqlQuery($this->StrConn, $sql);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+
+    function GetDataDocNo() {
+        $cSql = new SqlSrv();
+        $sql = "select distinct DocNo
+from STS_repair
+where DocNo like 'R%'
+order by DocNo desc";
+        $rs0 = $cSql->SqlQuery($this->StrConn, $sql);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+
+    function SearchDocNo($doc_no) {
+        $cSql = new SqlSrv();
+        $sql = "SELECT * FROM STS_repair WHERE DocNo = '$doc_no'";
+        $rs0 = $cSql->SqlQuery($this->StrConn, $sql);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+
+    function UpdateReportRepair($doc_no,$r_department, $r_item, $remark, $detail_issue,$time) {
+
+        $sql = "UPDATE STS_repair SET Dept = '$r_department', Item = '$r_item', Remark1 = '$remark', DetailIssue = '$detail_issue' WHERE DocNo = '$doc_no'";
+
+        if ($time == 'start_repair') {
+            $sql = "UPDATE STS_repair SET Dept = '$r_department', Item = '$r_item', Remark1 = '$remark', DetailIssue = '$detail_issue', DateRepairStart = GETDATE() WHERE DocNo = '$doc_no'";
+        }
+
+        if ($time == 'end_repair') {
+            $sql = "UPDATE STS_repair SET Dept = '$r_department', Item = '$r_item', Remark1 = '$remark', DetailIssue = '$detail_issue', DateRepairEnd = GETDATE(), approve = 1 WHERE DocNo = '$doc_no'";
+        }
+
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $sql);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+
+    function GetReportRepairV2($StartDate, $EndDate, $doc_no, $types, $items, $status, $dept) {
+        $cSql = new SqlSrv();
+        $query = "";
+
+        if ($doc_no != "") {
+            $query .= " AND DocNo = '$doc_no'";
+        }
+        if ($types != "") {
+            if ($types == "open") {
+                $query = $query . " and approve = 0";
+            } else if ($types == "close") {
+                $query = $query . " and approve = 1";
+            } else {
+
+            }
+        }
+        if ($items != "") {
+            $query = $query . " AND Type = '$items'";
+        }
+
+        if ($status != "") {
+            $query = $query . " AND Status = '$status'";
+        }
+        if ($dept != "") {
+            $query = $query . " AND re.Dept = '$dept'";
+        }
+
+        if ($StartDate != "" && $EndDate != "") {
+            $query = $query . " AND FORMAT(DateIssue, 'yyyy-MM-dd') BETWEEN '$StartDate' AND '$EndDate'";
+        }
+
+        $sql = "select re.* , iss.issue, department = wc.[description]
+from STS_repair re inner join STS_repair_issue iss
+    on iss.issuenum = re.detailissue
+    left join wc_mst wc on wc.wc = re.Dept where 1=1 $query";
+        $rs0 = $cSql->SqlQuery($this->StrConn, $sql);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+
+    function GetDepartment() {
+        $cSql = new SqlSrv();
+        $sql = "select wc,[description] 
+from wc_mst
+where [description] not like '%กลุ่ม%' and [description] <> 'ลบ'
+  and [description] not like '%ยกเลิก%'
+  and [description] not like 'สถานี Forming (%)'
+union
+select wc=wc, [description]=wc
+from STS_repair_wc";
+        $rs = $cSql->SqlQuery($this->StrConn, $sql);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+    function GetIssue() {
+        $cSql = new SqlSrv();
+        $sql = "select wc.wc, iss.* 
+from STS_repair_issue iss 
+ inner join STS_repair_issue_wc wc
+ on iss.issuenum = wc.issuenum
+order by wc, issuenum";
+        $rs = $cSql->SqlQuery($this->StrConn, $sql);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+    function UploadImagesReportRepair($doc_no, $upload_path) {
+        $cSql = new SqlSrv();
+        $sql = "INSERT INTO STS_repair_pic (DocNo, path) VALUES ('$doc_no', '$upload_path')";
+        $rs = $cSql->SqlQuery($this->StrConn, $sql);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+    function SelectReportRepairImage($doc_no) {
+        $cSql = new SqlSrv();
+        $sql = "SELECT * FROM STS_repair_pic WHERE DocNo = '$doc_no'";
+        $rs = $cSql->SqlQuery($this->StrConn, $sql);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
 }
 
 
