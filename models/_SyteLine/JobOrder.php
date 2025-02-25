@@ -610,7 +610,7 @@ class JOBORDER {
 
     function tag_scan($tag_id) {
         $query = " select  MV_Bc_Tag.*,isnull(MV_Bc_Tag.qty2,1) as qty2,item_mst.description FROM MV_Bc_Tag LEFT JOIN item_mst  on MV_Bc_Tag.item = item_mst.item"
-                . " where (MV_Bc_Tag.receipt = 0 or MV_Bc_Tag.receipt is null) and  MV_Bc_Tag.id = '$tag_id' ";
+                . " where MV_Bc_Tag.id = '$tag_id' ";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);
@@ -619,20 +619,23 @@ class JOBORDER {
 
     function process_job_receipt($job, $suffix, $item, $operNum, $qty, $qty2, $lot, $loc, $transDate, $tag_id) {
 
-        $query = " EXEC SP_WebApp_JobReceiptPostSp @SJob='$job',"
-                . " @SSuffix  = $suffix,"
+        $query = " EXEC RC_STSJobReceiptProcessSp @SJob='$job',"
+                . " @SSuffix  = 0,"
                 . " @SItem ='$item',"
-                . " @SOperNum  = $operNum ,"
-                . " @SQty = $qty ,"
+                . " @SOperNum  = 10,"
+                . " @SQty = $qty,"
                 . " @SQty2   = $qty2,"
                 . " @SLot   ='$lot',"
                 . " @SLoc ='$loc',"
-                . " @STransDate = '" . date("Y-m-d") . " 00:00:00.000',"
-                . " @TagId = '$tag_id' ";
+                . " @STransDate = '" . date("Y-m-d H:i:s") . "',"
+                . " @TagId = '$tag_id',"
+                . " @UserName = 'admin',"
+                . " @msg = NULL,"
+                . " @UpStat =  NULL";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);
-        return 1;
+        return $rs0;
     }
 
     function check_process_job_receipt($lot) {
@@ -675,6 +678,75 @@ class JOBORDER {
 
         array_splice($rs0, count($rs0) - 1, 1);
         return $rs0;
+    }
+
+    function GetJob($job) {
+        $query = "select job.item, jobname=job.description, QtyOrd=job.qty_released, QtyRcvd=isnull(job.qty_complete,0),DocRef=isnull(job.Uf_sts_job,'')
+  ,jobr.wc, wcname=wc.description--, wcg.rgid
+  , rgid = STUFF((SELECT ',' + w.rgid
+            FROM wcresourcegroup_mst w
+   where jobr.wc = w.wc
+            FOR XML PATH('')
+            ), 1, 1, '')
+from job_mst job 
+  inner join jobroute_mst jobr on job.job = jobr.job and oper_num = convert(int,right('$job',2))
+  inner join wc_mst wc on jobr.wc = wc.wc
+  inner join wcresourcegroup_mst wcg on wcg.wc = wc.wc
+where job.stat = 'R' and job.type ='J'
+  and job.job = left('$job',10)
+group by job.item, job.description, job.qty_released, isnull(job.qty_complete,0),isnull(job.Uf_sts_job,'')
+  ,jobr.wc, wc.description";
+
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+
+    function GetTag($job, $tag) {
+        $query = "select tag_status, mv.item, itemName = item.description, lt.loc, mv.lot, mv.qty1, UM = isnull(mv.um1,item.u_m)
+  , qty2 = isnull(mv.qty2,0), UM2 = isnull(mv.um2,''), DocRef=isnull(mv.uf_sts_job,'')
+  , QtyRem=sum(isnull(case when units='U' then (job.qty_released * jm.matl_qty) else jm.matl_qty end,0))
+  , QtyIss=sum(isnull(qty_issued,0))
+from Mv_Bc_Tag mv
+  inner join item_mst as item on item.item=mv.item
+  inner join lot_loc_mst as lt on lt.item=mv.item
+         and lt.lot=mv.lot
+  inner join jobmatl_mst jm on mv.item = jm.item and jm.ref_type = 'I'
+  inner join job_mst as job on job.job=jm.job
+           and job.suffix=jm.suffix and job.type='J'
+where mv.id = '$tag' and mv.active = 1 and mv.ship_stat = 0
+   and jm.job = left('$job',10)
+   and jm.oper_num = convert(int,right('$job',2))
+   and jm.suffix = convert(smallint,substring('$job',12,1))
+group by tag_status, mv.item, item.description, lt.loc, mv.lot, mv.qty1,  isnull(mv.um1,item.u_m)
+  ,isnull(mv.qty2,0), isnull(mv.um2,''), isnull(mv.uf_sts_job,'')";
+
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+
+    function MaterialProcess($job, $suffix, $item, $operNum, $qty1, $qty2, $lot, $loc, $doc) {
+
+        $date = date('Y-m-d H:i:s');
+
+        $query = " EXEC [dbo].[RC_STSJobMatlTransactionSp] @Job = '$job',"
+                . " @Suffix = $suffix,"
+                . " @OperNum = $operNum,"
+                . " @Item = '$item',"
+                . " @Loc = '$loc',"
+                . " @Lot = '$lot',"
+                . " @TransDate = '$date',"
+                . " @Qty = $qty1,"
+                . " @DocumentNum = '$doc',"
+                . " @Qty2 = $qty2,"
+                . " @msg = NULL";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $query;
     }
 
     function Getmatltran_mst($job) {
@@ -955,15 +1027,16 @@ class JOBORDER {
     }
 
     function LocationByDo($do) {
-        $query = " select distinct location_mst.loc ,location_mst.description  
+        $query = "select distinct location_mst.loc ,location_mst.description  
         from mv_bc_tag tag 
           inner join job_mst on tag.job = job_mst.job 
-          left join AIT_Preship_Do_Seq preship on job_mst.ord_num = preship.co_num and job_mst.ord_line = preship.co_line 
+          inner join AIT_Preship_Do_Seq preship on job_mst.ord_num = preship.co_num and job_mst.ord_line = preship.co_line 
           inner JOIN STS_qty_move_line on STS_qty_move_line.lot = tag.lot and STS_qty_move_line.toloc like 'CL%' 
           inner JOIN STS_qty_move_hrd on STS_qty_move_hrd.doc_num = STS_qty_move_line.doc_num and STS_qty_move_hrd.loc like 'CL%' and STS_qty_move_hrd.doc_type ='Ship'
           inner join STS_list_of_do_group gr on gr.do_group_list like '%'+preship.do_num+'%' and preship.do_num <> '1'
-          inner join location_mst on location_mst.loc = STS_qty_move_hrd.loc
-        where gr.do_group_name = '$do'    ";
+          inner join location_mst on location_mst.loc like 'CL%' and location_mst.loc = STS_qty_move_hrd.loc
+    inner join co_ship_mst cosh on cosh.do_num = preship.do_num and cosh.co_num = preship.co_num and cosh.co_line = preship.co_line
+        where gr.do_group_name = '$do' ";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);
