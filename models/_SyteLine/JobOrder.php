@@ -712,7 +712,7 @@ from Mv_Bc_Tag mv
   inner join item_mst as item on item.item=mv.item
   inner join lot_loc_mst as lt on lt.item=mv.item
          and lt.lot=mv.lot
-  inner join jobmatl_mst jm on mv.item = jm.item and jm.ref_type = 'I'
+  inner join jobmatl_mst jm on mv.item = jm.item and jm.ref_type = 'J'
   inner join job_mst as job on job.job=jm.job
            and job.suffix=jm.suffix and job.type='J'
 where mv.id = '$tag' and mv.active = 1 and mv.ship_stat = 0
@@ -746,7 +746,7 @@ group by tag_status, mv.item, item.description, lt.loc, mv.lot, mv.qty1,  isnull
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);
-        return $query;
+        return $rs0;
     }
 
     function Getmatltran_mst($job) {
@@ -1527,5 +1527,81 @@ WHERE id = '$id' ";
         array_splice($rs0, count($rs0) - 1, 1);
         return $rs0;
     }
+
+    function PlatedOrderReport() {
+        $query = " EXEC MV_PLATED_ORDER_REPORT @TransactionDateStarting= NULL,"
+                . " @TransactionDateEnding  = NULL,"
+                . " @JobStarting = NULL,"
+                . " @JobEnding = NULL,"
+                . " @SuffixStarting = 0000,"
+                . " @SuffixEnding = 9999,"
+                . " @ItemStarting = 'FC074N0060000-M2AS040F02100H',"
+                . " @ItemEnding = 'FC074N0060000-M2AS040F02100H',"
+                . " @JobStatus = 'FCRHS',"
+                . " @JobStsStart = NULL,"
+                . " @JobStsEnd = NULL,"
+                . " @OperStart = NULL,"
+                . " @OperEnd = NULL";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+    function PackingOrderReport() {
+        $query = " EXEC MV_PACKING_ORDER_REPORT @TransactionDateStarting= NULL,"
+                . " @TransactionDateEnding  = NULL,"
+                . " @JobStarting = NULL,"
+                . " @JobEnding = NULL,"
+                . " @SuffixStarting = 0000,"
+                . " @SuffixEnding = 9999,"
+                . " @ItemStarting = 'FC074N0060000-M2AS040F02100H',"
+                . " @ItemEnding = 'FC074N0060000-M2AS040F02100H',"
+                . " @JobStatus = 'R'";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+    function ProductionOrderReport() {
+        $query = " EXEC MV_PRODUCTION_ORDER_REPORT @TransactionDateStarting= NULL,"
+                . " @TransactionDateEnding  = NULL,"
+                . " @JobStarting = NULL,"
+                . " @JobEnding = NULL,"
+                . " @SuffixStarting = 0000,"
+                . " @SuffixEnding = 9999,"
+                . " @ItemStarting = 'FC074N0060000-M2AS040F02100H',"
+                . " @ItemEnding = 'FC074N0060000-M2AS040F02100H',"
+                . " @JobStatus = 'FCRHS'";
+                $query2 = " EXEC MV_PRODUCTION_ORDER_REPORT_sub @TransactionDateStarting= NULL,"
+                . " @TransactionDateEnding  = NULL,"
+                . " @JobStarting = NULL,"
+                . " @JobEnding = NULL,"
+                . " @SuffixStarting = 0000,"
+                . " @SuffixEnding = 9999,"
+                . " @ItemStarting = 'FC074N0060000-M2AS040F02100H',"
+                . " @ItemEnding = 'FC074N0060000-M2AS040F02100H',"
+                . " @JobStatus = 'FCRHS'";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query2);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+    function HotRollReport() {
+        $query = " EXEC MV_HOT_ROLL_SLIT_REPORT @TransactionDateStarting= NULL,"
+                . " @TransactionDateEnding  = NULL,"
+                . " @JobStarting = NULL,"
+                . " @JobEnding = NULL,"
+                . " @ItemStarting = NULL,"
+                . " @ItemEnding = NULL";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+    
     
 }
