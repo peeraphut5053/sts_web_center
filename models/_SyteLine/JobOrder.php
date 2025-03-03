@@ -712,7 +712,7 @@ from Mv_Bc_Tag mv
   inner join item_mst as item on item.item=mv.item
   inner join lot_loc_mst as lt on lt.item=mv.item
          and lt.lot=mv.lot
-  inner join jobmatl_mst jm on mv.item = jm.item and jm.ref_type = 'J'
+  inner join jobmatl_mst jm on mv.item = jm.item and jm.ref_type in ('J', 'I')
   inner join job_mst as job on job.job=jm.job
            and job.suffix=jm.suffix and job.type='J'
 where mv.id = '$tag' and mv.active = 1 and mv.ship_stat = 0
@@ -1531,12 +1531,12 @@ WHERE id = '$id' ";
     function PlatedOrderReport() {
         $query = " EXEC MV_PLATED_ORDER_REPORT @TransactionDateStarting= NULL,"
                 . " @TransactionDateEnding  = NULL,"
-                . " @JobStarting = NULL,"
-                . " @JobEnding = NULL,"
+                . " @JobStarting = 'A532502005',"
+                . " @JobEnding = 'A532502005',"
                 . " @SuffixStarting = 0000,"
                 . " @SuffixEnding = 9999,"
-                . " @ItemStarting = 'FC074N0060000-M2AS040F02100H',"
-                . " @ItemEnding = 'FC074N0060000-M2AS040F02100H',"
+                . " @ItemStarting = NULL,"
+                . " @ItemEnding = NLL,"
                 . " @JobStatus = 'FCRHS',"
                 . " @JobStsStart = NULL,"
                 . " @JobStsEnd = NULL,"
@@ -1584,7 +1584,7 @@ WHERE id = '$id' ";
                 . " @ItemEnding = 'FC074N0060000-M2AS040F02100H',"
                 . " @JobStatus = 'FCRHS'";
         $cSql = new SqlSrv();
-        $rs = $cSql->SqlQuery($this->StrConn, $query2);
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
         return $rs;
     }
