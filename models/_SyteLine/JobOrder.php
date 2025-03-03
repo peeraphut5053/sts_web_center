@@ -1644,10 +1644,7 @@ where [description] not like '%กลุ่ม%' and [description] <> 'ลบ'
         }
         
         // Build the WHERE clause only if we have status conditions
-        if (!empty($statusConditions)) {
-            // Use prepared statement format with placeholders
-            $wh .= " and stat IN (" . implode(',', array_map(fn($val) => "'$val'", $statusConditions)) . ")";
-        }
+     
 
         $query = "select distinct job_mst.job, job_mst.stat, job_mst.item, jr.wc,jo.no,jo.Createdate
 FROM            job_mst 
