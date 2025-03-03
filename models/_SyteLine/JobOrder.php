@@ -1531,13 +1531,13 @@ WHERE id = '$id' ";
     function PlatedOrderReport() {
         $query = " EXEC MV_PLATED_ORDER_REPORT @TransactionDateStarting= NULL,"
                 . " @TransactionDateEnding  = NULL,"
-                . " @JobStarting = 'A532502005',"
-                . " @JobEnding = 'A532502005',"
+                . " @JobStarting = NULL,"
+                . " @JobEnding = NULL,"
                 . " @SuffixStarting = 0000,"
                 . " @SuffixEnding = 9999,"
                 . " @ItemStarting = NULL,"
                 . " @ItemEnding = NLL,"
-                . " @JobStatus = 'FCRHS',"
+                . " @JobStatus = 'R',"
                 . " @JobStsStart = NULL,"
                 . " @JobStsEnd = NULL,"
                 . " @OperStart = NULL,"
@@ -1548,16 +1548,17 @@ WHERE id = '$id' ";
         return $rs;
     }
 
-    function PackingOrderReport() {
-        $query = " EXEC MV_PACKING_ORDER_REPORT @TransactionDateStarting= NULL,"
+    function PackingOrderReport($item, $wc) {
+        $query = " EXEC MV_PACKING_ORDER_web @TransactionDateStarting= NULL,"
                 . " @TransactionDateEnding  = NULL,"
                 . " @JobStarting = NULL,"
                 . " @JobEnding = NULL,"
                 . " @SuffixStarting = 0000,"
                 . " @SuffixEnding = 9999,"
-                . " @ItemStarting = 'FC074N0060000-M2AS040F02100H',"
-                . " @ItemEnding = 'FC074N0060000-M2AS040F02100H',"
-                . " @JobStatus = 'R'";
+                . " @ItemStarting = " . ($item == null ? "NULL" : "'$item'") . ","
+                . " @ItemEnding = " . ($item == null ? "NULL" : "'$item'") . ","
+                . " @wcStarting = " . ($wc == null ? "NULL" : "'$wc'") . ","
+                . " @wcEnding = " . ($wc == null ? "NULL" : "'$wc'") . "";
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
@@ -1600,6 +1601,86 @@ WHERE id = '$id' ";
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
         return $rs;
+    }
+
+    function GetWorkCenter() {
+        $query = "select wc,[description] 
+from wc_mst
+where [description] not like '%กลุ่ม%' and [description] <> 'ลบ'
+  and [description] not like '%ยกเลิก%'
+  and [description] not like 'สถานี Forming (%)'";
+
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+    function SearchJobOrderReport($Item , $wc, $Firm, $Complete, $Stopped, $Released) {
+
+        $wh = '';
+
+        if ($Item != '') {
+            $wh .= " and item = '" . $Item . "'";
+        }
+        if ($wc != '') {
+            $wh .= " and wc = '" . $wc . "'";
+        }
+
+        $statusConditions = [];
+
+        // Add each status condition to the array if it's set
+        if ($Firm != '') {
+            $statusConditions[] = $Firm;
+        }
+        if ($Complete != '') {
+            $statusConditions[] = $Complete;
+        }
+        if ($Stopped != '') {
+            $statusConditions[] = $Stopped;
+        }
+        if ($Released != '') {
+            $statusConditions[] = $Released;
+        }
+        
+        // Build the WHERE clause only if we have status conditions
+        if (!empty($statusConditions)) {
+            // Use prepared statement format with placeholders
+            $wh .= " and stat IN (" . implode(',', array_map(fn($val) => "'$val'", $statusConditions)) . ")";
+        }
+
+        $query = "select distinct job_mst.job, job_mst.stat, job_mst.item, jr.wc,jo.no,jo.Createdate
+FROM            job_mst 
+    inner JOIN jobroute_mst jr ON job_mst.job = jr.job 
+    left JOIN STS_curr_job_order jo ON job_mst.job = jo.job
+where len(rtrim(ltrim(job_mst.job))) = 10
+  and job_mst.stat <> 'H' $wh 
+order by job_mst.job";
+
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+    function SaveJobOrder($job, $job_order) {
+
+        $query = "INSERT INTO STS_curr_job_order (job,no) VALUES ('$job','$job_order')";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+        
+    }
+
+    function CloseJobOrder($job) {
+
+        $query = "DELETE FROM STS_curr_job_order WHERE job = '$job'";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+        
     }
 
     

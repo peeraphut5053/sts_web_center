@@ -1,0 +1,396 @@
+<style>
+    .modal-dialog {
+    width: 70%; /* หรือกำหนดเป็น px เช่น 1200px */
+    max-width: 1200px; /* ป้องกันไม่ให้กว้างเกินไป */
+  }
+      /* ซ่อน Checkbox ดั้งเดิม */
+.custom-checkbox input[type="checkbox"] {
+display: none;
+}
+
+/* ตำแหน่งและขนาดของ Checkbox */
+.custom-checkbox {
+display: inline-flex;
+align-items: center;
+cursor: pointer;
+font-size: 16px;
+margin: 3px;
+}
+
+/* สไตล์สำหรับ Checkmark */
+.custom-checkbox .checkmark {
+width: 20px;
+height: 20px;
+background-color: #ccc;
+border-radius: 4px;
+display: inline-block;
+margin-right: 10px;
+position: relative;
+transition: background-color 0.3s;
+}
+
+/* สไตล์สำหรับ Checkbox เมื่อถูกเลือก */
+.custom-checkbox input[type="checkbox"]:checked + .checkmark {
+background-color: #4CAF50;
+}
+
+/* สไตล์สำหรับเครื่องหมายถูก */
+.custom-checkbox .checkmark::after {
+content: "";
+position: absolute;
+display: none;
+}
+
+/* แสดงเครื่องหมายถูกเมื่อ Checkbox ถูกเลือก */
+.custom-checkbox input[type="checkbox"]:checked + .checkmark::after {
+display: block;
+}
+
+/* รูปแบบของเครื่องหมายถูก */
+.custom-checkbox .checkmark::after {
+left: 8px;
+top: 3px;
+width: 5px;
+height: 10px;
+border: solid white;
+border-width: 0 3px 3px 0;
+transform: rotate(45deg);
+}
+.loading-spinner{
+width:30px;
+height:30px;
+border:2px solid indigo;
+border-radius:50%;
+border-top-color:#0001;
+display:inline-block;
+animation:loadingspinner .7s linear infinite;
+}
+  </style>
+  <div class="row">
+      <div>
+        <h1 class="text-center">Job Order Report</h1>
+      </div>
+      <div class="col-lg-2">
+        <div class="input-group">
+          <div class="input-group-addon">Item</div>
+          <input type="text" class="form-control txt-filter" id="job_item">
+        </div>
+      </div>
+      <div class="col-lg-3">
+        <div class="input-group w-full">
+          <div class="input-group-addon">Work Center</div>
+          <select class="form-control txt-filter" id="job_wc">
+            <option value=""></option>
+          </select>
+        </div>
+      </div>
+      <div class="col-lg-4 col-search">
+        <div class="flex items-center">
+            <label class="custom-checkbox">
+                <input type="checkbox" name='Firm' id="job_firm" />
+                <span class="checkmark"></span>
+                 Firm
+            </label>
+            <label class="custom-checkbox">
+                <input type="checkbox" name='Complete' id="job_complete" />
+                <span class="checkmark"></span>
+                 Complete
+            </label>
+            <label class="custom-checkbox">
+                <input type="checkbox" name='Stopped' id="job_stopped" />
+                <span class="checkmark"></span>
+                 Stopped
+            </label>
+            <label class="custom-checkbox">
+                <input type="checkbox" name='Released' id="job_released" />
+                <span class="checkmark"></span>
+                 Released
+            </label>
+        </div>
+    </div> 
+      <div class="col-lg-2">
+        <button id="btnSearch_Repair_Check" class="btn btn-info"><i class="fa fa-searh"></i>&nbsp;ค้นหา</button>
+      </div>
+    </div>
+    
+    <div class="row" id="divReport">
+      <table width="100%" class="table table-condensed table-bordered table-striped" id="tblReport">
+        <thead>
+          <tr>
+            <th>Job</th>
+            <th>Status</th>
+            <th>Item</th>
+            <th>work Center</th>
+            <th>Order</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+      </table>
+    </div>
+    <div class="modal fade bd-example-modal-lg" id="ModalJobReport" role="dialog" aria-labelledby="myLargeModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="exampleModalLabel">เปิด Job Order</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+      </div>
+      <div class="modal-body">
+        <div class="flex justify-start items-center mb-5">
+          <div class="input-group basis-2/4">
+            <div class="input-group-addon">Job</div>
+            <input type="text" autocomplete="off" class="form-control" id="job" disabled>
+          </div>
+        </div>
+        <div class="flex justify-start items-center mb-5">
+          <div class="input-group basis-2/4">
+            <div class="input-group-addon">ลำดับ</div>
+            <input type="text" autocomplete="off" class="form-control" id="job_order">
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="btnJob">บันทึก</button>
+      </div>
+    </div>
+  </div>
+</div>
+    <script type="text/javascript">
+
+$(document).ready(function () {
+    $.ajax({
+      type: "POST",
+      url: "././module/RPT_Job_Order_Report/data.php",
+      dataType: "json",
+      data: { load: "wc" },
+      success: function (response) {
+
+        const options = response.map((item) => ({
+          id: item.wc,
+          text: item.wc + " - " + item.description
+        }))
+        
+        var $select = $("#job_wc");
+        $select.select2({
+          placeholder: 'Work Center',
+          allowClear: true,
+          width: '100%',
+          data: options,
+          language: {
+            noResults: function () {
+              return "ไม่พบข้อมูล";
+            }
+          }
+        }).on('select2:select', function (e) {
+        });
+      }
+    });
+  });
+  
+      $("#btnSearch_Repair_Check").click(function () {
+        ReportItemSearch();
+      });
+    
+      function ReportItemSearch() {
+        var OldHtml = $("#btnSearch_Repair_Check").html();
+        var Item = $("#job_item").val();
+        var wc = $("#job_wc").val();
+        var Firm = $("#job_firm").is(":checked");
+        var Complete = $("#job_complete").is(":checked");
+        var Stopped = $("#job_stopped").is(":checked");
+        var Released = $("#job_released").is(":checked");
+
+        if (Item == "" && wc == "" && Firm == false && Complete == false && Stopped == false && Released == false) {
+          alert("กรุณากรอกข้อมูล");
+          return false;
+        }
+ 
+        $("#btnSearch").html("<i class='fa fa-spinner fa-spin'></i>");
+        $("#tblReport").loading();
+        $("#tblReport tfoot").remove();
+        $.ajax({
+          type: "POST",
+          url: "././module/RPT_Job_Order_Report/data.php",
+          dataType: "json",
+          beforeSend: function () {
+            $("#btnSearch").html("<i class='fa fa-spinner fa-spin'>");
+          },
+          data: {
+            load: 'Search',
+            Item: Item,
+            wc: wc,
+            Firm: Firm ? 'F' : '',
+            Complete: Complete ? 'C' : '',
+            Stopped: Stopped ? 'S' : '',
+            Released: Released ? 'R' : '',
+          },
+          success: function (data) {
+    
+          $("#tblReport").DataTable().clear();
+          $("#tblReport").dataTable({
+            aaData: data,
+            paging: false,
+            fixedHeader: true,
+            destroy: true,
+            processing: true,
+            scrollY: "65vh",
+            scrollCollapse: true,
+            scrollX: true,
+            select: true,
+            columnDefs: [
+              {
+                targets: [2],
+                width: 300,
+              }
+            ],
+            columns: [
+              {
+                "data": "job",
+                "className": "text-center",
+              },
+              {
+                "data": "stat",
+                "className": "text-center",
+              },
+              {
+                "data": "item",
+                "className": "text-center",
+              },
+              {
+                "data": "wc",
+                "className": "text-center",
+              },
+              {
+                "data": "no",
+                "className": "text-center",
+              },
+              {
+                "data": "Createdate.date",
+                "className": "text-center",
+                "render": function (data) {
+                    if (data) {
+                        return moment(data).format('DD/MM/YYYY');
+                    } else {
+                        return '';
+                    }
+                }
+              },
+              ],
+              dom:
+            "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+            "<'row'<'col-md-12'tr>>" +
+            "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+          buttons: [
+           {
+              text: `<button type="button" class="btn btn-success">เปิด Job Order</button>`,
+              action: function (e, dt, node, config) {
+                // on selected
+                let selected = Array.from(dt.rows('.selected').data());
+                if (selected.length == 0) {
+                  alert("กรุณาเลือก Job Order ที่ต้องการเปิด");
+                  return false;
+                }
+
+                if (selected[0].stat !== 'R') {
+                    alert("กรุณาเลือก Job Order ที่มีสถานะเป็น Released");
+                    return false;
+                }
+
+                if (selected[0].Createdate) {
+                    alert("Job Order นี้ได้เปิดไปแล้ว");
+                    return false;
+                }
+
+                $("#job").val(selected[0].job);
+                $("#ModalJobReport").modal("show");
+              }
+            },
+            {
+              text: `<button type="button" class="btn btn-danger">ปิด Job Order</button>`,
+              action: function (e, dt, node, config) {
+                // on selected
+                let selected = Array.from(dt.rows('.selected').data());
+                if (selected.length == 0) {
+                  alert("กรุณาเลือก Job Order ที่ต้องการปิด");
+                  return false;
+                }
+
+                if (!selected[0].Createdate) {
+                    alert("Job Order นี้ยังไม่ได้เปิด");
+                    return false;
+                }
+                
+                if (window.confirm("คุณต้องการปิด Job Order นี้หรือไม่")) {
+                   $.ajax({
+                   type: "POST",
+                   url: "././module/RPT_Job_Order_Report/data.php",
+                   dataType: "json",
+                   beforeSend: function () {
+                   },
+                   data: {
+                     load: 'Close',
+                     job: selected[0].job,
+                   },
+                   success: function (data) {
+                       alert("ปิด Job Order สําเร็จ");
+                       ReportItemSearch();
+                    },
+                   error: function (e) {
+                     console.log("There was an error with your request...");
+                     console.log("error: " + JSON.stringify(e));
+                   }
+                   });
+                }
+              }
+            }
+          ],
+            });
+            $("#tblReport").loading("stop");
+            $("#btnSearch").html(OldHtml);
+
+          },
+    
+          error: function (e) {
+            $("#tblReport").loading("stop");
+            $("#btnSearch").html(OldHtml);
+            console.log("There was an error with your request...");
+            console.log("error: " + JSON.stringify(e));
+          },
+        });
+      }
+
+      $("#btnJob").click(function () {
+        // get data selected 
+        var job = $("#job").val();
+        var job_order = $("#job_order").val();
+
+        $.ajax({
+          type: "POST",
+          url: "././module/RPT_Job_Order_Report/data.php",
+          dataType: "json",
+          beforeSend: function () {
+          },
+          data: {
+            load: 'Job',
+            job: job,
+            job_order: job_order,
+          },
+          success: function (data) {
+            $("#ModalJobReport").modal("hide");
+            $("#job").val('');
+            $("#job_order").val('');
+            alert("เปิด Job Order สําเร็จ");
+            ReportItemSearch();
+          },
+    
+          error: function (e) {
+            alert("เปิด Job Order ไม่สําเร็จ");
+          },
+
+        });
+      });
+    
+    </script>

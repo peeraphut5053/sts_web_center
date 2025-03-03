@@ -1,0 +1,259 @@
+<div class="row" style="border-bottom:solid 1px #e8e8e8;">  
+    <div class="row">
+        <h3 style="padding-left:5px;">Packing Order Report</h3>
+    </div>
+</div>
+
+   <div class="row"> 
+    <div class="col-lg-3 col-search">
+            <div class="input-group">
+              <div class="input-group-addon">Item</div>
+              <input type="text" class="form-control txt-filter" id="packing_item">
+            </div>
+    </div>
+    <div class="col-lg-3 col-search">
+        <div class="input-group w-full">
+            <div class="input-group-addon">Work Center</div>
+            <select class="form-control txt-filter" id="wc_packing">
+              <option value=""></option>
+            </select>
+          </div>
+    </div>
+    <div class="col-lg-1 col-md-2 col-sm-1 col-xs-6  col-search">
+        <button id="BtnPackingSearch" class="btn btn-info"><i class="fa fa-search"></i>Search</button>
+    </div>
+</div>
+
+    <div class="row" id="divReportAll">
+        <table class="table table-condensed table-bordered table-striped" id="tblReportPack">
+            <thead>
+                <tr>
+                    <th>ลำดับ</th>
+                    <th>Item</th>
+                    <th>WC</th>
+                    <th>CUST</th>
+                    <th>STS PO</th>
+                    <th>PORT</th>
+                    <th>SIZE</th>
+                    <th>SPEC</th>
+                    <th>GRADE</th>
+                    <th>SCH.</th>
+                    <th>Length</th>
+                    <th>Type</th>
+                    <th>JOB Barcode</th>
+                    <th>CS/B'DL</th>
+                    <th>B'DL</th>
+                    <th>ผลิตแล้ว</th>
+                    <th>สั่งผลิต</th>
+                    <th>Note</th>
+                </tr>
+        </table>
+    </div>
+
+<script type="text/javascript">
+
+$(document).ready(function () {
+    $.ajax({
+      type: "POST",
+      url: "././module/RPT_Job_Order_Report/data.php",
+      dataType: "json",
+      data: { load: "wc" },
+      success: function (response) {
+
+        const options = response.map((item) => ({
+          id: item.wc,
+          text: item.wc + " - " + item.description
+        }))
+        
+        var $select = $("#wc_packing");
+        $select.select2({
+          placeholder: 'Work Center',
+          allowClear: true,
+          width: '100%',
+          data: options,
+          language: {
+            noResults: function () {
+              return "ไม่พบข้อมูล";
+            }
+          }
+        }).on('select2:select', function (e) {
+        });
+      }
+    });
+  });
+
+    $("#BtnPackingSearch").click(function () {
+            ReportAllSearch();
+    });
+
+    function roundToTwo(num) {
+    return Math.round((num + 1e-8) * 100) / 100;
+   }
+
+    function ReportAllSearch() {
+        var OldHtml = $("#BtnPackingSearch").html();
+        var item = $("#packing_item").val();
+        var wc = $("#wc_packing").val();
+
+        if (wc == "") {
+            alert("กรุณาเลือก Work Center");
+            return false;
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: "././module/RPT_Order_Report/data.php",
+            dataType: 'json',
+            beforeSend: function () {
+                $("#BtnPackingSearch").html("<i class='fa fa-spinner fa-spin'>");
+            },
+            data: {
+                "load": "Packing",
+                "item": item,
+                "wc": wc
+            },
+            success: function (data) {
+                console.log(data);
+                
+                $("#tblReportPack").dataTable().fnDestroy();
+                var table = $('#tblReportPack').DataTable({
+                    scrollY: "400px",
+                    "scrollX": true,
+                    scrollCollapse: true,
+                    "aaData": data,
+                    "paging": false,
+                    "searching": false,
+                    "bInfo": false,        
+                    "columns": [
+                        {"data": "ordernum",
+                            "className": "text-center",
+                        },
+                        {"data": "item",
+                            "className": "text-center",
+                        },
+                        {"data": "wc",
+                            "className": "text-center",
+                        },
+                        {"data": "CustName",
+                            "className": "text-center",
+                        },
+                        {"data": "Uf_refno",
+                            "className": "text-center",
+                        },
+                        {"data": "PORT",
+                            "className": "text-center",
+                        },
+                        {"data": "SIZE",
+                            "className": "text-center",
+                        },
+                        {"data": "Uf_Spec",
+                            "className": "text-center",
+                        },
+                        {"data": "Uf_Grade",
+                            "className": "text-center",
+                        },
+                        {"data": "Uf_Schedule",
+                            "className": "text-center",
+                        },
+                        {"data": "Uf_Length",
+                            "className": "text-center",
+                        },
+                        {"data": "ProdCodeDesc",
+                            "className": "text-center",
+                        },
+                        {"data": "jobBarcode",
+                            "className": "text-center",
+                        },
+                        {"data": "Uf_Pack",
+                            "className": "text-center",
+                        },
+                        {"data": "bundles",
+                            "className": "text-center",
+                            "render": function (data, type, row) {
+                                // remove decimal
+                                return roundToTwo(data);
+                            }
+                        },
+                        {"data": "qty_complete",
+                            "className": "text-center",
+                            "render": function (data, type, row) {
+                                // remove decimal
+                                return Number(data);
+                            }
+                        },
+                        {"data": "qty_released",
+                            "className": "text-center",
+                            "render": function (data, type, row) {
+                                // remove decimal
+                                return Number(data);
+                            }
+                        },
+                        {"data": "Uf_remark",
+                            "className": "text-center",
+                        },
+                    ],
+                    'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                            "<'row'<'col-md-12'tr>>" +
+                            "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                    buttons: [
+                        {
+                            extend: 'print',
+                            text: "<i class='fa fa-print'></i>&nbsp;Print",
+                            title: ''
+                        },
+                        {
+                            extend: 'excel',
+                            text: "<i class='fa fa-file-excel'></i>&nbsp;Excel&nbsp;",
+                            title: `ReportByCo`,
+                            customize: function (xlsx) {
+                                var sheet = xlsx.xl.worksheets['sheet1.xml'];
+                                var numrows = 2;
+                            }
+                        },
+                    ],
+                    
+                    "footerCallback": function (row, data, start, end, display) {
+                            var api = this.api(),
+                                    data;
+
+                            // converting to interger to find total
+                            var intVal = function (i) {
+                                return typeof i === 'string' ?
+                                        i.replace(/[\$,]/g, '') * 1 :
+                                        typeof i === 'number' ?
+                                        i : 0;
+                            };
+
+                            // computing column Total of the complete result
+                            var qty_need = api
+                                    .column(10)
+                                    .data()
+                                    .reduce(function (a, b) {
+                                        return intVal(a) + intVal(b);
+                                    }, 0);
+
+                            var avai_FC = api
+                                    .column(11)
+                                    .data()
+                                    .reduce(function (a, b) {
+                                        return intVal(b) > intVal(a) ? intVal(b) : intVal(a);
+                                    }, 0);
+
+                            $(api.column(1).footer()).html('qty_need');
+                            $(api.column(2).footer()).html(addCommas(qty_need.toFixed(2)));
+                            $(api.column(3).footer()).html('avai_FC');
+                            $(api.column(4).footer()).html(addCommas(avai_FC.toFixed(2)));
+                            $(api.column(5).footer()).html('avai_FC - qty_need');
+                            $(api.column(6).footer()).html(addCommas((avai_FC-qty_need).toFixed(2)));
+                        },
+                });
+                $('#tblReportPack').loading("stop");
+                $("#BtnPackingSearch").html("<i class='fa fa-search'></i>Search");
+            },
+            error: function (e) {
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            }
+        });
+    }
+</script>
