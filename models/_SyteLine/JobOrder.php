@@ -1616,7 +1616,7 @@ where [description] not like '%กลุ่ม%' and [description] <> 'ลบ'
         return $rs;
     }
 
-    function SearchJobOrderReport($Item , $wc, $Firm, $Complete, $Stopped, $Released) {
+    function SearchJobOrderReport($Item , $wc, $whereClause) {
 
         $wh = '';
 
@@ -1627,24 +1627,9 @@ where [description] not like '%กลุ่ม%' and [description] <> 'ลบ'
             $wh .= " and wc = '" . $wc . "'";
         }
 
-        $statusConditions = [];
-
-        // Add each status condition to the array if it's set
-        if ($Firm != '') {
-            $statusConditions[] = $Firm;
+        if ($whereClause != '') {
+            $wh .=  "". $whereClause;
         }
-        if ($Complete != '') {
-            $statusConditions[] = $Complete;
-        }
-        if ($Stopped != '') {
-            $statusConditions[] = $Stopped;
-        }
-        if ($Released != '') {
-            $statusConditions[] = $Released;
-        }
-        
-        // Build the WHERE clause only if we have status conditions
-     
 
         $query = "select distinct job_mst.job, job_mst.stat, job_mst.item, jr.wc,jo.no,jo.Createdate
 FROM            job_mst 
