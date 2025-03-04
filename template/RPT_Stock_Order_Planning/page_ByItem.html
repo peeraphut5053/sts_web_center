@@ -33,6 +33,7 @@
                     <th>co_num</th>
                     <th>co_line</th>
                     <th>due_date</th>
+                    <th>projected_date</th>
                     <th>STS_PO</th>
                     <th>qty_ordered</th>
                     <th>qty_shipped</th>
@@ -84,7 +85,7 @@
                 $("#tblReportByitem").DataTable().clear();
                     var RowFooterBuild = "";
                     var ColBuild = "";
-                    var ColCount = 20;
+                    var ColCount = 21;
                     var i = 0;
                     RowFooterBuild = "<tfoot><tr>!!ColBuild!!</tr></tfoot>";
                     for (i = 1; i <= ColCount; i++) {
@@ -124,6 +125,17 @@
                         },
                         {"data": "Due_Date",
                             "className": "text-center",
+                        },
+                        {"data": "projected_date.date",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                            if (data){
+                                var ret = moment(data).format('YYYY-MM-DD')
+                                return ret;
+                            } else {
+                                return "";
+                            }
+                        }
                         },
                         {"data": "STS_PO",
                             "className": "text-center",
@@ -322,100 +334,100 @@
 
                             
                             var qty_ordered = api
-                                    .column(6)
-                                    .data()
-                                    .reduce(function (a, b) {
-                                        return intVal(a) + intVal(b);
-                                    }, 0);
-
-                            var qty_shipped = api
                                     .column(7)
                                     .data()
                                     .reduce(function (a, b) {
                                         return intVal(a) + intVal(b);
                                     }, 0);
 
-                            var qty_ready = api
+                            var qty_shipped = api
                                     .column(8)
                                     .data()
                                     .reduce(function (a, b) {
                                         return intVal(a) + intVal(b);
                                     }, 0);
 
-                            var qty_need = api
+                            var qty_ready = api
                                     .column(9)
                                     .data()
                                     .reduce(function (a, b) {
                                         return intVal(a) + intVal(b);
                                     }, 0);
 
-                            var avai_FC = api
+                            var qty_need = api
                                     .column(10)
+                                    .data()
+                                    .reduce(function (a, b) {
+                                        return intVal(a) + intVal(b);
+                                    }, 0);
+
+                            var avai_FC = api
+                                    .column(11)
                                     .data()
                                     .reduce(function (a, b) {
                                         return intVal(b) > intVal(a) ? intVal(b) : intVal(a);
                                     }, 0);
 
                             var avai_WC = api
-                                    .column(12)
-                                    .data()
-                                    .reduce(function (a, b) {
-                                        return intVal(b) > intVal(a) ? intVal(b) : intVal(a);
-                                    }, 0);
-
-                            var avai_WSHR_PCS = api
                                     .column(13)
                                     .data()
                                     .reduce(function (a, b) {
                                         return intVal(b) > intVal(a) ? intVal(b) : intVal(a);
                                     }, 0);
 
-                            var avai_RHR_PCS = api
+                            var avai_WSHR_PCS = api
                                     .column(14)
                                     .data()
                                     .reduce(function (a, b) {
                                         return intVal(b) > intVal(a) ? intVal(b) : intVal(a);
                                     }, 0);
 
-                            var avai_WSHR_KG = api
+                            var avai_RHR_PCS = api
                                     .column(15)
                                     .data()
                                     .reduce(function (a, b) {
                                         return intVal(b) > intVal(a) ? intVal(b) : intVal(a);
                                     }, 0);
 
-                            var avai_RHR_KG = api
+                            var avai_WSHR_KG = api
                                     .column(16)
+                                    .data()
+                                    .reduce(function (a, b) {
+                                        return intVal(b) > intVal(a) ? intVal(b) : intVal(a);
+                                    }, 0);
+
+                            var avai_RHR_KG = api
+                                    .column(17)
                                     .data()
                                     .reduce(function (a, b) {
                                         return intVal(b) > intVal(a) ? intVal(b) : intVal(a);
                                     }, 0);
                               
                             var avai_WSHR_KGperPCS = api
-                                .column(18)
-                                .data()
-                                .reduce(function (a, b) {
-                                    return intVal(b) > intVal(a) ? intVal(b) : intVal(a);
-                                }, 0);
-
-                            var avai_RHR_KGperPCS = api
                                 .column(19)
                                 .data()
                                 .reduce(function (a, b) {
                                     return intVal(b) > intVal(a) ? intVal(b) : intVal(a);
                                 }, 0);
 
-                            $(api.column(6).footer()).html(addCommas(qty_ordered.toFixed(2)));
-                            $(api.column(7).footer()).html(addCommas(qty_shipped.toFixed(2)));
-                            $(api.column(8).footer()).html(addCommas(qty_ready.toFixed(2)));
-                            $(api.column(9).footer()).html(addCommas(qty_need.toFixed(2)));
-                            $(api.column(10).footer()).html(addCommas(avai_FC.toFixed(2)));
-                            $(api.column(11).footer()).html(addCommas((avai_FC-qty_need).toFixed(2)));
-                            $(api.column(12).footer()).html(addCommas(((avai_FC+avai_WC)-qty_need).toFixed(2)));
-                            $(api.column(13).footer()).html(addCommas(((avai_FC+avai_WC)-qty_need+avai_WSHR_PCS).toFixed(2)));
-                            $(api.column(14).footer()).html(addCommas(((avai_FC+avai_WC)-qty_need+avai_WSHR_PCS+avai_RHR_PCS).toFixed(2)));
-                            $(api.column(15).footer()).html(addCommas((((avai_FC+avai_WC)-qty_need+avai_WSHR_PCS)*avai_WSHR_KGperPCS).toFixed(2)));
-                            $(api.column(16).footer()).html(addCommas((((avai_FC+avai_WC)-qty_need+avai_WSHR_PCS+avai_RHR_PCS)*avai_RHR_KGperPCS).toFixed(2)));
+                            var avai_RHR_KGperPCS = api
+                                .column(20)
+                                .data()
+                                .reduce(function (a, b) {
+                                    return intVal(b) > intVal(a) ? intVal(b) : intVal(a);
+                                }, 0);
+
+                            $(api.column(7).footer()).html(addCommas(qty_ordered.toFixed(2)));
+                            $(api.column(8).footer()).html(addCommas(qty_shipped.toFixed(2)));
+                            $(api.column(9).footer()).html(addCommas(qty_ready.toFixed(2)));
+                            $(api.column(10).footer()).html(addCommas(qty_need.toFixed(2)));
+                            $(api.column(11).footer()).html(addCommas(avai_FC.toFixed(2)));
+                            $(api.column(12).footer()).html(addCommas((avai_FC-qty_need).toFixed(2)));
+                            $(api.column(13).footer()).html(addCommas(((avai_FC+avai_WC)-qty_need).toFixed(2)));
+                            $(api.column(14).footer()).html(addCommas(((avai_FC+avai_WC)-qty_need+avai_WSHR_PCS).toFixed(2)));
+                            $(api.column(15).footer()).html(addCommas(((avai_FC+avai_WC)-qty_need+avai_WSHR_PCS+avai_RHR_PCS).toFixed(2)));
+                            $(api.column(16).footer()).html(addCommas((((avai_FC+avai_WC)-qty_need+avai_WSHR_PCS)*avai_WSHR_KGperPCS).toFixed(2)));
+                            $(api.column(17).footer()).html(addCommas((((avai_FC+avai_WC)-qty_need+avai_WSHR_PCS+avai_RHR_PCS)*avai_RHR_KGperPCS).toFixed(2)));
 
                         },
                 });

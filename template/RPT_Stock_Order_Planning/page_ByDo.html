@@ -13,7 +13,7 @@
     </div>
 
     <div class="col-lg-1 col-md-2 col-sm-1 col-xs-6  col-search">
-        <button id="BtnSearchCO" class="btn btn-info"><i class="fa fa-search"></i>Search</button>
+        <button id="BtnSearchDo" class="btn btn-info"><i class="fa fa-search"></i>Search</button>
     </div>
 </div>
 
@@ -27,6 +27,7 @@
                     <th>co_num</th>
                     <th>co_line</th>
                     <th>due_date</th>
+                    <th>projected_date</th>
                     <th>STS_PO</th>
                     <th>qty_ordered</th>
                     <th>qty_shipped_CO</th>
@@ -42,13 +43,13 @@
 
 <script type="text/javascript">
 
-    $("#BtnSearchCO").click(function () {
+    $("#BtnSearchDo").click(function () {
             ReportAllSearch();
         });
 
 
     function ReportAllSearch() {
-    var OldHtml = $("#BtnSearchCO").html();
+    var OldHtml = $("#BtnSearchDo").html();
     var DO = $("#BY_DO").val();
 
     // if (DO == "") {
@@ -71,7 +72,7 @@
                 $("#tblReportByCO").DataTable().clear();
                     var RowFooterBuild = "";
                     var ColBuild = "";
-                    var ColCount = 14;
+                    var ColCount = 15;
                     var i = 0;
                     RowFooterBuild = "<tfoot><tr>!!ColBuild!!</tr></tfoot>";
                     for (i = 1; i <= ColCount; i++) {
@@ -114,6 +115,17 @@
                         },
                         {"data": "Due_Date",
                             "className": "text-center",
+                        },
+                        {"data": "projected_date.date",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                            if (data){
+                                var ret = moment(data).format('YYYY-MM-DD')
+                                return ret;
+                            } else {
+                                return "";
+                            }
+                        }
                         },
                         {"data": "STS_PO",
                             "className": "text-center",
@@ -265,7 +277,7 @@
                 //         },
                 });
                 $('#tblReportByCO').loading("stop");
-                $("#BtnSearchCO").html("<i class='fa fa-search'></i>Search");
+                $("#BtnSearchDo").html("<i class='fa fa-search'></i>Search");
             },
             error: function (e) {
                 console.log("There was an error with your request...");
