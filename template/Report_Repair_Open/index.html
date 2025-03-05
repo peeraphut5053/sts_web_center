@@ -69,8 +69,7 @@
       <button id="BtnSearchDocNo" class="btn btn-info"><i class="fa fa-search"></i>&nbsp; Search</button>
     </div>
     <div class="col-lg-1 col-md-2 col-sm-1 col-xs-6  col-search">
-      <button id="print_repair_pdf" class="btn btn-danger hidden" onclick="PrintReportOpen();"><i
-          class="fa fa-print"></i>&nbsp; พิมพ์ใบเปิดแจ้ง</button>
+      <button id="btnResetReportRepair" class="btn btn-warning p-4 w-96"><i class="fa fa-searh"></i>&nbsp;สร้างใหม่</button>
     </div>
   </div>
 </div>
@@ -150,7 +149,6 @@
     </div>
   </div>
   <div>
-    <button id="btnResetReportRepair" class="btn btn-warning p-4 w-96"><i class="fa fa-searh"></i>&nbsp;รีเซ็ต</button>
     <button id="btnSaveReportRepair" class="btn btn-primary p-4 w-96"><i class="fa fa-searh"></i>&nbsp;บันทึก</button>
   </div>
 </div>
@@ -436,6 +434,8 @@
     $('input[name="start_repair"]').prop('checked', false);
     $('input[name="end_repair"]').prop('checked', false);
     $("#doc_no_search").val('');
+    $("#doc_no_repair").val('').trigger('change');
+ 
     $("#r_remark").val('');
     $("#detail_issue").val('');
 
@@ -456,6 +456,15 @@
   function ReportItemSearch() {
 
   };
+
+  // file-input check file length 
+
+  $('#file-input').change(function () {
+    if (this.files.length > 2) {
+      alert("คุณสามารถอัพโหลดได้ไม่เกิน 2 รูป");
+      $(this).val(null);
+    }
+  })
 
   $('#btnSaveReportRepair').click(function () {
     let type = 'Create';
