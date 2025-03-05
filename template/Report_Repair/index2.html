@@ -583,27 +583,27 @@
   });
 
   async function UploadFiles(DocNo) {
-  console.log(DocNo);
   
   const fileInput = document.getElementById('file-input_2');
   const files = fileInput.files; // รับไฟล์ที่เลือกทั้งหมด
   const formData = new FormData();
-  formData.append('doc_no', DocNo);
   for (let i = 0; i < files.length; i++) {
       const file = files[i];
+      console.log(i,'i');
+      
       // jpg, png only
       if (file && (file.type === 'image/jpg' || file.type === 'image/jpeg' || file.type === 'image/png')) {
           const resizedFile = await resizeImage(file, 1280, 720);
           formData.append('file[]', resizedFile);
-          console.log(formData);
-          
       } 
       else {
           alert('กรุณาเลือกไฟล์ JPG, JPEG  หรือ PNG เท่านั้น');
           return;
       }
   }
+  
   try {
+
       const response = await fetch('././module/Report_Repair_Open/data.php', {
           method: 'POST',
           body: formData
@@ -759,8 +759,7 @@
         $("#ModalCloseReport").modal("hide");
         ReportItemSearch();
         $("#btnCloseRepair").attr("disabled", false);
-        $("#file-input_2").val(null);
-
+    
       },
       error: function (e) {
         $("#btnCloseRepair").attr("disabled", false);
