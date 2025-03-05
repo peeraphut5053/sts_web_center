@@ -1,20 +1,20 @@
 <style>
-      /* ซ่อน Checkbox ดั้งเดิม */
-.custom-checkbox input[type="checkbox"] {
+  /* ซ่อน Checkbox ดั้งเดิม */
+  .custom-checkbox input[type="checkbox"] {
     display: none;
-}
+  }
 
-/* ตำแหน่งและขนาดของ Checkbox */
-.custom-checkbox {
+  /* ตำแหน่งและขนาดของ Checkbox */
+  .custom-checkbox {
     display: inline-flex;
     align-items: center;
     cursor: pointer;
     font-size: 16px;
     margin: 3px;
-}
+  }
 
-/* สไตล์สำหรับ Checkmark */
-.custom-checkbox .checkmark {
+  /* สไตล์สำหรับ Checkmark */
+  .custom-checkbox .checkmark {
     width: 20px;
     height: 20px;
     background-color: #ccc;
@@ -23,27 +23,27 @@
     margin-right: 10px;
     position: relative;
     transition: background-color 0.3s;
-}
+  }
 
-/* สไตล์สำหรับ Checkbox เมื่อถูกเลือก */
-.custom-checkbox input[type="checkbox"]:checked + .checkmark {
+  /* สไตล์สำหรับ Checkbox เมื่อถูกเลือก */
+  .custom-checkbox input[type="checkbox"]:checked+.checkmark {
     background-color: #4CAF50;
-}
+  }
 
-/* สไตล์สำหรับเครื่องหมายถูก */
-.custom-checkbox .checkmark::after {
+  /* สไตล์สำหรับเครื่องหมายถูก */
+  .custom-checkbox .checkmark::after {
     content: "";
     position: absolute;
     display: none;
-}
+  }
 
-/* แสดงเครื่องหมายถูกเมื่อ Checkbox ถูกเลือก */
-.custom-checkbox input[type="checkbox"]:checked + .checkmark::after {
+  /* แสดงเครื่องหมายถูกเมื่อ Checkbox ถูกเลือก */
+  .custom-checkbox input[type="checkbox"]:checked+.checkmark::after {
     display: block;
-}
+  }
 
-/* รูปแบบของเครื่องหมายถูก */
-.custom-checkbox .checkmark::after {
+  /* รูปแบบของเครื่องหมายถูก */
+  .custom-checkbox .checkmark::after {
     left: 8px;
     top: 3px;
     width: 5px;
@@ -51,7 +51,7 @@
     border: solid white;
     border-width: 0 3px 3px 0;
     transform: rotate(45deg);
-}
+  }
 </style>
 <div class="row">
   <div class="mt-4">
@@ -69,7 +69,8 @@
       <button id="BtnSearchDocNo" class="btn btn-info"><i class="fa fa-search"></i>&nbsp; Search</button>
     </div>
     <div class="col-lg-1 col-md-2 col-sm-1 col-xs-6  col-search">
-      <button id="btnResetReportRepair" class="btn btn-warning p-4 w-96"><i class="fa fa-searh"></i>&nbsp;สร้างใหม่</button>
+      <button id="btnResetReportRepair" class="btn btn-warning p-4 w-96"><i
+          class="fa fa-searh"></i>&nbsp;สร้างใหม่</button>
     </div>
   </div>
 </div>
@@ -82,8 +83,21 @@
         <input type="text" autocomplete="off" class="form-control" id="doc_no_search" disabled>
       </div>
       <div class="input-group basis-2/4">
-        <div class="input-group-addon">ชื่อผู้แจ้ง</div>
+        <div class="input-group-addon">System Name</div>
         <input type="text" autocomplete="off" disabled class="form-control" id="r_name">
+      </div>
+    </div>
+    <div class="flex justify-start items-center flex-grow gap-6 mb-5">
+      <div class="input-group basis-2/4">
+        <div style="color: red;" class="input-group-addon">Site *</div>
+        <select class="form-control txt-filter" id="r_site">
+          <option value="ปู่เจ้า">ปู่เจ้า</option>
+          <option value="วังน้อย">วังน้อย</option>
+        </select>
+      </div>
+      <div class="input-group basis-2/4">
+        <div style="color: red;" class="input-group-addon">ชื่อผู้แจ้ง *</div>
+        <input type="text" autocomplete="off" class="form-control" id="IssueName">
       </div>
     </div>
     <div class="flex justify-start items-center flex-grow gap-6 mb-5">
@@ -128,8 +142,8 @@
         <label class="custom-checkbox">
           <input type="checkbox" name='start_repair' />
           <span class="checkmark"></span>
-           เริ่มซ่อม
-      </label>
+          เริ่มซ่อม
+        </label>
       </div>
       <div id="status_repair_show" class="input-group basis-2/4 hidden">
         <div class="input-group-addon">เริ่มซ่อม</div>
@@ -139,8 +153,8 @@
         <label class="custom-checkbox">
           <input type="checkbox" name='end_repair' />
           <span class="checkmark"></span>
-           ซ่อมเสร็จ
-      </label>
+          ซ่อมเสร็จ
+        </label>
       </div>
       <div id="status_repair_end_show" class="input-group basis-2/4 hidden">
         <div class="input-group-addon">ซ่อมเสร็จ</div>
@@ -168,65 +182,71 @@
 
     // Return a promise that resolves when the image is loaded and processed
     return new Promise((resolve) => {
-        reader.onload = function(e) {
-            img.src = e.target.result;
+      reader.onload = function (e) {
+        img.src = e.target.result;
 
-            img.onload = function() {
-                // Create canvas
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
+        img.onload = function () {
+          // Create canvas
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
 
-                // Calculate proportions
-                let width = img.width;
-                let height = img.height;
-                let ratio = 1;
+          // Calculate proportions
+          let width = img.width;
+          let height = img.height;
+          let ratio = 1;
 
-                if (width > height) {
-                    if (width > maxWidth) {
-                        ratio = maxWidth / width;
-                    }
-                } else {
-                    if (height > maxHeight) {
-                        ratio = maxHeight / height;
-                    }
-                }
+          if (width > height) {
+            if (width > maxWidth) {
+              ratio = maxWidth / width;
+            }
+          } else {
+            if (height > maxHeight) {
+              ratio = maxHeight / height;
+            }
+          }
 
-                width = width * ratio;
-                height = height * ratio;
+          width = width * ratio;
+          height = height * ratio;
 
-                // Set canvas size
-                canvas.width = width;
-                canvas.height = height;
+          // Set canvas size
+          canvas.width = width;
+          canvas.height = height;
 
-                // Draw resized image on canvas
-                ctx.drawImage(img, 0, 0, width, height);
+          // Draw resized image on canvas
+          ctx.drawImage(img, 0, 0, width, height);
 
-                // Convert to blob and then to file
-                canvas.toBlob((blob) => {
-                    const resizedImage = new File([blob], file.name, { type: file.type });
-                    resolve(resizedImage);
-                }, file.type);
-            };
+          // Convert to blob and then to file
+          canvas.toBlob((blob) => {
+            const resizedImage = new File([blob], file.name, { type: file.type });
+            resolve(resizedImage);
+          }, file.type);
         };
+      };
 
-        reader.readAsDataURL(file);
+      reader.readAsDataURL(file);
     });
-}
+  }
 
-  $(document).ready(function () {
+  $("#r_site").change(function () {
+    var site = $("#r_site").val();
+
     $.ajax({
       type: "POST",
       url: "././module/Report_Repair/data.php",
       dataType: "json",
-      data: { load: "Dept" },
+      data: { load: "Dept", site: site },
       success: function (response) {
 
-        const options = response.map((item) => ({
+
+        const options = [{ id: '', text: '' }].concat(response.map((item) => ({
           id: item.wc,
           text: item.wc + " - " + item.description
-        }))
-        
+        })));
+
+        $("#r_department").empty();
+
         var $select = $("#r_department");
+
         $select.select2({
           placeholder: 'กรุณาเลือกแผนก',
           allowClear: true,
@@ -237,8 +257,7 @@
               return "ไม่พบข้อมูล";
             }
           }
-        }).on('select2:select', function (e) {
-        });
+        }).trigger('change');
       }
     });
     $.ajax({
@@ -252,7 +271,51 @@
     });
   });
 
- 
+    $("#r_site").ready(function () {
+    var site = $("#r_site").val();
+
+    $.ajax({
+      type: "POST",
+      url: "././module/Report_Repair/data.php",
+      dataType: "json",
+      data: { load: "Dept", site: site },
+      success: function (response) {
+
+
+        const options = [{ id: '', text: '' }].concat(response.map((item) => ({
+          id: item.wc,
+          text: item.wc + " - " + item.description
+        })));
+
+        $("#r_department").empty();
+
+        var $select = $("#r_department");
+
+        $select.select2({
+          placeholder: 'กรุณาเลือกแผนก',
+          allowClear: true,
+          width: '100%',
+          data: options,
+          language: {
+            noResults: function () {
+              return "ไม่พบข้อมูล";
+            }
+          }
+        }).trigger('change');
+      }
+    });
+    $.ajax({
+      type: "POST",
+      url: "././module/Report_Repair/data.php",
+      dataType: "json",
+      data: { load: "Issue" },
+      success: function (response) {
+        options = response;
+      }
+    });
+  });
+
+
   $("#r_department").change(function () {
     // want id of selected
     var id = $(this).val();
@@ -298,23 +361,23 @@
     }
 
     var opt = [{ id: '', text: '' }].concat(data.map((item) => ({
-        id: item.issueNum,
-        text: item.issue
+      id: item.issueNum,
+      text: item.issue
     })));
-    
+
     $("#detail_issue").empty();
-    
+
     // สร้าง select2 ใหม่
     $("#detail_issue").select2({
-        placeholder: 'กรุณาเลือกรายละเอียดการแจ้ง',
-        allowClear: true,
-        width: '100%',
-        data: opt,
-        language: {
-            noResults: function () {
-                return "ไม่พบข้อมูล";
-            }
+      placeholder: 'กรุณาเลือกรายละเอียดการแจ้ง',
+      allowClear: true,
+      width: '100%',
+      data: opt,
+      language: {
+        noResults: function () {
+          return "ไม่พบข้อมูล";
         }
+      }
     }).trigger('change');
   })
 
@@ -377,6 +440,8 @@
         $("#doc_no_search").val(data[0]["DocNo"]);
         $("#r_name").val(data[0]["Username"]);
         $("#r_item").val(data[0]["Item"]);
+        $("#r_site").val(data[0]["Site"]);
+        $("#IssueName").val(data[0]["IssueName"]);
 
         $("#r_department option").filter(function () {
           return $(this).val() == data[0]["Dept"];
@@ -387,7 +452,7 @@
         $("#detail_issue").trigger('change');
 
         $('#detail_issue').val(data[0]["DetailIssue"]).trigger('change');
-        
+
         $("#r_remark").val(data[0]["Remark1"]);
 
         if (info["DateRepairStart"]) {
@@ -395,13 +460,13 @@
           $("#status_repair_show").removeClass("hidden");
           $("#start_repair_date").val(moment(info["DateRepairStart"].date).format("DD/MM/YYYY HH:mm"));
           if (info["DateRepairEnd"]) {
-          $("#status_repair_end").addClass("hidden");
-          $("#status_repair_end_show").removeClass("hidden");
-          $("#end_repair_date").val(moment(info["DateRepairEnd"].date).format("DD/MM/YYYY HH:mm"));
-        } else {
-          $("#status_repair_end").removeClass("hidden");
-          $("#status_repair_end_show").addClass("hidden");
-        }
+            $("#status_repair_end").addClass("hidden");
+            $("#status_repair_end_show").removeClass("hidden");
+            $("#end_repair_date").val(moment(info["DateRepairEnd"].date).format("DD/MM/YYYY HH:mm"));
+          } else {
+            $("#status_repair_end").removeClass("hidden");
+            $("#status_repair_end_show").addClass("hidden");
+          }
         } else {
           $("#status_repair").removeClass("hidden");
           $("#status_repair_end").addClass("hidden");
@@ -435,9 +500,12 @@
     $('input[name="end_repair"]').prop('checked', false);
     $("#doc_no_search").val('');
     $("#doc_no_repair").val('').trigger('change');
- 
+    $("#IssueName").val('');
+
     $("#r_remark").val('');
     $("#detail_issue").val('');
+    $("#r_site").val('');
+
 
     $("#file_upload").removeClass("hidden");
     $("#status_repair").addClass("hidden");
@@ -467,11 +535,14 @@
   })
 
   $('#btnSaveReportRepair').click(function () {
+    $("#btnSaveReportRepair").attr("disabled", true);
     let type = 'Create';
     // get id of selected r_department
     var r_department = $("#r_department").val();
     var doc_no = $("#doc_no_search").val();
     var r_name = $("#r_name").val();
+    var r_site = $("#r_site").val();
+    var issue_name = $("#IssueName").val();
     var r_item = $("#r_item").val();
     var remark = $("#r_remark").val();
     var detail_issue = $("#detail_issue").val();
@@ -487,7 +558,7 @@
       alert("กรุณากรอกข้อมูลให้ครบ");
       return false;
     }
-    
+
     let time = '';
 
     if (start_repair == "on") {
@@ -498,13 +569,16 @@
       time = 'end_repair';
     }
 
+    if (issue_name == "") {
+      alert("กรุณากรอกชื่อผู้แจ้ง");
+      return false;
+    }
+
     if (detail_issue == "") {
       alert("กรุณาระบุปัญหาเครื่องจักร");
       return false;
     }
-    
 
-    $("#btnSaveReportRepair").attr("disabled", true);
     $.ajax({
       type: "POST",
       url: "././module/Report_Repair/data.php",
@@ -517,7 +591,9 @@
         r_item: r_item,
         remark: remark,
         detail_issue: detail_issue,
-        time: time
+        time: time,
+        r_site: r_site,
+        issue_name: issue_name
       },
       success: function (data) {
         if (type == 'Create') {
@@ -525,11 +601,13 @@
           alert("แจ้งซ่อมสําเร็จ : " + data[0].DocNo);
           $("#doc_no_repair").empty();
           $("#doc_no_search").val('');
-        $("#r_remark").val('');
-        $("#detail_issue").val('');
-        $("#r_department option").filter(function () {
-          return $(this).text() == '';
-        }).prop('selected', true);
+          $("#IssueName").val('');
+          $("#r_site").val('');
+          $("#r_remark").val('');
+          $("#detail_issue").val('');
+          $("#r_department option").filter(function () {
+            return $(this).text() == '';
+          }).prop('selected', true);
           GetDocNoOptions();
         } else {
           alert("บันทึกสําเร็จ");
@@ -547,43 +625,44 @@
   })
 
   async function UploadFiles(DocNo) {
-  
-            const fileInput = document.getElementById('file-input');
-            const files = fileInput.files; // รับไฟล์ที่เลือกทั้งหมด
-            const formData = new FormData();
-            formData.append('doc_no', DocNo);
-            for (let i = 0; i < files.length; i++) {
-                const file = files[i];
-                // jpg, png only
-                if (file && (file.type === 'image/jpg' || file.type === 'image/jpeg' || file.type === 'image/png')) {
-                    const resizedFile = await resizeImage(file, 1280, 720);
-                    formData.append('file[]', resizedFile);
-                } 
-                else {
-                    alert('กรุณาเลือกไฟล์ JPG, JPEG  หรือ PNG เท่านั้น');
-                    return;
-                }
-            }
-            try {
-                const response = await fetch('././module/Report_Repair_Open/data.php', {
-                    method: 'POST',
-                    body: formData
-                });
 
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data.success) {
-                        alert('การอัพโหลดสําเร็จ');
-                        fileInput.value = '';
-                    } else {
-                        alert('การอัพโหลดล้มเหลว');
-                    }
-                } else {
-                    throw new Error('การอัพโหลดล้มเหลว');
-                }
-            } catch (error) {
-                alert('เกิดข้อผิดพลาดในการอัพโหลด: ' + error.message);
-            }
+    const fileInput = document.getElementById('file-input');
+    const files = fileInput.files; // รับไฟล์ที่เลือกทั้งหมด
+    const formData = new FormData();
+    formData.append('doc_no', DocNo);
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      // jpg, png only
+      if (file && (file.type === 'image/jpg' || file.type === 'image/jpeg' || file.type === 'image/png')) {
+        const resizedFile = await resizeImage(file, 1280, 720);
+        formData.append('file[]', resizedFile);
+      }
+      else {
+        alert('กรุณาเลือกไฟล์ JPG, JPEG  หรือ PNG เท่านั้น');
+        return;
+      }
+    }
+    try {
+
+      const response = await fetch('././module/Report_Repair_Open/data.php', {
+        method: 'POST',
+        body: formData
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success) {
+          alert('การอัพโหลดสําเร็จ');
+          fileInput.value = '';
+        } else {
+          alert('การอัพโหลดล้มเหลว');
+        }
+      } else {
+        throw new Error('การอัพโหลดล้มเหลว');
+      }
+    } catch (error) {
+      alert('เกิดข้อผิดพลาดในการอัพโหลด: ' + error.message);
+    }
   }
 
   function PrintReportOpen() {

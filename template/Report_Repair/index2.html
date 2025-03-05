@@ -153,10 +153,10 @@
               <option value="อัตติชย แกนจนทร">อัตติชย แกนจนทร</option>
               <option value="จรัญ ฮวดกระโทก">จรัญ ฮวดกระโทก</option>
               <option value="เฉลิมพิงค์ ธรรมนิยม">เฉลิมพิงค์ ธรรมนิยม</option>
-              <option value="อนุชัย นิอาวรณ์ ">อนุชัย นิอาวรณ์</option>
-              <option value="ยุทธการ บัวหอม">ยุทธการ บัวหอม</option>
-              <option value="ถาวร บุ้งรุ้ง">ถาวร บุ้งรุ้ง</option>
-              <option value="ธเนศ อาจารสุทธิ์">ธเนศ อาจารสุทธิ์</option>
+              <option value="จักษ์กริช กำหัวเรือ">จักษ์กริช กำหัวเรือ</option>
+              <option value="เอกรัฐ สอนหมื่น">เอกรัฐ สอนหมื่น</option>
+              <option value="กิตติศักดิ์ ลาภดารา">กิตติศักดิ์ ลาภดารา</option>
+              <option value="กิตติศักดิ์ ลาภดารา">จัดจ้าง</option>
             </select>
           </div>
         </div>
@@ -350,6 +350,10 @@
           select: true,
           columnDefs: [
             {
+              targets: [4],
+              width: 150,
+            },
+            {
               targets: [5],
               width: 150,
             },
@@ -402,6 +406,10 @@
             {
               "data": "Dept",
               "className": "text-center",
+              "render": function (data, type, row, meta) {
+                var des = row.department ? row.department : '';
+                return data + ' ' + des;
+              }
             },
             {
               "data": "Remark1",
@@ -412,7 +420,7 @@
               "className": "text-center",
             },
             {
-              "data": "Username",
+              "data": "IssueName",
               "className": "text-center",
             },
             {

@@ -61,7 +61,7 @@ class Factory {
         return $rs0;
     }
 
-    function InsertReportRepair($r_department, $r_name, $r_item, $remark, $detail_issue) {
+    function InsertReportRepair($r_department, $r_name, $r_item, $remark, $detail_issue, $r_site,$issue_name) {
         $year = date('y');
         $cSql = new SqlSrv();
         $sql = "SELECT TOP 1 DocNo FROM STS_repair WHERE DocNo LIKE 'R$year%' ORDER BY DocNo DESC";
@@ -81,7 +81,7 @@ class Factory {
         }
         // สร้างเลขเอกสารใหม่
         $docNumber = sprintf("R%s%05d", $year, $newNumber);
-        $query = "INSERT INTO STS_repair (DocNo,approve,DateIssue,Dept,Remark1,Item,Username,DetailIssue) OUTPUT inserted.* VALUES ('$docNumber', 0, GETDATE(),'$r_department','$remark','$r_item','$r_name','$detail_issue')";
+        $query = "INSERT INTO STS_repair (DocNo,approve,DateIssue,Dept,Remark1,Item,Username,DetailIssue, Site,IssueName) OUTPUT inserted.* VALUES ('$docNumber', 0, GETDATE(),'$r_department','$remark','$r_item','$r_name','$detail_issue','$r_site','$issue_name')";
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);
         return $rs0;
@@ -154,16 +154,16 @@ order by DocNo desc";
         return $rs0;
     }
 
-    function UpdateReportRepair($doc_no,$r_department, $r_item, $remark, $detail_issue,$time) {
+    function UpdateReportRepair($doc_no,$r_department, $r_item, $remark, $detail_issue,$time, $r_site,$issue_name) {
 
-        $sql = "UPDATE STS_repair SET Dept = '$r_department', Item = '$r_item', Remark1 = '$remark', DetailIssue = '$detail_issue' WHERE DocNo = '$doc_no'";
+        $sql = "UPDATE STS_repair SET Dept = '$r_department', Item = '$r_item', Remark1 = '$remark', DetailIssue = '$detail_issue', Site = '$r_site', IssueName = '$issue_name' WHERE DocNo = '$doc_no'";
 
         if ($time == 'start_repair') {
-            $sql = "UPDATE STS_repair SET Dept = '$r_department', Item = '$r_item', Remark1 = '$remark', DetailIssue = '$detail_issue', DateRepairStart = GETDATE() WHERE DocNo = '$doc_no'";
+            $sql = "UPDATE STS_repair SET Dept = '$r_department', Item = '$r_item', Remark1 = '$remark', DetailIssue = '$detail_issue', DateRepairStart = GETDATE(), Site = '$r_site', IssueName = '$issue_name' WHERE DocNo = '$doc_no'";
         }
 
         if ($time == 'end_repair') {
-            $sql = "UPDATE STS_repair SET Dept = '$r_department', Item = '$r_item', Remark1 = '$remark', DetailIssue = '$detail_issue', DateRepairEnd = GETDATE(), approve = 1 WHERE DocNo = '$doc_no'";
+            $sql = "UPDATE STS_repair SET Dept = '$r_department', Item = '$r_item', Remark1 = '$remark', DetailIssue = '$detail_issue', DateRepairEnd = GETDATE(), Site = '$r_site', IssueName = '$issue_name', approve = 1 WHERE DocNo = '$doc_no'";
         }
 
         $cSql = new SqlSrv();
@@ -212,16 +212,30 @@ from STS_repair re inner join STS_repair_issue iss
         return $rs0;
     }
 
-    function GetDepartment() {
+    function GetDepartment($site) {
         $cSql = new SqlSrv();
         $sql = "select wc,[description] 
 from wc_mst
 where [description] not like '%กลุ่ม%' and [description] <> 'ลบ'
   and [description] not like '%ยกเลิก%'
-  and [description] not like 'สถานี Forming (%)'
+  and wc like 'P%'
 union
 select wc=wc, [description]=wc
-from STS_repair_wc";
+from STS_repair_wc
+where wc not like '%วังน้อย%'";
+
+       if ($site == 'วังน้อย') {
+           $sql = "select wc,[description] 
+from wc_mst
+where [description] not like '%กลุ่ม%' and [description] <> 'ลบ'
+  and [description] not like '%ยกเลิก%'
+  and wc like 'W%'
+union
+select wc=wc, [description]=wc
+from STS_repair_wc
+where wc not like '%ปู่เจ้า%'";
+       }
+
         $rs = $cSql->SqlQuery($this->StrConn, $sql);
         array_splice($rs, count($rs) - 1, 1);
         return $rs;

@@ -30,7 +30,7 @@ if ($load == "Search") {
     $CallModel->SyteLine_Models();
     $STS_Custom = new Factory();
     $STS_Custom->setConn($ConnSL);
-    $rs = $STS_Custom->InsertReportRepair($r_department, $r_name, $r_item, $remark, $detail_issue);
+    $rs = $STS_Custom->InsertReportRepair($r_department, $r_name, $r_item, $remark, $detail_issue, $r_site,$issue_name);
     echo json_encode($rs);
 } else if ($load == "Get") {
     $CallModel = new CallModel();
@@ -65,7 +65,7 @@ if ($load == "Search") {
     $CallModel->SyteLine_Models();
     $STS_Custom = new Factory();
     $STS_Custom->setConn($ConnSL);
-    $rs = $STS_Custom->UpdateReportRepair($doc_no,$r_department, $r_item, $remark, $detail_issue, $time);
+    $rs = $STS_Custom->UpdateReportRepair($doc_no,$r_department, $r_item, $remark, $detail_issue, $time,  $r_site,$issue_name);
     echo json_encode($rs);
 } else if ($load == "SearchCheck") {
     $CallModel = new CallModel();
@@ -79,7 +79,7 @@ if ($load == "Search") {
     $CallModel->SyteLine_Models();
     $STS_Custom = new Factory();
     $STS_Custom->setConn($ConnSL);
-    $rs = $STS_Custom->GetDepartment();
+    $rs = $STS_Custom->GetDepartment($site);
     echo json_encode($rs);
 } else if ($load == "Issue") {
     $CallModel = new CallModel();
