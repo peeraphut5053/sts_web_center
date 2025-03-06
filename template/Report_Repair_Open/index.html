@@ -160,7 +160,7 @@
         <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">เริ่มซ่อม</div>
         <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off" class="form-control" id="start_repair_date" disabled>
       </div>
-      <div id="status_repair_end" class="input-group basis-full hidden">
+      <div style="display: none;" id="status_repair_end" class="input-group basis-full">
         <label class="custom-checkbox">
           <input type="checkbox" name='end_repair' />
           <span class="checkmark"></span>
@@ -475,7 +475,7 @@
             $("#status_repair_end_show").removeClass("hidden");
             $("#end_repair_date").val(moment(info["DateRepairEnd"].date).format("DD/MM/YYYY HH:mm"));
           } else {
-            $("#status_repair_end").removeClass("hidden");
+            $("#status_repair_end").css("display", "block");
             $("#status_repair_end_show").addClass("hidden");
           }
         } else {
