@@ -77,7 +77,7 @@
   border-left-color: white;
   border-right-color: white;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-  padding: 2.5rem;
+  padding: 8rem;
   margin-top: 2.5rem;
 }
 
@@ -96,15 +96,30 @@
   justify-content: center;
   align-items: center;
 }
-  
+
+.element {
+  flex-basis: 50%;
+}
+
+.element2 {
+  flex-basis: 100%;
+}
+
+.imagBox {
+  border: 1px solid #d1d5db; /* เทียบเท่ากับ border-gray-300 */
+  padding: 0.5rem 1.25rem; /* px-5 = 1.25rem, py-2 = 0.5rem */
+  margin-right: 1rem; /* mr-4 = 1rem */
+}
+
+
 </style>
 <div class="row">
-  <div class="mt-4">
+  <div style="margin-top: 1rem;">
     <h1 class="text-center">แจ้งซ่อม</h1>
   </div>
   <div class="myheader">
-    <div class="col-lg-2 col-md-2 col-sm-6 col-xs-6 text-left">
-      <div class="flex justify-center">
+    <div class="col-lg-3 col-md-2 col-sm-6 col-xs-6 text-left">
+      <div>
         <select id="doc_no_repair" class="form-control" aria-label="Default select example">
           <option value="" selected>เลือก DO</option>
         </select>
@@ -114,7 +129,7 @@
       <button id="BtnSearchDocNo" class="btn btn-info"><i class="fa fa-search"></i>&nbsp; Search</button>
     </div>
     <div class="col-lg-1 col-md-2 col-sm-1 col-xs-6  col-search">
-      <button id="btnResetReportRepair" class="btn btn-warning p-4 w-96"><i
+      <button style="padding: 0.7rem; width: 20rem;" id="btnResetReportRepair" class="btn btn-warning"><i
           class="fa fa-searh"></i>&nbsp;สร้างใหม่</button>
     </div>
   </div>
@@ -123,30 +138,30 @@
   class="mycontainer">
   <div class="row col-xs-12 p-20">
     <div class="mybox">
-      <div class="input-group basis-2/4">
+      <div class="input-group element">
         <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">เลขที่ใบแจ้ง</div>
         <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off" class="form-control" id="doc_no_search" disabled>
       </div>
-      <div class="input-group basis-2/4">
+      <div class="input-group element">
         <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">System Name</div>
         <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off" disabled class="form-control" id="r_name">
       </div>
     </div>
     <div class="mybox">
-      <div class="input-group basis-2/4">
+      <div class="input-group element">
         <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">Site *</div>
         <select style="font-weight: bold; font-size: 16px;" class="form-control txt-filter" id="r_site">
           <option value="ปู่เจ้า">ปู่เจ้า</option>
           <option value="วังน้อย">วังน้อย</option>
         </select>
       </div>
-      <div class="input-group basis-2/4">
+      <div class="input-group element">
         <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">ชื่อผู้แจ้ง *</div>
         <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off" class="form-control" id="IssueName">
       </div>
     </div>
     <div class="mybox">
-      <div class="input-group basis-2/4">
+      <div class="input-group element">
         <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">ลักษณะงาน *</div>
         <select style="font-weight: bold; font-size: 16px;" class="form-control txt-filter" id="r_item">
           <option value="ด่วน">ด่วน</option>
@@ -154,7 +169,7 @@
           <option value="ล่วงหน้า">ล่วงหน้า</option>
         </select>
       </div>
-      <div class="input-group basis-2/4">
+      <div class="input-group element">
         <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">แผนก *</div>
         <select style="font-weight: bold; font-size: 16px;" class="form-control" id="r_department">
           <option value=""></option>
@@ -162,7 +177,7 @@
       </div>
     </div>
     <div class="mybox">
-      <div class="input-group basis-full">
+      <div class="input-group element2">
         <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">ปัญหาเครื่องจักร *</div>
         <select style="font-weight: bold; font-size: 16px;" class="form-control" id="detail_issue">
           <option value=""></option>
@@ -170,45 +185,45 @@
       </div>
     </div>
     <div class="mybox">
-      <div class="input-group basis-full">
+      <div class="input-group element2">
         <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">รายละเอียด | หมายเหตุ</div>
         <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off" class="form-control" id="r_remark">
       </div>
     </div>
-    <div class="flex items-center" id="file_upload">
-      <div style="font-weight: bold; font-size: 16px;" class="border border-gray-300 px-5 py-2 mr-4">รูปภาพ</div>
+    <div style="display: flex; align-items: center;" id="file_upload">
+      <div style="font-weight: bold; font-size: 16px;" class="imagBox">รูปภาพ</div>
       <div>
         <input type="file" id="file-input" multiple accept="image/jpeg, image/png, image/jpg">
       </div>
     </div>
     <hr class="mt-12" />
     <div class="mybox">
-      <div id="status_repair" class="input-group basis-full hidden">
+      <div id="status_repair" class="input-group element2 hidden">
         <label class="custom-checkbox">
           <input type="checkbox" name='start_repair' />
           <span class="checkmark"></span>
           เริ่มซ่อม
         </label>
       </div>
-      <div id="status_repair_show" class="input-group basis-2/4 hidden">
+      <div id="status_repair_show" class="input-group element hidden">
         <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">เริ่มซ่อม</div>
         <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off" class="form-control" id="start_repair_date" disabled>
       </div>
-      <div style="display: none;" id="status_repair_end" class="input-group basis-full">
+      <div style="display: none;" id="status_repair_end" class="input-group element2">
         <label class="custom-checkbox">
           <input type="checkbox" name='end_repair' />
           <span class="checkmark"></span>
           ซ่อมเสร็จ
         </label>
       </div>
-      <div id="status_repair_end_show" class="input-group basis-2/4 hidden">
+      <div id="status_repair_end_show" class="input-group element hidden">
         <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">ซ่อมเสร็จ</div>
         <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off" class="form-control" id="end_repair_date" disabled>
       </div>
     </div>
   </div>
   <div>
-    <button id="btnSaveReportRepair" class="btn btn-primary p-4 w-96"><i class="fa fa-searh"></i>&nbsp;บันทึก</button>
+    <button style="padding: 1rem; width: 30rem;" id="btnSaveReportRepair" class="btn btn-primary"><i class="fa fa-searh"></i>&nbsp;บันทึก</button>
   </div>
 </div>
 </div>
