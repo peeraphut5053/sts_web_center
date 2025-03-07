@@ -85,6 +85,7 @@
         <th>เลขที่ใบแจ้ง</th>
         <th>วันที่</th>
         <th>เวลาแจ้ง</th>
+        <th>Site</th>
         <th>แผนก</th>
         <th>Remark</th>
         <th>ลักษณะงาน</th>
@@ -350,23 +351,23 @@
           select: true,
           columnDefs: [
             {
-              targets: [4],
-              width: 150,
-            },
-            {
               targets: [5],
               width: 150,
             },
             {
-              targets: [9],
+              targets: [6],
+              width: 150,
+            },
+            {
+              targets: [10],
               width: 300,
             },
             {
-              targets: [12],
+              targets: [13],
               width: 300,
             },
             {
-              targets: [18],
+              targets: [19],
               width: 150,
             },
 
@@ -402,6 +403,10 @@
                 var ret = moment(data).format('HH:mm');
                 return ret;
               }
+            },
+            {
+              "data": "Site",
+              "className": "text-center",
             },
             {
               "data": "Dept",
