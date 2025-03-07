@@ -565,6 +565,53 @@
               extend: "excel",
               text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
               title: "รายการแจ้งซ่อม",
+            },
+            {
+              text: `<button type="button" class="btn btn-danger">ลบ</button>`,
+              action: function (e, dt, node, config) {
+                // on selected
+                let selected = Array.from(dt.rows('.selected').data());
+                if (selected.length == 0) {
+                  alert("กรุณาเลือกเลขที่เอกสารที่ต้องการลบ");
+                  return false;
+                }
+                
+                // put password
+                $.confirm({
+                  title: 'กรุณาใส่ Password',
+                  theme: 'modern',
+                  content: '<input placeholder="" type="password" id="Pass" class="form-control" name="Pass" autofocus>',
+                  buttons: {
+                    formSubmit: {
+                      text: 'ยืนยัน',
+                      btnClass: 'btn-blue',
+                      action: function () {
+                        var Pass = this.$content.find('#Pass').val();
+                        if (Pass == 7525) {
+                          $.ajax({
+                          type: "POST",
+                          url: "././module/Report_Repair/data.php",
+                          dataType: "json",
+                          data: {
+                            load: 'delete',
+                            doc_no: selected[0].DocNo,
+                          },
+                          success: function (data) {
+                              alert("ลบข้อมูลสําเร็จ");
+                              dt.rows('.selected').remove().draw();
+                          },
+                          error: function (e) {
+                            console.log("There was an error with your request...");
+                            console.log("error: " + JSON.stringify(e));
+                          },
+                        });
+                        } else {
+                          alert("รหัสผ่านไม่ถูกต้อง");
+                        }
+                      }
+                  }}
+                })
+              }
             }
           ],
         });

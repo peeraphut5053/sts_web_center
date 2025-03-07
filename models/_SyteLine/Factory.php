@@ -267,6 +267,14 @@ order by wc, issuenum";
         $rs = $cSql->SqlQuery($this->StrConn, $sql);
         array_splice($rs, count($rs) - 1, 1);
         return $rs;
+    } 
+
+    function DeleteReportRepairByDocNo($doc_no) {
+        $cSql = new SqlSrv();
+        $sql = "DELETE FROM STS_repair WHERE DocNo = '$doc_no'";
+        $rs = $cSql->SqlQuery($this->StrConn, $sql);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
     }
 }
 
