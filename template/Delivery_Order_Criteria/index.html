@@ -256,9 +256,9 @@
                         if (i == newData.length - 1 && foot) {
                             let countRemain = result.filter((x) => x.QtyRemainder > 0).length;
                             data.push([
-                                    { text: "", fontSize: 12, alignment: 'center', colSpan: 2 },
+                                    { text: `หมายเหตุ : ${newData[i].NoteContent ? newData[i].NoteContent : ''}`, fontSize: 13,bold: true, alignment: 'left', colSpan: 7 },
                                     { text: "", fontSize: 12, alignment: 'center' },
-                                    { text: `หมายเหตุ : ${newData[i].NoteContent ? newData[i].NoteContent : ''}`, fontSize: 13,bold: true, alignment: 'left', colSpan: 5 },
+                                    { text: "", fontSize: 12, alignment: 'center' },
                                     { text: "", fontSize: 12, alignment: 'center' },
                                     { text: "", fontSize: 12, alignment: 'center' },
                                     { text: "", fontSize: 12, alignment: 'center' },
@@ -328,7 +328,7 @@
 
 
                             if (newData.length == 4) {
-                                for (let i = 0; i < 3; i++) {
+                                for (let i = 0; i < 2; i++) {
                                     data.push([
                                         { border: [false, false, false, false], text: " ", fontSize: 12, alignment: 'center' },
                                         { border: [false, false, false, false], text: " ", fontSize: 12, alignment: 'center' },
