@@ -308,6 +308,15 @@
         reader.readAsDataURL(file);
     });
 }
+  
+  function minutesToHours(minutes) {
+    if (minutes === null || minutes === undefined) {
+      return "";
+    }
+    var hours = Math.floor(minutes / 60);
+    var remainingMinutes = minutes % 60;
+    return (hours > 0 ? hours + " ชั่วโมง " : "") + (remainingMinutes > 0 ? remainingMinutes + " นาที" : "");
+   }
 
   function ReportItemSearch() {
     var OldHtml = $("#btnSearch").html();
@@ -524,7 +533,7 @@
 
                 if (StartDate && EndDate) {
                   var ret = moment(EndDate).diff(moment(StartDate), 'minutes');
-                  return ret + ' นาที';
+                  return minutesToHours(ret);
                 } else {
                   return "";
                 }
