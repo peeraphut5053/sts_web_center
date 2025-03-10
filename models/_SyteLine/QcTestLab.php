@@ -117,9 +117,18 @@ from STS_QA_LAB inner join sts_po_qc
         return $rs0;
     }
 
-    function makeReport($do_num){
+    function makeReport($do_num, $co_num, $line_start, $line_end, $type){
         $query = "EXEC [dbo].[STS_QA_MILLCERT]
  @DONumStarting = N'$do_num'";
+
+        if($type == 'bulk'){
+            $query = "EXEC STS_QA_MILLCERT_BULK
+  @DONumStarting = N'$do_num',
+  @CONumStarting = " . ($co_num !== '' ? "N'$co_num'" : "NULL") . ",
+  @COlineStarting = $line_start,
+  @COlineEnding = $line_end";
+        }
+
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);

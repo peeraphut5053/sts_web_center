@@ -239,7 +239,7 @@ if ($load == 'makePDF') {
     $CallModel->SyteLine_Models();
     $QcTestLab = new QcTestLab();
     $QcTestLab->setConn($ConnSL);
-    $QcTestLab = $QcTestLab->makeReport($do_num);
+    $QcTestLab = $QcTestLab->makeReport($do_num, $co_num, $line_start, $line_end, $type);
     echo json_encode($QcTestLab); 
 }
 
