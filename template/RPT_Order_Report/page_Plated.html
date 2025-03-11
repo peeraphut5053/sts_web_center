@@ -98,7 +98,7 @@ transform:rotate(360deg)
 </div>
 
     <div class="row" id="divReportAll">
-        <table class="table table-condensed table-bordered table-striped" id="tblReportAll">
+        <table style="width: 100%;" class="table table-condensed table-bordered table-striped" id="tblReportAll">
             <thead>
                 <tr>
                     <th>Job</th>
@@ -152,12 +152,14 @@ $(document).ready(function () {
   });
 
     $("#BtnSearchAll").click(function () {
-           
-        });
+        ReportAllSearch();
+    });
 
 
     function ReportAllSearch() {
     var OldHtml = $("#BtnSearchAll").html();
+        var plated_item = $("#plated_item").val();
+        var wc_plated = $("#wc_plated").val();
         $.ajax({
             type: 'POST',
             url: "././module/RPT_Order_Report/data.php",
@@ -167,6 +169,8 @@ $(document).ready(function () {
             },
             data: {
                 "load": "Plated",
+                "item": plated_item,
+                "wc": wc_plated
             },
             success: function (data) {
                 $("#tblReportAll").dataTable().fnDestroy();

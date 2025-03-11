@@ -1,198 +1,91 @@
-<style>
-    /* ซ่อน Checkbox ดั้งเดิม */
-.custom-checkbox input[type="checkbox"] {
-display: none;
-}
-
-/* ตำแหน่งและขนาดของ Checkbox */
-.custom-checkbox {
-display: inline-flex;
-align-items: center;
-cursor: pointer;
-font-size: 16px;
-margin: 3px;
-}
-
-/* สไตล์สำหรับ Checkmark */
-.custom-checkbox .checkmark {
-width: 20px;
-height: 20px;
-background-color: #ccc;
-border-radius: 4px;
-display: inline-block;
-margin-right: 10px;
-position: relative;
-transition: background-color 0.3s;
-}
-
-/* สไตล์สำหรับ Checkbox เมื่อถูกเลือก */
-.custom-checkbox input[type="checkbox"]:checked + .checkmark {
-background-color: #4CAF50;
-}
-
-/* สไตล์สำหรับเครื่องหมายถูก */
-.custom-checkbox .checkmark::after {
-content: "";
-position: absolute;
-display: none;
-}
-
-/* แสดงเครื่องหมายถูกเมื่อ Checkbox ถูกเลือก */
-.custom-checkbox input[type="checkbox"]:checked + .checkmark::after {
-display: block;
-}
-
-/* รูปแบบของเครื่องหมายถูก */
-.custom-checkbox .checkmark::after {
-left: 8px;
-top: 3px;
-width: 5px;
-height: 10px;
-border: solid white;
-border-width: 0 3px 3px 0;
-transform: rotate(45deg);
-}
-.loading-spinner{
-width:30px;
-height:30px;
-border:2px solid indigo;
-border-radius:50%;
-border-top-color:#0001;
-display:inline-block;
-animation:loadingspinner .7s linear infinite;
-}
-@keyframes loadingspinner{
-0%{
-transform:rotate(0deg)
-}
-100%{
-transform:rotate(360deg)
-}
-}
-</style>
-<div class="row" style="border-bottom:solid 1px #e8e8e8;">  
+<div class="row" style="border-bottom:solid 1px #e8e8e8;">
     <div class="row">
         <h3 style="padding-left:5px;">Hot-Roll SLit Report</h3>
     </div>
 </div>
 
-   <div class="row">
-    <div class="col-lg-4 col-search">
-        <label class="text-2xl">
-            Job Status
-       </label>
-        <div class="flex items-center">
-            <label class="custom-checkbox">
-                <input type="checkbox" name='Firm' id="Firm" />
-                <span class="checkmark"></span>
-                 Firm
-            </label>
-            <label class="custom-checkbox">
-                <input type="checkbox" name='Complete' id="Complete" />
-                <span class="checkmark"></span>
-                 Complete
-            </label>
-            <label class="custom-checkbox">
-                <input type="checkbox" name='Stopped' id="Stopped" />
-                <span class="checkmark"></span>
-                 Stopped
-            </label>
-            <label class="custom-checkbox">
-                <input type="checkbox" name='Released' id="Released" />
-                <span class="checkmark"></span>
-                 Released
-            </label>
-            <label class="custom-checkbox">
-                <input type="checkbox" name='History' id="History" />
-                <span class="checkmark"></span>
-                 History
-            </label>
-        </div>
-    </div> 
+<div class="row">
     <div class="col-lg-3 col-search">
-      
-        <div class="input-group-addon">Starting</div>
-    
-        <div class="input-group">
-            <div class="input-group-addon">เลขที่ใบสั่งผลิต</div>
-            <input type="text" class="form-control txt-filter" id="doc_plan_s">
-        </div>
-        <div class="flex">
-            <div class="input-group  m-2">
-                <div class="input-group-addon">Job Order</div>
-                <input type="text" class="form-control txt-filter" id="job_plan_s">
-            </div>
-            <div class="input-group  m-2">
-                <input type="number" class="form-control txt-filter" id="suffix_plan_s" value="0000">
-            </div>
-        </div>
         <div class="input-group">
             <div class="input-group-addon">Item</div>
-            <input type="text" class="form-control txt-filter" id="item_plan_s">
-        </div>
-        <div class="input-group">
-            <div class="input-group-addon">Job Start Date</div>
-            <input type="text" class="form-control txt-filter" id="date_plan_s">
+            <input type="text" class="form-control txt-filter" id="hot_item">
         </div>
     </div>
     <div class="col-lg-3 col-search">
-        
-            <div class="input-group-addon">Ending</div>
-        
         <div class="input-group w-full">
-            <input type="text" class="form-control txt-filter" id="doc_plan_e">
-        </div>
-        <div class="flex">
-            <div class="input-group  m-2">
-                <input type="text" class="form-control txt-filter" id="job_plan_e">
-            </div>
-            <div class="input-group  m-2">
-                <input type="text" class="form-control txt-filter" id="suffix_plan_e" value="9999">
-            </div>
-        </div>
-        <div class="input-group">
-            <input type="text" class="form-control txt-filter" id="item_plan_e">
-        </div>
-        <div class="input-group">
-            <input type="text" class="form-control txt-filter" id="date_plan_e">
+            <div class="input-group-addon">Work Center</div>
+            <select class="form-control txt-filter" id="wc_hot">
+                <option value=""></option>
+            </select>
         </div>
     </div>
-
     <div class="col-lg-1 col-md-2 col-sm-1 col-xs-6  col-search">
-        <button id="BtnSearchAll" class="btn btn-info"><i class="fa fa-search"></i>Search</button>
+        <button id="BtnHotSearch" class="btn btn-info"><i class="fa fa-search"></i>Search</button>
     </div>
 </div>
 
-    <div class="row" id="divReportAll">
-        <table class="table table-condensed table-bordered table-striped" id="tblReportAll">
-            <thead>
-                <tr>
-                    <th>Job</th>
-                    <th>Wc</th>
-                    <th>Item</th>
-                    <th>Size</th>
-                    <th>Spec</th>
-                    <th>Grade</th>
-                    <th>SCH.</th>
-                    <th>Length</th>
-                    <th>Type</th>
-                    <th>Pcs/Bundle</th>
-                    <th>ผลิต Qty</th>
-                    <th>HT PSI</th>
-                    <th>Remark</th>
-                </tr>
-        </table>
-    </div>
+<div class="row" id="divReportAll">
+    <table class="table table-condensed table-bordered table-striped" id="tblReportHot">
+        <thead>
+            <tr>
+                <th>Job</th>
+                <th>Wc</th>
+                <th>Item</th>
+                <th>Size</th>
+                <th>Spec</th>
+                <th>Grade</th>
+                <th>SCH.</th>
+                <th>Length</th>
+                <th>Type</th>
+                <th>Pcs/Bundle</th>
+                <th>ผลิต Qty</th>
+                <th>HT PSI</th>
+                <th>Remark</th>
+            </tr>
+    </table>
+</div>
 
 <script type="text/javascript">
 
     $("#BtnSearchAll").click(function () {
-      
+
+    });
+
+    $(document).ready(function () {
+    $.ajax({
+      type: "POST",
+      url: "././module/RPT_Job_Order_Report/data.php",
+      dataType: "json",
+      data: { load: "wc" },
+      success: function (response) {
+
+        const options = response.map((item) => ({
+          id: item.wc,
+          text: item.wc + " - " + item.description
+        }))
+        
+        var $select = $("#wc_hot");
+        $select.select2({
+          placeholder: 'Work Center',
+          allowClear: true,
+          width: '100%',
+          data: options,
+          language: {
+            noResults: function () {
+              return "ไม่พบข้อมูล";
+            }
+          }
+        }).on('select2:select', function (e) {
         });
+      }
+    });
+  });
 
 
     function ReportAllSearch() {
-    var OldHtml = $("#BtnSearchAll").html();
+        var OldHtml = $("#BtnSearchAll").html();
+        var hot_item = $("#hot_item").val();
+        var wc_hot = $("#wc_hot").val();
         $.ajax({
             type: 'POST',
             url: "././module/RPT_Order_Report/data.php",
@@ -201,7 +94,9 @@ transform:rotate(360deg)
                 $("#BtnSearchAll").html("<i class='fa fa-spinner fa-spin'>");
             },
             data: {
-                "load": "Plated",
+                "load": "Hot",
+                "item": hot_item,
+                "wc": wc_hot
             },
             success: function (data) {
                 $("#tblReportAll").dataTable().fnDestroy();
@@ -211,56 +106,69 @@ transform:rotate(360deg)
                     scrollCollapse: true,
                     "aaData": data,
                     "paging": false,
-//                        fixedColumns: {
-//                            leftColumns: 1,
-//                        },
+                    //                        fixedColumns: {
+                    //                            leftColumns: 1,
+                    //                        },
                     "searching": false,
                     "bInfo": false,
 
                     "columns": [
-                        {"data": "job",
+                        {
+                            "data": "job",
                             "className": "text-center",
                         },
-                        {"data": "wc",
+                        {
+                            "data": "wc",
                             "className": "text-center",
                         },
-                        {"data": "item",
+                        {
+                            "data": "item",
                             "className": "text-center",
                         },
-                        {"data": "Uf_NPS",
+                        {
+                            "data": "Uf_NPS",
                             "className": "text-center",
                         },
-                        {"data": "Uf_Spec",
+                        {
+                            "data": "Uf_Spec",
                             "className": "text-center",
                         },
-                        {"data": "Uf_Grade",
+                        {
+                            "data": "Uf_Grade",
                             "className": "text-center",
                         },
-                        {"data": "Uf_Schedule",
+                        {
+                            "data": "Uf_Schedule",
                             "className": "text-center",
                         },
-                        {"data": "Uf_Length",
+                        {
+                            "data": "Uf_Length",
                             "className": "text-center",
                         },
-                        {"data": "Uf_TypeEnd",
+                        {
+                            "data": "Uf_TypeEnd",
                             "className": "text-center",
                         },
-                        {"data": "Uf_Pack",
+                        {
+                            "data": "Uf_Pack",
                             "className": "text-center",
                         },
-                        {"data": "qty_released",
+                        {
+                            "data": "qty_released",
                             "className": "text-center",
                         },
-                        {"data": "uf_ht_psi",
+                        {
+                            "data": "uf_ht_psi",
                             "className": "text-center",
                         },
-                        {"data": "uf_remark",
+                        {
+                            "data": "uf_remark",
                             "className": "text-center",
                         },
                     ],
                     'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
-                            "<'row'<'col-md-12'tr>>" +
-                            "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                        "<'row'<'col-md-12'tr>>" +
+                        "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
                     buttons: [
                         {
                             extend: 'print',
@@ -277,41 +185,41 @@ transform:rotate(360deg)
                             }
                         },
                     ],
-                    
+
                     "footerCallback": function (row, data, start, end, display) {
-                            var api = this.api(),
-                                    data;
+                        var api = this.api(),
+                            data;
 
-                            // converting to interger to find total
-                            var intVal = function (i) {
-                                return typeof i === 'string' ?
-                                        i.replace(/[\$,]/g, '') * 1 :
-                                        typeof i === 'number' ?
-                                        i : 0;
-                            };
+                        // converting to interger to find total
+                        var intVal = function (i) {
+                            return typeof i === 'string' ?
+                                i.replace(/[\$,]/g, '') * 1 :
+                                typeof i === 'number' ?
+                                    i : 0;
+                        };
 
-                            // computing column Total of the complete result
-                            var qty_need = api
-                                    .column(10)
-                                    .data()
-                                    .reduce(function (a, b) {
-                                        return intVal(a) + intVal(b);
-                                    }, 0);
+                        // computing column Total of the complete result
+                        var qty_need = api
+                            .column(10)
+                            .data()
+                            .reduce(function (a, b) {
+                                return intVal(a) + intVal(b);
+                            }, 0);
 
-                            var avai_FC = api
-                                    .column(11)
-                                    .data()
-                                    .reduce(function (a, b) {
-                                        return intVal(b) > intVal(a) ? intVal(b) : intVal(a);
-                                    }, 0);
+                        var avai_FC = api
+                            .column(11)
+                            .data()
+                            .reduce(function (a, b) {
+                                return intVal(b) > intVal(a) ? intVal(b) : intVal(a);
+                            }, 0);
 
-                            $(api.column(1).footer()).html('qty_need');
-                            $(api.column(2).footer()).html(addCommas(qty_need.toFixed(2)));
-                            $(api.column(3).footer()).html('avai_FC');
-                            $(api.column(4).footer()).html(addCommas(avai_FC.toFixed(2)));
-                            $(api.column(5).footer()).html('avai_FC - qty_need');
-                            $(api.column(6).footer()).html(addCommas((avai_FC-qty_need).toFixed(2)));
-                        },
+                        $(api.column(1).footer()).html('qty_need');
+                        $(api.column(2).footer()).html(addCommas(qty_need.toFixed(2)));
+                        $(api.column(3).footer()).html('avai_FC');
+                        $(api.column(4).footer()).html(addCommas(avai_FC.toFixed(2)));
+                        $(api.column(5).footer()).html('avai_FC - qty_need');
+                        $(api.column(6).footer()).html(addCommas((avai_FC - qty_need).toFixed(2)));
+                    },
                 });
                 $('#tblReportAll').loading("stop");
                 $("#BtnSearchAll").html("<i class='fa fa-search'></i>Search");
@@ -322,4 +230,7 @@ transform:rotate(360deg)
             }
         });
     }
+
+
+    
 </script>
