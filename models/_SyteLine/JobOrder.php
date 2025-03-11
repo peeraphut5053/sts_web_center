@@ -617,23 +617,43 @@ class JOBORDER {
         return $rs0;
     }
 
-    function process_job_receipt($job, $suffix, $item, $operNum, $qty, $qty2, $lot, $loc, $transDate, $tag_id) {
+    function process_job_receipt($job, $suffix, $item, $operNum, $qty, $qty2, $lot, $loc, $transDate, $tag_id,$user) {
+
+        $time = date("Y-m-d H:i:s");
 
         $query = " EXEC RC_STSJobReceiptProcessSp @SJob='$job',"
-                . " @SSuffix  = 0,"
+                . " @SSuffix  = $suffix,"
                 . " @SItem ='$item',"
-                . " @SOperNum  = 10,"
+                . " @SOperNum  = $operNum,"
                 . " @SQty = $qty,"
                 . " @SQty2   = $qty2,"
                 . " @SLot   ='$lot',"
                 . " @SLoc ='$loc',"
-                . " @STransDate = '" . date("Y-m-d H:i:s") . "',"
+                . " @STransDate = '$time',"
                 . " @TagId = '$tag_id',"
                 . " @UserName = 'admin',"
                 . " @msg = NULL,"
                 . " @UpStat =  NULL";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        
+        // delay 1s
+       sleep(1);
+    
+        $qs = "update matltran_mst 
+  set createdby = '$user', UpdatedBy = '$user'
+  where trans_type = 'F' and ref_type = 'J' 
+     and uf_qty2 is not null
+     and convert(date,createdate) = convert(date,'$time')
+     and DATEDIFF(second, createdate, '$time') < 15
+     and item = '$item' 
+     and ref_num = '$job' and ref_release = '$operNum'
+     and qty = $qty
+     and loc = '$loc'
+     and lot = '$lot'";
+
+        $cSql->SqlQuery($this->StrConn, $qs);
+
         array_splice($rs0, count($rs0) - 1, 1);
         return $rs0;
     }
@@ -728,7 +748,7 @@ group by tag_status, mv.item, item.description, lt.loc, mv.lot, mv.qty1,  isnull
         return $rs0;
     }
 
-    function MaterialProcess($job, $suffix, $item, $operNum, $qty1, $qty2, $lot, $loc, $doc) {
+    function MaterialProcess($job, $suffix, $item, $operNum, $qty1, $qty2, $lot, $loc, $doc, $user) {
 
         $date = date('Y-m-d H:i:s');
 
@@ -745,6 +765,20 @@ group by tag_status, mv.item, item.description, lt.loc, mv.lot, mv.qty1,  isnull
                 . " @msg = NULL";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+
+        $qs = "update matltran_mst 
+  set createdby = '$user', updatedby = '$user'
+  where trans_type = 'I' and ref_type = 'J' 
+     and uf_qty2 is not null
+     and convert(date,createdate) = convert(date,'$date')
+     and DATEDIFF(second, createdate, getdate()) < 15
+     and item = '$item' 
+     and ref_num = '$job' and ref_release = '$operNum'
+     and qty = $qty1
+     and loc = '$loc'
+     and lot = '$lot'";
+
+        $cSql->SqlQuery($this->StrConn, $qs);
         array_splice($rs0, count($rs0) - 1, 1);
         return $rs0;
     }
@@ -1528,20 +1562,22 @@ WHERE id = '$id' ";
         return $rs0;
     }
 
-    function PlatedOrderReport() {
-        $query = " EXEC MV_PLATED_ORDER_REPORT @TransactionDateStarting= NULL,"
+    function PlatedOrderReport($item, $wc) {
+        $query = " EXEC MV_PLATED_ORDER_REPORT_web @TransactionDateStarting= NULL,"
                 . " @TransactionDateEnding  = NULL,"
                 . " @JobStarting = NULL,"
                 . " @JobEnding = NULL,"
                 . " @SuffixStarting = 0000,"
                 . " @SuffixEnding = 9999,"
-                . " @ItemStarting = NULL,"
-                . " @ItemEnding = NLL,"
+                . " @ItemStarting = " . ($item == null ? "NULL" : "'$item'") . ","
+                . " @ItemEnding = " . ($item == null ? "NULL" : "'$item'") . ","
                 . " @JobStatus = 'R',"
                 . " @JobStsStart = NULL,"
                 . " @JobStsEnd = NULL,"
                 . " @OperStart = NULL,"
-                . " @OperEnd = NULL";
+                . " @OperEnd = NULL,"
+                . " @wcStarting = " . ($wc == null ? "NULL" : "'$wc'") . ","
+                . " @wcEnding = " . ($wc == null ? "NULL" : "'$wc'") . "";
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
@@ -1565,16 +1601,18 @@ WHERE id = '$id' ";
         return $rs;
     }
 
-    function ProductionOrderReport() {
-        $query = " EXEC MV_PRODUCTION_ORDER_REPORT @TransactionDateStarting= NULL,"
+    function ProductionOrderReport($item,$wc) {
+        $query = " EXEC MV_PRODUCTION_ORDER_REPORT_web @TransactionDateStarting= NULL,"
                 . " @TransactionDateEnding  = NULL,"
                 . " @JobStarting = NULL,"
                 . " @JobEnding = NULL,"
                 . " @SuffixStarting = 0000,"
                 . " @SuffixEnding = 9999,"
-                . " @ItemStarting = 'FC074N0060000-M2AS040F02100H',"
-                . " @ItemEnding = 'FC074N0060000-M2AS040F02100H',"
-                . " @JobStatus = 'FCRHS'";
+                . " @ItemStarting = " . ($item == null ? "NULL" : "'$item'") . ","
+                . " @ItemEnding = " . ($item == null ? "NULL" : "'$item'") . ","
+                . " @JobStatus = 'R',"
+                . " @wcStarting = " . ($wc == null ? "NULL" : "'$wc'") . ","
+                . " @wcEnding = " . ($wc == null ? "NULL" : "'$wc'") . "";
                 $query2 = " EXEC MV_PRODUCTION_ORDER_REPORT_sub @TransactionDateStarting= NULL,"
                 . " @TransactionDateEnding  = NULL,"
                 . " @JobStarting = NULL,"
@@ -1590,13 +1628,15 @@ WHERE id = '$id' ";
         return $rs;
     }
 
-    function HotRollReport() {
+    function HotRollReport($item,$wc) {
         $query = " EXEC MV_HOT_ROLL_SLIT_REPORT @TransactionDateStarting= NULL,"
                 . " @TransactionDateEnding  = NULL,"
                 . " @JobStarting = NULL,"
                 . " @JobEnding = NULL,"
-                . " @ItemStarting = NULL,"
-                . " @ItemEnding = NULL";
+                . " @ItemStarting = " . ($item == null ? "NULL" : "'$item'") . ","
+                . " @ItemEnding = " . ($item == null ? "NULL" : "'$item'") . ","
+                . " @wcStarting = " . ($wc == null ? "NULL" : "'$wc'") . ","
+                . " @wcEnding = " . ($wc == null ? "NULL" : "'$wc'") . "";
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);

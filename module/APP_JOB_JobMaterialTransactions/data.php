@@ -58,7 +58,7 @@ if ($load == "GetDataJob") {
 
     // loop tag array.length
     foreach ($tag as $key => $value) {
-        $GetDataJob = $CallModelObj->MaterialProcess($data["job"], $data["suffix"], $value["item"], $data["operNum"], $value["qty1"], $value["qty2"], $value["lot"], $value["loc"], $value["DocRef"]);
+        $GetDataJob = $CallModelObj->MaterialProcess($data["job"], $data["suffix"], $value["item"], $data["operNum"], $value["qty1"], $value["qty2"], $value["lot"], $value["loc"], $value["DocRef"], $data["user"]);
         
     }
 

@@ -22,7 +22,7 @@ if ($load == "job_id_list") {
     $tag_scan = $CallModelObj->tag_scan($tag_id);
     echo json_encode($tag_scan);
 } else if ($load == "process_job_receipt") {
-    $tag_scan = $CallModelObj->process_job_receipt($job, $suffix, $item, $operNum, $qty, $qty2, $lot, $loc, $transDate, $tag_id);
+    $tag_scan = $CallModelObj->process_job_receipt($job, $suffix, $item, $operNum, $qty, $qty2, $lot, $loc, $transDate, $tag_id,$user);
     echo json_encode($tag_scan);
 } else if ($load == "check_process_job_receipt") {
     $tag_scan = $CallModelObj->check_process_job_receipt($lot);
