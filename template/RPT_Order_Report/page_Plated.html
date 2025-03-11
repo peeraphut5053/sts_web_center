@@ -101,6 +101,7 @@ transform:rotate(360deg)
         <table style="width: 100%;" class="table table-condensed table-bordered table-striped" id="tblReportAll">
             <thead>
                 <tr>
+                    <th>ลำดับ</th>
                     <th>Job</th>
                     <th>Wc</th>
                     <th>Item</th>
@@ -187,6 +188,9 @@ $(document).ready(function () {
                     "bInfo": false,
 
                     "columns": [
+                    {"data": "ordernum",
+                            "className": "text-center",
+                        },
                         {"data": "job",
                             "className": "text-center",
                         },

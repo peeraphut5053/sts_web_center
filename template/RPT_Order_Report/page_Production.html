@@ -29,6 +29,7 @@
     <table class="table table-condensed table-bordered table-striped" id="tblReportPro">
         <thead>
             <tr>
+                <th>ลำดับ</th>
                 <th>Job</th>
                 <th>Wc</th>
                 <th>Ref no.</th>
@@ -151,6 +152,9 @@ function generateBarcode(text) {
                     ],
                     select: true,
                     "columns": [
+                        {"data": "ordernum",
+                            "className": "text-center",
+                        },
                         {
                             "data": "jobbarcode2",
                             "className": "text-center",
