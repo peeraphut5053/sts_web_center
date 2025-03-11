@@ -1381,7 +1381,7 @@ return data;
 }
 
 function qrCode(cur,pageData) {
-if (type === 'out') {
+if (type === 'out' || type === 'bulk') {
     return {} 
 } else {}
 if (pageData[cur -1][0].standard_sub === 'TIS.107') {
@@ -1952,7 +1952,7 @@ return data;
 }
 
 function qrCode(cur,pageData) {
-if (type === 'out') {
+if (type === 'out' || type === 'bulk') {
     return {} 
 } else {}
 if (pageData[cur -1][0].standard_sub === 'TIS.107') {
