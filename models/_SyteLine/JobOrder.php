@@ -775,7 +775,7 @@ group by tag_status, mv.item, item.description, lt.loc, mv.lot, mv.qty1,  isnull
      and convert(date,createdate) = convert(date,'$date')
      and DATEDIFF(second, createdate, '$date') < 15
      and item = '$item' 
-     and ref_num = '$job' and ref_release = '$operNum'
+     and ref_num = '$job' and ref_release = $operNum
      and qty = $qty1
      and loc = '$loc'
      and lot = '$lot'";
