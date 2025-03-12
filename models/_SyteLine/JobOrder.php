@@ -750,7 +750,7 @@ group by tag_status, mv.item, item.description, lt.loc, mv.lot, mv.qty1,  isnull
 
     function MaterialProcess($job, $suffix, $item, $operNum, $qty1, $qty2, $lot, $loc, $doc, $user) {
 
-        $date = date('Y-m-d H:i:s');
+        $date = date("Y-m-d H:i:s");
 
         $query = " EXEC [dbo].[RC_STSJobMatlTransactionSp] @Job = '$job',"
                 . " @Suffix = $suffix,"
@@ -766,12 +766,14 @@ group by tag_status, mv.item, item.description, lt.loc, mv.lot, mv.qty1,  isnull
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
 
+        sleep(1);
+
         $qs = "update matltran_mst 
   set createdby = '$user', updatedby = '$user'
   where trans_type = 'I' and ref_type = 'J' 
      and uf_qty2 is not null
      and convert(date,createdate) = convert(date,'$date')
-     and DATEDIFF(second, createdate, getdate()) < 15
+     and DATEDIFF(second, createdate, '$date') < 15
      and item = '$item' 
      and ref_num = '$job' and ref_release = '$operNum'
      and qty = $qty1
