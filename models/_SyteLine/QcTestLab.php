@@ -386,7 +386,7 @@ where trans_type = 'F'
             Equipment = '$measuring',
             Code = '$code_no',
             SN = '$s_n',
-            Manufac = '$manufacturer',
+            Manu = '$manufacturer',
             Model = '$model',
             RangeEquip = N'$range',
             RangeCali = N'$range_cal',
@@ -396,7 +396,7 @@ where trans_type = 'F'
             NextCalDate = $next_cal_value,
             Company = '$company',
             Frequency = '$frequency',
-            Location = '$loc_equipment',
+            Loc = '$loc_equipment',
             RptNo = '$onlyexternal'
           WHERE 
             RptNo = '$old_onlyexternal'";
