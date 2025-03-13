@@ -1,5 +1,7 @@
 <?php
 
+header('Content-Type: application/json');
+
 foreach ($_GET as $key => $value) {
     $$key = trim($value);
 }
@@ -33,17 +35,30 @@ if ($load == "wc") {
     $rs = $STS_Custom->SearchJobOrderReport($Item , $wc,$whereClause);
     echo json_encode($rs);
 } else if ($load == "Job") {
+
     $CallModel = new CallModel();
     $CallModel->SyteLine_Models();
     $STS_Custom = new JOBORDER();
     $STS_Custom->setConn($ConnSL);
-    $rs = $STS_Custom->SaveJobOrder($job, $job_order);
+    // loop job and job_order is array 
+    $jobs = isset($_POST['job']) ? $_POST['job'] : [];
+    $job_orders = isset($_POST['job_order']) ? $_POST['job_order'] : [];
+
+    for ($i = 0; $i < count($jobs); $i++) {
+        $rs = $STS_Custom->SaveJobOrder($jobs[$i], $job_orders[$i]);
+    }
+    
     echo json_encode($rs);
 } else if ($load == "Close") {
     $CallModel = new CallModel();
     $CallModel->SyteLine_Models();
     $STS_Custom = new JOBORDER();
     $STS_Custom->setConn($ConnSL);
-    $rs = $STS_Custom->CloseJobOrder($job);
+    $jobs = isset($_POST['job']) ? $_POST['job'] : [];
+
+    for ($i = 0; $i < count($jobs); $i++) {
+        $rs = $STS_Custom->CloseJobOrder($jobs[$i]);
+    }
+    
     echo json_encode($rs);
 }

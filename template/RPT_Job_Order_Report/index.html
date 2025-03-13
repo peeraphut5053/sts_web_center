@@ -142,18 +142,9 @@
           </button>
       </div>
       <div class="modal-body">
-        <div class="flex justify-start items-center mb-5">
-          <div class="input-group basis-2/4">
-            <div class="input-group-addon">Job</div>
-            <input type="text" autocomplete="off" class="form-control" id="job" disabled>
-          </div>
-        </div>
-        <div class="flex justify-start items-center mb-5">
-          <div class="input-group basis-2/4">
-            <div class="input-group-addon">ลำดับ</div>
-            <input type="text" autocomplete="off" class="form-control" id="job_order">
-          </div>
-        </div>
+        <div id="jobContainer">
+          <!-- ข้อมูลจาก AJAX จะแสดงที่นี่ -->
+      </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
@@ -258,6 +249,9 @@
           scrollCollapse: true,
           scrollX: true,
           select: true,
+          select: {
+              style: "multi",
+            },
           columnDefs: [
             {
               targets: [2],
@@ -312,17 +306,38 @@
                   return false;
                 }
 
-                if (selected[0].stat !== 'R') {
-                  alert("กรุณาเลือก Job Order ที่มีสถานะเป็น Released");
+                if (selected.some(item => item.stat !== 'R')) {
+                  alert("กรุณาเลือก Job Order ทั้งหมดที่มีสถานะเป็น Released");
                   return false;
                 }
 
-                if (selected[0].Createdate) {
+                if (selected.some(item => item.Createdate)) {
                   alert("Job Order นี้ได้เปิดไปแล้ว");
                   return false;
                 }
+                
+                renderJobFields(selected);
+                function renderJobFields(data) {
+                  let container = $('#jobContainer'); // สมมติว่า `<div id="jobContainer"></div>` อยู่ใน HTML
+                  container.empty(); // เคลียร์ข้อมูลเก่า
+                  console.log(data);
 
-                $("#job").val(selected[0].job);
+                  data.forEach((item, index) => {
+                    let html = `
+            <div class="flex justify-start items-center mb-5 gap-4 job-row">
+                <div class="input-group basis-2/4">
+                    <div class="input-group-addon">Job</div>
+                    <input type="text" class="form-control job" value="${item.job}" disabled>
+                </div>
+                <div class="input-group basis-2/4">
+                    <div class="input-group-addon">ลำดับ</div>
+                    <input type="number" class="form-control job-no" value="${item.no}" >
+                </div>
+            </div>
+        `;
+                    container.append(html);
+                  });
+                }
                 $("#ModalJobReport").modal("show");
               }
             },
@@ -336,7 +351,7 @@
                   return false;
                 }
 
-                if (!selected[0].Createdate) {
+                if (selected.some(item => !item.Createdate)) {
                   alert("Job Order นี้ยังไม่ได้เปิด");
                   return false;
                 }
@@ -350,7 +365,7 @@
                     },
                     data: {
                       load: 'Close',
-                      job: selected[0].job,
+                      job: selected.map(item => item.job),
                     },
                     success: function (data) {
                       alert("ปิด Job Order สําเร็จ");
@@ -382,8 +397,17 @@
 
   $("#btnJob").click(function () {
     // get data selected 
-    var job = $("#job").val();
-    var job_order = $("#job_order").val();
+    let jobData = [];
+    let order = [];
+
+    // วนลูปเก็บค่าที่ผู้ใช้แก้ไข
+    $('#jobContainer .job-row').each(function () {
+      let job = $(this).find('.job').val(); // ค่าจาก input
+      let job_order = $(this).find('.job-no').val(); // ค่าจาก input
+
+      jobData.push(job);
+      order.push(job_order);
+    });
 
     $.ajax({
       type: "POST",
@@ -393,8 +417,8 @@
       },
       data: {
         load: 'Job',
-        job: job,
-        job_order: job_order,
+        job: jobData,
+        job_order: order,
       },
       success: function (data) {
         $("#ModalJobReport").modal("hide");

@@ -1689,7 +1689,8 @@ order by job_mst.job";
 
     function SaveJobOrder($job, $job_order) {
 
-        $query = "INSERT INTO STS_curr_job_order (job,no) VALUES ('$job','$job_order')";
+        $order = !empty($job_order) ? $job_order : 'NULL';
+        $query = "INSERT INTO STS_curr_job_order (job, no) VALUES ('$job', $order)";
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
