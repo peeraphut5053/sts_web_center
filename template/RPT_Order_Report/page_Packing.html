@@ -124,7 +124,13 @@ $(document).ready(function () {
                     "aaData": data,
                     "paging": false,
                     "searching": false,
-                    "bInfo": false,        
+                    "bInfo": false,    
+                    columnDefs: [
+                        {
+                            targets: [2],
+                            width: 150,
+                        }
+                    ],    
                     "columns": [
                         {"data": "ordernum",
                             "className": "text-center",
