@@ -155,7 +155,7 @@ if ($load == "moveqty_create_hdr_BoatNoteOnly") {
     (isset($do_num)) ? $do_num = $do_num : $do_num = "";
     (isset($boatList)) ? $boatList = $boatList : $boatList = "";
 
-    $moveqty_create_hdr_BoatNoteOnly = $CallModelObj->moveqty_create_hdr_BoatNoteOnly($toLoc, $w_c, $doc_type, $do_num, $boatList, $destination, $ActWeight);
+    $moveqty_create_hdr_BoatNoteOnly = $CallModelObj->moveqty_create_hdr_BoatNoteOnly($toLoc, $w_c, $doc_type, $do_num, $boatList, $destination, $ActWeight,$round);
     echo json_encode($moveqty_create_hdr_BoatNoteOnly);
 }
 
