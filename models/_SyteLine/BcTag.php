@@ -401,9 +401,15 @@ order by id desc";
 	
 	Function UpdateBoat_Position($id,$doc_num,$boat_position) {
         $cSql = new SqlSrv();
-        $query = "update STS_qty_move_line "
-                . " set boat_position = '$boat_position' "
-                . " where tag_id = $id and doc_num = '$doc_num' ";
+        $query = "update STS_qty_move_line set boat_position = '$boat_position' where tag_id = '$id' and doc_num = '$doc_num' ";
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+	Function DeleteQtyMoveLine($id,$doc_num,$boat_position) {
+        $cSql = new SqlSrv();
+        $query = "Delete FROM STS_qty_move_line where tag_id = '$id' and doc_num = '$doc_num' and boat_position = '$boat_position'";
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
         return $rs;
@@ -429,7 +435,7 @@ order by id desc";
 
     Function STS_qty_move_hrd_ship() {
         $cSql = new SqlSrv();
-        $query = "select top 3500 doc_num, loc, create_date, doc_type, destination, round FROM STS_qty_move_hrd where doc_type = 'ship' order by doc_num desc ";
+        $query = "select top 3500 doc_num, loc, create_date, doc_type, destination FROM STS_qty_move_hrd where doc_type = 'ship' order by doc_num desc ";
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
         return $rs;
@@ -441,7 +447,9 @@ order by id desc";
         }
         $cSql = new SqlSrv();
         $query = "exec STS_QtyMoveLotLocation_GEN_HEADER @loc = '$toLoc' , @w_c= '$w_c' ,@doc_type= '$doc_type' , @do_num='$do_num',@boatList='$boatList',@destination = '$destination',@ActWeight = '$ActWeight', @round = " . ($round == "" ? "NULL" : $round) . " ";
-        return $query;
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
     }
 
     
