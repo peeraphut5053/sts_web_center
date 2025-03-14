@@ -485,7 +485,8 @@ order by id desc";
 		@docnum = N'".$rs2[1]["doc_num"]."',
 		@docline = N'$docline',
 		@tagNum = N'$tagnum',
-		@toLoc = N'$toLoc'";
+		@toLoc = N'$toLoc',
+        @boatPosition = NULL";
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         return $rs[0];
