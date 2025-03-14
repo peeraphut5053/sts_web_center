@@ -569,7 +569,7 @@ order by do_num desc";
 
     function GetDataDeliveryDx($do_num) {
         $query = "select do_num, do_line, Uf_Container_num, Uf_Container_zeal, Uf_Container_size
-  , Uf_Container_blank_weight, Uf_Container_car_num
+  , Uf_Container_blank_weight, Uf_Container_car_num, uf_act_weight
 from do_line_mst
 where do_num = '$do_num'";
         $cSql = new SqlSrv();
@@ -600,9 +600,10 @@ where do_num = '$do_num'";
         return $rs0;
     }
     
-    function SaveDelivery($do_delivery, $line_delivery, $Uf_Container_num, $Uf_Container_zeal, $Uf_Container_size, $Uf_Container_blank_weight, $Uf_Container_car_num) {
+    function SaveDelivery($do_delivery, $line_delivery, $Uf_Container_num, $Uf_Container_zeal, $Uf_Container_size, $Uf_Container_blank_weight, $Uf_Container_car_num, $uf_act_weight) {
         $con_size = $Uf_Container_size == '' ? 'NULL' : $Uf_Container_size;
-        $query = "UPDATE do_line_mst set Uf_Container_num = '$Uf_Container_num', Uf_Container_zeal = '$Uf_Container_zeal', Uf_Container_size = $con_size, Uf_Container_blank_weight = $Uf_Container_blank_weight, Uf_Container_car_num = '$Uf_Container_car_num' where do_num = '$do_delivery' and do_line = '$line_delivery' ";
+        $act_weight = $uf_act_weight == '' ? 'NULL' : $uf_act_weight;
+        $query = "UPDATE do_line_mst set Uf_Container_num = '$Uf_Container_num', Uf_Container_zeal = '$Uf_Container_zeal', Uf_Container_size = $con_size, Uf_Container_blank_weight = $Uf_Container_blank_weight, Uf_Container_car_num = '$Uf_Container_car_num', Uf_act_weight = $act_weight where do_num = '$do_delivery' and do_line = '$line_delivery' ";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);

@@ -47,6 +47,6 @@ if ($load == "Search") {
 
     $STS_Custom = new DeliveryOrder();
     $STS_Custom->setConn($ConnSL);
-    $rs = $STS_Custom->SaveDelivery($do_delivery, $line_delivery, $Uf_Container_num, $Uf_Container_zeal, $Uf_Container_size, $Uf_Container_blank_weight, $Uf_Container_car_num);
+    $rs = $STS_Custom->SaveDelivery($do_delivery, $line_delivery, $Uf_Container_num, $Uf_Container_zeal, $Uf_Container_size, $Uf_Container_blank_weight, $Uf_Container_car_num,$uf_act_weight);
     echo json_encode($rs);
 }

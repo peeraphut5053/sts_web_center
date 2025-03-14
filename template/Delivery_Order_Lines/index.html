@@ -85,6 +85,7 @@
           <th  class="bg-gray">ซีลตู้</th>
           <th  class="bg-gray">ขนาดตู้</th>
           <th class="bg-gray">น้ําหนักตู้เปล่า</th>
+          <th class="bg-gray">น้ําหนักชั่งจริง</th>
           <th class="bg-gray">ทะเบียนรถ</th>
 
         </tr>
@@ -140,6 +141,10 @@ aria-hidden="true">
         <div class="input-group basis-2/4">
           <div class="input-group-addon">ขนาดตู้</div>
           <input type="text" autocomplete="off" class="form-control" id="Uf_Container_size">
+        </div>
+        <div class="input-group basis-2/4">
+          <div class="input-group-addon">น้ําหนักชั่งจริง</div>
+          <input type="text" autocomplete="off" class="form-control" id="uf_act_weight">
         </div>
       </div>
     </div>
@@ -319,6 +324,10 @@ aria-hidden="true">
                   className: "text-center",
                 },
                 {
+                  data: "uf_act_weight",
+                  className: "text-center",
+                },
+                {
                   data: "Uf_Container_car_num",
                   className: "text-center",
                 }
@@ -356,6 +365,7 @@ aria-hidden="true">
                 $("#Uf_Container_size").val(selected[0].Uf_Container_size);
                 $("#Uf_Container_blank_weight").val(selected[0].Uf_Container_blank_weight);
                 $("#Uf_Container_car_num").val(selected[0].Uf_Container_car_num);
+                $("#uf_act_weight").val(selected[0].uf_act_weight);
                 $("#DeliveryOrderLines").modal("show");
                 }
                 },
@@ -402,6 +412,7 @@ aria-hidden="true">
       var Uf_Container_size = $("#Uf_Container_size").val();
       var Uf_Container_blank_weight = $("#Uf_Container_blank_weight").val();
       var Uf_Container_car_num = $("#Uf_Container_car_num").val();
+      var uf_act_weight = $("#uf_act_weight").val();
 
       $.ajax({
         type: "POST",
@@ -415,7 +426,8 @@ aria-hidden="true">
           Uf_Container_zeal: Uf_Container_zeal,
           Uf_Container_size: Uf_Container_size,
           Uf_Container_blank_weight: Uf_Container_blank_weight,
-          Uf_Container_car_num: Uf_Container_car_num
+          Uf_Container_car_num: Uf_Container_car_num,
+          uf_act_weight: uf_act_weight
    
         },
         success: function (data) {
