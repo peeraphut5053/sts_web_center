@@ -69,6 +69,11 @@
     display: inline-block;
     animation: loadingspinner .7s linear infinite;
   }
+
+  .selected {
+    background-color: rgb(229, 244, 251) !important; /* Add !important to make sure override datables base styles */
+    color: black !important;
+ }
 </style>
 <div class="row">
   <div>
@@ -121,6 +126,7 @@
   <table width="100%" class="table table-condensed table-bordered table-striped" id="tblReport">
     <thead>
       <tr>
+        <th></th>
         <th>Job</th>
         <th>Status</th>
         <th>Item</th>
@@ -189,7 +195,35 @@
     ReportItemSearch();
   });
 
+  var selectedJob = [];
+
+  function selectJob(job) {
+
+    if (selectedJob.some(item => item.job === job)) {
+      selectedJob = selectedJob.filter(item => item.job !== job);
+    } else {
+      selectedJob.push({
+        job: job,
+        order: null
+      });
+    }
+  }
+
+  function updateOrder(job, order) {
+    if (selectedJob.some(item => item.job === job)) {
+      selectedJob = selectedJob.map(item => {
+        if (item.job === job) {
+          item.order = order;
+        }
+        return item;
+      });
+    } 
+    console.log(selectedJob);
+    
+  }
+
   function ReportItemSearch() {
+    selectedJob = [];
     var OldHtml = $("#btnSearch_Repair_Check").html();
     var Item = $("#job_item").val();
     var wc = $("#job_wc").val();
@@ -249,16 +283,28 @@
           scrollCollapse: true,
           scrollX: true,
           select: true,
+          order: [
+            [1, "asc"]
+          ],
           select: {
               style: "multi",
+              selector: 'td:nth-child(1)' // กำหนดให้คลิกได้เฉพาะคอลัมน์ที่ 2
+
             },
           columnDefs: [
             {
-              targets: [2],
-              width: 300,
+              targets: [3],
+              width: 200,
             }
           ],
           columns: [
+            {
+              "data": "job",
+              "className": "text-center",
+              "render": function (data, type, row) {
+                return `<input id="selectJob" onclick="selectJob('${data}')" style="width: 30px; height: 30px;" type="checkbox" class="job" value="${data}" />`;
+              }
+            },
             {
               "data": "job",
               "className": "text-center",
@@ -278,7 +324,11 @@
             {
               "data": "no",
               "className": "text-center",
+              "render": function (data, type, row) {
+                return `<input onchange="updateOrder('${row.job}' , this.value)" type="number" class="form-control job-no" value="${data}">`;
+              }
             },
+             
             {
               "data": "Createdate.date",
               "className": "text-center",
@@ -300,14 +350,20 @@
               text: `<button type="button" class="btn btn-success">เปิด Job Order</button>`,
               action: function (e, dt, node, config) {
                 // on selected
-                let selected = Array.from(dt.rows('.selected').data());
+                let data = Array.from(dt.rows().data());
+
+                // data filter by selectJob 
+
+                let selected = data.filter(item => selectedJob.some(selectedItem => selectedItem.job === item.job));
+
+
                 if (selected.length == 0) {
                   alert("กรุณาเลือก Job Order ที่ต้องการเปิด");
                   return false;
                 }
 
                 if (selected.some(item => item.stat !== 'R')) {
-                  alert("กรุณาเลือก Job Order ทั้งหมดที่มีสถานะเป็น Released");
+                  alert("กรุณาเลือก Job Order ที่มีสถานะเป็น Released");
                   return false;
                 }
 
@@ -315,12 +371,34 @@
                   alert("Job Order นี้ได้เปิดไปแล้ว");
                   return false;
                 }
+
+                $.ajax({
+                  type: "POST",
+                  url: "././module/RPT_Job_Order_Report/data.php",
+                  dataType: "json",
+                  beforeSend: function () {
+                  },
+                  data: {
+                    load: 'Job',
+                    job: selectedJob.map(item => item.job),
+                    job_order: selectedJob.map(item => item.order),
+                  },
+                  success: function (data) {
+                    selectedJob = [];
+                    alert("เปิด Job Order สําเร็จ");
+                    ReportItemSearch();
+                  },
+
+                  error: function (e) {
+                    alert("เปิด Job Order ไม่สําเร็จ");
+                  },
+
+                });
                 
-                renderJobFields(selected);
+                {/*renderJobFields(selected);
                 function renderJobFields(data) {
                   let container = $('#jobContainer'); // สมมติว่า `<div id="jobContainer"></div>` อยู่ใน HTML
                   container.empty(); // เคลียร์ข้อมูลเก่า
-                  console.log(data);
 
                   data.forEach((item, index) => {
                     let html = `
@@ -339,13 +417,17 @@
                   });
                 }
                 $("#ModalJobReport").modal("show");
-              }
+                */}
+              } 
             },
             {
               text: `<button type="button" class="btn btn-danger">ปิด Job Order</button>`,
               action: function (e, dt, node, config) {
                 // on selected
-                let selected = Array.from(dt.rows('.selected').data());
+                let data = Array.from(dt.rows().data());
+
+                let selected = data.filter(item => selectedJob.some(selectedItem => selectedItem.job === item.job));
+
                 if (selected.length == 0) {
                   alert("กรุณาเลือก Job Order ที่ต้องการปิด");
                   return false;
@@ -369,6 +451,7 @@
                     },
                     success: function (data) {
                       alert("ปิด Job Order สําเร็จ");
+                      selectedJob = [];
                       ReportItemSearch();
                     },
                     error: function (e) {
@@ -409,30 +492,7 @@
       order.push(job_order);
     });
 
-    $.ajax({
-      type: "POST",
-      url: "././module/RPT_Job_Order_Report/data.php",
-      dataType: "json",
-      beforeSend: function () {
-      },
-      data: {
-        load: 'Job',
-        job: jobData,
-        job_order: order,
-      },
-      success: function (data) {
-        $("#ModalJobReport").modal("hide");
-        $("#job").val('');
-        $("#job_order").val('');
-        alert("เปิด Job Order สําเร็จ");
-        ReportItemSearch();
-      },
-
-      error: function (e) {
-        alert("เปิด Job Order ไม่สําเร็จ");
-      },
-
-    });
+  
   });
 
 </script>
