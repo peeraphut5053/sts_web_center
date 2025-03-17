@@ -231,6 +231,9 @@ $(document).ready(function () {
                         },
                         {"data": "qty_released",
                             "className": "text-center",
+                            "render": function (data, type, row) {
+                                return Number(data).toLocaleString();
+                            }
                         },
                         {"data": "uf_ht_psi",
                             "className": "text-center",
