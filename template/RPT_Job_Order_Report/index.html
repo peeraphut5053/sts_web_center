@@ -74,6 +74,10 @@
     background-color: rgb(229, 244, 251) !important; /* Add !important to make sure override datables base styles */
     color: black !important;
  }
+
+  .bolded {
+    font-weight: bold;
+  }
 </style>
 <div class="row">
   <div>
@@ -326,7 +330,7 @@
             {
               targets: [6],
               width: 40,
-            },
+            }
           ],
           columns: [
             {
@@ -345,41 +349,41 @@
             },
             {
               "data": "Uf_refno",
-              "className": "text-center",
+              "className": "text-center bolded",
             },
             {
               "data": "job",
-              "className": "text-center",
+              "className": "text-center bolded",
             },
             {
               "data": "stat",
-              "className": "text-center",
+              "className": "text-center bolded",
             },
             {
               "data": "item",
-              "className": "text-center",
+              "className": "text-center bolded",
             },
             {
               "data": "wc",
-              "className": "text-center",
+              "className": "text-center bolded",
             },
             {
               "data": "qty_released",
-              "className": "text-center",
+              "className": "text-center bolded",
               "render" : function (data, type, row) {
                 return Number(data).toLocaleString();
               }
             },
             {
               "data": "qty_complete",
-              "className": "text-center",
+              "className": "text-center bolded",
               "render" : function (data, type, row) {
                 return Number(data).toLocaleString();
               }
             },
             {
               "data": "Createdate.date",
-              "className": "text-center",
+              "className": "text-center bolded" ,
               "render": function (data) {
                 if (data) {
                   return moment(data).format('DD/MM/YYYY');
