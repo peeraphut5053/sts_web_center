@@ -168,12 +168,13 @@ if ($load == "moveqty_create_line_BoatNoteOnly") {
     $tagnum = $_GET["tagnum"] ;
     $boatPosition = $_GET["boatPosition"] ;
     $toLoc = $_GET["toLoc"] ;
+    $doc_num = $_GET["doc_num"] ;
 
     for ($i=0;$i<count($tagnum);$i++){
         $docline = $i+1;
         $moveqty_create_line_BoatNoteOnly[$i] = new BcTag();
         $moveqty_create_line_BoatNoteOnly[$i]->setConn($ConnSL);
-        $moveqty_create_line_BoatNoteOnly[$i] = $CallModelObj->moveqty_create_line_BoatNoteOnly($tagnum[$i], $toLoc, $boatPosition[$i], $docline);
+        $moveqty_create_line_BoatNoteOnly[$i] = $CallModelObj->moveqty_create_line_BoatNoteOnly($tagnum[$i], $toLoc, $boatPosition[$i], $docline, $doc_num);
         echo json_encode($i);
     }
 }
@@ -188,12 +189,13 @@ if ($load == "STS_qty_move_hrd_Truck") {
 if ($load == "moveqty_create_line_Truck") {
     $tagnum = $_GET["tagnum"] ;
     $toLoc = $_GET["toLoc"] ;
+    $doc_num = $_GET["doc_num"] ;
 
     for ($i=0;$i<count($tagnum);$i++){
         $docline = $i+1;
         $moveqty_create_line_Truck[$i] = new BcTag();
         $moveqty_create_line_Truck[$i]->setConn($ConnSL);
-        $moveqty_create_line_Truck[$i] = $CallModelObj->moveqty_create_line_Truck($tagnum[$i], $toLoc, $docline);
+        $moveqty_create_line_Truck[$i] = $CallModelObj->moveqty_create_line_Truck($tagnum[$i], $toLoc, $docline, $doc_num);
         echo json_encode($i);
     }
 }
@@ -201,4 +203,9 @@ if ($load == "moveqty_create_line_Truck") {
 if ($load == "locEdit_Truck") {
     $locEdit_Truck = $CallModelObj->locEdit_Truck($loc, $doc_num);
     echo json_encode($locEdit_Truck);
+}
+
+if ($load == "DeleteTruckQtyMoveLine") {
+    $DeleteTruck = $CallModelObj->DeleteTruckQtyMoveLine($id,$doc_num);
+    echo json_encode($DeleteTruck);
 }
