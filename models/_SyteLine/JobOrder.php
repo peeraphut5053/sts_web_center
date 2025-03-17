@@ -1673,7 +1673,7 @@ where [description] not like '%กลุ่ม%' and [description] <> 'ลบ'
             $wh .=  "". $whereClause;
         }
 
-        $query = "select distinct job_mst.job, job_mst.stat, job_mst.item,job_mst.qty_released, job_mst.qty_complete, jr.wc,jo.no,jo.Createdate
+        $query = "select distinct job_mst.job, job_mst.stat, job_mst.item,job_mst.qty_released, job_mst.qty_complete,job_mst.Uf_refno, jr.wc,jo.no,jo.Createdate
 FROM            job_mst 
     inner JOIN jobroute_mst jr ON job_mst.job = jr.job 
     left JOIN STS_curr_job_order jo ON job_mst.job = jo.job

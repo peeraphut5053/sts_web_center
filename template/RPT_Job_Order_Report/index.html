@@ -128,6 +128,7 @@
       <tr>
         <th></th>
         <th>Order</th>
+        <th>STS PO</th>
         <th>Job</th>
         <th>Status</th>
         <th>Item</th>
@@ -294,6 +295,8 @@
           order: [
             [1, "asc"]
           ],
+          // fontWeight: "bold",
+          style: "font-weight: bold;",
           select: {
               style: "multi",
               selector: 'td:nth-child(1)' // กำหนดให้คลิกได้เฉพาะคอลัมน์ที่ 2
@@ -302,22 +305,26 @@
           columnDefs: [
            {
               targets: [1],
-              width: 30,
-            },
-           {
-              targets: [3],
-              width: 30,
+              width: 10,
             },
             {
               targets: [2],
+              width: 50,
+            },
+           {
+              targets: [4],
+              width: 30,
+            },
+            {
+              targets: [3],
               width: 100,
             },
             {
-              targets: [4],
+              targets: [5],
               width: 200,
             },
             {
-              targets: [5],
+              targets: [6],
               width: 40,
             },
           ],
@@ -333,8 +340,12 @@
               "data": "no",
               "className": "text-center",
               "render": function (data, type, row) {
-                return `<input size="1" onchange="updateOrder('${row.job}' , this.value)" type="number" class="form-control job-no" value="${data}">`;
+                return `<input size="1" style="width: 60px;" onchange="updateOrder('${row.job}' , this.value)" type="number" class="form-control job-no" value="${data}">`;
               }
+            },
+            {
+              "data": "Uf_refno",
+              "className": "text-center",
             },
             {
               "data": "job",
