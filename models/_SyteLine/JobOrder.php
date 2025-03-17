@@ -735,7 +735,7 @@ from Mv_Bc_Tag mv
   inner join jobmatl_mst jm on mv.item = jm.item and jm.ref_type in ('J', 'I')
   inner join job_mst as job on job.job=jm.job
            and job.suffix=jm.suffix and job.type='J'
-where mv.id = '$tag' and mv.active = 1 and mv.ship_stat = 0
+where mv.id = '$tag' and mv.active = 1 and isnull(mv.ship_stat,0) = 0
    and jm.job = left('$job',10)
    and jm.oper_num = convert(int,right('$job',2))
    and jm.suffix = convert(smallint,substring('$job',12,1))
