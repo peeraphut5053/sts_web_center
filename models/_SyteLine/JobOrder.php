@@ -1673,7 +1673,7 @@ where [description] not like '%กลุ่ม%' and [description] <> 'ลบ'
             $wh .=  "". $whereClause;
         }
 
-        $query = "select distinct job_mst.job, job_mst.stat, job_mst.item, jr.wc,jo.no,jo.Createdate
+        $query = "select distinct job_mst.job, job_mst.stat, job_mst.item,job_mst.qty_released, job_mst.qty_complete, jr.wc,jo.no,jo.Createdate
 FROM            job_mst 
     inner JOIN jobroute_mst jr ON job_mst.job = jr.job 
     left JOIN STS_curr_job_order jo ON job_mst.job = jo.job
@@ -1701,6 +1701,16 @@ order by job_mst.job";
     function CloseJobOrder($job) {
 
         $query = "DELETE FROM STS_curr_job_order WHERE job = '$job'";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+        
+    }
+
+    function EditJobOrder($job, $job_order) {
+
+        $query = "UPDATE STS_curr_job_order SET no = '$job_order' WHERE job = '$job'";
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);

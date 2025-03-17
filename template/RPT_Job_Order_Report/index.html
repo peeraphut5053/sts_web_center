@@ -127,11 +127,13 @@
     <thead>
       <tr>
         <th></th>
+        <th>Order</th>
         <th>Job</th>
         <th>Status</th>
         <th>Item</th>
-        <th>work Center</th>
-        <th>Order</th>
+        <th>WC</th>
+        <th>สั่งผลิต</th>
+        <th>ผลิตแล้ว</th>
         <th>Date</th>
       </tr>
     </thead>
@@ -292,10 +294,26 @@
 
             },
           columnDefs: [
-            {
+           {
+              targets: [1],
+              width: 30,
+            },
+           {
               targets: [3],
+              width: 30,
+            },
+            {
+              targets: [2],
+              width: 100,
+            },
+            {
+              targets: [4],
               width: 200,
-            }
+            },
+            {
+              targets: [5],
+              width: 40,
+            },
           ],
           columns: [
             {
@@ -303,6 +321,13 @@
               "className": "text-center",
               "render": function (data, type, row) {
                 return `<input id="selectJob" onclick="selectJob('${data}')" style="width: 30px; height: 30px;" type="checkbox" class="job" value="${data}" />`;
+              }
+            },
+            {
+              "data": "no",
+              "className": "text-center",
+              "render": function (data, type, row) {
+                return `<input size="1" onchange="updateOrder('${row.job}' , this.value)" type="number" class="form-control job-no" value="${data}">`;
               }
             },
             {
@@ -322,13 +347,19 @@
               "className": "text-center",
             },
             {
-              "data": "no",
+              "data": "qty_released",
               "className": "text-center",
-              "render": function (data, type, row) {
-                return `<input onchange="updateOrder('${row.job}' , this.value)" type="number" class="form-control job-no" value="${data}">`;
+              "render" : function (data, type, row) {
+                return Number(data).toLocaleString();
               }
             },
-             
+            {
+              "data": "qty_complete",
+              "className": "text-center",
+              "render" : function (data, type, row) {
+                return Number(data).toLocaleString();
+              }
+            },
             {
               "data": "Createdate.date",
               "className": "text-center",
@@ -418,6 +449,57 @@
                 }
                 $("#ModalJobReport").modal("show");
                 */}
+              } 
+            },
+            {
+              text: `<button type="button" class="btn btn-warning">แก้ไข Job Order</button>`,
+              action: function (e, dt, node, config) {
+                // on selected
+                let data = Array.from(dt.rows().data());
+
+                // data filter by selectJob 
+
+                let selected = data.filter(item => selectedJob.some(selectedItem => selectedItem.job === item.job));
+
+
+                if (selected.length == 0) {
+                  alert("กรุณาเลือก Job Order ที่ต้องการแก้ไข");
+                  return false;
+                }
+
+                if (selected.some(item => item.stat !== 'R')) {
+                  alert("กรุณาเลือก Job Order ที่มีสถานะเป็น Released");
+                  return false;
+                }
+
+                if (selected.some(item => !item.Createdate)) {
+                  alert("Job Order นี้ยังไม่ได้เปิด");
+                  return false;
+                }
+
+                $.ajax({
+                  type: "POST",
+                  url: "././module/RPT_Job_Order_Report/data.php",
+                  dataType: "json",
+                  beforeSend: function () {
+                  },
+                  data: {
+                    load: 'EditJob',
+                    job: selectedJob.map(item => item.job),
+                    job_order: selectedJob.map(item => item.order),
+                  },
+                  success: function (data) {
+                    selectedJob = [];
+                    alert("แก้ไข Job Order สําเร็จ");
+                    ReportItemSearch();
+                  },
+
+                  error: function (e) {
+                    alert("แก้ไข Job Order ไม่สําเร็จ");
+                  },
+
+                });
+
               } 
             },
             {

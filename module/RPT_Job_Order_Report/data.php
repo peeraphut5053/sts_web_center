@@ -61,4 +61,18 @@ if ($load == "wc") {
     }
     
     echo json_encode($rs);
+} else if ($load == "EditJob") {
+    $CallModel = new CallModel();
+    $CallModel->SyteLine_Models();
+    $STS_Custom = new JOBORDER();
+    $STS_Custom->setConn($ConnSL);
+    $jobs = isset($_POST['job']) ? $_POST['job'] : [];
+    $job_orders = isset($_POST['job_order']) ? $_POST['job_order'] : [];
+
+    for ($i = 0; $i < count($jobs); $i++) {
+        $rs = $STS_Custom->EditJobOrder($jobs[$i], $job_orders[$i]);
+    }
+    
+    echo json_encode($rs);
+    
 }
