@@ -127,6 +127,11 @@ if ($load == "UpdateBoat_Position") {
     echo json_encode($checkItemLotLoc);
 }
 
+if ($load == "DeleteQtyMoveLine") {
+    $checkItemLotLoc = $CallModelObj->DeleteQtyMoveLine($id,$doc_num,$boat_position);
+    echo json_encode($checkItemLotLoc);
+}
+
 if ($load == "Search_STS_qty_move_hrd") {
     $Search_STS_qty_move_hrd = $CallModelObj->Search_STS_qty_move_hrd($doc_num);
     echo json_encode($Search_STS_qty_move_hrd);
