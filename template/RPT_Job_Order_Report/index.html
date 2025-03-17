@@ -78,6 +78,17 @@
   .bolded {
     font-weight: bold;
   }
+
+  .select2-results__options{
+        font-size:18px !important;
+        }
+
+   .select2-results__options .select2-results__option--highlighted{
+        background-color: #6bc6dd !important;
+   }
+   .select2-selection__rendered {
+        font-size:18px !important;
+   }
 </style>
 <div class="row">
   <div>
@@ -85,13 +96,13 @@
   </div>
   <div class="col-lg-2">
     <div class="input-group">
-      <div class="input-group-addon">Item</div>
+      <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">Item</div>
       <input type="text" class="form-control txt-filter" id="job_item">
     </div>
   </div>
-  <div class="col-lg-3">
+  <div class="col-lg-4">
     <div class="input-group w-full">
-      <div class="input-group-addon">Work Center</div>
+      <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">Work Center</div>
       <select class="form-control txt-filter" id="job_wc">
         <option value=""></option>
       </select>
