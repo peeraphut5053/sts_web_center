@@ -212,6 +212,12 @@
   }
 
   function updateOrder(job, order) {
+    
+    // can't change order if not selected
+    if (!selectedJob.some(item => item.job === job)) {
+      return false;
+    }
+    
     if (selectedJob.some(item => item.job === job)) {
       selectedJob = selectedJob.map(item => {
         if (item.job === job) {
