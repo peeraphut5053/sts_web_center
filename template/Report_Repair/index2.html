@@ -62,7 +62,7 @@
     <button id="open_repair" class="btn btn-danger" data-toggle="modal" data-target="#ModalCloseReport"><i
         class="fa fa-searh"></i>เพิ่มข้อมูลเปิดงาน</button>
   </div>
-  <div class="col-lg-4">
+  <div class="col-lg-2">
     <div class="input-group">
       <div class="input-group-addon">หน่วยงานซ่อม</div>
       <select class="form-control txt-filter" id="items">
@@ -72,6 +72,18 @@
         <option value="ห้องกลึง">ห้องกลึง</option>
         <option value="จัดจ้าง">จัดจ้าง</option>
         <option value="วิศวกรรม">วิศวกรรม</option>
+      </select>
+    </div>
+  </div>
+  <div class="col-lg-2">
+    <div class="input-group w-full">
+      <div class="input-group-addon">สถานะ</div>
+      <select class="form-control txt-filter" id="r_status">
+        <option selected disabled>ทุกสถานะ</option>
+        <option value="ดำเนินงาน">ดำเนินงาน</option>
+        <option value="รออะไหล่">รออะไหล่</option>
+        <option value="งานต่อเเนื่อง">งานต่อเเนื่อง</option>
+        <option value="ปิดงาน">ปิดงาน</option>
       </select>
     </div>
   </div>
@@ -326,6 +338,8 @@
     var doc_no = $("#R_doc").val();
     var types = $("#types").val();
     var items = $("#items").val();
+    var status = $("#r_status").val();
+
     $("#btnSearch").html("<i class='fa fa-spinner fa-spin'></i>");
     $("#tblReport").loading();
     $("#tblReport tfoot").remove();
@@ -342,7 +356,8 @@
         EndDate: EndDate,
         doc_no: doc_no,
         types: types,
-        items: items
+        items: items,
+        status: status
       },
       success: function (data) {
         myData = data;

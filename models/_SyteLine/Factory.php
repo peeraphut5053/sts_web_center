@@ -87,7 +87,7 @@ class Factory {
         return $rs0;
     }
 
-    function GetReportRepair($StartDate, $EndDate, $doc_no, $types, $items) {
+    function GetReportRepair($StartDate, $EndDate, $doc_no, $types, $items,$status) {
         $cSql = new SqlSrv();
         $query = "";
 
@@ -105,6 +105,10 @@ class Factory {
         }
         if ($items != "") {
             $query = $query . " AND Type = '$items'";
+        }
+
+        if ($status != "") {
+            $query = $query . " AND Status = '$status'";
         }
 
         if ($StartDate != "" && $EndDate != "") {

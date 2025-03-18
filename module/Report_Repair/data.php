@@ -37,7 +37,7 @@ if ($load == "Search") {
     $CallModel->SyteLine_Models();
     $STS_Custom = new Factory();
     $STS_Custom->setConn($ConnSL);
-    $rs = $STS_Custom->GetReportRepair($StartDate, $EndDate, $doc_no, $types, $items);
+    $rs = $STS_Custom->GetReportRepair($StartDate, $EndDate, $doc_no, $types, $items,$status);
     echo json_encode($rs);
 } else if ($load == "StartRepair") {
     $CallModel = new CallModel();
