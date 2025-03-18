@@ -41,17 +41,17 @@
   </div>
   <div class="col-lg-2">
     <div class="input-group">
-      <div class="input-group-addon">doc no</div>
+      <div class="input-group-addon">เลขที่ใบแจ้ง</div>
       <input type="text" class="form-control txt-filter" id="R_doc">
     </div>
   </div>
   <div class="col-lg-2">
     <div class="input-group">
-      <div class="input-group-addon">Type</div>
+      <div class="input-group-addon">อนุมัติจบงาน</div>
       <select class="form-control txt-filter" id="types">
         <option value="all">ทุกรายการ</option>
-        <option value="close">รายการปิดงาน</option>
-        <option value="open">รายการรอดำเนินการ</option>
+        <option value="close">รายการอนุมัติ</option>
+        <option value="open">รายการรออนุมัติ</option>
       </select>
     </div>
   </div>
@@ -99,11 +99,11 @@
         <th>เวลาแจ้ง</th>
         <th>Site</th>
         <th>แผนก</th>
-        <th>Remark</th>
+        <th>รายการแจ้งซ่อม</th>
         <th>ลักษณะงาน</th>
         <th>ชื่อผู้แจ้ง</th>
         <th>หน่วยงานซ่อม</th>
-        <th>รายละเอียดการแจ้ง</th>
+        <th>ปัญหา</th>
         <th>รูปภาพ</th>
         <th>สถานะ</th>
         <th>รายละเอียดการแก้ไข</th>
@@ -403,9 +403,9 @@
               "className": "text-center",
               "render": function (data, type, row, meta) {
                 if (data == 1) {
-                  return "<span class='text-green-500 text-2xl'>ปิดงาน</span>";
+                  return "<span class='text-green-500 text-2xl'>อนุมัติ</span>";
                 } else {
-                  return "<span class='text-red-500 text-2xl'>ดำเนินการ</span>";
+                  return "<span class='text-red-500 text-2xl'>รออนุมัติ</span>";
                 }
               }
             },
