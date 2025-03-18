@@ -1674,9 +1674,18 @@ where [description] not like '%กลุ่ม%' and [description] <> 'ลบ'
         }
 
         $query = "select distinct job_mst.job, job_mst.stat, job_mst.item,job_mst.qty_released, job_mst.qty_complete,job_mst.Uf_refno, jr.wc,jo.no,jo.Createdate
+    , isnull(custaddr_mst.addr##2,name) as custname2, job_mst.Uf_remark
+    ,  CASE WHEN custaddr_mst.cust_num IS NOT NULL AND 
+                         custaddr_mst.cust_num <> '' THEN 
+       custaddr_mst.city 
+       ELSE CASE WHEN co_mst.prospect_id IS NOT NULL AND 
+                         co_mst.prospect_id <> '' THEN prospect_mst.company ELSE '' END END AS PORT
 FROM            job_mst 
     inner JOIN jobroute_mst jr ON job_mst.job = jr.job 
     left JOIN STS_curr_job_order jo ON job_mst.job = jo.job
+ inner join co_mst on job_mst.ord_num = co_mst.co_num 
+  inner join custaddr_mst on custaddr_mst.cust_num = co_mst.cust_num and custaddr_mst.cust_seq = co_mst.cust_seq
+  left join prospect_mst ON co_mst.prospect_id = prospect_mst.prospect_id 
 where len(rtrim(ltrim(job_mst.job))) = 10
   and job_mst.stat <> 'H' $wh 
 order by job_mst.job";

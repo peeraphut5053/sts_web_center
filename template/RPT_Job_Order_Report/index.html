@@ -145,12 +145,15 @@
         <th>Order</th>
         <th>STS PO</th>
         <th>Job</th>
+        <th>Cust</th>
+        <th>Port</th>
         <th>Status</th>
         <th>Item</th>
         <th>WC</th>
         <th>สั่งผลิต</th>
         <th>ผลิตแล้ว</th>
         <th>Date</th>
+        <th>Remark</th>
       </tr>
     </thead>
   </table>
@@ -273,7 +276,7 @@
 
     if (statusConditions.length > 0) {
       let placeholders = statusConditions.map((i) => `'${i}'`).join(',');
-      whereClause = ` AND stat IN (${placeholders})`;
+      whereClause = ` AND job_mst.stat IN (${placeholders})`;
       params = statusConditions;
     }
 
@@ -326,20 +329,24 @@
               targets: [2],
               width: 50,
             },
+            {
+              targets: [3],
+              width: 50,
+            },
            {
               targets: [4],
-              width: 30,
+              width: 60,
             },
             {
               targets: [3],
               width: 100,
             },
             {
-              targets: [5],
+              targets: [7],
               width: 200,
             },
             {
-              targets: [6],
+              targets: [8],
               width: 40,
             }
           ],
@@ -364,6 +371,14 @@
             },
             {
               "data": "job",
+              "className": "text-center bolded",
+            },
+            {
+              "data": "custname2",
+              "className": "text-center bolded",
+            },
+            {
+              "data": "PORT",
               "className": "text-center bolded",
             },
             {
@@ -402,6 +417,10 @@
                   return '';
                 }
               }
+            },
+            {
+              "data": "Uf_remark",
+              "className": "text-center bolded",
             },
           ],
           dom:
