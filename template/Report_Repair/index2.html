@@ -78,7 +78,7 @@
   <div class="col-lg-2">
     <div class="input-group w-full">
       <div class="input-group-addon">สถานะ</div>
-      <select class="form-control txt-filter" id="r_status">
+      <select class="form-control txt-filter" id="s_status">
         <option selected disabled>ทุกสถานะ</option>
         <option value="ดำเนินงาน">ดำเนินงาน</option>
         <option value="รออะไหล่">รออะไหล่</option>
@@ -338,7 +338,7 @@
     var doc_no = $("#R_doc").val();
     var types = $("#types").val();
     var items = $("#items").val();
-    var status = $("#r_status").val();
+    var status = $("#s_status").val();
 
     $("#btnSearch").html("<i class='fa fa-spinner fa-spin'></i>");
     $("#tblReport").loading();
