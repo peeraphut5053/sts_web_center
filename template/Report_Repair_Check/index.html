@@ -467,11 +467,26 @@
               "className": "text-center",
             },
             ],
+            dom:
+            "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+            "<'row'<'col-md-12'tr>>" +
+            "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+          buttons: [
+            {
+              extend: "print",
+              text: "<i class='fa fa-print'></i>&nbsp;Print",
+              title: "",
+            },
+            {
+              extend: "excel",
+              text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+              title: "รายการแจ้งซ่อม",
+            },
+          ],
           });
           $("#tblReport").loading("stop");
           $("#btnSearch").html(OldHtml);
         },
-  
         error: function (e) {
           $("#tblReport").loading("stop");
           $("#btnSearch").html(OldHtml);
