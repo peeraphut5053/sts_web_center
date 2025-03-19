@@ -197,6 +197,7 @@
       </div>
     </div>
     <hr class="mt-12" />
+    <h3 id="time_header" class="hidden" style="text-align: center; color: red ; font-weight: bold; text-decoration: underline; margin-bottom: 20px">สำหรับลงเวลาเมื่อช่างมาซ่อมงาน</h3>
     <div class="mybox">
       <div id="status_repair" class="input-group element2 hidden">
         <label class="custom-checkbox">
@@ -518,6 +519,7 @@
         if (info["DateRepairStart"]) {
           $("#status_repair").addClass("hidden");
           $("#status_repair_show").removeClass("hidden");
+          $("#time_header").removeClass("hidden");
           $("#start_repair_date").val(moment(info["DateRepairStart"].date).format("DD/MM/YYYY HH:mm"));
           if (info["DateRepairEnd"]) {
             $("#status_repair_end").addClass("hidden");
@@ -531,6 +533,7 @@
           $("#status_repair").removeClass("hidden");
           $("#status_repair_end").addClass("hidden");
           $("#status_repair_show").addClass("hidden");
+          $("#time_header").addClass("hidden");
           $("#status_repair_end_show").addClass("hidden");
         }
 
@@ -570,6 +573,7 @@
     $("#file_upload").removeClass("hidden");
     $("#status_repair").addClass("hidden");
     $("#status_repair_show").addClass("hidden");
+    $("#time_header").removeClass("hidden");
     $("#status_repair_end").addClass("hidden");
     $("#status_repair_end_show").addClass("hidden");
     $("#r_department option").filter(function () {
