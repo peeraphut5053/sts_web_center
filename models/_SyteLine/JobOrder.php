@@ -1631,7 +1631,7 @@ WHERE id = '$id' ";
     }
 
     function HotRollReport($item,$wc) {
-        $query = " EXEC MV_HOT_ROLL_SLIT_REPORT @TransactionDateStarting= NULL,"
+        $query = " EXEC MV_HOT_ROLL_SLIT_REPORT_web @TransactionDateStarting= NULL,"
                 . " @TransactionDateEnding  = NULL,"
                 . " @JobStarting = NULL,"
                 . " @JobEnding = NULL,"

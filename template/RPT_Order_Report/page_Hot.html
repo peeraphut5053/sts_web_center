@@ -24,31 +24,34 @@
     </div>
 </div>
 
-<div class="row" id="divReportAll">
+<div class="row" id="divReportHot">
     <table class="table table-condensed table-bordered table-striped" id="tblReportHot">
         <thead>
             <tr>
+                <th>ลำดับ</th>
+                <th>เลขที่</th>
                 <th>Job</th>
                 <th>Wc</th>
                 <th>Item</th>
-                <th>Size</th>
-                <th>Spec</th>
-                <th>Grade</th>
-                <th>SCH.</th>
-                <th>Length</th>
-                <th>Type</th>
-                <th>Pcs/Bundle</th>
-                <th>ผลิต Qty</th>
-                <th>HT PSI</th>
-                <th>Remark</th>
+                <th>หน้ากว้าง</th>
+                <th>ความหนา</th>
+                <th>จำนวน</th>
+                <th>รวม</th>
+                <th>นน.(KG)</th>
+                <th>ชั้นคุณภาพ</th>
+                <th>หนาสุด</th>
+                <th>บางสุด</th>
+                <th>Prd_Note2</th>
+                <th>ค่าเผื่อ</th>
+                <th>ค่าใบ</th>
             </tr>
     </table>
 </div>
 
 <script type="text/javascript">
 
-    $("#BtnSearchAll").click(function () {
-
+    $("#BtnHotSearch").click(function () {
+        ReportAllSearch();
     });
 
     $(document).ready(function () {
@@ -83,7 +86,7 @@
 
 
     function ReportAllSearch() {
-        var OldHtml = $("#BtnSearchAll").html();
+        var OldHtml = $("#BtnHotSearch").html();
         var hot_item = $("#hot_item").val();
         var wc_hot = $("#wc_hot").val();
         $.ajax({
@@ -91,7 +94,7 @@
             url: "././module/RPT_Order_Report/data.php",
             dataType: 'json',
             beforeSend: function () {
-                $("#BtnSearchAll").html("<i class='fa fa-spinner fa-spin'>");
+                $("#BtnHotSearch").html("<i class='fa fa-spinner fa-spin'>");
             },
             data: {
                 "load": "Hot",
@@ -99,8 +102,8 @@
                 "wc": wc_hot
             },
             success: function (data) {
-                $("#tblReportAll").dataTable().fnDestroy();
-                var table = $('#tblReportAll').DataTable({
+                $("#tblReportHot").dataTable().fnDestroy();
+                var table = $('#tblReportHot').DataTable({
                     scrollY: "400px",
                     "scrollX": true,
                     scrollCollapse: true,
@@ -113,9 +116,20 @@
                     "bInfo": false,
 
                     "columns": [
+                         {
+                            "data": "ordernum",
+                            "className": "text-center",
+                        },
+                         {
+                            "data": "Uf_sts_job",
+                            "className": "text-center",
+                        },
                         {
                             "data": "job",
                             "className": "text-center",
+                            "render": function (data, type, row) {
+                                return '<a style="padding: 5px" class="btn btn-info btn-xs" href="http://172.18.1.194/sts_tag/?tag_history_slit&jobno='+data+'%2B0%2B10&act=start" target="_blank">พิมพ์ Tag</a><div>'+row.job+'</div>';
+                            }
                         },
                         {
                             "data": "wc",
@@ -126,31 +140,19 @@
                             "className": "text-center",
                         },
                         {
-                            "data": "Uf_NPS",
+                            "data": "ItemWidth",
                             "className": "text-center",
                         },
                         {
-                            "data": "Uf_Spec",
+                            "data": "ItemThickness",
                             "className": "text-center",
                         },
                         {
-                            "data": "Uf_Grade",
+                            "data": "Uf_qty_slit",
                             "className": "text-center",
                         },
                         {
-                            "data": "Uf_Schedule",
-                            "className": "text-center",
-                        },
-                        {
-                            "data": "Uf_Length",
-                            "className": "text-center",
-                        },
-                        {
-                            "data": "Uf_TypeEnd",
-                            "className": "text-center",
-                        },
-                        {
-                            "data": "Uf_Pack",
+                            "data": "Total",
                             "className": "text-center",
                         },
                         {
@@ -158,11 +160,27 @@
                             "className": "text-center",
                         },
                         {
-                            "data": "uf_ht_psi",
+                            "data": "Uf_spec",
                             "className": "text-center",
                         },
                         {
-                            "data": "uf_remark",
+                            "data": "ThickMax",
+                            "className": "text-center",
+                        },
+                        {
+                            "data": "ThickMin",
+                            "className": "text-center",
+                        },
+                        {
+                            "data": "Uf_prdnote2",
+                            "className": "text-center",
+                        },
+                        {
+                            "data": "Uf_blade_discrepancy_1",
+                            "className": "text-center",
+                        },
+                        {
+                            "data": "Uf_blade_discrepancy_2",
                             "className": "text-center",
                         },
                     ],
@@ -185,44 +203,9 @@
                             }
                         },
                     ],
-
-                    "footerCallback": function (row, data, start, end, display) {
-                        var api = this.api(),
-                            data;
-
-                        // converting to interger to find total
-                        var intVal = function (i) {
-                            return typeof i === 'string' ?
-                                i.replace(/[\$,]/g, '') * 1 :
-                                typeof i === 'number' ?
-                                    i : 0;
-                        };
-
-                        // computing column Total of the complete result
-                        var qty_need = api
-                            .column(10)
-                            .data()
-                            .reduce(function (a, b) {
-                                return intVal(a) + intVal(b);
-                            }, 0);
-
-                        var avai_FC = api
-                            .column(11)
-                            .data()
-                            .reduce(function (a, b) {
-                                return intVal(b) > intVal(a) ? intVal(b) : intVal(a);
-                            }, 0);
-
-                        $(api.column(1).footer()).html('qty_need');
-                        $(api.column(2).footer()).html(addCommas(qty_need.toFixed(2)));
-                        $(api.column(3).footer()).html('avai_FC');
-                        $(api.column(4).footer()).html(addCommas(avai_FC.toFixed(2)));
-                        $(api.column(5).footer()).html('avai_FC - qty_need');
-                        $(api.column(6).footer()).html(addCommas((avai_FC - qty_need).toFixed(2)));
-                    },
                 });
-                $('#tblReportAll').loading("stop");
-                $("#BtnSearchAll").html("<i class='fa fa-search'></i>Search");
+                $('#tblReportHot').loading("stop");
+                $("#BtnHotSearch").html("<i class='fa fa-search'></i>Search");
             },
             error: function (e) {
                 console.log("There was an error with your request...");
