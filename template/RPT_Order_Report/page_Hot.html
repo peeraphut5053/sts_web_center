@@ -114,7 +114,12 @@
                     //                        },
                     "searching": false,
                     "bInfo": false,
-
+                    columnDefs: [
+                        {
+                            targets: [4],
+                            width: 150,
+                        },
+                    ],
                     "columns": [
                          {
                             "data": "ordernum",
@@ -158,6 +163,9 @@
                         {
                             "data": "qty_released",
                             "className": "text-center",
+                            "render": function (data, type, row) {
+                                return Number(data).toLocaleString();
+                            }
                         },
                         {
                             "data": "Uf_spec",
