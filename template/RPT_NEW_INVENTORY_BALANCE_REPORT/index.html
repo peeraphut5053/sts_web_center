@@ -256,7 +256,7 @@
                     'processing': true,
                     "columns": [
                         {
-                            "data": "Item",
+                            "data": "item",
                             "className": "text-left",
                             "render": function (data, type, row, meta) {
                                 var ret = data;
@@ -306,7 +306,7 @@
                         {
                             "data": "", "className": "text-center",
                             "render": function (data, type, row, meta) {
-                                return "<a id='item_" + row["Item"] + "' OnClick='openModal(`" + row["Item"] + "`)'><i class='fa fa-search'></i></a>";
+                                return "<a id='item_" + row["item"] + "' OnClick='openModal(`" + row["item"] + "`)'><i class='fa fa-search'></i></a>";
                             }
                         },
                     ],

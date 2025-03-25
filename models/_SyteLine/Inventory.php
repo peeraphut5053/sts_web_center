@@ -75,15 +75,27 @@ class Inventory {
         if ($txtItemStart) {
             if (substr($txtItemStart, -1) == "*") {
                 $txtItemStart = str_replace('*', '', $txtItemStart);
-                $searchItem = " AND ( a.item like '$txtItemStart%') ";
+                $searchItem = " AND ( main.item like '$txtItemStart%') ";
             } else {
-                $searchItem = " AND ( a.item like '%$txtItemStart%') ";
+                $searchItem = " AND ( main.item like '%$txtItemStart%') ";
             }
         }
-        $query = "SELECT a.item as Item ,max(itm.description) as ItemDescription,max(itm.unit_weight) as UnitWeight ,(select top 1 BalQty "
-                . "from matltran2_detail_mst b where item=a.item and (CONVERT(date , TransDate,103) BETWEEN '$txtStartDate' AND '$txtEndDate' or TransDate is null) ORDER BY CONVERT (date , TransDate ,103) DESC , CASE WHEN left(TransDescription ,1) ='R' OR left(TransDescription ,1) ='F' THEN 1 ELSE 0 END , CAST(TransNum as int) DESC) as BalQty ,(select top 1 BalAmt from matltran2_detail_mst b where item=a.item and (CONVERT(date , TransDate,103) BETWEEN '$txtStartDate' AND '$txtEndDate' or TransDate is null) ORDER BY CONVERT (date , TransDate ,103) DESC , CASE WHEN left(TransDescription ,1) ='R' OR left(TransDescription ,1) ='F' THEN 1 ELSE 0 END , CAST(TransNum as int) DESC) as BalAmt ,(select top 1 BalUnit from matltran2_detail_mst b where item=a.item and (CONVERT(date , TransDate,103) BETWEEN '$txtStartDate' AND '$txtEndDate' or TransDate is null) ORDER BY CONVERT (date , TransDate ,103) DESC , CASE WHEN left(TransDescription ,1) ='R' OR left(TransDescription ,1) ='F' THEN 1 ELSE 0 END , CAST(TransNum as int) DESC ) as BalUnit FROM matltran2_detail_mst a LEFT JOIN item_mst itm ON (a.item = itm.item ) where 1=1 ";
-        $query = $query . $searchItem;
-        $query = $query . " and ( CONVERT(date , TransDate,103)  BETWEEN '$txtStartDate' AND '$txtEndDate' or transdate is null) group by a.item";
+        $query = "SELECT main.item  
+,ItemDescription = itm.[description]
+,UnitWeight = itm.unit_weight 
+,BalQty, BalAmt, BalUnit 
+FROM  (select * from
+   (select  item, BalQty, BalAmt, BalUnit 
+     ,rowno = ROW_NUMBER() OVER (PARTITION BY item ORDER BY CONVERT (date , TransDate ,103) DESC 
+           , CASE WHEN left(TransDescription ,1) ='R' OR left(TransDescription ,1) ='F' THEN 1 ELSE 0 END 
+           , CAST(TransNum as int) DESC) 
+   from matltran2_detail_mst b 
+   where  (CONVERT(date , TransDate,103) BETWEEN '2018-12-31' AND '2023-09-30' or TransDate is null) 
+   ) sub
+   where rowno = 1) main
+  LEFT JOIN item_mst itm ON main.item = itm.item
+   where 1=1 $searchItem
+order by main.item";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);
