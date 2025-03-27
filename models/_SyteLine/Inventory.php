@@ -90,7 +90,7 @@ FROM  (select * from
            , CASE WHEN left(TransDescription ,1) ='R' OR left(TransDescription ,1) ='F' THEN 1 ELSE 0 END 
            , CAST(TransNum as int) DESC) 
    from matltran2_detail_mst b 
-   where  (CONVERT(date , TransDate,103) BETWEEN '2018-12-31' AND '2023-12-31' or TransDate is null) 
+   where  (CONVERT(date , TransDate,103) BETWEEN '$txtStartDate' AND '$txtEndDate' or TransDate is null) 
    ) sub
    where rowno = 1) main
   LEFT JOIN item_mst itm ON main.item = itm.item 
