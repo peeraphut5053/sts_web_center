@@ -1212,7 +1212,7 @@ for (let i = 0; i <= res.length-1; i++) {
   { text: `${unique[i]?.Uf_Schedule ? res[i]?.Uf_Schedule : ''}`,bold: true , alignment: 'center', font: 'Roboto', fontSize: 6 },
   { text: `${unique[i]?.length? unique[i]?.length : ''}`,bold: true , alignment: 'center', font: 'Roboto', fontSize: 6 },
   { text: `${unique[i]?.bundle ? unique[i].bundle : ''}`,bold: true , alignment: 'center', font: 'Roboto', fontSize: 6 },
-  { text: `${load !== 'Canada' ? unique[i]?.piece ? unique[i].piece : '' : res[i]?.TAGsumqty ? Number(res[i].TAGsumqty) : ''}`,bold: true , alignment: 'center', font: 'Roboto', fontSize: 6 },
+  { text: `${load !== 'CanadaBulk' && load !== 'Canada' ? unique[i]?.piece ? unique[i].piece : '' : res[i]?.TAGsumqty ? Number(res[i].TAGsumqty) : ''}`,bold: true , alignment: 'center', font: 'Roboto', fontSize: 6 },
   { text: `${res[i]?.qa_sts_no ? res[i].qa_sts_no : ''}`,bold: true , alignment: 'center', font: 'Roboto', fontSize: 6 },
   { text: `${res[i]?.sts_c ? res[i].sts_c : ''}`,bold: true , alignment: 'center', font: 'Roboto', fontSize: 6 },
   { text: `${res[i]?.sts_si ? res[i].sts_si : ''}`,bold: true , alignment: 'center', font: 'Roboto', fontSize: 6 },
