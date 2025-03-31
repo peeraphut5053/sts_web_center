@@ -252,6 +252,15 @@ if ($load == 'Canada') {
     echo json_encode($QcTestLab); 
 }
 
+if ($load == 'CanadaBulk') {
+    $CallModel = new CallModel();
+    $CallModel->SyteLine_Models();
+    $QcTestLab = new QcTestLab();
+    $QcTestLab->setConn($ConnSL);
+    $QcTestLab = $QcTestLab->makeReportCanadaBulk($do_num, $co_num, $line_start, $line_end, $type);
+    echo json_encode($QcTestLab); 
+}
+
 if ($load == 'makePDF_Header') {
     $CallModel = new CallModel();
     $CallModel->SyteLine_Models();

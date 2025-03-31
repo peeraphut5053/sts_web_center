@@ -144,6 +144,20 @@ from STS_QA_LAB inner join sts_po_qc
         return $rs0;
     }
 
+    function makeReportCanadaBulk($do_num, $co_num, $line_start, $line_end, $type){
+    
+            $query = "EXEC [dbo].[STS_QA_MILLCERT_CANADA_BULK]
+  @DONumStarting = N'$do_num',
+  @CONumStarting = N'$co_num',
+  @COlineStarting = $line_start,
+  @COlineEnding = $line_end";
+  
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+
     function makePDF_Header($do_num){
         $query = "EXEC [dbo].[STS_QA_MILLCERT_HEAD]
   @donum = '$do_num'";
