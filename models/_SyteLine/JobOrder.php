@@ -1719,7 +1719,11 @@ order by job_mst.job";
 
     function EditJobOrder($job, $job_order) {
 
-        $query = "UPDATE STS_curr_job_order SET no = '$job_order' WHERE job = '$job'";
+        if (empty($job_order)) {
+            $job_order = 'NULL';
+        }
+
+        $query = "UPDATE STS_curr_job_order SET no = $job_order WHERE job = '$job'";
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);

@@ -234,7 +234,14 @@
     
     // can't change order if not selected
     if (!selectedJob.some(item => item.job === job)) {
-      return false;
+      // เลือก checkbox อัตโนมัติเมื่อมีการเปลี่ยนค่า order
+      $(`input[value="${job}"]`).prop('checked', true);
+      // เพิ่ม job ที่เลือกเข้าไปในอาร์เรย์
+      selectedJob.push({
+        job: job,
+        order: order
+      });
+      return true;
     }
     
     if (selectedJob.some(item => item.job === job)) {
@@ -435,9 +442,7 @@
                 let data = Array.from(dt.rows().data());
 
                 // data filter by selectJob 
-
                 let selected = data.filter(item => selectedJob.some(selectedItem => selectedItem.job === item.job));
-
 
                 if (selected.length == 0) {
                   alert("กรุณาเลือก Job Order ที่ต้องการเปิด");
@@ -454,11 +459,22 @@
                   return false;
                 }
 
+                // ตรวจสอบว่ามีการกำหนดลำดับหรือไม่
+                let hasEmptyOrder = false;
+                selectedJob.forEach(item => {
+                  if (!item.order || item.order === "") {
+                    hasEmptyOrder = true;
+                  }
+                });
+
                 $.ajax({
                   type: "POST",
                   url: "././module/RPT_Job_Order_Report/data.php",
                   dataType: "json",
                   beforeSend: function () {
+                    // แสดง loading
+                    $("button.btn-success").html("<i class='fa fa-spinner fa-spin'></i> กำลังดำเนินการ...");
+                    $("button.btn-success").prop("disabled", true);
                   },
                   data: {
                     load: 'Job',
@@ -469,37 +485,17 @@
                     selectedJob = [];
                     alert("เปิด Job Order สําเร็จ");
                     ReportItemSearch();
+                    // คืนค่าปุ่มเดิม
+                    $("button.btn-success").html("เปิด Job Order");
+                    $("button.btn-success").prop("disabled", false);
                   },
-
                   error: function (e) {
                     alert("เปิด Job Order ไม่สําเร็จ");
+                    // คืนค่าปุ่มเดิม
+                    $("button.btn-success").html("เปิด Job Order");
+                    $("button.btn-success").prop("disabled", false);
                   },
-
                 });
-                
-                {/*renderJobFields(selected);
-                function renderJobFields(data) {
-                  let container = $('#jobContainer'); // สมมติว่า `<div id="jobContainer"></div>` อยู่ใน HTML
-                  container.empty(); // เคลียร์ข้อมูลเก่า
-
-                  data.forEach((item, index) => {
-                    let html = `
-            <div class="flex justify-start items-center mb-5 gap-4 job-row">
-                <div class="input-group basis-2/4">
-                    <div class="input-group-addon">Job</div>
-                    <input type="text" class="form-control job" value="${item.job}" disabled>
-                </div>
-                <div class="input-group basis-2/4">
-                    <div class="input-group-addon">ลำดับ</div>
-                    <input type="number" class="form-control job-no" value="${item.no}" >
-                </div>
-            </div>
-        `;
-                    container.append(html);
-                  });
-                }
-                $("#ModalJobReport").modal("show");
-                */}
               } 
             },
             {
@@ -509,9 +505,7 @@
                 let data = Array.from(dt.rows().data());
 
                 // data filter by selectJob 
-
                 let selected = data.filter(item => selectedJob.some(selectedItem => selectedItem.job === item.job));
-
 
                 if (selected.length == 0) {
                   alert("กรุณาเลือก Job Order ที่ต้องการแก้ไข");
@@ -528,11 +522,22 @@
                   return false;
                 }
 
+                // ตรวจสอบว่ามีการกำหนดลำดับหรือไม่
+                let hasEmptyOrder = false;
+                selectedJob.forEach(item => {
+                  if (!item.order || item.order === "") {
+                    hasEmptyOrder = true;
+                  }
+                });
+
                 $.ajax({
                   type: "POST",
                   url: "././module/RPT_Job_Order_Report/data.php",
                   dataType: "json",
                   beforeSend: function () {
+                    // แสดง loading
+                    $("button.btn-warning").html("<i class='fa fa-spinner fa-spin'></i> กำลังดำเนินการ...");
+                    $("button.btn-warning").prop("disabled", true);
                   },
                   data: {
                     load: 'EditJob',
@@ -543,14 +548,17 @@
                     selectedJob = [];
                     alert("แก้ไข Job Order สําเร็จ");
                     ReportItemSearch();
+                    // คืนค่าปุ่มเดิม
+                    $("button.btn-warning").html("แก้ไข Job Order");
+                    $("button.btn-warning").prop("disabled", false);
                   },
-
                   error: function (e) {
                     alert("แก้ไข Job Order ไม่สําเร็จ");
+                    // คืนค่าปุ่มเดิม
+                    $("button.btn-warning").html("แก้ไข Job Order");
+                    $("button.btn-warning").prop("disabled", false);
                   },
-
                 });
-
               } 
             },
             {
