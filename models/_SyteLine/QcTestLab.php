@@ -464,5 +464,61 @@ where trans_type = 'F'
         array_splice($rs, count($rs) - 1, 1);
         return $rs;
     }
+
+    function SelectQaDocuments($StartDate, $EndDate, $dept, $code) {
+
+        $wh = '';
+
+        if ($StartDate !== '' && $EndDate !== '') {
+            $wh  = ' and Issue_date between \'' . $StartDate . '\' and \'' . $EndDate . '\'';
+        }
+
+        if ($dept !== '') {
+            $wh  = ' and Dept = \'' . $dept . '\'';
+        }
+
+        if ($code !== '') {
+            $wh  = ' and Code = \'' . $code . '\'';
+        }
+
+        $query = "select * from STS_QA_Document where 1=1 $wh";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+    function InsertQaDocument($dept, $code, $title, $revision, $issue_date) {
+        // want result of insert
+        $query = "INSERT INTO STS_QA_Document(Dept,Code,Title,revision,Issue_date) OUTPUT inserted.* VALUES('$dept','$code','$title',$revision,'$issue_date')";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+    function UpdateQaDocument($dept, $code, $title, $revision, $issue_date, $old_code) {
+        $query = "UPDATE STS_QA_Document SET Dept = '$dept', Code = '$code', Title = '$title', revision = $revision, Issue_date = '$issue_date' OUTPUT inserted.* WHERE Code = '$old_code'";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+    function DeleteQaDocument($code) {
+        $query = "DELETE FROM STS_QA_Document WHERE Code = '$code'";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+    function UploadFileQaDocument($code, $new_filename) {
+        $query = "UPDATE STS_QA_Document SET [file]  = '$new_filename' WHERE Code = '$code'";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
 }
 ?>
