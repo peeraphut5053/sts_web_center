@@ -95,17 +95,33 @@
         <button id="BtnSearchQa" class="btn btn-info"><i class="fa fa-search"></i>&nbsp; Search</button>
     </div>
     <div class="col-lg-1 col-md-1 col-sm-6 col-xs-6 text-left">
-        <div class="flex gap-16">
+        <div class="flex">
             <button id="btnAdd" class="btn btn-success" data-toggle="modal" data-target="#ModalQaAdd"><i
                     class="fa fa-searh"></i>เพิ่มข้อมูลรายงาน</button>
             <!-- <a class="btn btn-success ml-32" href="module/STS_Custom_Data/Import_Excel_In.php"  id="btnTransfer">&nbsp;Import Excel (IN)</a> -->
         </div>
     </div>
 </div>
+<div class="row" style="margin-left: 123px;">
+    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6">
+        <div class="input-group">
+            <div class="input-group-addon">Type</div>
+            <select class="form-control" id="type_qa">
+                <option value="All">All</option>
+                <option value="Procedure">Procedure</option>
+                <option value="Standard">Standard</option>
+                <option value="Drawing">Drawing</option>
+                <option value="WI">WI</option>
+            </select>
+        </div>
+    </div>
+</div>
+
 <div class="row" id="rowResultTable">
     <table width="100%" class="table table-condensed table-bordered table-striped" id="tblReport">
         <thead>
             <tr class="bg-gray">
+                <th>Type</th>
                 <th>Dept</th>
                 <th>Code</th>
                 <th>Title</th>
@@ -161,6 +177,17 @@
                         <input class="items-center" type="file" id="file-input" accept="application/pdf">
                     </div>
                 </div>
+                <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                    <div class="input-group basis-2/4">
+                        <div class="input-group-addon">Type</div>
+                        <select class="form-control" id="qa_type">
+                            <option value="Procedure">Procedure</option>
+                            <option value="Standard">Standard</option>
+                            <option value="Drawing">Drawing</option>
+                            <option value="WI">WI</option>
+                        </select>
+                    </div>
+                </div>
             </div>
 
             <div class="modal-footer">
@@ -213,6 +240,17 @@
                     <div class="input-group basis-2/4">
                         <div class="input-group-addon">File</div>
                         <input class="items-center" type="file" id="file-input_edit" accept="application/pdf">
+                    </div>
+                </div>
+                <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                    <div class="input-group basis-2/4">
+                        <div class="input-group-addon">Type</div>
+                        <select class="form-control" id="qa_type_edit">
+                            <option value="Procedure">Procedure</option>
+                            <option value="Standard">Standard</option>
+                            <option value="Drawing">Drawing</option>
+                            <option value="WI">WI</option>
+                        </select>
                     </div>
                 </div>
             </div>
@@ -319,6 +357,7 @@
             success: function (data) {
                 alert("แก้ไขข้อมูลสําเร็จ");
                 $("#file_name").val('');
+                ReportItemSearch();
             },
             error: function (e) {
                 alert("บันทึกข้อมูลไม่สําเร็จ");
@@ -347,6 +386,7 @@
         var OldHtml = $("#BtnSearchQa").html();
         var StartDate = $("#Start_Date_Qa").val();
         var EndDate = $("#End_Date_Qa").val();
+        var type = $("#type_qa").val();
 
         var dept = $("#dept_qa").val();
         var code = $("#code_qa").val();
@@ -366,7 +406,8 @@
                 StartDate: StartDate,
                 EndDate: EndDate,
                 dept: dept,
-                code: code
+                code: code,
+                type: type == 'All' ? '' : type
             },
             success: function (data) {
 
@@ -382,6 +423,11 @@
                     scrollX: true,
                     select: true,
                     columns: [
+                        {
+                            data: "Type",
+                            className: "text-center",
+
+                        },
                         {
                             data: "Dept",
                             className: "text-center",
@@ -455,6 +501,7 @@
                                 $("#qa_revision_edit").val(selected[0].revision);
                                 $("#qa_issue_edit").val(selected[0].Issue_date?.date ? moment(selected[0].Issue_date?.date).format("YYYY-MM-DD") : '');
                                 $("#file_name").val(selected[0].file);
+                                $("#qa_type_edit").val(selected[0].Type);
                                 $("#ModalQaEdit").modal("show");
 
                             }
@@ -517,6 +564,7 @@
         var title = $("#qa_title").val();
         var revision = $("#qa_revision").val();
         var issue = $("#qa_issue").val();
+        var type = $("#qa_type").val();
 
         if (code == '') {
            alert("กรุณากรอกรหัส Code");
@@ -533,7 +581,8 @@
                 code: code,
                 title: title,
                 revision: revision,
-                issue_date: issue
+                issue_date: issue,
+                type: type
             },
             success: function (data) {
               console.log(data);
@@ -556,6 +605,7 @@
         var title = $("#qa_title_edit").val();
         var revision = $("#qa_revision_edit").val();
         var issue = $("#qa_issue_edit").val();
+        var type = $("#qa_type_edit").val();
 
         if (code == '') {
            alert("กรุณากรอกรหัส Code");
@@ -573,7 +623,8 @@
                 title: title,
                 revision: revision,
                 issue_date: issue,
-                old_code: old_code
+                old_code: old_code,
+                type: type
             },
             success: function (data) {
              const fileInput = document.getElementById('file-input_edit').files[0];
@@ -583,6 +634,7 @@
              } else {
                  alert("แก้ไขข้อมูลสําเร็จ");
                  $("#ModalQaEdit").modal("hide");
+                 ReportItemSearch();
              }
                
             },

@@ -465,7 +465,7 @@ where trans_type = 'F'
         return $rs;
     }
 
-    function SelectQaDocuments($StartDate, $EndDate, $dept, $code) {
+    function SelectQaDocuments($StartDate, $EndDate, $dept, $code,$type) {
 
         $wh = '';
 
@@ -481,6 +481,10 @@ where trans_type = 'F'
             $wh  = ' and Code = \'' . $code . '\'';
         }
 
+        if ($type !== '') {
+            $wh  = ' and Type = \'' . $type . '\'';
+        }
+
         $query = "select * from STS_QA_Document where 1=1 $wh";
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
@@ -488,17 +492,17 @@ where trans_type = 'F'
         return $rs;
     }
 
-    function InsertQaDocument($dept, $code, $title, $revision, $issue_date) {
+    function InsertQaDocument($dept, $code, $title, $revision, $issue_date, $type) {
         // want result of insert
-        $query = "INSERT INTO STS_QA_Document(Dept,Code,Title,revision,Issue_date) OUTPUT inserted.* VALUES('$dept','$code','$title',$revision,'$issue_date')";
+        $query = "INSERT INTO STS_QA_Document(Dept,Code,Title,revision,Issue_date,Type) OUTPUT inserted.* VALUES('$dept','$code','$title',$revision,'$issue_date','$type')";
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
         return $rs;
     }
 
-    function UpdateQaDocument($dept, $code, $title, $revision, $issue_date, $old_code) {
-        $query = "UPDATE STS_QA_Document SET Dept = '$dept', Code = '$code', Title = '$title', revision = $revision, Issue_date = '$issue_date' OUTPUT inserted.* WHERE Code = '$old_code'";
+    function UpdateQaDocument($dept, $code, $title, $revision, $issue_date, $old_code, $type) {
+        $query = "UPDATE STS_QA_Document SET Dept = '$dept', Code = '$code', Title = '$title', revision = $revision, Issue_date = '$issue_date', Type = '$type' OUTPUT inserted.* WHERE Code = '$old_code'";
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
