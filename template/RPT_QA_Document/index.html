@@ -62,6 +62,11 @@
         display: flex;
         justify-content: center;
     }
+
+    .type_qa {
+        width: 200px;
+    }
+
 </style>
 <div class="row">
     <h4 class="text-header text-center">QA Document</h4>
@@ -271,6 +276,10 @@
     $("#qa_issue , #qa_issue_edit, #Start_Date_Qa, #End_Date_Qa").datepicker({
         dateFormat: "yy-mm-dd",
     });
+    const test = 'ASTM A370-2022 Standard Test Methods and Definitions for Mechanical Testing of Steel Products.pdf'
+
+    console.log(test.length);
+    
 
     async function UploadFiles(DocNo) {
 
@@ -435,13 +444,13 @@
                         },
                         {
                             data: "Code",
-                            className: "text-center",
+                            className: "text-left",
 
 
                         },
                         {
                             data: "Title",
-                            className: "text-center",
+                            className: "text-left",
 
                         },
                         {
@@ -460,7 +469,7 @@
                         },
                         {
                             data: "file",
-                            className: "text-center",
+                            className: "text-left",
                             render: function (data, type, row) {
                                 // link open file pdf
                                 var ret = "<a href='module/RPT_QA_Document/files/" + data + "' target='_blank'> " + data + " </a>";
