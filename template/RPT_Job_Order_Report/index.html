@@ -145,6 +145,7 @@
         <th>Order</th>
         <th>STS PO</th>
         <th>Job</th>
+        <th>STS Job</th>
         <th>Cust</th>
         <th>Port</th>
         <th>Status</th>
@@ -378,6 +379,10 @@
             },
             {
               "data": "job",
+              "className": "text-center bolded",
+            },
+            {
+              "data": "Uf_sts_job",
               "className": "text-center bolded",
             },
             {
@@ -626,11 +631,11 @@
 
     // วนลูปเก็บค่าที่ผู้ใช้แก้ไข
     $('#jobContainer .job-row').each(function () {
-      let job = $(this).find('.job').val(); // ค่าจาก input
-      let job_order = $(this).find('.job-no').val(); // ค่าจาก input
+        let job = $(this).find('.job').val(); // ค่าจาก input
+        let job_order = $(this).find('.job-no').val(); // ค่าจาก input
 
-      jobData.push(job);
-      order.push(job_order);
+        jobData.push(job);
+        order.push(job_order);
     });
 
   

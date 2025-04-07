@@ -1673,7 +1673,7 @@ where [description] not like '%กลุ่ม%' and [description] <> 'ลบ'
             $wh .=  "". $whereClause;
         }
 
-        $query = "select distinct job_mst.job, job_mst.stat, job_mst.item,job_mst.qty_released, job_mst.qty_complete,job_mst.Uf_refno, jr.wc,jo.no,jo.Createdate
+        $query = "select distinct job_mst.job, job_mst.stat, job_mst.item,job_mst.qty_released, job_mst.Uf_sts_job, job_mst.qty_complete,job_mst.Uf_refno, jr.wc,jo.no,jo.Createdate
     , isnull(custaddr_mst.addr##2,name) as custname2, job_mst.Uf_remark
     ,  CASE WHEN custaddr_mst.cust_num IS NOT NULL AND 
                          custaddr_mst.cust_num <> '' THEN 
