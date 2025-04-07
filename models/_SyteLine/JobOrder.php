@@ -1658,13 +1658,19 @@ where [description] not like '%กลุ่ม%' and [description] <> 'ลบ'
         return $rs;
     }
 
-    function SearchJobOrderReport($Item , $wc, $whereClause) {
+    function SearchJobOrderReport($Item, $sts_job, $wc, $whereClause) {
 
         $wh = '';
 
         if ($Item != '') {
             $wh .= " and item = '" . $Item . "'";
         }
+
+        if ($sts_job !== '') {
+            $wh .= " and Uf_sts_job = '" . $sts_job . "'";
+        }
+
+
         if ($wc != '') {
             $wh .= " and wc = '" . $wc . "'";
         }

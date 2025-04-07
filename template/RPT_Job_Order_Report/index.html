@@ -100,6 +100,12 @@
       <input type="text" class="form-control txt-filter" id="job_item">
     </div>
   </div>
+  <div class="col-lg-2">
+    <div class="input-group">
+      <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">STS Job</div>
+      <input type="text" class="form-control txt-filter" id="sts_job">
+    </div>
+  </div>
   <div class="col-lg-4">
     <div class="input-group w-full">
       <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">Work Center</div>
@@ -108,7 +114,7 @@
       </select>
     </div>
   </div>
-  <div class="col-lg-4 col-search">
+  <div class="col-lg-3 col-search">
     <div class="flex items-center">
       <label class="custom-checkbox">
         <input type="checkbox" name='Firm' id="job_firm" />
@@ -132,7 +138,7 @@
       </label>
     </div>
   </div>
-  <div class="col-lg-2">
+  <div class="col-lg-1">
     <button id="btnSearch_Repair_Check" class="btn btn-info"><i class="fa fa-searh"></i>&nbsp;ค้นหา</button>
   </div>
 </div>
@@ -261,6 +267,7 @@
     selectedJob = [];
     var OldHtml = $("#btnSearch_Repair_Check").html();
     var Item = $("#job_item").val();
+    var sts_job = $("#sts_job").val();
     var wc = $("#job_wc").val();
     var Firm = $("#job_firm").is(":checked") ? 'F' : '';
     var Complete = $("#job_complete").is(":checked") ? 'C' : '';
@@ -302,6 +309,7 @@
       data: {
         load: 'Search',
         Item: Item,
+        sts_job: sts_job,
         wc: wc,
         whereClause: whereClause
       },

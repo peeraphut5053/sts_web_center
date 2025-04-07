@@ -32,7 +32,7 @@ if ($load == "wc") {
     $CallModel->SyteLine_Models();
     $STS_Custom = new JOBORDER();
     $STS_Custom->setConn($ConnSL);
-    $rs = $STS_Custom->SearchJobOrderReport($Item , $wc,$whereClause);
+    $rs = $STS_Custom->SearchJobOrderReport($Item, $sts_job, $wc, $whereClause);
     echo json_encode($rs);
 } else if ($load == "Job") {
 
