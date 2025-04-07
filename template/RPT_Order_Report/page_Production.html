@@ -30,8 +30,7 @@
         <thead>
             <tr>
                 <th>ลำดับ</th>
-                <th>พิมพ์ Tag</th>
-                <th>Job</th>
+                <th>พิมพ์แท็ก Job</th>
                 <th>Wc</th>
                 <th>Ref no.</th>
                 <th>Item</th>
@@ -164,12 +163,8 @@ function generateBarcode(text) {
                             "data": "job",
                             "className": "text-center",
                             "render": function (data, type, row) {
-                                return '<a style="padding: 5px" class="btn btn-info btn-xs" href="http://172.18.1.194/sts_tag/?tag_history_forming_coProduct&jobno=+' + data + '%2B0%2B10&act=start" target="_blank">พิมพ์ Tag</a>';
+                                return '<a style="padding: 5px; font-size: 14px;" class="btn btn-info btn-xs" href="http://172.18.1.194/sts_tag/?tag_history_forming_coProduct&jobno=+' + data + '%2B0%2B10&act=start" target="_blank">'+ row.jobbarcode2 +'</a>';
                             }
-                        },
-                        {
-                            "data": "jobbarcode2",
-                            "className": "text-center",
                         },
                         {
                             "data": "wc",

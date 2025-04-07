@@ -30,7 +30,7 @@
             <tr>
                 <th>ลำดับ</th>
                 <th>เลขที่</th>
-                <th>Job</th>
+                <th>พิมพ์แท็ก Job</th>
                 <th>Wc</th>
                 <th>Item</th>
                 <th>หน้ากว้าง</th>
@@ -133,7 +133,7 @@
                             "data": "job",
                             "className": "text-center",
                             "render": function (data, type, row) {
-                                return '<a style="padding: 5px" class="btn btn-info btn-xs" href="http://172.18.1.194/sts_tag/?tag_history_slit&jobno='+data+'%2B0%2B10&act=start" target="_blank">พิมพ์ Tag</a><div>'+row.job+'</div>';
+                                return '<a style="padding: 5px; font-size: 14px;" class="btn btn-info btn-xs" href="http://172.18.1.194/sts_tag/?tag_history_slit&jobno='+data+'%2B0%2B10&act=start" target="_blank">'+ row.job +'</a>';
                             }
                         },
                         {
