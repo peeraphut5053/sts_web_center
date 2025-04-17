@@ -327,7 +327,8 @@
           scrollX: true,
           select: true,
           order: [
-            [1, "asc"]
+            [4, "asc"], 
+            [2, "asc"], 
           ],
           // fontWeight: "bold",
           style: "font-weight: bold;",
@@ -384,6 +385,12 @@
             {
               "data": "Uf_refno",
               "className": "text-center bolded",
+              render: function(data, type, row) {
+                                if (type === 'sort') {
+                                    return data === null || data === '' ? 999999 : data;
+                                }
+                                return data;
+                            }
             },
             {
               "data": "job",
@@ -392,6 +399,12 @@
             {
               "data": "Uf_sts_job",
               "className": "text-center bolded",
+              render: function(data, type, row) {
+                                if (type === 'sort') {
+                                    return data === null || data === '' ? 'Z999999' : data;
+                                }
+                                return data;
+                            }
             },
             {
               "data": "custname2",

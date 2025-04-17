@@ -123,12 +123,20 @@ $(document).ready(function () {
                     "aaData": data,
                     "paging": false,
                     "searching": false,
-                    "bInfo": false,    
+                    "bInfo": false,
+                   
                     order: [[2, "asc"], [0, "asc"]],
                     columnDefs: [
                         {
                             targets: [0],
                             width: 30,
+                            type: 'num',
+                            render: function(data, type, row) {
+                                if (type === 'sort') {
+                                    return data === null || data === '' ? 999999 : data;
+                                }
+                                return data;
+                            }
                         },
                         {
                             targets: [2],
