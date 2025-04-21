@@ -1,0 +1,125 @@
+<div class="row">
+      <div>
+        <h1 class="text-center">รายงานเหล็กม้วนคงเหลือสืบกลับ</h1>
+      </div>
+    </div>
+    <div class="row" id="divReport">
+      <table style="width:100%;" class="table table-condensed table-bordered table-striped" id="tblReport">
+        <thead>
+          <tr>
+          <th>Item</th>
+          <th>Item Description</th>
+          <th>Qty On Hand</th>
+          <th>Lot</th>
+          <th>Ref Number</th>
+          <th>Vendor</th>
+          <th>Vendor Name</th>
+          <th>Item Cost</th>
+          <th>Currency</th>
+          </tr>
+        </thead>
+      </table>
+    </div>
+    <script type="text/javascript">
+
+      $(document).ready(function () {
+        ReportItemSearch();
+      });
+
+      function ReportItemSearch() {
+        var OldHtml = $("#btnSearch_Repair_Check").html();
+        $("#btnSearch").html("<i class='fa fa-spinner fa-spin'></i>");
+        $("#tblReport").loading();
+        $("#tblReport tfoot").remove();
+        $.ajax({
+          type: "POST",
+          url: "././module/RPT_ITEM_LOT/data.php",
+          dataType: "json",
+          beforeSend: function () {
+            $("#btnSearch").html("<i class='fa fa-spinner fa-spin'>");
+          },
+          data: {
+            load: 'Get',
+          },
+          success: function (data) {
+          $("#divReport2").addClass("hidden");
+          $("#divReport").removeClass("hidden");
+          $("#tblReport").DataTable().clear();
+          $("#tblReport").dataTable({
+            aaData: data,
+            paging: false,
+            fixedHeader: true,
+            destroy: true,
+            processing: true,
+            scrollY: "65vh",
+            scrollCollapse: true,
+            scrollX: true,
+            columns: [
+              {
+                "data": "item",
+                "className": "text-center",
+              },
+              {
+                "data": "description",
+                "className": "text-center",
+              },
+              {
+                "data": "qty_on_hand",
+                "className": "text-center",
+              },
+              {
+                "data": "lot",
+                "className": "text-center",
+              },
+              {
+                "data": "ref_num",
+                "className": "text-center",
+              },
+              {
+                "data": "vend_num",
+                "className": "text-center",
+              },
+              {
+                "data": "name",
+                "className": "text-center",
+              },
+              {
+                "data": "item_cost",
+                "className": "text-center",
+                "render": $.fn.dataTable.render.number(',', '.', 5, ''),
+              },
+              {
+                "data": "curr_code",
+                "className": "text-center",
+              },
+              ],
+              dom:
+              "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+              "<'row'<'col-md-12'tr>>" +
+              "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+            buttons: [
+              {
+                extend: "print",
+                text: "<i class='fa fa-print'></i>&nbsp;Print",
+                title: "",
+              },
+              {
+                extend: "excel",
+                text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                title: "รายงานเหล็กม้วนคงเหลือสืบกลับ",
+              },
+            ],
+            });
+            $("#tblReport").loading("stop");
+            $("#btnSearch").html(OldHtml);
+          },
+          error: function (e) {
+            $("#tblReport").loading("stop");
+            $("#btnSearch").html(OldHtml);
+            console.log("There was an error with your request...");
+            console.log("error: " + JSON.stringify(e));
+          },
+        });
+      };
+    
+    </script>
