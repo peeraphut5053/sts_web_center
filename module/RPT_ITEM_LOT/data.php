@@ -15,6 +15,6 @@ $Data = new Costing();
 $Data->setConn($ConnSL);
 
 if ($load == "Get") {
-    $Data = $Data->GetReportItemLot();
+    $Data = $Data->GetReportItemLot($item, $lot);
     echo json_encode($Data);
 }

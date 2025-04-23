@@ -1,7 +1,23 @@
 <div class="row">
-      <div>
-        <h1 class="text-center">รายงานเหล็กม้วนคงเหลือสืบกลับ</h1>
+      <div class="m-2">
+        <h1 class="text-center">รายงานสืบกลับเหล็กม้วนคงเหลือ</h1>
       </div>
+      <div class="row"> 
+        <div class="col-lg-4 col-search">
+                <div class="input-group w-full">
+                  <div style="font-weight: bold;" class="input-group-addon">Item</div>
+                  <input type="text" class="form-control txt-filter" id="item">
+                </div>
+        </div>
+        <div class="col-lg-4 col-search">
+          <div class="input-group  w-full">
+            <div style="font-weight: bold;" class="input-group-addon">Lot</div>
+            <input type="text" class="form-control txt-filter" id="lot">
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-2 col-sm-1 col-xs-6  col-search">
+            <button id="BtnItemLotSearch" class="btn btn-info"><i class="fa fa-search"></i>&nbsp;Search</button>
+        </div>
     </div>
     <div class="row" id="divReport">
       <table style="width:100%;" class="table table-condensed table-bordered table-striped" id="tblReport">
@@ -22,13 +38,15 @@
     </div>
     <script type="text/javascript">
 
-      $(document).ready(function () {
+      $("#BtnItemLotSearch").click(function () {
         ReportItemSearch();
-      });
+      })
 
       function ReportItemSearch() {
-        var OldHtml = $("#btnSearch_Repair_Check").html();
-        $("#btnSearch").html("<i class='fa fa-spinner fa-spin'></i>");
+        var OldHtml = $("#BtnItemLotSearch").html();
+        var item = $("#item").val();
+        var lot = $("#lot").val();
+        $("#BtnItemLotSearch").html("<i class='fa fa-spinner fa-spin'></i>");
         $("#tblReport").loading();
         $("#tblReport tfoot").remove();
         $.ajax({
@@ -36,14 +54,14 @@
           url: "././module/RPT_ITEM_LOT/data.php",
           dataType: "json",
           beforeSend: function () {
-            $("#btnSearch").html("<i class='fa fa-spinner fa-spin'>");
+            $("#BtnItemLotSearch").html("<i class='fa fa-spinner fa-spin'>");
           },
           data: {
             load: 'Get',
+            item: item,
+            lot: lot
           },
           success: function (data) {
-          $("#divReport2").addClass("hidden");
-          $("#divReport").removeClass("hidden");
           $("#tblReport").DataTable().clear();
           $("#tblReport").dataTable({
             aaData: data,
@@ -106,16 +124,16 @@
               {
                 extend: "excel",
                 text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
-                title: "รายงานเหล็กม้วนคงเหลือสืบกลับ",
+                title: "รายงานสืบกลับเหล็กม้วนคงเหลือ",
               },
             ],
             });
             $("#tblReport").loading("stop");
-            $("#btnSearch").html(OldHtml);
+            $("#BtnItemLotSearch").html(OldHtml);
           },
           error: function (e) {
             $("#tblReport").loading("stop");
-            $("#btnSearch").html(OldHtml);
+            $("#BtnItemLotSearch").html(OldHtml);
             console.log("There was an error with your request...");
             console.log("error: " + JSON.stringify(e));
           },

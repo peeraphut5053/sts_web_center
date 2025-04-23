@@ -43,7 +43,18 @@ class Costing {
         return $rs0;
     }
 
-    function GetReportItemLot() {
+    function GetReportItemLot($item, $lot) {
+
+        $wh = '';
+
+        if ($item != "") {
+            $wh .= " and lot.item = '" . $item . "'";
+        }
+
+        if ($lot != "") {
+            $wh .= " and lot.lot = '" . $lot . "'";
+        }
+
         $query = "select lot.item, item.description, convert(decimal(10,2),lot.qty_on_hand) as qty_on_hand
   , lot.lot,mat.ref_num
   ,po.vend_num, va.name
@@ -51,13 +62,14 @@ class Costing {
   ,ven.curr_code
 from lot_loc_mst lot 
   inner join item_mst item on lot.item = item.item
-  inner join matltran_mst mat on lot.item = mat.item and lot.lot = mat.lot
+  left join matltran_mst mat on lot.item = mat.item and lot.lot = mat.lot
      and mat.ref_type = 'P' and qty <> 0
-  inner join poitem_mst poi on mat.item = poi.item and mat.ref_num = poi.po_num
-  inner join po_mst po on po.po_num = poi.po_num
-  inner join vendor_mst ven on ven.vend_num = po.vend_num
-  inner join vendaddr_mst va on ven.vend_num = va.vend_num
-where (lot.item like 'RHR%' or lot.item like 'RSHR%')";
+  left join poitem_mst poi on mat.item = poi.item and mat.ref_num = poi.po_num
+  left join po_mst po on po.po_num = poi.po_num
+  left join vendor_mst ven on ven.vend_num = po.vend_num
+  left join vendaddr_mst va on ven.vend_num = va.vend_num
+where (lot.item like 'RHR%' or lot.item like 'RSHR%')
+ and lot.qty_on_hand <> 0 $wh";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);
