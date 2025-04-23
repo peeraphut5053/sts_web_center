@@ -1,0 +1,221 @@
+<div class="row">
+    <div class="m-2">
+      <h1 class="text-center">รายงานเหล็กม้วนใช้ไปสืบกลับ</h1>
+    </div>
+    <div class="col-lg-2 col-search">
+        <div class="input-group  w-full">
+          <div style="font-weight: bold;" class="input-group-addon">From Date</div>
+          <input type="text" class="form-control txt-filter" id="mat_fromdate">
+        </div>
+      </div>
+    <div class="col-lg-2 col-search">
+        <div class="input-group  w-full">
+          <div style="font-weight: bold;" class="input-group-addon">To Date</div>
+          <input type="text" class="form-control txt-filter" id="mat_todate">
+        </div>
+      </div>
+    <div class="row"> 
+      <div class="col-lg-2 col-search">
+              <div class="input-group w-full">
+                <div style="font-weight: bold;" class="input-group-addon">Item</div>
+                <input type="text" class="form-control txt-filter" id="mat_item">
+              </div>
+      </div>
+      <div class="col-lg-2 col-search">
+        <div class="input-group  w-full">
+          <div style="font-weight: bold;" class="input-group-addon">Lot</div>
+          <input type="text" class="form-control txt-filter" id="mat_lot">
+        </div>
+      </div>
+      <div class="col-lg-2 col-search">
+        <div class="input-group  w-full">
+          <div style="font-weight: bold;" class="input-group-addon">PO</div>
+          <input type="text" class="form-control txt-filter" id="mat_po">
+        </div>
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-1 col-xs-6  col-search">
+          <button id="BtnMatSearch" class="btn btn-info"><i class="fa fa-search"></i>&nbsp;Search</button>
+      </div>
+  </div>
+  <div class="row" id="divReport">
+    <table class="table table-condensed table-bordered table-striped" id="tblReport">
+      <thead>
+        <tr>
+        <th>Transaction Number</th>
+        <th>Transaction Date        </th>
+        <th>Transaction Type        </th>
+        <th>Reference Type        </th>
+        <th>Ref Number</th>
+        <th>Lot</th>
+        <th>Document Number</th>
+        <th>Item</th>
+        <th>Description</th>
+        <th>Quantity</th>
+        <th>PO Number</th>
+        <th>Vendor        </th>
+        <th>Vendor Name        </th>
+        <th>Item Cost        </th>
+        <th>Currency        </th>
+        </tr>
+      </thead>
+    </table>
+  </div>
+  <script type="text/javascript">
+
+    $("#mat_fromdate , #mat_todate").datepicker({
+        dateFormat: "yy-mm-dd",
+    });
+
+    $("#BtnMatSearch").click(function () {
+      ReportItemSearch();
+    })
+
+    function ReportItemSearch() {
+      var OldHtml = $("#BtnMatSearch").html();
+      var fromdate = $("#mat_fromdate").val();
+      var todate = $("#mat_todate").val();
+      var item = $("#mat_item").val();
+      var lot = $("#mat_lot").val();
+      var po = $("#mat_po").val();
+  
+      if (fromdate == "" && todate == "" && item == "" && lot == "" && po == "") {
+        alert("กรุณาระบุข้อมูลที่ต้องการค้นหา");
+        return false;
+      }
+
+      $("#BtnMatSearch").html("<i class='fa fa-spinner fa-spin'></i>");
+      $("#tblReport").loading();
+      $("#tblReport tfoot").remove();
+      $.ajax({
+        type: "POST",
+        url: "././module/RPT_Matltran_Mst/data.php",
+        dataType: "json",
+        beforeSend: function () {
+          $("#BtnMatSearch").html("<i class='fa fa-spinner fa-spin'>");
+        },
+        data: {
+          load: 'Get',
+          fromdate: fromdate,
+          todate: todate,
+          item: item,
+          lot: lot,
+          po: po
+        },
+        success: function (data) {
+        $("#tblReport").DataTable().clear();
+        $("#tblReport").dataTable({
+          aaData: data,
+          paging: false,
+          fixedHeader: true,
+          destroy: true,
+          processing: true,
+          scrollY: "65vh",
+          scrollCollapse: true,
+          scrollX: true,
+          columnDefs: [
+            {
+              targets: [7],
+              width: 100,
+            },
+            {
+              targets: [12],
+              width: 250,
+            },
+          ],
+          columns: [
+            {
+              "data": "trans_num",
+              "className": "text-center",
+            },
+            {
+              "data": "trans_date.date",
+              "className": "text-center",
+              "render": function (data, type, row, meta) {
+                var ret = moment(data).format("DD/MM/YYYY");
+                return ret;
+              }
+            },
+            {
+              "data": "trans_type",
+              "className": "text-center",
+            },
+            {
+              "data": "ref_type",
+              "className": "text-center",
+            },
+            {
+              "data": "ref_num",
+              "className": "text-center",
+            },
+            {
+              "data": "lot",
+              "className": "text-center",
+            },
+            {
+              "data": "document_num",
+              "className": "text-center",
+            },
+            {
+              "data": "item",
+              "className": "text-center",
+            },
+            {
+              "data": "description",
+              "className": "text-center",
+            },
+            {
+              "data": "qty",
+              "className": "text-center",
+            },
+            {
+              "data": "po_num",
+              "className": "text-center",
+            },
+            {
+              "data": "vend_num",
+              "className": "text-center",
+            },
+            {
+              "data": "name",
+              "className": "text-center",
+            },
+            {
+              "data": "item_cost",
+              "className": "text-center",
+              "render": $.fn.dataTable.render.number(',', '.', 5, ''),
+            },
+            {
+              "data": "curr_code",
+              "className": "text-center",
+            },
+            ],
+            dom:
+            "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+            "<'row'<'col-md-12'tr>>" +
+            "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+          buttons: [
+            {
+              extend: "print",
+              text: "<i class='fa fa-print'></i>&nbsp;Print",
+              title: "",
+            },
+            {
+              extend: "excel",
+              text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+              title: "รายงานเหล็กม้วนใช้ไปสืบกลับ",
+            },
+          ],
+          });
+          $("#tblReport").loading("stop");
+          $("#BtnMatSearch").html(OldHtml);
+        },
+        error: function (e) {
+          $("#tblReport").loading("stop");
+          $("#BtnMatSearch").html(OldHtml);
+          console.log("There was an error with your request...");
+          console.log("error: " + JSON.stringify(e));
+        },
+      });
+    };
+  
+  </script>

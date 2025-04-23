@@ -75,4 +75,57 @@ where (lot.item like 'RHR%' or lot.item like 'RSHR%')
         array_splice($rs0, count($rs0) - 1, 1);
         return $rs0;
     }
+
+    function GetReportMatltranMst($fromdate, $todate, $item, $lot,$po) {
+
+        $wh = '';
+
+        if ($fromdate != "" && $todate != "") {
+            $wh .= " and convert(date,mat.trans_date) between '" . $fromdate . "' and '" . $todate . "'";
+        }
+
+        if ($item != "") {
+            $wh .= " and mat.item = '" . $item . "'";
+        }
+
+        if ($lot != "") {
+            $wh .= " and mat.lot = '" . $lot . "'";
+        }
+
+        if ($po != "") {
+            $wh .= " and matsub.po_num = '" . $po . "'";
+        }
+
+        $query = "select distinct mat.trans_num, convert(date,mat.trans_date) as trans_date , trans.trans_description as trans_type, ref.ref_description as ref_type
+  , mat.ref_num, mat.lot, mat.document_num
+  , mat.item, item.[description]
+  , convert(decimal(10,2),mat.qty) as qty
+  , matsub.po_num, matsub.vend_num, matsub.name, matsub. item_cost, matsub.curr_code
+from matltran_mst mat 
+ inner join item_mst item on mat.item = item.item
+ inner join trans_type_mst trans on mat.trans_type = trans.trans_type
+ inner join ref_type_mst ref on ref.ref_type = mat. ref_type
+ left join (select mat.ref_num as po_num, mat.item, mat.lot
+         ,po.vend_num, va.name
+      ,convert(decimal(10,5),poi.item_cost) as item_cost
+      ,ven.curr_code
+      from matltran_mst mat
+     inner join poitem_mst poi on mat.item = poi.item and mat.ref_num = poi.po_num
+     inner join po_mst po on po.po_num = poi.po_num
+     inner join vendor_mst ven on ven.vend_num = po.vend_num
+     inner join vendaddr_mst va on ven.vend_num = va.vend_num
+      where (mat.item like 'RHR%' or mat.item like 'RSHR%')
+     and mat.ref_type = 'P' and mat.qty <> 0
+     ) matsub
+     on matsub.item = mat.item and matsub.lot = mat.lot
+where (mat.item like 'RHR%' or mat.item like 'RSHR%')
+  and mat.trans_type <> 'M'
+     and mat.ref_type <> 'P' and mat.qty <> 0
+$wh
+order by lot, trans_num";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
 }
