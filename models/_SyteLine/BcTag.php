@@ -812,6 +812,17 @@ VALUES('$wc', GETDATE());";
         return $rs;
     }
 
+    function getOvertimeReport($StartDate, $EndDate) {
+        $query = "EXEC [dbo].[STS_PROD_TIME_REPORT_sum]
+  @DateStarting = '$StartDate',
+  @DateEnding = '$EndDate'";
+
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
 
 
  

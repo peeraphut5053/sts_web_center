@@ -116,6 +116,13 @@ if ($load == "ajax") {
     $Mv_Bc_Tag->setConn($ConnSL);
     $rs = $Mv_Bc_Tag->getMachineReport($StartDate, $EndDate, $w_c, $type);
     echo json_encode($rs);
+} elseif ($load == 'OvertimeReport') {
+    $CM = new CallModel();
+    $CM->SyteLine_Models();
+    $Mv_Bc_Tag = new BcTag();
+    $Mv_Bc_Tag->setConn($ConnSL);
+    $rs = $Mv_Bc_Tag->getOvertimeReport($StartDate, $EndDate);
+    echo json_encode($rs);
 } else {
     $CM = new CallModel();
     $CM->SyteLine_Models();
