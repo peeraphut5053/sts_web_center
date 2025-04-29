@@ -157,15 +157,15 @@
             THSarabunNew: {
                 normal: 'THSarabunNew.ttf',
                 bold: 'THSarabunNew Bold.ttf',
-                italics: 'THSarabunNew-Italic.ttf',
-                bolditalics: 'THSarabunNew-BoldItalic.ttf'
+                italics: 'THSarabunNew Italic.ttf',
+                bolditalics: 'THSarabunNew BoldItalic.ttf'
             },
             Roboto: {
                 normal: 'Roboto-Regular.ttf',
                 bold: 'Roboto-Medium.ttf',
                 italics: 'Roboto-Italic.ttf',
                 bolditalics: 'Roboto-MediumItalic.ttf'
-            }
+            },
         };
         $.ajax({
             type: "POST",
@@ -228,7 +228,7 @@
                             {
                                 stack: [
                                     { image: generateBarcode(newData[i].item), width: 210, height: 25, alignment: 'center' },
-                                    { text: newData[i].description ? newData[i].description : '', fontSize: 10, bold: true,font: 'THSarabunNew', alignment: 'center' }
+                                    { text: newData[i].description ? newData[i].description : '', fontSize: 14,  bold: true, font: 'THSarabunNew', alignment: 'center' }
                                 ], fontSize: 12, alignment: 'center'
                             },
                             { stack: [
@@ -368,14 +368,14 @@
                             if (result.length <= 5) {
                                 data.push([
                                     { border: [false, false, false, false], text: "", fontSize: 12, alignment: 'center' },
-                                    { border: [false, false, false, false], text: `Request By (ผู้เบิก) : ${username_session}`, colSpan: 11, fontSize: 12, bold: true, alignment: 'left', colSpan: 2, margin: [0, 20, 0, 0] },
+                                    { border: [false, false, false, false], text: `Request By (ผู้เบิก) : ${username_session}`, colSpan: 11, fontSize: 12, bold: true, alignment: 'left', colSpan: 2, margin: [0, 0, 0, 0] },
                                     { text: "", fontSize: 12, alignment: 'center' },
-                                    { border: [false, false, false, false], text: "Loaded By (พนักงานโหลดสินค้า) : ________________________", fontSize: 12,bold: true, alignment: 'left', colSpan: 5, margin: [0, 20, 0, 0] },
-                                    { text: "", fontSize: 12, alignment: 'center' },
-                                    { text: "", fontSize: 12, alignment: 'center' },
+                                    { border: [false, false, false, false], text: "Loaded By (พนักงานโหลดสินค้า) : ________________________", fontSize: 12,bold: true, alignment: 'left', colSpan: 5, margin: [0, 0, 0, 0] },
                                     { text: "", fontSize: 12, alignment: 'center' },
                                     { text: "", fontSize: 12, alignment: 'center' },
-                                    { border: [false, false, false, false], text: "นํ้าหนักของโดยประมาณ : ________________________Kgs.", fontSize: 12,bold: true, alignment: 'left', colSpan: 4, margin: [0, 20, 0, 0] },
+                                    { text: "", fontSize: 12, alignment: 'center' },
+                                    { text: "", fontSize: 12, alignment: 'center' },
+                                    { border: [false, false, false, false], text: "นํ้าหนักของโดยประมาณ : ________________________Kgs.", fontSize: 12,bold: true, alignment: 'left', colSpan: 4, margin: [0, 0, 0, 0] },
                                     { text: "", fontSize: 12, alignment: 'center' },
                                     { text: "", fontSize: 12, alignment: 'center' },
                                     { text: '', fontSize: 12, bold: true, alignment: 'center' },
