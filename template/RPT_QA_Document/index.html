@@ -355,28 +355,7 @@
                     $('#qa_issue_edit').val('');
                     fileInput.value = '';
                     $("#ModalQaEdit").modal("hide");
-                    // delete old file
-
-                    if ($("#file_name").val() != '') {
-                        $.ajax({
-            type: "POST",
-            url: "././module/RPT_QA_Document/data.php",
-            dataType: "json",
-            data: {
-                load: "DeleteFile",
-                file: $("#file_name").val(),
-            },
-            success: function (data) {
-                alert("แก้ไขข้อมูลสําเร็จ");
-                $("#file_name").val('');
-                ReportItemSearch();
-            },
-            error: function (e) {
-                alert("บันทึกข้อมูลไม่สําเร็จ");
-            },
-        });
-
-                    }
+                    alert('บันทึกสําเร็จ');
                     ReportItemSearch();
                 } else {
                     alert('การอัพโหลดล้มเหลว');
