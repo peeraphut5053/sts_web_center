@@ -34,14 +34,17 @@ if (isset($_FILES['file'])) {
         // ตรวจสอบนามสกุลไฟล์
         $file_type = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
         if (in_array($file_type, $allowed_types)) {
+            // ลบไฟล์เก่าถ้ามี
+            if (isset($old_file) && !empty($old_file)) {
+                $old_upload_path = $upload_dir . $old_file;
+                if (file_exists($old_upload_path)) {
+                    unlink($old_upload_path);
+                }
+            }
+
             // ใช้ชื่อไฟล์
             $new_filename = $file['name'];
             $upload_path = $upload_dir . $new_filename;
-            
-            // ตรวจสอบและลบไฟล์เดิมถ้ามี
-            if (file_exists($upload_path)) {
-                unlink($upload_path);
-            }
             
             // ย้ายไฟล์
             if (move_uploaded_file($file['tmp_name'], $upload_path)) {

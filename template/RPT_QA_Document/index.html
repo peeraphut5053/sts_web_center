@@ -330,6 +330,7 @@
 
         const fileInput = document.getElementById('file-input_edit');
         const files = fileInput.files; // รับไฟล์ที่เลือกทั้งหมด
+        const old_file = $("#file_name").val();
 
         if (files.length == 0) {
             return false;
@@ -338,6 +339,7 @@
         const formData = new FormData();
         formData.append('code', DocNo);
         formData.append('file', files[0]);
+        formData.append('old_file', old_file)
         try {
 
             const response = await fetch('././module/RPT_QA_Document/upload.php', {
@@ -355,7 +357,11 @@
                     $('#qa_issue_edit').val('');
                     fileInput.value = '';
                     $("#ModalQaEdit").modal("hide");
-                    alert('บันทึกสําเร็จ');
+                    // delete old file
+
+                    if ($("#file_name").val() != '') {
+                        alert("แก้ไขข้อมูลสําเร็จ");
+                    }
                     ReportItemSearch();
                 } else {
                     alert('การอัพโหลดล้มเหลว');
