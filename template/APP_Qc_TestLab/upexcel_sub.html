@@ -266,8 +266,177 @@
                         }
                         
                     }
-
+                  
+                    const size = row.find("td:eq(0)").text().substring(3,6);
+                    const sch = row.find("td:eq(3)").text();
+                    const grade = row.find("td:eq(6)").text();
+                    const el = row.find("td:eq(10)").text();
+                    const standard = row.find("td:eq(5)").text().substring(0,4);
+                    console.log(standard);
+                    
+           
+                    if (size == 112 && sch == 10 && grade == 'A' && el < 22 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 112 && sch == 10 && grade == 'B' && el < 18 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 112 && sch == 40 && grade == 'A' && el < 24 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 112 && sch == 40 && grade == 'B' && el < 19 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 112 && sch == 80 && grade == 'A' && el < 25 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 112 && sch == 80 && grade == 'B' && el < 21 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 114 && sch == 10 && grade == 'A' && el < 22 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 114 && sch == 10 && grade == 'B' && el < 18 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 114 && sch == 40 && grade == 'A' && el < 24 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 114 && sch == 40 && grade == 'B' && el < 19 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 114 && sch == 80 && grade == 'A' && el < 24 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 114 && sch == 80 && grade == 'B' && el < 19 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 200 && sch == 10 && grade == 'A' && el < 22 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 200 && sch == 10 && grade == 'B' && el < 18 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 200 && sch == 40 && grade == 'A' && el < 24 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 200 && sch == 40 && grade == 'B' && el < 20 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 200 && sch == 80 && grade == 'A' && el < 26 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 200 && sch == 80 && grade == 'B' && el < 21 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 212 && sch == 10 && grade == 'A' && el < 23 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 212 && sch == 10 && grade == 'B' && el < 19 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 212 && sch == 40 && grade == 'A' && el < 25 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 212 && sch == 40 && grade == 'B' && el < 21 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 212 && sch == 80 && grade == 'A' && el < 27 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 212 && sch == 80 && grade == 'B' && el < 22 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 300 && sch == 10 && grade == 'A' && el < 22 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 300 && sch == 10 && grade == 'B' && el < 18 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 300 && sch == 40 && grade == 'A' && el < 26 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 300 && sch == 40 && grade == 'B' && el < 21 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 300 && sch == 80 && grade == 'A' && el < 27 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 300 && sch == 80 && grade == 'B' && el < 22 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 312 && sch == 10 && grade == 'A' && el < 22 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 312 && sch == 10 && grade == 'B' && el < 18 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 312 && sch == 40 && grade == 'A' && el < 26 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 312 && sch == 40 && grade == 'B' && el < 21 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 312 && sch == 80 && grade == 'A' && el < 28 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 312 && sch == 80 && grade == 'B' && el < 23 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 400 && sch == 10 && grade == 'A' && el < 22 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 400 && sch == 10 && grade == 'B' && el < 18 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 400 && sch == 40 && grade == 'A' && el < 27 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 400 && sch == 40 && grade == 'B' && el < 22 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 400 && sch == 80 && grade == 'A' && el < 29 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 400 && sch == 80 && grade == 'B' && el < 24 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 500 && sch == 10 && grade == 'A' && el < 23 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 500 && sch == 10 && grade == 'B' && el < 19 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 500 && sch == 40 && grade == 'A' && el < 27 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 500 && sch == 40 && grade == 'B' && el < 22 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 500 && sch == 80 && grade == 'A' && el < 30 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 500 && sch == 80 && grade == 'B' && el < 24 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 600 && sch == 10 && grade == 'A' && el < 23 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 600 && sch == 10 && grade == 'B' && el < 19 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 600 && sch == 40 && grade == 'A' && el < 28 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 600 && sch == 40 && grade == 'B' && el < 23 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 600 && sch == 80 && grade == 'A' && el < 30 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 600 && sch == 80 && grade == 'B' && el < 25 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 800 && sch == 10 && grade == 'A' && el < 25 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 800 && sch == 10 && grade == 'B' && el < 20 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 800 && sch == 40 && grade == 'A' && el < 28 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 800 && sch == 40 && grade == 'B' && el < 23 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 800 && sch == 80 && grade == 'A' && el < 31 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 800 && sch == 80 && grade == 'B' && el < 26 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 380 && sch == 40 && grade == 'A' && el < 28 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 380 && sch == 40 && grade == 'B' && el < 23 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 120 && sch == 40 && grade == 'A' && el < 29 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 120 && sch == 40 && grade == 'B' && el < 24 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 120 && sch == 80 && grade == 'A' && el < 30 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 120 && sch == 80 && grade == 'B' && el < 25 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 340 && sch == 10 && grade == 'A' && el < 29 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 340 && sch == 10 && grade == 'B' && el < 24 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 340 && sch == 40 && grade == 'A' && el < 31 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 340 && sch == 40 && grade == 'B' && el < 25 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 340 && sch == 80 && grade == 'A' && el < 32 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 340 && sch == 80 && grade == 'B' && el < 26 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 100 && sch == 10 && grade == 'A' && el < 32 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 100 && sch == 10 && grade == 'B' && el < 26 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 100 && sch == 40 && grade == 'A' && el < 33 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 100 && sch == 40 && grade == 'B' && el < 27 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 100 && sch == 80 && grade == 'A' && el < 35 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    } else if (size == 100 && sch == 80 && grade == 'B' && el < 29 && standard == 'ASTM') {
+                        row.find("td:eq(10)").css("color", "red");
+                    }
+                      
                     });
+
+                   
+                    
 
         
                             
