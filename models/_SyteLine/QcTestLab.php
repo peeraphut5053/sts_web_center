@@ -277,7 +277,8 @@ from matltran_mst
    left join STS_QC_zinc_coat zinc on zinc.item = tag.item and zinc.lot = tag.lot and zinc.sts_no = tag.sts_no
 where trans_type = 'F'
      and matltran_mst.wc like '%GL%'
-   and matltran_mst.item like 'w%071%'
+   and matltran_mst.item like 'w%'
+   and substring(matltran_mst.item,4,2) = '71'
    and (convert(date,matltran_mst.createdate) between  '$StartDate'  and '$EndDate')";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
