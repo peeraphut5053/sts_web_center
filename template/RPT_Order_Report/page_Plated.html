@@ -112,7 +112,8 @@ transform:rotate(360deg)
                     <th>Length</th>
                     <th>Type</th>
                     <th>Pcs/Bundle</th>
-                    <th>ผลิต Qty</th>
+                    <th>ผลิตแล้ว</th>
+                    <th>สั่งผลิต</th>
                     <th>HT PSI</th>
                     <th>Thread</th>
                     <th>Remark</th>
@@ -283,10 +284,20 @@ $(document).ready(function () {
                         {"data": "Uf_Pack",
                             "className": "text-center",
                         },
+                        {"data": "qty_complete",
+                            "className": "text-center",
+                            "render": function (data, type, row) {
+                                let val = Number(data).toLocaleString();
+                                let rt = "<span style='color:blue; font-weight:bold;'>" + val + "</span>";
+                                return rt;
+                            }
+                        },
                         {"data": "qty_released",
                             "className": "text-center",
                             "render": function (data, type, row) {
-                                return Number(data).toLocaleString();
+                                let val = Number(data).toLocaleString();
+                                let rt = "<span style='font-weight:bold;'>" + val + "</span>";
+                                return rt;
                             }
                         },
                         {"data": "uf_ht_psi",
@@ -297,6 +308,15 @@ $(document).ready(function () {
                         },
                         {"data": "uf_remark",
                             "className": "text-center",
+                             "render": function (data, type, row) {
+
+                                if (data == null) {
+                                    data = "";
+                                }
+
+                                let rt = "<span style='font-weight:bold; color:red;'>" + data + "</span>";
+                                return rt;
+                            }
                         },
                     ],
                     'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +

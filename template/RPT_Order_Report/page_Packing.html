@@ -260,19 +260,30 @@ $(document).ready(function () {
                         {"data": "qty_complete",
                             "className": "text-center",
                             "render": function (data, type, row) {
-                                // remove decimal
-                                return Number(data);
+                                let val = Number(data).toLocaleString();
+                                let rt = "<span style='color:blue; font-weight:bold;'>" + val + "</span>";
+                                return rt;
                             }
                         },
                         {"data": "qty_released",
                             "className": "text-center",
                             "render": function (data, type, row) {
-                                // remove decimal
-                                return Number(data);
+                                 let val = Number(data).toLocaleString();
+                                let rt = "<span style='font-weight:bold;'>" + val + "</span>";
+                                return rt;
                             }
                         },
                         {"data": "Uf_remark",
                             "className": "text-center",
+                             "render": function (data, type, row) {
+
+                                if (data == null) {
+                                    data = "";
+                                }
+
+                                let rt = "<span style='font-weight:bold; color:red;'>" + data + "</span>";
+                                return rt;
+                            }
                         },
                     ],
                     'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
