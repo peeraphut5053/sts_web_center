@@ -100,7 +100,7 @@
     </div>
     <div class="col-lg-1 col-md-1 col-sm-6 col-xs-6 text-left">
         <div class="flex">
-            <button id="btnAdd" class="btn btn-success" data-toggle="modal" data-target="#ModalQaAdd"><i
+            <button id="btnAddQaDocument" class="btn btn-success"><i
                     class="fa fa-searh"></i>เพิ่มข้อมูลรายงาน</button>
             <!-- <a class="btn btn-success ml-32" href="module/STS_Custom_Data/Import_Excel_In.php"  id="btnTransfer">&nbsp;Import Excel (IN)</a> -->
         </div>
@@ -272,15 +272,39 @@
 
     $("#BtnSearchQa").click(function () {
         ReportItemSearch();
-    })
+    });
+
+    $("#btnAddQaDocument").click(function () {
+         $.confirm({
+                                    title: 'กรุณาใส่ Password',
+                                    theme: 'modern',
+                                    content: '<input placeholder="Password" type="password" id="Pass" class="form-control my-2" name="Pass" autofocus>',
+                                    buttons: {
+                                        confirm: function () {
+                                            var Pass = $("#Pass").val();
+
+                                            if (Pass == "QA1234") {
+                                                $("#ModalQaAdd").modal("show");
+                                            } else {
+                                                $('#Pass').attr('placeholder', 'Password ไม่ถูกต้อง');
+                                                $("#Pass").val('');
+                                                return false;
+                                            }
+                                        },
+                                        cancel: function () {
+                                            window.close();
+                                        }
+
+                                    }
+                                });
+    });
+
+
 
     $("#qa_issue , #qa_issue_edit, #Start_Date_Qa, #End_Date_Qa").datepicker({
         dateFormat: "yy-mm-dd",
     });
     const test = 'ASTM A370-2022 Standard Test Methods and Definitions for Mechanical Testing of Steel Products.pdf'
-
-    console.log(test.length);
-
 
     async function UploadFiles(DocNo) {
 

@@ -96,7 +96,7 @@
   </div>
   <div class="col-lg-1 col-md-1 col-sm-6 col-xs-6 text-left">
     <div class="flex gap-16">
-      <button id="btnAdd" class="btn btn-success" data-toggle="modal" data-target="#ModalCalibration"><i
+      <button id="btnAddCalPlan" class="btn btn-success"><i
           class="fa fa-searh"></i>เพิ่มข้อมูลรายงาน</button>
       <!-- <a class="btn btn-success ml-32" href="module/STS_Custom_Data/Import_Excel_In.php"  id="btnTransfer">&nbsp;Import Excel (IN)</a> -->
     </div>
@@ -361,7 +361,32 @@
 
   $("#BtnSearchPlan").click(function () {
     ReportItemSearch();
-  })
+  });
+
+  $("#btnAddCalPlan").click(function () {
+         $.confirm({
+                                    title: 'กรุณาใส่ Password',
+                                    theme: 'modern',
+                                    content: '<input placeholder="Password" type="password" id="Pass" class="form-control my-2" name="Pass" autofocus>',
+                                    buttons: {
+                                        confirm: function () {
+                                            var Pass = $("#Pass").val();
+
+                                            if (Pass == "QA1234") {
+                                                $("#ModalCalibration").modal("show");
+                                            } else {
+                                                $('#Pass').attr('placeholder', 'Password ไม่ถูกต้อง');
+                                                $("#Pass").val('');
+                                                return false;
+                                            }
+                                        },
+                                        cancel: function () {
+                                            window.close();
+                                        }
+
+                                    }
+                                });
+    });
 
   $("#Start_Date_Plan, #End_Date_Plan").datepicker({
     dateFormat: "yy-mm-dd",
