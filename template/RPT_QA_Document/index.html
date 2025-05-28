@@ -66,7 +66,6 @@
     .type_qa {
         width: 200px;
     }
-
 </style>
 <div class="row">
     <h4 class="text-header text-center">QA Document</h4>
@@ -199,8 +198,7 @@
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary"
-                    onclick="SaveQaDocument()">บันทึก</button>
+                <button type="button" class="btn btn-primary" onclick="SaveQaDocument()">บันทึก</button>
             </div>
         </div>
     </div>
@@ -282,7 +280,7 @@
     const test = 'ASTM A370-2022 Standard Test Methods and Definitions for Mechanical Testing of Steel Products.pdf'
 
     console.log(test.length);
-    
+
 
     async function UploadFiles(DocNo) {
 
@@ -327,7 +325,7 @@
         }
     }
 
-       async function UpdateFiles(DocNo) {
+    async function UpdateFiles(DocNo) {
 
         const fileInput = document.getElementById('file-input_edit');
         const files = fileInput.files; // รับไฟล์ที่เลือกทั้งหมด
@@ -492,16 +490,37 @@
                                     alert("กรุณารายการที่ต้องการแก้ไข");
                                     return false;
                                 }
-                                $("#qa_dept_edit").val(selected[0].Dept);
-                                $("#qa_code_edit").val(selected[0].Code);
-                                $("#old_code").val(selected[0].Code);
-                                $("#qa_title_edit").val(selected[0].Title);
-                                $("#qa_revision_edit").val(selected[0].revision);
-                                $("#qa_issue_edit").val(selected[0].Issue_date?.date ? moment(selected[0].Issue_date?.date).format("YYYY-MM-DD") : '');
-                                $("#file_name").val(selected[0].file);
-                                $("#qa_type_edit").val(selected[0].Type);
-                                $("#ModalQaEdit").modal("show");
 
+                                $.confirm({
+                                    title: 'กรุณาใส่ Password',
+                                    theme: 'modern',
+                                    content: '<input placeholder="Password" type="password" id="Pass" class="form-control my-2" name="Pass" autofocus>',
+                                    buttons: {
+                                        confirm: function () {
+                                            var Pass = $("#Pass").val();
+
+                                            if (Pass == "QA1234") {
+                                                $("#qa_dept_edit").val(selected[0].Dept);
+                                                $("#qa_code_edit").val(selected[0].Code);
+                                                $("#old_code").val(selected[0].Code);
+                                                $("#qa_title_edit").val(selected[0].Title);
+                                                $("#qa_revision_edit").val(selected[0].revision);
+                                                $("#qa_issue_edit").val(selected[0].Issue_date?.date ? moment(selected[0].Issue_date?.date).format("YYYY-MM-DD") : '');
+                                                $("#file_name").val(selected[0].file);
+                                                $("#qa_type_edit").val(selected[0].Type);
+                                                $("#ModalQaEdit").modal("show");
+                                            } else {
+                                                $('#Pass').attr('placeholder', 'Password ไม่ถูกต้อง');
+                                                $("#Pass").val('');
+                                                return false;
+                                            }
+                                        },
+                                        cancel: function () {
+                                            window.close();
+                                        }
+
+                                    }
+                                });
                             }
                         },
                         {
@@ -516,29 +535,49 @@
 
                                 // alert confirm delete
 
-                                if (confirm("ยืนยันการลบ")) {
-                                    $.ajax({
-                                        type: "POST",
-                                        url: "././module/RPT_QA_Document/data.php",
-                                        dataType: "json",
-                                        data: {
-                                            load: "Delete",
-                                            code: selected[0].Code,
-                                            file: selected[0].file
+                                $.confirm({
+                                    title: 'กรุณาใส่ Password',
+                                    theme: 'modern',
+                                    content: '<input placeholder="Password" type="password" id="Pass" class="form-control my-2" name="Pass" autofocus>',
+                                    buttons: {
+                                        confirm: function () {
+                                            var Pass = $("#Pass").val();
 
-                                        },
-                                        success: function (data) {
-                                            $.alert("ลบข้อมูลสําเร็จ");
-                                            dt.rows('.selected').remove().draw();
-                                        },
-                                        error: function (xhr, status, error) {
-                                            alert("ลบข้อมูลไม่สําเร็จ");
-                                        },
-                                        //            dataType: "json"
-                                    });
+                                            if (Pass == "QA1234") {
+                                                if (confirm("ยืนยันการลบ")) {
+                                                    $.ajax({
+                                                        type: "POST",
+                                                        url: "././module/RPT_QA_Document/data.php",
+                                                        dataType: "json",
+                                                        data: {
+                                                            load: "Delete",
+                                                            code: selected[0].Code,
+                                                            file: selected[0].file
 
-                                }
+                                                        },
+                                                        success: function (data) {
+                                                            $.alert("ลบข้อมูลสําเร็จ");
+                                                            dt.rows('.selected').remove().draw();
+                                                        },
+                                                        error: function (xhr, status, error) {
+                                                            alert("ลบข้อมูลไม่สําเร็จ");
+                                                        },
+                                                        //            dataType: "json"
+                                                    });
 
+                                                }
+                                            } else {
+                                                $('#Pass').attr('placeholder', 'Password ไม่ถูกต้อง');
+                                                $("#Pass").val('');
+                                                return false;
+                                            }
+                                        },
+                                        cancel: function () {
+                                            window.close();
+                                        }
+
+                                    }
+                                });
                             }
                         }
                     ],
@@ -565,10 +604,10 @@
         var type = $("#qa_type").val();
 
         if (code == '') {
-           alert("กรุณากรอกรหัส Code");
-           return false;
+            alert("กรุณากรอกรหัส Code");
+            return false;
         }
-    
+
         $.ajax({
             type: "POST",
             url: "././module/RPT_QA_Document/data.php",
@@ -583,13 +622,13 @@
                 type: type
             },
             success: function (data) {
-              console.log(data);
-              UploadFiles(data[0].Code);
+                console.log(data);
+                UploadFiles(data[0].Code);
             },
             error: function (e) {
                 alert("บันทึกข้อมูลไม่สําเร็จ");
                 console.log('test222');
-                
+
             },
         });
     }
@@ -606,8 +645,8 @@
         var type = $("#qa_type_edit").val();
 
         if (code == '') {
-           alert("กรุณากรอกรหัส Code");
-           return false;
+            alert("กรุณากรอกรหัส Code");
+            return false;
         }
 
         $.ajax({
@@ -625,16 +664,16 @@
                 type: type
             },
             success: function (data) {
-             const fileInput = document.getElementById('file-input_edit').files[0];
-             // if file input is not empty
-             if (fileInput) {
-                 UpdateFiles(data[0].Code);
-             } else {
-                 alert("แก้ไขข้อมูลสําเร็จ");
-                 $("#ModalQaEdit").modal("hide");
-                 ReportItemSearch();
-             }
-               
+                const fileInput = document.getElementById('file-input_edit').files[0];
+                // if file input is not empty
+                if (fileInput) {
+                    UpdateFiles(data[0].Code);
+                } else {
+                    alert("แก้ไขข้อมูลสําเร็จ");
+                    $("#ModalQaEdit").modal("hide");
+                    ReportItemSearch();
+                }
+
             },
             error: function (e) {
                 alert("แก้ไขข้อมูลไม่สำเร็จ");

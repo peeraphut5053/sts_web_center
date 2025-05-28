@@ -70,45 +70,25 @@
   <div class="col-lg-2 col-md-3 col-sm-6 col-xs-6">
     <div class="input-group">
       <div class="input-group-addon">Start Date</div>
-      <input
-        type="text"
-        class="form-control"
-        id="Start_Date_Plan"
-        autocomplete="off"
-      />
+      <input type="text" class="form-control" id="Start_Date_Plan" autocomplete="off" />
     </div>
   </div>
   <div class="col-lg-2 col-md-3 col-sm-6 col-xs-6">
     <div class="input-group">
       <div class="input-group-addon">End Date</div>
-      <input
-        type="text"
-        class="form-control"
-        id="End_Date_Plan"
-        autocomplete="off"
-      />
+      <input type="text" class="form-control" id="End_Date_Plan" autocomplete="off" />
     </div>
   </div>
   <div class="col-lg-2 col-md-3 col-sm-6 col-xs-6">
     <div class="input-group">
       <div class="input-group-addon">Report No.</div>
-      <input
-        type="text"
-        class="form-control"
-        id="report_no"
-        autocomplete="off"
-      />
+      <input type="text" class="form-control" id="report_no" autocomplete="off" />
     </div>
   </div>
   <div class="col-lg-2 col-md-3 col-sm-6 col-xs-6">
     <div class="input-group">
       <div class="input-group-addon">Code No.</div>
-      <input
-        type="text"
-        class="form-control"
-        id="code_no_search"
-        autocomplete="off"
-      />
+      <input type="text" class="form-control" id="code_no_search" autocomplete="off" />
     </div>
   </div>
   <div class="col-lg-1 col-md-2 col-sm-1 col-xs-6  col-search">
@@ -230,7 +210,8 @@
               <option value="Calibration Laboratory Co.,Ltd.">Calibration Laboratory Co.,Ltd.</option>
               <option value="Department of Science Service">Department of Science Service</option>
               <option value="Microtech Calibration Laboratory">Microtech Calibration Laboratory</option>
-              <option value="National Institute of Metrology (Thailand)">National Institute of Metrology (Thailand)</option>
+              <option value="National Institute of Metrology (Thailand)">National Institute of Metrology (Thailand)
+              </option>
               <option value="QES (Thailand) Co.,Ltd.">QES (Thailand) Co.,Ltd.</option>
               <option value="Sahathai Steel Pipe Co.,Ltd.">Sahathai Steel Pipe Co.,Ltd.</option>
               <option value="SP Metrology System (Thailand) Co.,Ltd.">SP Metrology System (Thailand) Co.,Ltd.</option>
@@ -341,7 +322,8 @@
               <option value="Calibration Laboratory Co.,Ltd.">Calibration Laboratory Co.,Ltd.</option>
               <option value="Department of Science Service">Department of Science Service</option>
               <option value="Microtech Calibration Laboratory">Microtech Calibration Laboratory</option>
-              <option value="National Institute of Metrology (Thailand)">National Institute of Metrology (Thailand)</option>
+              <option value="National Institute of Metrology (Thailand)">National Institute of Metrology (Thailand)
+              </option>
               <option value="QES (Thailand) Co.,Ltd.">QES (Thailand) Co.,Ltd.</option>
               <option value="Sahathai Steel Pipe Co.,Ltd.">Sahathai Steel Pipe Co.,Ltd.</option>
               <option value="SP Metrology System (Thailand) Co.,Ltd.">SP Metrology System (Thailand) Co.,Ltd.</option>
@@ -628,25 +610,47 @@
                   alert("กรุณารายการที่ต้องการแก้ไข");
                   return false;
                 }
-                $("#measuring_edit").val(selected[0].Equipment);
-                $("#code_no_edit").val(selected[0].Code);
-                $("#s_n_edit").val(selected[0].SN);
-                $("#manufacturer_edit").val(selected[0].Manufac);
-                $("#model_edit").val(selected[0].Model);
-                $("#range_edit").val(selected[0].RangeEquip);
-                $("#range_cal_edit").val(selected[0].RangeCali);
-                $("#acceptance_edit").val(selected[0].Acc_Cri);
 
-                $("#due_date_edit").val(selected[0].DueDate?.date ? moment(selected[0].DueDate?.date).format("YYYY-MM-DD") : '');
-                $("#actual_cal_edit").val(selected[0].ActCalDate?.date ? moment(selected[0].ActCalDate?.date).format("YYYY-MM-DD") : '');
-                $("#next_cal_edit").val(selected[0].NextCalDate?.date ? moment(selected[0].NextCalDate?.date).format("YYYY-MM-DD") : '');
-                $("#company_edit").val(selected[0].Company);
-                $("#frequency_edit").val(selected[0].Frequency);
-                $("#loc_equipment_edit").val(selected[0]?.["Location "]);
-                $("#onlyexternal_edit").val(selected[0].RptNo);
-                $("#old_onlyexternal_edit").val(selected[0].RptNo);
-                $("#ModalCalibrationEdit").modal("show");
+                $.confirm({
+                  title: 'กรุณาใส่ Password',
+                  theme: 'modern',
+                  content: '<input placeholder="Password" type="password" id="Pass" class="form-control my-2" name="Pass" autofocus>',
+                  buttons: {
+                    confirm: function () {
+                      var Pass = $("#Pass").val();
 
+                      if (Pass == "QA1234") {
+                        $("#measuring_edit").val(selected[0].Equipment);
+                        $("#code_no_edit").val(selected[0].Code);
+                        $("#s_n_edit").val(selected[0].SN);
+                        $("#manufacturer_edit").val(selected[0].Manu);
+                        $("#model_edit").val(selected[0].Model);
+                        $("#range_edit").val(selected[0].RangeEquip);
+                        $("#range_cal_edit").val(selected[0].RangeCali);
+                        $("#acceptance_edit").val(selected[0].Acc_Cri);
+
+                        $("#due_date_edit").val(selected[0].DueDate?.date ? moment(selected[0].DueDate?.date).format("YYYY-MM-DD") : '');
+                        $("#actual_cal_edit").val(selected[0].ActCalDate?.date ? moment(selected[0].ActCalDate?.date).format("YYYY-MM-DD") : '');
+                        $("#next_cal_edit").val(selected[0].NextCalDate?.date ? moment(selected[0].NextCalDate?.date).format("YYYY-MM-DD") : '');
+                        $("#company_edit").val(selected[0].Company);
+                        $("#frequency_edit").val(selected[0].Frequency);
+                        $("#loc_equipment_edit").val(selected[0]?.loc);
+                        $("#onlyexternal_edit").val(selected[0].RptNo);
+                        $("#old_onlyexternal_edit").val(selected[0].RptNo);
+                        $("#ModalCalibrationEdit").modal("show");
+                      } else {
+                        $('#Pass').attr('placeholder', 'Password ไม่ถูกต้อง');
+                        $("#Pass").val('');
+                        return false;
+                      }
+
+
+                    },
+                    cancel: function () {
+                       window.close();
+                    }
+                  }
+                })
 
               }
             },
@@ -662,27 +666,48 @@
 
                 // alert confirm delete
 
-                if (confirm("ยืนยันการลบ")) {
-                  $.ajax({
-                    type: "POST",
-                    url: "././module/STS_Calibration_Plan/data.php",
-                    dataType: "json",
-                    data: {
-                      load: "DeleteCalibrationPlan",
-                      RptNo: selected[0].RptNo,
+                $.confirm({
+                  title: 'กรุณาใส่ Password',
+                  theme: 'modern',
+                  content: '<input placeholder="Password" type="password" id="Pass" class="form-control my-2" name="Pass" autofocus>',
+                  buttons: {
+                    confirm: function () {
+                      var Pass = $("#Pass").val();
 
-                    },
-                    success: function (data) {
-                      $.alert("ลบข้อมูลสําเร็จ");
-                      dt.rows('.selected').remove().draw();
-                    },
-                    error: function (xhr, status, error) {
-                     alert("ลบข้อมูลไม่สําเร็จ");
-                    },
-                    //            dataType: "json"
-                  });
+                      if (Pass == "QA1234") {
+                        if (confirm("ยืนยันการลบ")) {
+                          $.ajax({
+                            type: "POST",
+                            url: "././module/STS_Calibration_Plan/data.php",
+                            dataType: "json",
+                            data: {
+                              load: "DeleteCalibrationPlan",
+                              RptNo: selected[0].RptNo,
 
-                }
+                            },
+                            success: function (data) {
+                              $.alert("ลบข้อมูลสําเร็จ");
+                              dt.rows('.selected').remove().draw();
+                            },
+                            error: function (xhr, status, error) {
+                              alert("ลบข้อมูลไม่สําเร็จ");
+                            },
+                            //            dataType: "json"
+                          });
+
+                        }
+                      } else {
+                        $('#Pass').attr('placeholder', 'Password ไม่ถูกต้อง');
+                        $("#Pass").val('');
+                        return false;
+                      }
+                    },
+                    cancel: function () {
+                       window.close();
+                    }
+
+                  }
+                })
 
               }
             }
