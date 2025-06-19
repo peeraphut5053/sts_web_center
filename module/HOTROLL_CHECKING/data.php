@@ -9,21 +9,21 @@ include "../../initial.php";
 
 if ($load == 'ajax') {
     $CallModel = new CallModel();
-    $CallModel->MGT_Models();
-    $po_QC = new PO_QC();
-    $po_QC->setConn($var);
+    $CallModel->SyteLine_Models();
+    $po_QC = new QcTestLab();
+    $po_QC->setConn($ConnSL);
     $where = "where 1=1";
     if (($txtFromDate != "") && ($txtToDate != "")) {
-        $where = $where . " AND ( po_date BETWEEN '$txtFromDate' AND '$txtToDate' )  ";
+        $where = $where . " AND ( qc.po_date BETWEEN '$txtFromDate' AND '$txtToDate' )  ";
     }
     if ($sno != "") {
-        $where = $where . " AND sno like '%" . $sno . "%' ";
+        $where = $where . " AND qc.sno like '%" . $sno . "%' ";
     }
     if ($c_no != "") {
-        $where = $where . " AND c_no like '%" . $c_no . "%' ";
+        $where = $where . " AND qc.c_no like '%" . $c_no . "%' ";
     }
     if ($h_no != "") {
-        $where = $where . " AND h_no = '" . $h_no . "' ";
+        $where = $where . " AND qc.h_no = '" . $h_no . "' ";
     }
     $po_QC = $po_QC->GetRowsWithCond2($where);
     $CallModel = null;

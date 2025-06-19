@@ -35,7 +35,7 @@
 </style>
 
 <div class="row">
-    <h4>HOT ROLL CHECKING</h4>
+    <h2 class="text-header text-center">ตรวจสอบเหล็กม้วน</h2>
 </div>
 <div class='row'>
 
@@ -80,12 +80,10 @@
     <table class="table table-condensed table-bordered table-striped" id="tblReport">
         <thead>
             <tr>
-                <th colspan="14" class="bg-gray">Hot Roll Detail</th>
-                <th colspan="20" class="bg-gray">Chemical analysis from supplier</th>
-                <th colspan="20" class="bg-gray">Chemical analysis from Lab.'STS</th>
+                <th colspan="16" class="bg-gray">Hot Roll Detail</th>
             </tr>
             <tr>
-                <th>Checking</th>
+            
                 <th>sno</th>
                 <th>PO Date</th>
                 <th>STS.No.</th>
@@ -98,47 +96,10 @@
                 <th>Thicks</th>
                 <th>Width</th>
                 <th>widths</th>
+                <th>po_line</th>
                 <th>reference</th>
-                <th>C</th>
-                <th>Si</th>
-                <th>Mn</th>
-                <th>P</th>
-                <th>S</th>
-                <th>Cu</th>
-                <th>V</th>
-                <th>Ni</th>
-                <th>Cr</th>
-                <th>Mo</th>
-                <th>Ti</th>
-                <th>Nb</th>
-                <th>Al</th>
-                <th>B</th>
-                <th>Co</th>
-                <th>Pb</th>
-                <th>Fe</th>
-                <th>Ts</th>
-                <th>Ys</th>
-                <th>El</th>
-                <th>C</th>
-                <th>Si</th>
-                <th>Mn</th>
-                <th>P</th>
-                <th>S</th>
-                <th>Cu</th>
-                <th>V</th>
-                <th>Ni</th>
-                <th>Cr</th>
-                <th>Mo</th>
-                <th>Ti</th>
-                <th>Nb</th>
-                <th>Al</th>
-                <th>B</th>
-                <th>Co</th>
-                <th>Pb</th>
-                <th>Fe</th>
-                <th>Ts</th>
-                <th>Ys</th>
-                <th>El</th>
+                <th>vendor</th>
+                <th>city</th>
             </tr>
         </thead>
         <tbody  id="tbodytblReport">
@@ -173,7 +134,7 @@
 <script type="text/javascript">
 
     $("#txtToDate").val(GetToday());
-    $("#txtFromDate").val('2020-02-09');
+    $("#txtFromDate").val(GetToday());
 
     $("#txtFromDate , #txtToDate").datepicker({
         dateFormat: 'yy-mm-dd',
@@ -223,55 +184,29 @@
                         "paging": false,
                         "searching": false,
                         "bInfo": false,
+                              columnDefs: [
+            {
+              targets: [14],
+              width: 300,
+            },
+          ],
                         "columns": [
                             {
-                                "data": {
-                                    sts_no: "sts_no",
-                                    h_no: "h_no",
-                                    thick: "thick",
-                                    width: "width",
-                                    check_heat_no: "check_heat_no",
-                                },
-                                "render": function (data, type, row, meta) {
-                                    var chk = "";
-                                    var chk_text = "";
-                                    var check_coil_no = data.check_coil_no;
-
-                                    if (data.check_coil_no == '1') {
-                                        check_coil_no_txt = "<font color='red' >**</font>";
-                                    } else {
-                                        check_coil_no_txt = "";
-                                    }
-                                    if (data.check_heat_no == '1') {
-                                        chk = "checked";
-                                        chk_text = "[ตรวจแล้ว]";
-                                    } else {
-                                        chk = ""
-                                    }
-                                    var ret = '<input  class=check_heat id=chk_' + data.sts_no + '_' + data.h_no + '_' + data.thick + '_' + data.width + '_' + data.check_heat_no + ' type=checkbox ' + chk + ' /> ' + chk_text + check_coil_no_txt + ' ';
-                                    return ret;
-                                },
-                                "className": "text-center",
-                            },
-                            {
                                 "orderable": false,
-                                "data": {
-                                    sno: "sts_no",
-                                    sts_no: "sts_no",
-                                    h_no: "h_no",
-                                    thick: "thick",
-                                    width: "width",
-                                    check_heat_no: "check_heat_no",
-                                },
+                                "data": "sno",
                                 "defaultContent": '',
                                 "className": `details-control sno text-center`,
                                 "render": function (data, type, row, meta) {
-                                    var ret = '<input onclick= ShowDetail(' + data.sno + '); value="เพิ่มผล lab" class="btn btn-default" id=chk_' + data.sts_no + '_' + data.h_no + '_' + data.thick + '_' + data.width + '_' + data.check_heat_no + ' type=button  /> ' + data.sno + '';
-                                    return ret;
+                                    
+                                    return data;
                                 }
                             },
-                            {"data": "po_date",
+                            {"data": "po_date.date",
                                 "className": "text-center",
+                                "render": function (data, type, row, meta) {
+                                    var ret = moment(data).format('DD/MM/YYYY');
+                                    return ret;
+                                }
                             },
                             {"data": "sts_no",
                                 "className": "text-center ",
@@ -297,47 +232,12 @@
                                 "className": "text-right"},
                             {"data": "widths",
                                 "className": "text-right"},
+                            {"data": "upload_po_line",
+                                "className": "text-center",},
                             {"data": "reference"},
-                            {"data": "sup_c"},
-                            {"data": "sup_si"},
-                            {"data": "sup_mn"},
-                            {"data": "sup_p"},
-                            {"data": "sup_s"},
-                            {"data": "sup_cu"},
-                            {"data": "sup_v"},
-                            {"data": "sup_ni"},
-                            {"data": "sup_cr"},
-                            {"data": "sup_mo"},
-                            {"data": "sup_ti"},
-                            {"data": "sup_nb"},
-                            {"data": "sup_al"},
-                            {"data": "sup_b"},
-                            {"data": "sup_co"},
-                            {"data": "sup_pb"},
-                            {"data": "sup_fe"},
-                            {"data": "sup_ts"},
-                            {"data": "sup_ys"},
-                            {"data": "sup_el"},
-                            {"data": "sts_c"},
-                            {"data": "sts_si"},
-                            {"data": "sts_mn"},
-                            {"data": "sts_p"},
-                            {"data": "sts_s"},
-                            {"data": "sts_cu"},
-                            {"data": "sts_v"},
-                            {"data": "sts_ni"},
-                            {"data": "sts_cr"},
-                            {"data": "sts_mo"},
-                            {"data": "sts_ti"},
-                            {"data": "sts_nb"},
-                            {"data": "sts_al"},
-                            {"data": "sts_b"},
-                            {"data": "sts_co"},
-                            {"data": "sts_pb"},
-                            {"data": "sts_fe"},
-                            {"data": "sts_ts"},
-                            {"data": "sts_ys"},
-                            {"data": "sts_el"},
+                            {"data": "vendor_name"},
+                            {"data": "city"},
+    
                             
                             
                         ],

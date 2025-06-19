@@ -525,5 +525,17 @@ where trans_type = 'F'
         array_splice($rs, count($rs) - 1, 1);
         return $rs;
     }
+
+    function GetRowsWithCond2($Where) {
+        $query = "SELECT qc.* , vendor_name = ven.name, ven.city
+FROM STS_po_qc qc 
+left join po_mst po on po.po_num = qc.upload_po
+left join vendaddr_mst ven on ven.vend_num = po.vend_num
+ $Where";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
 }
 ?>
