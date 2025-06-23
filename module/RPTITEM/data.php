@@ -61,7 +61,7 @@ if ($load == "form") {
     $BetweenSale = $CO->CheckQty($item);
     $totalQty = 0;
     $lines = "";
-    $tableHead = '<thead><tr><th>#</th><th>Loc</th><th>Loc Description</th><th>qty on hand</th></tr></thead>';
+    $tableHead = '<thead><tr><th>#</th><th>Loc</th><th>Loc Description</th><th>Lot</th><th>qty on hand</th><th>Act Weight</th><th>Tag</th></tr></thead>';
 
     if (count($BetweenSale) >= 1) {
         $i = 0;
@@ -72,12 +72,16 @@ if ($load == "form") {
             $lines = $lines . "<tr>"
                     . "<td align='center'>$i</td>"
                     . "<td align='center'>" . $rr["loc"] . "</td>"
-                    . "<td align='center'>" . $rr["loc_desc"] . "</td>"
+                    . "<td align='center'>" . $rr["description"] . "</td>"
+                    . "<td align='center'>" . $rr["lot"] . "</td>"
                     . "<td align='right'>$qty</td>"
+                    . "<td align='center'>" . $rr["uf_act_weight"] . "</td>"
+                    . "<td align='center'>" . $rr["tag"] . "</td>"
                     . "</tr>";
         }
         $lines = $lines . "<tr>"
-                . "<td align='center'></td><td>Total</td>"
+                . "<td align='center'></td><td align='center'>Total</td>"
+                . "<td></td>"
                 . "<td></td>"
                 . "<td align='right'>" . number_format($totalQty, 2) . "</td>"
                 . "</tr>";

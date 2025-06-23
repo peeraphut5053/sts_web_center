@@ -19,7 +19,12 @@ class CustomerOrder {
     }
 
     function CheckQty($item) {
-        $query = "SELECT * FROM V_WebApp_ItemLoc_Sale    Where item_code = '$item'  AND qty_on_hand > 0 ";
+        $query = "SELECT distinct lot.loc, loc.description, lot.lot, lot.qty_on_hand, tag.uf_act_weight ,tag=tag.id
+FROM lot_loc_mst lot
+inner join location_mst loc on loc.loc = lot.loc
+left join mv_bc_tag tag on lot.item=tag.item and lot.lot=tag.lot
+Where lot.qty_on_hand > 0 and tag.active = 1 and tag.ship_stat <> 1
+and lot.item = '$item'";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);

@@ -12,7 +12,12 @@ $CM = new CallModel();
 $CM->SyteLine_Models();
 $Item = new ItemSyteLine();
 $Item->setConn($ConnSL);
-$yr = $Item->GetYearData();
+// get year 2018-current
+$yr = [];
+$currentYear = date('Y');
+for ($year = 2018; $year <= $currentYear; $year++) {
+    $yr[] = ["yr" => $year];
+}
 $GetItemNpsForDropdown = $Item->GetItemNpsForDropdown();
 $yrl = "";
 $thisYear = date('Y');
