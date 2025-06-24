@@ -1,0 +1,324 @@
+<style>
+    .col-search {
+      padding-left: 3px;
+      padding-right: 3px;
+    }
+    /*    table.dataTable thead .sorting:after,
+          table.dataTable thead .sorting:before,
+          table.dataTable thead .sorting_asc:after,
+          table.dataTable thead .sorting_asc:before,
+          table.dataTable thead .sorting_asc_disabled:after,
+          table.dataTable thead .sorting_asc_disabled:before,
+          table.dataTable thead .sorting_desc:after,
+          table.dataTable thead .sorting_desc:before,
+          table.dataTable thead .sorting_desc_disabled:after,
+          table.dataTable thead .sorting_desc_disabled:before {
+              bottom: .5em;
+          }*/
+    .table thead th {
+      text-align: center;
+    }
+  
+    .col-flt-page {
+      padding-top: 10px;
+      font-weight: bold;
+    }
+  
+    #tblReport tbody tr td a {
+      cursor: pointer;
+    }
+    table.dataTable.fixedHeader-floating,
+    table.dataTable.fixedHeader-locked {
+      background-color: white;
+      margin-top: 50px !important;
+      margin-bottom: 0 !important;
+    }
+    @media print {
+      table th:nth-child(0) {
+        width: 200px;
+        word-break: break-all;
+        white-space: pre-line;
+      }
+      table td:nth-child(0) {
+        width: 200px;
+        word-break: break-all;
+        white-space: pre-line;
+      }
+    }
+    .text-header {
+      font-weight: bold;
+      font-size: 20px;
+    }
+    .text-wrap {
+      white-space: normal;
+    }
+    .width-200 {
+      width: 200px;
+    }
+    input[type="checkbox"] {
+      margin-left: 5px;
+      margin-right: 5px;
+    } /*
+      .cb_lb{
+          margin-top:-5px;
+      }*/
+    .item-center {
+      display: flex;
+      justify-content: center;
+    }
+  </style>
+  <div class="row">
+    <h4 class="text-header text-center">รายงานนํ้าหนักขาย</h4>
+  </div>
+  <div class="row item-center">
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+      <div class="input-group">
+        <div class="input-group-addon">Start Invoice_date</div>
+        <input
+          type="text"
+          class="form-control"
+          id="invoice_date_start"
+          autocomplete="off"
+        />
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+      <div class="input-group">
+        <div class="input-group-addon">End Invoice_date</div>
+        <input
+          type="text"
+          class="form-control"
+          id="invoice_date_end"
+          autocomplete="off"
+        />
+      </div>
+      
+    </div>
+    <div class="col-lg-2 col-md-2 col-sm-1 col-xs-6  col-search">
+            <button id="BtnInvWeightSearch" class="btn btn-info"><i class="fa fa-search"></i>&nbsp;Search</button>
+    </div>
+  </div>
+  <div class="row" id="rowResultTable">
+    <table
+      class="table table-condensed table-bordered table-striped"
+      width="100%"
+      id="tblReport"
+    >
+      <thead>
+        <tr>
+          <th class="bg-gray">inv_num</th>
+          <th class="bg-gray">co_num</th>
+          <th class="bg-gray">co_line</th>
+          <th class="bg-gray">item</th>
+          <th class="bg-gray">description</th>
+          <th class="bg-gray">qty_pcs</th>
+          <th class="bg-gray">unit</th>
+          <th class="bg-gray">std_weight</th>
+          <th class="bg-gray">total_std_weight</th>
+          <th class="bg-gray">total_act_weight</th>
+        </tr>
+      </thead>
+      <!--        <tbody id="tblReportList">
+                      <tr><td align="center" colspan="12">.... No item search ....</td></tr>
+     </tbody>-->
+    </table>
+  </div>
+  <script type="text/javascript">
+ 
+    $("#BtnInvWeightSearch").click(function () {
+      ReportItemSearch();
+    });
+           
+    $("#invoice_date_start,#invoice_date_end").datepicker({
+      dateFormat: "yy-mm-dd",
+    });
+  
+    function ReportItemSearch() {
+      var OldHtml = $("#btnSearch").html();
+      var StartDate = $("#invoice_date_start").val();
+      var EndDate = $("#invoice_date_end").val();
+  
+      if (StartDate != "" && EndDate == "" || StartDate == "" && EndDate != "") {
+          $.alert("กรุณาเลือกวันที่เริ่มต้นและสิ้นสุดให้ครบถ้วน");
+          return false;
+      }
+  
+      if (StartDate == "" && EndDate == "") {
+        $.alert("กรุณากรอกข้อมูลอย่างน้อย 1 ช่อง");
+        return false;
+      } else {
+        $("#btnSearch").html("<i class='fa fa-spinner fa-spin'></i>");
+        $("#tblReport").loading();
+        $("#tblReport tfoot").remove();
+        $.ajax({
+          type: "POST",
+          url: "././module/RPT_INV_WEIGHT/data.php",
+          dataType: "json",
+          beforeSend: function () {
+            $("#btnSearch").html("<i class='fa fa-spinner fa-spin'>");
+          },
+          data: {
+            load: "Get",
+            StartDate: StartDate,
+            EndDate: EndDate,
+          },
+          success: function (data) {
+            $("#tblReport").DataTable().clear();
+            $("#tblReport").append(
+              "<tfoot><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></tfoot>"
+            );
+            $("#tblReport").dataTable({
+              aaData: data,
+              paging: false,
+              fixedHeader: true,
+              destroy: true,
+              processing: true,
+              scrollY: "65vh",
+              scrollCollapse: true,
+              scrollX: true,
+              select: false,
+              columnDefs: [
+                     {
+                       targets: [3],
+                       width: 200,
+                     },
+        
+              ],
+              columns: [
+                {
+                  data: "inv_num",
+                  className: "text-center",
+                },
+                {
+                  data: "co_num",
+                  className: "text-center",
+                },
+                {
+                  data: "co_line",
+                  className: "text-center",
+                },
+                {
+                  data: "item",
+                  className: "text-center",
+                },
+                {
+                  data: "description",
+                  className: "text-center",
+                },
+                {
+                  data: "qty_pcs",
+                  className: "text-center",
+                  "render": function (data, type, row, meta) {
+                    if (data == 0 || data == null) {
+                        return '0.00';
+                    }
+                    return addCommas(data);
+                  }
+                },
+                {
+                  data: 'unit',
+                  className: "text-center",
+                },
+                {
+                  data: 'std_weight',
+                  className: "text-center",
+                },
+                {
+                    data: 'total_std_weight',
+                  className: "text-center",
+                  "render": function (data, type, row, meta) {
+                    if (data == 0 || data == null) {
+                        return '0.00';
+                    }
+                     return addCommas(data);
+                  }
+                },
+                {
+                  data: "Total_act_weight",
+                  className: "text-center",
+                  "render": function (data, type, row, meta) {
+                    if (data == 0 || data == null) {
+                        return '0.00';
+                    }
+
+                    return addCommas(data);
+                  }
+                },
+              ],
+              dom:
+                "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                "<'row'<'col-md-12'tr>>" +
+                "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+              buttons: [
+                {
+                  extend: "print",
+                  text: "<i class='fa fa-print'></i>&nbsp;Print",
+                  title: "",
+                },
+                {
+                  extend: "excel",
+                  footer: true,
+                  text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                  title:
+                    "รายงานนํ้าหนักขาย" +
+                    StartDate +
+                    "_to_" +
+                    EndDate,
+                }
+              ],
+              "footerCallback": function (row, data, start, end, display) {
+                        var api = this.api(),
+                                data;
+                        var intVal = function (i) {
+                            return typeof i === 'string' ?
+                                    i.replace(/[\$,]/g, '') * 1 :
+                                    typeof i === 'number' ?
+                                    i : 0;
+                        };
+                        var totalKG = api
+                                .column(5)
+                                .data()
+                                .reduce(function (a, b) {
+                                    return intVal(a) + intVal(b);
+                                }, 0);
+                        var totalAmt = api
+                                .column(7)
+                                .data()
+                                .reduce(function (a, b) {
+                                    return intVal(a) + intVal(b);
+                                }, 0);
+                        var totalVal5 = api
+                                .column(8)
+                                .data()
+                                .reduce(function (a, b) {
+                                    return intVal(a) + intVal(b);
+                                }, 0);
+                        var totalVal7 = api
+                                .column(9)
+                                .data()
+                                .reduce(function (a, b) {
+                                    return intVal(a) + intVal(b);
+                                }, 0);
+
+                        $(api.column(3).footer()).html("<b>รวม</b>");
+                        $(api.column(5).footer()).html(addCommas(totalKG.toFixed(2)));
+                        $(api.column(7).footer()).html(addCommas(totalAmt.toFixed(2)));
+                        $(api.column(8).footer()).html(addCommas(totalVal5.toFixed(2)));
+                        $(api.column(9).footer()).html(addCommas(totalVal7.toFixed(2)));
+                    },
+            });
+            $("#tblReport").loading("stop");
+            $("#btnSearch").html(OldHtml);
+          },
+
+          error: function (e) {
+            $("#tblReport").loading("stop");
+            $("#btnSearch").html(OldHtml);
+            console.log("There was an error with your request...");
+            console.log("error: " + JSON.stringify(e));
+          },
+        });
+      }
+    }
+
+  </script>

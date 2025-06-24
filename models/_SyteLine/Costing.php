@@ -128,4 +128,15 @@ order by lot, trans_num";
         array_splice($rs0, count($rs0) - 1, 1);
         return $rs0;
     }
+
+    function GetReportInvWeight($StartDate, $EndDate) {
+        $query = "EXEC [dbo].[STS_inv_weight]
+  @SInvDateStarting = '$StartDate',
+  @EInvDateEnding = '$EndDate'";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
 }
+
