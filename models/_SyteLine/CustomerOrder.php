@@ -23,7 +23,8 @@ class CustomerOrder {
 FROM lot_loc_mst lot
 inner join location_mst loc on loc.loc = lot.loc
 left join mv_bc_tag tag on lot.item=tag.item and lot.lot=tag.lot and tag.qty1 = lot.qty_on_hand
-Where lot.qty_on_hand > 0 and tag.active = 1 and tag.ship_stat <> 1
+   and tag.active = 1 and tag.ship_stat <> 1
+Where lot.qty_on_hand > 0 
 and lot.item = '$item'";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
