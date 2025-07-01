@@ -114,9 +114,7 @@ $(document).ready(function () {
             },
             success: function (data) {
                 console.log(data);
-                // sort by order: [[2, "asc"], [0, "asc"]],
-                const sort = data.sort
-                
+             
                 $("#tblReportPack").dataTable().fnDestroy();
                 var table = $('#tblReportPack').DataTable({
                     scrollY: "400px",
