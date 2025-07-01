@@ -27,12 +27,9 @@
 <div class="row">
     <h3 style="padding-left:10px;"> รายงาน Item </h3>
 </div>
-<div class='row text-center' style='font-size:11px;color:red;'>
-    * เลือกความ หนา-ยาว ตามช่วงให้ใช้ '-' เช่น เลือกตั้งแต่ 1 ถึง 6 ให้ใส่ '1-6' แต่ถ้าหากระบุ 6 ตัวเดียวระบบจะหาข้อมูลที่เป็น 6 เท่านั้น  *  
-</div>
 <div class='row'>
-    <div class="col-md-6  col-search"  >
-        <div class="input-group">
+    <div class="col-md-4  col-search"  >
+        <div class="input-group w-full">
             <div class="input-group-addon">Item</div>
             <input type="text" class="form-control txt-filter" id="txtItem" >
         </div>
@@ -43,7 +40,7 @@
                 <input type="text" class="form-control txt-filter" id="txtItemDesc">
             </div>
         </div>-->
-    <div class="col-md-6 col-search"  >
+    <div class="col-md-2 col-search"  >
         <!--        <div class="row">
                     <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 text-right">
                         <input type="radio" onclick="RadioClick(this.id);"  id="radSize1" name="radSize" value="1" >
@@ -64,8 +61,10 @@
             <div class="input-group-addon">ขนาด</div>
             <input type="text" class="form-control txt-filter" id="txtSize" >
         </div>
+        
     </div>
-    <div class="col-md-6 col-search"  >
+    
+   <!-- <div class="col-md-6 col-search"  >
         <div class="input-group">
             <div class="input-group-addon">หนา</div>
             <input type="text" class="form-control txt-filter" id="txtThick" >          
@@ -96,19 +95,21 @@
             <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10  col-search">
                 <input type="radio" style="width:25px;" checked name="radYear" id="radSearch" value="" >&nbsp;ทั้งหมด
                 <!--            <input type="radio"  name="radYear" id="radYear" value="2018" >&nbsp;2018
-                            <input type="radio" name="radYear" id="radYear" value="2019" >&nbsp;2019 -->
+                            <input type="radio" name="radYear" id="radYear" value="2019" >&nbsp;2019 
                 {year_list}
             </div>
 
 
 
         </div>
-    </div>
-    <div class="col-md-1 col-lg-1 col-sm-6 col-xs-12 col-search text-center"  style="padding-top:10px;">
-        <div class="row" >
-            <button id="btnSearch" class="btn btn-info"><i class="fa fa-search"></i>&nbsp;ค้นหา</button>
+    </div> -->
+    <div class="col-md-4 col-search">
+          <div class="col-md-1 col-lg-1 col-sm-6 col-xs-12 col-search text-center">
+        <div class="row">
+            <button  id="btnSearch" class="btn btn-info"><i class="fa fa-search"></i>&nbsp;ค้นหา</button>
             <!--<button id="btnExportExcel" class="btn btn-success"><i class="fa fa-download"></i>&nbsp;Export Excel</button>-->
         </div>
+    </div>
     </div>
 </div>
 
@@ -152,7 +153,7 @@
                     <!--<th >ที่เก็บ</th>-->
                     <th >สต็อคคงเหลือ(เส้น)</th>
                     <th>สินค้าระหว่างขาย(เส้น)</th>
-                    <th>สินค้าระหว่างส่ง(เส้น)</th>
+                    <!-- <th>สินค้าระหว่างส่ง(เส้น)</th>  -->
                     <!--<th>ส่งเรียบร้อย(เส้น)</th>-->
                 </tr>
 
@@ -217,31 +218,19 @@
 //    $("#tblReport").css({"width": screen.width});
     function ReportItemSearch() {
 
-
-
+        $('#tblReport').DataTable().destroy();
         var oldHtmlBtn = $("#btnSearch").html();
         $("#btnSearch").html("<i class='fa fa-spinner fa-spin'></i>");
         $('#tblReport').loading();
-        var radioValue = $("input[name='radSearch']:checked").val();
-        var atYear = $("input[name='radYear']:checked").val();
         var txtItem = $("#txtItem").val();
-        var txtItemDesc = $("#txtItemDesc").val();
         var txtSize = $("#txtSize").val();
-        var txtThick = $("#txtThick").val();
-        var txtWidth = $("#txtWidth").val();
-
         var Locs = [];
         Locs = $("#selWH").val();
 
         $("#tblReportList").load("././module/RPTITEM/data.php", {
             "load": "ajax",
             "txtItem": txtItem,
-            "Locs": Locs,
             "txtSize": txtSize,
-            "txtThick": txtThick,
-            "txtWidth": txtWidth,
-            "stock": radioValue,
-            "atYear": atYear
         }, function () {
             $("#btnSearch").html(oldHtmlBtn);
             $('#tblReport').DataTable({

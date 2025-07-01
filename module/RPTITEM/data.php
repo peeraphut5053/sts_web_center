@@ -14,10 +14,6 @@ if ($load == "form") {
     $Item->setConn($ConnSL);
     $Item->_rpt_item = $txtItem;
     $Item->_rpt_size = $txtSize;
-    $Item->_rpt_thick = $txtThick;
-    $Item->_rpt_width = $txtWidth;
-    $Item->_rpt_stock = $stock;
-    $Item->_atYear = $atYear;
     $Items = $Item->GetItemLocation();
 
     
@@ -44,8 +40,8 @@ if ($load == "form") {
                 . "<a  OnClick='CheckQty(this.id);' id='CheckQty!!$i!!" . $rr["item_code"] . "!!'>" . number_format($rr["sum_qty_oh"], 2) . "</a></td>"
                 . "<td align='right'>"
                 . "<a  OnClick='BetweenSale(this.id);' id='betweenSale!!$i!!" . $rr["item_code"] . "!!'>" . number_format($rr["sum_qty_saling"], 2) . "</a></td>"
-                . "<td align='right'>"
-                . "<a OnClick='Shipping(this.id);' id='shipping!!$i!!" . $rr["item_code"] . "!!'>" . number_format($rr["sum_qty_shipping"], 2) . "</a></td>"
+                //. "<td align='right'>"
+                //. "<a OnClick='Shipping(this.id);' id='shipping!!$i!!" . $rr["item_code"] . "!!'>" . number_format($rr["sum_qty_shipping"], 2) . "</a></td>"
 //                . "<a OnClick='Shipping(this.id);' id='shipping!!$i!!" . $rr["item_code"] . "!!'>" . number_format($rr["sum_qty_shipping"], 2) . "</a></td>"
 //                . "<td align='right'>"
 //                . "<a OnClick='Shipped(this.id);' id='shipped!!$i!!" . $rr["item_code"] . "!!' >" . number_format($rr["item_shipped_count"], 2) . "</a></td>"
@@ -95,7 +91,7 @@ if ($load == "form") {
     $CM->SyteLine_Models();
     $CO = new CustomerOrder();
     $CO->setConn($ConnSL);
-    $CO->_atYear = $atYear;
+    //$CO->_atYear = $atYear;
     $BetweenSale = $CO->GetRowsBetweenSale($item);
     $lines = "";
     $unit_weight = 0;
@@ -150,7 +146,7 @@ if ($load == "form") {
     $CM = new CallModel();
     $CM->SyteLine_Models();
     $CO = new CustomerOrder();
-    $CO->_atYear = $atYear;
+    // $CO->_atYear = $atYear;
     $CO->setConn($ConnSL);
     $BetweenSale = $CO->GetRowsShipping($item, $loc);
     $lines = "";
