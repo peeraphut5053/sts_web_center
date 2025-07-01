@@ -116,6 +116,10 @@
                     "bInfo": false,
                     order: [[4, "asc"], [0, "asc"]],
                     columnDefs: [
+                        { 
+                           "orderable": false, 
+                           "targets": "_all"  // ปิด sort ทุกคอลัมน์
+                        },
                        {
                             targets: [0],
                             width: 30,

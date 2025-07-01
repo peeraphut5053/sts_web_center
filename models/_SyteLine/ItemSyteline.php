@@ -595,7 +595,7 @@ class ItemSyteLine {
 //        if ($this->_location != "0") {
 //            $query = $query . "AND ( loc = '" . trim($this->_location) . "' ) ";
 //        }
-
+       
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);

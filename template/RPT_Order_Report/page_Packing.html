@@ -114,6 +114,8 @@ $(document).ready(function () {
             },
             success: function (data) {
                 console.log(data);
+                // sort by order: [[2, "asc"], [0, "asc"]],
+                const sort = data.sort
                 
                 $("#tblReportPack").dataTable().fnDestroy();
                 var table = $('#tblReportPack').DataTable({
@@ -124,9 +126,12 @@ $(document).ready(function () {
                     "paging": false,
                     "searching": false,
                     "bInfo": false,
-                   
                     order: [[2, "asc"], [0, "asc"]],
                     columnDefs: [
+                        { 
+                           "orderable": false, 
+                           "targets": "_all"  // ปิด sort ทุกคอลัมน์
+                        },
                         {
                             targets: [0],
                             width: 30,

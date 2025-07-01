@@ -190,6 +190,10 @@ $(document).ready(function () {
                     "bInfo": false,
                     order: [[1, "asc"]],
                     columnDefs: [
+                        { 
+                           "orderable": false, 
+                           "targets": "_all"  // ปิด sort ทุกคอลัมน์
+                        },
                         {
                             targets: [0],
                             width: 30,
