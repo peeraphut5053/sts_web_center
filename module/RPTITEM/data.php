@@ -114,7 +114,7 @@ if ($load == "form") {
         $i = 0;
         foreach ($BetweenSale as $ii => $rr) {
             $i++;
-            $qty = $rr["qty_remain"];
+            $qty = $rr["qty_ordered"];
             $totalQty = $totalQty + $qty;
             $qty = number_format($qty, 2);
 //             if ($rr["loc_desc"]) {
@@ -124,7 +124,7 @@ if ($load == "form") {
 //            }
             $lines = $lines . "<tr>"
                     . "<td align='center'>$i</td>"
-                    . "<td>" . $rr["Order_date"]->format('d/m/Y') . "</td>"
+                    . "<td>" . $rr["order_date"]->format('d/m/Y') . "</td>"
                     . "<td>" . $rr["cust_name"] . "</td>"
                     . "<td>" . $rr["co_num"] . "</td>"
                     . "<td align='center'>" . $rr["co_line"] . "</td>"

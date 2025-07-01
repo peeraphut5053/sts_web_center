@@ -39,14 +39,18 @@ and lot.item = '$item'";
             $crYear = " AND ( year(CreateDate) = $atYear ) ";
         }
 
-        $query = "SELECT Order_date ,co_num , cust_num,cust_name ,co_line ,sum(qty_ordered - qty_shipped) as qty_remain   "
-                . "FROM V_WebApp_ItemLoc_selling   "
-                . "Where 1=1  $crYear  AND  (  item = '$item' )  AND (stat = 'O')  and qty_ordered - qty_shipped > 0    "
-                . "GROUP BY Order_date , co_num , cust_num,cust_name ,co_line   ";
+        $query = "select co_mst.order_date, co_mst.co_num, cust_name = custaddr_mst.name, coi.co_line, coi.qty_ordered
+from co_mst inner join custaddr_mst on co_mst.cust_num = custaddr_mst.cust_num and co_mst.cust_seq = custaddr_mst.cust_seq
+   left join coitem_mst coi on co_mst.co_num = coi.co_num and coi.stat = 'O' and coi.qty_ordered - coi.qty_shipped > 0
+where coi.item ='$item'
+UNION
+select co_mst.order_date, co_mst.co_num, cust_name = custaddr_mst.name, bln.co_line, bln.blanket_qty
+from co_mst inner join custaddr_mst on co_mst.cust_num = custaddr_mst.cust_num and co_mst.cust_seq = custaddr_mst.cust_seq
+   left join co_bln_mst bln on co_mst.co_num = bln.co_num and bln.stat = 'O' 
+   left join coitem_mst coi on bln.co_num = coi.co_num and bln.co_line = coi.co_line
+where coi.co_line is null and bln.stat= 'O'
+  and bln.item ='$item'";
 
-        $query = " select DISTINCT Order_date,co_num , cust_num,cust_name ,co_line,qty_ordered,qty_shipped,qty_ordered - qty_shipped as qty_remain "
-                . " FROM V_WebApp_ItemLoc_selling where 1=1 $crYear and (item = '$item') "
-                . " and (stat = 'O') and qty_ordered - qty_shipped > 0 ";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);
