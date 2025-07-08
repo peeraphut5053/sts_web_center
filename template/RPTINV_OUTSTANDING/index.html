@@ -137,6 +137,7 @@
                         },
                         {
                             "data": "dateDUE",
+                              "className": "text-center"
                         },
                         {
                             "data": "co_num",
@@ -159,12 +160,27 @@
                         ,
                         {
                             "data": "qty_order",
+                              "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                return addCommas(data);
+                            }
                         },
                         {
                             "data": "qty_shipped",
+                              "className": "text-center",
+                              "render": function (data, type, row, meta) {
+                                if (data == null || data == "0.00" || data < 1) {
+                                    return "0.00";
+                                }
+                                return addCommas(data);
+                             }
                         },
                         {
                             "data": "qty_pending",
+                              "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                return addCommas(data);
+                            }
                         },
                     ],
                     'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
