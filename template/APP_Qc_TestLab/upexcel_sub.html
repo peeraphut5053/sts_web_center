@@ -164,6 +164,11 @@
                     let hasSTS_M = row.find("td:eq(5)").text().indexOf("STS-M") !== -1;
                     let hasMK = row.find("td:eq(5)").text().indexOf("MK") !== -1;
                     let hasMTO = row.find("td:eq(5)").text().indexOf("MTO") !== -1;
+
+                    // check item empty
+                    if (row.find("td:eq(0)").text() == "") {
+                        row.find("td:eq(0)").css("background-color", "red");
+                    }
     
                     if (hasASTM) {
                         // ASTM 330-520
@@ -530,9 +535,17 @@
             var remark = [];
 
             var CountItem = 0;
+            var itemEmpty = false;
            
             $("tbody tr").each(function () {
                 if (i >= 0) {
+
+                    if ($(this).find('td:eq(0)').text() == "") {
+                        alert("กรุณากรอกข้อมูล Item ให้ครบทุกช่อง");
+                        itemEmpty = true;
+                        return false;
+                    }
+
                     item.push($(this).find('td:eq(0)').text());
                     opr_no.push($(this).find('td:eq(1)').text());
 					size.push($(this).find('td:eq(2)').text());
@@ -570,7 +583,11 @@
                 }
                 i++;
             });
-            console.log(sts_no);
+
+            if (itemEmpty == true) {
+                return false;
+            }
+        
             $.ajax({
                 url: "../../module/APP_Qc_TestLab/data.php",
                 type: 'POST',
@@ -625,6 +642,7 @@
 
                 },
             });
+
         }
      
     </script>
