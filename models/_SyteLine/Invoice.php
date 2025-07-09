@@ -76,7 +76,7 @@ class Invoice {
         $txtFromCusnumOrName = $this->_txtFromCusnumOrName;
         $txtFromItemOrDes = $this->_txtFromItemOrDes;
         if (($txtFromDate_start) && ($txtFromDate_end)) {
-            $order_date = " AND ( order_date BETWEEN '$txtFromDate_start 00:00:00' AND '$txtFromDate_end 23:59:59' ) ";
+            $order_date = " AND ( order_date BETWEEN '$txtFromDate_start' AND '$txtFromDate_end' ) ";
         }
         $query = "SELECT CONVERT(varchar,order_date,103) as order_date_conv ,datediff(day, order_date,getdate() ) as dateDUE,* FROM V_WebApp_InvItem_OutStanding "
                 . "WHERE "
@@ -84,7 +84,7 @@ class Invoice {
 
 
         if ($this->_txtFromDate_start != "") {
-            $query = $query . "AND ( order_date BETWEEN '$txtFromDate_start 00:00:00' AND '$txtFromDate_end 23:59:59' ) ";
+            $query = $query . "AND ( order_date BETWEEN '$txtFromDate_start' AND '$txtFromDate_end' ) ";
         }
         if ($txtFromCoNum_start != "") {
             $query = $query . "AND ( co_num BETWEEN '$txtFromCoNum_start' AND '$txtFromCoNum_end' ) ";
@@ -95,7 +95,7 @@ class Invoice {
         if ($txtFromItemOrDes != "") {
             $query = $query . "AND ( item LIKE '%" . $txtFromItemOrDes . "%' or description LIKE '%" . $txtFromItemOrDes . "%' ) ";
         }
-
+    
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);
