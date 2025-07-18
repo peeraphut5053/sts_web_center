@@ -782,7 +782,7 @@
     $.confirm({
       title: 'กรุณาใส่ Password และเหตุผล',
       theme: 'modern',
-      content: '<input placeholder="Password" type="password" id="Pass" class="form-control my-2" name="Pass" autofocus><input placeholder="เหตุผล" type="text" id="Reason" class="form-control" name="Reason" autofocus>',
+      content: '<input placeholder="Password" type="password" id="Pass" class="form-control my-2" name="Pass" autofocus><input placeholder="เหตุผล" value="ตรวจสอบแล้ว" type="text" id="Reason" class="form-control" name="Reason" autofocus>',
       buttons: {
         confirm: function checked() {
           var Pass = $("#Pass").val();
