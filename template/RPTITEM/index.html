@@ -298,7 +298,7 @@
 //                loc: loc
             },
             success: function (data) {
-                $("#modalDetailHead").text("ข้อมูล [" + item + "] ระหว่างขาย ");
+                $("#modalDetailHead").text("ข้อมูล [" + item + "] สต็อค ");
                 $("#tblModal").html(data);
 
                 $('#tblModal').DataTable({
@@ -355,7 +355,7 @@
                 atYear: atYear
             },
             success: function (data) {
-                $("#modalDetailHead").text("ข้อมูล [" + item + "] ระหว่างขาย ");
+                $("#modalDetailHead").text("ข้อมูล [" + item + "] LINE status = Ordered ");
                 $("#tblModal").html(data);
                 $('#tblModal').DataTable({
                     "scrollX": true,
