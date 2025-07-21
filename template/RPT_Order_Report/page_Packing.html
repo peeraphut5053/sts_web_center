@@ -46,6 +46,7 @@
                     <th style="padding: 5px;">ผลิตแล้ว</th>
                     <th style="padding: 5px;">สั่งผลิต</th>
                     <th style="padding: 5px;">Note</th>
+                    <th style="padding: 5px; display: none;">Uf_sts_job</th>
                 </tr>
         </table>
     </div>
@@ -124,7 +125,7 @@ $(document).ready(function () {
                     "paging": false,
                     "searching": false,
                     "bInfo": false,
-                    order: [[2, "asc"], [0, "asc"], [1, "asc"]],
+                    order: [[2, "asc"], [0, "asc"], [18, "asc"]],
                     columnDefs: [
                         { 
                            "orderable": false, 
@@ -287,6 +288,9 @@ $(document).ready(function () {
                                 let rt = "<span style='font-weight:bold; color:red;'>" + data + "</span>";
                                 return rt;
                             }
+                        },
+                         {"data": "Uf_sts_job",
+                            "className": "text-center hidden",
                         },
                     ],
                     'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
