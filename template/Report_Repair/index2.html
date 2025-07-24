@@ -274,9 +274,6 @@ function showDesktopNotification(title, message, icon = null) {
     if (Notification.permission === 'granted') {
         const notification = new Notification(title, {
             body: message,
-            icon: icon || '/favicon.ico',
-            badge: '/badge.png',
-            tag: 'app-notification', // จัดกลุ่ม
             requireInteraction: false, // ปิดอัตโนมัติ
         });
         
