@@ -102,5 +102,12 @@ if ($load == "Search") {
     $STS_Custom->setConn($ConnSL);
     $rs = $STS_Custom->DeleteReportRepairByDocNo($doc_no);
     echo json_encode($rs);
+} else if ($load == "getLastData") {
+    $CallModel = new CallModel();
+    $CallModel->SyteLine_Models();
+    $STS_Custom = new Factory();
+    $STS_Custom->setConn($ConnSL);
+    $rs = $STS_Custom->GetLastData();
+    echo json_encode($rs);
 }
  

@@ -282,6 +282,14 @@ order by wc, issuenum";
         array_splice($rs, count($rs) - 1, 1);
         return $rs;
     }
+    function GetLastData() {
+        $cSql = new SqlSrv();
+        // get last data
+        $sql = "SELECT TOP 1 * FROM STS_repair ORDER BY DateIssue DESC";
+        $rs = $cSql->SqlQuery($this->StrConn, $sql);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
 }
 
 

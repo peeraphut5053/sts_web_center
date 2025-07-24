@@ -61,7 +61,12 @@
         class="fa fa-searh"></i>เพิ่มข้อมูลเปิดงาน</button>-->
     <button id="open_repair" class="btn btn-danger" data-toggle="modal" data-target="#ModalCloseReport"><i
         class="fa fa-searh"></i>เพิ่มข้อมูลเปิดงาน</button>
-  </div>
+    <span class="align-center p-4 font-bold text-2xl">
+      ใบแจ้งล่าสุด : <span id="last_doc"></span>
+    </span>
+    <div hidden id="DocNo">
+    </div>
+  </div> 
   <div class="col-lg-2">
     <div class="input-group">
       <div class="input-group-addon">หน่วยงานซ่อม</div>
@@ -258,6 +263,40 @@
   $("#r_name").val(username_session);
   var myData = [];
 
+// ใช้กับ setInterval ใน background
+setInterval(async function() {
+  getLastData();
+}, 10000); // 60000 มิลลิวินาที = 1 นาที
+
+
+getLastData();
+  function getLastData() {
+    const lastDoc = document.getElementById("last_doc");
+    const DocNo = document.getElementById("DocNo");
+    $.ajax({
+      url: '././module/Report_Repair/data.php',
+      type: 'GET',
+      dataType: 'json',
+      data: { load: 'getLastData' },
+      success: function (data) {
+
+        if (data[0].DocNo != DocNo.innerHTML) {
+          DocNo.innerHTML = data[0].DocNo;
+          lastDoc.innerHTML = data[0].DocNo + " สถานะ : " + data[0].Status;
+          data[0].Status == null ? lastDoc.style.color = "red" : lastDoc.style.color = "green";
+
+          // soound alert browser
+          if (data[0].Status == null) {
+            var audio = new Audio('https://cdn.pixabay.com/download/audio/2025/06/02/audio_a1fabf1d84.mp3?filename=new-notification-010-352755.mp3');
+            audio.play() 
+          }
+        }
+        
+      }
+    });
+   
+  }
+    
   $("#R_FromDate, #R_ToDate, #due_date").datepicker({
     dateFormat: 'yy-mm-dd',
     // timeFormat: 'HH:mm',
