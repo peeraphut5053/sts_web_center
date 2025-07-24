@@ -693,6 +693,10 @@
 
   async function UploadFiles(DocNo) {
 
+    if (DocNo == "" || DocNo == null) {
+      return false;
+    }
+
     const fileInput = document.getElementById('file-input');
     const files = fileInput.files; // รับไฟล์ที่เลือกทั้งหมด
 
