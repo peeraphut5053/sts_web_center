@@ -268,8 +268,30 @@ setInterval(async function() {
   getLastData();
 }, 60000); // 60000 มิลลิวินาที = 1 นาที
 
-
-getLastData();
+function showDesktopNotification(title, message, icon = null) {
+    if (!('Notification' in window)) return;
+    
+    if (Notification.permission === 'granted') {
+        const notification = new Notification(title, {
+            body: message,
+            icon: icon || '/favicon.ico',
+            badge: '/badge.png',
+            tag: 'app-notification', // จัดกลุ่ม
+            requireInteraction: false, // ปิดอัตโนมัติ
+        });
+        
+        // เหตุการณ์ต่างๆ
+        notification.onclick = () => {
+            window.focus(); // โฟกัสกลับมาที่หน้าเว็บ
+            notification.close();
+        };
+        
+        // ปิดอัตโนมัติ
+        setTimeout(() => notification.close(), 10000);
+    }
+}
+ 
+ getLastData();
   function getLastData() {
     const lastDoc = document.getElementById("last_doc");
     const DocNo = document.getElementById("DocNo");
@@ -288,6 +310,7 @@ getLastData();
           // soound alert browser
           if (data[0].Status == null) {
             var audio = new Audio('https://cdn.pixabay.com/download/audio/2025/06/02/audio_a1fabf1d84.mp3?filename=new-notification-010-352755.mp3');
+            showDesktopNotification("แจ้งซ่อม", "ใบแจ้งซ่อมล่าสุด : " + data[0].DocNo + " สถานะ : " + data[0].Status);
             audio.play() 
           }
         }
