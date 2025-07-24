@@ -63,8 +63,10 @@ class Factory {
 
     function InsertReportRepair($r_department, $r_name, $r_item, $remark, $detail_issue, $r_site,$issue_name) {
         $year = date('y');
+        $month = date('m');
+        $day = date('d');
         $cSql = new SqlSrv();
-        $sql = "SELECT TOP 1 DocNo FROM STS_repair WHERE DocNo LIKE 'R$year%' ORDER BY DocNo DESC";
+        $sql = "SELECT TOP 1 DocNo FROM STS_repair WHERE DocNo LIKE 'R$year$month$day%' ORDER BY DocNo DESC";
         $cSql = new SqlSrv();
         $result = $cSql->SqlQuery($this->StrConn, $sql);
         array_splice($result, count($result) - 1, 1);
@@ -73,14 +75,14 @@ class Factory {
             $row = $result[0];
             $lastDoc = $row['DocNo'];
             // ดึงเลขลำดับจากเลขเอกสารล่าสุด (A2400001 -> 00001)
-            $lastNumber = intval(substr($lastDoc, -5));
+            $lastNumber = intval(substr($lastDoc, -3));
             $newNumber = $lastNumber + 1;
         } else {
             // ถ้าไม่มีเลขของปีนี้ เริ่มที่ 1
             $newNumber = 1;
         }
         // สร้างเลขเอกสารใหม่
-        $docNumber = sprintf("R%s%05d", $year, $newNumber);
+        $docNumber = sprintf("R%s%02d%02d%03d", $year, $month, $day, $newNumber);
         $query = "INSERT INTO STS_repair (DocNo,approve,DateIssue,Dept,Remark1,Item,Username,DetailIssue, Site,IssueName) OUTPUT inserted.* VALUES ('$docNumber', 0, GETDATE(),'$r_department','$remark','$r_item','$r_name','$detail_issue','$r_site','$issue_name')";
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);
