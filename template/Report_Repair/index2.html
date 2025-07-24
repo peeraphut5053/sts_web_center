@@ -280,6 +280,7 @@ setInterval(async function() {
       data: { load: 'getLastData' },
       success: function (data) {
         data[0].Status == null ? lastDoc.style.color = "red" : lastDoc.style.color = "green";
+        lastDoc.innerHTML = data[0].DocNo + " สถานะ : " + data[0].Status;
         if (data[0].DocNo != DocNo.innerHTML) {
           DocNo.innerHTML = data[0].DocNo;
           lastDoc.innerHTML = data[0].DocNo + " สถานะ : " + data[0].Status;
