@@ -43,6 +43,7 @@
                 <th id="thMinor" class="bg-gray">Minor_Cause</th>
                 <th class="bg-gray">Total NC Product</th>
                 <th class="bg-gray">Reject</th>
+                <th class="bg-gray">Scrap</th>
                 <th class="bg-gray">Fix</th>
                 <th class="bg-gray">Nc Accept</th>
                 <th class="bg-gray">In Process</th>
@@ -144,7 +145,7 @@
                 });
                 $("#tblReportZ").DataTable().clear();
             $("#tblReportZ").append(
-              "<tfoot><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></tfoot>"
+              "<tfoot><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></tfoot>"
             );
             $("#tblReportZ").dataTable({
               aaData: data,
@@ -176,6 +177,14 @@
                         },
                         {
                             "data": "REJECT",
+                            "className": "text-center",
+                            "render": function (data, type, row) {
+                                let ret = Number(data);
+                                return ret.toFixed(2);
+                            }
+                        },
+                        {
+                            "data": "SCRAP",
                             "className": "text-center",
                             "render": function (data, type, row) {
                                 let ret = Number(data);
@@ -250,20 +259,26 @@
                                 .reduce(function (a, b) {
                                     return intVal(a) + intVal(b);
                                 }, 0).toFixed(2);
-                        var fix = api
+                        var scrap = api
                                 .column(4)
                                 .data()
                                 .reduce(function (a, b) {
                                     return intVal(a) + intVal(b);
                                 }, 0).toFixed(2);
-                        var nc = api
+                        var fix = api
                                 .column(5)
                                 .data()
                                 .reduce(function (a, b) {
                                     return intVal(a) + intVal(b);
                                 }, 0).toFixed(2);
-                        var inProcess = api
+                        var nc = api
                                 .column(6)
+                                .data()
+                                .reduce(function (a, b) {
+                                    return intVal(a) + intVal(b);
+                                }, 0).toFixed(2);
+                        var inProcess = api
+                                .column(7)
                                 .data()
                                 .reduce(function (a, b) {
                                     return intVal(a) + intVal(b);
@@ -271,9 +286,10 @@
                         $(api.column(1).footer()).html("<b>รวม</b>");
                         $(api.column(2).footer()).html("<b>" + total + "</b>");
                         $(api.column(3).footer()).html("<b>" + reject + "</b>");
-                        $(api.column(4).footer()).html("<b>" + fix + "</b>");
-                        $(api.column(5).footer()).html("<b>" + nc + "</b>");
-                        $(api.column(6).footer()).html("<b>" + inProcess + "</b>");
+                        $(api.column(4).footer()).html("<b>" + scrap + "</b>");
+                        $(api.column(5).footer()).html("<b>" + fix + "</b>");
+                        $(api.column(6).footer()).html("<b>" + nc + "</b>");
+                        $(api.column(7).footer()).html("<b>" + inProcess + "</b>");
                 
                     },
             });
