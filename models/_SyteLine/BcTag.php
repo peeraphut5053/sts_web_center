@@ -733,7 +733,7 @@ order by [date]";
 
     function GetQcDataAnalysisSummary($StartDate, $EndDate) {
         $query = "select Main_cause
-   , Total=sum(total), REJECT=sum(REJECT), FIX=sum(FIX)
+   , Total=sum(total), REJECT=sum(REJECT), SCRAP=sum(SCRAP), FIX=sum(FIX)
    , [NC ACCEPT]= sum([NC ACCEPT]), [in PROCESS]=sum([in PROCESS])
 from V_STS_QA_TAG_MAIN_minor
 where QA_RecordDate between '$StartDate' and '$EndDate'
@@ -746,7 +746,7 @@ group by Main_cause";
 
     function GetQcDataAnalysisSummaryGroup($StartDate, $EndDate,$load) {
         $query = "select Main_cause, Minor_cause
-   , Total=sum(total), REJECT=sum(REJECT), FIX=sum(FIX)
+   , Total=sum(total), REJECT=sum(REJECT), SCRAP=sum(SCRAP), FIX=sum(FIX)
    , [NC ACCEPT]= sum([NC ACCEPT]), [in PROCESS]=sum([in PROCESS])
 from V_STS_QA_TAG_MAIN_minor
 where QA_RecordDate between '$StartDate'and '$EndDate'
@@ -824,9 +824,6 @@ VALUES('$wc', GETDATE());";
     }
 
 
-
- 
-	
 }
 
 
