@@ -537,5 +537,28 @@ left join vendaddr_mst ven on ven.vend_num = po.vend_num
         array_splice($rs, count($rs) - 1, 1);
         return $rs;
     }
+
+    function getQaLabSub($prodDate, $importDate) {
+        $query = "select * from STS_QA_LAB_SUB where 1=1";
+
+        if($prodDate !== '') {
+            $query .= " and convert(date,prod_date) = '$prodDate'";
+        }
+        if($importDate !== '') {
+            $query .= " and convert(date,importDate) = '$importDate'";
+        }
+
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+     function DeleteQaLabSub($opr_no,$item,$length, $sts_no, $prod_FM_no, $prod_Date,$size) {
+        $query = "DELETE from STS_QA_LAB_SUB where opr_no = '$opr_no' and item = '$item' and  sts_no = '$sts_no' and prod_FM_no = '$prod_FM_no' and length = '$length' and size = '$size'  and convert(date,prod_date) = '$prod_Date'";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
 }
 ?>

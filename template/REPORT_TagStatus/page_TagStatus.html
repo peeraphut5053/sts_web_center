@@ -165,6 +165,50 @@
         { id: "Ot", name: "Other" }
     ]
 
+    function changeStatus(id) {
+        var content = "";
+        for (var i = 0; i < select_status.length; i++) {
+            content += '<option value="' + select_status[i] + '">' + select_status[i] + '</option>';
+        }
+        $.confirm({
+            title: "Please select status",
+            theme: "modern",
+            content: '<select class="form-control" id="select_status">' + content + '</select>',
+            buttons: {
+                confirm: function () {
+                    var selectedStatus = $("#select_status").val();
+                    if (selectedStatus == "-- select --") {
+                        $.alert("กรุณาเลือกสถานะ");
+                        return false;
+                    }
+                    // Validate status here if needed
+                    $.ajax({
+                        type: "POST",
+                        dataType: "json",
+                        url: "././module/APP_Qc_TestLab/data.php",
+                        data: {
+                            load: "ChangeStatus",
+                            data: JSON.stringify(id),
+                            status: selectedStatus
+                        },
+                        success: function (data) {
+                            $.alert("เปลี่ยนสถานะเรียบร้อยแล้ว");
+                            $("#tag_status").val(selectedStatus);4
+                            ReportAllSearchShow();
+                            
+                            
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                            $.alert("เปลี่ยนสถานะไม่สําเร็จ");
+                        },
+                    });
+                },
+                cancel: function () {
+                },
+            },
+        });
+    }
+
     function ReportAllSearchHidden() {
         var OldHtml = $("#BtnSearchM").html();
         var tag_id = $("#tag_id").val();
@@ -356,6 +400,14 @@
                                     var sheet = xlsx.xl.worksheets['sheet1.xml'];
                                     var numrows = 2;
                                 }
+                            },
+                            {
+                                text: `<button type="button" class="btn btn-danger">Change Status</button>`,
+                                action: function (e, dt, node, config) {
+                                    let data = Array.from(dt.rows().data());
+                                    let id = data.map(item => item.id);
+                                    changeStatus(id);
+                                },
                             },
                         ],
                     });

@@ -375,6 +375,45 @@ if ($load == 'SaveData') {
     echo json_encode($QcTestLab);
 }
 
+if ($load == 'GetQaLabSub') {
+    $CM = new CallModel();
+    $CM->SyteLine_Models();
+    $Mv_Bc_Tag = new QcTestLab();
+    $Mv_Bc_Tag->setConn($ConnSL);
+    $rs = $Mv_Bc_Tag->getQaLabSub($prodDate, $importDate);
+    echo json_encode($rs);
+} 
+if ($load == 'DeleteQaLabSub') {
+    $CM = new CallModel();
+    $CM->SyteLine_Models();
+    $Mv_Bc_Tag = new QcTestLab();
+    $Mv_Bc_Tag->setConn($ConnSL);
+    // covert string data to array
+    $id = json_decode($data);
+    // loop show data
+    foreach ($id as $key => $value) {
+        $Mv_Bc_Tag->DeleteQaLabSub($value->opr_no, $value->item, $value->length, $value->sts_no, $value->prod_FM_no, $value->prod_Date, $value->size);
+    }
+    echo json_encode($id);
+}
+
+if ($load == 'ChangeStatus') {
+    $CM = new CallModel();
+    $CM->SyteLine_Models();
+    $Tag_Status = new BcTag();
+    $Tag_Status->setConn($ConnSL);
+    // covert string data to array
+
+    $id = json_decode($data);
+    // loop show data
+    foreach ($id as $key => $value) {
+        $Tag_Status->UpdateTagStatus($value, $status);
+    }
+    echo json_encode($id);
+}
+
+
+
 
 
 
