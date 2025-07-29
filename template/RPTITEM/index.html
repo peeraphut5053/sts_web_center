@@ -254,7 +254,6 @@
                 ]
             });
             var getAllRows = $(".table tbody tr").length;
-            $(".col-flt-page").text("จำนวนทั้งหมด : " + getAllRows.toString());
             $('#tblReport').loading('stop');
         });
     }
@@ -298,6 +297,7 @@
 //                loc: loc
             },
             success: function (data) {
+                   $("#tblModal").empty();
                 $("#modalDetailHead").text("ข้อมูล [" + item + "] สต็อค ");
                 $("#tblModal").html(data);
 
@@ -355,6 +355,7 @@
                 atYear: atYear
             },
             success: function (data) {
+                $("#tblModal").empty();
                 $("#modalDetailHead").text("ข้อมูล [" + item + "] LINE status = Ordered ");
                 $("#tblModal").html(data);
                 $('#tblModal').DataTable({
