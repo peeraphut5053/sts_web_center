@@ -203,7 +203,7 @@
         <option value="รออะไหล่">รออะไหล่</option>
         <option value="งานต่อเนื่อง">งานต่อเนื่อง</option>
         <option value="ปิดงาน">ปิดงาน</option>
-          <option value="ปิดงานต่อเนื่อง">ปิดงานต่อเนื่อง</option>
+        <option value="ปิดงานต่อเนื่อง">ปิดงานต่อเนื่อง</option>
       </select>
     </div>
   </div>
@@ -320,31 +320,15 @@
           </div>
         </div>
         <hr class="mt-12" />
-    <h3 id="time_header" style="text-align: center; color: red ; font-weight: bold; text-decoration: underline; margin-bottom: 20px">สำหรับลงเวลาเมื่อช่างเริ่มซ่อม</h3>
-        <div class="mybox">
-          <div id="status_repair" class="input-group element2 hidden">
-            <label class="custom-checkbox">
-              <input type="checkbox" name='start_repair' />
-              <span class="checkmark"></span>
-              เริ่มซ่อม
-            </label>
+        <h3 id="time_header" style="text-align: center; color: red ; font-weight: bold; text-decoration: underline; margin-bottom: 20px">สำหรับลงเวลาเมื่อช่างเริ่มซ่อม</h3>
+       <div class="flex justify-start items-center mb-5 gap-4">
+          <div class="input-group basis-2/4">
+            <div style="color: red;" class="input-group-addon">วันกำหนดเสร็จ</div>
+            <input type="text" autocomplete="off" class="form-control" id="start_repair">
           </div>
-          <div id="status_repair_show" class="input-group element hidden">
-            <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">เริ่มซ่อม</div>
-            <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off" class="form-control"
-              id="start_repair_date" disabled>
-          </div>
-          <div style="display: none;" id="status_repair_end" class="input-group element2">
-            <label class="custom-checkbox">
-              <input type="checkbox" name='end_repair' />
-              <span class="checkmark"></span>
-              ซ่อมเสร็จ
-            </label>
-          </div>
-          <div id="status_repair_end_show" class="input-group element hidden">
-            <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">ซ่อมเสร็จ</div>
-            <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off" class="form-control"
-              id="end_repair_date" disabled>
+           <div class="input-group basis-2/4">
+            <div style="color: red;" class="input-group-addon">วันกำหนดเสร็จ</div>
+            <input type="text" autocomplete="off" class="form-control" id="end_repair">
           </div>
         </div>
       </div>
@@ -440,7 +424,14 @@
 
   $("#R_FromDate, #R_ToDate, #due_date").datepicker({
     dateFormat: 'yy-mm-dd',
-    // timeFormat: 'HH:mm',
+    // controlType: 'select',
+    // oneLine: true,
+    // timeInput: true
+  });
+
+  $("#start_repair, #end_repair").datetimepicker({
+    dateFormat: 'yy-mm-dd',
+    timeFormat: 'HH:mm',
     // controlType: 'select',
     // oneLine: true,
     // timeInput: true
@@ -941,32 +932,10 @@
 
   $('#open_repair').click(function () {
     var selected = Array.from($('#tblReport').DataTable().rows('.selected').data());
-
-
-    console.log(selected);
     
     if (selected.length == 0) {
       alert("กรุณาเลือกเลขที่ใบแจ้ง");
       return false;
-    }
-
-    if (selected[0]["DateRepairStart_en"]) {
-          $("#status_repair").addClass("hidden");
-          $("#status_repair_show").removeClass("hidden");
-          $("#start_repair_date").val(moment(selected[0]["DateRepairStart_en"].date).format("DD/MM/YYYY HH:mm"));
-          if (selected[0]["DateRepairEnd_en"]) {
-            $("#status_repair_end").addClass("hidden");
-            $("#status_repair_end_show").removeClass("hidden");
-            $("#end_repair_date").val(moment(selected[0]["DateRepairEnd_en"].date).format("DD/MM/YYYY HH:mm"));
-          } else {
-            $("#status_repair_end").css("display", "block");
-            $("#status_repair_end_show").addClass("hidden");
-          }
-        } else {
-          $("#status_repair").removeClass("hidden");
-          $("#status_repair_end").addClass("hidden");
-          $("#status_repair_show").addClass("hidden");
-          $("#status_repair_end_show").addClass("hidden");
     }
 
     {/*if (selected[0].DateRepairStart?.date && selected[0].DateRepairEnd?.date) {
@@ -992,10 +961,18 @@
       $("#due_date").val(moment(selected[0].DueDate.date).format('YYYY-MM-DD'));
     }
 
+    if (selected[0]["DateRepairEnd_en"].date) {
+      $("#start_repair").val(moment(selected[0]["DateRepairEnd_en"].date).format("DD/MM/YYYY HH:mm"));
+    }
+
+    if (selected[0]["DateRepairStart_en"].date) {
+      $("#end_repair").val(moment(selected[0]["DateRepairStart_en"].date).format("DD/MM/YYYY HH:mm"));
+    }
+
     $("#r_remark2").val(selected[0].Remark2);
     $("#detail_repair").val(selected[0].DetailRepair);
+    
 
-  
   })
 
 
@@ -1009,8 +986,8 @@
     var due_date = $("#due_date").val();
     var r_remark2 = $("#r_remark2").val();
     var detail_repair = $("#detail_repair").val();
-    var start_repair = $('input[name="start_repair"]:checked').val();
-    var end_repair = $('input[name="end_repair"]:checked').val();
+    var start_repair = $("#start_repair").val();
+    var end_repair = $("#end_repair").val();
 
     if (!due_date) {
       alert("กรุณาเลือกวันกําหนดเสร็จ");
@@ -1020,14 +997,6 @@
     if (!detail_repair) {
       alert("กรุณากรอกรายละเอียดการซ่อม");
       return false;
-    }
-
-    let time = '';
-
-    if (start_repair == "on") {
-      time = 'start_repair';
-    } else if (end_repair == "on") {
-      time = 'end_repair';
     }
 
     $("#btnCloseRepair").attr("disabled", true);
@@ -1047,7 +1016,8 @@
         due_date: due_date,
         remark2: r_remark2,
         detail_repair: detail_repair,
-        time: time
+        start_repair: start_repair,
+        end_repair: end_repair
       },
       success: function (data) {
         const fileInput = document.getElementById('file-input_2');
