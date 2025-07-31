@@ -323,11 +323,11 @@
         <h3 id="time_header" style="text-align: center; color: red ; font-weight: bold; text-decoration: underline; margin-bottom: 20px">สำหรับลงเวลาเมื่อช่างเริ่มซ่อม</h3>
        <div class="flex justify-start items-center mb-5 gap-4">
           <div class="input-group basis-2/4">
-            <div style="color: red;" class="input-group-addon">วันกำหนดเสร็จ</div>
+            <div style="color: red;" class="input-group-addon">เริ่มซ่อม</div>
             <input type="text" autocomplete="off" class="form-control" id="start_repair">
           </div>
            <div class="input-group basis-2/4">
-            <div style="color: red;" class="input-group-addon">วันกำหนดเสร็จ</div>
+            <div style="color: red;" class="input-group-addon">ซ่อมเสร็จ</div>
             <input type="text" autocomplete="off" class="form-control" id="end_repair">
           </div>
         </div>
@@ -932,7 +932,7 @@
 
   $('#open_repair').click(function () {
     var selected = Array.from($('#tblReport').DataTable().rows('.selected').data());
-    
+
     if (selected.length == 0) {
       alert("กรุณาเลือกเลขที่ใบแจ้ง");
       return false;
