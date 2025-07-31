@@ -961,12 +961,12 @@
       $("#due_date").val(moment(selected[0].DueDate.date).format('YYYY-MM-DD'));
     }
 
-    if (selected[0]["DateRepairEnd_en"].date) {
-      $("#start_repair").val(moment(selected[0]["DateRepairEnd_en"].date).format("DD/MM/YYYY HH:mm"));
+    if (selected[0]["DateRepairStart_en"].date) {
+      $("#start_repair").val(moment(selected[0]["DateRepairStart_en"].date).format("DD/MM/YYYY HH:mm"));
     }
 
-    if (selected[0]["DateRepairStart_en"].date) {
-      $("#end_repair").val(moment(selected[0]["DateRepairStart_en"].date).format("DD/MM/YYYY HH:mm"));
+    if (selected[0]["DateRepairEnd_en"].date) {
+      $("#end_repair").val(moment(selected[0]["DateRepairEnd_en"].date).format("DD/MM/YYYY HH:mm"));
     }
 
     $("#r_remark2").val(selected[0].Remark2);
