@@ -934,6 +934,9 @@
 
   $('#open_repair').click(function () {
     var selected = Array.from($('#tblReport').DataTable().rows('.selected').data());
+    $("#start_repair").val('');
+    $("#end_repair").val('');
+    $("#due_date").val('');
 
     if (selected.length == 0) {
       alert("กรุณาเลือกเลขที่ใบแจ้ง");
@@ -1033,6 +1036,8 @@
         $("#detail_repair").val('');
         $("#repair_name").val('');
         $("#ModalCloseReport").modal("hide");
+        $("#start_repair").val('');
+        $("#end_repair").val('');
         ReportItemSearch();
         getLastData();
         $("#btnCloseRepair").attr("disabled", false);
