@@ -964,11 +964,11 @@
     }
 
     if (selected[0]["DateRepairStart_en"]?.date) {
-      $("#start_repair").val(moment(selected[0]["DateRepairStart_en"].date).format("DD/MM/YYYY HH:mm"));
+      $("#start_repair").val(moment(selected[0]["DateRepairStart_en"].date).format("YYYY-MM-DD HH:mm"));
     }
 
     if (selected[0]["DateRepairEnd_en"]?.date) {
-      $("#end_repair").val(moment(selected[0]["DateRepairEnd_en"].date).format("DD/MM/YYYY HH:mm"));
+      $("#end_repair").val(moment(selected[0]["DateRepairEnd_en"].date).format("YYYY-MM-DD HH:mm"));
     }
 
     $("#r_remark2").val(selected[0].Remark2);
