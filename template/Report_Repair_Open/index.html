@@ -138,6 +138,12 @@
   class="mycontainer">
   <div class="row col-xs-12 p-20">
     <div class="mybox">
+      <div id="date_issue_box" class="input-group w-full hidden">
+        <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">วันที่แจ้ง</div>
+        <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off" class="form-control" id="date_issue" disabled>
+      </div>
+    </div>
+    <div class="mybox">
       <div class="input-group element">
         <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">เลขที่ใบแจ้ง</div>
         <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off" class="form-control" id="doc_no_search" disabled>
@@ -494,10 +500,12 @@
       dataType: "json",
       success: function (data) {
         info = data[0];
+        $("#date_issue_box").removeClass("hidden");
         $("#file_upload").addClass("hidden");
         $("#file-input").val(null);
         $('input[name="start_repair"]').prop('checked', false);
         $('input[name="end_repair"]').prop('checked', false);
+        $("#date_issue").val(moment(info["DateIssue"].date).format("DD/MM/YYYY HH:mm"));
         $("#doc_no_search").val(data[0]["DocNo"]);
         $("#r_name").val(data[0]["Username"]);
         $("#r_item").val(data[0]["Item"]);
@@ -559,6 +567,7 @@
   });
 
   $("#btnResetReportRepair").click(function () {
+    $("#date_issue_box").addClass("hidden");
     $('input[name="start_repair"]').prop('checked', false);
     $('input[name="end_repair"]').prop('checked', false);
     $("#doc_no_search").val('');
