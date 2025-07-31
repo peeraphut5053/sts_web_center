@@ -5,6 +5,120 @@
     max-width: 1200px;
     /* ป้องกันไม่ให้กว้างเกินไป */
   }
+
+  /* ซ่อน Checkbox ดั้งเดิม */
+  .custom-checkbox input[type="checkbox"] {
+    display: none;
+  }
+
+  /* ตำแหน่งและขนาดของ Checkbox */
+  .custom-checkbox {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 20px;
+    margin: 3px;
+  }
+
+  /* สไตล์สำหรับ Checkmark */
+  .custom-checkbox .checkmark {
+    width: 20px;
+    height: 20px;
+    background-color: #ccc;
+    border-radius: 4px;
+    display: inline-block;
+    margin-right: 10px;
+    position: relative;
+    transition: background-color 0.3s;
+  }
+
+  /* สไตล์สำหรับ Checkbox เมื่อถูกเลือก */
+  .custom-checkbox input[type="checkbox"]:checked+.checkmark {
+    background-color: #4CAF50;
+  }
+
+  /* สไตล์สำหรับเครื่องหมายถูก */
+  .custom-checkbox .checkmark::after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
+
+  /* แสดงเครื่องหมายถูกเมื่อ Checkbox ถูกเลือก */
+  .custom-checkbox input[type="checkbox"]:checked+.checkmark::after {
+    display: block;
+  }
+
+  /* รูปแบบของเครื่องหมายถูก */
+  .custom-checkbox .checkmark::after {
+    left: 8px;
+    top: 3px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    transform: rotate(45deg);
+  }
+  .select2-results__options{
+        font-size:18px !important;
+        }
+
+   .select2-results__options .select2-results__option--highlighted{
+        background-color: #4CAF50 !important;
+   }
+   .select2-selection__rendered {
+        font-size:18px !important;
+   }
+
+   .mycontainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 83.333333%;
+  margin-left: auto;
+  margin-right: auto;
+  border-width: 4px;
+  border-bottom-color: #60a5fa;
+  border-top-color: white;
+  border-left-color: white;
+  border-right-color: white;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  padding: 6rem;
+  margin-top: 2.5rem;
+}
+
+.mybox {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-grow: 1;
+  gap: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.myheader {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.element {
+  flex-basis: 50%;
+}
+
+.element2 {
+  flex-basis: 100%;
+}
+
+.imagBox {
+  border: 1px solid #d1d5db; /* เทียบเท่ากับ border-gray-300 */
+  padding: 0.5rem 1.25rem; /* px-5 = 1.25rem, py-2 = 0.5rem */
+  margin-right: 1rem; /* mr-4 = 1rem */
+}
+
+
 </style>
 <div class="row">
   <div>
@@ -66,7 +180,7 @@
     </span>
     <div hidden id="DocNo">
     </div>
-  </div> 
+  </div>
   <div class="col-lg-2">
     <div class="input-group">
       <div class="input-group-addon">หน่วยงานซ่อม</div>
@@ -89,6 +203,7 @@
         <option value="รออะไหล่">รออะไหล่</option>
         <option value="งานต่อเนื่อง">งานต่อเนื่อง</option>
         <option value="ปิดงาน">ปิดงาน</option>
+          <option value="ปิดงานต่อเนื่อง">ปิดงานต่อเนื่อง</option>
       </select>
     </div>
   </div>
@@ -161,6 +276,7 @@
               <option value="รออะไหล่">รออะไหล่</option>
               <option value="งานต่อเนื่อง">งานต่อเนื่อง</option>
               <option value="ปิดงาน">ปิดงาน</option>
+              <option value="ปิดงานต่อเนื่อง">ปิดงานต่อเนื่อง</option>
             </select>
           </div>
           <div class="input-group basis-2/4">
@@ -203,9 +319,35 @@
             <input type="file" id="file-input_2" multiple accept="image/jpeg, image/png, image/jpg">
           </div>
         </div>
-
+        <hr class="mt-12" />
+    <h3 id="time_header" style="text-align: center; color: red ; font-weight: bold; text-decoration: underline; margin-bottom: 20px">สำหรับลงเวลาเมื่อช่างเริ่มซ่อม</h3>
+        <div class="mybox">
+          <div id="status_repair" class="input-group element2 hidden">
+            <label class="custom-checkbox">
+              <input type="checkbox" name='start_repair' />
+              <span class="checkmark"></span>
+              เริ่มซ่อม
+            </label>
+          </div>
+          <div id="status_repair_show" class="input-group element hidden">
+            <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">เริ่มซ่อม</div>
+            <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off" class="form-control"
+              id="start_repair_date" disabled>
+          </div>
+          <div style="display: none;" id="status_repair_end" class="input-group element2">
+            <label class="custom-checkbox">
+              <input type="checkbox" name='end_repair' />
+              <span class="checkmark"></span>
+              ซ่อมเสร็จ
+            </label>
+          </div>
+          <div id="status_repair_end_show" class="input-group element hidden">
+            <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">ซ่อมเสร็จ</div>
+            <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off" class="form-control"
+              id="end_repair_date" disabled>
+          </div>
+        </div>
       </div>
-
       <div class="modal-footer">
         <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
         <button type="button" class="btn btn-primary" id="btnCloseRepair">บันทึก</button>
@@ -263,13 +405,13 @@
   $("#r_name").val(username_session);
   var myData = [];
 
-// ใช้กับ setInterval ใน background
-setInterval(async function() {
-  getLastData();
-}, 60000); // 60000 มิลลิวินาที = 1 นาที
+  // ใช้กับ setInterval ใน background
+  setInterval(async function () {
+    getLastData();
+  }, 60000); // 60000 มิลลิวินาที = 1 นาที
 
   getLastData();
-  
+
   function getLastData() {
     const lastDoc = document.getElementById("last_doc");
     const DocNo = document.getElementById("DocNo");
@@ -287,15 +429,15 @@ setInterval(async function() {
           // soound alert browser
           if (data[0].Status == null) {
             var audio = new Audio('https://cdn.pixabay.com/download/audio/2025/06/02/audio_a1fabf1d84.mp3?filename=new-notification-010-352755.mp3');
-            audio.play() 
+            audio.play()
           }
         }
-        
+
       }
     });
-   
+
   }
-    
+
   $("#R_FromDate, #R_ToDate, #due_date").datepicker({
     dateFormat: 'yy-mm-dd',
     // timeFormat: 'HH:mm',
@@ -315,51 +457,51 @@ setInterval(async function() {
 
     // Return a promise that resolves when the image is loaded and processed
     return new Promise((resolve) => {
-        reader.onload = function(e) {
-            img.src = e.target.result;
+      reader.onload = function (e) {
+        img.src = e.target.result;
 
-            img.onload = function() {
-                // Create canvas
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
+        img.onload = function () {
+          // Create canvas
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
 
-                // Calculate proportions
-                let width = img.width;
-                let height = img.height;
-                let ratio = 1;
+          // Calculate proportions
+          let width = img.width;
+          let height = img.height;
+          let ratio = 1;
 
-                if (width > height) {
-                    if (width > maxWidth) {
-                        ratio = maxWidth / width;
-                    }
-                } else {
-                    if (height > maxHeight) {
-                        ratio = maxHeight / height;
-                    }
-                }
+          if (width > height) {
+            if (width > maxWidth) {
+              ratio = maxWidth / width;
+            }
+          } else {
+            if (height > maxHeight) {
+              ratio = maxHeight / height;
+            }
+          }
 
-                width = width * ratio;
-                height = height * ratio;
+          width = width * ratio;
+          height = height * ratio;
 
-                // Set canvas size
-                canvas.width = width;
-                canvas.height = height;
+          // Set canvas size
+          canvas.width = width;
+          canvas.height = height;
 
-                // Draw resized image on canvas
-                ctx.drawImage(img, 0, 0, width, height);
+          // Draw resized image on canvas
+          ctx.drawImage(img, 0, 0, width, height);
 
-                // Convert to blob and then to file
-                canvas.toBlob((blob) => {
-                    const resizedImage = new File([blob], file.name, { type: file.type });
-                    resolve(resizedImage);
-                }, file.type);
-            };
+          // Convert to blob and then to file
+          canvas.toBlob((blob) => {
+            const resizedImage = new File([blob], file.name, { type: file.type });
+            resolve(resizedImage);
+          }, file.type);
         };
+      };
 
-        reader.readAsDataURL(file);
+      reader.readAsDataURL(file);
     });
-}
-  
+  }
+
   function minutesToHours(minutes) {
     if (minutes === null || minutes === undefined) {
       return "";
@@ -367,7 +509,7 @@ setInterval(async function() {
     var hours = Math.floor(minutes / 60);
     var remainingMinutes = minutes % 60;
     return (hours > 0 ? hours + " ชั่วโมง " : "") + (remainingMinutes > 0 ? remainingMinutes + " นาที" : "");
-   }
+  }
 
   function ReportItemSearch() {
     var OldHtml = $("#btnSearch").html();
@@ -629,7 +771,7 @@ setInterval(async function() {
                   alert("กรุณาเลือกเลขที่เอกสารที่ต้องการลบ");
                   return false;
                 }
-                
+
                 // put password
                 $.confirm({
                   title: 'กรุณาใส่ Password',
@@ -643,27 +785,28 @@ setInterval(async function() {
                         var Pass = this.$content.find('#Pass').val();
                         if (Pass == 7525) {
                           $.ajax({
-                          type: "POST",
-                          url: "././module/Report_Repair/data.php",
-                          dataType: "json",
-                          data: {
-                            load: 'delete',
-                            doc_no: selected[0].DocNo,
-                          },
-                          success: function (data) {
+                            type: "POST",
+                            url: "././module/Report_Repair/data.php",
+                            dataType: "json",
+                            data: {
+                              load: 'delete',
+                              doc_no: selected[0].DocNo,
+                            },
+                            success: function (data) {
                               alert("ลบข้อมูลสําเร็จ");
                               dt.rows('.selected').remove().draw();
-                          },
-                          error: function (e) {
-                            console.log("There was an error with your request...");
-                            console.log("error: " + JSON.stringify(e));
-                          },
-                        });
+                            },
+                            error: function (e) {
+                              console.log("There was an error with your request...");
+                              console.log("error: " + JSON.stringify(e));
+                            },
+                          });
                         } else {
                           alert("รหัสผ่านไม่ถูกต้อง");
                         }
                       }
-                  }}
+                    }
+                  }
                 })
               }
             }
@@ -710,47 +853,47 @@ setInterval(async function() {
   });
 
   async function UploadFiles(DocNo) {
-  
-  const fileInput = document.getElementById('file-input_2');
-  const files = fileInput.files; // รับไฟล์ที่เลือกทั้งหมด
-  const formData = new FormData();
-  for (let i = 0; i < files.length; i++) {
+
+    const fileInput = document.getElementById('file-input_2');
+    const files = fileInput.files; // รับไฟล์ที่เลือกทั้งหมด
+    const formData = new FormData();
+    for (let i = 0; i < files.length; i++) {
       const file = files[i];
-      console.log(i,'i');
-      
+      console.log(i, 'i');
+
       // jpg, png only
       if (file && (file.type === 'image/jpg' || file.type === 'image/jpeg' || file.type === 'image/png')) {
-          const resizedFile = await resizeImage(file, 1280, 720);
-          formData.append('file[]', resizedFile);
-      } 
-      else {
-          alert('กรุณาเลือกไฟล์ JPG, JPEG  หรือ PNG เท่านั้น');
-          return;
+        const resizedFile = await resizeImage(file, 1280, 720);
+        formData.append('file[]', resizedFile);
       }
-  }
-  
-  try {
+      else {
+        alert('กรุณาเลือกไฟล์ JPG, JPEG  หรือ PNG เท่านั้น');
+        return;
+      }
+    }
+
+    try {
 
       const response = await fetch('././module/Report_Repair_Open/data.php', {
-          method: 'POST',
-          body: formData
+        method: 'POST',
+        body: formData
       });
 
       if (response.ok) {
-          const data = await response.json();
-          if (data.success) {
-              alert('การอัพโหลดสําเร็จ');
-              fileInput.value = '';
-          } else {
-              alert('การอัพโหลดล้มเหลว');
-          }
+        const data = await response.json();
+        if (data.success) {
+          alert('การอัพโหลดสําเร็จ');
+          fileInput.value = '';
+        } else {
+          alert('การอัพโหลดล้มเหลว');
+        }
       } else {
-          throw new Error('การอัพโหลดล้มเหลว');
+        throw new Error('การอัพโหลดล้มเหลว');
       }
-  } catch (error) {
+    } catch (error) {
       alert('เกิดข้อผิดพลาดในการอัพโหลด: ' + error.message);
+    }
   }
-}
 
   function btnShowImage(doc_no) {
     $.ajax({
@@ -799,9 +942,31 @@ setInterval(async function() {
   $('#open_repair').click(function () {
     var selected = Array.from($('#tblReport').DataTable().rows('.selected').data());
 
+
+    console.log(selected);
+    
     if (selected.length == 0) {
       alert("กรุณาเลือกเลขที่ใบแจ้ง");
       return false;
+    }
+
+    if (selected[0]["DateRepairStart_en"]) {
+          $("#status_repair").addClass("hidden");
+          $("#status_repair_show").removeClass("hidden");
+          $("#start_repair_date").val(moment(selected[0]["DateRepairStart_en"].date).format("DD/MM/YYYY HH:mm"));
+          if (selected[0]["DateRepairEnd_en"]) {
+            $("#status_repair_end").addClass("hidden");
+            $("#status_repair_end_show").removeClass("hidden");
+            $("#end_repair_date").val(moment(selected[0]["DateRepairEnd_en"].date).format("DD/MM/YYYY HH:mm"));
+          } else {
+            $("#status_repair_end").css("display", "block");
+            $("#status_repair_end_show").addClass("hidden");
+          }
+        } else {
+          $("#status_repair").removeClass("hidden");
+          $("#status_repair_end").addClass("hidden");
+          $("#status_repair_show").addClass("hidden");
+          $("#status_repair_end_show").addClass("hidden");
     }
 
     {/*if (selected[0].DateRepairStart?.date && selected[0].DateRepairEnd?.date) {
@@ -829,6 +994,8 @@ setInterval(async function() {
 
     $("#r_remark2").val(selected[0].Remark2);
     $("#detail_repair").val(selected[0].DetailRepair);
+
+  
   })
 
 
@@ -842,6 +1009,8 @@ setInterval(async function() {
     var due_date = $("#due_date").val();
     var r_remark2 = $("#r_remark2").val();
     var detail_repair = $("#detail_repair").val();
+    var start_repair = $('input[name="start_repair"]:checked').val();
+    var end_repair = $('input[name="end_repair"]:checked').val();
 
     if (!due_date) {
       alert("กรุณาเลือกวันกําหนดเสร็จ");
@@ -851,6 +1020,14 @@ setInterval(async function() {
     if (!detail_repair) {
       alert("กรุณากรอกรายละเอียดการซ่อม");
       return false;
+    }
+
+    let time = '';
+
+    if (start_repair == "on") {
+      time = 'start_repair';
+    } else if (end_repair == "on") {
+      time = 'end_repair';
     }
 
     $("#btnCloseRepair").attr("disabled", true);
@@ -869,7 +1046,8 @@ setInterval(async function() {
         repair_name: repair_name,
         due_date: due_date,
         remark2: r_remark2,
-        detail_repair: detail_repair
+        detail_repair: detail_repair,
+        time: time
       },
       success: function (data) {
         const fileInput = document.getElementById('file-input_2');
@@ -879,7 +1057,7 @@ setInterval(async function() {
         if (files.length > 0) {
           UploadFiles(doc_no);
         }
-       
+
         $("#r_remark2").val('');
         $("#detail_repair").val('');
         $("#repair_name").val('');
@@ -887,7 +1065,7 @@ setInterval(async function() {
         ReportItemSearch();
         getLastData();
         $("#btnCloseRepair").attr("disabled", false);
-    
+
       },
       error: function (e) {
         $("#btnCloseRepair").attr("disabled", false);
