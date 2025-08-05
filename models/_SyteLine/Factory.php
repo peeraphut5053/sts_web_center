@@ -129,16 +129,14 @@ from STS_repair re inner join STS_repair_issue iss
         $cSql = new SqlSrv();
         $sql = "UPDATE STS_repair SET Status = '$status', Type = '$item', DetailRepair = '$detail_repair', Repairname = '$repair_name', Remark2 = '$remark2', DueDate = '$due_date' WHERE DocNo = '$doc_no'";
      
-        if ($start_repair != "" && $end_repair == "") {
-             $sql = "UPDATE STS_repair SET Status = '$status', Type = '$item', DetailRepair = '$detail_repair', Repairname = '$repair_name', Remark2 = '$remark2', DueDate = '$due_date', DateRepairStart_en = '$start_repair' WHERE DocNo = '$doc_no'";
+        if ($start_repair != "") {
+             $start = "UPDATE STS_repair SET DateRepairStart_en = '$start_repair' WHERE DocNo = '$doc_no'";
+             $cSql->SqlQuery($this->StrConn, $start);
         }
 
-        if ($end_repair != "" && $start_repair == "") {
-             $sql = "UPDATE STS_repair SET Status = '$status', Type = '$item', DetailRepair = '$detail_repair', Repairname = '$repair_name', Remark2 = '$remark2', DueDate = '$due_date' , DateRepairEnd_en = '$end_repair' WHERE DocNo = '$doc_no'";
-        }
-
-        if ($end_repair != "" && $start_repair != "") {
-            $sql = "UPDATE STS_repair SET Status = '$status', Type = '$item', DetailRepair = '$detail_repair', Repairname = '$repair_name', Remark2 = '$remark2', DueDate = '$due_date',DateRepairStart_en = '$start_repair', DateRepairEnd_en = '$end_repair' WHERE DocNo = '$doc_no'";
+        if ($end_repair != "") {
+             $end = "UPDATE STS_repair SET DateRepairEnd_en = '$end_repair' WHERE DocNo = '$doc_no'";
+             $cSql->SqlQuery($this->StrConn, $end);
         }
 
         $rs0 = $cSql->SqlQuery($this->StrConn, $sql);
