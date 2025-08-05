@@ -265,7 +265,7 @@ where cust.cust_num = '$cust_num'";
     }
 
      function GetItemQuote($search) {
-        $query = "select distinct[description], item from item_mst where item like '%$search%'";
+        $query = "select distinct[description], item from item_mst where description like '%$search%'";
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
