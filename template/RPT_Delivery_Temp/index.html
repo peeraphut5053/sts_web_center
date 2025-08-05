@@ -1,0 +1,1334 @@
+<style>
+  .col-search {
+    padding-left: 3px;
+    padding-right: 3px;
+  }
+
+  /*    table.dataTable thead .sorting:after,
+          table.dataTable thead .sorting:before,
+          table.dataTable thead .sorting_asc:after,
+          table.dataTable thead .sorting_asc:before,
+          table.dataTable thead .sorting_asc_disabled:after,
+          table.dataTable thead .sorting_asc_disabled:before,
+          table.dataTable thead .sorting_desc:after,
+          table.dataTable thead .sorting_desc:before,
+          table.dataTable thead .sorting_desc_disabled:after,
+          table.dataTable thead .sorting_desc_disabled:before {
+              bottom: .5em;
+          }*/
+  .table thead th {
+    text-align: center;
+  }
+
+  .col-flt-page {
+    padding-top: 10px;
+    font-weight: bold;
+  }
+
+  #tblReport tbody tr td a {
+    cursor: pointer;
+  }
+
+  table.dataTable.fixedHeader-floating,
+  table.dataTable.fixedHeader-locked {
+    background-color: white;
+    margin-top: 50px !important;
+    margin-bottom: 0 !important;
+  }
+
+  .text-header {
+    font-weight: bold;
+    font-size: 20px;
+  }
+
+  .text-wrap {
+    white-space: normal;
+  }
+
+  .width-200 {
+    width: 200px;
+  }
+
+  input[type="checkbox"] {
+    margin-left: 5px;
+    margin-right: 5px;
+  }
+
+  /*
+      .cb_lb{
+          margin-top:-5px;
+      }*/
+  .item-center {
+    display: flex;
+    justify-content: center;
+  }
+
+  datalist {
+    position: absolute;
+    max-height: 20em;
+    border: 0 none;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  datalist option {
+    font-size: 0.8em;
+    padding: 0.3em 1em;
+    background-color: #ccc;
+    cursor: pointer;
+  }
+
+  /* option active styles */
+  datalist option:hover,
+  datalist option:focus {
+    color: #fff;
+    background-color: #036;
+    outline: 0 none;
+  }
+
+  #browserdata option {
+    font-size: 1.8em;
+    padding: 0.3em 1em;
+    background-color: #ccc;
+    cursor: pointer;
+  }
+</style>
+<div class="row">
+  <h4 class="text-header text-center">ใบส่งของ (ชั่วคราว)</h4>
+</div>
+<div class="row item-center">
+  <div class="col-lg-2 col-md-3 col-sm-6 col-xs-6">
+    <div class="input-group">
+      <div class="input-group-addon">doc_num</div>
+      <input type="text" class="form-control" id="doc_num" autocomplete="off" />
+    </div>
+  </div>
+   <div class="col-lg-2 col-md-3 col-sm-6 col-xs-6">
+    <div class="input-group">
+      <div class="input-group-addon">name</div>
+      <input type="text" class="form-control" id="name" autocomplete="off" />
+    </div>
+  </div>
+  <div class="col-lg-2 col-md-3 col-sm-6 col-xs-6">
+    <div class="input-group">
+      <div class="input-group-addon">Start Date</div>
+      <input type="text" class="form-control" id="Start_Date_Delivery" autocomplete="off" />
+    </div>
+  </div>
+  <div class="col-lg-2 col-md-3 col-sm-6 col-xs-6">
+    <div class="input-group">
+      <div class="input-group-addon">End Date</div>
+      <input type="text" class="form-control" id="End_Date_Delivery" autocomplete="off" />
+    </div>
+  </div>
+  <div class="col-lg-1 col-md-2 col-sm-1 col-xs-6  col-search">
+    <button id="BtnSearchDelivery" class="btn btn-info"><i class="fa fa-search"></i>&nbsp; Search</button>
+  </div>
+  <div class="col-lg-1 col-md-1 col-sm-6 col-xs-6 text-left">
+    <div class="flex gap-16">
+      <button id="btnAddDelivery" class="btn btn-success"><i class="fa fa-searh"></i>เพิ่มข้อมูลใบส่งของ</button>
+      <!-- <a class="btn btn-success ml-32" href="module/STS_Custom_Data/Import_Excel_In.php"  id="btnTransfer">&nbsp;Import Excel (IN)</a> -->
+    </div>
+  </div>
+</div>
+<div class="row">
+  <table class="table table-condensed table-bordered table-striped" id="tblReportDeliveryTemp">
+    <thead>
+      <tr>
+        <th class="bg-gray">doc_num</th>
+        <th class="bg-gray">cust_num</th>
+        <th class="bg-gray">name</th>
+        <th class="bg-gray">item</th>
+        <th class="bg-gray">ActWeight</th>
+        <th class="bg-gray">qty</th>
+        <th class="bg-gray">qty_modify</th>
+        <th class="bg-gray">u_m</th>
+        <th class="bg-gray">ref_no</th>
+        <th class="bg-gray">cust_po</th>
+        <th class="bg-gray">delivery_date</th>
+        <th class="bg-gray">car</th>
+        <th class="bg-gray">remark</th>
+        <th class="bg-gray">inv_num</th>
+      </tr>
+    </thead>
+    <!--        <tbody id="tblReportList">
+                      <tr><td align="center" colspan="12">.... No item search ....</td></tr>
+     </tbody>-->
+  </table>
+</div>
+<!-- Modal -->
+<div class="modal fade bd-example-modal-lg" id="ModalDeliveryTemp" role="dialog" aria-labelledby="myLargeModalLabel"
+  aria-hidden="true" style="cursor: move;">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title text-center" id="exampleModalLabel">เพิ่มข้อมูลใบส่งของ</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+      </div>
+      <div class="modal-body">
+        <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+          <div class="input-group basis-full">
+            <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">Customer *</div>
+            <select style="font-weight: bold; font-size: 16px;" class="form-control" id="customer">
+              <option value=""></option>
+            </select>
+          </div>
+        </div>
+        <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+          <div class="input-group basis-full">
+            <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">Ship to *</div>
+            <select style="font-weight: bold; font-size: 16px;" class="form-control" id="customer_seq">
+              <option value=""></option>
+            </select>
+          </div>
+        </div>
+        <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+          <div class="input-group basis-2/4">
+            <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">Date *</div>
+            <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off" class="form-control"
+              id="delivery_date">
+          </div>
+          <div class="input-group basis-2/4">
+            <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">cust_po *</div>
+            <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off" class="form-control"
+              id="cust_po">
+          </div>
+        </div>
+        <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+          <div class="input-group basis-2/4">
+            <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">ref_no</div>
+            <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off" class="form-control"
+              id="ref_no">
+          </div>
+          <div class="input-group basis-2/4">
+            <div style="font-weight: bold; font-size: 16px;" style="color: red" class="input-group-addon">inv_num</div>
+            <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off" class="form-control"
+              id="inv_num">
+          </div>
+        </div>
+        <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+          <div class="input-group basis-2/4">
+            <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">car</div>
+            <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off" class="form-control"
+              id="car">
+          </div>
+          <div class="input-group basis-2/4">
+            <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">remark</div>
+            <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off" class="form-control"
+              id="remark">
+          </div>
+        </div>
+        <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+          <div class="input-group basis-2/4">
+            <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">item *</div>
+            <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off" class="form-control"
+              list="list_item" id="item">
+            <datalist id="list_item">
+            </datalist>
+          </div>
+          <div class="input-group basis-2/4">
+            <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">ActWeight *</div>
+            <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off" class="form-control"
+              id="act_weight">
+          </div>
+        </div>
+        <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+          <div class="input-group basis-2/4">
+            <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">qty *</div>
+            <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off" class="form-control"
+              id="qty">
+          </div>
+          <div class="input-group basis-2/4">
+            <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">หน่วย *</div>
+            <select style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off" class="form-control"
+              id="u_m">
+              <option value="PCS">PCS</option>
+              <option value="KG">KG</option>
+            </select>
+          </div>
+        </div>
+        <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+          <div class="input-group basis-2/4">
+            <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">สถานที่รับของ </div>
+            <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off" class="form-control"
+              id="pick_address">
+          </div>
+        </div>
+        <button type="button" class="btn btn-warning" id="item_list">View Item</button>
+        <button type="button" class="btn btn-success" id="add_item">Add Item</button>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="SaveCalibration" onclick="SaveDeliveryTemp()">บันทึก</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal -->
+<div class="modal fade bd-example-modal-lg m-8" id="ModalDeliveryTempItem" role="dialog"
+  aria-labelledby="myLargeModalLabel" aria-hidden="true" style="cursor: move;">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title text-center" id="exampleModalLabel">รายการส่งสินค้า</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <table style="width: 100%" class="table table-condensed table-bordered table-striped"
+            id="tblReportDeliveryTempItem">
+            <thead>
+              <tr>
+                <th class="bg-gray">item</th>
+                <th class="bg-gray">ActWeight</th>
+                <th class="bg-gray">qty</th>
+                <th class="bg-gray">u_m</th>
+                <th class="bg-gray">ลำดับ</th>
+              </tr>
+            </thead>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade bd-example-modal-lg m-8" id="ModalDeliveryTempItemEdit" role="dialog"
+  aria-labelledby="myLargeModalLabel" aria-hidden="true" style="cursor: move;">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title text-center" id="exampleModalLabel">แก้ไขข้อมูลใบส่งของ</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+      </div>
+      <div class="modal-body">
+        <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+          <div class="input-group basis-full">
+            <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">เลขที่เอกสาร</div>
+            <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off" class="form-control" disabled
+              id="doc_num_edit">
+          </div>
+        </div>
+        <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+          <div class="input-group basis-full">
+            <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">Customer *</div>
+            <select style="font-weight: bold; font-size: 16px;" class="form-control" id="customer_edit">
+              <option value=""></option>
+            </select>
+          </div>
+        </div>
+        <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+          <div class="input-group basis-full">
+            <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">Ship to *</div>
+            <select style="font-weight: bold; font-size: 16px;" class="form-control" id="customer_seq_edit">
+              <option value=""></option>
+            </select>
+          </div>
+        </div>
+        <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+          <div class="input-group basis-2/4">
+            <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">Date *</div>
+            <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off" class="form-control"
+              id="delivery_date_edit">
+          </div>
+          <div class="input-group basis-2/4">
+            <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">cust_po *</div>
+            <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off" class="form-control"
+              id="cust_po_edit">
+          </div>
+        </div>
+        <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+          <div class="input-group basis-2/4">
+            <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">ref_no</div>
+            <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off" class="form-control"
+              id="ref_no_edit">
+          </div>
+          <div class="input-group basis-2/4">
+            <div style="font-weight: bold; font-size: 16px;" style="color: red" class="input-group-addon">inv_num</div>
+            <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off" class="form-control"
+              id="inv_num_edit">
+          </div>
+        </div>
+        <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+          <div class="input-group basis-2/4">
+            <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">car</div>
+            <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off" class="form-control"
+              id="car_edit">
+          </div>
+          <div class="input-group basis-2/4">
+            <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">remark</div>
+            <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off" class="form-control"
+              id="remark_edit">
+          </div>
+        </div>
+        <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+          <div class="input-group basis-2/4">
+            <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">item *</div>
+            <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off" class="form-control"
+              list="list_item" id="item_edit">
+            <datalist id="list_item">
+            </datalist>
+          </div>
+          <div class="input-group basis-2/4">
+            <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">ActWeight *</div>
+            <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off" class="form-control"
+              id="act_weight_edit">
+          </div>
+        </div>
+        <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+          <div class="input-group basis-2/4">
+            <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">qty *</div>
+            <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off" class="form-control"
+              id="qty_edit" disabled>
+          </div>
+          <div class="input-group basis-2/4">
+            <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">หน่วย *</div>
+             <select style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off" class="form-control"
+              id="u_m_edit">
+              <option value="PCS">PCS</option>
+              <option value="KG">KG</option>
+            </select>
+          </div>
+        </div>
+        <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+          <div class="input-group basis-2/4">
+            <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">qty edit</div>
+            <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off" class="form-control"
+              id="qty_modify">
+          </div>
+          <div class="input-group basis-2/4">
+            <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">สถานที่รับของ </div>
+            <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off" class="form-control"
+              id="pick_address_edit">
+            <input type="text" class="hidden" id="item_old" disabled>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="SaveCalibration" onclick="SaveDeliveryTempEdit()">บันทึก</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+  // create datalist #item_list
+  $.ajax({
+    type: "GET",
+    url: "././module/RPT_Delivery_Temp/data.php",
+    dataType: "json",
+    data: {
+      load: "GetItem"
+    },
+    success: function (data) {
+      let item_list = document.getElementById("list_item");
+      data.forEach((item) => {
+        let option = document.createElement("option");
+        option.value = item.description;
+        item_list.appendChild(option);
+      });
+    }
+  });
+
+  var customer;
+  var tableItem = $('#tblReportDeliveryTempItem').DataTable({
+    "columnDefs": [
+      { "targets": '_all', "className": 'text-center' },
+      {
+        targets: [4], // column index ที่เก็บลำดับ
+        visible: false, // ซ่อน column
+        searchable: false
+      }
+    ],
+    order: [[4, 'asc']]
+  });
+
+  $(document).ready(function () {
+    $("#ModalDeliveryTemp").draggable({
+      handle: ".modal-header"
+    });
+  });
+
+  $(document).ready(function () {
+    $("#ModalDeliveryTempItem").draggable({
+      handle: ".modal-header"
+    });
+  });
+
+  $("#BtnSearchDelivery").click(function () {
+    ReportDeliveryTemp();
+  });
+
+  $.ajax({
+    type: "GET",
+    url: "././module/RPT_Delivery_Temp/data.php",
+    dataType: "json",
+    data: { load: "Get" },
+    success: function (data) {
+      customer = [{ id: '', text: '' }].concat(data.map((item) => ({
+        id: item.cust_num,
+        text: item.name
+      })));
+    },
+  });
+
+  $('#btnAddDelivery').click(function () {
+    var $select = $("#customer");
+    $select.select2({
+      placeholder: 'กรุณาเลือก Customer',
+      allowClear: true,
+      width: '100%',
+      data: customer,
+      language: {
+        noResults: function () {
+          return "ไม่พบข้อมูล";
+        }
+      }
+    }).trigger('change');
+    $('#ModalDeliveryTemp').modal('show');
+
+  });
+
+  $("#item_list").click(function () {
+    $('#ModalDeliveryTempItem').modal('show');
+  })
+
+  $("#add_item").click(function () {
+    var item = $("#item").val();
+    var qty = $("#qty").val();
+    var u_m = $("#u_m").val();
+    var act_weight = $("#act_weight").val();
+    if (item && qty && u_m && act_weight) {
+      try {
+        let rowIndex = 0;
+        tableItem.row.add([item, act_weight, qty, u_m, rowIndex++]).draw();
+        // sorting by
+        $("#item").val('');
+        $("#qty").val('');
+  
+        $("#act_weight").val('');
+
+        $("#item_list").text(`View Item (${tableItem.rows().count()})`);
+
+      } catch (error) {
+        console.error(error);
+        alert("ไม่สามารถเพิ่มรายการได้");
+      }
+    } else {
+      alert("กรุณากรอกข้อมูลทั้งหมด");
+    }
+  })
+
+
+
+
+  $("#customer").change(function () {
+    let cust_seq;
+    $("#customer_seq").empty();
+    $.ajax({
+      type: "GET",
+      url: "././module/RPT_Delivery_Temp/data.php",
+      dataType: "json",
+      data: { load: "GetCustomerSeq", cust_num: $(this).val() },
+      success: function (data) {
+        cust_seq = [{ id: '', text: '' }].concat(data.map((item) => ({
+          id: item.cust_seq,
+          text: item.name + ' (' + item.cust_seq + ')'
+        })));
+        var $select = $("#customer_seq");
+        $select.select2({
+          placeholder: 'กรุณาเลือก Cust_seq',
+          allowClear: true,
+          width: '100%',
+          data: cust_seq,
+          language: {
+            noResults: function () {
+              return "ไม่พบข้อมูล";
+            }
+          }
+        }).trigger('change');
+      },
+    });
+  });
+
+
+  $("#Start_Date_Delivery, #End_Date_Delivery").datepicker({
+    dateFormat: "yy-mm-dd",
+    showAnim: "slideDown"
+
+  });
+
+  $("#delivery_date, #delivery_date_edit").datepicker({
+    dateFormat: "yy-mm-dd",
+    // add select year 
+    changeYear: true,
+  });
+
+
+  $("#btnRemove").click(function () {
+    $("#tblReport").DataTable().clear().destroy();
+  });
+
+
+  function ReportDeliveryTemp() {
+    var OldHtml = $("#BtnSearchDelivery").html();
+    var StartDate = $("#Start_Date_Delivery").val();
+    var EndDate = $("#End_Date_Delivery").val();
+    var doc_num = $("#doc_num").val();
+    var name = $("#name").val();
+
+    $("#BtnSearchDelivery").html("<i class='fa fa-spinner fa-spin'></i>");
+    $("#tblReportDeliveryTemp").loading();
+    $("#tblReportDeliveryTemp tfoot").remove();
+    $.ajax({
+      type: "POST",
+      url: "././module/RPT_Delivery_Temp/data.php",
+      dataType: "json",
+      beforeSend: function () {
+        $("#BtnSearchDelivery").html("<i class='fa fa-spinner fa-spin'>");
+      },
+      data: {
+        load: "GetData",
+        StartDate: StartDate,
+        EndDate: EndDate,
+        doc_num: doc_num,
+        name: name
+      },
+      success: function (data) {
+
+        $("#tblReportDeliveryTemp").DataTable().clear();
+        $("#tblReportDeliveryTemp").dataTable({
+          aaData: data,
+          paging: false,
+          fixedHeader: true,
+          destroy: true,
+          processing: true,
+          scrollY: "65vh",
+          scrollCollapse: true,
+          scrollX: true,
+          select: true,
+          columnDefs: [
+            {
+              targets: [0],
+              width: 30
+            },
+            {
+              targets: [1],
+              width: 30
+            },
+            {
+              targets: [2],
+              width: 300
+            },
+            {
+              targets: [3],
+              width: 200
+            },
+            {
+              targets: [4],
+              width: 50
+            },
+            {
+              targets: [5],
+              width: 30
+            },
+            {
+              targets: [6],
+              width: 30
+            },
+            {
+              targets: [7],
+              width: 30
+            },
+            {
+              targets: [8],
+              width: 50
+            },
+            {
+              targets: [9],
+              width: 60
+            }
+          ],
+          columns: [
+            {
+              data: "doc_num",
+              className: "text-center",
+            },
+            {
+              data: "cust_num",
+              className: "text-center",
+            },
+            {
+              data: "name",
+              className: "text-center",
+            },
+            {
+              data: "item",
+              className: "text-center",
+            },
+            {
+              data: "actweight",
+              className: "text-center",
+            },
+            {
+              data: "qty",
+              className: "text-center",
+            },
+            {
+              data: "qty_amend",
+              className: "text-center",
+              render: function (data) {
+                console.log(Number(data));
+                
+                if (data == null || Number(data) == 0) {
+                  return '-';
+                } else {
+                  return data;
+                }
+              }
+            },
+            {
+              data: "u_m",
+              className: "text-center",
+            },
+            {
+              data: "ref_no",
+              className: "text-center",
+            },
+            {
+              data: "cust_po",
+              className: "text-center",
+            },
+            {
+              data: "delivery_date.date",
+              className: "text-center",
+              render: function (data) {
+                return moment(data).format("DD/MM/YYYY");
+              }
+            },
+            {
+              data: "car",
+              className: "text-center",
+            },
+            {
+              data: "remark",
+              className: "text-center",
+            },
+            {
+              data: "inv_num",
+              className: "text-center",
+            },
+          ],
+          dom:
+            "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+            "<'row'<'col-md-12'tr>>" +
+            "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+          buttons: [
+            {
+              extend: "print",
+              text: "<i class='fa fa-print'></i>&nbsp;Print",
+              title: "",
+            },
+            {
+              extend: "excel",
+              footer: true,
+              text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+              title:
+                "รายงานใบส่งสินค้า " + GetCurrDateTime(),
+            },
+            {
+              text: `<button type="button" class="btn btn-info">Edit</button>`,
+              action: function (e, dt, node, config) {
+                // on selected
+                let selected = Array.from(dt.rows('.selected').data());
+                if (selected.length == 0) {
+                  alert("กรุณารายการที่ต้องการแก้ไข");
+                  return false;
+                }
+
+                var $select = $("#customer_edit");
+                $select.select2({
+                  placeholder: 'กรุณาเลือก Customer',
+                  allowClear: true,
+                  width: '100%',
+                  data: customer,
+                  language: {
+                    noResults: function () {
+                      return "ไม่พบข้อมูล";
+                    }
+                  }
+                }).trigger('change');
+
+
+                $select.val(selected[0].cust_num).trigger('change');
+
+                var $select_seq = $("#customer_seq_edit");
+
+                $select_seq.select2({
+                  placeholder: 'กรุณาเลือก Customer',
+                  allowClear: true,
+                  width: '100%',
+                  data: customer,
+                  language: {
+                    noResults: function () {
+                      return "ไม่พบข้อมูล";
+                    }
+                  }
+                }).trigger('change');
+
+                let cust_seq;
+                $("#customer_seq_edit").empty();
+                $.ajax({
+                  type: "GET",
+                  url: "././module/RPT_Delivery_Temp/data.php",
+                  dataType: "json",
+                  data: { load: "GetCustomerSeq", cust_num: selected[0].cust_num },
+                  success: function (data) {
+                    cust_seq = [{ id: '', text: '' }].concat(data.map((item) => ({
+                      id: item.cust_seq,
+                      text: item.name + ' (' + item.cust_seq + ')'
+                    })));
+                    var $select_seq = $("#customer_seq_edit");
+                    $select_seq.select2({
+                      placeholder: 'กรุณาเลือก Cust_seq',
+                      allowClear: true,
+                      width: '100%',
+                      data: cust_seq,
+                      language: {
+                        noResults: function () {
+                          return "ไม่พบข้อมูล";
+                        }
+                      }
+                    }).trigger('change');
+                    $select_seq.val(selected[0].cust_seq).trigger('change');
+                  },
+                });
+
+                // on customer_edit change
+
+                $("#customer_edit").change(function () {
+                  let cust_num = $(this).val();
+                  $("#customer_seq_edit").empty();
+                  $.ajax({
+                    type: "GET",
+                    url: "././module/RPT_Delivery_Temp/data.php",
+                    dataType: "json",
+                    data: { load: "GetCustomerSeq", cust_num: cust_num },
+                    success: function (data) {
+                      cust_seq = [{ id: '', text: '' }].concat(data.map((item) => ({
+                        id: item.cust_seq,
+                        text: item.name + ' (' + item.cust_seq + ')'
+                      })));
+                      var $select_seq = $("#customer_seq_edit");
+                      $select_seq.select2({
+                        placeholder: 'กรุณาเลือก Cust_seq',
+                        allowClear: true,
+                        width: '100%',
+                        data: cust_seq,
+                        language: {
+                          noResults: function () {
+                            return "ไม่พบข้อมูล";
+                          }
+                        }
+                      }).trigger('change');
+                    },
+                  });
+                });
+
+                $("#doc_num_edit").val(selected[0].doc_num);
+                $("#customer_edit").val(selected[0].cust_num);
+                $("#name_edit").val(selected[0].name);
+                $("#item_edit").val(selected[0].item);
+                $("#item_old").val(selected[0].item);
+                $("#act_weight_edit").val(selected[0].actweight);
+                $("#qty_edit").val(selected[0].qty);
+                $("#u_m_edit").val(selected[0].u_m);
+                $("#ref_no_edit").val(selected[0].ref_no);
+                $("#cust_po_edit").val(selected[0].cust_po);
+                $("#delivery_date_edit").val(moment(selected[0].delivery_date.date).format('YYYY-MM-DD'));
+                $("#car_edit").val(selected[0].car);
+                $("#remark_edit").val(selected[0].remark);
+                $("#inv_num_edit").val(selected[0].inv_num);
+                $("#qty_modify").val(selected[0].qty_amend > 0 ? selected[0].qty_amend : '');
+                $("#pick_address_edit").val(selected[0].pickPlace);
+
+
+                $("#ModalDeliveryTempItemEdit").modal("show");
+
+              }
+            },
+            {
+              text: `<button type="button" class="btn btn-danger">Delete</button>`,
+              action: function (e, dt, node, config) {
+                // on selected
+                let selected = Array.from(dt.rows('.selected').data());
+                if (selected.length == 0) {
+                  alert("กรุณารายการที่ต้องการลบ");
+                  return false;
+                }
+
+                if (confirm("ต้องการลบรายการนี้ ใช่หรือไม่ ?")) {
+                 $.ajax({
+                    type: "GET",
+                    url: "././module/RPT_Delivery_Temp/data.php",
+                    dataType: "json",
+                    data: { load: "DeleteDeliveryTempItem", doc_num: selected[0].doc_num, item: selected[0].item },
+                    success: function (data) {
+                      alert(`ลบรายการ ${selected[0].item} ของ ${selected[0].doc_num} สําเร็จ`);
+                      ReportDeliveryTemp();
+                    },
+                  });
+                }
+              }
+            },
+            {
+              text: `<button type="button" class="btn btn-info">พิมพ์ใบส่งของ</button>`,
+              action: function (e, dt, node, config) {
+                // on selected
+                let selected = Array.from(dt.rows('.selected').data());
+                let all = Array.from(dt.rows().data());
+                if (selected.length == 0) {
+                  alert("กรุณารายการที่ต้องการพิมพ์ใบส่งของ");
+                  return false;
+                }
+
+                const item_list = all.filter((item) => {
+                  return item.doc_num == selected[0].doc_num
+                });
+
+                PrintSetting(item_list);
+              }
+            },
+          ],
+        });
+        $("#tblReportDeliveryTemp").loading("stop");
+        $("#BtnSearchDelivery").html(OldHtml);
+      },
+      error: function (e) {
+        $("#tblReportDeliveryTemp").loading("stop");
+        $("#BtnSearchDelivery").html(OldHtml);
+        console.log("There was an error with your request...");
+        console.log("error: " + JSON.stringify(e));
+      },
+    });
+  }
+
+
+  function SaveDeliveryTempEdit() {
+    var doc_num = $("#doc_num_edit").val();
+    var cust_num = $("#customer_edit").val();
+    var cust_seq = $("#customer_seq_edit").val();
+    var delivery_date = $("#delivery_date_edit").val();
+    var cust_po = $("#cust_po_edit").val();
+    var remark = $("#remark_edit").val();
+    var inv_num = $("#inv_num_edit").val();
+    var car = $("#car_edit").val();
+    var ref_no = $("#ref_no_edit").val();
+    var pick_address = $("#pick_address_edit").val();
+    var item = $("#item_edit").val();
+    var act_weight = $("#act_weight_edit").val();
+    var qty = $("#qty_modify").val();
+    var u_m = $("#u_m_edit").val();
+    var item_old = $("#item_old").val();
+  console.log(item_old);
+  
+
+    if (item.length == 0) {
+      alert("กรุณากรอกรายการสินค้าอย่างน้อย 1 รายการ");
+      return false;
+    }
+
+    $.ajax({
+      type: "POST",
+      url: "././module/RPT_Delivery_Temp/data.php",
+      dataType: "json",
+      data: {
+        load: "UpdateDeliveryTemp",
+        cust_num: cust_num,
+        cust_seq: cust_seq,
+        delivery_date: delivery_date,
+        cust_po: cust_po,
+        remark: remark,
+        inv_num: inv_num,
+        car: car,
+        ref_no: ref_no,
+        pick_address: pick_address,
+        item: item,
+        act_weight: act_weight,
+        qty: qty,
+        u_m: u_m,
+        doc_num: doc_num,
+        item_old: item_old
+      },
+      success: function (data) {
+        alert("บันทึกข้อมูลสําเร็จ");
+        $("#customer_edit").val("");
+        $("#customer_seq_edit").val("");
+        $("#delivery_date_edit").val("");
+        $("#cust_po_edit").val("");
+        $("#remark_edit").val("");
+        $("#inv_num_edit").val("");
+        $("#car_edit").val("");
+        $("#ref_no_edit").val("");
+        $("#item_edit").val("");
+        $("#item_old").val("");
+        $("#qty_edit").val("");
+        $("#u_m_edit").val("");
+        $("#act_weight_edit").val("");
+        $("#pick_address_edit").val("");
+        $("#ModalDeliveryTempItemEdit").modal("hide");
+        ReportDeliveryTemp();
+      },
+      error: function (e) {
+        alert("บันทึกข้อมูลไม่สําเร็จ");
+      },
+    });
+  }
+
+  function SaveDeliveryTemp() {
+    var cust_num = $("#customer").val();
+    var cust_seq = $("#customer_seq").val();
+    var delivery_date = $("#delivery_date").val();
+    var cust_po = $("#cust_po").val();
+    var remark = $("#remark").val();
+    var inv_num = $("#inv_num").val();
+    var car = $("#car").val();
+    var ref_no = $("#ref_no").val();
+    var item = [];
+    var act_weight = [];
+    var qty = [];
+    var u_m = [];
+    var pick_address = $("#pick_address").val();
+
+    tableItem.rows().data().each(function (data, index) {
+      item.push(data[0]);
+      act_weight.push(data[1]);
+      qty.push(data[2]);
+      u_m.push(data[3]);
+    });
+
+    if (item.length == 0) {
+      alert("กรุณากรอกรายการสินค้าอย่างน้อย 1 รายการ");
+      return false;
+    }
+
+    $.ajax({
+      type: "POST",
+      url: "././module/RPT_Delivery_Temp/data.php",
+      dataType: "json",
+      data: {
+        load: "SaveDeliveryTemp",
+        cust_num: cust_num,
+        cust_seq: cust_seq,
+        delivery_date: delivery_date,
+        cust_po: cust_po,
+        remark: remark,
+        inv_num: inv_num,
+        car: car,
+        ref_no: ref_no,
+        pick_address: pick_address,
+        item: JSON.stringify(item),
+        act_weight: JSON.stringify(act_weight),
+        qty: JSON.stringify(qty),
+        u_m: JSON.stringify(u_m),
+      },
+      success: function (data) {
+         alert(`บันทึกข้อมูลสําเร็จ เลขที่เอกสาร : ${data}`);
+        $("#customer").val("");
+        $("#customer_seq").val("");
+        $("#delivery_date").val("");
+        $("#cust_po").val("");
+        $("#remark").val("");
+        $("#inv_num").val("");
+        $("#car").val("");
+        $("#ref_no").val("");
+        $("#item").val("");
+        $("#qty").val("");
+        $("#u_m").val("");
+        $("#act_weight").val("");
+        $("#pick_address").val("");
+        tableItem.clear().draw();
+        $("#ModalDeliveryTemp").modal("hide");
+        ReportDeliveryTemp();
+      },
+      error: function (e) {
+        alert("บันทึกข้อมูลไม่สําเร็จ");
+      },
+    });
+  }
+
+  var select_status = [
+    "บริษัท สหไทยสตีลไพพ์ จำกัด (มหาชน)",
+    "บริษัท บี เอ็น เค สตีล จำกัด",
+    "บริษัท โกลบอล อินไซท์ จำกัด",
+    "บริษัท บูลไพพ์ สตีลเซ็นเตอร์ จำกัด",
+  ];
+
+  function PrintSetting(selectedData) {
+    var content = "";
+    for (var i = 0; i < select_status.length; i++) {
+      let index = i + 1;
+      content += '<option value="' + index + '">' + select_status[i] + '</option>';
+    }
+    $.confirm({
+      title: "เลือกบริษัท",
+      theme: "modern",
+      content: '<select style="margin-bottom: 10px" class="form-control" id="select_status">' + content + '</select>',
+      buttons: {
+        confirm: function () {
+          var selectedStatus = $("#select_status").val();
+          if (selectedStatus == "-- select --") {
+            $.alert("กรุณาเลือกบริษัท");
+            return false;
+          }
+          // Validate status here if needed
+          $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: "././module/RPT_Delivery_Temp/data.php",
+            data: {
+              load: "GetNominee",
+              nominee: selectedStatus
+            },
+            success: function (data) {
+              PrintDeliveryTemp(selectedData, data);
+
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+              $.alert("");
+            },
+          });
+        },
+        cancel: function () {
+        },
+      },
+    });
+  }
+
+
+  function PrintDeliveryTemp(selectedData, nominee) {
+
+    console.log(selectedData, nominee);
+
+    pdfMake.fonts = {
+      THSarabunNew: {
+        normal: 'THSarabunNew.ttf',
+        bold: 'THSarabunNew Bold.ttf',
+        italics: 'THSarabunNew-Italic.ttf',
+        bolditalics: 'THSarabunNew-BoldItalic.ttf'
+      }
+    };
+
+    const data = []
+
+    data.push([
+      { border: [true, true, false, false], text: `ชื่อลูกค้า : ${selectedData[0].name} ${selectedData[0].cust_num}`, rowSpan: 2, fontSize: 13, bold: true, alignment: 'left', },
+      { border: [true, true, true, false], text: `วันที่ส่งของ : ${moment(selectedData[0].delivery_date.date).format('DD/MM/YYYY')}`, fontSize: 13, colSpan: 3, bold: true, alignment: 'center' },
+      { text: "", fontSize: 11, alignment: 'center' },
+      { text: "", fontSize: 11, alignment: 'center' },
+    ]);
+
+    data.push([
+      {},
+      { border: [true, false, true, false], text: `เลขที่เอกสาร : ${selectedData[0].doc_num}`, fontSize: 13, bold: true, colSpan: 3, alignment: 'center', margin: [28, 0, 0, 0] },
+      { text: "", fontSize: 11, alignment: 'center' },
+      { text: "", fontSize: 11, alignment: 'center' },
+    ]);
+
+    data.push([
+      { border: [true, false, false, false], text: `ที่อยู่ : ${selectedData[0].add1 ?? ''} ${selectedData[0].add2 ?? ''} ${selectedData[0].add3 ?? ''} ${selectedData[0].add4 ?? ''} ${selectedData[0].zip ?? ''}`, rowSpan: 2, fontSize: 13, bold: true, alignment: 'left', },
+      { border: [true, false, true, false], text: `เลขที่เอกสารอ้างอิง : ${selectedData[0].ref_no}`, fontSize: 13, bold: true, colSpan: 3, alignment: 'center', margin: [-25, 0, 0, 0] },
+      { text: "", fontSize: 11, alignment: 'center' },
+      { text: "", fontSize: 11, alignment: 'center' },
+    ]);
+
+    data.push([
+      {},
+      { border: [true, false, true, false], text: `Cust PO : ${selectedData[0].cust_po}`, fontSize: 13, bold: true, colSpan: 3, alignment: 'center', margin: [20, 0, 0, 0] },
+      { text: "", fontSize: 11, alignment: 'center' },
+      { text: "", fontSize: 11, alignment: 'center' },
+    ]);
+
+    data.push([
+      { text: "รายการ", fontSize: 13, bold: true, alignment: 'center' },
+      { text: "นํ้าหนักตาชั่ง (KG)", fontSize: 13, bold: true, alignment: 'center' },
+      { text: "จำนวน", fontSize: 13, bold: true, alignment: 'center' },
+      { text: "หน่วย", fontSize: 13, bold: true, alignment: 'center' },
+    ]);
+
+    for (let i = 0; i < selectedData.length; i++) {
+      data.push([
+        { text: selectedData[i].item, fontSize: 12, alignment: 'left' },
+        { text: selectedData[i].actweight, fontSize: 12, alignment: 'center' },
+        { text: selectedData[i].qty_amend > 0 ? selectedData[i].qty_amend : selectedData[i].qty, fontSize: 12, alignment: 'center' },
+        { text: selectedData[i].u_m, fontSize: 12, alignment: 'center' },
+      ],
+      )
+
+      if (i === selectedData.length - 1) {
+        data.push([
+          { text: `รวม`, fontSize: 12, alignment: 'center', style: 'header' },
+          { text: selectedData.reduce((total, item) => total + Number(item.actweight), 0), fontSize: 12, alignment: 'center' },
+          { text: selectedData.reduce((total, item) => total + Number(item.qty), 0), fontSize: 12, alignment: 'center' },
+          { text: "", fontSize: 12, alignment: 'center' },
+        ],
+        )
+      }
+    }
+
+
+    let dataReason = [];
+    dataReason.push([
+      { text: `ลำดับ`, fontSize: 12, alignment: 'center', style: 'header' },
+      { text: "รายการ", fontSize: 12, alignment: 'center' },
+      { text: "น้ำหนัก/กิโลกรัม", fontSize: 12, alignment: 'center' },
+    ],
+    )
+
+    let dataNow2 = [1, 2, 3, 4]
+
+    for (let i = 0; i < dataNow2.length; i++) {
+      dataReason.push([
+        { text: i + 1, alignment: 'center' },
+        { text: "เหล็กสลิต", fontSize: 12, alignment: 'center' },
+        { text: "793,458.00", fontSize: 12, alignment: 'center' },
+      ],
+      )
+
+      if (i === dataNow2.length - 1) {
+        dataReason.push([
+          { text: `รวม`, fontSize: 12, alignment: 'center', style: 'header', colSpan: 2 },
+          { text: "", fontSize: 12, alignment: 'center' },
+          { text: "3,598,519.48", fontSize: 12, alignment: 'center' },
+        ],
+        )
+      }
+    }
+
+    var docDefinition = {
+      pageSize: 'A4',
+      pageOrientation: '',
+      pageMargins: [20, 130, 5, 50],
+      header: function (currentPage, pageCount, pageSize) {
+        return {
+          margin: [10, 5, 20, 10],
+          table: {
+            widths: [25, 500],
+            body: [
+              [
+                {
+                  border: [false, false, false, false],
+                  width: 160,
+                  text: "",
+                  alignment: 'left',
+
+                },
+                {
+                  border: [false, false, false, false], text: nominee[0].name, fontSize: 24, bold: true, alignment: 'center', margin: [0, 0, 0, 0]
+                },
+              ],
+              [
+                {
+                  border: [false, false, false, false], text: ``, fontSize: 14, alignment: 'left',
+                },
+                {
+                  border: [false, false, false, false], text: `${nominee[0].addr1} ${nominee[0].addr2} ${nominee[0].addr3} ${nominee[0].addr4}`, fontSize: 15, bold: true, alignment: 'center',
+                },
+              ],
+              [
+                {
+                  border: [false, false, false, false], text: ``, fontSize: 14, alignment: 'left',
+                },
+                {
+                  border: [false, false, false, false], text: `ใบส่งสินค้า (ชั่วคราว)`, fontSize: 24, bold: true, alignment: 'center',
+                },
+              ],
+            ],
+
+          },
+        };
+      },
+      footer: function (currentPage, pageCount) {
+        return {
+          margin: [20, -90, 50, 10],
+          table: {
+            widths: [127, 127, 127, 140],
+            body: [
+              [
+                {
+                  border: [false, false, false, false], text: `หมายเลขทะเบียนรถ : ${selectedData[0].car}`, fontSize: 14, bold: true, colSpan: 2
+                },
+                {
+                  border: [false, false, false, false], text: `` 
+                },
+                {
+                  border: [false, false, false, false], text: `สถานที่รับของ : ${selectedData[0].pickPlace ?? ''}`,fontSize: 14, bold: true, colSpan: 2
+                },
+                {
+                  border: [false, false, false, false], text: ''
+                },
+              ],
+              [
+                {
+                  border: [true, true, true, false], text: `หมายเหตุ : ${selectedData[0].remark}`, fontSize: 14, bold: true, colSpan: 4
+                },
+                {
+                  border: [false, false, false, false], text: ''
+                },
+                {
+                  border: [false, false, false, false], text: '' 
+                },
+                {
+                  border: [false, false, false, false], text: ''
+                },
+              ],
+      
+              [
+                {
+                  text: `\n ____________________ \n พิมพ์โดย`, fontSize: 12, bold: true, alignment: 'center',
+                },
+                {
+                  text: `\n ____________________ \n ผู้ส่งสินค้า`, fontSize: 12, bold: true, alignment: 'center',
+                },
+                {
+                  text: `\n ____________________ \n ผู้อนุมัติ`, fontSize: 12, bold: true, alignment: 'center',
+                },
+                {
+                  text: `\n _____________________________ \n ผู้รับสินค้า / วันที่รับสินค้า`, fontSize: 12, bold: true, alignment: 'center',
+                },
+              ],
+
+
+            ],
+          },
+        };
+      },
+      content: [
+        {
+          table: {
+            widths: [280, 100, 70, 70],
+            headerRows: 1,
+            body: data,
+          },
+        },
+      ],
+      defaultStyle: {
+        font: 'THSarabunNew',
+      },
+
+    };
+    pdfMake.createPdf(docDefinition).open()
+
+  }
+
+</script>

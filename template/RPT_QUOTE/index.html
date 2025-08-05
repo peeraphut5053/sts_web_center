@@ -1,0 +1,1535 @@
+<style>
+    .col-search {
+        padding-left: 3px;
+        padding-right: 3px;
+    }
+
+    /*    table.dataTable thead .sorting:after,
+          table.dataTable thead .sorting:before,
+          table.dataTable thead .sorting_asc:after,
+          table.dataTable thead .sorting_asc:before,
+          table.dataTable thead .sorting_asc_disabled:after,
+          table.dataTable thead .sorting_asc_disabled:before,
+          table.dataTable thead .sorting_desc:after,
+          table.dataTable thead .sorting_desc:before,
+          table.dataTable thead .sorting_desc_disabled:after,
+          table.dataTable thead .sorting_desc_disabled:before {
+              bottom: .5em;
+          }*/
+    .table thead th {
+        text-align: center;
+    }
+
+    .col-flt-page {
+        padding-top: 10px;
+        font-weight: bold;
+    }
+
+    #tblReport tbody tr td a {
+        cursor: pointer;
+    }
+
+    table.dataTable.fixedHeader-floating,
+    table.dataTable.fixedHeader-locked {
+        background-color: white;
+        margin-top: 50px !important;
+        margin-bottom: 0 !important;
+    }
+
+    .text-header {
+        font-weight: bold;
+        font-size: 20px;
+    }
+
+    .text-wrap {
+        white-space: normal;
+    }
+
+    .width-200 {
+        width: 200px;
+    }
+
+    input[type="checkbox"] {
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+
+    /*
+      .cb_lb{
+          margin-top:-5px;
+      }*/
+    .item-center {
+        display: flex;
+        justify-content: center;
+    }
+
+    datalist {
+        position: absolute;
+        max-height: 20em;
+        border: 0 none;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    datalist option {
+        font-size: 0.8em;
+        padding: 0.3em 1em;
+        background-color: #ccc;
+        cursor: pointer;
+    }
+
+    /* option active styles */
+    datalist option:hover,
+    datalist option:focus {
+        color: #fff;
+        background-color: #036;
+        outline: 0 none;
+    }
+
+    #browserdata option {
+        font-size: 1.8em;
+        padding: 0.3em 1em;
+        background-color: #ccc;
+        cursor: pointer;
+    }
+      /* ซ่อน Checkbox ดั้งเดิม */
+  .custom-checkbox input[type="checkbox"] {
+    display: none;
+  }
+
+  /* ตำแหน่งและขนาดของ Checkbox */
+  .custom-checkbox {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 20px;
+    margin: 3px;
+  }
+
+  /* สไตล์สำหรับ Checkmark */
+  .custom-checkbox .checkmark {
+    width: 20px;
+    height: 20px;
+    background-color: #ccc;
+    border-radius: 4px;
+    display: inline-block;
+    margin-right: 10px;
+    position: relative;
+    transition: background-color 0.3s;
+  }
+
+  /* สไตล์สำหรับ Checkbox เมื่อถูกเลือก */
+  .custom-checkbox input[type="checkbox"]:checked+.checkmark {
+    background-color: #4CAF50;
+  }
+
+  /* สไตล์สำหรับเครื่องหมายถูก */
+  .custom-checkbox .checkmark::after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
+
+  /* แสดงเครื่องหมายถูกเมื่อ Checkbox ถูกเลือก */
+  .custom-checkbox input[type="checkbox"]:checked+.checkmark::after {
+    display: block;
+  }
+
+  /* รูปแบบของเครื่องหมายถูก */
+  .custom-checkbox .checkmark::after {
+    left: 8px;
+    top: 3px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    transform: rotate(45deg);
+  }
+</style>
+<div class="row">
+    <h4 class="text-header text-center">ใบเสนอราคา</h4>
+</div>
+<div class="row item-center">
+    <div class="col-lg-2 col-md-3 col-sm-6 col-xs-6">
+        <div class="input-group">
+            <div class="input-group-addon">doc_num</div>
+            <input type="text" class="form-control" id="doc_num_quote" autocomplete="off" />
+        </div>
+    </div>
+    <div class="col-lg-2 col-md-3 col-sm-6 col-xs-6">
+        <div class="input-group">
+            <div class="input-group-addon">name</div>
+            <input type="text" class="form-control" id="name_quote" autocomplete="off" />
+        </div>
+    </div>
+    <div class="col-lg-2 col-md-3 col-sm-6 col-xs-6">
+        <div class="input-group">
+            <div class="input-group-addon">Start Date</div>
+            <input type="text" class="form-control" id="Start_Date_Quote" autocomplete="off" />
+        </div>
+    </div>
+    <div class="col-lg-2 col-md-3 col-sm-6 col-xs-6">
+        <div class="input-group">
+            <div class="input-group-addon">End Date</div>
+            <input type="text" class="form-control" id="End_Date_Quote" autocomplete="off" />
+        </div>
+    </div>
+    <div class="col-lg-1 col-md-2 col-sm-1 col-xs-6  col-search">
+        <button id="BtnSearchQuote" class="btn btn-info"><i class="fa fa-search"></i>&nbsp; Search</button>
+    </div>
+    <div class="col-lg-1 col-md-1 col-sm-6 col-xs-6 text-left">
+        <div class="flex gap-16">
+            <button id="btnAddQuote" class="btn btn-success"><i class="fa fa-searh"></i>เพิ่มข้อมูลใบเสนอราคา</button>
+            <!-- <a class="btn btn-success ml-32" href="module/STS_Custom_Data/Import_Excel_In.php"  id="btnTransfer">&nbsp;Import Excel (IN)</a> -->
+        </div>
+    </div>
+</div>
+<div class="row">
+    <table width="100%" class="table table-condensed table-bordered table-striped" id="tblReportDeliveryTemp">
+        <thead>
+            <tr>
+                <th class="bg-gray">doc_num</th>
+                <th class="bg-gray">cust_num</th>
+                <th class="bg-gray">name</th>
+                <th class="bg-gray">item</th>
+                <th class="bg-gray">Subject</th>
+                <th class="bg-gray">Tel.</th>
+                <th class="bg-gray">qty</th>
+                <th class="bg-gray">unit_price</th>
+                <th class="bg-gray">WeightPCS</th>
+                <th class="bg-gray">หน่วย</th>
+                <th class="bg-gray">ref_no</th>
+                <th class="bg-gray">remark</th>
+            </tr>
+        </thead>
+        <!--        <tbody id="tblReportList">
+                      <tr><td align="center" colspan="12">.... No item search ....</td></tr>
+     </tbody>-->
+    </table>
+</div>
+<!-- Modal -->
+<div class="modal fade bd-example-modal-lg" id="ModalAddQuote" role="dialog" aria-labelledby="myLargeModalLabel"
+    aria-hidden="true" style="cursor: move;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-center" id="exampleModalLabel">เพิ่มข้อมูลใบเสนอราคา</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+            </div>
+            <div class="modal-body">
+                <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                    <div class="input-group basis-full">
+                        <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">Customer
+                            *</div>
+                        <select style="font-weight: bold; font-size: 16px;" class="form-control" id="customer_quote">
+                            <option value=""></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                    <div class="input-group basis-full">
+                        <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">Ship to *
+                        </div>
+                        <select style="font-weight: bold; font-size: 16px;" class="form-control"
+                            id="customer_seq_quote">
+                            <option value=""></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                    <div class="input-group basis-2/4">
+                        <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">เรียน</div>
+                        <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
+                            class="form-control" id="cust_to">
+                    </div>
+                    <div class="input-group basis-2/4">
+                        <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">โทร</div>
+                        <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
+                            class="form-control" id="tel">
+                    </div>
+                </div>
+                <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                    <div class="input-group basis-2/4">
+                        <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">เรื่อง</div>
+                        <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
+                            class="form-control" id="subject">
+                    </div>
+                    <div class="input-group basis-2/4">
+                        <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">ref_no</div>
+                        <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
+                            class="form-control" id="ref_no_quote">
+                    </div>
+                </div>
+                    <span class="text-red-600">** ใส่เครื่องหมาย comma (,) ในช่องเงื่อนไขเพื่อปัดบรรทัดในหน้ารายงาน</span>
+              
+                <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                   <div class="input-group basis-2/4">
+                        <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">เงื่อนไข</div>
+                        <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
+                            class="form-control" id="remark_quote">
+                    </div>
+                    <div class="input-group basis-2/4">
+                        <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">หมายเหตุ</div>
+                        <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
+                            class="form-control" id="remark2_quote">
+                    </div>
+                </div>
+                <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                    <div class="input-group basis-full">
+                        <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">item *
+                        </div>
+                        <select style="font-weight: bold; font-size: 16px;" class="form-control" id="item_quote">
+                            <option value=""></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                    <div class="input-group basis-2/4">
+                        <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">qty *
+                        </div>
+                        <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
+                            class="form-control" id="qty_quote">
+                    </div>
+                    <div class="input-group basis-2/4">
+                        <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">หน่วย *
+                        </div>
+                        <select style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
+                            class="form-control" id="u_m_quote">
+                            <option value="PCS">PCS</option>
+                            <option value="KG">KG</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                    <div class="input-group basis-2/4">
+                        <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">unit
+                            price *</div>
+                        <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
+                            class="form-control" id="unit_price">
+                    </div>
+                      <div class="input-group basis-2/4">
+                        <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">weight pcs *</div>
+                        <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
+                            class="form-control" id="weight_pcs">
+                    </div>
+                    <input type="text" class="hidden" id="item_old_quote" disabled>
+                </div>
+                <button type="button" class="btn btn-warning" id="item_list_quote">View Item</button>
+                <button type="button" class="btn btn-success" id="add_item_quote">Add Item</button>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="SaveQuote" onclick="SaveQuote()">บันทึก</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade bd-example-modal-lg m-8" id="ModalQuoteItem" role="dialog" aria-labelledby="myLargeModalLabel"
+    aria-hidden="true" style="cursor: move;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-center" id="exampleModalLabel">รายการส่งสินค้า</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <table style="width: 100%" class="table table-condensed table-bordered table-striped"
+                        id="tblReportDeliveryTempItem">
+                        <thead>
+                            <tr>
+                                <th class="bg-gray">item</th>
+                                <th class="bg-gray">qty</th>
+                                <th class="bg-gray">unit price</th>
+                                <th class="bg-gray">weight pcs</th>
+                                <th class="bg-gray">u_m</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade bd-example-modal-lg m-8" id="ModalQuoteItemEdit" role="dialog"
+    aria-labelledby="myLargeModalLabel" aria-hidden="true" style="cursor: move;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-center" id="exampleModalLabel">แก้ไขข้อมูลใบเสนอราคา</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+            </div>
+            <div class="modal-body">
+                <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                    <div class="input-group basis-full">
+                        <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">เลขที่เอกสาร</div>
+                        <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
+                            class="form-control" disabled id="doc_quote">
+                    </div>
+                </div>
+                <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                    <div class="input-group basis-full">
+                        <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">Customer
+                            *</div>
+                        <select style="font-weight: bold; font-size: 16px;" class="form-control"
+                            id="customer_quote_edit">
+                            <option value=""></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                    <div class="input-group basis-full">
+                        <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">Ship to *
+                        </div>
+                        <select style="font-weight: bold; font-size: 16px;" class="form-control"
+                            id="customer_seq_quote_edit">
+                            <option value=""></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                    <div class="input-group basis-2/4">
+                        <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">เรื่อง</div>
+                        <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
+                            class="form-control" id="cust_to_edit">
+                    </div>
+                    <div class="input-group basis-2/4">
+                        <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">โทร</div>
+                        <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
+                            class="form-control" id="tel_edit">
+                    </div>
+                </div>
+                <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                    <div class="input-group basis-2/4">
+                        <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">เรื่อง</div>
+                        <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
+                            class="form-control" id="subject_edit">
+                    </div>
+                    <div class="input-group basis-2/4">
+                        <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">ref_no</div>
+                        <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
+                            class="form-control" id="ref_no_quote_edit">
+                    </div>
+                </div>
+                <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                   <div class="input-group basis-2/4">
+                        <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">เงื่อนไข</div>
+                        <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
+                            class="form-control" id="remark_quote_edit">
+                    </div>
+                    <div class="input-group basis-2/4">
+                        <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">หมายเหตุ</div>
+                        <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
+                            class="form-control" id="remark2_quote_edit">
+                    </div>
+                </div>
+                <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                    <div class="input-group basis-full">
+                        <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">item *
+                        </div>
+                        <select style="font-weight: bold; font-size: 16px;" class="form-control" id="item_quote_edit">
+                            <option value=""></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                    <div class="input-group basis-2/4">
+                        <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">qty *
+                        </div>
+                        <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
+                            class="form-control" id="qty_quote_edit">
+                    </div>
+                    <div class="input-group basis-2/4">
+                        <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">หน่วย *
+                        </div>
+                        <select style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
+                            class="form-control" id="u_m_quote_edit">
+                            <option value="PCS">PCS</option>
+                            <option value="KG">KG</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                    <div class="input-group basis-2/4">
+                        <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">unit
+                            price *</div>
+                        <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
+                            class="form-control" id="unit_price_edit">
+                    </div>
+                    <div class="input-group basis-2/4">
+                        <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">weight pcs *</div>
+                        <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
+                            class="form-control" id="weight_pcs_edit">
+                    </div>
+                </div>
+                <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                   <label class="custom-checkbox">
+                      <input type="checkbox" name='Revised' />
+                       <span class="checkmark"></span>
+                          Revised
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="SaveCalibration"
+                    onclick="SaveQuoteEdit()">บันทึก</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+  
+
+function roundToFixed(num, decimals) {
+    // แปลงเป็น Big number
+    const bigNum = new Big(num.toString());
+    
+    // ปัดเศษไปยังจำนวนทศนิยมที่ต้องการ
+    const rounded = bigNum.round(decimals);
+    
+    return rounded;
+}
+    // create datalist #item_list
+      var $items = $("#item_quote");
+      $items.select2({
+                                    placeholder: 'กรุณาเลือก Item',
+                                    allowClear: true,
+                                    width: '100%',
+                                    language: {
+                                        noResults: function () {
+                                            return "ไม่พบข้อมูล";
+                                        },
+                                        searching: function () {
+                                            return "กำลังค้นหา...";
+                                        }
+                                    },
+                                    // ใช้ AJAX แทน data
+                                        ajax: {
+                                        type: "GET",
+                                        url: "././module/RPT_QUOTE/data.php",
+                                        dataType: "json",
+                                        data: function (params) {
+                                            return {
+                                                load: "GetItem",
+                                                search: params.term, // ส่งคำค้นหาไปใน parameter
+                                            };
+                                        },
+                                        processResults: function (data, params) {
+                                            params.page = params.page || 1;
+
+                                            let results = [{ id: '', text: '' }].concat(data.map((item, i) => ({
+                                                id: item.description,
+                                                text: item.description,
+                                            })));
+
+                                            return {
+                                                results: results,
+                                                pagination: {
+                                                    more: (params.page * 30) < (data.length || 0) // ถ้ามีข้อมูลเพิ่มเติม
+                                                }
+                                            };
+                                        },
+                                        cache: true // เก็บ cache เพื่อลดการยิง API ซ้ำ
+                                    },
+                                    // กำหนดจำนวนตัวอักษรขั้นต่ำในการเริ่มค้นหา
+                                    minimumInputLength: 2,
+                                    // แสดงข้อความเมื่อพิมพ์ไม่ถึงตัวอักษรขั้นต่ำ
+                                    language: {
+                                        inputTooShort: function () {
+                                            return "กรุณากรอกอย่างน้อย 2 ตัวอักษร";
+                                        },
+                                        noResults: function () {
+                                            return "ไม่พบข้อมูล";
+                                        },
+                                        searching: function () {
+                                            return "กำลังค้นหา...";
+                                        }
+                                    }
+                                }).trigger('change');
+
+    var customer;
+    var tableItem = $('#tblReportDeliveryTempItem').DataTable({
+        "columnDefs": [
+            { "targets": '_all', "className": 'text-center' },
+            {
+                targets: [4], // column index ที่เก็บลำดับ
+                visible: false, // ซ่อน column
+                searchable: false
+            }
+        ],
+        order: [[4, 'asc']]
+    });
+
+    $(document).ready(function () {
+        $("#ModalAddQuote").draggable({
+            handle: ".modal-header"
+        });
+    });
+
+    $(document).ready(function () {
+        $("#ModalQuoteItem").draggable({
+            handle: ".modal-header"
+        });
+    });
+
+    $("#BtnSearchQuote").click(function () {
+        ReportDeliveryTemp();
+    });
+
+    $.ajax({
+        type: "GET",
+        url: "././module/RPT_Delivery_Temp/data.php",
+        dataType: "json",
+        data: { load: "Get" },
+        success: function (data) {
+            customer = [{ id: '', text: '' }].concat(data.map((item) => ({
+                id: item.cust_num,
+                text: item.name
+            })));
+        },
+    });
+
+    $('#btnAddQuote').click(function () {
+        var $select = $("#customer_quote");
+        $select.select2({
+            placeholder: 'กรุณาเลือก Customer',
+            allowClear: true,
+            width: '100%',
+            data: customer,
+            language: {
+                noResults: function () {
+                    return "ไม่พบข้อมูล";
+                }
+            }
+        }).trigger('change');
+        $('#ModalAddQuote').modal('show');
+
+    });
+
+    $("#item_list_quote").click(function () {
+        $('#ModalQuoteItem').modal('show');
+    })
+
+    $("#add_item_quote").click(function () {
+
+        var item = $("#item_quote").select2('data')[0].text;
+        var qty = $("#qty_quote").val();
+        var u_m = $("#u_m_quote").val();
+        var unit_price = $("#unit_price").val();
+        var weight = $("#weight_pcs").val();
+        if (item && qty && u_m && unit_price) {
+            try {
+                let rowIndex = 0;
+                tableItem.row.add([item, qty, unit_price, weight, u_m, rowIndex++]).draw();
+                // sorting by
+                $("#item_quote").val('').trigger('change');
+                $("#qty_quote").val('');
+                $("#unit_price").val('');
+                $("#weight_pcs").val('');
+                $("#item_list_quote").text(`View Item (${tableItem.rows().count()})`);
+
+            } catch (error) {
+                console.error(error);
+                alert("ไม่สามารถเพิ่มรายการได้");
+            }
+        } else {
+            alert("กรุณากรอกข้อมูลทั้งหมด");
+        }
+    })
+
+
+
+
+    $("#customer_quote").change(function () {
+        let cust_seq;
+        $("#customer_seq_quote").empty();
+        $.ajax({
+            type: "GET",
+            url: "././module/RPT_QUOTE/data.php",
+            dataType: "json",
+            data: { load: "GetCustomerSeq", cust_num: $(this).val() },
+            success: function (data) {
+                cust_seq = [{ id: '', text: '' }].concat(data.map((item) => ({
+                    id: item.cust_seq,
+                    text: item.cust_to
+                })));
+                var $select = $("#customer_seq_quote");
+                $select.select2({
+                    placeholder: 'กรุณาเลือก Cust_seq',
+                    allowClear: true,
+                    width: '100%',
+                    data: cust_seq,
+                    language: {
+                        noResults: function () {
+                            return "ไม่พบข้อมูล";
+                        }
+                    }
+                }).trigger('change').on('change', function (e) {
+                    $("#tel").val(data[0]?.cust_seq);
+                }).on('select2:select', function (e) {
+                    $("#cust_to").val(e.params.data.text);
+                })
+            },
+        });
+    });
+
+
+    $("#Start_Date_Quote, #End_Date_Quote").datepicker({
+        dateFormat: "yy-mm-dd",
+        showAnim: "slideDown"
+
+    });
+
+    $("#btnRemove").click(function () {
+        $("#tblReport").DataTable().clear().destroy();
+    });
+
+
+    function ReportDeliveryTemp() {
+        var OldHtml = $("#BtnSearchQuote").html();
+        var StartDate = $("#Start_Date_Quote").val();
+        var EndDate = $("#End_Date_Quote").val();
+        var doc_num = $("#doc_num_quote").val();
+        var name = $("#name_quote").val();
+
+        $("#BtnSearchQuote").html("<i class='fa fa-spinner fa-spin'></i>");
+        $("#tblReportDeliveryTemp").loading();
+        $("#tblReportDeliveryTemp tfoot").remove();
+        $.ajax({
+            type: "POST",
+            url: "././module/RPT_QUOTE/data.php",
+            dataType: "json",
+            beforeSend: function () {
+                $("#BtnSearchQuote").html("<i class='fa fa-spinner fa-spin'>");
+            },
+            data: {
+                load: "GetData",
+                StartDate: StartDate,
+                EndDate: EndDate,
+                doc_num: doc_num,
+                name: name
+            },
+            success: function (data) {
+
+                $("#tblReportDeliveryTemp").DataTable().clear();
+                $("#tblReportDeliveryTemp").dataTable({
+                    aaData: data,
+                    paging: false,
+                    fixedHeader: true,
+                    destroy: true,
+                    processing: true,
+                    scrollY: "65vh",
+                    scrollCollapse: true,
+                    scrollX: true,
+                    select: true,
+                    columnDefs: [
+                        {
+                            targets: [0],
+                            width: 50
+                        },
+                        {
+                            targets: [1],
+                            width: 50
+                        },
+                        {
+                            targets: [2],
+                            width: 200
+                        },
+                        {
+                            targets: [3],
+                            width: 200
+                        },
+                        {
+                            targets: [4],
+                            width: 50
+                        },
+                        {
+                            targets: [5],
+                            width: 50
+                        },
+                        {
+                            targets: [6],
+                            width: 50
+                        },
+                        {
+                            targets: [7],
+                            width: 50
+                        },
+                        {
+                            targets: [8],
+                            width: 100
+                        },
+                        {
+                            targets: [9],
+                            width: 60
+                        }
+                    ],
+                    columns: [
+                        {
+                            data: "doc_num",
+                            className: "text-center",
+                        },
+                        {
+                            data: "cust_num",
+                            className: "text-center",
+                        },
+                        {
+                            data: "cust_to",
+                            className: "text-center",
+                        },
+                        {
+                            data: "item",
+                            className: "text-center",
+                        },
+                        {
+                            data: "cust_subject",
+                            className: "text-center",
+                        },
+                        {
+                            data: "cust_tel",
+                            className: "text-center",
+                        },
+                        {
+                            data: "qty",
+                            className: "text-center",
+                        },
+                        {
+                            data: "unit_price",
+                            className: "text-center",
+                        },
+                        {
+                            data: "weightPCS",
+                            className: "text-center",
+                        },
+                        {
+                            data: "u_m",
+                            className: "text-center",
+                        },
+                        {
+                            data: "ref_no",
+                            className: "text-center",
+                        },
+                        {
+                            data: "remark2",
+                            className: "text-center",
+                        },
+                    ],
+                    dom:
+                        "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                        "<'row'<'col-md-12'tr>>" +
+                        "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                    buttons: [
+                        {
+                            extend: "print",
+                            text: "<i class='fa fa-print'></i>&nbsp;Print",
+                            title: "",
+                        },
+                        {
+                            extend: "excel",
+                            footer: true,
+                            text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                            title:
+                                "รายงานใบเสนอราคา " + GetCurrDateTime(),
+                        },
+                        {
+                            text: `<button type="button" class="btn btn-info">Edit</button>`,
+                            action: function (e, dt, node, config) {
+                                // on selected
+                                let selected = Array.from(dt.rows('.selected').data());
+                                if (selected.length == 0) {
+                                    alert("กรุณารายการที่ต้องการแก้ไข");
+                                    return false;
+                                }
+
+                                var $select = $("#customer_quote_edit");
+                                $select.select2({
+                                    placeholder: 'กรุณาเลือก Customer',
+                                    allowClear: true,
+                                    width: '100%',
+                                    data: customer,
+                                    language: {
+                                        noResults: function () {
+                                            return "ไม่พบข้อมูล";
+                                        }
+                                    }
+                                }).trigger('change');
+
+
+                                $select.val(selected[0].cust_num).trigger('change');
+
+                                var $select_seq = $("#customer_seq_quote_edit");
+
+                                $select_seq.select2({
+                                    placeholder: 'กรุณาเลือก Customer',
+                                    allowClear: true,
+                                    width: '100%',
+                                    data: customer,
+                                    language: {
+                                        noResults: function () {
+                                            return "ไม่พบข้อมูล";
+                                        }
+                                    }
+                                }).trigger('change');
+
+                                let cust_seq;
+                                $("#customer_seq_quote_edit").empty();
+                                $.ajax({
+                                    type: "GET",
+                                    url: "././module/RPT_QUOTE/data.php",
+                                    dataType: "json",
+                                    data: { load: "GetCustomerSeq", cust_num: selected[0].cust_num },
+                                    success: function (data) {
+                                        cust_seq = [{ id: '', text: '' }].concat(data.map((item) => ({
+                                            id: item.cust_seq,
+                                            text: item.cust_to
+                                        })));
+                                        var $select_seq = $("#customer_seq_quote_edit");
+                                        $select_seq.select2({
+                                            placeholder: 'กรุณาเลือก Cust_seq',
+                                            allowClear: true,
+                                            width: '100%',
+                                            data: cust_seq,
+                                            language: {
+                                                noResults: function () {
+                                                    return "ไม่พบข้อมูล";
+                                                }
+                                            }
+                                        }).trigger('change');
+                                        $select_seq.val(selected[0].cust_seq).trigger('change');
+                                    },
+                                });
+
+                                // on customer_edit change
+
+                                $("#customer_quote_edit").change(function () {
+                                    let cust_num = $(this).val();
+                                    $("#customer_seq_quote_edit").empty();
+                                    $.ajax({
+                                        type: "GET",
+                                        url: "././module/RPT_QUOTE/data.php",
+                                        dataType: "json",
+                                        data: { load: "GetCustomerSeq", cust_num: cust_num },
+                                        success: function (data) {
+                                            cust_seq = [{ id: '', text: '' }].concat(data.map((item) => ({
+                                                id: item.cust_seq,
+                                                text: item.cust_to
+                                            })));
+                                            var $select_seq = $("#customer_seq_quote_edit");
+                                            $select_seq.select2({
+                                                placeholder: 'กรุณาเลือก Cust_seq',
+                                                allowClear: true,
+                                                width: '100%',
+                                                data: cust_seq,
+                                                language: {
+                                                    noResults: function () {
+                                                        return "ไม่พบข้อมูล";
+                                                    }
+                                                }
+                                            }).trigger('change')
+                                        },
+                                    });
+                                });
+
+                                var $items = $("#item_quote_edit");
+
+                                $items.select2({
+                                    placeholder: 'กรุณาเลือก Item',
+                                    allowClear: true,
+                                    width: '100%',
+                                    language: {
+                                        noResults: function () {
+                                            return "ไม่พบข้อมูล";
+                                        },
+                                        searching: function () {
+                                            return "กำลังค้นหา...";
+                                        }
+                                    },
+                                    // ใช้ AJAX แทน data
+                                    ajax: {
+                                        type: "GET",
+                                        url: "././module/RPT_QUOTE/data.php",
+                                        dataType: "json",
+                                        data: function (params) {
+                                            return {
+                                                load: "GetItem",
+                                                search: params.term, // ส่งคำค้นหาไปใน parameter
+                                            };
+                                        },
+                                        processResults: function (data, params) {
+                                            params.page = params.page || 1;
+
+                                            let results = [{ id: '', text: '' }].concat(data.map((item, i) => ({
+                                                id: item.description,
+                                                text: item.description,
+                                            })));
+
+                                            return {
+                                                results: results,
+                                                pagination: {
+                                                    more: (params.page * 30) < (data.length || 0) // ถ้ามีข้อมูลเพิ่มเติม
+                                                }
+                                            };
+                                        },
+                                        cache: true // เก็บ cache เพื่อลดการยิง API ซ้ำ
+                                    },
+                                    // กำหนดจำนวนตัวอักษรขั้นต่ำในการเริ่มค้นหา
+                                    minimumInputLength: 2,
+                                    // แสดงข้อความเมื่อพิมพ์ไม่ถึงตัวอักษรขั้นต่ำ
+                                    language: {
+                                        inputTooShort: function () {
+                                            return "กรุณากรอกอย่างน้อย 2 ตัวอักษร";
+                                        },
+                                        noResults: function () {
+                                            return "ไม่พบข้อมูล";
+                                        },
+                                        searching: function () {
+                                            return "กำลังค้นหา...";
+                                        }
+                                    }
+                                }).trigger('change')
+                                    .change(function (e) {
+                                        var item = $(this).val();
+                                        $("#item_quote_edit").val(item);
+                                    });
+
+                                var option = new Option(selected[0].item, selected[0].item, true, true);
+                                $("#item_quote_edit").append(option);
+                                $("#item_quote_edit").val(selected[0].item).trigger('change');
+                                $("#cust_to_edit").val(selected[0].cust_to);
+                                $("#tel_edit").val(selected[0].cust_tel);
+                                $("#subject_edit").val(selected[0].cust_subject);
+                                $("#remark2_quote_edit").val(selected[0].remark2);
+                                $("#doc_quote").val(selected[0].doc_num);
+                                // set checkbox name Revised 
+                                if (selected[0].revised == 1) {
+                                   $('input[name="Revised"]').prop('checked', selected[0].revised == 1);
+                                   // can disable checkbox
+                                   $('input[name="Revised"]').attr("disabled", true);
+                                } else {
+                                    $('input[name="Revised"]').attr("disabled", false);
+                                    $('input[name="Revised"]').prop('checked', false);
+                                }
+                              
+                                $("#item_old_quote").val(selected[0].item);
+                                $("#qty_quote_edit").val(selected[0].qty);
+                                $("#u_m_quote_edit").val(selected[0].u_m);
+                                $("#ref_no_quote_edit").val(selected[0].ref_no);
+                                $("#remark_quote_edit").val(selected[0].remark);
+                                $("#unit_price_edit").val(selected[0].unit_price);
+                                $("#weight_pcs_edit").val(selected[0].weightPCS);
+                                $("#ModalQuoteItemEdit").modal("show");
+
+                            }
+                        },
+                        {
+                            text: `<button type="button" class="btn btn-danger">Delete</button>`,
+                            action: function (e, dt, node, config) {
+                                // on selected
+                                let selected = Array.from(dt.rows('.selected').data());
+                                if (selected.length == 0) {
+                                    alert("กรุณารายการที่ต้องการลบ");
+                                    return false;
+                                }
+
+                                if (confirm("ต้องการลบรายการนี้ ใช่หรือไม่ ?")) {
+                                    $.ajax({
+                                        type: "GET",
+                                        url: "././module/RPT_QUOTE/data.php",
+                                        dataType: "json",
+                                        data: { load: "DeleteQuoteItem", doc_num: selected[0].doc_num, item: selected[0].item },
+                                        success: function (data) {
+                                            alert(`ลบรายการ ${selected[0].item} ของ ${selected[0].doc_num} สําเร็จ`);
+                                            ReportDeliveryTemp();
+                                        },
+                                    });
+                                }
+                            }
+                        },
+                        {
+                            text: `<button type="button" class="btn btn-info">พิมพ์ใบส่งของ</button>`,
+                            action: function (e, dt, node, config) {
+                                // on selected
+                                let selected = Array.from(dt.rows('.selected').data());
+                                let all = Array.from(dt.rows().data());
+                                if (selected.length == 0) {
+                                    alert("กรุณารายการที่ต้องการพิมพ์ใบส่งของ");
+                                    return false;
+                                }
+
+                                const item_list = all.filter((item) => {
+                                    return item.doc_num == selected[0].doc_num
+                                });
+
+                                PrintSetting(item_list);
+                            }
+                        },
+                    ],
+                });
+                $("#tblReportDeliveryTemp").loading("stop");
+                $("#BtnSearchQuote").html(OldHtml);
+            },
+            error: function (e) {
+                $("#tblReportDeliveryTemp").loading("stop");
+                $("#BtnSearchQuote").html(OldHtml);
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            },
+        });
+    }
+
+
+    function SaveQuoteEdit() {
+        var doc_num = $("#doc_quote").val();
+        var cust_num = $("#customer_quote_edit").val();
+        var cust_seq = $("#customer_seq_quote_edit").val();
+        var remark = $("#remark_quote_edit").val();
+        var ref_no = $("#ref_no_quote_edit").val();
+        var cust_to = $("#cust_to_edit").val();
+        var tel = $("#tel_edit").val();
+        var subject = $("#subject_edit").val();
+        var remark2 = $("#remark2_quote_edit").val();
+        var item = $("#item_quote_edit").val();
+        var qty = $("#qty_quote_edit").val();
+        var u_m = $("#u_m_quote_edit").val();
+        var unit_price = $("#unit_price_edit").val();
+        var weight_pcs = $("#weight_pcs_edit").val();
+        var item_old = $("#item_old_quote").val();
+        var revised = $('input[name="Revised"]:checked').val();
+
+        if (item.length == 0) {
+            alert("กรุณากรอกรายการสินค้าอย่างน้อย 1 รายการ");
+            return false;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "././module/RPT_QUOTE/data.php",
+            dataType: "json",
+            data: {
+                load: "UpdateQuote",
+                doc_num: doc_num,
+                cust_num: cust_num,
+                cust_seq: cust_seq,
+                remark: remark,
+                ref_no: ref_no,
+                cust_to: cust_to,
+                tel: tel,
+                subject: subject,
+                remark2: remark2,
+                item: item,
+                qty: qty,
+                u_m: u_m,
+                unit_price: unit_price,
+                weight_pcs: weight_pcs,
+                item_old: item_old,
+                revised: revised == 'on' ? 1 : 0
+
+            },
+            success: function (data) {
+                alert("บันทึกข้อมูลสําเร็จ");
+                $("#customer_quote_edit").val("");
+                $("#customer_seq_quote_edit").val("");
+                $("#remark_quote_edit").val("");
+                $("#ref_no_quote_edit").val("");
+                $("#cust_to_edit").val("");
+                $("#tel_edit").val("");
+                $("#subject_edit").val("");
+                $("#remark2_quote_edit").val("");
+                $("#item_quote_edit").val("");
+                $("#qty_quote_edit").val("");
+                $("#unit_price_edit").val("");
+                $("#weight_pcs_edit").val("");
+                $("#item_old_quote").val("");
+                $("#ModalQuoteItemEdit").modal("hide");
+                ReportDeliveryTemp();
+            },
+            error: function (e) {
+                alert("บันทึกข้อมูลไม่สําเร็จ กรุณาตรวจสอบข้อมูลแล้วลองใหม่อีกครั้ง");
+            },
+        });
+    }
+
+    function SaveQuote() {
+        var cust_num = $("#customer_quote").val();
+        var cust_seq = $("#customer_seq_quote").val();
+        var remark = $("#remark_quote").val();
+        var ref_no = $("#ref_no_quote").val();
+        var cust_to = $("#cust_to").val();
+        var tel = $("#tel").val();
+        var subject = $("#subject").val();
+        var remark2 = $("#remark2_quote").val();
+        var item = [];
+        var qty = [];
+        var u_m = [];
+        var unit_price = [];
+        var weight_pcs = [];
+
+        tableItem.rows().data().each(function (data, index) {
+            item.push(data[0]);
+            qty.push(data[1]);
+            unit_price.push(data[2]);
+            weight_pcs.push(data[3]);
+            u_m.push(data[4]);
+        });
+
+        if (item.length == 0) {
+            alert("กรุณากรอกรายการสินค้าอย่างน้อย 1 รายการ");
+            return false;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "././module/RPT_QUOTE/data.php",
+            dataType: "json",
+            data: {
+                load: "SaveQuote",
+                cust_num: cust_num,
+                cust_seq: cust_seq,
+                remark: remark,
+                ref_no: ref_no,
+                cust_to: cust_to,
+                tel: tel,
+                subject: subject,
+                remark2: remark2,
+                item: JSON.stringify(item),
+                qty: JSON.stringify(qty),
+                unit: JSON.stringify(unit_price),
+                weight_pcs: JSON.stringify(weight_pcs),
+                u_m: JSON.stringify(u_m),
+            },
+            success: function (data) {
+                alert(`บันทึกข้อมูลสําเร็จ เลขที่เอกสาร : ${data}`);
+                $("#customer_quote").val("");
+                $("#customer_seq_quote").val("");
+                $("#date_quote").val("");
+                $("#remark_quote").val("");
+                $("#ref_no_quote").val("");
+                $("#item_quote").val("");
+                $("#qty_quote").val("");
+                $("#unit_price").val("");
+                tableItem.clear().draw();
+                $("#item_list_quote").text(`View Item`);
+                $("#ModalAddQuote").modal("hide");
+                ReportDeliveryTemp();
+            },
+            error: function (e) {
+                alert("บันทึกข้อมูลไม่สําเร็จ");
+            },
+        });
+    }
+
+    var select_status = [
+        "บริษัท สหไทยสตีลไพพ์ จำกัด (มหาชน)",
+        "บริษัท บี เอ็น เค สตีล จำกัด",
+        "บริษัท โกลบอล อินไซท์ จำกัด",
+        "บริษัท บูลไพพ์ สตีลเซ็นเตอร์ จำกัด",
+    ];
+
+    function PrintSetting(selectedData) {
+        var content = "";
+        for (var i = 0; i < select_status.length; i++) {
+            let index = i + 1;
+            content += '<option value="' + index + '">' + select_status[i] + '</option>';
+        }
+        $.confirm({
+            title: "เลือกบริษัท",
+            theme: "modern",
+            content: '<select style="margin-bottom: 10px" class="form-control" id="select_status">' + content + '</select>',
+            buttons: {
+                confirm: function () {
+                    var selectedStatus = $("#select_status").val();
+                    if (selectedStatus == "-- select --") {
+                        $.alert("กรุณาเลือกบริษัท");
+                        return false;
+                    }
+                    // Validate status here if needed
+                    $.ajax({
+                        type: "POST",
+                        dataType: "json",
+                        url: "././module/RPT_Delivery_Temp/data.php",
+                        data: {
+                            load: "GetNominee",
+                            nominee: selectedStatus
+                        },
+                        success: function (data) {
+                            PrintDeliveryTemp(selectedData, data);
+
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                            $.alert("");
+                        },
+                    });
+                },
+                cancel: function () {
+                },
+            },
+        });
+    }
+
+
+    function PrintDeliveryTemp(selectedData, nominee) {
+
+        console.log(selectedData, nominee);
+
+        pdfMake.fonts = {
+            THSarabunNew: {
+                normal: 'THSarabunNew.ttf',
+                bold: 'THSarabunNew Bold.ttf',
+                italics: 'THSarabunNew-Italic.ttf',
+                bolditalics: 'THSarabunNew-BoldItalic.ttf'
+            }
+        };
+
+        const data = [];
+        const remark = selectedData[0].remark.replace(/,/g, '\n');
+        data.push([
+            { border: [true, true, false, false], text: `เรียน : ${selectedData[0].cust_to}`, colSpan: 2, fontSize: 13, bold: true, alignment: 'left', },
+            {},
+            { border: [true, true, true, false], text: `เลขที่เอกสาร : ${selectedData[0].doc_num}`, fontSize: 13, colSpan: 5, bold: true, alignment: 'center' },
+            { text: "", fontSize: 11, alignment: 'center' },
+            { text: "", fontSize: 11, alignment: 'center' },
+            { text: "", fontSize: 11, alignment: 'center' },
+            { text: "", fontSize: 11, alignment: 'center' },
+        ]);
+
+        data.push([
+             { border: [true, false, false, false], text: `โทร : ${selectedData[0].cust_tel ?? ""}`, colSpan: 2, fontSize: 13, bold: true, alignment: 'left', },
+             {},
+            { border: [true, false, true, false], text: `วันที่ : ${moment(selectedData[0].createdate.date).format('DD/MM/YYYY')}`, fontSize: 13, bold: true, colSpan: 5, rowSpan: 3, alignment: 'center', margin: [35, 0, 0, 0] },
+            { text: "", fontSize: 11, alignment: 'center' },
+            { text: "", fontSize: 11, alignment: 'center' },
+            { text: "", fontSize: 11, alignment: 'center' },
+            { text: "", fontSize: 11, alignment: 'center' },
+        ]);
+
+        data.push([
+            { border: [true, false, false, false], text: `เรื่อง : ${selectedData[0].cust_subject ?? ""}`, rowSpan: 2, colSpan: 2, fontSize: 13, bold: true, alignment: 'left', },
+           {},
+            { border: [true, false, true, false], text: ``, fontSize: 13, bold: true, colSpan: 3, alignment: 'center', margin: [-25, 0, 0, 0] },
+            { text: "", fontSize: 11, alignment: 'center' },
+             { text: "", fontSize: 11, alignment: 'center' },
+             { text: "", fontSize: 11, alignment: 'center' },
+            { text: "", fontSize: 11, alignment: 'center' },
+        
+            
+        ]);
+
+        data.push([
+            {},
+            { border: [true, false, true, false], text: ``, fontSize: 13, bold: true, colSpan: 3, alignment: 'center', margin: [20, 0, 0, 0] },
+            { text: "", fontSize: 11, alignment: 'center' },
+            { text: "", fontSize: 11, alignment: 'center' },
+            { text: "", fontSize: 11, alignment: 'center' },
+            { text: "", fontSize: 11, alignment: 'center' },
+            { text: "", fontSize: 11, alignment: 'center' },
+       
+        ]);
+
+        data.push([
+            { text: "Item", fontSize: 13, bold: true, alignment: 'center' },
+            { text: "Description", fontSize: 13, bold: true, alignment: 'center' },
+            { text: "Total Weight", fontSize: 13, bold: true, alignment: 'center' },
+            { text: "Weight/PCS", fontSize: 13, bold: true, alignment: 'center' },
+            { text: "Qty", fontSize: 13, bold: true, alignment: 'center' },
+            { text: "Price/PCS", fontSize: 13, bold: true, alignment: 'center' },
+            { text: "Amount", fontSize: 13, bold: true, alignment: 'center' },
+            
+        ]);
+
+        for (let i = 0; i < selectedData.length; i++) {
+            data.push([
+                { text: i+1, fontSize: 12, alignment: 'center' },
+                { text: selectedData[i].item, fontSize: 12, alignment: 'left' },
+                { text: addCommas(Math.round(Number(selectedData[i].weightPCS) * Number(selectedData[i].qty))), fontSize: 12, alignment: 'center' },
+                { text: selectedData[i].weightPCS, fontSize: 12, alignment: 'center' },
+                { text: Number(selectedData[i].qty).toFixed(0), fontSize: 12, alignment: 'center' },
+                { text: addCommas(selectedData[i].unit_price), fontSize: 12, alignment: 'center' },
+                { text: addCommas(roundToFixed((Number(selectedData[i].qty) * Number(selectedData[i].unit_price)),2).toFixed(2)), fontSize: 12, alignment: 'center' },
+            ],
+            )
+
+            if (i === selectedData.length - 1) {
+                data.push([
+                    { text: `รวม`, fontSize: 12, colSpan: 2, alignment: 'center', style: 'header' },
+                    {},
+                    { text: addCommas(selectedData.reduce((total, item) => total + Math.round(Number(item.weightPCS) * Number(item.qty)), 0)), fontSize: 12, alignment: 'center' },
+                    { text: '', fontSize: 12, alignment: 'center' },
+                    { text: selectedData.reduce((total, item) => total + Number(item.qty), 0), fontSize: 12, alignment: 'center' },
+                    { text: '', fontSize: 12, alignment: 'center' },
+                    { text: addCommas(roundToFixed((selectedData.reduce((total, item) => total + (Number(item.qty) * Number(item.unit_price)), 0)),2).toFixed(2)), fontSize: 12, alignment: 'center' },
+                ],
+                )
+
+                const totalAmount = selectedData.reduce((total, item) => total + (Number(item.qty) * Number(item.unit_price)), 0);
+                const vat = roundToFixed(totalAmount * 0.07, 2);
+
+                 data.push([
+                    { text: `ภาษีมูลค่าเพิ่ม/Vat 7%`, fontSize: 12, colSpan: 6, alignment: 'center', style: 'header' },
+                    {},
+                    {},
+                    {},
+                    {},
+                    {},
+                    { text: addCommas(vat.toFixed(2)), fontSize: 12, alignment: 'center' },
+                ],
+                )
+
+                 data.push([
+                    { text: `รวมทั้งสิ้น/Grand Total`, fontSize: 12, colSpan: 6, alignment: 'center', style: 'header' },
+                    {},
+                    {},
+                    {},
+                    {},
+                    {},
+                    { text: addCommas(roundToFixed(Number(totalAmount) + Number(vat), 2).toFixed(2)), fontSize: 12, alignment: 'center' },
+                ],
+                )
+            }
+        }
+
+
+        let dataReason = [];
+        dataReason.push([
+            { text: `ลำดับ`, fontSize: 12, alignment: 'center', style: 'header' },
+            { text: "รายการ", fontSize: 12, alignment: 'center' },
+            { text: "น้ำหนัก/กิโลกรัม", fontSize: 12, alignment: 'center' },
+        ],
+        )
+
+        let dataNow2 = [1, 2, 3, 4]
+
+        for (let i = 0; i < dataNow2.length; i++) {
+            dataReason.push([
+                { text: i + 1, alignment: 'center' },
+                { text: "เหล็กสลิต", fontSize: 12, alignment: 'center' },
+                { text: "793,458.00", fontSize: 12, alignment: 'center' },
+            ],
+            )
+
+            if (i === dataNow2.length - 1) {
+                dataReason.push([
+                    { text: `รวม`, fontSize: 12, alignment: 'center', style: 'header', colSpan: 2 },
+                    { text: "", fontSize: 12, alignment: 'center' },
+                    { text: "3,598,519.48", fontSize: 12, alignment: 'center' },
+                ],
+                )
+            }
+        }
+
+        var docDefinition = {
+            pageSize: 'A4',
+            pageOrientation: '',
+            pageMargins: [20, 130, 5, 50],
+            header: function (currentPage, pageCount, pageSize) {
+                return {
+                    margin: [10, 5, 20, 10],
+                    table: {
+                        widths: [500, 50],
+                        body: [
+                            [
+                                {
+                                    border: [false, false, false, false], text: nominee[0].name, fontSize: 24, bold: true, alignment: 'center', margin: [0, 0, 0, 0],colSpan: 2
+                                },
+                                {
+                                    border: [false, false, false, false], text: '', fontSize: 24, bold: true, alignment: 'center'
+                                },
+                            ],
+                            [
+                                {
+                                    border: [false, false, false, false], text: `${nominee[0].addr1} ${nominee[0].addr2} ${nominee[0].addr3} ${nominee[0].addr4}`, fontSize: 15, bold: true, alignment: 'center', colSpan: 2
+                                },
+                                {
+                                    border: [false, false, false, false], text: ``, fontSize: 15, bold: true, alignment: 'center',
+                                },
+                            ],
+                            [
+                                {
+                                    border: [false, false, false, false], text: `ใบเสนอราคา`, fontSize: 24, bold: true, alignment: 'center', margin: [50, 0, 0, 0]
+                                },
+                                {
+                                    border: [false, false, false, false], text: `${selectedData[0].revised == 1 ? "Resvised" : ""}`, fontSize: 14, bold: true, alignment: 'center', color: 'red', margin: [0, 20, 0, 0]
+                                },
+                            ]
+                        ],
+
+                    },
+                };
+            },
+            footer: function (currentPage, pageCount) {
+                return {
+                    margin: [20, -180, 50, 10],
+                    table: {
+                        widths: [175, 175, 175],
+                        body: [
+                             [
+                                {
+                                    border: [true, true, true, false], text: `${remark}`, fontSize: 14, bold: true, colSpan: 3
+                                },
+                                {
+                                    border: [false, false, false, false], text: ''
+                                },
+                                {
+                                    border: [false, false, false, false], text: ''
+                                }
+                            ],
+                            [
+                                {
+                                    border: [true, false, true, false], text: `หมายเหตุ : ${selectedData[0].remark2}`, fontSize: 14, bold: true, colSpan: 3
+                                },
+                                {
+                                    border: [false, false, false, false], text: ''
+                                },
+                                {
+                                    border: [false, false, false, false], text: ''
+                                }
+                            ],
+                            [
+                                {
+                                    text: `\n ____________________ \n ผู้เสนอราคา`, fontSize: 12, bold: true, alignment: 'center',
+                                },
+                                {
+                                    text: `\n ____________________ \n ผู้สั่งซื้อ`, fontSize: 12, bold: true, alignment: 'center',
+                                },
+                                {
+                                    text: `\n ____________________ \n ผู้อนุมัติ`, fontSize: 12, bold: true, alignment: 'center',
+                                }
+                            ],
+
+
+                        ],
+                    },
+                };
+            },
+            content: [
+                {
+                    table: {
+                        widths: [20,260, 50, 40, 30, 40,50],
+                        headerRows: 1,
+                        body: data,
+                    },
+                },
+            ],
+            defaultStyle: {
+                font: 'THSarabunNew',
+            },
+
+        };
+        pdfMake.createPdf(docDefinition).open()
+
+    }
+
+</script>
