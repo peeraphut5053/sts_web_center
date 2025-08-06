@@ -367,6 +367,75 @@
     </div>
 </div>
 
+<!-- Modal -->
+<div class="modal fade bd-example-modal-lg" id="ModalAddQuoteItem" role="dialog" aria-labelledby="myLargeModalLabel"
+    aria-hidden="true" style="cursor: move;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-center" id="exampleModalLabel">เพิ่ม Item</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+            </div>
+            <div class="modal-body">
+                <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                    <div class="input-group basis-full">
+                        <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">เลขที่เอกสาร
+                            *</div>
+                        <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
+                            class="form-control" disabled id="doc_num_add">
+                    </div>
+                </div>
+                <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                    <div class="input-group basis-full">
+                         <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">item *</div>
+            <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off" class="form-control"
+              list="list_item" id="item_quote_add">
+            <datalist id="list_item">
+            </datalist>
+                    </div>
+                </div>
+                <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                    <div class="input-group basis-2/4">
+                        <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">qty *
+                        </div>
+                        <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
+                            class="form-control" id="qty_quote_add">
+                    </div>
+                    <div class="input-group basis-2/4">
+                        <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">หน่วย *
+                        </div>
+                        <select style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
+                            class="form-control" id="u_m_quote_add">
+                            <option value="PCS">PCS</option>
+                            <option value="KG">KG</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                    <div class="input-group basis-2/4">
+                        <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">unit
+                            price *</div>
+                        <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
+                            class="form-control" id="unit_price_add">
+                    </div>
+                      <div class="input-group basis-2/4">
+                        <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">weight pcs *</div>
+                        <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
+                            class="form-control" id="weight_pcs_add">
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="AddItemQuote" onclick="SaveAddItemQuote()">บันทึก</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="modal fade bd-example-modal-lg m-8" id="ModalQuoteItemEdit" role="dialog"
     aria-labelledby="myLargeModalLabel" aria-hidden="true" style="cursor: move;">
     <div class="modal-dialog modal-lg">
@@ -934,6 +1003,20 @@ $.ajax({
                             }
                         },
                         {
+                            text: `<button type="button" class="btn btn-success">Add Item</button>`,
+                            action: function (e, dt, node, config) {
+                                // on selected
+                                let selected = Array.from(dt.rows('.selected').data());
+                                if (selected.length == 0) {
+                                    alert("กรุณารายการที่ต้องการเพิ่ม Item");
+                                    return false;
+                                }
+
+                                $("#doc_num_add").val(selected[0].doc_num);
+                                $("#ModalAddQuoteItem").modal("show");
+                            }
+                        },
+                        {
                             text: `<button type="button" class="btn btn-danger">Delete</button>`,
                             action: function (e, dt, node, config) {
                                 // on selected
@@ -1142,6 +1225,65 @@ $.ajax({
             },
             error: function (e) {
                 alert("บันทึกข้อมูลไม่สําเร็จ");
+            },
+        });
+    }
+
+    function SaveAddItemQuote() {
+        var doc_num = $("#doc_num_add").val();
+        var item = $("#item_quote_add").val();
+        var qty = $("#qty_quote_add").val();
+        var u_m = $("#u_m_quote_add").val();
+        var unit_price = $("#unit_price_add").val();
+        var weight_pcs = $("#weight_pcs_add").val();
+    
+        if (item.length == 0) {
+            alert("กรุณากรอก Item");
+            return false;
+        }
+         
+        if (qty.length == 0) {
+            alert("กรุณากรอก Qty");
+            return false;
+        }
+        if (u_m.length == 0) {
+            alert("กรุณาเลือกหน่วย");
+            return false;
+        }
+        if (unit_price.length == 0) {
+            alert("กรุณากรอก Unit Price");
+            return false;
+        }
+        if (weight_pcs.length == 0) {
+            alert("กรุณากรอก Weight");
+            return false;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "././module/RPT_QUOTE/data.php",
+            dataType: "json",
+            data: {
+                load: "AddItem",
+                doc_num: doc_num,
+                item: item,
+                qty: qty,
+                u_m: u_m,
+                unit_price: unit_price,
+                weight_pcs: weight_pcs,
+            },
+            success: function (data) {
+                alert("บันทึกข้อมูลสําเร็จ");
+                $("#doc_num_add").val("");
+                $("#item_quote_add").val("");
+                $("#qty_quote_add").val("");
+                $("#unit_price_add").val("");
+                $("#weight_pcs_add").val("");
+                $("#ModalAddQuoteItem").modal("hide");
+                ReportDeliveryTemp();
+            },
+            error: function (e) {
+                alert("บันทึกข้อมูลไม่สําเร็จ กรุณาตรวจสอบข้อมูลแล้วลองใหม่อีกครั้ง");
             },
         });
     }

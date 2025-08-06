@@ -380,4 +380,19 @@ where 1=1 $wh
         array_splice($rs, count($rs) - 1, 1);
         return $rs;
     }
+
+    function AddQuoteItem($doc_num, $item, $qty, $u_m, $unit_price, $weight_pc) {
+        $query = "INSERT INTO STS_quote_item (doc_num, item, qty, u_m, unit_price, WeightPCS) VALUES ('$doc_num', '$item', '$qty', '$u_m', '$unit_price', '$weight_pc')";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+    function AddDeliveryTempItem($doc_num, $item, $qty, $u_m, $act_weight) {
+        $query = "INSERT INTO STS_delivery_temp_item (doc_num,item,qty,u_m,ActWeight) VALUES ('$doc_num','$item','$qty','$u_m','$act_weight')";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
 }

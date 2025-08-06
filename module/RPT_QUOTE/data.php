@@ -59,3 +59,8 @@ if ($load == "DeleteQuoteItem") {
     $Data = $Data->DeleteQuoteItem($doc_num, $item);
     echo json_encode($Data);
 }
+
+if ($load == "AddItem") {
+    $Data = $Data->AddQuoteItem($doc_num, $item, $qty, $u_m, $unit_price, $weight_pcs);
+    echo json_encode($Data);
+}

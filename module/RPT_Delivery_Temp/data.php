@@ -58,3 +58,8 @@ if ($load == "DeleteDeliveryTempItem") {
     $Data = $Data->DeleteDeliveryTempItem($doc_num, $item);
     echo json_encode($Data);
 }
+
+if ($load == "AddItem") {
+    $Data = $Data->AddDeliveryTempItem($doc_num, $item, $qty, $u_m, $act_weight);
+    echo json_encode($Data);
+}
