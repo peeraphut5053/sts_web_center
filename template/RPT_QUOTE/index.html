@@ -252,7 +252,7 @@
                 </div>
                 <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
                     <div class="input-group basis-2/4">
-                        <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">เรื่อง</div>
+                        <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">หน่วยงาน</div>
                         <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
                             class="form-control" id="subject">
                     </div>
@@ -263,12 +263,18 @@
                     </div>
                 </div>
                     <span class="text-red-600">** ใส่เครื่องหมาย comma (,) ในช่องเงื่อนไขเพื่อปัดบรรทัดในหน้ารายงาน</span>
-              
                 <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
-                   <div class="input-group basis-2/4">
+                   <div class="input-group basis-full">
                         <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">เงื่อนไข</div>
                         <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
                             class="form-control" id="remark_quote">
+                    </div>
+                </div>
+                <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                   <div class="input-group basis-2/4">
+                        <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">ผู้เสนอราคา</div>
+                        <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
+                            class="form-control" id="salesman">
                     </div>
                     <div class="input-group basis-2/4">
                         <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">หมายเหตุ</div>
@@ -278,11 +284,11 @@
                 </div>
                 <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
                     <div class="input-group basis-full">
-                        <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">item *
-                        </div>
-                        <select style="font-weight: bold; font-size: 16px;" class="form-control" id="item_quote">
-                            <option value=""></option>
-                        </select>
+                         <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">item *</div>
+            <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off" class="form-control"
+              list="list_item" id="item_quote">
+            <datalist id="list_item">
+            </datalist>
                     </div>
                 </div>
                 <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
@@ -401,7 +407,7 @@
                 </div>
                 <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
                     <div class="input-group basis-2/4">
-                        <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">เรื่อง</div>
+                        <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">เรียน</div>
                         <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
                             class="form-control" id="cust_to_edit">
                     </div>
@@ -413,7 +419,7 @@
                 </div>
                 <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
                     <div class="input-group basis-2/4">
-                        <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">เรื่อง</div>
+                        <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">หน่วยงาน</div>
                         <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
                             class="form-control" id="subject_edit">
                     </div>
@@ -423,11 +429,18 @@
                             class="form-control" id="ref_no_quote_edit">
                     </div>
                 </div>
-                <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
-                   <div class="input-group basis-2/4">
+                  <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                   <div class="input-group basis-full">
                         <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">เงื่อนไข</div>
                         <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
                             class="form-control" id="remark_quote_edit">
+                    </div>
+                </div>
+                <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                   <div class="input-group basis-2/4">
+                        <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">ผู้เสนอราคา</div>
+                        <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
+                            class="form-control" id="salesman_edit">
                     </div>
                     <div class="input-group basis-2/4">
                         <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">หมายเหตุ</div>
@@ -437,11 +450,11 @@
                 </div>
                 <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
                     <div class="input-group basis-full">
-                        <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">item *
-                        </div>
-                        <select style="font-weight: bold; font-size: 16px;" class="form-control" id="item_quote_edit">
-                            <option value=""></option>
-                        </select>
+                        <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">item *</div>
+            <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off" class="form-control"
+              list="list_item" id="item_quote_edit">
+            <datalist id="list_item">
+            </datalist>
                     </div>
                 </div>
                 <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
@@ -492,75 +505,23 @@
 </div>
 <script type="text/javascript">
 
+$.ajax({
+    type: "GET",
+    url: "././module/RPT_Delivery_Temp/data.php",
+    dataType: "json",
+    data: {
+      load: "GetItem"
+    },
+    success: function (data) {
+      let item_list = document.getElementById("list_item");
+      data.forEach((item) => {
+        let option = document.createElement("option");
+        option.value = item.description;
+        item_list.appendChild(option);
+      });
+    }
+  });
   
-
-function roundToFixed(num, decimals) {
-    // แปลงเป็น Big number
-    const bigNum = new Big(num.toString());
-    
-    // ปัดเศษไปยังจำนวนทศนิยมที่ต้องการ
-    const rounded = bigNum.round(decimals);
-    
-    return rounded;
-}
-    // create datalist #item_list
-      var $items = $("#item_quote");
-      $items.select2({
-                                    placeholder: 'กรุณาเลือก Item',
-                                    allowClear: true,
-                                    width: '100%',
-                                    language: {
-                                        noResults: function () {
-                                            return "ไม่พบข้อมูล";
-                                        },
-                                        searching: function () {
-                                            return "กำลังค้นหา...";
-                                        }
-                                    },
-                                    // ใช้ AJAX แทน data
-                                        ajax: {
-                                        type: "GET",
-                                        url: "././module/RPT_QUOTE/data.php",
-                                        dataType: "json",
-                                        data: function (params) {
-                                            return {
-                                                load: "GetItem",
-                                                search: params.term, // ส่งคำค้นหาไปใน parameter
-                                            };
-                                        },
-                                        processResults: function (data, params) {
-                                            params.page = params.page || 1;
-
-                                            let results = [{ id: '', text: '' }].concat(data.map((item, i) => ({
-                                                id: item.description,
-                                                text: item.description,
-                                            })));
-
-                                            return {
-                                                results: results,
-                                                pagination: {
-                                                    more: (params.page * 30) < (data.length || 0) // ถ้ามีข้อมูลเพิ่มเติม
-                                                }
-                                            };
-                                        },
-                                        cache: true // เก็บ cache เพื่อลดการยิง API ซ้ำ
-                                    },
-                                    // กำหนดจำนวนตัวอักษรขั้นต่ำในการเริ่มค้นหา
-                                    minimumInputLength: 2,
-                                    // แสดงข้อความเมื่อพิมพ์ไม่ถึงตัวอักษรขั้นต่ำ
-                                    language: {
-                                        inputTooShort: function () {
-                                            return "กรุณากรอกอย่างน้อย 2 ตัวอักษร";
-                                        },
-                                        noResults: function () {
-                                            return "ไม่พบข้อมูล";
-                                        },
-                                        searching: function () {
-                                            return "กำลังค้นหา...";
-                                        }
-                                    }
-                                }).trigger('change');
-
     var customer;
     var tableItem = $('#tblReportDeliveryTempItem').DataTable({
         "columnDefs": [
@@ -626,7 +587,7 @@ function roundToFixed(num, decimals) {
 
     $("#add_item_quote").click(function () {
 
-        var item = $("#item_quote").select2('data')[0].text;
+        var item = $("#item_quote").val();
         var qty = $("#qty_quote").val();
         var u_m = $("#u_m_quote").val();
         var unit_price = $("#unit_price").val();
@@ -636,7 +597,7 @@ function roundToFixed(num, decimals) {
                 let rowIndex = 0;
                 tableItem.row.add([item, qty, unit_price, weight, u_m, rowIndex++]).draw();
                 // sorting by
-                $("#item_quote").val('').trigger('change');
+                $("#item_quote").val('');
                 $("#qty_quote").val('');
                 $("#unit_price").val('');
                 $("#weight_pcs").val('');
@@ -944,74 +905,11 @@ function roundToFixed(num, decimals) {
                                     });
                                 });
 
-                                var $items = $("#item_quote_edit");
-
-                                $items.select2({
-                                    placeholder: 'กรุณาเลือก Item',
-                                    allowClear: true,
-                                    width: '100%',
-                                    language: {
-                                        noResults: function () {
-                                            return "ไม่พบข้อมูล";
-                                        },
-                                        searching: function () {
-                                            return "กำลังค้นหา...";
-                                        }
-                                    },
-                                    // ใช้ AJAX แทน data
-                                    ajax: {
-                                        type: "GET",
-                                        url: "././module/RPT_QUOTE/data.php",
-                                        dataType: "json",
-                                        data: function (params) {
-                                            return {
-                                                load: "GetItem",
-                                                search: params.term, // ส่งคำค้นหาไปใน parameter
-                                            };
-                                        },
-                                        processResults: function (data, params) {
-                                            params.page = params.page || 1;
-
-                                            let results = [{ id: '', text: '' }].concat(data.map((item, i) => ({
-                                                id: item.description,
-                                                text: item.description,
-                                            })));
-
-                                            return {
-                                                results: results,
-                                                pagination: {
-                                                    more: (params.page * 30) < (data.length || 0) // ถ้ามีข้อมูลเพิ่มเติม
-                                                }
-                                            };
-                                        },
-                                        cache: true // เก็บ cache เพื่อลดการยิง API ซ้ำ
-                                    },
-                                    // กำหนดจำนวนตัวอักษรขั้นต่ำในการเริ่มค้นหา
-                                    minimumInputLength: 2,
-                                    // แสดงข้อความเมื่อพิมพ์ไม่ถึงตัวอักษรขั้นต่ำ
-                                    language: {
-                                        inputTooShort: function () {
-                                            return "กรุณากรอกอย่างน้อย 2 ตัวอักษร";
-                                        },
-                                        noResults: function () {
-                                            return "ไม่พบข้อมูล";
-                                        },
-                                        searching: function () {
-                                            return "กำลังค้นหา...";
-                                        }
-                                    }
-                                }).trigger('change')
-                                    .change(function (e) {
-                                        var item = $(this).val();
-                                        $("#item_quote_edit").val(item);
-                                    });
-
-                                var option = new Option(selected[0].item, selected[0].item, true, true);
-                                $("#item_quote_edit").append(option);
-                                $("#item_quote_edit").val(selected[0].item).trigger('change');
+                                $("#item_quote_edit").val(selected[0].item)
                                 $("#cust_to_edit").val(selected[0].cust_to);
                                 $("#tel_edit").val(selected[0].cust_tel);
                                 $("#subject_edit").val(selected[0].cust_subject);
+                                $("#salesman_edit").val(selected[0].salesman);
                                 $("#remark2_quote_edit").val(selected[0].remark2);
                                 $("#doc_quote").val(selected[0].doc_num);
                                 // set checkbox name Revised 
@@ -1101,6 +999,7 @@ function roundToFixed(num, decimals) {
         var cust_to = $("#cust_to_edit").val();
         var tel = $("#tel_edit").val();
         var subject = $("#subject_edit").val();
+        var salesman = $("#salesman_edit").val();
         var remark2 = $("#remark2_quote_edit").val();
         var item = $("#item_quote_edit").val();
         var qty = $("#qty_quote_edit").val();
@@ -1129,6 +1028,7 @@ function roundToFixed(num, decimals) {
                 cust_to: cust_to,
                 tel: tel,
                 subject: subject,
+                salesman: salesman,
                 remark2: remark2,
                 item: item,
                 qty: qty,
@@ -1148,6 +1048,7 @@ function roundToFixed(num, decimals) {
                 $("#cust_to_edit").val("");
                 $("#tel_edit").val("");
                 $("#subject_edit").val("");
+                $("#salesman_edit").val("");
                 $("#remark2_quote_edit").val("");
                 $("#item_quote_edit").val("");
                 $("#qty_quote_edit").val("");
@@ -1171,6 +1072,7 @@ function roundToFixed(num, decimals) {
         var cust_to = $("#cust_to").val();
         var tel = $("#tel").val();
         var subject = $("#subject").val();
+        var salesman = $("#salesman").val();
         var remark2 = $("#remark2_quote").val();
         var item = [];
         var qty = [];
@@ -1191,6 +1093,17 @@ function roundToFixed(num, decimals) {
             return false;
         }
 
+        if (cust_num.length == 0) {
+            alert("กรุณาเลือก Customer");
+            return false;
+        }
+
+        if (cust_seq.length == 0) {
+            alert("กรุณากรอกชื่อลูกค้า");
+            return false;
+        }
+
+    
         $.ajax({
             type: "POST",
             url: "././module/RPT_QUOTE/data.php",
@@ -1204,6 +1117,7 @@ function roundToFixed(num, decimals) {
                 cust_to: cust_to,
                 tel: tel,
                 subject: subject,
+                salesman: salesman,
                 remark2: remark2,
                 item: JSON.stringify(item),
                 qty: JSON.stringify(qty),
@@ -1285,7 +1199,15 @@ function roundToFixed(num, decimals) {
 
     function PrintDeliveryTemp(selectedData, nominee) {
 
-        console.log(selectedData, nominee);
+        function roundToFixed(num, decimals) {
+    // แปลงเป็น Big number
+    const bigNum = new Big(num.toString());
+    
+    // ปัดเศษไปยังจำนวนทศนิยมที่ต้องการ
+    const rounded = bigNum.round(decimals);
+    
+    return rounded;
+}
 
         pdfMake.fonts = {
             THSarabunNew: {
@@ -1319,7 +1241,7 @@ function roundToFixed(num, decimals) {
         ]);
 
         data.push([
-            { border: [true, false, false, false], text: `เรื่อง : ${selectedData[0].cust_subject ?? ""}`, rowSpan: 2, colSpan: 2, fontSize: 13, bold: true, alignment: 'left', },
+            { border: [true, false, false, false], text: `หน่วยงาน : ${selectedData[0].cust_subject ?? ""}`, rowSpan: 2, colSpan: 2, fontSize: 13, bold: true, alignment: 'left', },
            {},
             { border: [true, false, true, false], text: ``, fontSize: 13, bold: true, colSpan: 3, alignment: 'center', margin: [-25, 0, 0, 0] },
             { text: "", fontSize: 11, alignment: 'center' },
@@ -1347,20 +1269,24 @@ function roundToFixed(num, decimals) {
             { text: "Total Weight", fontSize: 13, bold: true, alignment: 'center' },
             { text: "Weight/PCS", fontSize: 13, bold: true, alignment: 'center' },
             { text: "Qty", fontSize: 13, bold: true, alignment: 'center' },
-            { text: "Price/PCS", fontSize: 13, bold: true, alignment: 'center' },
+            { text: `${selectedData[0].u_m == 'PCS' ? 'Price/PCS' : 'Price/KG'}`, fontSize: 13, bold: true, alignment: 'center' },
             { text: "Amount", fontSize: 13, bold: true, alignment: 'center' },
             
         ]);
 
         for (let i = 0; i < selectedData.length; i++) {
+            let totalWeight = Math.round(Number(selectedData[i].weightPCS) * Number(selectedData[i].qty));
+            const totalAmountKG = roundToFixed(selectedData.reduce((total, item) => total + ((Number(item.qty) * Number(item.weightPCS)) * Number(item.unit_price)), 0),2).toFixed(2);
+            const totalAmountPCS = roundToFixed(selectedData.reduce((total, item) => total + (Number(item.qty) * Number(item.unit_price)), 0),2).toFixed(2);
+            
             data.push([
                 { text: i+1, fontSize: 12, alignment: 'center' },
                 { text: selectedData[i].item, fontSize: 12, alignment: 'left' },
-                { text: addCommas(Math.round(Number(selectedData[i].weightPCS) * Number(selectedData[i].qty))), fontSize: 12, alignment: 'center' },
+                { text: addCommas(totalWeight), fontSize: 12, alignment: 'center' },
                 { text: selectedData[i].weightPCS, fontSize: 12, alignment: 'center' },
                 { text: Number(selectedData[i].qty).toFixed(0), fontSize: 12, alignment: 'center' },
                 { text: addCommas(selectedData[i].unit_price), fontSize: 12, alignment: 'center' },
-                { text: addCommas(roundToFixed((Number(selectedData[i].qty) * Number(selectedData[i].unit_price)),2).toFixed(2)), fontSize: 12, alignment: 'center' },
+                { text: selectedData[0].u_m == 'PCS' ? addCommas(roundToFixed((Number(selectedData[i].qty) * Number(selectedData[i].unit_price)),2).toFixed(2)) : addCommas(roundToFixed((totalWeight * Number(selectedData[i].unit_price)),2).toFixed(2)), fontSize: 12, alignment: 'center' },
             ],
             )
 
@@ -1372,12 +1298,14 @@ function roundToFixed(num, decimals) {
                     { text: '', fontSize: 12, alignment: 'center' },
                     { text: selectedData.reduce((total, item) => total + Number(item.qty), 0), fontSize: 12, alignment: 'center' },
                     { text: '', fontSize: 12, alignment: 'center' },
-                    { text: addCommas(roundToFixed((selectedData.reduce((total, item) => total + (Number(item.qty) * Number(item.unit_price)), 0)),2).toFixed(2)), fontSize: 12, alignment: 'center' },
+                    { text: selectedData[0].u_m == 'PCS' ? addCommas(totalAmountPCS) : addCommas(totalAmountKG), fontSize: 12, alignment: 'center' },
                 ],
                 )
 
-                const totalAmount = selectedData.reduce((total, item) => total + (Number(item.qty) * Number(item.unit_price)), 0);
-                const vat = roundToFixed(totalAmount * 0.07, 2);
+                
+                const vat = selectedData[0].u_m == 'PCS' ? roundToFixed(Number(totalAmountPCS) * 0.07, 2) : roundToFixed(Number(totalAmountKG) * 0.07, 2);
+                const grandTotal = selectedData[0].u_m == 'PCS' ? roundToFixed(Number(totalAmountPCS) + Number(vat), 2).toFixed(2) : roundToFixed(Number(totalAmountKG) + Number(vat), 2).toFixed(2);
+
 
                  data.push([
                     { text: `ภาษีมูลค่าเพิ่ม/Vat 7%`, fontSize: 12, colSpan: 6, alignment: 'center', style: 'header' },
@@ -1397,7 +1325,7 @@ function roundToFixed(num, decimals) {
                     {},
                     {},
                     {},
-                    { text: addCommas(roundToFixed(Number(totalAmount) + Number(vat), 2).toFixed(2)), fontSize: 12, alignment: 'center' },
+                    { text: addCommas(grandTotal), fontSize: 12, alignment: 'center' },
                 ],
                 )
             }
@@ -1501,8 +1429,23 @@ function roundToFixed(num, decimals) {
                             ],
                             [
                                 {
-                                    text: `\n ____________________ \n ผู้เสนอราคา`, fontSize: 12, bold: true, alignment: 'center',
-                                },
+                  stack: [
+    {
+      text: `${selectedData[0].salesman ?? ''}`,
+      margin: [0, 15, 0, 0], // margin เฉพาะ admin
+      fontSize: 12,
+      bold: true,
+      alignment: 'center'
+    },
+    {
+      text: '\n ____________________ \n ผู้เสนอราคา',
+       margin: [0, -30, 0, 0], 
+      fontSize: 12,
+      bold: true,
+      alignment: 'center'
+    }
+  ], margin: [0, 0, 0, 0], fontSize: 12, bold: true, alignment: 'center',
+                },
                                 {
                                     text: `\n ____________________ \n ผู้สั่งซื้อ`, fontSize: 12, bold: true, alignment: 'center',
                                 },

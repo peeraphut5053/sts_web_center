@@ -288,7 +288,7 @@ where cust.cust_num = '$cust_num'";
         return $rs;
     }
 
-    function CreateQuote($cust_num, $cust_seq,  $remark,$ref_no, $arr_item, $arr_qty, $arr_u_m, $arr_unit,$arr_weight, $cust_to,$tel,$subject,$remark2){
+    function CreateQuote($cust_num, $cust_seq,  $remark,$ref_no, $arr_item, $arr_qty, $arr_u_m, $arr_unit,$arr_weight, $cust_to,$tel,$subject,$remark2,$salesman) {
         $year = date('y');
         $month = date('m');
         $cSql = new SqlSrv();
@@ -309,7 +309,7 @@ where cust.cust_num = '$cust_num'";
         }
         // สร้างเลขเอกสารใหม่
         $docNumber = sprintf("Q%s%02d%03d", $year, $month, $newNumber);
-        $query = "INSERT INTO STS_quote_hdr (doc_num,cust_num,cust_seq,remark,ref_no,cust_to,cust_tel,cust_subject,remark2) VALUES ('$docNumber','$cust_num','$cust_seq','$remark','$ref_no', '$cust_to','$tel','$subject','$remark2')";
+        $query = "INSERT INTO STS_quote_hdr (doc_num,cust_num,cust_seq,remark,ref_no,cust_to,cust_tel,cust_subject,remark2,salesman) VALUES ('$docNumber','$cust_num','$cust_seq','$remark','$ref_no', '$cust_to','$tel','$subject','$remark2','$salesman')";
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         // foreach insert item act weight qty u_m
@@ -341,7 +341,7 @@ where cust.cust_num = '$cust_num'";
             $wh .= " and cust.name like '%" . $name . "%'";
         }
 
-        $query = "select hdr.doc_num, hdr.cust_num, hdr.cust_seq, hdr.createdate, hdr.ref_no
+        $query = "select hdr.doc_num, hdr.cust_num, hdr.cust_seq, hdr.createdate, hdr.ref_no, hdr.salesman
   , cust_to = isnull(hdr.cust_to,cust.name), cust_tel = coalesce(hdr.cust_tel,cus.phone##1,cus.phone##2)
   , hdr.cust_subject
   , item.item, item.[description], item.qty , item.u_m,item.unit_price, item.weightPCS
@@ -358,11 +358,11 @@ where 1=1 $wh
         return $rs;
     }
 
-     function UpdateQuote($doc_num, $cust_num, $cust_seq, $remark, $ref_no, $item, $qty, $u_m, $unit_price, $item_old, $weight_pcs,$cust_to,$tel,$subject,$remark2,$revised) {
-        $query = "UPDATE STS_quote_hdr SET cust_num='$cust_num', cust_seq='$cust_seq', remark='$remark', ref_no='$ref_no', cust_to = '$cust_to', cust_tel = '$tel', cust_subject = '$subject', remark2 = '$remark2', updateDate = GETDATE() WHERE doc_num = '$doc_num'";
+     function UpdateQuote($doc_num, $cust_num, $cust_seq, $remark, $ref_no, $item, $qty, $u_m, $unit_price, $item_old, $weight_pcs,$cust_to,$tel,$subject,$remark2,$revised,$salesman) {
+        $query = "UPDATE STS_quote_hdr SET cust_num='$cust_num', cust_seq='$cust_seq', remark='$remark', ref_no='$ref_no', cust_to = '$cust_to', cust_tel = '$tel', cust_subject = '$subject', remark2 = '$remark2', salesman = '$salesman', updateDate = GETDATE() WHERE doc_num = '$doc_num'";
 
         if ($revised == 1) {
-            $query = "UPDATE STS_quote_hdr SET cust_num='$cust_num', cust_seq='$cust_seq', remark='$remark', ref_no='$ref_no', cust_to = '$cust_to', cust_tel = '$tel', cust_subject = '$subject', remark2 = '$remark2', revised = $revised, updateDate = GETDATE() WHERE doc_num = '$doc_num'";
+            $query = "UPDATE STS_quote_hdr SET cust_num='$cust_num', cust_seq='$cust_seq', remark='$remark', ref_no='$ref_no', cust_to = '$cust_to', cust_tel = '$tel', cust_subject = '$subject', remark2 = '$remark2', salesman = '$salesman', revised = $revised, updateDate = GETDATE() WHERE doc_num = '$doc_num'";
         }
 
         $query2 = "UPDATE STS_quote_item SET item='$item', qty='$qty', u_m='$u_m', unit_price='$unit_price', WeightPCS='$weight_pcs', updateDate = GETDATE() WHERE doc_num = '$doc_num' AND item = '$item_old'";

@@ -422,6 +422,8 @@
   </div>
 </div>
 <script type="text/javascript">
+  var username_session = GetUserProp("login_username");
+
   // create datalist #item_list
   $.ajax({
     type: "GET",
@@ -1054,7 +1056,6 @@
         $("#ref_no").val("");
         $("#item").val("");
         $("#qty").val("");
-        $("#u_m").val("");
         $("#act_weight").val("");
         $("#pick_address").val("");
         tableItem.clear().draw();
@@ -1297,7 +1298,22 @@
       
               [
                 {
-                  text: `\n ____________________ \n พิมพ์โดย`, fontSize: 12, bold: true, alignment: 'center',
+                  stack: [
+    {
+      text: `${username_session}`,
+      margin: [0, 15, 0, 0], // margin เฉพาะ admin
+      fontSize: 12,
+      bold: true,
+      alignment: 'center'
+    },
+    {
+      text: '\n ____________________ \n พิมพ์โดย',
+       margin: [0, -30, 0, 0], 
+      fontSize: 12,
+      bold: true,
+      alignment: 'center'
+    }
+  ], margin: [0, 0, 0, 0], fontSize: 12, bold: true, alignment: 'center',
                 },
                 {
                   text: `\n ____________________ \n ผู้ส่งสินค้า`, fontSize: 12, bold: true, alignment: 'center',

@@ -30,12 +30,12 @@ if ($load == "SaveQuote") {
     $arr_unit = json_decode($unit);
     $arr_weight = json_decode($weight_pcs);
     $arr_u_m = json_decode($u_m);
-    $Data = $Data->CreateQuote($cust_num, $cust_seq,  $remark,$ref_no, $arr_item, $arr_qty, $arr_u_m, $arr_unit, $arr_weight, $cust_to,$tel,$subject,$remark2);
+    $Data = $Data->CreateQuote($cust_num, $cust_seq,  $remark,$ref_no, $arr_item, $arr_qty, $arr_u_m, $arr_unit, $arr_weight, $cust_to,$tel,$subject,$remark2,$salesman);
     echo json_encode($Data);
 }
 
 if ($load == "UpdateQuote") {
-    $Data = $Data->UpdateQuote($doc_num, $cust_num, $cust_seq, $remark, $ref_no, $item, $qty, $u_m, $unit_price, $item_old, $weight_pcs,$cust_to,$tel,$subject,$remark2,$revised);
+    $Data = $Data->UpdateQuote($doc_num, $cust_num, $cust_seq, $remark, $ref_no, $item, $qty, $u_m, $unit_price, $item_old, $weight_pcs,$cust_to,$tel,$subject,$remark2,$revised,$salesman);
     echo json_encode($Data);
 }
 
