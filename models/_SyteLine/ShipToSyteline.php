@@ -121,14 +121,10 @@ order by co.co_num";
     }
 
      function GetReportContainerBookingConfirm($doc_num, $co_num, $cust_po, $cust_name, $city, $sts_po) {
-        $query = "select bun.* 
-    , [1-pcs] = pcs.[1], [2-pcs] = pcs.[2], [3-pcs] = pcs.[3], [4-pcs] = pcs.[4], [5-pcs] = pcs.[5], [6-pcs] = pcs.[6]
-    , [7-pcs] = pcs.[7], [8-pcs] = pcs.[8], [9-pcs] = pcs.[9], [10-pcs] = pcs.[10], [11-pcs] = pcs.[11], [12-pcs] = pcs.[12]
-    , [13-pcs] = pcs.[13], [14-pcs] = pcs.[14], [15-pcs] = pcs.[15], [16-pcs] = pcs.[16], [17-pcs] = pcs.[17], [18-pcs] = pcs.[18]
-    , [19-pcs] = pcs.[19], [20-pcs] = pcs.[20], [21-pcs] = pcs.[21], [22-pcs] = pcs.[22], [23-pcs] = pcs.[23], [24-pcs] = pcs.[24]
-    , [25-pcs] = pcs.[25], [26-pcs] = pcs.[26], [27-pcs] = pcs.[27], [28-pcs] = pcs.[28], [29-pcs] = pcs.[29], [30-pcs] = pcs.[30]
+        $query = "select bun.* , [cont_no(pcs)] = pcs.cont_no, pcs.bundle_pcs
 from V_STS_EX_booking_line_cont bun
-  inner join V_STS_EX_booking_line_cont_pcs pcs on bun.co_num = pcs.co_num and bun.co_line = pcs.co_line and bun.doc_num = pcs.doc_num
+  left join STS_EX_booking_line_cont pcs on bun.co_num = pcs.co_num and bun.co_line = pcs.co_line and bun.doc_num = pcs.doc_num
+   and bundle_pcs is not null
 where bun.doc_num = '$doc_num'";
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
