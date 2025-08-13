@@ -1,0 +1,530 @@
+<style>
+   .mycontainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+  border-width: 4px;
+  border-bottom-color: #60a5fa;
+  border-top-color: white;
+  border-left-color: white;
+  border-right-color: white;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  padding: 6rem;
+  margin-top: 2.5rem;
+ }
+
+ .mybox {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-grow: 1;
+  gap: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+</style>
+<div class="">
+    <div class="col-xs-12">
+        <div class="page-header">
+            <h1 class="text-header text-left">รายงานการจองตู้</h1>
+        </div>
+    </div>
+</div>
+<div class="mycontainer mb-12">
+    <div class="row col-xs-12">
+         <div class="mybox">
+            <div class="input-group basis-3/6">
+                <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">Doc No *</div>
+                 <input type="text" style="font-weight: bold; font-size: 16px;" class="form-control txt-filter" id="doc_num_booking" list="list_doc_num">
+                 <datalist id="list_doc_num">
+                    
+                 </datalist>
+            </div>
+             <div class="input-group basis-3/6">
+                <div class="flex gap-6">
+                    <button type="button" class="btn btn-primary btn-lg" id="btnSearchBooking">Search</button>
+                    <button type="button" class="btn btn-warning btn-lg" id="btnGenarateDoc">Create Booking</button>
+                </div>
+            </div>
+             <div class="input-group basis-2/6">
+            </div>
+        </div>
+        <div class="mybox">
+            <div class="input-group basis-2/6">
+                <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">City *</div>
+                <select style="font-weight: bold; font-size: 16px;" class="form-control txt-filter" id="city_booking">
+                    <option value=""></option>
+                </select>
+            </div>
+             <div class="input-group basis-2/6">
+                <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">Customer *</div>
+                <select style="font-weight: bold; font-size: 16px;" class="form-control txt-filter" id="customer_booking">
+                    <option value=""></option>
+                </select>
+            </div>
+             <div class="input-group basis-2/6">
+                <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">Co Number *</div>
+                <select style="font-weight: bold; font-size: 16px;" class="form-control txt-filter" id="co_num_booking">
+                    <option value=""></option>
+                </select>
+            </div>
+        </div>
+        <div class="mybox">
+            <div class="input-group basis-2/6">
+                <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">Container 40</div>
+                <input type="text" style="font-weight: bold; font-size: 16px;" class="form-control txt-filter" id="container_40">
+            </div>
+             <div class="input-group basis-2/6">
+                 <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">Container 45</div>
+                <input type="text" style="font-weight: bold; font-size: 16px;" class="form-control txt-filter" id="container_45">
+            </div>
+             <div class="input-group basis-2/6">
+                <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">Booking Number 40</div>
+                 <input type="text" style="font-weight: bold; font-size: 16px;" class="form-control txt-filter" id="booking_number40">
+            </div>
+             <div class="input-group basis-2/6">
+                <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">Booking Number 45</div>
+                 <input type="text" style="font-weight: bold; font-size: 16px;" class="form-control txt-filter" id="booking_number45">
+            </div>
+        </div>
+         <div class="mybox">
+            <div class="input-group basis-3/6">
+                <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">Pick Date</div>
+                <input type="text" style="font-weight: bold; font-size: 16px;" class="form-control txt-filter" id="booking_date">
+            </div>
+             <div class="input-group basis-3/6">
+                <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">Status *</div>
+                <select style="font-weight: bold; font-size: 16px;" class="form-control txt-filter" id="status_booking">
+                    <option value="ดำเนินการ">ดำเนินการ</option>
+                    <option value="ยกเลิก">ยกเลิก</option>
+                    <option value="จบ">จบ</option>
+                </select>
+            </div>
+        </div>
+        <div>
+            <button type="button" class="btn btn-success btn-lg" id="btnAddContainer">Add Booking</button>
+            <button type="button" class="btn btn-info btn-lg" id="btnUpdateBooking" disabled>Update Booking</button>
+        </div>
+        <input type="text" style="font-weight: bold; font-size: 16px;" class="hidden" id="old_co_num">
+    </div>
+</div>
+<div class="row">
+    <table class="table table-condensed table-bordered table-striped" id="tblReportContainerBooking">
+        <thead>
+            <tr>
+                <th class="bg-gray">Doc Num</th>
+                <th class="bg-gray">Co Number</th>
+                <th class="bg-gray">Container 40</th>
+                <th class="bg-gray">Container 45</th>
+                <th class="bg-gray">Booking Number 40</th>
+                <th class="bg-gray">Booking Number 45</th>
+                <th class="bg-gray">Pick Date</th>
+                <th class="bg-gray">Status</th>
+            </tr>
+        </thead>
+        <!--        <tbody id="tblReportList">
+                      <tr><td align="center" colspan="12">.... No item search ....</td></tr>
+     </tbody>-->
+    </table>
+</div>
+<script type="text/javascript">
+
+   // create datalist #item_list
+
+   getDocNumList();
+
+   function getDocNumList() {
+     $.ajax({
+        type: "GET",
+        url: "././module/RPT_CONTAINER_BOOKING/data.php",
+        dataType: "json",
+        data: {
+            load: "GetDocList"
+        },
+        success: function (data) {
+            let item_list = document.getElementById("list_doc_num");
+            data.forEach((item) => {
+                let option = document.createElement("option");
+                option.value = item.doc_num;
+                item_list.appendChild(option);
+            });
+        }
+    });
+   }
+
+    $("#customer_booking").select2({
+        placeholder: 'กรุณาเลือก Customer',
+        allowClear: true,
+        width: '100%',
+        data: [],
+        language: {
+            noResults: function () {
+                return "ไม่พบข้อมูล";
+            }
+        }
+    });
+
+   $("#co_num_booking").select2({
+        placeholder: 'กรุณาเลือก Customer',
+        allowClear: true,
+        width: '100%',
+        data: [],
+        language: {
+            noResults: function () {
+                return "ไม่พบข้อมูล";
+            }
+        }
+    });
+
+   var table = $('#tblReportContainerBooking').DataTable({
+     "columnDefs": [
+            { "targets": '_all', "className": 'text-center' },
+        ],
+            paging: false,
+            searching: false,
+            select: true,
+            dom:
+                        "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                        "<'row'<'col-md-12'tr>>" +
+                        "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                    buttons: [
+                        {
+                            text: `<button type="button" class="btn btn-danger">Edit Booking</button>`,
+                            action: function (e, dt, node, config) {
+                                // on selected
+                                let selected = Array.from(dt.rows('.selected').data());
+                                if (selected.length == 0) {
+                                    alert("กรุณารายการที่ต้องการแก้ไข");
+                                    return false;
+                                }
+
+                                // btnAddContainer disabled
+                                $("#btnAddContainer").attr("disabled", true);
+                                $("#btnUpdateBooking").attr("disabled", false);
+
+                                // clear co_num_booking
+                                $("#co_num_booking").empty();
+                                
+                                $("#co_num_booking").append('<option value="' + selected[0][1] + '">' + selected[0][1] + '</option>');
+                                $("#co_num_booking").val(selected[0][1]).trigger("change");
+                                $("#old_co_num").val(selected[0][1]);
+                                $("#container_40").val(selected[0][2]);
+                                $("#container_45").val(selected[0][3]);
+                                $("#booking_number40").val(selected[0][4]);
+                                $("#booking_number45").val(selected[0][5]);
+                                $("#booking_date").val(selected[0][6] !== '' ? moment(selected[0][6]).format('YYYY-MM-DD') : '');
+                                $("#status_booking").val(selected[0][7]);
+                            }
+                        },
+                    ],
+    });
+
+    $.ajax({
+        type: "GET",
+        url: "././module/RPT_CONTAINER_BOOKING/data.php",
+        dataType: "json",
+        data: { load: "GetCity" },
+        success: function (data) {
+            let city = [{ id: '', text: '' }].concat(data.map((item) => ({
+                id: item.city,
+                text: item.city
+            })));
+
+            $("#city_booking").select2({
+                placeholder: 'กรุณาเลือก City',
+                allowClear: true,
+                width: '100%',
+                data: city,
+                language: {
+                    noResults: function () {
+                        return "ไม่พบข้อมูล";
+                    }
+                }
+            }).on('select2:select', function (e) {
+                let city = e.params.data.id;
+                $.ajax({
+                    type: "GET",
+                    url: "././module/RPT_CONTAINER_BOOKING/data.php",
+                    dataType: "json",
+                    data: { load: "GetCustomerByCity", city: city },
+                    success: function (data) {
+                        const customer = [{ id: '', text: '' }].concat(data.map((item) => ({
+                            id: item.name,
+                            text: item.name
+                        })));
+
+                        $("#customer_booking").empty();
+                        $("#customer_booking").select2({
+                            placeholder: 'กรุณาเลือก Customer',
+                            allowClear: true,
+                            width: '100%',
+                            data: customer,
+                            language: {
+                                noResults: function () {
+                                    return "ไม่พบข้อมูล";
+                                }
+                            }
+                        }).on('select2:select', function (e) {
+                            let customer = e.params.data.id;
+                            $.ajax({
+                                type: "GET",
+                                url: "././module/RPT_CONTAINER_BOOKING/data.php",
+                                dataType: "json",
+                                data: { load: "GetCoNum", city: city, customer: customer },
+                                success: function (data) {
+                                     let co_num = [{ id: '', text: '' }].concat(data.map((item) => ({
+                                        id: item.co_num,
+                                        text: item.co_num
+                                    })));
+                                    $("#co_num_booking").empty();
+                                    $("#co_num_booking").select2({
+                                        placeholder: 'กรุณาเลือก Co_num',
+                                        allowClear: true,
+                                        width: '100%',
+                                        data: co_num,
+                                        language: {
+                                            noResults: function () {
+                                                return "ไม่พบข้อมูล";
+                                            }
+                                        }
+                                    });
+                                },
+                            });
+                        });
+                    },
+                });
+            });
+        }
+    });
+
+    $("#btnGenarateDoc").click(function () {
+        $.ajax({
+        type: "GET",
+        url: "././module/RPT_CONTAINER_BOOKING/data.php",
+        dataType: "json",
+        data: {
+            load: "GenerateDoc"
+        },
+        success: function (data) {
+            $("#doc_num_booking").val(data);
+            $("#city_booking").val('').trigger('change');
+            $("#customer_booking").val('').trigger('change');
+            $("#co_num_booking").val('').trigger('change');
+            $("#container_40").val('');
+            $("#container_45").val('');
+            $("#booking_number40").val('');
+            $("#booking_number45").val('');
+            $("#booking_date").val('');
+            $("#status_booking").val('ดำเนินการ');
+             $("#btnAddContainer").attr("disabled", false);
+             $("#btnUpdateBooking").attr("disabled", true);
+               $("#old_co_num").val("");
+            table.clear().draw();
+        },
+        error: function (xhr, status, error) {
+            alert('Error');
+        }
+        });
+    });
+
+    $("#btnSearchBooking").click(function () {
+        var doc_num = $("#doc_num_booking").val();
+
+        if (doc_num == '') {
+            alert("กรุณาระบุ Doc No");
+            return false;
+        }
+ 
+        $.ajax({
+        type: "GET",
+        url: "././module/RPT_CONTAINER_BOOKING/data.php",
+        dataType: "json",
+        data: {
+            load: "GetDataByDocNum",
+            doc_num: doc_num
+        },
+        success: function (data) {
+
+            if (data.length == 0) {
+                alert("ไม่พบข้อมูล");
+                $("#btnAddContainer").attr("disabled", false);
+                $("#btnUpdateBooking").attr("disabled", true);
+                $("#city_booking").val('').trigger('change');
+                $("#customer_booking").val('').trigger('change');
+                $("#co_num_booking").val('').trigger('change');
+                $("#container_40").val('');
+                $("#container_45").val('');
+                $("#booking_number40").val('');
+                $("#booking_number45").val('');
+                $("#booking_date").val('');
+                $("#old_co_num").val("");
+                $("#status_booking").val('ดำเนินการ');
+                table.clear().draw();
+                return false;
+            }
+
+            table.clear();
+            data.forEach(item => {
+                let booking_date = item.booking_date == null ? "" : moment(item.booking_date?.date).format("YYYY-MM-DD");
+                table.row.add([item.doc_num, item.co_num, item.no_cont40, item.no_cont45, item.booking_num40, item.booking_num45, booking_date, item.status]).draw();
+            })
+            $("#btnAddContainer").attr("disabled", false);
+            $("#btnUpdateBooking").attr("disabled", true);
+            $("#city_booking").val('').trigger('change');
+            $("#customer_booking").val('').trigger('change');
+            $("#co_num_booking").val('').trigger('change');
+            $("#container_40").val('');
+            $("#container_45").val('');
+            $("#booking_number40").val('');
+            $("#booking_number45").val('');
+            $("#booking_date").val('');
+            $("#old_co_num").val("");
+            $("#status_booking").val('ดำเนินการ');
+        },
+        error: function (xhr, status, error) {
+            alert('Error');
+        }
+        });
+    });
+
+
+    $('#btnAddContainer').click(function () {
+       // add data to table #tblReportContainerBooking
+        let doc_num = $("#doc_num_booking").val();
+        let co_num = $("#co_num_booking").val();
+        let container_40 = $("#container_40").val();
+        let container_45 = $("#container_45").val();
+        let booking_number40 = $("#booking_number40").val();
+        let booking_number45 = $("#booking_number45").val();
+        let booking_date = $("#booking_date").val();
+        let status_booking = $("#status_booking").val();
+
+        if (doc_num == '') {
+            alert("กรุณาระบุ Doc No");
+            return false;
+        }
+
+        if (co_num == '') {
+            alert("กรุณาระบุ Co_num");
+            return false;
+        }
+
+        if (status_booking == '') {
+            alert("กรุณาระบุ Status");
+            return false;
+        }
+
+        $.ajax({
+        type: "POST",
+        url: "././module/RPT_CONTAINER_BOOKING/data.php",
+        dataType: "json",
+        data: {
+            load: "CreateContainerBooking",
+            doc_num: doc_num,
+            co_num: co_num,
+            container_40: container_40,
+            container_45: container_45,
+            booking_number40: booking_number40,
+            booking_number45: booking_number45,
+            booking_date: booking_date,
+            status_booking: status_booking
+        },
+        success: function (data) {
+            let booking_date = data[0].booking_date == null ? "" : moment(data[0].booking_date?.date).format("YYYY-MM-DD");
+            table.row.add([data[0].doc_num, data[0].co_num, data[0].no_cont40, data[0].no_cont45, data[0].booking_num40, data[0].booking_num45, booking_date, data[0].status]).draw();
+            // clear form
+
+            $("#city_booking").val('').trigger('change');
+            $("#customer_booking").val('').trigger('change');
+            $("#co_num_booking").val('').trigger('change');
+            $("#co_num_booking").val('').trigger('change');
+            $("#container_40").val('');
+            $("#container_45").val('');
+            $("#booking_number40").val('');
+            $("#booking_number45").val('');
+            $("#booking_date").val('');
+            $("#status_booking").val('ดำเนินการ');
+            $("#old_co_num").val("");
+            getDocNumList();
+        }
+        });
+    });
+
+    $('#btnUpdateBooking').click(function () {
+       // add data to table #tblReportContainerBooking
+        let doc_num = $("#doc_num_booking").val();
+        let co_num = $("#co_num_booking").val();
+        let container_40 = $("#container_40").val();
+        let container_45 = $("#container_45").val();
+        let booking_number40 = $("#booking_number40").val();
+        let booking_number45 = $("#booking_number45").val();
+        let booking_date = $("#booking_date").val();
+        let status_booking = $("#status_booking").val();
+        let old_co_num = $("#old_co_num").val();
+
+        if (doc_num == '') {
+            alert("กรุณาระบุ Doc No");
+            return false;
+        }
+
+        if (co_num == '') {
+            alert("กรุณาระบุ Co_num");
+            return false;
+        }
+
+        if (status_booking == '') {
+            alert("กรุณาระบุ Status");
+            return false;
+        }
+
+        $.ajax({
+        type: "POST",
+        url: "././module/RPT_CONTAINER_BOOKING/data.php",
+        dataType: "json",
+        data: {
+            load: "UpdateContainerBooking",
+            doc_num: doc_num,
+            co_num: co_num,
+            container_40: container_40,
+            container_45: container_45,
+            booking_number40: booking_number40,
+            booking_number45: booking_number45,
+            booking_date: booking_date,
+            status_booking: status_booking,
+            old_co_num: old_co_num
+        },
+        success: function (data) {
+             $("#btnAddContainer").attr("disabled", false);
+             $("#btnUpdateBooking").attr("disabled", true);
+             table.clear();
+             data.forEach(item => {
+                let booking_date = item.booking_date == null ? "" : moment(item.booking_date?.date).format("YYYY-MM-DD");
+                table.row.add([item.doc_num, item.co_num, item.no_cont40, item.no_cont45, item.booking_num40, item.booking_num45, booking_date, item.status]).draw();
+             });
+             // clear form
+             $("#co_num_booking").val("").trigger("change");
+             $("#container_40").val("");
+             $("#container_45").val("");
+             $("#booking_number40").val("");
+             $("#booking_number45").val("");
+             $("#booking_date").val("");
+             $("#old_co_num").val("");
+        
+        }
+        });
+    });
+
+
+    $("#booking_date").datepicker({
+        dateFormat: "yy-mm-dd",
+        showAnim: "slideDown"
+    });
+
+
+
+
+
+</script>

@@ -1,0 +1,666 @@
+<style>
+    .col-search {
+        padding-left: 3px;
+        padding-right: 3px;
+    }
+
+    /*    table.dataTable thead .sorting:after,
+          table.dataTable thead .sorting:before,
+          table.dataTable thead .sorting_asc:after,
+          table.dataTable thead .sorting_asc:before,
+          table.dataTable thead .sorting_asc_disabled:after,
+          table.dataTable thead .sorting_asc_disabled:before,
+          table.dataTable thead .sorting_desc:after,
+          table.dataTable thead .sorting_desc:before,
+          table.dataTable thead .sorting_desc_disabled:after,
+          table.dataTable thead .sorting_desc_disabled:before {
+              bottom: .5em;
+          }*/
+    .table thead th {
+        text-align: center;
+    }
+
+    .col-flt-page {
+        padding-top: 10px;
+        font-weight: bold;
+    }
+
+    #tblReport tbody tr td a {
+        cursor: pointer;
+    }
+
+    table.dataTable.fixedHeader-floating,
+    table.dataTable.fixedHeader-locked {
+        background-color: white;
+        margin-top: 50px !important;
+        margin-bottom: 0 !important;
+    }
+
+    .text-header {
+        font-weight: bold;
+        font-size: 20px;
+    }
+
+    .text-wrap {
+        white-space: normal;
+    }
+
+    .width-200 {
+        width: 200px;
+    }
+
+    input[type="checkbox"] {
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+
+    /*
+      .cb_lb{
+          margin-top:-5px;
+      }*/
+    .item-center {
+        display: flex;
+        justify-content: center;
+    }
+
+    datalist {
+        position: absolute;
+        max-height: 20em;
+        border: 0 none;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    datalist option {
+        font-size: 0.8em;
+        padding: 0.3em 1em;
+        background-color: #ccc;
+        cursor: pointer;
+    }
+
+    /* option active styles */
+    datalist option:hover,
+    datalist option:focus {
+        color: #fff;
+        background-color: #036;
+        outline: 0 none;
+    }
+
+    #browserdata option {
+        font-size: 1.8em;
+        padding: 0.3em 1em;
+        background-color: #ccc;
+        cursor: pointer;
+    }
+      /* ซ่อน Checkbox ดั้งเดิม */
+  .custom-checkbox input[type="checkbox"] {
+    display: none;
+  }
+
+  /* ตำแหน่งและขนาดของ Checkbox */
+  .custom-checkbox {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 20px;
+    margin: 3px;
+  }
+
+  /* สไตล์สำหรับ Checkmark */
+  .custom-checkbox .checkmark {
+    width: 20px;
+    height: 20px;
+    background-color: #ccc;
+    border-radius: 4px;
+    display: inline-block;
+    margin-right: 10px;
+    position: relative;
+    transition: background-color 0.3s;
+  }
+
+  /* สไตล์สำหรับ Checkbox เมื่อถูกเลือก */
+  .custom-checkbox input[type="checkbox"]:checked+.checkmark {
+    background-color: #4CAF50;
+  }
+
+  /* สไตล์สำหรับเครื่องหมายถูก */
+  .custom-checkbox .checkmark::after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
+
+  /* แสดงเครื่องหมายถูกเมื่อ Checkbox ถูกเลือก */
+  .custom-checkbox input[type="checkbox"]:checked+.checkmark::after {
+    display: block;
+  }
+
+  /* รูปแบบของเครื่องหมายถูก */
+  .custom-checkbox .checkmark::after {
+    left: 8px;
+    top: 3px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    transform: rotate(45deg);
+  }
+</style>
+<div class="row">
+    <h4 class="text-header text-center">รายงานการจองตู้</h4>
+</div>
+<div class="row item-center">
+  <div class="col-lg-2 col-md-3 col-sm-6 col-xs-6">
+        <div class="input-group">
+            <div class="input-group-addon">co_num</div>
+            <input type="text" class="form-control" id="co_num_booking" autocomplete="off" />
+        </div>
+    </div>
+    <div class="col-lg-2 col-md-3 col-sm-6 col-xs-6">
+        <div class="input-group">
+            <div class="input-group-addon">cust po</div>
+            <input type="text" class="form-control" id="cust_po_booking" autocomplete="off" />
+        </div>
+    </div>
+    <div class="col-lg-2 col-md-3 col-sm-6 col-xs-6">
+        <div class="input-group">
+            <div class="input-group-addon">cust name</div>
+            <input type="text" class="form-control" id="cust_name_booking" autocomplete="off" />
+        </div>
+    </div>
+    <div class="col-lg-2 col-md-3 col-sm-6 col-xs-6">
+        <div class="input-group">
+            <div class="input-group-addon">city</div>
+            <input type="text" class="form-control" id="city_booking" autocomplete="off" />
+        </div>
+    </div>
+    <div class="col-lg-2 col-md-3 col-sm-6 col-xs-6">
+        <div class="input-group">
+            <div class="input-group-addon">sts po</div>
+            <input type="text" class="form-control" id="sts_po_booking" autocomplete="off" />
+        </div>
+    </div>
+    <div class="col-lg-1 col-md-2 col-sm-1 col-xs-6  col-search">
+        <button id="BtnSearchConBooking" class="btn btn-info"><i class="fa fa-search"></i>&nbsp; Search</button>
+    </div>
+</div>
+<div class="row">
+    <table width="100%" class="table table-condensed table-bordered table-striped" id="tblReportContainerBooking">
+        <thead>
+            <tr>
+                <th class="bg-gray">co_num</th>
+                <th class="bg-gray">cust_po</th>
+                <th class="bg-gray">Name</th>
+                <th class="bg-gray">City</th>
+                <th class="bg-gray">sts po</th>
+                <th class="bg-gray">bundle</th>
+                <th class="bg-gray">qty order</th>
+                <th class="bg-gray">qty ready</th>
+                <th class="bg-gray">qty shipped</th>
+                <th class="bg-gray">qty remain</th>
+                <th class="bg-gray">qty container (Ton)</th>
+                <th class="bg-gray">container 40</th>
+                <th class="bg-gray">container 45</th>
+            </tr>
+        </thead>
+        <!--        <tbody id="tblReportList">
+                      <tr><td align="center" colspan="12">.... No item search ....</td></tr>
+     </tbody>-->
+    </table>
+</div>
+<!-- Modal -->
+<div class="modal fade bd-example-modal-lg" id="ModalContainerBooking" role="dialog" aria-labelledby="myLargeModalLabel"
+    aria-hidden="true" style="cursor: move;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-center" id="exampleModalLabel">Container Booking</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+            </div>
+            <div class="modal-body">
+                <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                    <div class="input-group basis-full">
+                        <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">co num</div>
+                        <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
+                            class="form-control" id="co_num" readonly>
+                    </div>
+                </div>
+                <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                    <div class="input-group basis-2/4">
+                        <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">Status</div>
+                        <select style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
+                            class="form-control" id="status_booking">
+                            <option value="ดำเนินการ">ดำเนินการ</option>
+                            <option value="ยกเลิก">ยกเลิก</option>
+                            <option value="จบ">จบ</option>
+                        </select>
+                    </div>
+                    <div class="input-group basis-2/4">
+                        <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">Booking 40</div>
+                        <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
+                            class="form-control" id="no_container">
+                    </div>
+                </div>
+                <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                    <div class="input-group basis-2/4">
+                        <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">Booking 45</div>
+                        <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
+                            class="form-control" id="no_container_45">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="SaveBooking" onclick="SaveBooking()">บันทึก</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade bd-example-modal-lg m-8" id="ModalQuoteItemEdit" role="dialog"
+    aria-labelledby="myLargeModalLabel" aria-hidden="true" style="cursor: move;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-center" id="exampleModalLabel">แก้ไขข้อมูลใบเสนอราคา</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+            </div>
+            <div class="modal-body">
+                <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                    <div class="input-group basis-full">
+                        <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">เลขที่เอกสาร</div>
+                        <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
+                            class="form-control" disabled id="doc_quote">
+                    </div>
+                </div>
+                <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                    <div class="input-group basis-full">
+                        <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">Customer
+                            *</div>
+                        <select style="font-weight: bold; font-size: 16px;" class="form-control"
+                            id="customer_quote_edit">
+                            <option value=""></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                    <div class="input-group basis-full">
+                        <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">Ship to *
+                        </div>
+                        <select style="font-weight: bold; font-size: 16px;" class="form-control"
+                            id="customer_seq_quote_edit">
+                            <option value=""></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                    <div class="input-group basis-2/4">
+                        <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">เรียน</div>
+                        <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
+                            class="form-control" id="cust_to_edit">
+                    </div>
+                    <div class="input-group basis-2/4">
+                        <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">โทร</div>
+                        <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
+                            class="form-control" id="tel_edit">
+                    </div>
+                </div>
+                <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                    <div class="input-group basis-2/4">
+                        <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">หน่วยงาน</div>
+                        <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
+                            class="form-control" id="subject_edit">
+                    </div>
+                    <div class="input-group basis-2/4">
+                        <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">ref_no</div>
+                        <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
+                            class="form-control" id="ref_no_quote_edit">
+                    </div>
+                </div>
+                  <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                   <div class="input-group basis-full">
+                        <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">เงื่อนไข</div>
+                        <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
+                            class="form-control" id="remark_quote_edit">
+                    </div>
+                </div>
+                <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                   <div class="input-group basis-2/4">
+                        <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">ผู้เสนอราคา</div>
+                        <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
+                            class="form-control" id="salesman_edit">
+                    </div>
+                    <div class="input-group basis-2/4">
+                        <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">หมายเหตุ</div>
+                        <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
+                            class="form-control" id="remark2_quote_edit">
+                    </div>
+                </div>
+                <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                    <div class="input-group basis-full">
+                        <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">item *</div>
+            <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off" class="form-control"
+              list="list_item" id="item_quote_edit">
+            <datalist id="list_item">
+            </datalist>
+                    </div>
+                </div>
+                <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                    <div class="input-group basis-2/4">
+                        <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">qty *
+                        </div>
+                        <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
+                            class="form-control" id="qty_quote_edit">
+                    </div>
+                    <div class="input-group basis-2/4">
+                        <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">หน่วย *
+                        </div>
+                        <select style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
+                            class="form-control" id="u_m_quote_edit">
+                            <option value="PCS">PCS</option>
+                            <option value="KG">KG</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                    <div class="input-group basis-2/4">
+                        <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">unit
+                            price *</div>
+                        <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
+                            class="form-control" id="unit_price_edit">
+                    </div>
+                    <div class="input-group basis-2/4">
+                        <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">weight pcs *</div>
+                        <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
+                            class="form-control" id="weight_pcs_edit">
+                    </div>
+                </div>
+                <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                   <label class="custom-checkbox">
+                      <input type="checkbox" name='Revised' />
+                       <span class="checkmark"></span>
+                          Revised
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="SaveCalibration"
+                    onclick="SaveQuoteEdit()">บันทึก</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    $("#BtnSearchConBooking").click(function () {
+        ReportDeliveryTemp();
+    });
+
+
+    $('#btnAddQuote').click(function () {
+        var $select = $("#customer_quote");
+        $select.select2({
+            placeholder: 'กรุณาเลือก Customer',
+            allowClear: true,
+            width: '100%',
+            data: customer,
+            language: {
+                noResults: function () {
+                    return "ไม่พบข้อมูล";
+                }
+            }
+        }).trigger('change');
+        $('#ModalAddQuote').modal('show');
+
+    });
+
+
+    $("#Start_Date_Quote, #End_Date_Quote").datepicker({
+        dateFormat: "yy-mm-dd",
+        showAnim: "slideDown"
+
+    });
+
+    function ReportDeliveryTemp() {
+        var OldHtml = $("#BtnSearchConBooking").html();
+        var co_num = $("#co_num_booking").val();
+        var cust_po = $("#cust_po_booking").val();
+        var cust_name = $("#cust_name_booking").val();
+        var city = $("#city_booking").val();
+        var sts_po = $("#sts_po_booking").val();
+
+        if (co_num == "" && cust_po == "" && cust_name == "" && city == "" && sts_po == "") {
+            alert("กรุณากรอกข้อมูลในการค้นหา");
+            $("#BtnSearchConBooking").html(OldHtml);
+            return false;
+        }
+
+    
+        $("#BtnSearchConBooking").html("<i class='fa fa-spinner fa-spin'></i>");
+        $("#tblReportContainerBooking").loading();
+        $("#tblReportContainerBooking tfoot").remove();
+        $.ajax({
+            type: "POST",
+            url: "././module/RPT_CONTAINER_BOOKING/data.php",
+            dataType: "json",
+            beforeSend: function () {
+                $("#BtnSearchConBooking").html("<i class='fa fa-spinner fa-spin'>");
+            },
+            data: {
+                load: "GetReportContainerBooking",
+                co_num: co_num,
+                cust_po: cust_po,
+                cust_name: cust_name,
+                city: city ? city : "",
+                sts_po: sts_po ? sts_po : ""
+            },
+            success: function (data) {
+
+                $("#tblReportContainerBooking").DataTable().clear();
+                $("#tblReportContainerBooking").dataTable({
+                    aaData: data,
+                    paging: false,
+                    fixedHeader: true,
+                    destroy: true,
+                    processing: true,
+                    scrollY: "65vh",
+                    scrollCollapse: true,
+                    scrollX: true,
+                    select: true,
+                    columnDefs: [
+                        {
+                            targets: [0],
+                            width: 50
+                        },
+                        {
+                            targets: [1],
+                            width:100
+                        },
+                        {
+                            targets: [2],
+                            width: 100
+                        },
+                        {
+                            targets: [3],
+                            width: 100
+                        },
+                        {
+                            targets: [4],
+                            width: 50
+                        },
+                        {
+                            targets: [5],
+                            width: 50
+                        },
+                        {
+                            targets: [6],
+                            width: 50
+                        },
+                        {
+                            targets: [7],
+                            width: 50
+                        },
+                        {
+                            targets: [8],
+                            width: 100
+                        },
+                        {
+                            targets: [9],
+                            width: 60
+                        }
+                    ],
+                    columns: [
+                        {
+                            data: "co_num",
+                            className: "text-center",
+                        },
+                        {
+                            data: "cust_po",
+                            className: "text-center",
+                        },
+                        {
+                            data: "name",
+                            className: "text-center",
+                        },
+                        {
+                            data: "city",
+                            className: "text-center",
+                        },
+                        {
+                            data: "sts_po",
+                            className: "text-center",
+                        },
+                        {
+                            data: "bundle",
+                            className: "text-center",
+                        },
+                        {
+                            data: "qty_ordered",
+                            className: "text-center",
+                        },
+                        {
+                            data: "qty_ready",
+                            className: "text-center",
+                        },
+                        {
+                            data: "qty_shipped",
+                            className: "text-center",
+                        },
+                        {
+                            data: "qty_remain",
+                            className: "text-center",
+                        },
+                        {
+                            data: "cont_remain",
+                            className: "text-center",
+                            render: function (data, type, row, meta) {
+                                return parseFloat(data);
+                            }
+                        },
+                        {
+                            data: "total_cont40",
+                            className: "text-center",
+                        },
+                        {
+                            data: "total_cont45",
+                            className: "text-center",
+                        },
+                      
+                    ],
+                    dom:
+                        "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                        "<'row'<'col-md-12'tr>>" +
+                        "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                    buttons: [
+                        {
+                            extend: "print",
+                            text: "<i class='fa fa-print'></i>&nbsp;Print",
+                            title: "",
+                        },
+                        {
+                            extend: "excel",
+                            footer: true,
+                            text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                            title:
+                                "รายงานการจองตู้ " + GetCurrDateTime(),
+                        },
+                        {
+                            text: `<button type="button" class="btn btn-warning">Booking</button>`,
+                            action: function (e, dt, node, config) {
+                                // on selected
+                                let selected = Array.from(dt.rows('.selected').data());
+                                if (selected.length == 0) {
+                                    alert("กรุณารายการที่ต้องการแก้ไข");
+                                    return false;
+                                }
+                                $("#co_num").val(selected[0].co_num);
+                                $("#ModalContainerBooking").modal("show");
+
+                            }
+                        },
+                    ],
+                });
+                $("#tblReportContainerBooking").loading("stop");
+                $("#BtnSearchConBooking").html(OldHtml);
+            },
+            error: function (e) {
+                $("#tblReportContainerBooking").loading("stop");
+                $("#BtnSearchConBooking").html(OldHtml);
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            },
+        });
+    }
+
+    function SaveBooking() {
+        var co_num = $("#co_num").val();
+        var status = $("#status_booking").val();
+        var no_container = $("#no_container").val();
+        var no_container_45 = $("#no_container_45").val();
+
+        if (co_num.length == 0) {no_container
+            alert("ไม่มีเลข co num กรุณาตรวจสอบ");
+            return false;
+        }
+
+        if (status.length == 0) {
+            alert("กรุณาเลือกสถานะ");
+            return false;
+        }
+
+        if (no_container.length == 0) {
+            alert("กรุณากรอกจำนวน Booking");
+            return false;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "././module/RPT_CONTAINER_BOOKING/data.php",
+            dataType: "json",
+            data: {
+                load: "CreateContainerBooking",
+                co_num: co_num,
+                status: status,
+                no_container: no_container,
+                no_container_45: no_container_45
+            },
+            success: function (data) {
+                alert(`บันทึกข้อมูลสําเร็จ`);
+                $("#co_num").val("");
+                $("#no_container").val("");
+                $("#ModalContainerBooking").modal("hide");
+                ReportDeliveryTemp();
+            },
+            error: function (e) {
+                alert("บันทึกข้อมูลไม่สําเร็จ");
+            },
+        });
+    }
+
+
+</script>
