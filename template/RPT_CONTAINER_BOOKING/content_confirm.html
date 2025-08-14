@@ -123,13 +123,13 @@
                 <th class="bg-gray">Co Number</th>
                 <th class="bg-gray">STS PO</th>
                 <th class="bg-gray">PO.CUST</th>
-                <th class="bg-gray">Co Line</th>
                 <th class="bg-gray">Size</th>
                 <th class="bg-gray">Spec</th>
                 <th class="bg-gray">Schedule</th>
                 <th class="bg-gray">Length</th>
                 <th class="bg-gray">Type</th>
                 <th class="bg-gray">Pack</th>
+                <th class="bg-gray">Co Line</th>
                 <th class="bg-gray">Bundle</th>
                 <th class="bg-gray">มัดเศษ</th>
             </tr>
@@ -246,15 +246,13 @@
             { "data": "co_num" },
             { "data": "sts_po" },
             { "data": "cust_po" },
-
-            { "data": "co_line" },
             { "data": "size" },
             { "data": "spec" },
             { "data": "schedule" },
             { "data": "length" },
             { "data": "type" },
             { "data": "pack" },
-
+            { "data": "co_line" },
             // on select container
             {
                 "data": null,
@@ -283,6 +281,8 @@
                     return `<input size="5" type='text' class='form-control container-input' value='${val}' data-field='${fieldName}' data-row='${meta.row}' onchange="SaveContainer(this, ${meta.row}, 'pcs');" onkeyup="if(event.keyCode == 13) { var index = ${meta.row} + 1; if (index < table.data().length) { var nextInput = $('#tblReportContainerManage tbody tr:eq('+index+') .container-input')[0]; if(nextInput) { nextInput.focus(); nextInput.setSelectionRange(nextInput.value.length, nextInput.value.length); } } }">`;
                 }
             },
+           
+            
 
         ],
         dom:
@@ -296,10 +296,32 @@
                 text: 'Print',
                 className: 'btn btn-primary',
                 title: 'Container Booking',
-                exportOptions: {
-                    columns: ':visible',
+                customize: function (win) {
+                    // add column 
+                   
                 }
-
+            },
+            // excel
+            {
+                extend: 'excel',
+                text: 'Excel',
+                className: 'btn btn-primary',
+                title: 'Container Booking',
+                customize: function (xlsx) {
+                    // if column value is null or undefined or empty, hide column
+                    var sheet = xlsx.xl.worksheets['sheet1.xml'];
+                    $('row c[r^="A"]', sheet).each( function () {
+                        if (this.$.t == "" || this.$.t == null || this.$.t == undefined) {
+                            var index = Number($(this).attr('r').replace(/[A-Z]/g, '')) - 1;
+                            if (index > -1) {
+                                $(`thead th:eq(${index}), tbody tr td:eq(${index})`, table.table().container()).hide();
+                            }
+                        }
+                    });
+                    
+                    
+                   
+                }
             },
             {
                 text: `<select class="form-control" id="containerSelect" style="min-width: 150px; font-weight: bold; font-size: 16px;">
@@ -793,6 +815,12 @@
         dateFormat: "yy-mm-dd",
         showAnim: "slideDown"
     });
+
+    // create table print custom
+    
+
+   
+
 
 
 
