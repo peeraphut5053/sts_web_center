@@ -266,8 +266,6 @@
                     if (val == null || val == undefined) {
                         val = "";
                     }
-
-
                     return `<input size="5" type='text' class='form-control container-input' value='${val}' data-field='${fieldName}' data-row='${meta.row}' onchange="SaveContainer(this, ${meta.row},'bundle');" onkeyup="if(event.keyCode == 13) { var index = ${meta.row} + 1; if (index < table.data().length) { var nextInput = $('#tblReportContainerManage tbody tr:eq('+index+') .container-input')[0]; if(nextInput) { nextInput.focus(); nextInput.setSelectionRange(nextInput.value.length, nextInput.value.length); } } }">`;
                 }
             },
@@ -277,17 +275,14 @@
                     // ดึงค่าจาก field ที่ต้องการตาม container_no
                     let fieldName = `bundle_pcs`;
                     let val = row[fieldName] || '';
-
-                    if (val == null || val == undefined) {
+    
+                    if (val == null || val == undefined || row["cont_no(pcs)"] !== Number(container_no)) {
                         val = "";
                     }
-
 
                     return `<input size="5" type='text' class='form-control container-input' value='${val}' data-field='${fieldName}' data-row='${meta.row}' onchange="SaveContainer(this, ${meta.row}, 'pcs');" onkeyup="if(event.keyCode == 13) { var index = ${meta.row} + 1; if (index < table.data().length) { var nextInput = $('#tblReportContainerManage tbody tr:eq('+index+') .container-input')[0]; if(nextInput) { nextInput.focus(); nextInput.setSelectionRange(nextInput.value.length, nextInput.value.length); } } }">`;
                 }
             },
-
-
 
         ],
         dom:
@@ -443,29 +438,7 @@
                 }
             }
         ],
-        footerCallback: function (row, data, start, end, display) {
-            var api = this.api(),
-                data;
-            var intVal = function (i) {
-                return typeof i === 'string' ?
-                    i.replace(/[\$,]/g, '') * 1 :
-                    typeof i === 'number' ?
-                        i : 0;
-            };
-            var totalKG = api
-                .column(11)
-                .data()
-                .reduce(function (a, b) {
-                    return intVal(a) + intVal(b);
-                }, 0);
-
-
-            $(api.column(5).footer()).html("<b>รวม</b>");
-            $(api.column(11).footer()).html(addCommas(totalKG.toFixed(2)));
-
-
-        }
-    });
+         });
 
     $.ajax({
         type: "GET",
