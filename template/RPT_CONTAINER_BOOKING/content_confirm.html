@@ -31,12 +31,12 @@
                 <datalist id="list_doc_num">
                 </datalist>
             </div>
-            <div class="input-group basis-1/6 hidden">
+            <div class="input-group basis-1/6">
                 <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">Co Num</div>
                 <input type="text" style="font-weight: bold; font-size: 16px;" class="form-control txt-filter"
                     id="co_num_search">
             </div>
-            <div class="input-group basis-1/6 hidden">
+            <div class="input-group basis-1/6">
                 <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">Cust PO</div>
                 <input type="text" style="font-weight: bold; font-size: 16px;" class="form-control txt-filter"
                     id="cust_po">
@@ -51,7 +51,7 @@
                 <input type="text" style="font-weight: bold; font-size: 16px;" class="form-control txt-filter"
                     id="city_search">
             </div>
-            <div class="input-group basis-1/6 hidden">
+            <div class="input-group basis-1/6">
                 <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">STS PO</div>
                 <input type="text" style="font-weight: bold; font-size: 16px;" class="form-control txt-filter"
                     id="sts_po">
@@ -120,7 +120,6 @@
             <tr>
                 <th class="bg-gray">Doc Num</th>
                 <th class="bg-gray">Job</th>
-                <th class="bg-gray">Co Number</th>
                 <th class="bg-gray">STS PO</th>
                 <th class="bg-gray">PO.CUST</th>
                 <th class="bg-gray">Size</th>
@@ -129,6 +128,7 @@
                 <th class="bg-gray">Length</th>
                 <th class="bg-gray">Type</th>
                 <th class="bg-gray">Pack</th>
+                <th class="bg-gray">Co Number</th>
                 <th class="bg-gray">Co Line</th>
                 <th class="bg-gray">Bundle</th>
                 <th class="bg-gray">มัดเศษ</th>
@@ -243,7 +243,7 @@
 
             { "data": "doc_num" },
             { "data": "job" },
-            { "data": "co_num" },
+   
             { "data": "sts_po" },
             { "data": "cust_po" },
             { "data": "size" },
@@ -252,6 +252,7 @@
             { "data": "length" },
             { "data": "type" },
             { "data": "pack" },
+                     { "data": "co_num" },
             { "data": "co_line" },
             // on select container
             {
@@ -290,6 +291,7 @@
             "<'row'<'col-md-12'tr>>" +
             "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
         buttons: [
+           
             {
                 text: `<select class="form-control" id="containerSelect" style="min-width: 150px; font-weight: bold; font-size: 16px;">
                    <option value="1">1</option>

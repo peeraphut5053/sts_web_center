@@ -121,9 +121,26 @@ order by co.co_num";
     }
 
      function GetReportContainerBookingConfirm($doc_num, $co_num, $cust_po, $cust_name, $city, $sts_po) {
+        $wh = '';
+        if ($co_num !== "") {
+            $wh = "and co_num = '$co_num' ";
+        }
+        if ($cust_po !== "") {
+            $wh = "and cust_po = '$cust_po' ";
+        }
+        if ($cust_name !== "") {
+            $wh = "and cust_name = '$cust_name' ";
+        }
+        if ($city !== "") {
+            $wh = "and city = '$city' ";
+        }
+        if ($sts_po !== "") {
+            $wh = "and sts_po = '$sts_po' ";
+            # code...
+        }
         $query = "select * 
 from V_STS_EX_booking_line_cont 
-where doc_num = '$doc_num'";
+where doc_num = '$doc_num' $wh";
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
