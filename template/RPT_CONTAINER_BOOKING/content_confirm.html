@@ -291,39 +291,6 @@
             "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
         buttons: [
             {
-                // print
-                extend: 'print',
-                text: 'Print',
-                className: 'btn btn-primary',
-                title: 'Container Booking',
-                customize: function (win) {
-                    // add column 
-                   
-                }
-            },
-            // excel
-            {
-                extend: 'excel',
-                text: 'Excel',
-                className: 'btn btn-primary',
-                title: 'Container Booking',
-                customize: function (xlsx) {
-                    // if column value is null or undefined or empty, hide column
-                    var sheet = xlsx.xl.worksheets['sheet1.xml'];
-                    $('row c[r^="A"]', sheet).each( function () {
-                        if (this.$.t == "" || this.$.t == null || this.$.t == undefined) {
-                            var index = Number($(this).attr('r').replace(/[A-Z]/g, '')) - 1;
-                            if (index > -1) {
-                                $(`thead th:eq(${index}), tbody tr td:eq(${index})`, table.table().container()).hide();
-                            }
-                        }
-                    });
-                    
-                    
-                   
-                }
-            },
-            {
                 text: `<select class="form-control" id="containerSelect" style="min-width: 150px; font-weight: bold; font-size: 16px;">
                    <option value="1">1</option>
                    <option value="2">2</option>
