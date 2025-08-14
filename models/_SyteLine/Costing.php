@@ -163,8 +163,7 @@ order by lot, trans_num";
         }
 
         $query = "select hdr.doc_num, hdr.cust_num, cust.name, hdr.cust_seq, hdr.ref_no, hdr.cust_po, hdr.delivery_date
-  ,hdr.inv_num,hdr.pickPlace, item.item, item.actweight, qty = isnull(item.qty_modif,item.qty)
-  , qty_amend = isnull(item.qty_modif,0)
+  ,hdr.inv_num,hdr.pickPlace, item.item, item.actweight, item.qty, qty_amend = isnull(item.qty_modif,0)
   , item.u_m, hdr.car, hdr.remark , addr##1 as add1, addr##2 as add2, addr##3 as add3,addr##4 as add4, zip
 from STS_delivery_temp_hdr hdr 
   inner join STS_delivery_temp_item item on hdr.doc_num = item.doc_num

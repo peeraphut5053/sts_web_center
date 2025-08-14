@@ -163,7 +163,9 @@ where doc_num = '$doc_num' $wh";
     }
 
      function GetDataBookingByDocNum($doc_num) {
-        $query = "select * from STS_EX_booking where doc_num = '$doc_num'";
+        $query = "select distinct book.* , do.do_num
+from STS_EX_booking book
+left join do_hdr_mst do on (do.uf_bookingNo = book.booking_num40 or do.uf_bookingNo = book.booking_num45) where book.doc_num  = '$doc_num'";
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);

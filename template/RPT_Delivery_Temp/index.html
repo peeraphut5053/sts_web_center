@@ -1260,6 +1260,10 @@
       }
     };
 
+    const qty = selectedData.map((item) => 
+    Number(item.qty_amend) < 1 ? item.qty : item.qty_amend
+    );
+    
     const data = []
 
     data.push([
@@ -1310,7 +1314,7 @@
         data.push([
           { text: `รวม`, fontSize: 12, alignment: 'center', style: 'header' },
           { text: selectedData.reduce((total, item) => total + Number(item.actweight), 0), fontSize: 12, alignment: 'center' },
-          { text: selectedData.reduce((total, item) => total + Number(item.qty), 0), fontSize: 12, alignment: 'center' },
+          { text: qty.reduce((total, item) => total + Number(item), 0), fontSize: 12, alignment: 'center' },
           { text: "", fontSize: 12, alignment: 'center' },
         ],
         )

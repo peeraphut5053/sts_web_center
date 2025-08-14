@@ -369,7 +369,7 @@
             table.clear();
             data.forEach(item => {
                 let booking_date = item.booking_date == null ? "" : moment(item.booking_date?.date).format("YYYY-MM-DD");
-                table.row.add([item.doc_num, item.co_num, item.no_cont40, item.no_cont45, item.booking_num40, item.booking_num45, booking_date, item.status]).draw();
+                table.row.add([item.doc_num, item.co_num, item.no_cont40, item.no_cont45, item.booking_num40 + "," + item.do_num, item.booking_num45, booking_date, item.status]).draw();
             })
             $("#btnAddContainer").attr("disabled", false);
             $("#btnUpdateBooking").attr("disabled", true);
