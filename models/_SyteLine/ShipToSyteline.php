@@ -121,11 +121,9 @@ order by co.co_num";
     }
 
      function GetReportContainerBookingConfirm($doc_num, $co_num, $cust_po, $cust_name, $city, $sts_po) {
-        $query = "select bun.* , [cont_no(pcs)] = pcs.cont_no, pcs.bundle_pcs
-from V_STS_EX_booking_line_cont bun
-  left join STS_EX_booking_line_cont pcs on bun.co_num = pcs.co_num and bun.co_line = pcs.co_line and bun.doc_num = pcs.doc_num
-   and bundle_pcs is not null
-where bun.doc_num = '$doc_num'";
+        $query = "select * 
+from V_STS_EX_booking_line_cont 
+where doc_num = '$doc_num'";
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
