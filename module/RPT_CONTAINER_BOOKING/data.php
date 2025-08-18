@@ -58,3 +58,8 @@ if ($load == "GetDataByDocNum") {
     $Data = $Data->GetDataBookingByDocNum($doc_num);
     echo json_encode($Data);
 }
+
+if ($load == "ReportBookingLine") {
+    $Data = $Data->GetReportBookingLine($doc_num, $co_num, $cust_po, $cust_name, $city, $sts_po);
+    echo json_encode($Data);
+}

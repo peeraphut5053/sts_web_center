@@ -1,0 +1,341 @@
+<style>
+    .col-search {
+      padding-left: 3px;
+      padding-right: 3px;
+    }
+    /*    table.dataTable thead .sorting:after,
+          table.dataTable thead .sorting:before,
+          table.dataTable thead .sorting_asc:after,
+          table.dataTable thead .sorting_asc:before,
+          table.dataTable thead .sorting_asc_disabled:after,
+          table.dataTable thead .sorting_asc_disabled:before,
+          table.dataTable thead .sorting_desc:after,
+          table.dataTable thead .sorting_desc:before,
+          table.dataTable thead .sorting_desc_disabled:after,
+          table.dataTable thead .sorting_desc_disabled:before {
+              bottom: .5em;
+          }*/
+    .table thead th {
+      text-align: center;
+    }
+  
+    .col-flt-page {
+      padding-top: 10px;
+      font-weight: bold;
+    }
+  
+    #tblReportBookingLine tbody tr td a {
+      cursor: pointer;
+    }
+    table.dataTable.fixedHeader-floating,
+    table.dataTable.fixedHeader-locked {
+      background-color: white;
+      margin-top: 50px !important;
+      margin-bottom: 0 !important;
+    }
+    @media print {
+      table th:nth-child(0) {
+        width: 200px;
+        word-break: break-all;
+        white-space: pre-line;
+      }
+      table td:nth-child(0) {
+        width: 200px;
+        word-break: break-all;
+        white-space: pre-line;
+      }
+    }
+    .text-header {
+      font-weight: bold;
+      font-size: 20px;
+    }
+    .text-wrap {
+      white-space: normal;
+    }
+    .width-200 {
+      width: 200px;
+    }
+    input[type="checkbox"] {
+      margin-left: 5px;
+      margin-right: 5px;
+    } /*
+      .cb_lb{
+          margin-top:-5px;
+      }*/
+    .item-center {
+      display: flex;
+      justify-content: center;
+    }
+  </style>
+  <div class="row">
+    <h2 class="text-left m-4">รายงานการจองตู้</h2>
+  </div>
+  <div class="row items-start">
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+      <div class="input-group">
+        <div class="input-group-addon">Doc Num</div>
+        <input
+          type="text"
+          class="form-control"
+          id="doc_num_r"
+          autocomplete="off"
+        />
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+      <div class="input-group">
+        <div class="input-group-addon">Co Num</div>
+        <input
+          type="text"
+          class="form-control"
+          id="co_num_r"
+          autocomplete="off"
+        />
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+      <div class="input-group">
+        <div class="input-group-addon">Cust PO</div>
+        <input
+          type="text"
+          class="form-control"
+          id="cust_po_r"
+          autocomplete="off"
+        />
+      </div>
+    </div>
+    <div class="col-lg-1 col-md-1 col-sm-6 col-xs-6 text-left">
+      <button class="btn btn-info" id="btnSearchReport">
+        <i class="fa fa-search"></i>&nbsp; Search
+      </button>
+    </div>
+  </div>
+
+  <div class="row items-start">
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+      <div class="input-group">
+        <div class="input-group-addon">Cust Name</div>
+        <input
+          type="text"
+          class="form-control"
+          id="cust_name_r"
+          autocomplete="off"
+        />
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+      <div class="input-group">
+        <div class="input-group-addon">City</div>
+        <input
+          type="text"
+          class="form-control"
+          id="city_r"
+          autocomplete="off"
+        />
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+      <div class="input-group">
+        <div class="input-group-addon">STS PO</div>
+        <input
+          type="text"
+          class="form-control"
+          id="sts_po_r"
+          autocomplete="off"
+        />
+      </div>
+    </div>
+  </div>
+  
+  
+  <div class="row" id="rowResultTable">
+    <table
+      class="table table-condensed table-bordered table-striped"
+      width="100%"
+      id="tblReportBookingLine"
+    >
+      <thead>
+        <tr>
+          <th class="bg-gray">Doc Num</th>
+          <th class="bg-gray">Booking Number 40</th>
+          <th class="bg-gray">Booking Number 45</th>
+          <th class="bg-gray">Name</th>
+          <th class="bg-gray">City</th>
+          <th class="bg-gray">Cust PO</th>
+          <th class="bg-gray">Co Number</th>
+          <th class="bg-gray">Co Line</th>
+          <th class="bg-gray">Item</th>
+          <th class="bg-gray">Container No.</th>
+          <th class="bg-gray">Bundle</th>
+          <th class="bg-gray">มัดเศษ</th>
+          <th class="bg-gray">Qty</th>
+        </tr>
+      </thead>
+      <!--        <tbody id="tblReportBookingLineList">
+                      <tr><td align="center" colspan="12">.... No item search ....</td></tr>
+     </tbody>-->
+    </table>
+  </div>
+  <div id="printpopup"></div>
+  <script type="text/javascript">
+ 
+    $("#btnSearchReport").click(function () {
+      ReportItemSearch();
+    });
+           
+    function ReportItemSearch() {
+      var OldHtml = $("#btnSearchReport").html();
+      var doc_num = $("#doc_num_r").val();
+      var co_num = $("#co_num_r").val();
+      var cust_po = $("#cust_po_r").val();
+      var cust_name = $("#cust_name_r").val();
+      var city = $("#city_r").val();
+      var sts_po = $("#sts_po_r").val();
+
+  
+      if (doc_num == "" && co_num == "" && cust_po == "" && cust_name == "" && city == "" && sts_po == "") {
+        $.alert("กรุณากรอกข้อมูลอย่างน้อย 1 ช่อง");
+        return false;
+      } else {
+        $("#btnSearchReport").html("<i class='fa fa-spinner fa-spin'></i>");
+        $("#tblReportBookingLine").loading();
+        $("#tblReportBookingLine tfoot").remove();
+        $.ajax({
+          type: "POST",
+          url: "././module/RPT_CONTAINER_BOOKING/data.php",
+          dataType: "json",
+          beforeSend: function () {
+            $("#btnSearchReport").html("<i class='fa fa-spinner fa-spin'>");
+          },
+          data: {
+            load: "ReportBookingLine",
+            doc_num: doc_num,
+            co_num: co_num,
+            cust_po: cust_po,
+            cust_name: cust_name,
+            city: city,
+            sts_po: sts_po
+          },
+          success: function (data) {
+            $("#tblReportBookingLine").DataTable().clear();
+            $("#tblReportBookingLine").append(
+              "<tfoot><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></tfoot>"
+            );
+            $("#tblReportBookingLine").dataTable({
+              aaData: data,
+              paging: false,
+              fixedHeader: true,
+              destroy: true,
+              processing: true,
+              scrollY: "65vh",
+              scrollCollapse: true,
+              scrollX: true,
+              select: false,
+               columnDefs: [
+                    {
+                        targets: [3],
+                        width: 150,
+                    },
+                     {
+                        targets: [4],
+                        width: 80,
+                    },
+                      {
+                        targets: [5],
+                        width: 80,
+                    },
+                      {
+                        targets: [8],
+                        width: 210,
+                    },
+                ],
+              columns: [
+                {
+                  data: "doc_num",
+                  className: "text-center",
+                },
+                {
+                  data: "booking_num40",
+                  className: "text-center",
+                },
+                {
+                  data: "booking_num45",
+                  className: "text-center",
+                },
+                {
+                  data: "name",
+                  className: "text-center",
+                },
+                {
+                  data: "city",
+                  className: "text-center",
+                },
+                {
+                  data: "cust_po",
+                  className: "text-center",
+                },
+                {
+                  data: "co_num",
+                  className: "text-center",
+                },
+                {
+                  data: "co_line",
+                  className: "text-center",
+                },
+                {
+                  data: "item",
+                  className: "text-center",
+                },
+                {
+                  data: "cont_no",
+                  className: "text-center",
+                },
+                {
+                  data: "bundle",
+                  className: "text-center",
+                },
+                {
+                  data: "bundle_pcs",
+                  className: "text-center",
+                },
+                {
+                  data: "qty",
+                  className: "text-center",
+                },
+              ],
+              dom:
+                "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                "<'row'<'col-md-12'tr>>" +
+                "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+              buttons: [
+                {
+                  extend: "print",
+                  text: "<i class='fa fa-print'></i>&nbsp;Print",
+                  title: "",
+                },
+                {
+                  extend: "excel",
+                  footer: true,
+                  text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                  title:
+                    "รายงานการจองตู้" + moment().format("YYYY-MM-DD HH:mm:ss"),
+                   
+                },
+              ]
+            });
+  
+            $("#tblReportBookingLine").loading("stop");
+            $("#btnSearchReport").html(OldHtml);
+          },
+          error: function (e) {
+            $("#tblReportBookingLine").loading("stop");
+            $("#btnSearchReport").html(OldHtml);
+            console.log("There was an error with your request...");
+            console.log("error: " + JSON.stringify(e));
+          },
+        });
+      }
+    }
+
+  </script>
+  

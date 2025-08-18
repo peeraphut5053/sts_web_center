@@ -220,5 +220,19 @@ group by line.doc_num ,line.cont_no";
         return $rs;
     }
 
+     function GetReportBookingLine($doc_num, $co_num, $cust_po, $cust_name, $city, $sts_po) {
+        $query = "EXEC [dbo].[sts_EX_booking_line]
+  @co_num = '$co_num',
+  @cust_po = '$cust_po',
+  @cust_name = '$cust_name',
+  @city = '$city',
+  @sts_po = '$sts_po',
+  @doc_num = '$doc_num'";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
 
 }
