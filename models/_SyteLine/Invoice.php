@@ -487,33 +487,19 @@ class Invoice {
 
         $item = $this->_item;
 
-        $query = "SELECT  CONVERT(varchar,inv_date,103) as inv_date_conv ,FORMAT(AMT, 'N2') as AMT_2d, * 
-        ,recpt_date =   isnull(stuff(
-                                (SELECT ',' + convert(varchar,convert(date,(recpt_date)))
-                              FROM artran_mst arsub
-                                 WHERE arsub.inv_num = V_WebApp_InvItem_IN_noVAT.inv_num
-                                   AND arsub.[type] = 'P'
-                                 GROUP BY inv_num,inv_seq,recpt_date,amount
-                                 ORDER BY inv_seq--,convert(date,recpt_date),amount 
-                                 FOR XML PATH ('')) , 1, 1, ''), '')
-       , recpt_amount =   isnull(stuff(
-                                (SELECT ',' + convert(varchar,convert(decimal(20,3),amount))
-                              FROM artran_mst arsub
-                                 WHERE arsub.inv_num = V_WebApp_InvItem_IN_noVAT.inv_num
-                                   AND arsub.[type] = 'P'
-                                 GROUP BY inv_num,inv_seq,convert(date,recpt_date),amount
-                                 ORDER BY inv_seq--,convert(date,recpt_date),amount
-                                 FOR XML PATH ('')) , 1, 1, ''), '') 
- FROM V_WebApp_InvItem_IN_noVAT
- where 1=1";
+        $query = "EXEC [dbo].[SP_WebApp_InvItem]
+  @InvDateStart = N'$start_invdate',
+  @InvDateEnd = N'$end_invdate',
+  @InvNumStart = " . ($start_inv !== '' ? "'$start_inv'" : "null") . ",
+  @InvNumEnd = " . ($end_inv !== '' ? "'$end_inv'" : "null") . "";
         
 
-        if (($start_inv) && ($end_inv)) {
+        /*if (($start_inv) && ($end_inv)) {
             $query .= " AND ( inv_num between '$start_inv' AND '$end_inv' ) ";
         }
         if (($start_invdate) && ($end_invdate)) {
             $query .= " AND ( inv_date BETWEEN '$start_invdate 00:00:00' AND '$end_invdate 23:59:59' ) ";
-        }
+        }*/
         if ($this->_item != "") {
             $query = $query . "AND ( CONCAT(item , ' ' , description)  LIKE '%" . trim($this->_item) . "%' ) ";
         }
@@ -550,7 +536,7 @@ class Invoice {
             $query .= substr($Criteria, 0, -3) . " ) ";
         }
 
-        $query = $query . " ORDER BY inv_date , inv_num , co_num, co_line , Uf_DoHdr_car_num, item";
+        // $query = $query . " ORDER BY inv_date , inv_num , co_num, co_line , Uf_DoHdr_car_num, item";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);
@@ -641,7 +627,10 @@ class Invoice {
             $query = "  select cust_num,name, SUM( isnull(cast(replace(QtyKG, ',', '') as decimal(23, 2)), 0) ) as AmountUSD, SUM( isnull(cast(replace(AMT_THB, ',', '') as decimal(23, 2)), 0) ) as AmountTHB  FROM v_webapp_invitem_EX where 1=1 "
                     . " and (inv_date between '$from_date 00:00:00' and '$end_date 23:59:59')  group by cust_num,name order by cust_num";
         } else {
-            $query = "select cust_num,cust_name,sum(qtyKG) as summary_kg,sum(AMT_TOTAL) as  summary_amount  FROM V_WebApp_InvItem_IN where  inv_date between '$from_date' and '$end_date' group by cust_num ,cust_name ";
+            $query = "select cust_num,cust_name,sum(qtyKG) as summary_kg,sum(AMT) as  summary_amount  
+FROM V_WebApp_InvItem_IN_noVAT 
+where  inv_date between '$from_date' and '$end_date' 
+group by cust_num ,cust_name";
         }
 
         $cSql = new SqlSrv();
@@ -843,10 +832,10 @@ where left(customer_mst.cust_num,2) = 'EX' group by custaddr_mst.cust_num,custad
 
             $query = " select isnull(group_code,'Z_ORDER') as group_code , isnull(group_final,'') as group_final , SUM( isnull(cast(replace(QtyKG, ',', '') as decimal(23, 2)), 0) ) as summary_kg , SUM( isnull(cast(replace(AMT_THB, ',', '') as decimal(23, 2)), 0) ) as summary_amount  FROM v_webapp_invitem_EX where 1=1  ";
         } else {
-            $query = " select isnull(group_final,'Z_ORDER') as group_code ,"
-                    . " isnull(group_final,'') as group_final, SUM( isnull(cast(replace(QtyKG, ',', '') as decimal(23, 2)), 0) ) as summary_kg,"
-                    . " SUM( isnull(cast(replace(AMT_TOTAL, ',', '') as decimal(23, 2)), 0) ) as summary_amount "
-                    . " FROM V_WebApp_InvItem_IN where 1=1 ";
+            $query = " select isnull(group_final,'Z_ORDER') as group_code , isnull(group_final,'') as group_final
+, SUM( isnull(cast(replace(QtyKG, ',', '') as decimal(23, 2)), 0) ) as summary_kg
+, SUM( isnull(cast(replace(AMT, ',', '') as decimal(23, 2)), 0) ) as summary_amount 
+FROM V_WebApp_InvItem_IN_noVAT where 1=1 ";
         }
         if ($from_date && $end_date) {
             $query = $query . " and (inv_date between '$from_date 00:00:00'  and '$end_date 23:59:59') ";
