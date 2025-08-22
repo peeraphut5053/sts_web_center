@@ -239,9 +239,11 @@ where cust.cust_num = '$cust_num'";
             $qty = $arr_qty[$key];
             $u_m = $arr_u_m[$key];
             $act_weight = $arr_act_weight[$key];
-            $query2 = "INSERT INTO STS_delivery_temp_item (doc_num,item,qty,u_m,ActWeight) VALUES ('$docNumber','$item','$qty','$u_m','$act_weight')";
+            $query2 = "INSERT INTO STS_delivery_temp_item (doc_num, item, qty, u_m, ActWeight) 
+        VALUES (?, ?, ?, ?, ?)";
+            $params = array($docNumber, $item, $qty, $u_m, $act_weight);
             $cSql = new SqlSrv();
-            $rs = $cSql->SqlQuery($this->StrConn, $query2);
+            $rs = $cSql->SqlQuery2($this->StrConn, $query2, $params);
         }
         array_splice($rs, count($rs) - 1, 1);
         return $docNumber;
@@ -389,9 +391,10 @@ where 1=1 $wh
         return $rs;
     }
     function AddDeliveryTempItem($doc_num, $item, $qty, $u_m, $act_weight) {
-        $query = "INSERT INTO STS_delivery_temp_item (doc_num,item,qty,u_m,ActWeight) VALUES ('$doc_num','$item','$qty','$u_m','$act_weight')";
+        $query = "INSERT INTO STS_delivery_temp_item (doc_num,item,qty,u_m,ActWeight) VALUES (?,?,?,?,?)";
+        $params = array($doc_num, $item, $qty, $u_m, $act_weight);
         $cSql = new SqlSrv();
-        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        $rs = $cSql->SqlQuery2($this->StrConn, $query, $params);
         array_splice($rs, count($rs) - 1, 1);
         return $rs;
     }

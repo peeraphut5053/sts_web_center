@@ -23,6 +23,24 @@ class SqlSrv {
 			return $rs;
 		}
 	}
+
+	function SqlQuery2($conn, $sql, $params, $type="key") {
+		$this->query = @sqlsrv_query($conn, $sql, $params);
+		if ($this->RsQuery($sql)) {
+			$row = 1;			
+			while ($result = sqlsrv_fetch_array($this->query, SQLSRV_FETCH_ASSOC)) {
+				$num=0;
+				foreach($result as $key=>$value) {
+					//$value = trim(stripslashes($value));
+					if ($type=="num") $rs[$row][$num++] = $value;
+					else $rs[$row][$key] = $value;	
+				}  
+				$row++;
+			}
+			$rs[0][0] = $row-1;			
+			return $rs;
+		}
+	}
 	
 	//insert //update //delete
 	function IsUpDel($conn, $sql) { 
