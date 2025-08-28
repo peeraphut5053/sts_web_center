@@ -1,0 +1,378 @@
+<style>
+    .col-search {
+      padding-left: 3px;
+      padding-right: 3px;
+    }
+    /*    table.dataTable thead .sorting:after,
+          table.dataTable thead .sorting:before,
+          table.dataTable thead .sorting_asc:after,
+          table.dataTable thead .sorting_asc:before,
+          table.dataTable thead .sorting_asc_disabled:after,
+          table.dataTable thead .sorting_asc_disabled:before,
+          table.dataTable thead .sorting_desc:after,
+          table.dataTable thead .sorting_desc:before,
+          table.dataTable thead .sorting_desc_disabled:after,
+          table.dataTable thead .sorting_desc_disabled:before {
+              bottom: .5em;
+          }*/
+    .table thead th {
+      text-align: center;
+    }
+  
+    .col-flt-page {
+      padding-top: 10px;
+      font-weight: bold;
+    }
+  
+    #tblReworkReport tbody tr td a {
+      cursor: pointer;
+    }
+    table.dataTable.fixedHeader-floating,
+    table.dataTable.fixedHeader-locked {
+      background-color: white;
+      margin-top: 50px !important;
+      margin-bottom: 0 !important;
+    }
+    @media print {
+      table th:nth-child(0) {
+        width: 200px;
+        word-break: break-all;
+        white-space: pre-line;
+      }
+      table td:nth-child(0) {
+        width: 200px;
+        word-break: break-all;
+        white-space: pre-line;
+      }
+    }
+    .text-header {
+      font-weight: bold;
+      font-size: 20px;
+    }
+    .text-wrap {
+      white-space: normal;
+    }
+    .width-200 {
+      width: 200px;
+    }
+    input[type="checkbox"] {
+      margin-left: 5px;
+      margin-right: 5px;
+    } /*
+      .cb_lb{
+          margin-top:-5px;
+      }*/
+    .item-center {
+      display: flex;
+      justify-content: center;
+    }
+  </style>
+  <div class="row">
+    <h4 class="text-header text-center">รายงานความประสงค์ขอแก้ไขสินค้า</h4>
+  </div>
+  <div class="row item-center">
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+      <div class="input-group">
+        <div class="input-group-addon">From Date</div>
+        <input
+          type="text"
+          class="form-control"
+          id="from_date_rework"
+          autocomplete="off"
+        />
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+      <div class="input-group">
+        <div class="input-group-addon">To Date</div>
+        <input
+          type="text"
+          class="form-control"
+          id="to_date_rework"
+          autocomplete="off"
+        />
+      </div>
+    </div>
+     <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+      <div class="input-group">
+        <div class="input-group-addon">เลขที่เอกสาร</div>
+        <input
+          type="text"
+          class="form-control"
+          id="doc_rework_report"
+          autocomplete="off"
+        />
+      </div>
+    </div>
+    <div class="col-lg-1 col-md-1 col-sm-6 col-xs-6 text-left">
+      <button class="btn btn-info" id="btnSearchReworkReport">
+        <i class="fa fa-search"></i>&nbsp; Search
+      </button>
+    </div>
+  </div>
+  
+  <div class="row" id="rowResultTable">
+    <table
+      class="table table-condensed table-bordered table-striped"
+      width="100%"
+      id="tblReworkReport"
+    >
+      <thead>
+        <tr>
+          <th class="bg-gray">เลขที่เอกสาร</th>
+          <th class="bg-gray">หน่วยงานผู้แจ้ง</th>
+          <th class="bg-gray">วันที่แจ้ง</th>
+          <th class="bg-gray">วันที่ต้องการใช้สินค้า</th>
+          <th class="bg-gray">ลำดับ</th>
+          <th class="bg-gray">Item สินค้าเดิม</th>
+          <th class="bg-gray">Item สินค้าใหม่</th>
+          <th class="bg-gray">รายละเอียด</th>
+          <th class="bg-gray">เหตุผล</th>
+          <th class="bg-gray">จำนวน (เส้น)</th>
+          <th class="bg-gray">รูปภาพ</th>
+          <th class="bg-gray">หน่วยงานที่ต้องการส่งไปแก้ไข</th>
+          <th class="bg-gray">ชื่อ-สกุลผู้แจ้ง</th>
+          <th class="bg-gray">Status</th>
+        </tr>
+      </thead>
+      <!--        <tbody id="tblReworkReportList">
+                      <tr><td align="center" colspan="12">.... No item search ....</td></tr>
+     </tbody>-->
+    </table>
+  </div>
+  <script type="text/javascript">
+ 
+    $("#btnSearchReworkReport").click(function () {
+      ReportItemSearch();
+    });
+           
+    function openImage(src) {
+        var win = window.open(src, '_blank');
+        win.focus();
+    }
+
+    $("#from_date_rework,#to_date_rework").datepicker({
+      dateFormat: "yy-mm-dd",
+    });
+    
+    $("#btnRemove").click(function () {
+      $("#tblReworkReport").DataTable().clear().destroy();
+    });
+  
+    function ReportItemSearch() {
+      var OldHtml = $("#btnSearchReworkReport").html();
+      var doc_rework = $("#doc_rework_report").val();
+      var from_date = $("#from_date_rework").val();
+      var to_date = $("#to_date_rework").val();
+ 
+  
+      if (from_date == "" && to_date == "" && doc_rework == "") {
+          $.alert("กรุณาระบุเลขที่เอกสาร หรือช่วงวันที่");
+          return false;
+      }
+  
+        $("#btnSearchReworkReport").html("<i class='fa fa-spinner fa-spin'></i>");
+        $("#tblReworkReport").loading();
+        $("#tblReworkReport tfoot").remove();
+        $.ajax({
+          type: "POST",
+          url: "././module/STS_REWORK_REPORT/data.php",
+          dataType: "json",
+          beforeSend: function () {
+            $("#btnSearchReworkReport").html("<i class='fa fa-spinner fa-spin'>");
+          },
+          data: {
+            load: "GetReport",
+            doc_rework: doc_rework,
+            from_date: from_date,
+            to_date: to_date
+          },
+          success: function (data) {
+            $("#tblReworkReport").DataTable().clear();
+            $("#tblReworkReport").append(
+              "<tfoot><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></tfoot>"
+            );
+            $("#tblReworkReport").dataTable({
+              aaData: data,
+              paging: false,
+              fixedHeader: true,
+              destroy: true,
+              processing: true,
+              scrollY: "65vh",
+              scrollCollapse: true,
+              scrollX: true,
+              select: true,
+              select: {
+                style: "single",
+              },
+              columnDefs: [
+                 {
+                  targets: [0],
+                  width: 60,
+                },
+                {
+                  targets: [1],
+                  width: 40,
+                },
+                 {
+                  targets: [3],
+                  width: 40,
+                },
+                 {
+                  targets: [4],
+                  width: 20,
+                },
+                {
+                  targets: [8],
+                  width: 150,
+                },
+                {
+                  targets: [11],
+                  width: 250,
+                }
+             ],
+              columns: [
+                {
+                  data: "docNo",
+                  className: "text-center",
+                },
+                {
+                  data: "deptdesc",
+                  className: "text-center",
+                },
+                {
+                  data: "createdate.date",
+                  className: "text-center",
+                  "render": function (data, type, row){
+                    return moment(data).format("DD/MM/YYYY");
+                  }
+                },
+                {
+                  data: "requiredate.date",
+                  className: "text-center",
+                  render: function (data, type, row) {
+                    return moment(data).format("DD/MM/YYYY");
+                  },
+                },
+                {
+                  data: "seq",
+                  className: "text-center",
+                },
+                {
+                  data: "item",
+                  className: "text-center",
+                },
+                {
+                  data: "Newitem",
+                  className: "text-center",
+                },
+                {
+                  data: "detail",
+                  className: "text-center",
+                },
+                {
+                  data: "reasondesc",
+                  className: "text-center",
+                },
+                {
+                  data: "qty",
+                  className: "text-center",
+                },
+                {
+                  data: "pic",
+                  className: "text-center",
+                  "render": function (data, type, row){
+                    return '<div style="display: flex; align-items: center; justify-content: center;"><img src="module/STS_REWORK_LINE/upload/' + data + '?v=' + Date.now() + '" style="width: 50px; height: 50px; " onclick="openImage(this.src)"></div>';
+                  }
+                },
+                {
+                  data: "wc",
+                  className: "text-center",
+                },
+                {
+                  data: "UserReq",
+                  className: "text-center",
+                },
+                {
+                  data: "stat",
+                  className: "text-center",
+                  "render": function (data, type, row, meta) {
+                      if (data == null || data == 0) {
+                        return `<button class='btn btn-danger' id='btnSaveStatus' style='width: 100px;' onclick='saveStatus("${row.docNo}", ${meta.row}, ${row.seq})'>พร้อมส่ง</button>`;
+                      } else {
+                        return `<button class='btn btn-success' id='btnSaveStatus' style='width: 100px;'>พร้อมส่ง</button>`;
+                      }
+                  }
+                },
+              ],
+              dom:
+                "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                "<'row'<'col-md-12'tr>>" +
+                "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+              buttons: [
+                {
+                  extend: "print",
+                  text: "<i class='fa fa-print'></i>&nbsp;Print",
+                  title: "",
+                },
+                {
+                  extend: "excel",
+                  footer: true,
+                  text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                  title:
+                    "Rework Report " + moment().format("DD-MM-YYYY HH:mm:ss"),
+                },
+              ]
+            });
+  
+            $("#tblReworkReport").loading("stop");
+            $("#btnSearchReworkReport").html(OldHtml);
+          },
+          error: function (e) {
+            $("#tblReworkReport").loading("stop");
+            $("#btnSearchReworkReport").html(OldHtml);
+            console.log("There was an error with your request...");
+            console.log("error: " + JSON.stringify(e));
+          },
+        });
+      }
+
+    function saveStatus(doc_no, row, seq){ 
+   
+    $.confirm({
+      title: 'กรุณายืนยัน',
+      theme: 'modern',
+      buttons: {
+        confirm: function checked() {
+            $.ajax({
+              type: "POST",
+              url: "././module/STS_REWORK_REPORT/data.php",
+              dataType: "json",
+              data: {
+                load: "SaveStatus",
+                doc_no: doc_no,
+                seq: seq
+              },
+              success: function (data) {
+                alert("บันทึกสําเร็จ");
+                var table = $('#tblReworkReport').DataTable();
+                table.cell(row, 13).data(1);
+                console.log(table.cell(status, 13).data());
+                
+                
+              },
+              error: function (e) {
+                alert("บันทึกไม่สําเร็จ");
+              },
+            });
+        },
+        cancel: function close() {
+          window.close()
+        }
+      }
+    });
+  }
+  
+
+  </script>
+  
