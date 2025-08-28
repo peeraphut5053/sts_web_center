@@ -544,6 +544,15 @@ if ($load == "SelectFinishing") {
     echo json_encode($Trans);
 }
 
+if ($load == "ExcelReportPo") {
+    $CallModel = new CallModel();
+    $CallModel->SyteLine_Models();
+    $Trans = new JobOrder();
+    $Trans->setConn($ConnSL);
+    $Trans = $Trans->ExcelReportPo($do_group_name,$loc, $boatPosition,$sts_po);
+    echo json_encode($Trans);
+}
+
 
 
 

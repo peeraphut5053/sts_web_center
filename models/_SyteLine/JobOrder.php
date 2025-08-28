@@ -1737,6 +1737,15 @@ order by job_mst.job";
         
     }
 
+    function ExcelReportPo($do_group_name,$loc, $boatPosition,$sts_po) {
+        $query = "EXEC STS_BOATNOTE_REPORT_detail @do_group_name = N'$do_group_name', @loc = N'$loc', @Boat_position = N'$boatPosition', @job='$sts_po'";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+        
+    }
+
     
     
 }
