@@ -487,11 +487,16 @@ class Invoice {
 
         $item = $this->_item;
 
+        $cust_num = $this->_Customers[0];
+
         $query = "EXEC [dbo].[SP_WebApp_InvItem]
   @InvDateStart = N'$start_invdate',
   @InvDateEnd = N'$end_invdate',
   @InvNumStart = " . ($start_inv !== '' ? "'$start_inv'" : "null") . ",
-  @InvNumEnd = " . ($end_inv !== '' ? "'$end_inv'" : "null") . "";
+  @InvNumEnd = " . ($end_inv !== '' ? "'$end_inv'" : "null") . ",
+  @Item = " . ($this->_item !== '' ? "'$this->_item'" : "null") . ",
+  @cust_num = " . ($cust_num !== '' ? "'$cust_num'" : "null") . "
+  ";
         
 
         /*if (($start_inv) && ($end_inv)) {
@@ -526,7 +531,7 @@ class Invoice {
             }
         }
 
-        $Customers = $this->_Customers;
+        {/*$Customers = $this->_Customers;
         $Criteria = "";
         if (isset($Customers[0])) {
             $Criteria .= " AND ( ";
@@ -535,6 +540,7 @@ class Invoice {
             }
             $query .= substr($Criteria, 0, -3) . " ) ";
         }
+        */}
 
         // $query = $query . " ORDER BY inv_date , inv_num , co_num, co_line , Uf_DoHdr_car_num, item";
         $cSql = new SqlSrv();
