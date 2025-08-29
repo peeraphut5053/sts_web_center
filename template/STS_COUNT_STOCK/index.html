@@ -351,7 +351,7 @@
                     tableStock.row.add([location, data[0]["item"], qty, data[0]["qty_stock"], remark, user]).draw();
                 }
 
-                $("#item_scan").val('');
+                $("#item_scan").val('').trigger('change');
                 $("#qty_stock").val('');
                 $("#remark_stock").val('');
                 $("#item_scan").focus();
@@ -409,6 +409,7 @@
                 $("#tag_stock").val('');
                 $("#qty_stock").val('');
                 $("#remark_stock").val('');
+                $("#item_scan").val('').trigger('change');
                 $("#tag_stock").focus();
                
             }
