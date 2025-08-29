@@ -28,10 +28,7 @@
         flex-grow: 1;
         gap: 1.5rem;
         margin-bottom: 1.25rem;
-        @media (max-width: 768px) {
-            flex-direction: column;
-            align-items: normal;
-        }
+    
     }
 </style>
 <div class="">
@@ -43,39 +40,39 @@
 </div>
 <div class="mycontainer mb-12">
     <div class="row col-xs-12">
-           <div class="mybox">
-            <div class="input-group basis-3/6 max-sm:basis-full">
+           <div class="mybox max-sm:flex-col">
+            <div class="input-group basis-3/6 max-sm:w-full">
                 <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">Location *</div>
                 <select style="font-weight: bold; font-size: 16px;" class="form-control txt-filter" id="location_stock">
                     <option value=""></option>
                 </select>
             </div>
-            <div class="input-group basis-3/6">
+            <div class="input-group basis-3/6 max-sm:w-full">
                 <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">User</div>
                 <input type="text" style="font-weight: bold; font-size: 16px;" class="form-control txt-filter"
                     id="user_stock" readonly>
             </div>
         </div>
-        <div class="mybox">
-             <div class="input-group basis-3/6">
+        <div class="mybox max-sm:flex-col">
+             <div class="input-group basis-3/6 max-sm:w-full">
                 <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">Tag</div>
                 <input type="text" style="font-weight: bold; font-size: 16px;" class="form-control txt-filter"
                     id="tag_stock" onkeypress="onScanTag(event)">
             </div>
-            <div class="input-group basis-3/6">
+            <div class="input-group basis-3/6 max-sm:w-full">
                 <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">Item *</div>
                 <select style="font-weight: bold; font-size: 16px;" class="form-control txt-filter" id="item_scan">
                     <option value=""></option>
                 </select>
             </div>
         </div>
-        <div class="mybox">
-             <div class="input-group basis-3/6">
+        <div class="mybox max-sm:flex-col">
+             <div class="input-group basis-3/6 max-sm:w-full">
                 <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">qty *</div>
                 <input type="number" style="font-weight: bold; font-size: 16px;" class="form-control txt-filter"
                     id="qty_stock">
             </div>
-                <div class="input-group basis-3/6">
+                <div class="input-group basis-3/6 max-sm:w-full">
                 <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">หมายเหตุ</div>
                 <input type="text" style="font-weight: bold; font-size: 16px;" class="form-control txt-filter"
                     id="remark_stock">
