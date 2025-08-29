@@ -141,4 +141,129 @@ class CountStock {
         return $query;
     }
 
+    function CheckStock($location, $item, $qty, $remark, $user) {
+        // check item exist or not if exist return true else return false
+        $query = "select itm.item, itm.[description], itm.u_m 
+ , loc = isnull(lot.loc, loc.loc), lot = isnull(lot.lot,'0'), qty_on_hand = coalesce(lot.qty_on_hand, loc.qty_on_hand, whse.qty_on_hand)
+from item_mst itm 
+left join lot_loc_mst lot on lot.item = itm.item and lot.loc = '$location'
+left join itemloc_mst loc on loc.item = itm.item and loc.loc = '$location'
+left join itemwhse_mst whse on whse.item = itm.item 
+where itm.item = '$item'";
+        $cSql2 = new SqlSrv();
+        $rs = $cSql2->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+
+   
+       
+        if ((float) $rs[0]["lot"] != 0) {
+            return 2;
+        }
+
+        $i = false;
+        if ($rs) {
+            // $rs[0]["qty_on_hand"]; covert to number 
+            $qty_on_hand = (float) $rs[0]["qty_on_hand"];
+            $tag = $rs[0]["lot"];
+        
+            $query2 = "INSERT INTO STS_countstock (tag,location, item, qty, remark, [user], qty_stock) OUTPUT inserted.* VALUES ('$tag','$location', '$item', '$qty', '$remark', '$user' , '$qty_on_hand')";
+            $cSql2 = new SqlSrv();
+            $rs2 = $cSql2->SqlQuery($this->StrConn, $query2);
+            array_splice($rs2, count($rs2) - 1, 1);
+            $i = $rs2;
+        } else {
+            $i = false;
+        }
+            
+        return $i;
+    }
+
+    function CheckStockLot($location, $tag, $qty, $remark, $user) {
+        // check item exist or not if exist return true else return false
+        $query = "select itm.item, itm.[description], itm.u_m 
+ , loc = isnull(lot.loc, loc.loc), lot = isnull(lot.lot,'0'), qty_on_hand = coalesce(lot.qty_on_hand, loc.qty_on_hand, whse.qty_on_hand)
+from item_mst itm 
+left join lot_loc_mst lot on lot.item = itm.item and lot.loc = '$location'
+left join itemloc_mst loc on loc.item = itm.item and loc.loc = '$location'
+left join itemwhse_mst whse on whse.item = itm.item 
+where lot.lot = '$tag'";
+        $cSql2 = new SqlSrv();
+        $rs = $cSql2->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        $date = date("Y-m-d");
+        $q = "select * from STS_countstock where tag = '$tag' and location = '$location' and create_date = '$date' and item = '{$rs[0]["item"]}'";
+        $cSql = new SqlSrv();
+        $c = $cSql->SqlQuery($this->StrConn, $q);
+        array_splice($c, count($c) - 1, 1);
+        // $c count == 1 return false
+
+        if (count($c) == 1) {
+            return 2;
+        }
+        
+        
+        $i = false;
+        if ($rs) {
+            // $rs[0]["qty_on_hand"]; covert to number 
+            $qty_on_hand = (float) $rs[0]["qty_on_hand"];
+            $item = $rs[0]["item"];
+        
+            $query2 = "INSERT INTO STS_countstock (tag,location, item, qty, remark, [user], qty_stock) OUTPUT inserted.* VALUES ('$tag','$location', '$item', '$qty', '$remark', '$user' , '$qty_on_hand')";
+            $cSql2 = new SqlSrv();
+            $rs2 = $cSql2->SqlQuery($this->StrConn, $query2);
+            array_splice($rs2, count($rs2) - 1, 1);
+            $i = $rs2;
+        } else {
+            $i = false;
+        }
+            
+        return $i;
+    }
+
+      function GetLocationItem() {
+        $query = "select distinct loc from itemloc_mst";
+        $cSql2 = new SqlSrv();
+        $rs = $cSql2->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+      function GetListItem() {
+        $query = "select itm.item, itm.[description], itm.u_m 
+ , loc.loc, lot = isnull(lot.lot,'0'), qty_on_hand = coalesce(lot.qty_on_hand,loc.qty_on_hand,whse.qty_on_hand)
+from item_mst itm 
+left join itemloc_mst loc on loc.item = itm.item 
+left join lot_loc_mst lot on lot.item = itm.item 
+left join itemwhse_mst whse on whse.item = itm.item 
+where (itm.item like 'st%' or itm.item like 'rzi%' or itm.item like 'rca%' or itm.item like 'rcb%' or itm.item like 'p%')
+and whse.qty_on_hand <> 0 and loc.qty_on_hand <> 0";
+        $cSql2 = new SqlSrv();
+        $rs = $cSql2->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+      function GetCountStock($user, $date) {
+        $query = "select * from STS_countstock where create_date = '$date' and [user] = '$user'";
+        $cSql2 = new SqlSrv();
+        $rs = $cSql2->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+     function GetItemByTag($tag,$loc) {
+        $query = "select itm.item, itm.[description], itm.u_m 
+ , loc = isnull(lot.loc, loc.loc), lot = isnull(lot.lot,'0'), qty_on_hand = coalesce(lot.qty_on_hand, loc.qty_on_hand, whse.qty_on_hand)
+from item_mst itm 
+left join lot_loc_mst lot on lot.item = itm.item and lot.loc = '$loc'
+left join itemloc_mst loc on loc.item = itm.item and loc.loc = '$loc'
+left join itemwhse_mst whse on whse.item = itm.item 
+where lot.lot = '$tag'";
+        $cSql2 = new SqlSrv();
+        $rs = $cSql2->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+
+    
+
 }

@@ -172,4 +172,149 @@ WHERE h.doc_no = '$doc_no'";
         array_splice($rs0, count($rs0) - 1, 1);
         return $rs0;
     }
+
+    function GetDept(){
+        $query = "
+select wc,[description] from wc_mst 
+where [description] not like '%ลบ%' and [description] not like '%ยกเลิก%' 
+and [description] not like '%กลุ่ม%' and wc not like 'PM%' 
+union 
+select wc, [description] = '' from STS_repair_wc
+order by wc";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+    
+    function GetDocList(){
+        $query = "SELECT doc_no FROM STS_store_withdraw_hdr WHERE doc_no like 'W%' ORDER BY doc_no DESC";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+    function GetWithdrawByDocNo($doc_no){
+        $query = "SELECT *, STS_store_withdraw_hdr.remark as remark_h FROM STS_store_withdraw_hdr
+        left join STS_store_withdraw_line on STS_store_withdraw_hdr.doc_no = STS_store_withdraw_line.doc_no
+        where STS_store_withdraw_hdr.doc_no = '$doc_no'";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+    function GetItemList(){
+        $query = "select item,[description] from item_mst where item like 'ST%' and [description] not like '%ยกเลิก%' order by item";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+    function CreateWithdraw($dept, $wc, $user, $remark_h, $arr_item, $arr_qty, $arr_wc_dest, $arr_remark){
+        $year = date('y');
+        $month = date('m');
+        $cSql = new SqlSrv();
+        $sql = "SELECT TOP 1 doc_no FROM STS_store_withdraw_hdr WHERE doc_no LIKE 'W$year$month%' ORDER BY doc_no DESC";
+        $cSql = new SqlSrv();
+        $result = $cSql->SqlQuery($this->StrConn, $sql);
+        array_splice($result, count($result) - 1, 1);
+
+        if (count($result) > 0) {
+            $row = $result[0];
+            $lastDoc = $row['doc_no'];
+            // ดึงเลขลำดับจากเลขเอกสารล่าสุด (W2407001 -> 001)
+            $lastNumber = intval(substr($lastDoc, -3));
+            $newNumber = $lastNumber + 1;
+        } else {
+            // ถ้าไม่มีเลขของปีนี้ เริ่มที่ 1
+            $newNumber = 1;
+        }
+        // สร้างเลขเอกสารใหม่
+        $docNumber = sprintf("W%s%02d%03d", $year, $month, $newNumber);
+        $query = "INSERT INTO STS_store_withdraw_hdr (doc_no,dept,wc,remark,[user]) VALUES ('$docNumber', '$dept', '$wc', '$remark_h', '$user')";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        // foreach insert item act weight qty u_m
+        foreach ($arr_item as $key => $item) {
+            $qty = $arr_qty[$key];
+            $wc_dest = $arr_wc_dest[$key];
+            $remark_l = $arr_remark[$key];
+            $query2 = "INSERT INTO STS_store_withdraw_line (doc_no,item,qty_wd,wc_dest,remark) VALUES ('$docNumber', '$item', '$qty', '$wc_dest', '$remark_l')";
+            $cSql = new SqlSrv();
+            $rs = $cSql->SqlQuery($this->StrConn, $query2);
+        }
+        array_splice($rs, count($rs) - 1, 1);
+        return $docNumber;
+    }
+    
+    function UpdateWithdraw($doc_no,$dept, $wc, $user, $remark_h, $arr_item, $arr_qty,$arr_qty_rcvd, $arr_wc_dest, $arr_remark){
+        $query = "UPDATE STS_store_withdraw_hdr SET remark = '$remark_h' WHERE doc_no = '$doc_no'";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        // foreach insert item act weight qty u_m
+        foreach ($arr_item as $key => $item) {
+            $qty = $arr_qty[$key];
+            $qty_rcvd = $arr_qty_rcvd[$key];
+            $wc_dest = $arr_wc_dest[$key];
+            $remark_l = $arr_remark[$key];
+            $query2 = "UPDATE STS_store_withdraw_line SET qty_rcvd = '$qty_rcvd' WHERE doc_no = '$doc_no' AND item = '$item' AND wc_dest = '$wc_dest'";
+            $cSql = new SqlSrv();
+            $rs = $cSql->SqlQuery($this->StrConn, $query2);
+        }
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+    function ApproveOneWithdraw($doc_no,$approve){
+        $query = "UPDATE STS_store_withdraw_hdr SET approver1 = '$approve' WHERE doc_no = '$doc_no'";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+     function ApproveTwoWithdraw($doc_no,$approve){
+        $query = "UPDATE STS_store_withdraw_hdr SET approver2 = '$approve' WHERE doc_no = '$doc_no'";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+     function ApproveStockWithdraw($doc_no,$stock){
+        $query = "UPDATE STS_store_withdraw_hdr SET stock = '$stock' WHERE doc_no = '$doc_no'";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+     function ApproveUserWithdraw($doc_no){
+        $query = "UPDATE STS_store_withdraw_hdr SET userApprove = 1 WHERE doc_no = '$doc_no'";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+    function AddNewItemWithdraw($doc_no, $item, $qty, $wc_dest, $remark){
+        $query = "INSERT INTO STS_store_withdraw_line (doc_no,item,qty_wd,wc_dest,remark) VALUES ('$doc_no', '$item', '$qty', '$wc_dest', '$remark')";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+    function UpdateWithdrawItem($doc_no, $item_old, $item, $qty, $wc_dest, $wc_dest_old, $remark){
+        $query = "UPDATE STS_store_withdraw_line SET item = '$item', qty_wd = '$qty', wc_dest = '$wc_dest', remark = '$remark' WHERE doc_no = '$doc_no' AND item = '$item_old' AND wc_dest = '$wc_dest_old'";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+
 }

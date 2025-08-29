@@ -916,7 +916,25 @@
         }
 
         if (seq == '') {
-            alert("กรุณาระบุ Seq");
+            $.ajax({
+                type: "POST",
+                url: "././module/STS_REWORK_LINE/data.php",
+                dataType: "json",
+                data: { 
+                    load: "UpdateHdr",
+                    doc_rework: doc_rework,
+                    due_rework: due_rework,
+                    user_req: user_req,
+                    dep_req: dep_req,
+                    remark: remark
+                 },
+                success: function (data) {
+                    alert("บันทึกสําเร็จ");
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            })
             return false;
         }
 

@@ -51,3 +51,9 @@ if ($load == "GetReworkByDoc") {
     $rs = $STS_Custom->GetReworkByDoc($doc_no);
     echo json_encode($rs);
 }
+
+if ($load == "UpdateHdr") {
+    $STS_Custom->setConn($ConnSL);
+    $rs = $STS_Custom->UpdateReworkHdr($doc_rework, $due_rework, $user_req, $dep_req, $remark);
+    echo json_encode($rs);
+}

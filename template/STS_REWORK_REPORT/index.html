@@ -141,7 +141,7 @@
     </table>
   </div>
   <script type="text/javascript">
- 
+    var username_session = GetUserProp("login_username");
     $("#btnSearchReworkReport").click(function () {
       ReportItemSearch();
     });
@@ -338,6 +338,11 @@
       }
 
     function saveStatus(doc_no, row, seq){ 
+
+    if (username_session !== 'admin') {
+      alert('ไม่สามารถบันทึกได้');
+      return false;
+    }
    
     $.confirm({
       title: 'กรุณายืนยัน',

@@ -1,0 +1,386 @@
+<style>
+    /* ซ่อน Checkbox ดั้งเดิม */
+    .custom-checkbox input[type="checkbox"] {
+        display: none;
+    }
+
+    /* ตำแหน่งและขนาดของ Checkbox */
+    .custom-checkbox {
+        display: inline-flex;
+        align-items: center;
+        cursor: pointer;
+        font-size: 20px;
+        margin: 3px;
+    }
+
+    /* สไตล์สำหรับ Checkmark */
+    .custom-checkbox .checkmark {
+        width: 20px;
+        height: 20px;
+        background-color: #ccc;
+        border-radius: 4px;
+        display: inline-block;
+        margin-right: 10px;
+        position: relative;
+        transition: background-color 0.3s;
+    }
+
+    /* สไตล์สำหรับ Checkbox เมื่อถูกเลือก */
+    .custom-checkbox input[type="checkbox"]:checked+.checkmark {
+        background-color: #4CAF50;
+    }
+
+    /* สไตล์สำหรับเครื่องหมายถูก */
+    .custom-checkbox .checkmark::after {
+        content: "";
+        position: absolute;
+        display: none;
+    }
+
+    /* แสดงเครื่องหมายถูกเมื่อ Checkbox ถูกเลือก */
+    .custom-checkbox input[type="checkbox"]:checked+.checkmark::after {
+        display: block;
+    }
+
+    /* รูปแบบของเครื่องหมายถูก */
+    .custom-checkbox .checkmark::after {
+        left: 8px;
+        top: 3px;
+        width: 5px;
+        height: 10px;
+        border: solid white;
+        border-width: 0 3px 3px 0;
+        transform: rotate(45deg);
+    }
+
+    .mycontainer {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 90%;
+        margin-left: auto;
+        margin-right: auto;
+        border-width: 4px;
+        border-bottom-color: #60a5fa;
+        border-top-color: white;
+        border-left-color: white;
+        border-right-color: white;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        padding: 6rem;
+        margin-top: 2.5rem;
+    }
+
+    .mybox {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        flex-grow: 1;
+        gap: 1.5rem;
+        margin-bottom: 1.25rem;
+    }
+</style>
+<div class="">
+    <div class="col-xs-12">
+        <div class="page-header">
+            <h1 class="text-header text-left">รับใบเบิกของ</h1>
+        </div>
+    </div>
+</div>
+<div class="mycontainer mb-12">
+    <div class="row col-xs-12">
+        <div class="mybox">
+            <div class="input-group basis-3/6">
+                <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">Doc No</div>
+                <select style="font-weight: bold; font-size: 16px;" class="form-control txt-filter" id="doc_no_w_2">
+                    <option value=""></option>
+                </select>
+            </div>
+            <div class="input-group basis-3/6">
+                <div class="flex gap-6">
+                    <button type="button" class="btn btn-primary btn-lg" id="btnSearchWithdrawR">Search</button>
+                    <button type="button" class="btn btn-warning btn-lg" id="btnResetReceive">Reset Form</button>
+                </div>
+            </div>
+            <div class="input-group basis-2/6">
+            </div>
+        </div>
+        <hr />
+        <div class="mybox">
+            <div class="input-group basis-3/6">
+                <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">แผนก *</div>
+                <input type="text" style="font-weight: bold; font-size: 16px;" class="form-control txt-filter"
+                    id="dept_w_2" readonly>
+
+            </div>
+            <div class="input-group basis-3/6">
+                <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">เครื่อง *</div>
+                <input type="text" style="font-weight: bold; font-size: 16px;" class="form-control txt-filter"
+                    id="wc_w_2" readonly>
+            </div>
+        </div>
+        <div class="mybox">
+            <div class="input-group basis-3/6">
+                <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">ผู้เบิก *</div>
+                <input type="text" style="font-weight: bold; font-size: 16px;" class="form-control txt-filter"
+                    id="user_w_2" readonly>
+            </div>
+            <div class="input-group basis-3/6">
+                <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">หมายเหตุ</div>
+                <input type="text" style="font-weight: bold; font-size: 16px;" class="form-control txt-filter"
+                    id="remark_withdraw_2">
+            </div>
+        </div>
+        <hr />
+        <div class="flex justify-between">
+            <div class="flex gap-4">
+                <div id="status_repair" class="input-group element2 ">
+                    <button type="button" class="btn btn-warning btn-lg" id="stock" onclick="approve_stock()">ลงชื่อตัดสต็อก</button>
+                </div>
+            </div>
+            <div>
+
+                <button type="button" class="btn btn-info btn-lg" id="btnUpdateWithdraw">Update</button>
+            </div>
+        </div>
+        <input type="text" style="font-weight: bold; font-size: 16px;" class="hidden" id="old_co_num">
+    </div>
+</div>
+<div class="row">
+    <table class="table table-condensed table-bordered table-striped" id="tbItemWithdrawR">
+        <thead>
+            <tr>
+                <th class="bg-gray">Item</th>
+                <th class="bg-gray">จำนวนที่ต้องการเบิก</th>
+                <th class="bg-gray">จำนวนที่เบิกได้</th>
+                <th class="bg-gray">นำไปใช้</th>
+                <th class="bg-gray">หมายเหตุ</th>
+            </tr>
+        </thead>
+        <!--        <tbody id="tblReportList">
+                      <tr><td align="center" colspan="12">.... No item search ....</td></tr>
+     </tbody>-->
+    </table>
+</div>
+<script type="text/javascript">
+    var username_session = GetUserProp("login_username");
+    
+    getDocNumList();
+
+    function getDocNumList() {
+        $.ajax({
+            type: "GET",
+            url: "././module/APP_STORE_WITHDRAW/data.php",
+            dataType: "json",
+            data: {
+                load: "GetDocList"
+            },
+            success: function (data) {
+                let doc = [{ id: '', text: '' }].concat(data.map((item) => ({
+                    id: item.doc_no,
+                    text: item.doc_no
+                })));
+
+                $("#doc_no_w_2").select2({
+                    placeholder: 'Doc No',
+                    allowClear: true,
+                    width: '100%',
+                    data: doc,
+                    language: {
+                        noResults: function () {
+                            return "ไม่พบข้อมูล";
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    var tableReceive = $('#tbItemWithdrawR').DataTable({
+        "columnDefs": [
+            { "targets": '_all', "className": 'text-center' },
+        ],
+        columns: [
+            { "data": "0" },
+            { "data": "1" },
+            {
+                "data": "2",
+                render: function (data, type, row, meta) {
+                    return `<input type="text" class="form-control" value="${data ?? ''}" onchange="UpdateDataTable(this.value, ${meta.row})">`;
+                }
+            },
+            { "data": "3" },
+            { "data": "4" },
+        ],
+        paging: false,
+        searching: false,
+        select: true,
+        dom:
+            "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+            "<'row'<'col-md-12'tr>>" +
+            "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+        buttons: [
+           
+        ],
+    });
+
+    $("#btnResetReceive").click(function () {
+        tableReceive.clear().draw();
+        $("#doc_no_w_2").val('').trigger("change");
+        $("#dept_w_2").val('');
+        $("#wc_w_2").val('');
+        $("#user_w_2").val('');
+        $("#remark_withdraw_2").val('');
+        // reset btn disabled and text
+
+
+        $("#stock").text("ลงชื่อตัดสต็อก");
+        $("#stock").attr("disabled", false);
+    })
+
+    $("#btnSearchWithdrawR").click(function () {
+        var doc_no = $("#doc_no_w_2").val();
+
+        if (doc_no == '') {
+            alert("กรุณาระบุ Doc No");
+            return false;
+        }
+
+        $.ajax({
+            type: "GET",
+            url: "././module/APP_STORE_WITHDRAW/data.php",
+            dataType: "json",
+            data: {
+                load: "GetWithdrawByDocNo",
+                doc_no: doc_no
+            },
+            success: function (data) {
+
+                tableReceive.clear();
+                data.forEach(item => {
+                    tableReceive.row.add([item.item, item.qty_wd, item.qty_rcvd, item.wc_dest, item.remark]).draw();
+                })
+                $("#dept_w_2").val(data[0].dept);
+                $("#wc_w_2").val(data[0].wc);
+                $("#user_w_2").val(data[0].user);
+                $("#remark_withdraw_2").val(data[0].remark_h);
+
+
+                if (data[0].stock !== null) {
+                    $("#stock").text("ตัดสต็อกแล้ว");
+                    $("#stock").attr("disabled", true);
+                } else {
+                    $("#stock").text("ลงชื่อตัดสต็อก");
+                    $("#stock").attr("disabled", false);
+                }
+
+
+            },
+            error: function (xhr, status, error) {
+                alert('Error');
+            }
+        });
+    });
+
+    $('#btnUpdateWithdraw').click(function () {
+        var dept = $("#dept_w_2").val();
+        var wc = $("#wc_w_2").val();
+        var user = $("#user_w_2").val();
+        var remark_h = $("#remark_withdraw_2").val();
+        var item = [];
+        var qty = [];
+        var qty_rcvd = [];
+        var wc_dest = [];
+        var remark = [];
+
+        if ($("#doc_no_w_2").val() == '' || dept == '') {
+            alert("กรุณาเลือก Doc No");
+            return false;
+        }
+
+        tableReceive.rows().data().each(function (data, index) {
+            item.push(data[0]);
+            qty.push(data[1]);
+            qty_rcvd.push(data[2]);
+            wc_dest.push(data[3]);
+            remark.push(data[4]);
+        });
+
+        $.ajax({
+            type: "POST",
+            url: "././module/APP_STORE_WITHDRAW/data.php",
+            dataType: "json",
+            data: {
+                load: "UpdateWithdraw",
+                doc_no: $("#doc_no_w_2").val(),
+                dept: dept,
+                wc: wc,
+                user: user,
+                remark_h: remark_h,
+                item: JSON.stringify(item),
+                qty: JSON.stringify(qty),
+                qty_rcvd: JSON.stringify(qty_rcvd),
+                wc_dest: JSON.stringify(wc_dest),
+                remark: JSON.stringify(remark)
+            },
+            success: function (data) {
+                alert("บันทึกข้อมูลสําเร็จ");
+            },
+            error: function (xhr, status, error) {
+                alert('Error');
+            }
+        });
+    });
+
+
+    function UpdateDataTable(val, row) {
+        // update datatable val by row
+        tableReceive.cell(row, 2).data(val);
+    }
+
+    function approve_stock() {
+
+        if ($("#doc_no_w_2").val() == '' || $("#dept_w_2").val() == '') {
+            alert("กรุณาเลือก Doc No");
+            return false;
+        }
+
+        $.confirm({
+            title: 'ตัดสต็อกโดย',
+            theme: 'modern',
+            content: '<input placeholder="ตัดสต็อก" type="text" id="i_stock" class="form-control my-2" value="' + username_session + '" autofocus>',
+            buttons: {
+                confirm: function () {
+                    var stock = $("#i_stock").val();
+
+                    $.ajax({
+                        type: "POST",
+                        url: "././module/APP_STORE_WITHDRAW/data.php",
+                        dataType: "json",
+                        data: {
+                            load: "ApproveStockWithdraw",
+                            doc_no: $("#doc_no_w_2").val(),
+                            stock: stock
+                        },
+                        success: function (data) {
+                            alert("ตัดสต็อกสําเร็จ");
+                            // edit text btn approve_stock
+                            $("#stock").text("ตัดสต็อกแล้ว");
+                            $("#stock").attr("disabled", true);
+                        },
+                        error: function (xhr, status, error) {
+                            alert('Error');
+                        }
+                    });
+                    
+                },
+                cancel: function () {
+                    window.close();
+                }
+
+            }
+        });
+
+    }
+
+</script>

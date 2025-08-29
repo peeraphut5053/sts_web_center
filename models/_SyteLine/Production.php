@@ -124,10 +124,10 @@ where [description] not like '%ยกเลิก%' and
 
     Function UpdateRework($doc_rework, $seq, $due_rework, $user_req, $dep_req, $item_rework, $new_item_rework, $reason_rework, $detail_rework, $qty_rework, $remark, $wcS, $wcPn, $wcG, $wcM, $wcT, $wcPk) {
         $cSql = new SqlSrv();
-        $query = "UPDATE STS_rework_hdr SET RequireDate = '$due_rework', UserReq = '$user_req', Dept = '$dep_req', Remark = '$remark' WHERE DocNo = '$doc_rework'";
+        $query = "UPDATE STS_rework_hdr SET RequireDate = '$due_rework', UserReq = '$user_req', Dept = '$dep_req', Remark = '$remark', UpdateDate = GETDATE() WHERE DocNo = '$doc_rework'";
         $rs = $cSql->SqlQuery($this->StrConn, $query);
 
-        $query2 = "UPDATE STS_rework_line SET Item = '$item_rework', NewItem = '$new_item_rework', Reason = '$reason_rework', Detail = '$detail_rework', Qty = '$qty_rework', wcS = '$wcS', wcPn = '$wcPn', wcG = '$wcG', wcM = '$wcM', wcT = '$wcT', wcPk = '$wcPk' Output INSERTED.* WHERE DocNo = '$doc_rework' AND seq = '$seq'";
+        $query2 = "UPDATE STS_rework_line SET Item = '$item_rework', NewItem = '$new_item_rework', Reason = '$reason_rework', Detail = '$detail_rework', Qty = '$qty_rework', wcS = '$wcS', wcPn = '$wcPn', wcG = '$wcG', wcM = '$wcM', wcT = '$wcT', wcPk = '$wcPk', UpdateDate = GETDATE() Output INSERTED.* WHERE DocNo = '$doc_rework' AND seq = '$seq'";
         $response = $cSql->SqlQuery($this->StrConn, $query2);
         array_splice($response, count($response) - 1, 1);
         return $response;
@@ -177,6 +177,14 @@ order by hdr.docNo, line.seq";
     function SaveStatus($doc_no, $seq) {
         $cSql = new SqlSrv();
         $query = "UPDATE STS_rework_line SET stat = 1 Output INSERTED.* WHERE DocNo = '$doc_no' AND seq = '$seq'";
+        $response = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($response, count($response) - 1, 1);
+        return $response;
+    }
+
+    function UpdateReworkHdr($doc_rework, $due_rework, $user_req, $dep_req, $remark) {
+        $cSql = new SqlSrv();
+        $query = "UPDATE STS_rework_hdr SET RequireDate = '$due_rework', UserReq = '$user_req', Dept = '$dep_req', Remark = '$remark', UpdateDate = GETDATE() WHERE DocNo = '$doc_rework'";
         $response = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($response, count($response) - 1, 1);
         return $response;

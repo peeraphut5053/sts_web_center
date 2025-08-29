@@ -1,0 +1,421 @@
+<style>
+    .mycontainer {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 90%;
+        margin-left: auto;
+        margin-right: auto;
+        border-width: 4px;
+        border-bottom-color: #60a5fa;
+        border-top-color: white;
+        border-left-color: white;
+        border-right-color: white;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        padding: 6rem;
+        margin-top: 2.5rem;
+        @media (max-width: 768px) {
+            padding: 1rem;
+            width: 99%;
+        }
+    }
+
+    .mybox {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        flex-grow: 1;
+        gap: 1.5rem;
+        margin-bottom: 1.25rem;
+        @media (max-width: 768px) {
+            flex-direction: column;
+            align-items: normal;
+        }
+    }
+</style>
+<div class="">
+    <div class="col-xs-12">
+        <div class="page-header">
+            <h1 class="text-header text-left">นับสต๊อก</h1>
+        </div>
+    </div>
+</div>
+<div class="mycontainer mb-12">
+    <div class="row col-xs-12">
+           <div class="mybox">
+            <div class="input-group basis-3/6 max-sm:basis-full">
+                <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">Location *</div>
+                <select style="font-weight: bold; font-size: 16px;" class="form-control txt-filter" id="location_stock">
+                    <option value=""></option>
+                </select>
+            </div>
+            <div class="input-group basis-3/6">
+                <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">User</div>
+                <input type="text" style="font-weight: bold; font-size: 16px;" class="form-control txt-filter"
+                    id="user_stock" readonly>
+            </div>
+        </div>
+        <div class="mybox">
+             <div class="input-group basis-3/6">
+                <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">Tag</div>
+                <input type="text" style="font-weight: bold; font-size: 16px;" class="form-control txt-filter"
+                    id="tag_stock" onkeypress="onScanTag(event)">
+            </div>
+            <div class="input-group basis-3/6">
+                <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">Item *</div>
+                <select style="font-weight: bold; font-size: 16px;" class="form-control txt-filter" id="item_scan">
+                    <option value=""></option>
+                </select>
+            </div>
+        </div>
+        <div class="mybox">
+             <div class="input-group basis-3/6">
+                <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">qty *</div>
+                <input type="number" style="font-weight: bold; font-size: 16px;" class="form-control txt-filter"
+                    id="qty_stock">
+            </div>
+                <div class="input-group basis-3/6">
+                <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">หมายเหตุ</div>
+                <input type="text" style="font-weight: bold; font-size: 16px;" class="form-control txt-filter"
+                    id="remark_stock">
+            </div>
+        </div>
+        <div class="flex justify-between">
+            <div>
+                <button type="button" class="btn btn-success btn-lg" id="btnCheckItem">Check Item</button>
+                <button type="button" class="btn btn-warning btn-lg" id="btnCheckLot">Check Lot</button>
+            </div>
+        </div>
+        <input type="text" style="font-weight: bold; font-size: 16px;" class="hidden" id="old_co_num">
+    </div>
+</div>
+<div class="input-group basis-3/6 m-6" >
+    <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">วันที่</div>
+    <input type="text" style="font-weight: bold; font-size: 16px;" class="form-control txt-filter"
+                    id="date_stock">
+</div>
+<div class="row">
+    <table class="table table-condensed table-bordered table-striped" id="tbItemWithdraw">
+        <thead>
+            <tr>
+                <th class="bg-gray">Location</th>
+                <th class="bg-gray">Item</th>
+                <th class="bg-gray">Qty</th>
+                <th class="bg-gray">Qty Stock</th>
+                <th class="bg-gray">หมายเหตุ</th>
+                <th class="bg-gray">User</th>
+            </tr>
+        </thead>
+        <!--        <tbody id="tblReportList">
+                      <tr><td align="center" colspan="12">.... No item search ....</td></tr>
+     </tbody>-->
+    </table>
+</div>
+<script type="text/javascript">
+    var username_session = GetUserProp("login_username");
+    $("#user_stock").val(username_session);
+
+    $("#date_stock").datepicker({
+        dateFormat: "yy-mm-dd",
+    }).datepicker("setDate", new Date()).on("change", function () {
+        GetCountStock();
+    });
+    GetCountStock();
+
+    function onScanTag(e) {
+        var tag = $("#tag_stock").val();
+        var loc = $("#location_stock").val();
+
+        if (loc == '') {
+            alert("กรุณาระบุ Location");
+            return false;
+        }
+
+        if (tag == '') {
+            alert("กรุณาระบุ Tag");
+            return false;
+        }
+
+        if (e.keyCode == 13) {
+           $.ajax({
+               type: "GET",
+               url: "././module/STS_COUNT_STOCK/data.php",
+               dataType: "json",
+               data: { 
+                   load: "GetItemByTag",
+                   tag: tag,
+                   loc: loc
+                },
+               success: function (data) {
+                   if (data.length > 0) {
+                       $("#item_scan").val(data[0].item);
+                       $("#item_scan").trigger("change");
+                   } else {
+                       alert("ไม่พบข้อมูล");
+                   }
+               }
+           })
+        }
+    }
+    
+
+    $.ajax({
+        type: "GET",
+        url: "././module/STS_COUNT_STOCK/data.php",
+        dataType: "json",
+        data: { load: "GetItem" },
+        success: function (data) {
+            const item = data.map((item) => {
+                return {
+                    id: item.item,
+                    text: item.item + " - " + item.description
+                }
+            })
+            $("#item_scan").select2({
+                placeholder: 'Item',
+                allowClear: true,
+                width: '100%',
+                data: item,
+                language: {
+                    noResults: function () {
+                        return "ไม่พบข้อมูล";
+                    }
+                }
+            });
+
+        }
+    });
+
+    function GetCountStock() {
+        $.ajax({
+        type: "GET",
+        url: "././module/STS_COUNT_STOCK/data.php",
+        dataType: "json",
+        data: { 
+            load: "GetCount",
+            user: username_session,
+            date: $("#date_stock").val()
+         },
+        success: function (data) {
+            // add data to table
+            tableStock.clear().draw();
+            data.forEach((item) => {
+                let row = tableStock.row.add([
+                    item.location,
+                    item.item,
+                    item.qty,
+                    item.qty_stock,
+                    item.remark,
+                    item.user,
+                ]);
+                row.draw();
+            });
+        }
+       });
+    }
+
+
+    var tableStock = $('#tbItemWithdraw').DataTable({
+        "columnDefs": [
+            { "targets": '_all', "className": 'text-center' },
+        ],
+        paging: false,
+        searching: false,
+        select: false,
+        scrollY: 400,
+        scrollCollapse: true,
+        dom:
+            "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+            "<'row'<'col-md-12'tr>>" +
+            "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+        buttons: [
+          
+        ],
+    });
+
+    $('#btnAddItemWithdraw').click(function () {
+        // add data to table 
+        let item = $("#item_w").val();
+        let qty = $("#qty_w").val();
+        let wc_dest = $("#wc_dest").val();
+        let remark = $("#remark_w").val();
+
+        if (item == '') {
+            alert("กรุณาระบุ Item");
+            return false;
+        } else if (qty == '') {
+            alert("กรุณาระบุ จํานวน");
+            return false;
+        } else if (wc_dest == '') {
+            alert("กรุณาระบุ แผนกปลายทาง");
+            return false;
+        }
+
+        table.row.add([item, qty, wc_dest, remark]).draw();
+
+        // clear form
+        $("#item_w").val('').trigger('change');
+        $("#wc_dest").val('').trigger('change');
+        $("#qty_w").val('');
+        $("#remark_w").val('');
+    });
+
+    $.ajax({
+        type: "GET",
+        url: "././module/STS_COUNT_STOCK/data.php",
+        dataType: "json",
+        data: { load: "GetLocation" },
+        success: function (data) {
+            let city = [{ id: '', text: '' }].concat(data.map((item) => ({
+                id: item.loc,
+                text: item.loc
+            })));
+
+            $("#location_stock").select2({
+                placeholder: 'กรุณาเลือก Location',
+                allowClear: true,
+                width: '100%',
+                data: city,
+                language: {
+                    noResults: function () {
+                        return "ไม่พบข้อมูล";
+                    }
+                }
+            });
+
+        }
+    });
+
+    $("#btnResetWithdraw").click(function () {
+        table.clear().draw();
+        $("#item_w").val('').trigger('change');
+        $("#wc_dest").val('').trigger('change');
+        $("#qty_w").val('');
+        $("#remark_w").val('');
+        $("#doc_no_w").val('').trigger('change');
+        $("#dept_w").val('').trigger('change');
+        $("#location_stock").val('').trigger('change');
+        $("#user_w").val(username_session);
+        $("#remark_withdraw").val('');
+
+        $("#btnCheckItem").attr("disabled", false);
+        $("#btnUpdateW").attr("disabled", true);
+        $("#btnAddItemWithdraw").attr("disabled", false);
+        $("#approve_user").hide();
+        // show approve button
+
+    });
+
+    $('#btnCheckItem').click(function () {
+        // add data to table 
+        var tag = $("#tag_stock").val();
+        var location = $("#location_stock").val();
+        var item = $("#item_scan").val();
+        var qty = $("#qty_stock").val();
+        var remark = $("#remark_stock").val();
+        var user = $("#user_stock").val();
+
+        if (tag !== '') {
+            alert("นับ Item ต้องไม่มี Tag");
+            return false;
+        }
+
+         if (item == '') {
+            alert("กรุณาระบุ Item");
+            return false;
+        } else if (qty == '' || qty == 0) {
+            alert("กรุณาระบุ จํานวน");
+            return false;
+        } else if (location == '') {
+            alert("กรุณาระบุ Location");
+            return false;
+        } 
+ 
+      
+        $.ajax({
+            type: "POST",
+            url: "././module/STS_COUNT_STOCK/data.php",
+            dataType: "json",
+            data: {
+                load: "CheckStock",
+                location: location,
+                item: item,
+                qty: qty,
+                remark: remark,
+                user: user
+            },
+            success: function (data) {
+        
+                if (data == false) {
+                    alert("ไม่มี Item นี้ในระบบ");
+                } else {
+                    console.log('data', data);
+                    tableStock.row.add([location, data[0]["item"], qty, data[0]["qty_stock"], remark, user]).draw();
+                }
+
+                $("#item_scan").val('');
+                $("#qty_stock").val('');
+                $("#remark_stock").val('');
+                $("#item_scan").focus();
+               
+            }
+        });
+    });
+
+     $('#btnCheckLot').click(function () {
+        // add data to table 
+        var location = $("#location_stock").val();
+        var tag = $("#tag_stock").val();
+        var qty = $("#qty_stock").val();
+        var remark = $("#remark_stock").val();
+        var user = $("#user_stock").val();
+
+        if (tag == '') {
+            alert("กรุณาระบุ Tag");
+            return false;
+        } else if (qty == '') {
+            alert("กรุณาระบุ จํานวน");
+            return false;
+        } else if (location == '') {
+            alert("กรุณาระบุ Location");
+            return false;
+        } 
+ 
+      
+        $.ajax({
+            type: "POST",
+            url: "././module/STS_COUNT_STOCK/data.php",
+            dataType: "json",
+            data: {
+                load: "CheckStockLot",
+                location: location,
+                tag: tag,
+                qty: qty,
+                remark: remark,
+                user: user
+            },
+            success: function (data) {
+                        console.log(data);
+                        
+                if (data == 2) {
+                    alert("Tag นี้ถูกนับไปแล้ว");
+                    return false;
+                }
+        
+                if (data == false) {
+                    alert("ไม่มี Item นี้ในระบบ");
+                } else {
+                    tableStock.row.add([location, data[0]["item"], qty, data[0]["qty_stock"], remark, user]).draw();
+                }
+
+                $("#tag_stock").val('');
+                $("#qty_stock").val('');
+                $("#remark_stock").val('');
+                $("#tag_stock").focus();
+               
+            }
+        });
+    });
+
+</script>
