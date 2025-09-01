@@ -1,3 +1,4 @@
+
 <div class="row">
     <div>
         <h1>Order Processing</h1>
@@ -38,7 +39,7 @@
 </div>
 
 <div class="row" id="divReport" >
-    <table class="table table-condensed table-bordered table-striped" id="tblReport" style="width:100%;">
+    <table class="table table-condensed table-bordered table-striped" id="tblReport">
         <thead>
             <tr>
                 <th>Customer</th>
@@ -68,12 +69,63 @@
     });
     $("#txtFromDate,#txtToDate").val(GetToday());
     $("#btnSearch").click(function () {
-        var tblReportId = '#tblReport';
-        var btnSearch = '#btnSearch';
-        SearchDataFn(tblReportId, btnSearch, tablecolumsArr, "OrderProcessing Report", "V_WebApp_OrderProcessing");
+        ReportItemSearch();
     });
-    var tablecolumsArr = [
-        {
+
+    function ReportItemSearch() {
+      var OldHtml = $("#btnSearch").html();
+      var cust_po = $("#cust_po").val();
+      var name = $("#name").val();
+      var Port = $("#Port").val();
+
+        $("#btnSearch").html("<i class='fa fa-spinner fa-spin'></i>");
+        $("#tblReport").loading();
+        $("#tblReport tfoot").remove();
+        $.ajax({
+          type: "POST",
+          url: "././module/RPT_OrderProcessing/data.php",
+          dataType: "json",
+          beforeSend: function () {
+            $("#btnSearch").html("<i class='fa fa-spinner fa-spin'>");
+          },
+          data: {
+            load: "V_WebApp_OrderProcessing",
+            cust_po: cust_po,
+            name: name,
+            Port: Port
+          },
+          success: function (data) {
+            $("#tblReport").DataTable().clear();
+            $("#tblReport").append(
+              "<tfoot><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></tfoot>"
+            );
+            $("#tblReport").dataTable({
+              aaData: data,
+              paging: false,
+              fixedHeader: true,
+              destroy: true,
+              processing: true,
+              scrollY: "65vh",
+              scrollCollapse: true,
+              scrollX: true,
+              select: false,
+              columnDefs: [
+                 {
+                  targets: [6],
+                  width: 10,
+                },
+                 {
+                  targets: [8],
+                  width: 20,
+                },
+                 {
+                  targets: [14],
+                  width: 60,
+                },
+            
+             ],
+              columns: [
+                 {
             "data": "cust_name",
             "render": function (data, type, row) {
                 var ret = data;
@@ -208,5 +260,37 @@
                 return ret;
             }
         },
-    ];
+              ],
+              dom:
+                "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                "<'row'<'col-md-12'tr>>" +
+                "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+              buttons: [
+                {
+                  extend: "print",
+                  text: "<i class='fa fa-print'></i>&nbsp;Print",
+                  title: "",
+                },
+                {
+                  extend: "excel",
+                  footer: true,
+                  text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                  title:
+                    "Report Order Processing " + moment().format("DD-MM-YYYY HH:mm:ss"),
+                },
+              ]
+            });
+  
+            $("#tblReport").loading("stop");
+            $("#btnSearch").html(OldHtml);
+          },
+          error: function (e) {
+            $("#tblReport").loading("stop");
+            $("#btnSearch").html(OldHtml);
+            console.log("There was an error with your request...");
+            console.log("error: " + JSON.stringify(e));
+          },
+        });
+      }
+
 </script>
