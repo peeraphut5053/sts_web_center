@@ -104,32 +104,38 @@
 
     </div>
 </div>
-<div class="flex justify-center gap-4">
-    <div class="basis-1/6">
-        <span>นํ้าหนัก</span><input style="font-weight: bold; font-size: 16px; color: red;" type="text"
-            class="form-control" id="total_weight" readonly>
-    </div>
-    <div class="basis-1/6">
-        <span>จำนวนมัด</span><input style="font-weight: bold; font-size: 16px; color: red;" type="text"
-            class="form-control" id="total_bundle" readonly>
-    </div>
+<div id="summaryContainer" class="m-4 flex gap-5 w-fit ml-auto transition-all duration-300 z-[9999]">     
+    <div class="flex flex-col">         
+        <span>นํ้าหนัก</span>
+        <input style="font-weight: bold; font-size: 16px; color: red;" type="text"             
+               class="border border-gray-300 rounded px-3 py-2 w-32" id="total_weight" readonly>     
+    </div>     
+    <div class="flex flex-col">         
+        <span>จำนวนมัด</span>
+        <input style="font-weight: bold; font-size: 16px; color: red;" type="text"             
+               class="border border-gray-300 rounded px-3 py-2 w-24" id="total_bundle" readonly>     
+    </div> 
 </div>
 <div class="row">
     <table width="100%" class="table table-condensed table-bordered table-striped" id="tblReportContainerManage">
         <thead>
             <tr>
-                <th class="bg-gray">Doc Num</th>
+                <th class="bg-gray">Doc</th>
                 <th class="bg-gray">Job</th>
                 <th class="bg-gray">STS PO</th>
-                <th class="bg-gray">PO.CUST</th>
+                <th class="bg-gray">Cust</th>
                 <th class="bg-gray">Size</th>
                 <th class="bg-gray">Spec</th>
-                <th class="bg-gray">Schedule</th>
+                <th class="bg-gray">Sch.</th>
                 <th class="bg-gray">Length</th>
                 <th class="bg-gray">Type</th>
                 <th class="bg-gray">Pack</th>
-                <th class="bg-gray">Co Number</th>
-                <th class="bg-gray">Co Line</th>
+                <th class="bg-gray">Co No.</th>
+                <th class="bg-gray">Order</th>
+                 <th class="bg-gray">Remain</th>
+                 <th class="bg-gray">Loaded</th>
+                 <th class="bg-gray">Ready</th>
+                <th class="bg-gray">Line</th>
                 <th class="bg-gray">Bundle</th>
                 <th class="bg-gray">มัดเศษ</th>
             </tr>
@@ -176,6 +182,32 @@
     </div>
 </div>
 <script type="text/javascript">
+
+    // draggable
+   const summaryContainer = document.getElementById('summaryContainer');
+let originalPosition = null;
+
+function handleScroll() {
+    const rect = summaryContainer.getBoundingClientRect();
+    const containerTop = rect.top + window.scrollY;
+    
+    if (originalPosition === null) {
+        originalPosition = containerTop;
+    }
+    
+    if (window.scrollY >= originalPosition) {
+        // เพิ่ม class สำหรับ sticky
+        summaryContainer.classList.add('fixed', 'top-0', 'right-0', 'bg-white/95', 'backdrop-blur-sm');
+        summaryContainer.classList.remove('ml-auto');
+    } else {
+        // ลบ class sticky
+        summaryContainer.classList.remove('fixed', 'top-0', 'right-0', 'bg-white/95', 'backdrop-blur-sm');
+        summaryContainer.classList.add('ml-auto');
+    }
+}
+
+window.addEventListener('scroll', handleScroll);
+handleScroll();
 
     var container_no = 1;
 
@@ -231,14 +263,22 @@
         "<tfoot><tr><td colspan='14'></td></tr></tfoot>"
     );
     var table = $('#tblReportContainerManage').DataTable({
-        "columnDefs": [
-            { "targets": '_all', "className": 'text-center' },
-        ],
+
         paging: false,
         searching: false,
-
+width: "100%",
         scrollX: true,
-        scrollY: 400,
+        columnDefs: [
+             { "targets": '_all', "className": 'text-center' },
+            {
+              targets: [3],
+              width: 100
+            },
+            {
+                targets: [5],
+                width: 100
+            }
+        ],
         columns: [
 
             { "data": "doc_num" },
@@ -253,6 +293,10 @@
             { "data": "type" },
             { "data": "pack" },
                      { "data": "co_num" },
+                     { "data": "qty_bundle"},
+                     { "data": "qty_remain"},
+                     { "data": "qty_loaded"},
+                     { "data": "qty_ready" },
             { "data": "co_line" },
             // on select container
             {
