@@ -1,0 +1,275 @@
+<style>
+  .col-search {
+    padding-left: 3px;
+    padding-right: 3px;
+  }
+
+  /*    table.dataTable thead .sorting:after,
+        table.dataTable thead .sorting:before,
+        table.dataTable thead .sorting_asc:after,
+        table.dataTable thead .sorting_asc:before,
+        table.dataTable thead .sorting_asc_disabled:after,
+        table.dataTable thead .sorting_asc_disabled:before,
+        table.dataTable thead .sorting_desc:after,
+        table.dataTable thead .sorting_desc:before,
+        table.dataTable thead .sorting_desc_disabled:after,
+        table.dataTable thead .sorting_desc_disabled:before {
+            bottom: .5em;
+        }*/
+  .table thead th {
+    text-align: center;
+  }
+
+  .col-flt-page {
+    padding-top: 10px;
+    font-weight: bold;
+  }
+
+  #tblReport tbody tr td a {
+    cursor: pointer;
+  }
+
+  table.dataTable.fixedHeader-floating,
+  table.dataTable.fixedHeader-locked {
+    background-color: white;
+    margin-top: 50px !important;
+    margin-bottom: 0 !important;
+  }
+
+  @media print {
+    table th:nth-child(0) {
+      width: 200px;
+      word-break: break-all;
+      white-space: pre-line;
+    }
+
+    table td:nth-child(0) {
+      width: 200px;
+      word-break: break-all;
+      white-space: pre-line;
+    }
+  }
+
+  .text-header {
+    font-weight: bold;
+    font-size: 20px;
+  }
+
+  .text-wrap {
+    white-space: normal;
+  }
+
+  .width-200 {
+    width: 200px;
+  }
+
+  input[type="checkbox"] {
+    margin-left: 5px;
+    margin-right: 5px;
+  }
+
+  /*
+    .cb_lb{
+        margin-top:-5px;
+    }*/
+  .item-center {
+    display: flex;
+    justify-content: center;
+  }
+
+  .bolded {
+    font-weight: bold;
+  }
+</style>
+<div class="row">
+  <h4 class="text-header text-center"></h4>
+</div>
+<div class="row item-center">
+  <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+    <div class="input-group w-full">
+      <div style="font-weight: bold; font-size: 16px" class="input-group-addon">
+        Type *
+      </div>
+      <select
+        style="font-weight: bold; font-size: 16px"
+        class="form-control txt-filter"
+        id="type_week"
+      >
+        <option value="amount">Amount</option>
+        <option value="kg">Kg</option>
+      </select>
+    </div>
+  </div>
+  <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+    <div class="input-group w-full">
+      <div style="font-weight: bold; font-size: 16px" class="input-group-addon">
+        Year
+      </div>
+      <select
+        style="font-weight: bold; font-size: 16px"
+        class="form-control txt-filter"
+        id="sale_week"
+      ></select>
+    </div>
+  </div>
+  <div class="col-lg-1 col-md-1 col-sm-6 col-xs-6 text-left">
+    <button class="btn btn-info" id="btnSearch">
+      <i class="fa fa-search"></i>&nbsp; Search
+    </button>
+  </div>
+</div>
+
+<div class="row" id="rowResultTable">
+  <table
+    class="table table-condensed table-bordered table-striped"
+    id="tblReport"
+  >
+    <thead>
+      <tr>
+        <!--<th >#</th>-->
+      </tr>
+    </thead>
+    <!--        <tbody id="tblReportList">
+                    <tr><td align="center" colspan="12">.... No item search ....</td></tr>
+                </tbody>-->
+  </table>
+</div>
+<script type="text/javascript">
+  var startYear = 2020;
+  var endYear = moment().year();
+
+  // create options for select
+  var options = Array.from({
+    length: endYear - startYear + 1,
+  }).map((value, index) => {
+    var year = startYear + index;
+    return `<option value="${year}">${year}</option>`;
+  });
+
+  // add options to select
+  $("#sale_week").append(options);
+  $("#sale_week").val(endYear);
+
+  $("#btnSearch").click(function () {
+    ReportItemSearch();
+  });
+
+  function ReportItemSearch() {
+    var OldHtml = $("#btnSearch").html();
+    var type_week = $("#type_week").val();
+    var year = $("#sale_week").val();
+
+    $("#btnSearch").html("<i class='fa fa-spinner fa-spin'></i>");
+    $("#tblReport").loading();
+    $("#tblReport tfoot").remove();
+    $.ajax({
+      type: "GET",
+      url: "././module/RPT_SALES_PERSONS/data.php",
+      dataType: "json",
+      beforeSend: function () {
+        $("#btnSearch").html("<i class='fa fa-spinner fa-spin'>");
+      },
+      data: {
+        load: "GetSalesByWeek",
+        type: type_week,
+        year: year,
+      },
+      success: function (data) {
+        // 1. Check for data and handle accordingly
+        if (!data || data.length === 0) {
+          console.log("No data found.");
+          // Stop execution if there is no data
+          return;
+        }
+
+        // 2. Destroy any existing DataTable instance
+        if ($.fn.DataTable.isDataTable("#tblReport")) {
+          $("#tblReport").DataTable().destroy();
+        }
+
+        // 3. Clear existing headers to start fresh
+        $("#tblReport thead tr").empty();
+
+        // 4. Get ALL keys from the first object to build headers
+        var allKeys = Object.keys(data[0]);
+        allKeys.forEach(function (field) {
+          $("#tblReport thead tr").append(
+            "<th class='bg-gray'>" + field + "</th>"
+          );
+        });
+
+        // 5. Build the column definitions array dynamically
+        var columnsDefinitions = allKeys.map(function (key) {
+          if (key === "name") {
+            return {
+              title: "ชื่อ",
+              data: "name",
+              className: "text-center",
+            };
+          }
+          return {
+            title: key,
+            // Use function accessor so keys with dots like "1.01" work
+            data: function (row) {
+              return row && Object.prototype.hasOwnProperty.call(row, key)
+                ? row[key]
+                : "-";
+            },
+            className: "text-center",
+            render: function (value) {
+              if (value === null || value === undefined || value === "-") {
+                return "-";
+              }
+              return typeof addCommas === "function" ? addCommas(value) : value;
+            },
+          };
+        });
+
+        // 6. Initialize DataTables with the data and column definitions
+        $("#tblReport").DataTable({
+          data: data,
+          paging: false,
+          fixedHeader: true,
+          destroy: true,
+          processing: true,
+          scrollY: "65vh",
+          scrollCollapse: true,
+          scrollX: true,
+          columnDefs: [
+            {
+              targets: [0],
+              width: 200,
+            },
+          ],
+          columns: columnsDefinitions,
+          dom:
+            "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+            "<'row'<'col-md-12'tr>>" +
+            "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+          buttons: [
+            {
+              extend: "print",
+              text: "<i class='fa fa-print'></i>&nbsp;Print",
+              title: "",
+            },
+            {
+              extend: "excel",
+              footer: true,
+              text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+              title: "รายงานยอดขาย By Sales Person " + GetCurrDateTime(),
+            },
+          ], // Pass the complete array here
+        });
+
+        $("#tblReport").loading("stop");
+        $("#btnSearch").html(OldHtml);
+      },
+      error: function (e) {
+        $("#tblReport").loading("stop");
+        $("#btnSearch").html(OldHtml);
+        console.log("There was an error with your request...");
+        console.log("error: " + JSON.stringify(e));
+      },
+    });
+  }
+</script>

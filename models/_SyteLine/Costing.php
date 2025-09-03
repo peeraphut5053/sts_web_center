@@ -400,4 +400,66 @@ where 1=1 $wh
         array_splice($rs, count($rs) - 1, 1);
         return $rs;
     }
+
+    function GetSalesByWeek($type, $year) {
+        $query = "";
+
+        if ($type == "amount") {
+            $query = "EXEC [dbo].[STS_salesperson_byWEEK]
+  @year = N'$year'";
+        } else {
+            $query = "EXEC [dbo].[STS_salesperson_byWEEK_KG]
+  @year = N'$year'";
+        }
+            
+
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+    function GetSalesByMonth($type, $year) {
+        $query = "";
+
+        if ($type == "amount") {
+            $query = "SELECT    name 
+  , [1] AS JAN, [2] AS FEB, [3] AS MAR, [4] AS APR, [5] AS MAY, [6] AS JUN
+  , [7] AS JUL, [8] AS AUG, [9] AS SEP, [10] AS OCT, [11] AS NOV, [12] AS DEC
+FROM ( SELECT [total_INVamount],[month],name  FROM V_WebApp_InvItem_IN_slsman  where [year]='$year' ) AS TABLE1
+PIVOT ( SUM([total_INVamount]) FOR [MONTH] IN ( [1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12] ) ) AS PIV";
+        } else {
+            $query = "SELECT    name 
+  , [1] AS JAN, [2] AS FEB, [3] AS MAR, [4] AS APR, [5] AS MAY, [6] AS JUN
+  , [7] AS JUL, [8] AS AUG, [9] AS SEP, [10] AS OCT, [11] AS NOV, [12] AS DEC
+FROM ( SELECT [QtyKG],[month],name  FROM V_WebApp_InvItem_IN_slsman  where [year]='$year' ) AS TABLE1
+PIVOT ( SUM([QtyKG]) FOR [MONTH] IN ( [1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12] ) ) AS PIV";
+        }
+        
+
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+    function GetSalesByYear($type, $year) {
+        $query = "";
+
+        if ($type == "amount") {
+            $query = "EXEC [dbo].[STS_salesperson_byYEAR]
+  @year = $year";
+        } else {
+            $query = "EXEC [dbo].[STS_salesperson_byYEAR_KG]
+  @year = $year";
+        }
+
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+
 }
+

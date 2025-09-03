@@ -1,0 +1,207 @@
+<style>
+    .not-show-content{
+        display:none;
+    }
+
+    .footer{
+        color: blue ;
+        font-weight: bold;
+    }
+    .col-search {
+        padding-left: 3px;
+        padding-right: 3px;
+    }
+
+    .table thead th {
+        text-align: center;
+    }
+
+    .col-flt-page {
+        padding-top: 10px;
+        font-weight: bold;
+    }
+
+    #tblReport tbody tr td a {
+        cursor: pointer;
+    }
+
+    table.dataTable.fixedHeader-floating,
+    table.dataTable.fixedHeader-locked {
+        background-color: white;
+        margin-top: 50px !important;
+        margin-bottom: 0 !important;
+    }
+
+    .tr-row-cn td {
+        color: red;
+    }
+    .selectize-input{
+        min-height: 80px;
+    }
+    .panel-body{
+        padding-top:5px;
+        padding-bottom:5px;
+    }
+
+    @import  url('https://fonts.googleapis.com/css?family=Roboto');
+
+    body{
+        font-family: 'Roboto', sans-serif;
+    }
+
+    h2{
+        margin:0px;
+        text-transform: uppercase;
+    }
+
+    h6{
+        margin:0px;
+        color:#777;
+    }
+
+    .wrapper2{
+        text-align:center;
+        margin-bottom:5px;
+    }
+
+    .tabs{
+        margin-top:10px;
+        font-size:15px;
+        padding:0px;
+        list-style:none;
+        background:#fff;
+        box-shadow:0px 5px 20px rgba(0,0,0,0.1);
+        display:inline-block;
+        border-radius:50px;
+        position:relative;
+    }
+
+    .tabs a{
+        text-decoration:none;
+        color: #777;
+        text-transform:uppercase;
+        padding:10px 20px;
+        display:inline-block;
+        position:relative;
+        z-index:1;
+        transition-duration:0.6s;
+    }
+
+    .tabs a.active{
+        color:#fff;
+    }
+
+    .tabs a i{
+        margin-right:5px;
+    }
+
+    .tabs .selector{
+        height:100%;
+        display:inline-block;
+        position:absolute;
+        left:0px;
+        top:0px;
+        z-index:1;
+        border-radius:50px;
+        transition-duration:0.6s;
+        transition-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+        background: #05abe0;
+        background: -moz-linear-gradient(45deg, #05abe0 0%, #8200f4 100%);
+        background: -webkit-linear-gradient(45deg, #05abe0 0%,#8200f4 100%);
+        background: linear-gradient(45deg, #05abe0 0%,#8200f4 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#05abe0', endColorstr='#8200f4',GradientType=1 );
+    }
+</style>
+<div class="wrapper2">
+    <div class="text-center p-4"><h2>รายงานยอดขาย By Sales Person</h2></div>
+    <nav class="tabs">
+        <div class="selector"></div>
+        <a href="#" id ="tab_salesWeek" class="active">BY WEEK</a>
+        <a href="#" id ="tab_salesMonth">BY MONTH</a>
+        <a href="#" id ="tab_salesYear">BY YEAR</a>
+    </nav>
+</div>
+<div id="content_salesWeek" >
+
+</div>
+<div id="content_salesMonth" class="not-show-content">
+
+</div>
+<div id="content_salesYear" class="not-show-content">
+
+</div>
+
+
+<script type="text/javascript">
+
+
+
+    $(".panel-heading").click(function () {
+        $(".panel-body").slideToggle("slow");
+    });
+
+    var tabs = $('.tabs');
+    var selector = $('.tabs').find('a').length;
+//var selector = $(".tabs").find(".selector");
+    var activeItem = tabs.find('.active');
+    var activeWidth = activeItem.innerWidth();
+    $(".selector").css({
+        "left": activeItem.position.left + "px",
+        "width": activeWidth + "px"
+    });
+
+
+
+    $(document).ready(function () {
+        pageHtml = "content_salesWeek";
+        Url = "././module/RPT_SALES_PERSONS/render.php"
+        $("#content_salesWeek").load(Url, {"pageHtml": pageHtml}, function (response, status, xhr) {
+            if (status == "error") {
+                var msg = "Sorry, error: ";
+                $.alert(msg + xhr.status + " " + xhr.statusText);
+            } else {
+              //  $("#content_Helloworld").loading("stop");
+            }
+        });
+    });
+
+
+    $(".tabs").on("click", "a", function (e) {
+        e.preventDefault();
+        $('.tabs a').removeClass("active");
+        $(this).addClass('active');
+        var activeWidth = $(this).innerWidth();
+        var itemPos = $(this).position();
+        $(".selector").css({
+            "left": itemPos.left + "px",
+            "width": activeWidth + "px"
+        });
+        var thisId = $(this).attr("id");
+        var split_id_tab = thisId.split("_");
+        var tab_name = split_id_tab[1];
+        $("div[id^='content']").hide();
+        $("#content_" + tab_name).fadeToggle("slow", "linear");
+
+
+
+        Url = "././module/RPT_SALES_PERSONS/render.php"
+        pageHtml = "content_" + tab_name;
+        $("#content_" + tab_name).load(Url, {"pageHtml": pageHtml}, function (response, status, xhr) {
+            if (status == "error") {
+                var msg = "Sorry, error: ";
+                $.alert(msg + xhr.status + " " + xhr.statusText);
+            } else {
+               // $("#content_Helloworld").loading("stop");
+            }
+        });
+
+
+//        if ($("#content_" + tab_name).hasClass("not-show-content")) {
+//            $("#content_" + tab_name).show();
+//        }
+//alert(tab_name);
+    });
+
+
+</script>
