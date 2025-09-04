@@ -84,10 +84,12 @@
             <th>qty order</th>
             <th>qty shipped</th>
             <th>qty pending</th>
-            <th>due date</th>
+            <th>estimate_ship</th>
             <th>kg/pcs</th>
             <th>PricePerKG</th>
             <th>Uf_pack</th>
+            <th>co due date</th>
+
         </tr>
     </thead>
 </table>
@@ -158,6 +160,7 @@
                         },
                         {
                             "data": "dateDUE",
+                            className: "text-center"
                         },
                         {
                             "data": "co_num",
@@ -210,7 +213,7 @@
 
                         {
                             "data": "due_date_conv",
-                            "className": "text-left doc_no",
+                            "className": "text-center doc_no",
                             "render": function (data, type, row) {
                                 var ret = data.substring(0, 10);
                                 return ret;
@@ -240,6 +243,14 @@
                                 return ret;
                             },
                         },
+                        {
+                            "data": "CO_orig_due_date",
+                            "className": "text-right doc_no",
+                            "render": function (data, type, row) {
+                                var ret = data;
+                                return ret;
+                            },
+                        }
                     ],
                     'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
                             "<'row'<'col-md-12'tr>>" +
