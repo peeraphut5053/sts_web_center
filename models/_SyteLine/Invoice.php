@@ -541,7 +541,7 @@ class Invoice {
             $query .= substr($Criteria, 0, -3) . " ) ";
         }
         */}
-    
+       
         // $query = $query . " ORDER BY inv_date , inv_num , co_num, co_line , Uf_DoHdr_car_num, item";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
