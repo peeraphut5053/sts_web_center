@@ -487,7 +487,7 @@ class Invoice {
 
         $item = $this->_item;
 
-        $cust_num = $this->_Customers[0];
+        $cust_num = isset($this->_Customers[0]) ? $this->_Customers[0] : '';
 
         $query = "EXEC [dbo].[SP_WebApp_InvItem]
   @InvDateStart = N'$start_invdate',
@@ -541,7 +541,7 @@ class Invoice {
             $query .= substr($Criteria, 0, -3) . " ) ";
         }
         */}
-
+    
         // $query = $query . " ORDER BY inv_date , inv_num , co_num, co_line , Uf_DoHdr_car_num, item";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
