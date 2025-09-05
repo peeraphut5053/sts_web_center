@@ -17,47 +17,18 @@
         </div>
         <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-2">   
             <div class="input-group">
-                <div class="input-group-addon">Co number start</div>
-                <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtFromCoNum_start" >
+                <div class="input-group-addon">cust po</div>
+                <input type="text" autocomplete="off"  class="form-control txt-filter" id="cust_po_ex" >
             </div>
         </div>
         <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-2">   
             <div class="input-group">
-                <div class="input-group-addon">Co number end</div>
-                <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtFromCoNum_end">
+                <div class="input-group-addon">sts po</div>
+                <input type="text" autocomplete="off"  class="form-control txt-filter" id="sts_po_ex">
             </div>
         </div>
     </div>
     <div class="row">
-        <div class="col-12 col-xs-12 col-sm-12 col-md-6 col-lg-3">   
-            <div class="input-group">
-                <div class="input-group-addon">cus number/ Name</div>
-                <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtFromCusnumOrName">
-            </div>
-        </div>
-
-
-        <div class="col-12 col-xs-12 col-sm-12 col-md-6 col-lg-3">   
-            <div class="input-group">
-                <div class="input-group-addon">Item or description</div>
-                <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtFromItemOrDes">
-            </div>
-        </div>
-
-        <div class="col-12 col-xs-12 col-sm-12 col-md-6 col-lg-2">   
-            <div class="input-group">
-                <div class="input-group-addon">City</div>
-                <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtCity">
-            </div>
-        </div>
-
-        <div class="col-12 col-xs-12 col-sm-12 col-md-6 col-lg-2">   
-            <div class="input-group">
-                <div class="input-group-addon">customer po</div>
-                <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtcustomerpo">
-            </div>
-        </div>
-
         <div class="row">
             <div class="col-12 col-xs-12 col-sm-12 col-md-6 col-lg-2" >   
                 <div class="input-group">
@@ -71,25 +42,25 @@
 <table class="table table-condensed table-bordered table-striped" id="tblCustReport" >
     <thead>
         <tr>
-            <th>order date</th>
-            <th>due days</th>
-            <th>co number</th>
-            <th>co line</th>
-            <th>customer po</th>
-            <th>customer number</th>
-            <th>name</th>
-            <th>item</th>
-            <th>description</th>
-            <th>city</th>
-            <th>qty order</th>
-            <th>qty shipped</th>
-            <th>qty pending</th>
-            <th>estimate_ship</th>
-            <th>kg/pcs</th>
-            <th>PricePerKG</th>
-            <th>Uf_pack</th>
-            <th>co due date</th>
-
+            <th>end user</th>
+            <th>cust po</th>
+            <th>sts po</th>
+            <th>port</th>
+            <th>size</th>
+            <th>spec</th>
+            <th>grade</th>
+            <th>Sch.</th>
+            <th>Length</th>
+            <th>type</th>
+            <th>KG</th>
+            <th>PCSbundle</th>
+            <th>bundle</th>
+            <th>shipped</th>
+            <th>Balance Bundle</th>
+            <th>Balance MT</th>
+            <th>ready</th>
+            <th>readyMT</th>
+            <th>estimate ship</th>
         </tr>
     </thead>
 </table>
@@ -100,20 +71,15 @@
 
 
     $("#btn_search").click(function () {
-        var keyword = $("#search").val();
-        var txtFromDate_start = $('#txtFromDate_start').val();
-        var txtFromDate_end = $('#txtFromDate_end').val();
-        var txtFromCoNum_start = $('#txtFromCoNum_start').val();
-        var txtFromCoNum_end = $('#txtFromCoNum_end').val();
-        var txtFromCusnumOrName = $('#txtFromCusnumOrName').val();
-        var txtFromItemOrDes = $('#txtFromItemOrDes').val();
-        var txtCity = $('#txtCity').val();
-        var txtcustomerpo = $('#txtcustomerpo').val();
-
-        getdata(keyword, txtFromDate_start, txtFromDate_end, txtFromCoNum_start, txtFromCoNum_end, txtFromCusnumOrName, txtFromItemOrDes, txtCity, txtcustomerpo);
+        getdata();
     });
 
-    function getdata(keyword, txtFromDate_start, txtFromDate_end, txtFromCoNum_start, txtFromCoNum_end, txtFromCusnumOrName, txtFromItemOrDes, txtCity, txtcustomerpo) {
+    function getdata() {
+        var fromDate = $("#txtFromDate_start").val();
+        var toDate = $("#txtFromDate_end").val();
+        var cust_po = $("#cust_po_ex").val();
+        var sts_po = $("#sts_po_ex").val();
+
         var TableId = "#tblCustReport";
         $.ajax({
             type: 'POST',
@@ -121,19 +87,12 @@
             dataType: 'json',
             data: {
                 "load": "ajax",
-                "keyword": keyword,
-                "txtFromDate_start": txtFromDate_start,
-                "txtFromDate_end": txtFromDate_end,
-                "txtFromCoNum_start": txtFromCoNum_start,
-                "txtFromCoNum_end": txtFromCoNum_end,
-                "txtFromCusnumOrName": txtFromCusnumOrName,
-                "txtFromItemOrDes": txtFromItemOrDes,
-                "txtCity": txtCity,
-                "txtcustomerpo": txtcustomerpo
+                "fromDate": fromDate,
+                "toDate": toDate,
+                "cust_po": cust_po,
+                "sts_po": sts_po
             },
             success: function (data) {
-                console.log("data")
-                console.log(data)
                 $(TableId).DataTable().clear();
                 var RowFooterBuild = "";
                 var ColBuild = "";
@@ -153,108 +112,97 @@
                     },
                     fixedHeader: true,
                     destroy: true,
-                    'processing': true,
+                    scrollX: true,
+                 
+                    scrollCollapse: true,
                     "columns": [
                         {
-                            "data": "order_date",
-                        },
-                        {
-                            "data": "dateDUE",
+                            "data": "end_user",
                             className: "text-center"
                         },
                         {
-                            "data": "co_num",
-                        },
-                        {
-                            "data": "co_line",
-                        },
-                        {
                             "data": "cust_po",
+                            className: "text-center"
                         },
                         {
-                            "data": "cust_num",
+                            "data": "sts_po",
+                            className: "text-center"
                         },
                         {
-                            "data": "name",
+                            "data": "port",
+                            className: "text-center"
                         },
                         {
-                            "data": "item",
+                            "data": "size",
+                            className: "text-center"
                         },
                         {
-                            "data": "description",
+                            "data": "spec",
+                            className: "text-center"
                         },
                         {
-                            "data": "city",
+                            "data": "grade",
+                            className: "text-center"
                         },
                         {
-                            "data": "qty_order",
-                            "className": "text-right doc_no",
-                            "render": function (data, type, row) {
-                                var ret = data;
-                                return ret;
+                            "data": "schedule",
+                            className: "text-center"
+                        },
+                        {
+                            "data": "length",
+                            className: "text-center"
+                        },
+                        {
+                            "data": "type",
+                            className: "text-center"
+                        },
+                        {
+                            "data": "KG",
+                            className: "text-center",
+                            render: function (data, type, row) {
+                                return parseFloat(data).toFixed(2);
                             }
                         },
                         {
-                            "data": "qty_shipped",
-                            "className": "text-right doc_no",
-                            "render": function (data, type, row) {
-                                var ret = data;
-                                return ret;
+                            "data": "PCSbundle",
+                            className: "text-center"
+                        },
+                        {
+                            "data": "bundle",
+                            className: "text-center"
+                        },
+                        {
+                            "data": "shipped",
+                            className: "text-center"
+                        },
+                        {
+                            "data": "pending",
+                            className: "text-center"
+                        },
+                        {
+                            "data": "pendingMT",
+                            className: "text-center"
+                        },
+                        {
+                            "data": "ready",
+                            className: "text-center"
+                        },
+                        {
+                            "data": "readyMT",
+                            className: "text-center"
+                        },
+                        {
+                            "data": "estimate_ship.date",
+                            className: "text-center",
+                            render: function (data, type, row) {
+                                return moment(data).format('DD/MM/YYYY');
                             }
                         },
-                        {
-                            "data": "qty_pending",
-                            "className": "text-right doc_no",
-                            "render": function (data, type, row) {
-                                var ret = data;
-                                return ret;
-                            }
-                        },
-
-                        {
-                            "data": "due_date_conv",
-                            "className": "text-center doc_no",
-                            "render": function (data, type, row) {
-                                var ret = data.substring(0, 10);
-                                return ret;
-                            },
-                        },
-                        {
-                            "data": "unit_weight",
-                            "className": "text-right doc_no",
-                            "render": function (data, type, row) {
-                                var ret = data;
-                                return ret;
-                            },
-                        },
-                        {
-                            "data": "Uf_PricePerKG",
-                            "className": "text-right doc_no",
-                            "render": function (data, type, row) {
-                                var ret = data;
-                                return ret;
-                            },
-                        },
-                        {
-                            "data": "Uf_pack",
-                            "className": "text-right doc_no",
-                            "render": function (data, type, row) {
-                                var ret = data;
-                                return ret;
-                            },
-                        },
-                        {
-                            "data": "CO_orig_due_date",
-                            "className": "text-right doc_no",
-                            "render": function (data, type, row) {
-                                var ret = data;
-                                return ret;
-                            },
-                        }
+                    
                     ],
-                    'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                    'dom': "<'row'<'col-md-5'B><'col-md-7 text-center col-flt-page'lf>>" +
                             "<'row'<'col-md-12'tr>>" +
-                            "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                            "<'row'<'col-md-5 text-left'i><'col-sm-7 text-center'p>>",
                     buttons: [{
                             extend: 'print',
                             text: "<i class='fa fa-print'></i>&nbsp;Print",
