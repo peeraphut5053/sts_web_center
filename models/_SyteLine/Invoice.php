@@ -102,50 +102,21 @@ class Invoice {
         return $rs0;
     }
 
-    function GetRPTINV_OutstandingEx() {
-        $cus_type = $this->_cus_type;
-        $keyword = $this->_keyword;
-        $txtFromDate_start = $this->_txtFromDate_start;
-        $txtFromDate_end = $this->_txtFromDate_end;
-        $txtFromCoNum_start = $this->_txtFromCoNum_start;
-        $txtFromCoNum_end = $this->_txtFromCoNum_end;
-        $txtFromCusnumOrName = $this->_txtFromCusnumOrName;
-        $txtFromItemOrDes = $this->_txtFromItemOrDes;
-        $txtCity = $this->_txtCity;
-        $txtcustomerpo = $this->_txtcustomerpo;
-
-        if (($txtFromDate_start) && ($txtFromDate_end)) {
-            $order_date = " AND ( order_date BETWEEN '$txtFromDate_start 00:00:00' AND '$txtFromDate_end 23:59:59' ) ";
-        }
-        $query = "SELECT "
-                . "distinct "
-                . "CONVERT(varchar,order_date,120) as order_date_conv ,datediff(day, getdate(),due_date ) as dateDUE,"
-                . "CONVERT(varchar,due_date,120) as due_date_conv ,"
-                . "V_WebApp_InvItem_OutStanding_2.* FROM V_WebApp_InvItem_OutStanding_2 "
-                . "WHERE ( LEFT(co_num,2) = 'EX' or LEFT(co_num,2) ='EB') and stat <> 'C' ";
+    function GetRPTINV_OutstandingEx($fromDate, $toDate, $cust_po, $sts_po) {
+        $query = "SELECT distinct  datediff(day, getdate(),co_due_date ) as dateDUE ,* 
+FROM V_WebApp_InvItem_OutStanding_2 
+WHERE 1=1";
         
-
-
-
-        if ($this->_txtFromDate_start != "") {
-            $query = $query . "AND ( order_date BETWEEN '$txtFromDate_start 00:00:00' AND '$txtFromDate_end 23:59:59' ) ";
+        if ($fromDate != "" && $toDate != "") {
+            $query = $query . "AND ( order_date BETWEEN '$fromDate' AND '$toDate' ) ";
         }
-        if ($txtFromCoNum_start != "") {
-            $query = $query . "AND ( co_num BETWEEN '$txtFromCoNum_start' AND '$txtFromCoNum_end' ) ";
+        if ($cust_po != "") {
+            $query = $query . "AND cust_po like '$cust_po%'";
         }
-        if ($txtFromCusnumOrName != "") {
-            $query = $query . "AND ( V_WebApp_InvItem_OutStanding_2.name LIKE '%" . $txtFromCusnumOrName . "%' or V_WebApp_InvItem_OutStanding_2.cust_num LIKE '%" . $txtFromCusnumOrName . "%' ) ";
+        if ($sts_po != "") {
+            $query = $query . "AND sts_po like '$sts_po%'";
         }
-        if ($txtFromItemOrDes != "") {
-            $query = $query . "AND ( V_WebApp_InvItem_OutStanding_2.item LIKE '%" . $txtFromItemOrDes . "%' or V_WebApp_InvItem_OutStanding_2.description LIKE '%" . $txtFromItemOrDes . "%' ) ";
-        }
-        if ($txtCity != "") {
-            $query = $query . "AND ( V_WebApp_InvItem_OutStanding_2.city LIKE '%" . $txtCity . "%'  ) ";
-        }
-        if ($txtcustomerpo != "") {
-            $query = $query . "AND ( cust_po LIKE '%" . $txtcustomerpo . "%'  ) ";
-        }
-
+     
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);
