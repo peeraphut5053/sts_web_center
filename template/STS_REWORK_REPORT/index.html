@@ -340,7 +340,7 @@
     function saveStatus(doc_no, row, seq){ 
 
     if (username_session !== 'admin' && username_session !== 'vorawut' && username_session !== 'sukanya' && username_session !== 'Sukanya') {
-      alert('ไม่สามารถบันทึกได้');
+      swal("คุณไม่มีสิทธิ์ในการบันทึกพร้อมส่ง!", "", "error");
       return false;
     }
    
