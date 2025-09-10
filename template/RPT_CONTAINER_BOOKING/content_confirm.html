@@ -55,7 +55,12 @@
                 <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">STS PO</div>
                 <input type="text" style="font-weight: bold; font-size: 16px;" class="form-control txt-filter"
                     id="sts_po">
-            </div>
+            </div>     
+            <div class="input-group basis-1/6">
+                <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">Size</div>
+                <input type="text" style="font-weight: bold; font-size: 16px;" class="form-control txt-filter"
+                    id="cm_size">
+            </div>  
             <div class="input-group basis-1/6">
                 <div class="flex gap-6">
                     <button type="button" class="btn btn-primary btn-lg" id="btnSearchManage">Search</button>
@@ -184,8 +189,8 @@
 <script type="text/javascript">
 
     // draggable
-   const summaryContainer = document.getElementById('summaryContainer');
-let originalPosition = null;
+   var summaryContainer = document.getElementById('summaryContainer');
+var originalPosition = null;
 
 function handleScroll() {
     const rect = summaryContainer.getBoundingClientRect();
@@ -265,7 +270,7 @@ handleScroll();
     var table = $('#tblReportContainerManage').DataTable({
 
         paging: false,
-        searching: false,
+        searching: true,
 width: "100%",
         scrollX: true,
         columnDefs: [
@@ -410,6 +415,7 @@ width: "100%",
                             var cust_name = $("#cust_name").val();
                             var city = $("#city_search").val();
                             var sts_po = $("#sts_po").val();
+                            var size = $("#cm_size").val();
                             // GetBookingLine new data
                             $.ajax({
                                 type: "GET",
@@ -422,7 +428,8 @@ width: "100%",
                                     cust_po: cust_po,
                                     cust_name: cust_name,
                                     city: city,
-                                    sts_po: sts_po
+                                    sts_po: sts_po,
+                                    size: size
                                 },
                                 success: function (data) {
 
@@ -590,6 +597,7 @@ width: "100%",
         var cust_name = $("#cust_name").val();
         var city = $("#city_search").val();
         var sts_po = $("#sts_po").val();
+        var size = $("#cm_size").val();
 
         if (doc_num == "" && co_num == "" && cust_po == "" && cust_name == "" && city == "" && sts_po == "") {
             alert("กรุณากรอกข้อมูลในการค้นหา");
@@ -605,8 +613,7 @@ width: "100%",
                 doc_num: $("#doc_num_manage").val()
             },
             success: function (data) {
-                $("#total_weight").val(addCommas(data[0].total_weight));
-                $("#total_bundle").val(addCommas(data[0].total_bundle));
+               
             }
         });
 
@@ -621,7 +628,8 @@ width: "100%",
                 cust_po: cust_po,
                 cust_name: cust_name,
                 city: city,
-                sts_po: sts_po
+                sts_po: sts_po,
+                size: size
             },
             success: function (data) {
 
@@ -738,21 +746,23 @@ width: "100%",
             });
         }
 
-        $.ajax({
-            type: "GET",
-            url: "././module/RPT_CONTAINER_CONFIRM/data.php",
-            dataType: "json",
-            data: {
-                load: "GetTotalWeight",
-                doc_num: $("#doc_num_manage").val()
-            },
-            success: function (data) {
-                console.log(data);
+        setTimeout(function () {
+            $.ajax({
+                type: "GET",
+                url: "././module/RPT_CONTAINER_CONFIRM/data.php",
+                dataType: "json",
+                data: {
+                    load: "GetTotalWeight",
+                    doc_num: $("#doc_num_manage").val()
+                },
+                success: function (data) {
+                    console.log(data);
 
-                $("#total_weight").val(addCommas(data[container_no - 1].total_weight));
-                $("#total_bundle").val(data[container_no - 1].total_bundle);
-            }
-        });
+                    $("#total_weight").val(addCommas(data[container_no - 1].total_weight));
+                    $("#total_bundle").val(data[container_no - 1].total_bundle);
+                }
+            });
+        }, 1000);
 
         // อัพเดตข้อมูลใน DataTable
     }

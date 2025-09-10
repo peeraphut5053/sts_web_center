@@ -15,7 +15,7 @@ $Data = new CustomerAddrSyteline();
 $Data->setConn($ConnSL);
 
 if ($load == "GetBookingLine") {
-    $Data = $Data->GetReportContainerBookingConfirm($doc_num, $co_num, $cust_po, $cust_name, $city, $sts_po);
+    $Data = $Data->GetReportContainerBookingConfirm($doc_num, $co_num, $cust_po, $cust_name, $city, $sts_po, $size);
     echo json_encode($Data);
 }
 

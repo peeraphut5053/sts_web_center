@@ -192,7 +192,7 @@
                         "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
                     buttons: [
                         {
-                            text: `<button type="button" class="btn btn-danger">Edit Booking</button>`,
+                            text: `<button type="button" class="btn btn-warning">Edit Booking</button>`,
                             action: function (e, dt, node, config) {
                                 // on selected
                                 let selected = Array.from(dt.rows('.selected').data());
@@ -219,6 +219,43 @@
                                 $("#status_booking").val(selected[0][7]);
                             }
                         },
+                        {
+                             text: `<button type="button" class="btn btn-danger">Delete</button>`,
+                             action: function (e, dt, node, config) {
+                                // on selected
+                                let selected = Array.from(dt.rows('.selected').data());
+                                if (selected.length == 0) {
+                                    alert("กรุณารายการที่ต้องการลบ");
+                                    return false;
+                                }
+
+                                // create swal confirm
+                                swal({
+                                    title: "ยืนยันการลบ",
+                                    text: "คุณต้องการลบรายการนี้หรือไม่",
+                                    icon: "warning",
+                                    buttons: true,
+                                    dangerMode: true,
+                                }).then((willDelete) => {
+                                    if (willDelete) {
+                                        $.ajax({
+                                            type: "POST",
+                                            url: "././module/RPT_CONTAINER_BOOKING/data.php",
+                                            dataType: "json",
+                                            data: {
+                                                load: "DeleteByDocNum",
+                                                doc_num: selected[0][0],
+                                                co_num: selected[0][1],
+                                            },
+                                            success: function (data) {
+                                                dt.row('.selected').remove().draw();
+                                                swal("ลบข้อมูลสําเร็จ", "", "success");
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        }
                     ],
     });
 

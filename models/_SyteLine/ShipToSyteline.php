@@ -120,24 +120,29 @@ order by co.co_num";
         return $rs;
     }
 
-     function GetReportContainerBookingConfirm($doc_num, $co_num, $cust_po, $cust_name, $city, $sts_po) {
+     function GetReportContainerBookingConfirm($doc_num, $co_num, $cust_po, $cust_name, $city, $sts_po, $size) {
         $wh = '';
         if ($co_num !== "") {
-            $wh = "and co_num = '$co_num' ";
+            $wh = $wh . "and co_num = '$co_num' ";
         }
         if ($cust_po !== "") {
-            $wh = "and cust_po = '$cust_po' ";
+            $wh = $wh . "and cust_po = '$cust_po' ";
         }
         if ($cust_name !== "") {
-            $wh = "and cust_name = '$cust_name' ";
+            $wh = $wh . "and cust_name = '$cust_name' ";
         }
         if ($city !== "") {
-            $wh = "and city = '$city' ";
+            $wh = $wh . "and city = '$city' ";
         }
         if ($sts_po !== "") {
-            $wh = "and sts_po = '$sts_po' ";
+            $wh = $wh . "and sts_po = '$sts_po' ";
             # code...
         }
+        if ($size !== "") {
+            $wh = $wh . "and size like '$size%' ";
+            # code...
+        }
+
         $query = "select * 
 from V_STS_EX_booking_line_cont 
 where doc_num = '$doc_num' $wh";
@@ -163,8 +168,9 @@ where doc_num = '$doc_num' $wh";
     }
 
      function GetDataBookingByDocNum($doc_num) {
-        $query = "select distinct book.* , do.do_num
+        $query = "select distinct book.* , cont.end_cust , cont.city , do.do_num
 from STS_EX_booking book
+left join STS_EX_booking_line_cont cont on (cont.doc_num = book.doc_num and cont.co_num = book.co_num)
 left join do_hdr_mst do on (do.uf_bookingNo = book.booking_num40 or do.uf_bookingNo = book.booking_num45) where book.doc_num  = '$doc_num'";
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
@@ -230,6 +236,16 @@ group by line.doc_num ,line.cont_no";
   @doc_num = '$doc_num'";
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+     function DeleteByDocNum($doc_num, $co_num) {
+        $query = "DELETE FROM STS_EX_booking WHERE doc_num = '$doc_num' and co_num = '$co_num'";
+        $query2 = "DELETE FROM STS_EX_booking_line_cont WHERE doc_num = '$doc_num' and co_num = '$co_num'";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        $rs = $cSql->SqlQuery($this->StrConn, $query2);
         array_splice($rs, count($rs) - 1, 1);
         return $rs;
     }
