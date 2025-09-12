@@ -110,7 +110,10 @@
           <th class="bg-gray">Order Date</th>
           <th class="bg-gray">Name</th>
           <th class="bg-gray">Item</th>
-          <th class="bg-gray">Cost</th>
+          <th class="bg-gray">หน่วย</th>
+          <th class="bg-gray">Qty Order</th>
+          <th class="bg-gray">Item Cost</th>
+          <th class="bg-gray">Total</th>
         </tr>
       </thead>
       <!--        <tbody id="tblReportPOList">
@@ -156,7 +159,7 @@
           success: function (data) {
             $("#tblReportPO").DataTable().clear();
             $("#tblReportPO").append(
-              "<tfoot><tr><td></td><td></td><td></td><td></td><td></td></tr></tfoot>"
+              "<tfoot><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></tfoot>"
             );
             $("#tblReportPO").dataTable({
               aaData: data,
@@ -189,7 +192,21 @@
                   className: "text-center",
                 },
                 {
-                  data: "cost",
+                  data: "u_m",
+                  className: "text-center",
+                },
+                {
+                  data: "qty_ordered",
+                  className: "text-center",
+                  render: $.fn.dataTable.render.number(",", ".", 2),
+                },
+                 {
+                  data: "item_cost",
+                  className: "text-center",
+                  render: $.fn.dataTable.render.number(",", ".", 2),
+                },
+                 {
+                  data: "total",
                   className: "text-center",
                   render: $.fn.dataTable.render.number(",", ".", 2),
                 },
@@ -224,15 +241,29 @@
                                     typeof i === 'number' ?
                                     i : 0;
                         };
+                        var order = api
+                                .column(5)
+                                .data()
+                                .reduce(function (a, b) {
+                                    return intVal(a) + intVal(b);
+                                }, 0);
                         var cost = api
-                                .column(4)
+                                .column(6)
+                                .data()
+                                .reduce(function (a, b) {
+                                    return intVal(a) + intVal(b);
+                                }, 0);
+                        var total = api
+                                .column(7)
                                 .data()
                                 .reduce(function (a, b) {
                                     return intVal(a) + intVal(b);
                                 }, 0);
 
                         $(api.column(2).footer()).html("<b>รวม</b>");
-                        $(api.column(4).footer()).html(addCommas(cost.toFixed(2)));
+                        $(api.column(5).footer()).html(addCommas(order.toFixed(2)));
+                        $(api.column(6).footer()).html(addCommas(cost.toFixed(2)));
+                        $(api.column(7).footer()).html(addCommas(total.toFixed(2)));
                     },
             });
             $("#tblReportPO").loading("stop");
