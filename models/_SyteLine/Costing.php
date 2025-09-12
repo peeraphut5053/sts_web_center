@@ -185,6 +185,23 @@ where cust_seq = 0";
         array_splice($rs, count($rs) - 1, 1);
         return $rs;
     }
+    function GetReportPO($StartDate, $EndDate){
+        $query = "select po.po_num
+    , order_date = convert(date,order_date)  
+    , ven.name
+    , item = itm.[description]
+    , cost = convert(decimal(18,2), poi.qty_ordered * poi.item_cost)
+from po_mst po
+     inner join vendaddr_mst ven on po.vend_num = ven.vend_num
+  inner join poitem_mst poi on po.po_num = poi.po_num
+  inner join item_mst itm on poi.item = itm.item
+where po.po_num like 'POS%'
+  and convert(date,po.order_date) between '$StartDate' and '$EndDate'";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
 
     function GetCustomerSeq($cust_num)
     {

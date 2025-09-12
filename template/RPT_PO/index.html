@@ -1,0 +1,252 @@
+<style>
+    .col-search {
+      padding-left: 3px;
+      padding-right: 3px;
+    }
+    /*    table.dataTable thead .sorting:after,
+          table.dataTable thead .sorting:before,
+          table.dataTable thead .sorting_asc:after,
+          table.dataTable thead .sorting_asc:before,
+          table.dataTable thead .sorting_asc_disabled:after,
+          table.dataTable thead .sorting_asc_disabled:before,
+          table.dataTable thead .sorting_desc:after,
+          table.dataTable thead .sorting_desc:before,
+          table.dataTable thead .sorting_desc_disabled:after,
+          table.dataTable thead .sorting_desc_disabled:before {
+              bottom: .5em;
+          }*/
+    .table thead th {
+      text-align: center;
+    }
+  
+    .col-flt-page {
+      padding-top: 10px;
+      font-weight: bold;
+    }
+  
+    #tblReportPO tbody tr td a {
+      cursor: pointer;
+    }
+    table.dataTable.fixedHeader-floating,
+    table.dataTable.fixedHeader-locked {
+      background-color: white;
+      margin-top: 50px !important;
+      margin-bottom: 0 !important;
+    }
+    @media print {
+      table th:nth-child(0) {
+        width: 200px;
+        word-break: break-all;
+        white-space: pre-line;
+      }
+      table td:nth-child(0) {
+        width: 200px;
+        word-break: break-all;
+        white-space: pre-line;
+      }
+    }
+    .text-header {
+      font-weight: bold;
+      font-size: 20px;
+    }
+    .text-wrap {
+      white-space: normal;
+    }
+    .width-200 {
+      width: 200px;
+    }
+    input[type="checkbox"] {
+      margin-left: 5px;
+      margin-right: 5px;
+    } /*
+      .cb_lb{
+          margin-top:-5px;
+      }*/
+    .item-center {
+      display: flex;
+      justify-content: center;
+    }
+  </style>
+  <div class="row">
+    <h4 class="text-header text-center">รายงาน PO</h4>
+  </div>
+  <div class="row item-center">
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+      <div class="input-group">
+        <div class="input-group-addon">From Date</div>
+        <input
+          type="text"
+          class="form-control"
+          id="from_date_po"
+          autocomplete="off"
+        />
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+      <div class="input-group">
+        <div class="input-group-addon">To Date</div>
+        <input
+          type="text"
+          class="form-control"
+          id="to_date_po"
+          autocomplete="off"
+        />
+      </div>
+      
+    </div>
+    <div class="col-lg-2 col-md-2 col-sm-1 col-xs-6  col-search">
+            <button id="BtnReportPO" class="btn btn-info"><i class="fa fa-search"></i>&nbsp;Search</button>
+    </div>
+  </div>
+  <div class="row" id="rowResultTable">
+    <table
+      class="table table-condensed table-bordered table-striped"
+      width="100%"
+      id="tblReportPO"
+    >
+      <thead>
+        <tr>
+          <th class="bg-gray">po_num</th>
+          <th class="bg-gray">Order Date</th>
+          <th class="bg-gray">Name</th>
+          <th class="bg-gray">Item</th>
+          <th class="bg-gray">Cost</th>
+        </tr>
+      </thead>
+      <!--        <tbody id="tblReportPOList">
+                      <tr><td align="center" colspan="12">.... No item search ....</td></tr>
+     </tbody>-->
+    </table>
+  </div>
+  <script type="text/javascript">
+ 
+    $("#BtnReportPO").click(function () {
+      ReportItemSearch();
+    });
+           
+    $("#from_date_po,#to_date_po").datepicker({
+      dateFormat: "yy-mm-dd",
+    });
+  
+    function ReportItemSearch() {
+      var OldHtml = $("#BtnReportPO").html();
+      var StartDate = $("#from_date_po").val();
+      var EndDate = $("#to_date_po").val();
+  
+      if (StartDate == "" && EndDate == "") {
+          $.alert("กรุณาเลือกวันที่เริ่มต้นและสิ้นสุดให้ครบถ้วน");
+          return false;
+      }
+  
+        $("#BtnReportPO").html("<i class='fa fa-spinner fa-spin'></i>");
+        $("#tblReportPO").loading();
+        $("#tblReportPO tfoot").remove();
+        $.ajax({
+          type: "POST",
+          url: "././module/RPT_PO/data.php",
+          dataType: "json",
+          beforeSend: function () {
+            $("#BtnReportPO").html("<i class='fa fa-spinner fa-spin'>");
+          },
+          data: {
+            load: "GetReportPO",
+            StartDate: StartDate,
+            EndDate: EndDate,
+          },
+          success: function (data) {
+            $("#tblReportPO").DataTable().clear();
+            $("#tblReportPO").append(
+              "<tfoot><tr><td></td><td></td><td></td><td></td><td></td></tr></tfoot>"
+            );
+            $("#tblReportPO").dataTable({
+              aaData: data,
+              paging: false,
+              fixedHeader: true,
+              destroy: true,
+              processing: true,
+              scrollY: "65vh",
+              scrollCollapse: true,
+              scrollX: true,
+              select: false,
+              columns: [
+                {
+                  data: "po_num",
+                  className: "text-center",
+                },
+                {
+                  data: "order_date.date",
+                  className: "text-center",
+                  render: function (data, type, row) {
+                    return moment(data).format("DD/MM/YYYY");
+                  }
+                },
+                {
+                  data: "name",
+                  className: "text-center",
+                },
+                {
+                  data: "item",
+                  className: "text-center",
+                },
+                {
+                  data: "cost",
+                  className: "text-center",
+                  render: $.fn.dataTable.render.number(",", ".", 2),
+                },
+              ],
+              dom:
+                "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                "<'row'<'col-md-12'tr>>" +
+                "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+              buttons: [
+                {
+                  extend: "print",
+                  text: "<i class='fa fa-print'></i>&nbsp;Print",
+                  title: "",
+                },
+                {
+                  extend: "excel",
+                  footer: true,
+                  text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                  title:
+                    "รายงาน PO จากวันที่" +
+                    StartDate +
+                    "_to_" +
+                    EndDate,
+                }
+              ],
+              "footerCallback": function (row, data, start, end, display) {
+                        var api = this.api(),
+                                data;
+                        var intVal = function (i) {
+                            return typeof i === 'string' ?
+                                    i.replace(/[\$,]/g, '') * 1 :
+                                    typeof i === 'number' ?
+                                    i : 0;
+                        };
+                        var cost = api
+                                .column(4)
+                                .data()
+                                .reduce(function (a, b) {
+                                    return intVal(a) + intVal(b);
+                                }, 0);
+
+                        $(api.column(2).footer()).html("<b>รวม</b>");
+                        $(api.column(4).footer()).html(addCommas(cost.toFixed(2)));
+                    },
+            });
+            $("#tblReportPO").loading("stop");
+            $("#BtnReportPO").html(OldHtml);
+          },
+
+          error: function (e) {
+            $("#tblReportPO").loading("stop");
+            $("#BtnReportPO").html(OldHtml);
+            console.log("There was an error with your request...");
+            console.log("error: " + JSON.stringify(e));
+          },
+        });
+      }
+    
+
+  </script>
