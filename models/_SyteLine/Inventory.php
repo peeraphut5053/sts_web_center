@@ -269,7 +269,6 @@ order by main.item";
         $query = $query . $searchItem;
         $query = $query . $search_date;
         $query = $query . $search_ThVendInvNum;
-        echo $query;
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);
