@@ -67,6 +67,7 @@
         <option value="8">ส่งทดสอบ</option>
         <option value="9">ทำชิ้นงานทดสอบ</option>
         <option value="10">ส่งงานตัวอย่าง - ส่งกลับ STS</option>
+        <option value="11">นำสินค้าไปเปลี่ยน - ส่งกลับ STS</option>
         <option value="7">อื่นๆ</option>
       </select>
     </div>
@@ -533,7 +534,8 @@
                       "อื่นๆ",
                       "ส่งทดสอบ - สอบเทียบ",
                       "ทำชิ้นงานทดสอบ",
-                      "ส่งงานตัวอย่าง - ส่งกลับ STS"
+                      "ส่งงานตัวอย่าง - ส่งกลับ STS",
+                      "นำสินค้าไปเปลี่ยน - ส่งกลับ STS"
                     ];
                   var ret = select_status[Number(data)];
                   return ret;
@@ -549,7 +551,8 @@
                     "อื่นๆ",
                     "ส่งทดสอบ - สอบเทียบ",
                     "ทำชิ้นงานทดสอบ",
-                    "ส่งงานตัวอย่าง - ส่งกลับ STS"
+                    "ส่งงานตัวอย่าง - ส่งกลับ STS",
+                    "นำสินค้าไปเปลี่ยน - ส่งกลับ STS"
                   ];
                 var $select = $("<select id='" + row.doc_no + "' value='" + data + "' onchange='SaveDetailOut(\"" + row.doc_no + "\",value,\"purpose\");'></select>", {
                 });
@@ -582,7 +585,8 @@
                     "อื่นๆ",
                     "ส่งทดสอบ - สอบเทียบ",
                     "ทำชิ้นงานทดสอบ",
-                    "ส่งงานตัวอย่าง - ส่งกลับ STS"
+                    "ส่งงานตัวอย่าง - ส่งกลับ STS",
+                    "นำสินค้าไปเปลี่ยน - ส่งกลับ STS"
                   ];
                 var ret = select_status[Number(data)];
                 return ret;
