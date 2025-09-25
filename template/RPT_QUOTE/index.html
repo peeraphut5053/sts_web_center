@@ -695,7 +695,7 @@ $.ajax({
             success: function (data) {
                 cust_seq = [{ id: '', text: '' }].concat(data.map((item) => ({
                     id: item.cust_seq,
-                    text: item.cust_to
+                    text: item.cust_to ? item.cust_to : 'ไม่มีชื่อ'
                 })));
                 var $select = $("#customer_seq_quote");
                 $select.select2({
@@ -925,7 +925,7 @@ $.ajax({
                                     success: function (data) {
                                         cust_seq = [{ id: '', text: '' }].concat(data.map((item) => ({
                                             id: item.cust_seq,
-                                            text: item.cust_to
+                                            text: item.cust_to ? item.cust_to : 'ไม่มีชื่อ'
                                         })));
                                         var $select_seq = $("#customer_seq_quote_edit");
                                         $select_seq.select2({
