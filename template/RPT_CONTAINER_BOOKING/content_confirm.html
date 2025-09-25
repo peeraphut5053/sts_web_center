@@ -109,7 +109,7 @@
 
     </div>
 </div>
-<div id="summaryContainer" class="m-4 flex gap-5 w-fit ml-auto transition-all duration-300 z-[9999]">     
+<div id="summaryContainer" class="m-4 flex gap-5 w-fit ml-auto transition-all duration-300 z-[9999] p-4 top-0 right-0 fixed bg-white/95 backdrop-blur-sm shadow rounded">     
     <div class="flex flex-col">         
         <span>นํ้าหนัก</span>
         <input style="font-weight: bold; font-size: 16px; color: red;" type="text"             
@@ -137,11 +137,40 @@
                 <th class="bg-gray">Pack</th>
                 <th class="bg-gray">Co No.</th>
                 <th class="bg-gray">Order</th>
-                 <th class="bg-gray">Remain</th>
-                 <th class="bg-gray">Loaded</th>
-                 <th class="bg-gray">Ready</th>
+                <th class="bg-gray">Remain</th>
+                <th class="bg-gray">Loaded</th>
+                <th class="bg-gray">Ready</th>
                 <th class="bg-gray">Line</th>
-                <th class="bg-gray">Bundle</th>
+                <th class="bg-gray">1</th>
+                <th class="bg-gray">2</th>
+                <th class="bg-gray">3</th>
+                <th class="bg-gray">4</th>
+                <th class="bg-gray">5</th>
+                <th class="bg-gray">6</th>
+                <th class="bg-gray">7</th>
+                <th class="bg-gray">8</th>
+                <th class="bg-gray">9</th>
+                <th class="bg-gray">10</th>
+                <th class="bg-gray">11</th>
+                <th class="bg-gray">12</th>
+                <th class="bg-gray">13</th>
+                <th class="bg-gray">14</th>
+                <th class="bg-gray">15</th>
+                <th class="bg-gray">16</th>
+                <th class="bg-gray">17</th>
+                <th class="bg-gray">18</th>
+                <th class="bg-gray">19</th>
+                <th class="bg-gray">20</th>
+                <th class="bg-gray">21</th>
+                <th class="bg-gray">22</th>
+                <th class="bg-gray">23</th>
+                <th class="bg-gray">24</th>
+                <th class="bg-gray">25</th>
+                <th class="bg-gray">26</th>
+                <th class="bg-gray">27</th>
+                <th class="bg-gray">28</th>
+                <th class="bg-gray">29</th>
+                <th class="bg-gray">30</th>
                 <th class="bg-gray">มัดเศษ</th>
             </tr>
         </thead>
@@ -189,8 +218,9 @@
 <script type="text/javascript">
 
     // draggable
-   var summaryContainer = document.getElementById('summaryContainer');
+var summaryContainer = document.getElementById('summaryContainer');
 var originalPosition = null;
+var isVisible;
 
 function handleScroll() {
     const rect = summaryContainer.getBoundingClientRect();
@@ -213,8 +243,6 @@ function handleScroll() {
 
 window.addEventListener('scroll', handleScroll);
 handleScroll();
-
-    var container_no = 1;
 
     getDocNumList();
 
@@ -264,14 +292,14 @@ handleScroll();
 
 
     // add footer to table tblReportContainerManage
-    $("#tblReportContainerManage").append(
-        "<tfoot><tr><td colspan='14'></td></tr></tfoot>"
-    );
+ 
     var table = $('#tblReportContainerManage').DataTable({
 
         paging: false,
-        searching: true,
-width: "100%",
+        searching: false,
+        width: "100%",
+        fixedHeader: true,
+        scrollY: "90vh",
         scrollX: true,
         columnDefs: [
              { "targets": '_all', "className": 'text-center' },
@@ -304,19 +332,23 @@ width: "100%",
                      { "data": "qty_ready" },
             { "data": "co_line" },
             // on select container
-            {
-                "data": null,
+        
+             // loop column 1-30
+            ...Array.from({ length: 30 }, (_, index) => ({
+                "data": index + 1,
+                visible: false,
                 render: function (data, type, row, meta) {
                     // ดึงค่าจาก field ที่ต้องการตาม container_no
-                    let fieldName = `${container_no}`;
+                    let fieldName = `${index + 1}`;
                     let val = row[fieldName] || '';
 
                     if (val == null || val == undefined) {
                         val = "";
                     }
-                    return `<input size="5" type='text' class='form-control container-input' value='${val}' data-field='${fieldName}' data-row='${meta.row}' onchange="SaveContainer(this, ${meta.row},'bundle');" onkeyup="if(event.keyCode == 13) { var index = ${meta.row} + 1; if (index < table.data().length) { var nextInput = $('#tblReportContainerManage tbody tr:eq('+index+') .container-input')[0]; if(nextInput) { nextInput.focus(); nextInput.setSelectionRange(nextInput.value.length, nextInput.value.length); } } }">`;
+
+                    return `<input size="5" type='text' class='form-control container-input' value='${val}' data-field='${fieldName}' data-row='${meta.row}' onchange="SaveContainer(this, ${meta.row},'bundle', ${index + 1});" onkeyup="if(event.keyCode == 13) { var index = ${meta.row} + 1; if (index < table.data().length) { var nextInput = $('#tblReportContainerManage tbody tr:eq('+index+') .container-input')[0]; if(nextInput) { nextInput.focus(); nextInput.setSelectionRange(nextInput.value.length, nextInput.value.length); } } }">`;
                 }
-            },
+            })),
             {
                 "data": null,
                 render: function (data, type, row, meta) {
@@ -324,14 +356,11 @@ width: "100%",
                     let fieldName = `bundle_pcs`;
                     let val = row[fieldName] || '';
     
-                    if (val == null || val == undefined || row["cont_no(pcs)"] !== Number(container_no)) {
-                        val = "";
-                    }
 
                     return `<input size="5" type='text' class='form-control container-input' value='${val}' data-field='${fieldName}' data-row='${meta.row}' onchange="SaveContainer(this, ${meta.row}, 'pcs');" onkeyup="if(event.keyCode == 13) { var index = ${meta.row} + 1; if (index < table.data().length) { var nextInput = $('#tblReportContainerManage tbody tr:eq('+index+') .container-input')[0]; if(nextInput) { nextInput.focus(); nextInput.setSelectionRange(nextInput.value.length, nextInput.value.length); } } }">`;
                 }
             },
-           
+            
             
 
         ],
@@ -340,8 +369,24 @@ width: "100%",
             "<'row'<'col-md-12'tr>>" +
             "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
         buttons: [
-           
-            {
+               // disable visible column 
+               {
+                  text: '<button class="btn btn-danger">Add Container</button>',
+                  action: function (e, dt, node, config) {
+                    // check visible column 16 - 30
+                    table.columns(isVisible).visible(true);
+                    isVisible++;
+
+                    
+                    
+
+                  }
+               },
+                {
+                    extend: 'colvis',
+                            text: "<i class='fa fa-file-excel'></i>&nbsp; ซ่อน / แสดง Colum",
+                    },
+          /*  {
                 text: `<select class="form-control" id="containerSelect" style="min-width: 150px; font-weight: bold; font-size: 16px;">
                    <option value="1">1</option>
                    <option value="2">2</option>
@@ -478,7 +523,7 @@ width: "100%",
                         e.stopPropagation();
                     });
                 }
-            }
+            } */
         ],
          });
 
@@ -651,6 +696,24 @@ width: "100%",
                 table.clear();
 
                 table.rows.add(data).draw();
+                let con_no = 16;
+                // loop check every row at field name 1 - 30 if not null + 1
+                for (let i = 0; i < data.length; i++) {
+                    for (let j = 1; j <= 30; j++) {
+                        if (data[i][j] !== null) {
+                            con_no++;
+                            break;
+                        }
+                    }
+                }
+
+                // visible column over con_no
+                for (let i = 16; i <= con_no; i++) {
+                    table.column(i).visible(true);
+                }
+
+                isVisible= con_no + 1;
+              
                 $("#btnAddContainerManage").attr("disabled", true);
                 $("#btnViewContainer").attr("disabled", true);
                 $("#doc_num_ref").val('');
@@ -669,7 +732,9 @@ width: "100%",
     });
 
 
-    function SaveContainer(element, rowIndex, type) {
+    function SaveContainer(element, rowIndex, type, container_no) {
+        console.log(rowIndex);
+        
         let $input = $(element);
         let newValue = $input.val();
         let fieldName = $input.data('field');
@@ -690,7 +755,7 @@ width: "100%",
                         load: "UpdateContainerLine",
                         doc_num: row.doc_num,
                         co_num: row.co_num,
-                        co_line: row.co_line,
+                        item: row.item,
                         container_no: container_no,
                         bundle: newValue
                     },
@@ -710,7 +775,7 @@ width: "100%",
                         load: "CreateContainerLine",
                         doc_num: row.doc_num,
                         co_num: row.co_num,
-                        co_line: row.co_line,
+                        item: row.item,
                         end_cust: row.name,
                         city: row.city,
                         container_no: container_no,
@@ -733,7 +798,7 @@ width: "100%",
                     load: "UpdateContainerPcs",
                     doc_num: row.doc_num,
                     co_num: row.co_num,
-                    co_line: row.co_line,
+                    item: row.item,
                     container_no: container_no,
                     bundle: newValue
                 },
