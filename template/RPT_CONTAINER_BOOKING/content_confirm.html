@@ -224,7 +224,8 @@
                 <th class="bg-gray">29</th>
                 <th class="bg-gray">30</th>
                 <th class="bg-gray">Add</th>
-                <th class="bg-gray">มัดเศษ</th>
+                <th class="bg-gray">ตู้</th>
+                <th class="bg-gray">เศษ</th>
             </tr>
         </thead>
         <!--        <tbody id="tblReportList">
@@ -398,14 +399,25 @@ var maxWeight;
                 }
             },
             {
-                "data": null,
+                "data": "cont_no(pcs)",
+                render: function (data, type, row, meta) {
+                    // ดึงค่าจาก field ที่ต้องการตาม container_no
+                    let fieldName = `cont_no(pcs)`;
+                    let val = row[fieldName] || '';
+    
+
+                    return `<input size="5" type='text' class='form-control container-input' id='con_${meta.row}' value='${val}' data-field='${fieldName}' data-row='${meta.row}'>`;
+                }
+            },
+            {
+                "data": "bundle_pcs",
                 render: function (data, type, row, meta) {
                     // ดึงค่าจาก field ที่ต้องการตาม container_no
                     let fieldName = `bundle_pcs`;
                     let val = row[fieldName] || '';
     
 
-                    return `<input size="5" type='text' class='form-control container-input' value='${val}' data-field='${fieldName}' data-row='${meta.row}' onchange="SaveContainer(this, ${meta.row}, 'pcs');">`;
+                    return `<input size="5" type='text' class='form-control container-input' id='pcs_${meta.row}' value='${val}' data-field='${fieldName}' data-row='${meta.row}' onchange="SaveBundlePcs(this, ${meta.row}, 'pcs')">`;
                 }
             },
             
@@ -910,22 +922,47 @@ var maxWeight;
         });
     });
 
+    function SaveBundlePcs(value, rowIndex, type) {
+            let row = table.row(rowIndex).data();
+            let $input = $(value);
+            let newValue = $input.val();
+            var cont_no = $("#con_" + rowIndex).val();
+
+            if (cont_no == null || cont_no == '') {
+                alert("กรุณาระบุ Container No.");
+                return false;
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "././module/RPT_CONTAINER_CONFIRM/data.php",
+                dataType: "json",
+                data: {
+                    load: "UpdateContainerPcs",
+                    doc_num: row.doc_num,
+                    co_num: row.co_num,
+                    item: row.item,
+                    container_no: cont_no,
+                    bundle: newValue
+                },
+                success: function (data) {
+                },
+                error: function (xhr, status, error) {
+                    alert('Error');
+                }
+            });
+
+        }
+
 
     function SaveContainer(element, rowIndex, type, container_no) {
-        console.log(rowIndex);
-        
         let $input = $(element);
         let newValue = $input.val();
         let fieldName = $input.data('field');
-
-
         // ดึงข้อมูล row จาก DataTable
         let row = table.row(rowIndex).data();
-        console.log(type);
-        
-
-        if (type == 'bundle') {
-            if (row[container_no] !== null) {
+     
+        if (row[container_no] !== null) {
                 $.ajax({
                     type: "POST",
                     url: "././module/RPT_CONTAINER_CONFIRM/data.php",
@@ -969,28 +1006,7 @@ var maxWeight;
                     }
                 });
             }
-        } else {
-            $.ajax({
-                type: "POST",
-                url: "././module/RPT_CONTAINER_CONFIRM/data.php",
-                dataType: "json",
-                data: {
-                    load: "UpdateContainerPcs",
-                    doc_num: row.doc_num,
-                    co_num: row.co_num,
-                    item: row.item,
-                    container_no: container_no,
-                    bundle: newValue
-                },
-                success: function (data) {
-                    console.log(data);
-                },
-                error: function (xhr, status, error) {
-                    alert('Error');
-                }
-            });
-        }
-
+      
         setTimeout(function () {
             $.ajax({
                 type: "GET",
@@ -1016,6 +1032,7 @@ var maxWeight;
 
         // อัพเดตข้อมูลใน DataTable
     }
+
 
     $('#btnViewContainer').click(function () {
         // add data to table #tblReportContainerManage

@@ -15,22 +15,22 @@ $Data = new CustomerAddrSyteline();
 $Data->setConn($ConnSL);
 
 if ($load == "GetBookingLine") {
-    $Data = $Data->GetReportContainerBookingConfirm($doc_num, $co_num, $cust_po, $cust_name, $city, $sts_po, $size);
+    $Data = $Data->GetReportContainerBookingConfirm($doc_num, $co_num, $cust_po, $cust_name, $city, $sts_po, $size, $remain, $ready);
     echo json_encode($Data);
 }
 
 if ($load == "CreateContainerLine") {
-    $Data = $Data->CreateContainerLine($doc_num, $co_num, $co_line, $end_cust, $city, $container_no, $bundle);
+    $Data = $Data->CreateContainerLine($doc_num, $co_num, $item, $end_cust, $city, $container_no, $bundle);
     echo json_encode($Data);
 }
 
 if ($load == "UpdateContainerLine") {
-    $Data = $Data->UpdateContainerLine($doc_num, $co_num, $co_line, $container_no, $bundle);
+    $Data = $Data->UpdateContainerLine($doc_num, $co_num, $item, $container_no, $bundle);
     echo json_encode($Data);
 }
 
 if ($load == "UpdateContainerPcs") {
-    $Data = $Data->UpdateContainerPcs($doc_num, $co_num, $co_line, $container_no, $bundle);
+    $Data = $Data->UpdateContainerPcs($doc_num, $co_num, $item, $container_no, $bundle);
     echo json_encode($Data);
 }
 

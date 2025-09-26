@@ -196,16 +196,18 @@ left join do_hdr_mst do on (do.uf_bookingNo = book.booking_num40 or do.uf_bookin
     }
 
      function UpdateContainerLine($doc_num, $co_num, $item, $container_no, $bundle) {
-        $query = "UPDATE STS_EX_booking_line_cont SET bundle = '$bundle' WHERE doc_num = '$doc_num' and co_num = '$co_num' and item = '$item' and cont_no = '$container_no'";
+        $query = "UPDATE STS_EX_booking_line_cont SET bundle = '$bundle', updatedate = GETDATE() WHERE doc_num = '$doc_num' and co_num = '$co_num' and item = '$item' and cont_no = '$container_no'";
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
         return $rs;
     }
 
-     function UpdateContainerPcs($doc_num, $co_num, $co_line, $container_no, $bundle) {
-        $query = "UPDATE STS_EX_booking_line_cont SET bundle_pcs = '$bundle' WHERE doc_num = '$doc_num' and co_num = '$co_num' and co_line = '$co_line' and cont_no = '$container_no'";
+     function UpdateContainerPcs($doc_num, $co_num, $item, $container_no, $bundle) {
+        $q = "UPDATE STS_EX_booking_line_cont SET bundle_pcs = null WHERE doc_num = '$doc_num' and co_num = '$co_num' and item = '$item'";
         $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $q);
+        $query = "UPDATE STS_EX_booking_line_cont SET bundle_pcs = '$bundle', updatedate = GETDATE() WHERE doc_num = '$doc_num' and co_num = '$co_num' and item = '$item' and cont_no = '$container_no'";
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
         return $rs;
