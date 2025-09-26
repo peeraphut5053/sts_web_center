@@ -73,7 +73,9 @@
     }
     
 </style>
-<h3 class="text-header text-left m-4">Container Manage</h3>
+<div class="flex items-center">
+    <h3 class="text-header text-left m-4">Container Manage</h3> <span id="city_manage" class="text-header text-right m-4 font-bold"></span> <span id="cust_manage" class="text-header text-right m-4 font-bold"></span>
+</div>
 </div>
 <div class="mycontainer2">
     <div class="row col-xs-12">
@@ -276,6 +278,7 @@ var summaryContainer = document.getElementById('summaryContainer');
 var originalPosition = null;
 var isVisible;
 var maxWeight;
+var result;
 
     getDocNumList();
 
@@ -540,7 +543,7 @@ var maxWeight;
         });
         
     }
-}
+},
           /*  {
                 text: `<select class="form-control" id="containerSelect" style="min-width: 150px; font-weight: bold; font-size: 16px;">
                    <option value="1">1</option>
@@ -914,7 +917,9 @@ var maxWeight;
                         }
                     }
                 });
-
+                result = data;
+                $("#city_manage").html("City : " + data[0].city);
+                $("#cust_manage").html("Customer : " + data[0].name);
             },
             error: function (xhr, status, error) {
                 alert('Error');
@@ -946,6 +951,7 @@ var maxWeight;
                     bundle: newValue
                 },
                 success: function (data) {
+
                 },
                 error: function (xhr, status, error) {
                     alert('Error');
