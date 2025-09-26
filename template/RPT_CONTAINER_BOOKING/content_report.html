@@ -73,13 +73,10 @@
   <div class="row items-start">
     <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
       <div class="input-group">
-        <div class="input-group-addon">Doc Num</div>
-        <input
-          type="text"
-          class="form-control"
-          id="doc_num_r"
-          autocomplete="off"
-        />
+        <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">Doc No</div>
+        <select style="font-weight: bold; font-size: 16px;" class="form-control txt-filter" id="doc_no_r">
+              <option value=""></option>
+        </select>
       </div>
     </div>
     <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
@@ -178,6 +175,39 @@
   </div>
   <div id="printpopup"></div>
   <script type="text/javascript">
+
+    $(document).ready(function () {
+      getDocNumList();
+    });
+
+    function getDocNumList() {
+        $.ajax({
+            type: "GET",
+            url: "././module/RPT_CONTAINER_BOOKING/data.php",
+            dataType: "json",
+            data: {
+                load: "GetDocList"
+            },
+            success: function (data) {
+                let doc = [{ id: '', text: '' }].concat(data.map((item) => ({
+                id: item.doc_num,
+                text: item.doc_num
+            })));
+                $("#doc_no_r").empty();
+                $("#doc_no_r").select2({
+                    placeholder: 'กรุณาเลือก Doc Num',
+                    allowClear: true,
+                    width: '100%',
+                    data: doc,
+                    language: {
+                        noResults: function () {
+                            return "ไม่พบข้อมูล";
+                        }
+                    }
+                });
+            }
+        });
+    }
  
     $("#btnSearchReport").click(function () {
       ReportItemSearch();
