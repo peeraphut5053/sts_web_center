@@ -410,8 +410,62 @@
             })
             $("#btnAddContainer").attr("disabled", false);
             $("#btnUpdateBooking").attr("disabled", true);
-            $("#city_booking").val('').trigger('change');
-            $("#customer_booking").val('').trigger('change');
+            $("#city_booking").val(data[0].city).trigger('change');
+
+                $.ajax({
+                    type: "GET",
+                    url: "././module/RPT_CONTAINER_BOOKING/data.php",
+                    dataType: "json",
+                    data: { load: "GetCustomerByCity", city: $("#city_booking").val() },
+                    success: function (customers) {
+                        const customer = [{ id: '', text: '' }].concat(customers.map((item) => ({
+                            id: item.name,
+                            text: item.name
+                        })));
+
+                        $("#customer_booking").empty();
+                        $("#customer_booking").select2({
+                            placeholder: 'กรุณาเลือก Customer',
+                            allowClear: true,
+                            width: '100%',
+                            data: customer,
+                            language: {
+                                noResults: function () {
+                                    return "ไม่พบข้อมูล";
+                                }
+                            }
+                        });
+                        $("#customer_booking").val(data[0].end_cust).trigger('change');
+
+                            $.ajax({
+                                type: "GET",
+                                url: "././module/RPT_CONTAINER_BOOKING/data.php",
+                                dataType: "json",
+                                data: { load: "GetCoNum", city: $("#city_booking").val(), customer: $("#customer_booking").val() },
+                                success: function (co_nums) {
+                                    const co_num = [{ id: '', text: '' }].concat(co_nums.map((item) => ({
+                                        id: item.co_num,
+                                        text: item.co_num
+                                    })));
+
+                                    $("#co_num_booking").empty();
+                                    $("#co_num_booking").select2({
+                                        placeholder: 'กรุณาเลือก Co_num',
+                                        allowClear: true,
+                                        width: '100%',
+                                        data: co_num,
+                                        language: {
+                                            noResults: function () {
+                                                return "ไม่พบข้อมูล";
+                                            }
+                                        }
+                                    });
+                                },
+                            });
+                    },
+                });
+                
+           
             $("#co_num_booking").val('').trigger('change');
             $("#container_40").val('');
             $("#container_45").val('');
@@ -474,9 +528,6 @@
             table.row.add([data[0].doc_num, data[0].co_num, data[0].no_cont40, data[0].no_cont45, data[0].booking_num40, data[0].booking_num45, booking_date, data[0].status]).draw();
             // clear form
 
-            $("#city_booking").val('').trigger('change');
-            $("#customer_booking").val('').trigger('change');
-            $("#co_num_booking").val('').trigger('change');
             $("#co_num_booking").val('').trigger('change');
             $("#container_40").val('');
             $("#container_45").val('');

@@ -29,7 +29,7 @@ class CustomerAddrSyteline {
     }
 
     function GetDocBookingList() {
-        $query = "select distinct doc_num from sts_ex_booking";
+        $query = "select distinct doc_num from sts_ex_booking order by doc_num desc";
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
@@ -120,7 +120,7 @@ order by co.co_num";
         return $rs;
     }
 
-     function GetReportContainerBookingConfirm($doc_num, $co_num, $cust_po, $cust_name, $city, $sts_po, $size) {
+     function GetReportContainerBookingConfirm($doc_num, $co_num, $cust_po, $cust_name, $city, $sts_po, $size, $remain, $ready) {
         $wh = '';
         if ($co_num !== "") {
             $wh = $wh . "and co_num = '$co_num' ";
@@ -140,6 +140,15 @@ order by co.co_num";
         }
         if ($size !== "") {
             $wh = $wh . "and size like '$size%' ";
+            # code...
+        }
+
+        if ($remain !== "") {
+            $wh = $wh . "and qty_remain > 0 ";
+            # code...
+        }
+        if ($ready !== "") {
+            $wh = $wh . "and qty_ready > 0 ";
             # code...
         }
 
@@ -178,16 +187,16 @@ left join do_hdr_mst do on (do.uf_bookingNo = book.booking_num40 or do.uf_bookin
         return $rs;
     }
 
-     function CreateContainerLine($doc_num, $co_num, $co_line, $end_cust, $city, $container_no, $bundle) {
-        $query = "INSERT INTO STS_EX_booking_line_cont (doc_num, co_num, co_line, end_cust, city, cont_no, bundle) VALUES ('$doc_num', '$co_num', '$co_line', '$end_cust', '$city', '$container_no', '$bundle')";
+     function CreateContainerLine($doc_num, $co_num, $item, $end_cust, $city, $container_no, $bundle) {
+        $query = "INSERT INTO STS_EX_booking_line_cont (doc_num, co_num, item, end_cust, city, cont_no, bundle) VALUES ('$doc_num', '$co_num', '$item', '$end_cust', '$city', '$container_no', '$bundle')";
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
         return $rs;
     }
 
-     function UpdateContainerLine($doc_num, $co_num, $co_line, $container_no, $bundle) {
-        $query = "UPDATE STS_EX_booking_line_cont SET bundle = '$bundle' WHERE doc_num = '$doc_num' and co_num = '$co_num' and co_line = '$co_line' and cont_no = '$container_no'";
+     function UpdateContainerLine($doc_num, $co_num, $item, $container_no, $bundle) {
+        $query = "UPDATE STS_EX_booking_line_cont SET bundle = '$bundle' WHERE doc_num = '$doc_num' and co_num = '$co_num' and item = '$item' and cont_no = '$container_no'";
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
@@ -215,8 +224,9 @@ left join do_hdr_mst do on (do.uf_bookingNo = book.booking_num40 or do.uf_bookin
  , [total_bundle] = sum(line.bundle)
     ,[total_weight] = convert(decimal(10,0),sum((item.uf_pack * line.bundle * item.unit_weight * 1.003)  +
         isnull(((line.bundle_pcs - item.uf_pack) * item.unit_weight * 1.003)  ,0)))
+ , area = convert(decimal(10,2),sum(isnull(line.bundle,0) * isnull(item.pp_area,0) / 100))
 from STS_EX_booking_line_cont line 
- inner join coitem_mst coi on coi.co_num = line.co_num and coi.co_line = line.co_line
+ inner join coitem_mst coi on coi.co_num = line.co_num and coi.item = line.item
  inner join item_mst item on coi.item = item.item
 where line.cont_no is not null and line.bundle is not null and line.doc_num = '$doc_num'
 group by line.doc_num ,line.cont_no";
