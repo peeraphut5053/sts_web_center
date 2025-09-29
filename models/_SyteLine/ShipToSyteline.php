@@ -262,5 +262,22 @@ group by line.doc_num ,line.cont_no";
         return $rs;
     }
 
-
+    function GetReportLoadLift($booknum, $port, $cust) { 
+         $query = "EXEC [dbo].[sts_EX_booking_summary]
+  @booknum = '$booknum',
+  @port = '$port',
+  @cust = '$cust'";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+    function SavePickDate($doc_no, $val, $type) {
+        $query = "UPDATE STS_EX_booking SET $type = '$val', updatedate = GETDATE() WHERE doc_num = '$doc_no'";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+    
 }

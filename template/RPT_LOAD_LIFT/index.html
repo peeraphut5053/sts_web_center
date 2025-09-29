@@ -1,0 +1,347 @@
+<style>
+    .col-search {
+      padding-left: 3px;
+      padding-right: 3px;
+    }
+    /*    table.dataTable thead .sorting:after,
+          table.dataTable thead .sorting:before,
+          table.dataTable thead .sorting_asc:after,
+          table.dataTable thead .sorting_asc:before,
+          table.dataTable thead .sorting_asc_disabled:after,
+          table.dataTable thead .sorting_asc_disabled:before,
+          table.dataTable thead .sorting_desc:after,
+          table.dataTable thead .sorting_desc:before,
+          table.dataTable thead .sorting_desc_disabled:after,
+          table.dataTable thead .sorting_desc_disabled:before {
+              bottom: .5em;
+          }*/
+    .table thead th {
+      text-align: center;
+    }
+  
+    .col-flt-page {
+      padding-top: 10px;
+      font-weight: bold;
+    }
+  
+    #tblReportPO tbody tr td a {
+      cursor: pointer;
+    }
+    table.dataTable.fixedHeader-floating,
+    table.dataTable.fixedHeader-locked {
+      background-color: white;
+      margin-top: 50px !important;
+      margin-bottom: 0 !important;
+    }
+    @media print {
+      table th:nth-child(0) {
+        width: 200px;
+        word-break: break-all;
+        white-space: pre-line;
+      }
+      table td:nth-child(0) {
+        width: 200px;
+        word-break: break-all;
+        white-space: pre-line;
+      }
+    }
+    .text-header {
+      font-weight: bold;
+      font-size: 20px;
+    }
+    .text-wrap {
+      white-space: normal;
+    }
+    .width-200 {
+      width: 200px;
+    }
+    input[type="checkbox"] {
+      margin-left: 5px;
+      margin-right: 5px;
+    } /*
+      .cb_lb{
+          margin-top:-5px;
+      }*/
+    .item-center {
+      display: flex;
+      justify-content: center;
+    }
+  </style>
+  <div class="row">
+    <h4 class="text-header text-center">Report Load Lift</h4>
+  </div>
+  <div class="row item-center">
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+      <div class="input-group">
+        <div class="input-group-addon">Book Num</div>
+        <input
+          type="text"
+          class="form-control"
+          id="book_num_lift"
+          autocomplete="off"
+        />
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+      <div class="input-group">
+        <div class="input-group-addon">Port</div>
+        <input
+          type="text"
+          class="form-control"
+          id="port_lift"
+          autocomplete="off"
+        />
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+      <div class="input-group">
+        <div class="input-group-addon">Cust</div>
+        <input
+          type="text"
+          class="form-control"
+          id="cust_lift"
+          autocomplete="off"
+        />
+      </div>
+    </div>
+    <div class="col-lg-2 col-md-2 col-sm-1 col-xs-6  col-search">
+            <button id="BtnReportPO" class="btn btn-info"><i class="fa fa-search"></i>&nbsp;Search</button>
+    </div>
+  </div>
+  <div class="row" id="rowResultTable">
+    <table
+      class="table table-condensed table-bordered table-striped"
+      width="100%"
+      id="tblReportPO"
+    >
+      <thead>
+        <tr>
+          <th class="bg-gray">Doc Num</th>
+          <th class="bg-gray">Booking Number</th>
+          <th class="bg-gray">Port</th>
+          <th class="bg-gray">จำนวนตู้</th>
+          <th class="bg-gray">Pick Date Start</th>
+          <th class="bg-gray">Pick Date End</th>
+          <th class="bg-gray">Co Num</th>
+          <th class="bg-gray">Cust Po</th>
+          <th class="bg-gray">Cust Name</th>
+          <th class="bg-gray">Ship</th>
+        </tr>
+      </thead>
+      <!--        <tbody id="tblReportPOList">
+                      <tr><td align="center" colspan="12">.... No item search ....</td></tr>
+     </tbody>-->
+    </table>
+  </div>
+  <script type="text/javascript">
+    var username_session = GetUserProp("login_username");
+ 
+    $("#BtnReportPO").click(function () {
+      ReportItemSearch();
+    });
+           
+    $("#from_date_po,#to_date_po").datepicker({
+      dateFormat: "yy-mm-dd",
+    });
+  
+    function ReportItemSearch() {
+      var OldHtml = $("#BtnReportPO").html();
+      var booknum = $("#book_num_lift").val();
+      var port = $("#port_lift").val();
+      var cust = $("#cust_lift").val();
+  
+
+      if (booknum === "" && port === "" && cust === "") {
+        return alert("กรุณากรอกข้อมูลสําหรับการค้นหาอย่างน้อย 1 ช่อง");
+      }
+  
+        $("#BtnReportPO").html("<i class='fa fa-spinner fa-spin'></i>");
+        $("#tblReportPO").loading();
+        $("#tblReportPO tfoot").remove();
+        $.ajax({
+          type: "POST",
+          url: "././module/RPT_LOAD_LIFT/data.php",
+          dataType: "json",
+          beforeSend: function () {
+            $("#BtnReportPO").html("<i class='fa fa-spinner fa-spin'>");
+          },
+          data: {
+            load: "GetReportLoadLift",
+            booknum: booknum,
+            port: port,
+            cust: cust
+          },
+          success: function (data) {
+            $("#tblReportPO").DataTable().clear();
+            $("#tblReportPO").append(
+              "<tfoot><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></tfoot>"
+            );
+            $("#tblReportPO").dataTable({
+              aaData: data,
+              paging: false,
+              fixedHeader: true,
+              destroy: true,
+              processing: true,
+              scrollY: "90vh",
+              scrollCollapse: true,
+              scrollX: true,
+              select: false,
+               columnDefs: [
+                    {
+                        targets: [0],
+                        width: 100,
+                    },
+                    {
+                        targets: [1],
+                        width: 100,
+                    },
+                    {
+                        targets: [2],
+                        width: 100,
+                    },
+                    {
+                        targets: [3],
+                        width: 60,
+                    },
+                    {
+                        targets: [4],
+                        width: 80,
+                    },
+                    {
+                        targets: [5],
+                        width: 80,
+                    },
+                    {
+                        targets: [6],
+                        width: 300,
+                    },
+                    {
+                        targets: [7],
+                        width: 300,
+                    },
+                    {
+                        targets: [8],
+                        width: 60,
+                    },
+                ],
+              columns: [
+                {
+                  data: "doc_num",
+                  className: "text-center",
+                },
+                {
+                  data: "bookNum",
+                  className: "text-center",
+                },
+                {
+                  data: "port",
+                  className: "text-center",
+                },
+                {
+                  data: "cont",
+                  className: "text-center",
+                },
+                {
+                  data: "pick_date_start.date",
+                  className: "text-center",
+                  render: function (data, type, row) {
+                      let valdata = data ? moment(data).format("YYYY-MM-DD") : "";
+                      if (username_session !== "kannikar") {
+                          return valdata;
+                      }
+                      $(`#start_${row.doc_num}`).datepicker({
+                          dateFormat: 'yy-mm-dd',
+                      });
+                      let ret = `<span hidden>${(valdata)}</span><input type='text' id='start_${row.doc_num}' class='form-control container-input' size='15' onchange="SavePickDate('${row.doc_num}',value,'pick_date_start');" value='${(valdata)}' />`;
+                      return ret;
+                  }
+                },
+                {
+                  data: "pick_date_end.date",
+                  className: "text-center",
+                   render: function (data, type, row) {
+                      let valdata = data ? moment(data).format("YYYY-MM-DD") : "";
+                      if (username_session !== "kannikar") {
+                          return valdata;
+                      }
+                      $(`#end_${row.doc_num}`).datepicker({
+                          dateFormat: 'yy-mm-dd',
+                      });
+                      let ret = `<span hidden>${(valdata)}</span><input type='text' id='end_${row.doc_num}' class='form-control container-input' size='15' onchange="SavePickDate('${row.doc_num}',value,'pick_date_end');" value='${(valdata)}' />`;
+                      return ret;
+                  }
+                },
+                {
+                  data: "co_num",
+                  className: "text-center",
+                },
+                {
+                  data: "cust_po",
+                  className: "text-center",
+                },
+                {
+                  data: "cust_name",
+                  className: "text-center",
+                },
+                 {
+                  data: "ship_to",
+                  className: "text-center",
+                },
+              ],
+              dom:
+                "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                "<'row'<'col-md-12'tr>>" +
+                "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+              buttons: [
+                {
+                  extend: "print",
+                  text: "<i class='fa fa-print'></i>&nbsp;Print",
+                  title: "",
+                },
+                {
+                  extend: "excel",
+                  footer: true,
+                  text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                  title:
+                    "Report Load Lift " +
+                    moment().format("YYYY-MM-DD HH:mm:ss"),
+                }
+              ],
+            });
+            $("#tblReportPO").loading("stop");
+            $("#BtnReportPO").html(OldHtml);
+          },
+
+          error: function (e) {
+            $("#tblReportPO").loading("stop");
+            $("#BtnReportPO").html(OldHtml);
+            console.log("There was an error with your request...");
+            console.log("error: " + JSON.stringify(e));
+          },
+        });
+      }
+    
+
+      function SavePickDate(doc_no, value, type) {
+            $.ajax({
+                type: "POST",
+                url: "././module/RPT_LOAD_LIFT/data.php",
+                dataType: "json",
+                data: {
+                    load: "SavePickDate",
+                    doc_no: doc_no,
+                    val: value,
+                    type: type
+                },
+                success: function (data) {
+                    console.log(data);
+                },
+                error: function (e) {
+                    swal("เกิดข้อผิดพลาด", "", "error");
+                    console.log("There was an error with your request...");
+                    console.log("error: " + JSON.stringify(e));
+                }
+            })
+        }
+
+  </script>
