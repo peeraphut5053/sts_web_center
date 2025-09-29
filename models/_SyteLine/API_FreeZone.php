@@ -236,4 +236,14 @@ class API_FreeZone {
         }
     }
 
+    function GetDoList() {
+        $query = "select do_num from do_hdr_mst
+where stat <> 'A' and (do_num like 'DO%' or do_num like 'DX%') and convert(date,createdate) > '2025-06-30'
+order by do_num";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
 }
