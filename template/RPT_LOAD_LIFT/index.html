@@ -246,7 +246,7 @@
                   className: "text-center",
                   render: function (data, type, row) {
                       let valdata = data ? moment(data).format("YYYY-MM-DD") : "";
-                      if (username_session !== "kannikar") {
+                      if (username_session !== "kannikar" && username_session !== "vorawut") {
                           return valdata;
                       }
                       $(`#start_${row.doc_num}`).datepicker({
@@ -261,7 +261,7 @@
                   className: "text-center",
                    render: function (data, type, row) {
                       let valdata = data ? moment(data).format("YYYY-MM-DD") : "";
-                      if (username_session !== "kannikar") {
+                      if (username_session !== "kannikar" && username_session !== "vorawut") {
                           return valdata;
                       }
                       $(`#end_${row.doc_num}`).datepicker({
