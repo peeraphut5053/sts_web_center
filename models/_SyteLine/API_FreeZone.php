@@ -246,6 +246,23 @@ order by do_num desc";
         return $rs;
     }
 
+    function GetReportCountPipe($do_num, $start_date, $end_date) {
+        $wh = '';
+        if ($do_num !== '') {
+            $wh = $wh . "and do_num = '$do_num' ";
+        }
+        
+        if ($start_date !== '' && $end_date !== '') {
+            $wh = $wh . "and convert(date, createdate) between '$start_date' and '$end_date' ";
+        }
+
+        $query = "SELECT * FROM STS_count_pipe WHERE 1=1 $wh";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
     function CreateCountPipe($do_num, $qty_system, $qty_human, $user, $file_type) {
         $s = "SELECT do_num FROM STS_count_pipe WHERE do_num = '$do_num' ORDER BY do_num DESC";
         $cSql = new SqlSrv();
