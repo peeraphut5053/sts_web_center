@@ -1,0 +1,272 @@
+<style>
+    .col-search {
+      padding-left: 3px;
+      padding-right: 3px;
+    }
+    /*    table.dataTable thead .sorting:after,
+          table.dataTable thead .sorting:before,
+          table.dataTable thead .sorting_asc:after,
+          table.dataTable thead .sorting_asc:before,
+          table.dataTable thead .sorting_asc_disabled:after,
+          table.dataTable thead .sorting_asc_disabled:before,
+          table.dataTable thead .sorting_desc:after,
+          table.dataTable thead .sorting_desc:before,
+          table.dataTable thead .sorting_desc_disabled:after,
+          table.dataTable thead .sorting_desc_disabled:before {
+              bottom: .5em;
+          }*/
+    .table thead th {
+      text-align: center;
+    }
+  
+    .col-flt-page {
+      padding-top: 10px;
+      font-weight: bold;
+    }
+  
+    #tblReportCountPipe tbody tr td a {
+      cursor: pointer;
+    }
+    table.dataTable.fixedHeader-floating,
+    table.dataTable.fixedHeader-locked {
+      background-color: white;
+      margin-top: 50px !important;
+      margin-bottom: 0 !important;
+    }
+    @media print {
+      table th:nth-child(0) {
+        width: 200px;
+        word-break: break-all;
+        white-space: pre-line;
+      }
+      table td:nth-child(0) {
+        width: 200px;
+        word-break: break-all;
+        white-space: pre-line;
+      }
+    }
+    .text-header {
+      font-weight: bold;
+      font-size: 20px;
+    }
+    .text-wrap {
+      white-space: normal;
+    }
+    .width-200 {
+      width: 200px;
+    }
+    input[type="checkbox"] {
+      margin-left: 5px;
+      margin-right: 5px;
+    } /*
+      .cb_lb{
+          margin-top:-5px;
+      }*/
+    .item-center {
+      display: flex;
+      justify-content: center;
+    }
+  </style>
+  <div class="row">
+    <h4 class="text-header text-center">รายงานการนับท่อ</h4>
+  </div>
+  <div class="row item-center">
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+      <div class="input-group">
+        <div class="input-group-addon">From Date</div>
+        <input
+          type="text"
+          class="form-control"
+          id="start_date_count_pipe"
+          autocomplete="off"
+        />
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+      <div class="input-group">
+        <div class="input-group-addon">To Date</div>
+        <input
+          type="text"
+          class="form-control"
+          id="end_date_count_pipe"
+          autocomplete="off"
+        />
+      </div>
+    </div>
+     <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+      <div class="input-group">
+        <div class="input-group-addon">do num</div>
+        <input
+          type="text"
+          class="form-control"
+          id="do_num_count_pipe"
+          autocomplete="off"
+        />
+      </div>
+    </div>
+    <div class="col-lg-1 col-md-1 col-sm-6 col-xs-6 text-left">
+      <button class="btn btn-info" id="btnSearchReportCountPipe">
+        <i class="fa fa-search"></i>&nbsp; Search
+      </button>
+    </div>
+  </div>
+  
+  <div class="row" id="rowResultTable">
+    <table
+      class="table table-condensed table-bordered table-striped"
+      width="100%"
+      id="tblReportCountPipe"
+    >
+      <thead>
+        <tr>
+          <th class="bg-gray">do num</th>
+          <th class="bg-gray">จำนวนที่ระบบนับ</th>
+          <th class="bg-gray">จำนวนนับจริง</th>
+          <th class="bg-gray">รูปภาพ</th>
+          <th class="bg-gray">Create Date</th>
+          <th class="bg-gray">User</th>
+          <th class="bg-gray">หมายเหตุ</th>
+        </tr>
+      </thead>
+      <!--        <tbody id="tblReportCountPipeList">
+                      <tr><td align="center" colspan="12">.... No item search ....</td></tr>
+     </tbody>-->
+    </table>
+  </div>
+  <script type="text/javascript">
+    var username_session = GetUserProp("login_username");
+    $("#btnSearchReportCountPipe").click(function () {
+      ReportItemSearch();
+    });
+           
+    function openImage(src) {
+        var win = window.open(src, '_blank');
+        win.focus();
+    }
+
+    $("#start_date_count_pipe,#end_date_count_pipe").datepicker({
+      dateFormat: "yy-mm-dd",
+    });
+    
+    $("#btnRemove").click(function () {
+      $("#tblReportCountPipe").DataTable().clear().destroy();
+    });
+  
+    function ReportItemSearch() {
+      var OldHtml = $("#btnSearchReportCountPipe").html();
+      var do_num = $("#do_num_count_pipe").val();
+      var start_date = $("#start_date_count_pipe").val();
+      var end_date = $("#end_date_count_pipe").val();
+ 
+  
+      if (do_num == "" && start_date == "" &&   end_date == "") {
+          $.alert("กรุณาระบุเลขที่เอกสาร หรือช่วงวันที่");
+          return false;
+      }
+  
+        $("#btnSearchReportCountPipe").html("<i class='fa fa-spinner fa-spin'></i>");
+        $("#tblReportCountPipe").loading();
+        $("#tblReportCountPipe tfoot").remove();
+        $.ajax({
+          type: "POST",
+          url: "././module/APP_COUNT_PIPE/data.php",
+          dataType: "json",
+          beforeSend: function () {
+            $("#btnSearchReportCountPipe").html("<i class='fa fa-spinner fa-spin'>");
+          },
+          data: {
+            load: "GetReportCountPipe",
+            do_num: do_num,
+            start_date: start_date,
+            end_date: end_date,
+          },
+          success: function (data) {
+            $("#tblReportCountPipe").DataTable().clear();
+            $("#tblReportCountPipe").append(
+              "<tfoot><tr><td align='center' colspan='7'>.... No item search ....</tr></tfoot>"
+            );
+            $("#tblReportCountPipe").dataTable({
+              aaData: data,
+              paging: false,
+              fixedHeader: true,
+              destroy: true,
+              processing: true,
+              scrollY: "65vh",
+              scrollCollapse: true,
+              scrollX: true,
+              select: true,
+              select: {
+                style: "single",
+              },
+              columnDefs: [
+             ],
+              columns: [
+                {
+                  data: "do_num",
+                  className: "text-center",
+                },
+                {
+                  data: "qty_system_count",
+                  className: "text-center",
+                },
+                {
+                  data: "qty_human_count",
+                  className: "text-center",
+                },
+                {
+                  data: "path",
+                  className: "text-center",
+                  "render": function (data, type, row){
+                    return '<div style="display: flex; align-items: center; justify-content: center;"><img src="module/APP_COUNT_PIPE/upload/' + data + '?v=' + Date.now() + '" style="width: 50px; height: 50px; " onclick="openImage(this.src)"></div>';
+                  }
+                },
+                {
+                  data: "createdate.date",
+                  className: "text-center",
+                  render: function (data, type, row) {
+                    return moment(data).format("DD/MM/YYYY");
+                  },
+                },
+                {
+                  data: "user",
+                  className: "text-center",
+                },
+                {
+                  data: "remark",
+                  className: "text-center",
+                },
+              ],
+              dom:
+                "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                "<'row'<'col-md-12'tr>>" +
+                "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+              buttons: [
+                {
+                  extend: "print",
+                  text: "<i class='fa fa-print'></i>&nbsp;Print",
+                  title: "",
+                },
+                {
+                  extend: "excel",
+                  footer: true,
+                  text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                  title:
+                    "Report Count Pipe " + moment().format("DD-MM-YYYY HH:mm:ss"),
+                },
+              ]
+            });
+  
+            $("#tblReportCountPipe").loading("stop");
+            $("#btnSearchReportCountPipe").html(OldHtml);
+          },
+          error: function (e) {
+            $("#tblReportCountPipe").loading("stop");
+            $("#btnSearchReportCountPipe").html(OldHtml);
+            console.log("There was an error with your request...");
+            console.log("error: " + JSON.stringify(e));
+          },
+        });
+      }
+
+  </script>
+  
