@@ -28,7 +28,7 @@ if ($_POST['load'] == 'CreateCountPipe') {
     $allowed_types = array('jpg', 'jpeg', 'png');
     $file_type = strtolower(pathinfo($files['name'], PATHINFO_EXTENSION));
     $STS_Custom->setConn($ConnSL);
-    $rs = $STS_Custom->CreateCountPipe($_POST['do_num'], $_POST['qty_system'], $_POST['qty_human'], $_POST['user'], $file_type);
+    $rs = $STS_Custom->CreateCountPipe($_POST['do_num'], $_POST['qty_system'], $_POST['qty_human'], $_POST['user'], $file_type, $_POST['remark']);
     if (!file_exists($upload_dir)) {
         mkdir($upload_dir, 0777, true);
     }
