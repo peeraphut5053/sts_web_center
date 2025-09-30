@@ -239,7 +239,25 @@ class API_FreeZone {
     function GetDoList() {
         $query = "select do_num from do_hdr_mst
 where stat <> 'A' and (do_num like 'DO%' or do_num like 'DX%') and convert(date,createdate) > '2025-06-30'
-order by do_num";
+order by do_num desc";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+    function CreateCountPipe($do_num, $qty_system, $qty_human, $user, $file_type) {
+        $s = "SELECT do_num FROM STS_count_pipe WHERE do_num = '$do_num' ORDER BY do_num DESC";
+        $cSql = new SqlSrv();
+        $do = $cSql->SqlQuery($this->StrConn, $s);
+        $do_count = count($do);
+        if ($do_count > 1) {
+            $do_count = $do_count + 0;
+        } else {
+            $do_count = 1;
+        }
+        $pathName = $do_num . "_" . $do_count . "_" . $user . "." . $file_type;
+        $query = "INSERT INTO STS_count_pipe (do_num,qty_system_count,qty_human_count,path,[user]) OUTPUT INSERTED.* VALUES('$do_num','$qty_system','$qty_human','$pathName','$user')";
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);

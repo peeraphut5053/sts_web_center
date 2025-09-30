@@ -7,22 +7,17 @@ foreach ($_GET as $key => $value) {
 }
 
 foreach ($_POST as $key => $value) {
-    if (is_array($value)) {
-        // ถ้าเป็น array ให้วนลูปอีกครั้งเพื่อ trim แต่ละ element
-        foreach ($value as $subKey => $subValue) {
-            $$key[$subKey] = trim($subValue);
-        }
-    } else {
-        $$key = trim($value);
-    }
+    $$key = trim($value);
 }
 
 include "../../initial.php";
-$CallModel = new CallModel();
-$CallModel->SyteLine_Models();
-$STS_Custom = new API_FreeZone();
+
 
 if ($load == "GetDoList") {
-    $STS_Custom = $STS_Custom->GetDoList();
-    echo json_encode($STS_Custom);
+    $CM = new CallModel();
+    $CM->SyteLine_Models();
+    $STS_COUNT = new API_FreeZone();
+    $STS_COUNT->setConn($ConnSL);
+    $rs = $STS_COUNT->GetDoList();
+    echo json_encode($rs);
 }
