@@ -81,6 +81,11 @@ if ($load == "ApproveTwoWithdraw") {
     echo json_encode($rs);
 }
 
+if ($load == "CancelApproveTwoWithdraw") {
+    $rs = $STS_Custom->CancelApproveTwoWithdraw($doc_no, $approve);
+    echo json_encode($rs);
+}
+
 if ($load == "ApproveStockWithdraw") {
     $rs = $STS_Custom->ApproveStockWithdraw($doc_no, $stock);
     echo json_encode($rs);

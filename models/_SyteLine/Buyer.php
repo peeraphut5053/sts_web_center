@@ -353,6 +353,15 @@ from reason_mst where reason_class = 'MISC ISSUE'";
         return $rs;
     }
 
+    function CancelApproveTwoWithdraw($doc_no, $approve)
+    {
+        $query = "UPDATE STS_store_withdraw_hdr SET approver2 = null, updatedate = getdate()   WHERE doc_no = '$doc_no'";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
     function ApproveStockWithdraw($doc_no, $stock)
     {
         $query = "UPDATE STS_store_withdraw_hdr SET stock = '$stock', updatedate = getdate()  WHERE doc_no = '$doc_no'";

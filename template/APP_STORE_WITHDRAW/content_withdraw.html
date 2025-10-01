@@ -56,6 +56,21 @@
         }
     }
 
+    .btn-1 {
+        @media (max-width: 768px) {
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+    }
+
+    .btn-2 {
+        gap: 3rem;
+        @media (max-width: 768px) {
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+    }
+
 </style>
 <div class="">
     <div class="col-xs-12">
@@ -103,7 +118,7 @@
                     <option value=""></option>
                 </select>
             </div>
-            <div class="input-group basis-3/6">
+            <div class="input-group item">
                 <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">หมายเหตุ</div>
                 <input type="text" style="font-weight: bold; font-size: 16px;" class="form-control txt-filter"
                     id="remark_withdraw">
@@ -148,8 +163,8 @@
                     id="remark_w">
             </div>
         </div>
-        <div class="flex justify-between">
-            <div class="flex gap-12">
+        <div class="flex justify-between btn-1">
+            <div class="flex btn-2">
                 <button type="button" class="btn btn-success btn-lg" id="btnAddItemWithdraw">1 Add Item</button>
                 <button style="display: none;" type="button" class="btn btn-danger btn-lg" id="approve_user"
                     onclick="approve_user()">รับของ</button>
@@ -907,6 +922,11 @@
                     $("#btnAddItemWithdraw").attr("disabled", false);
                 }
 
+                 var username_session_trim = username_session.trim().toLowerCase();
+                 if (userApproveTwo.map(x => x.trim().toLowerCase()).includes(username_session_trim) && data[0].userApprove == null) {
+                   $("#approve_two").attr("disabled", false);
+                 }
+
                 $("#item_w").val('').trigger('change');
                 $("#wc_dest").val('').trigger('change');
                 $("#user_w").val(data[0].user_hdr);
@@ -1185,15 +1205,21 @@
 
     function approve_two() {
 
+        var load = 'ApproveTwoWithdraw';
+
         if ($("#doc_no").val() == '' || $("#dept_w").val() == '') {
             alert("กรุณาเลือก Doc No");
             return false;
         }
 
-         var username_session_trim = username_session.trim().toLowerCase();
+        var username_session_trim = username_session.trim().toLowerCase();
         if (!userApproveTwo.map(x => x.trim().toLowerCase()).includes(username_session_trim)) {
             swal("คุณไม่มีสิทธิ์อนุมัติ", "", "warning");
             return false;
+        }
+
+        if ($("#approve_two").text().trim() === 'อนุมัติ 2 แล้ว') {
+            load = 'CancelApproveTwoWithdraw';
         }
 
 
@@ -1210,16 +1236,23 @@
                         url: "././module/APP_STORE_WITHDRAW/data.php",
                         dataType: "json",
                         data: {
-                            load: "ApproveTwoWithdraw",
+                            load: load,
                             doc_no: $("#doc_no_w").val(),
                             approve: approve
                         },
                         success: function (data) {
-                            swal("อนุมัติ 2 สําเร็จ", "", "success");
+                            if (load == 'ApproveTwoWithdraw') {
+                                swal("อนุมัติ 2 สําเร็จ", "", "success");
                             // edit text btn approve_two
                             $("#approve_two").text("อนุมัติ 2 แล้ว");
                             $("#approve_two").attr("disabled", true);
                             $("#btnAddItemWithdraw").attr("disabled", true);
+                            } else {
+                                alert('ยกเลิกอนุมัติ 2 สําเร็จ');
+                                  $("#approve_two").text("อนุมัติ 2");
+                                  $("#approve_two").attr("disabled", false);
+                                  $("#btnAddItemWithdraw").attr("disabled", false);
+                            }
                         },
                         error: function (xhr, status, error) {
                             alert('Error');
