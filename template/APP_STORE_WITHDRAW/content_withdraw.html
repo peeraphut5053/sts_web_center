@@ -1012,7 +1012,7 @@
             return false;
         }
 
-        if (data_withdraw[0].user_hdr != username_session) {
+        if (data_withdraw[0].user_hdr.trim().toLowerCase() != username_session.trim().toLowerCase()) {
             swal("ไม่สามารถรับของได้ ผู้เปิดใบเบิกต้องเป็นผู้รับของ!", "", "warning");
             return false;
         }
