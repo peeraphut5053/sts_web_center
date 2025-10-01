@@ -607,7 +607,7 @@
             "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
         buttons: [
             {
-                text: `<button type="button" class="btn btn-danger">Edit</button>`,
+                text: `<button type="button" class="btn btn-warning">Edit</button>`,
                 action: function (e, dt, node, config) {
                     var select = dt.rows('.selected').data().toArray();
                     var rowIndex = dt.rows('.selected').indexes()[0];
@@ -638,6 +638,52 @@
                     $("#row").val(rowIndex);
                     $("#ModalWithdraw").modal("show");
 
+                }
+            },
+             {
+                text: `<button type="button" class="btn btn-danger">Delete</button>`,
+                action: function (e, dt, node, config) {
+                    var select = dt.rows('.selected').data().toArray();
+                    var rowIndex = dt.rows('.selected').indexes()[0];
+                    var approve_one = $("#approve_one").text();
+                    var approve_two = $("#approve_two").text();
+
+        
+                    if (select.length == 0) {
+                        swal("กรุณาเลือกรายการที่ต้องการแก้ไข", "", "warning");
+                        return false;
+                    }
+
+
+                    if (approve_two != 'อนุมัติ 2') {
+                        swal("ไม่สามารถแก้ไขได้ เนื่องจากอนุมัติแล้ว", "", "warning");
+                        return false;
+                    }
+
+                    $.confirm({
+                        title: 'ยืนยันลบรายการ',
+                        theme: 'modern',
+                        buttons: {
+                            confirm: function () {
+                                $.ajax({
+                        type: "POST",
+                        url: "././module/APP_STORE_WITHDRAW/data.php",
+                        dataType: "json",
+                        data: { load: "DeleteItemWithdraw", doc_no: select[0].doc_no, line_id: select[0].line_id },
+                        success: function (data) {
+                                alert('ลบรายการสําเร็จ');
+                                dt.row(rowIndex).remove().draw();
+                        },
+                        error: function (xhr, status, error) {
+                            alert('Error');
+                        }
+                        
+                    });
+                            },
+                            cancel: function () {
+                            }
+                        }
+                    });
                 }
             },
             {
@@ -868,7 +914,8 @@
                 remark: JSON.stringify(remark)
             },
             success: function (data) {
-                swal("บันทึกข้อมูลสําเร็จ", "เลขที่ใบเบิก: " + data, "success");
+
+                alert("บันทึกข้อมูลสําเร็จ เลขที่ใบเบิก: " + data);
                 table.clear().draw();
                 $("#item_w").val('').trigger('change');
                 $("#wc_dest").val('').trigger('change');

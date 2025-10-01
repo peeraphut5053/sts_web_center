@@ -170,3 +170,8 @@ if ($load == "GetReportWithdraw") {
     $rs = $STS_Custom->GetReportWithdraw($doc_no, $StartDate, $EndDate, $dept, $userApprove, $approve1,$approve2,$stock);
     echo json_encode($rs);
 }
+
+if ($load == 'DeleteItemWithdraw') {
+    $rs = $STS_Custom->DeleteItemWithdraw($doc_no, $line_id);
+    echo json_encode($rs);
+}

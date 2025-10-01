@@ -640,5 +640,13 @@ where 1 = 1 $wh";
         array_splice($rs, count($rs) - 1, 1);
         return $rs;
     }
+
+    function DeleteItemWithdraw($doc_no, $line_id){
+        $query = "delete from STS_store_withdraw_line where doc_no = '$doc_no' and line_id = '$line_id'";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
     
 }
