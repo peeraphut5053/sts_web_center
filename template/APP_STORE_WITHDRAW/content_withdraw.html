@@ -884,7 +884,7 @@
             swal("กรุณากรอกรายการ Item ที่ต้องการเบิก อย่างน้อย 1 รายการ", "", "warning");
             return false;
         }
-
+   
         $("#btnAddWithdraw").attr("disabled", true);
 
         $.ajax({
@@ -1007,7 +1007,7 @@
 
     function approve_user() {
 
-        if ($("#doc_no_w_2").val() == '' || $("#dept_w").val() == '') {
+        if ($("#doc_no_w_old").val() == '' || $("#dept_w").val() == '') {
             swal("กรุณาเลือก Doc No", "", "warning");
             return false;
         }
