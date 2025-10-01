@@ -284,7 +284,7 @@
         "Chamnan",
         "Sam-Ang",
         "Suriyakan",
-        "Admin",
+        "admin",
         "Natchalida",
         "Supachai",
         "Canth",
@@ -323,7 +323,7 @@
         "Chamnan",
         "Sam-Ang",
         "Suriyakan",
-        "Admin",
+        "admin",
         "Anuchai",
         "Yutthakarn",
         "Thawon",
@@ -458,7 +458,7 @@
                 let doc;
 
                 var username_session_trim = username_session.trim().toLowerCase();
-                if (!userApproveOne.map(x => x.trim().toLowerCase()).includes(username_session_trim)) {
+                if (!userApproveOne.map(x => x.trim().toLowerCase()).includes(username_session_trim) && !userApproveTwo.map(x => x.trim().toLowerCase()).includes(username_session_trim)) {
                  var newData = data.filter(x => x.user == username_session);
                  doc = [{ id: '', text: '' }].concat(newData.map((item) => ({
                      id: item.doc_no,
