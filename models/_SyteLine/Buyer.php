@@ -467,18 +467,18 @@ from reason_mst where reason_class = 'MISC ISSUE'";
         return $rs2;
     }
 
-    function UpdateQty_rcvd($doc_no, $item, $wc_dest, $val)
+    function UpdateQty_rcvd($doc_no, $item, $line_id, $val)
     {
-        $query = "UPDATE STS_store_withdraw_line SET qty_rcvd = '$val', updatedate = getdate() WHERE doc_no = '$doc_no' AND item = '$item' AND wc_dest = '$wc_dest'";
+        $query = "UPDATE STS_store_withdraw_line SET qty_rcvd = '$val', updatedate = getdate() WHERE doc_no = '$doc_no' AND item = '$item' AND line_id = '$line_id'";
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
         return $rs;
     }
 
-    function UpdateQty_return($doc_no, $item, $wc_dest, $val)
+    function UpdateQty_return($doc_no, $item, $line_id, $val)
     {
-        $query = "UPDATE STS_store_withdraw_line SET [return] = '$val', updatedate = getdate() WHERE doc_no = '$doc_no' AND item = '$item' AND wc_dest = '$wc_dest'";
+        $query = "UPDATE STS_store_withdraw_line SET [return] = '$val', updatedate = getdate() WHERE doc_no = '$doc_no' AND item = '$item' AND wc_dest = '$line_id'";
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);

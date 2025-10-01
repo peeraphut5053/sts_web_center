@@ -481,7 +481,7 @@
                 "data": "qty_rcvd",
                 render: function (data, type, row, meta) {
                     // if row.stockOUT == 1, disable input
-                    return `<input type="number" class="form-control" value="${data ?? ''}" onchange="UpdateDataTable(this.value, '${row.doc_no}', '${row.item}', '${row.wc_dest}', '${meta.row}')" ${row.userApprove == 1 ? 'disabled' : ''}>`;
+                    return `<input type="number" class="form-control" value="${data ?? ''}" onchange="UpdateDataTable(this.value, '${row.doc_no}', '${row.item}', '${row.line_id}', '${meta.row}')" ${row.userApprove == 1 ? 'disabled' : ''}>`;
                 }
             },
             {
@@ -493,7 +493,7 @@
             {
                 "data": "return",
                 render: function (data, type, row, meta) {
-                    return `<input type="number" class="form-control" value="${data ?? ''}" onchange="UpdateDataTableReturn(this.value, '${row.doc_no}', '${row.item}', '${row.wc_dest}')">`;
+                    return `<input type="number" class="form-control" value="${data ?? ''}" onchange="UpdateDataTableReturn(this.value, '${row.doc_no}', '${row.item}', '${row.line_id}')">`;
                 }
             },
             { "data": "remark" },
@@ -816,7 +816,7 @@
     });
 
 
-    function UpdateDataTable(val, doc_no, item, wc_dest, row) {
+    function UpdateDataTable(val, doc_no, item, line_id, row) {
 
         $.ajax({
             type: "POST",
@@ -826,7 +826,7 @@
                 load: "UpdateQty_rcvd",
                 doc_no: doc_no,
                 item: item,
-                wc_dest: wc_dest,
+                line_id: line_id,
                 val: val
             },
             success: function (data) {
@@ -838,7 +838,7 @@
         });
     }
 
-    function UpdateDataTableReturn(val, doc_no, item, wc_dest) {
+    function UpdateDataTableReturn(val, doc_no, line_id, wc_dest) {
         $.ajax({
             type: "POST",
             url: "././module/APP_STORE_WITHDRAW/data.php",
@@ -847,7 +847,7 @@
                 load: "UpdateQty_return",
                 doc_no: doc_no,
                 item: item,
-                wc_dest: wc_dest,
+                line_id: line_id,
                 val: val
             },
             success: function (data) {

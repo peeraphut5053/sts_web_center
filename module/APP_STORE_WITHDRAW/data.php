@@ -112,12 +112,12 @@ if ($load == "SaveMiscIssueByLot") {
 }
 
 if ($load == "UpdateQty_rcvd") {
-    $rs = $STS_Custom->UpdateQty_rcvd($doc_no, $item, $wc_dest, $val );
+    $rs = $STS_Custom->UpdateQty_rcvd($doc_no, $item, $line_id, $val );
     echo json_encode($rs);
 }
 
 if ($load == "UpdateQty_return") {
-    $rs = $STS_Custom->UpdateQty_return($doc_no, $item, $wc_dest, $val);
+    $rs = $STS_Custom->UpdateQty_return($doc_no, $item, $line_id, $val);
     echo json_encode($rs);
 }
 
