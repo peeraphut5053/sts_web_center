@@ -885,6 +885,8 @@
             return false;
         }
 
+        $("#btnAddWithdraw").attr("disabled", true);
+
         $.ajax({
             type: "POST",
             url: "././module/APP_STORE_WITHDRAW/data.php",
@@ -911,7 +913,6 @@
                 $("#dept_w").val('').trigger('change');
                 $("#remark_withdraw").val('');
 
-                $("#btnAddWithdraw").attr("disabled", false);
                 $("#btnUpdateW").attr("disabled", true);
                 $("#btnAddItemWithdraw").attr("disabled", false);
                 $("#approve_user").hide();
