@@ -232,7 +232,10 @@ from location_mst";
 
     function GetItemList()
     {
-        $query = "select item,[description],u_m from item_mst where item like 'ST%' and [description] not like '%ยกเลิก%' order by item";
+        $query = "select item,[description],u_m 
+from item_mst 
+where (item like 'ST%' or item like 'RZI%' or item like 'RC%')
+and [description] not like '%ยกเลิก%' order by item";
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
