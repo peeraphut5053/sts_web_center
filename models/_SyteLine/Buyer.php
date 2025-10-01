@@ -254,53 +254,66 @@ from reason_mst where reason_class = 'MISC ISSUE'";
 
     function CreateWithdraw($dept, $user, $remark_h, $arr_item, $arr_qty, $arr_wc_dest, $arr_remark)
     {
+        if (sqlsrv_begin_transaction($this->StrConn) === false) {
+        die("Transaction failed: " . print_r(sqlsrv_errors(), true));
+    }
+    
+    try {
         $year = date('y');
         $month = date('m');
-        $cSql = new SqlSrv();
-        $sql = "SELECT TOP 1 doc_no FROM STS_store_withdraw_hdr WHERE doc_no LIKE 'W$year$month%' ORDER BY doc_no DESC";
+        
+        // Lock และ query เลขล่าสุด
+        $sql = "SELECT TOP 1 doc_no 
+                FROM STS_store_withdraw_hdr WITH (UPDLOCK, HOLDLOCK)
+                WHERE doc_no LIKE 'W{$year}{$month}%' 
+                ORDER BY doc_no DESC";
+        
         $cSql = new SqlSrv();
         $result = $cSql->SqlQuery($this->StrConn, $sql);
         array_splice($result, count($result) - 1, 1);
 
         if (count($result) > 0) {
-            $row = $result[0];
-            $lastDoc = $row['doc_no'];
-            // ดึงเลขลำดับจากเลขเอกสารล่าสุด (W2407001 -> 001)
+            $lastDoc = $result[0]['doc_no'];
             $lastNumber = intval(substr($lastDoc, -3));
             $newNumber = $lastNumber + 1;
         } else {
-            // ถ้าไม่มีเลขของปีนี้ เริ่มที่ 1
             $newNumber = 1;
         }
-        // สร้างเลขเอกสารใหม่
+        
         $docNumber = sprintf("W%s%02d%03d", $year, $month, $newNumber);
-        $query = "INSERT INTO STS_store_withdraw_hdr (doc_no,dept,remark,[user]) VALUES ('$docNumber', '$dept', '$remark_h', '$user')";
-        $cSql = new SqlSrv();
-        $rs = $cSql->SqlQuery($this->StrConn, $query);
-        // foreach insert item act weight qty u_m
+        
+        // Escape ข้อมูล
+        $dept = str_replace("'", "''", $dept);
+        $remark_h = str_replace("'", "''", $remark_h);
+        $user = str_replace("'", "''", $user);
+        
+        // Insert header
+        $query = "INSERT INTO STS_store_withdraw_hdr (doc_no, dept, remark, [user]) 
+                  VALUES ('$docNumber', '$dept', '$remark_h', '$user')";
+        $cSql->SqlQuery($this->StrConn, $query);
+        
+        // Insert lines
         foreach ($arr_item as $key => $item) {
-            $s = "SELECT TOP 1 line_id FROM STS_store_withdraw_line WHERE doc_no = '$docNumber' ORDER BY line_id DESC";
-            $seq = $cSql->SqlQuery($this->StrConn, $s);
-            array_splice($seq, count($seq) - 1, 1);
-
-            if (count($seq) > 0) {
-                $row = $seq[0];
-                $lastSeq = $row['line_id'];
-                $newNumber = $lastSeq + 1;
-            } else {
-                // ถ้าไม่มีเลขของปีนี้ เริ่มที่ 1
-                $newNumber = 1;
-            }
-            $seq = $newNumber;
-            $qty = $arr_qty[$key];
-            $wc_dest = $arr_wc_dest[$key];
-            $remark_l = $arr_remark[$key];
-            $query2 = "INSERT INTO STS_store_withdraw_line (doc_no, line_id, item,qty_wd,wc_dest,remark) VALUES ('$docNumber', '$seq', '$item', '$qty', '$wc_dest', '$remark_l')";
-            $cSql = new SqlSrv();
-            $rs = $cSql->SqlQuery($this->StrConn, $query2);
+            $seq = $key + 1;
+            $item_escaped = str_replace("'", "''", $arr_item[$key]);
+            $qty = floatval($arr_qty[$key]);
+            $wc_dest = str_replace("'", "''", $arr_wc_dest[$key]);
+            $remark_l = str_replace("'", "''", $arr_remark[$key]);
+            
+            $query2 = "INSERT INTO STS_store_withdraw_line 
+                       (doc_no, line_id, item, qty_wd, wc_dest, remark) 
+                       VALUES ('$docNumber', $seq, '$item_escaped', $qty, '$wc_dest', '$remark_l')";
+            $cSql->SqlQuery($this->StrConn, $query2);
         }
-        array_splice($rs, count($rs) - 1, 1);
+        
+        // Commit
+        sqlsrv_commit($this->StrConn);
         return $docNumber;
+        
+    } catch (Exception $e) {
+        sqlsrv_rollback($this->StrConn);
+        throw $e;
+    }
     }
 
     function UpdateWithdraw($doc_no, $dept, $wc, $user, $remark_h, $arr_item, $arr_qty, $arr_qty_rcvd, $arr_wc_dest, $arr_remark)
