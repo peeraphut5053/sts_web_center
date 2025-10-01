@@ -1,35 +1,437 @@
 <style>
-    .mycontainer {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        width: 90%;
-        margin-left: auto;
-        margin-right: auto;
-        border-width: 4px;
-        border-bottom-color: #60a5fa;
-        border-top-color: white;
-        border-left-color: white;
-        border-right-color: white;
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-        padding: 6rem;
-        margin-top: 2.5rem;
+    .col-search {
+        padding-left: 3px;
+        padding-right: 3px;
     }
 
-    .mybox {
+    /*    table.dataTable thead .sorting:after,
+          table.dataTable thead .sorting:before,
+          table.dataTable thead .sorting_asc:after,
+          table.dataTable thead .sorting_asc:before,
+          table.dataTable thead .sorting_asc_disabled:after,
+          table.dataTable thead .sorting_asc_disabled:before,
+          table.dataTable thead .sorting_desc:after,
+          table.dataTable thead .sorting_desc:before,
+          table.dataTable thead .sorting_desc_disabled:after,
+          table.dataTable thead .sorting_desc_disabled:before {
+              bottom: .5em;
+          }*/
+    .table thead th {
+        text-align: center;
+    }
+
+    .col-flt-page {
+        padding-top: 10px;
+        font-weight: bold;
+    }
+
+    #tblReportWithdraw tbody tr td a {
+        cursor: pointer;
+    }
+
+    table.dataTable.fixedHeader-floating,
+    table.dataTable.fixedHeader-locked {
+        background-color: white;
+        margin-top: 50px !important;
+        margin-bottom: 0 !important;
+    }
+
+    @media print {
+        table th:nth-child(0) {
+            width: 200px;
+            word-break: break-all;
+            white-space: pre-line;
+        }
+
+        table td:nth-child(0) {
+            width: 200px;
+            word-break: break-all;
+            white-space: pre-line;
+        }
+    }
+
+    .text-header {
+        font-weight: bold;
+        font-size: 20px;
+    }
+
+    .text-wrap {
+        white-space: normal;
+    }
+
+    .width-200 {
+        width: 200px;
+    }
+
+    input[type="checkbox"] {
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+
+    /*
+      .cb_lb{
+          margin-top:-5px;
+      }*/
+    .item-center {
         display: flex;
-        justify-content: flex-start;
-        align-items: center;
-        flex-grow: 1;
-        gap: 1.5rem;
-        margin-bottom: 1.25rem;
+        justify-content: center;
     }
 </style>
-<div class="">
-    <div class="col-xs-12">
-        <div class="page-header">
-            <h1 class="text-header text-left">รายงาน</h1>
+<div class="row">
+    <h4 class="text-header text-center">รายงานใบเบิกของ</h4>
+</div>
+<div class="row item-center">
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+        <div class="input-group w-full">
+            <div class="input-group-addon">เลขที่ใบเบิก</div>
+            <input type="text" class="form-control" id="doc_no_r" autocomplete="off" />
         </div>
     </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+        <div class="input-group w-full">
+            <div class="input-group-addon">From Date</div>
+            <input type="text" class="form-control" id="from_date_r" autocomplete="off" />
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+        <div class="input-group w-full">
+            <div class="input-group-addon">To Date</div>
+            <input type="text" class="form-control" id="to_date_r" autocomplete="off" />
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+        <div class="input-group w-full">
+            <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">แผนก</div>
+            <select style="font-weight: bold; font-size: 16px;" class="form-control txt-filter" id="dept_r">
+                 <option value=""></option>
+            </select>
+        </div>
+    </div>
+       <div class="col-lg-2 col-md-2 col-sm-1 col-xs-6  col-search">
+        <button id="BtnReportWithdraw" class="btn btn-info"><i class="fa fa-search"></i>&nbsp;Search</button>
+    </div>
 </div>
+<div class="row item-center">
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+        <div class="input-group w-full">
+            <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">รับของ</div>
+            <select style="font-weight: bold; font-size: 16px;" class="form-control txt-filter" id="userApprv">
+                <option value="">ทั้งหมด</option>
+                <option value="1">รับของแล้ว</option>
+                <option value="2">ยังไม่ได้รับ</option>
+            </select>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+        <div class="input-group w-full">
+             <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">อนุมัติ 1</div>
+            <select style="font-weight: bold; font-size: 16px;" class="form-control txt-filter" id="apprv_1">
+                <option value="">ทั้งหมด</option>
+                <option value="1">อนุมัติแล้ว</option>
+                <option value="2">ยังไม่ได้อนุมัติ 1</option>
+            </select>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+        <div class="input-group w-full">
+            <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">อนุมัติ 2</div>
+            <select style="font-weight: bold; font-size: 16px;" class="form-control txt-filter" id="apprv_2">
+                <option value="">ทั้งหมด</option>
+                <option value="1">อนุมัติแล้ว</option>
+                <option value="2">ยังไม่ได้อนุมัติ 1</option>
+            </select>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+        <div class="input-group w-full">
+            <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">ตัดสต๊อก</div>
+            <select style="font-weight: bold; font-size: 16px;" class="form-control txt-filter" id="stock_r">
+                <option value="">ทั้งหมด</option>
+                <option value="1">ตัดสต๊อกแล้ว</option>
+                <option value="2">ยังไม่ตัดสต๊อก</option>
+            </select>
+        </div>
+    </div>
+       <div class="col-lg-2 col-md-2 col-sm-1 col-xs-6  col-search">
+    </div>
+</div>
+<div class="row" id="rowResultTable">
+    <table class="table table-condensed table-bordered table-striped" width="100%" id="tblReportWithdraw">
+        <thead>
+            <tr>
+                <th class="bg-gray">เลขที่ใบเบิก</th>
+                <th class="bg-gray">วันที่</th>
+           
+                <th class="bg-gray">แผนก</th>
+                <th class="bg-gray">Item</th>
+                <th class="bg-gray">รายละเอียด</th>
+                <th class="bg-gray">นำไปใช้</th>
+                <th class="bg-gray">ขอเบิก</th>
+                <th class="bg-gray">เบิกได้</th>
+                <th class="bg-gray">ตัดสต๊อก</th>
+                <th class="bg-gray">หน่วย</th>
+                <th class="bg-gray">หมายเหตุ Item</th>
+                <th class="bg-gray">รับของ</th>
+                <th class="bg-gray">อนุมัติ 1</th>
+                <th class="bg-gray">อนุมัติ 2</th>
+                <th class="bg-gray">หมายเหตุ</th>
+            </tr>
+        </thead>
+        <!--        <tbody id="tblReportWithdrawList">
+                      <tr><td align="center" colspan="12">.... No item search ....</td></tr>
+     </tbody>-->
+    </table>
+</div>
+<script type="text/javascript">
+
+    $("#BtnReportWithdraw").click(function () {
+        console.log("click");
+        
+        ReportItemSearch();
+    });
+
+    var arr_lang = [
+        "คลังวัดถุ",
+        "คลังขายในประเทศ",
+        "คลังขายต่างประเทศ",
+        "จัดส่ง",
+        "จัดซื้อ",
+        "บัญชี",
+        "ตรวจสอบภายใน",
+        "ขายต่างประเทศ",
+        "ขายในประเทศ",
+        "ฝ่ายบุคคล",
+        "IT",
+        "เตาชุบ",
+        "พิมพ์ตรา",
+        "ต๊าปเกลียว",
+        "กรุ๊ปปลายท่อ",
+        "พ่นสี",
+        "ตัดแบ่งความยาว",
+        "มัดท่อ",
+        "ฟอร์มมิ่ง",
+        "เทสน้ำ",
+        "ดัดตรง",
+        "คว้านหัว",
+        "เครื่องตัด /สลิต",
+        "ไฟฟ้า เครื่องกลึง",
+        "ซ่อมบำรุง วิศวกร",
+        "QC ห้องแล็ป",
+        "วังน้อย-ฟอร์มมิ่ง",
+        "วังน้อย-เทสน้ำ",
+        "วังน้อย-ดัดตรง",
+        "วังน้อย-เครื่องตัด /สลิต",
+        "วังน้อย-กรุ๊ปปลายท่อ",
+        "วังน้อย-มัดท่อ",
+        "วังน้อย-ฝ่ายจัดซื้อ(สโตร์)",
+        "วังน้อย-วางแผนการผลิต",
+        "วังน้อย-จัดส่งสินค้า",
+        "วังน้อย-แผนกคลังวัตถุดิบ",
+        "วังน้อย-แผนกคลังสินค้าสำเร็จรูป",
+        "วังน้อย-ไฟฟ้า",
+        "วังน้อย-ซ่อมบำรุง",
+        "วังน้อย-เครื่องกลึง",
+        "วังน้อย-ส่วนกลางโรงงาน",
+        "วังน้อย-สำนักงานกลาง",
+        "วังน้อย-ฝ่ายบุคคล-ธุรการ",
+        "วังน้อย-QC"
+    ];
+
+
+    var deptOption = arr_lang.map(function (item) {
+        return {
+            id: item,
+            text: item
+        };
+    })
+
+
+
+            $("#dept_r").select2({
+                placeholder: 'กรุณาเลือกแผนก',
+                allowClear: true,
+                width: '100%',
+                data: deptOption,
+                language: {
+                    noResults: function () {
+                        return "ไม่พบข้อมูล";
+                    }
+                }
+            });
+   
+    $("#from_date_r,#to_date_r").datepicker({
+        dateFormat: "yy-mm-dd",
+    });
+
+    function ReportItemSearch() {
+        var OldHtml = $("#BtnReportWithdraw").html();
+        var StartDate = $("#from_date_r").val();
+        var EndDate = $("#to_date_r").val();
+        var doc_no = $("#doc_no_r").val();
+        var dept = $("#dept_r").val();
+        var userApprv = $("#userApprv").val();
+        var apprv_1 = $("#apprv_1").val();
+        var apprv_2 = $("#apprv_2").val();
+        var stock = $("#stock_r").val();
+        
+        if (doc_no == '' && StartDate == '' && EndDate == '' && dept == '' && userApprv == '' && apprv_1 == '' && apprv_2 == '' && stock == '') {
+            swal("กรุณาระบุเงื่อนไขการค้นหา", "", "warning");
+           return false;
+        }
+
+        $("#BtnReportWithdraw").html("<i class='fa fa-spinner fa-spin'></i>");
+        $("#tblReportWithdraw").loading();
+        $("#tblReportWithdraw tfoot").remove();
+        $.ajax({
+            type: "POST",
+            url: "././module/APP_STORE_WITHDRAW/data.php",
+            dataType: "json",
+            beforeSend: function () {
+                $("#BtnReportWithdraw").html("<i class='fa fa-spinner fa-spin'>");
+            },
+            data: {
+                load: "GetReportWithdraw",
+                StartDate: StartDate,
+                EndDate: EndDate,
+                doc_no: doc_no,
+                dept: dept,
+                userApprove: userApprv,
+                approve1: apprv_1,
+                approve2: apprv_2,
+                stock: stock
+            },
+            success: function (data) {
+                $("#tblReportWithdraw").DataTable().clear();
+                $("#tblReportWithdraw").append(
+                    "<tfoot><tr><td></td><td></td><td></td><td></td><td></td></tr></tfoot>"
+                );
+                $("#tblReportWithdraw").dataTable({
+                    aaData: data,
+                    paging: false,
+                    fixedHeader: true,
+                    destroy: true,
+                    processing: true,
+                    scrollY: "65vh",
+                    scrollCollapse: true,
+                    scrollX: true,
+                    select: false,
+                    columns: [
+                        {
+                            data: "doc_no",
+                            className: "text-center",
+                        },
+                        {
+                            data: "date.date",
+                            className: "text-center",
+                            render: function (data, type, row) {
+                                return moment(data).format("DD/MM/YYYY");
+                            }
+                        },
+                        {
+                            data: "dept",
+                            className: "text-center",
+                        },
+                       
+                        {
+                            data: "item",
+                            className: "text-center",
+                        },
+                        {
+                            data: "description",
+                            className: "text-center",
+                        },
+                        {
+                            data: "นำไปใช้",
+                            className: "text-center",
+                        },
+                        {
+                            data: "ขอเบิก",
+                            className: "text-center",
+                        },
+                        {
+                            data: "เบิกได้",
+                            className: "text-center",
+                        },
+                        {
+                            data: "ตัดสต๊อก",
+                            className: "text-center",
+                        },
+                        {
+                            data: "u_m",
+                            className: "text-center",
+                        },
+                        {
+                            data: "item_remark",
+                            className: "text-center",
+                        },
+                        {
+                            data: "userApprove",
+                            className: "text-center",
+                            render: function (data, type, row) {
+                                if (data == null) {
+                                    return "ยังไม่ได้รับของ";
+                                } else {
+                                    return 'รับของแล้ว';
+                                }
+                            }
+                        },
+                        {
+                            data: "approver1",
+                            className: "text-center",
+                        },
+                        {
+                            data: "approver2",
+                            className: "text-center",
+                        },
+                        {
+                            data: "hdr_remark",
+                            className: "text-center",
+                        },
+                    ],
+                    dom:
+                        "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                        "<'row'<'col-md-12'tr>>" +
+                        "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                    buttons: [
+                        {
+                            extend: "print",
+                            text: "<i class='fa fa-print'></i>&nbsp;Print",
+                            title: "",
+                        },
+                        {
+                            extend: "excel",
+                            footer: true,
+                            text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                            title:
+                                "รายงานขอเบิกสินค้า จากวัน" +
+                                StartDate +
+                                "_to_" +
+                                EndDate,
+                        }
+                    ],
+                    "footerCallback": function (row, data, start, end, display) {
+                        var api = this.api(),
+                            data;
+                        var intVal = function (i) {
+                            return typeof i === 'string' ?
+                                i.replace(/[\$,]/g, '') * 1 :
+                                typeof i === 'number' ?
+                                    i : 0;
+                        };
+                    },
+                });
+                $("#tblReportWithdraw").loading("stop");
+                $("#BtnReportWithdraw").html(OldHtml);
+            },
+
+            error: function (e) {
+                $("#tblReportWithdraw").loading("stop");
+                $("#BtnReportWithdraw").html(OldHtml);
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            },
+        });
+    }
+
+
+</script>

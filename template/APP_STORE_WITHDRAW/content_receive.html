@@ -114,6 +114,9 @@
 
             </div>
             <div class="input-group basis-3/6">
+
+            </div>
+            <div class="input-group basis-3/6 hidden">
                 <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">เครื่อง *</div>
                 <input type="text" style="font-weight: bold; font-size: 16px;" class="form-control txt-filter"
                     id="wc_w_2" readonly>
@@ -128,33 +131,39 @@
             <div class="input-group basis-3/6">
                 <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">หมายเหตุ</div>
                 <input type="text" style="font-weight: bold; font-size: 16px;" class="form-control txt-filter"
-                    id="remark_withdraw_2">
+                    id="remark_withdraw_2" readonly>
             </div>
         </div>
         <hr />
         <div class="flex justify-between">
             <div class="flex gap-4">
-                <div id="status_repair" class="input-group element2 ">
-                    <button type="button" class="btn btn-warning btn-lg" id="stock" onclick="approve_stock()">ลงชื่อตัดสต็อก</button>
+                <div style="display: none;" id="status_repair" class="input-group element2 ">
+                    <button type="button" class="btn btn-warning btn-lg" id="stock"
+                        onclick="approve_stock()">ลงชื่อตัดสต๊อก</button>
                 </div>
             </div>
             <div>
 
-                <button type="button" class="btn btn-info btn-lg" id="btnUpdateWithdraw">Update</button>
+                <button style="display: none;" type="button" class="btn btn-info btn-lg"
+                    id="btnUpdateWithdraw">Update</button>
             </div>
         </div>
         <input type="text" style="font-weight: bold; font-size: 16px;" class="hidden" id="old_co_num">
     </div>
 </div>
 <div class="row">
-    <table class="table table-condensed table-bordered table-striped" id="tbItemWithdrawR">
+    <table width="100%" class="table table-condensed table-bordered table-striped" id="tbItemWithdrawR">
         <thead>
             <tr>
                 <th class="bg-gray">Item</th>
+                <th class="bg-gray">รายละเอียด</th>
                 <th class="bg-gray">จำนวนที่ต้องการเบิก</th>
+                <th class="bg-gray">หน่วย</th>
                 <th class="bg-gray">จำนวนที่เบิกได้</th>
                 <th class="bg-gray">นำไปใช้</th>
+                <th class="bg-gray">จำนวนที่คืน</th>
                 <th class="bg-gray">หมายเหตุ</th>
+                <th class="bg-gray">ตัดสต๊อก</th>
             </tr>
         </thead>
         <!--        <tbody id="tblReportList">
@@ -162,10 +171,186 @@
      </tbody>-->
     </table>
 </div>
+<!-- Modal -->
+<div class="modal fade bd-example-modal-lg" id="ModalMiscIssue" role="dialog" aria-labelledby="myLargeModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-center" id="exampleModalLabel">ตัดสต๊อก By Item</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+            </div>
+            <div class="modal-body">
+                <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                    <div class="input-group basis-2/4">
+                        <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">Item</div>
+                        <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
+                            class="form-control" id="item_r_misc" readonly>
+                    </div>
+                    <div class="input-group basis-2/4">
+                        <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">Loc *
+                        </div>
+                        <select style="font-weight: bold; font-size: 16px;" class="form-control txt-filter"
+                            id="loc_r_misc">
+                            <option value=""></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                    <div class="input-group basis-2/4">
+                        <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">Qty *
+                        </div>
+                        <input style="font-weight: bold; font-size: 16px;" type="number" autocomplete="off"
+                            class="form-control" id="qty_r_misc" readonly>
+                    </div>
+                    <div class="input-group basis-2/4">
+                        <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">หน่วย *
+                        </div>
+                        <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
+                            class="form-control" id="u_m_misc" readonly>
+                    </div>
+                </div>
+                <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                    <div class="input-group basis-2/4">
+                        <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">Reason
+                            Code *</div>
+                        <select style="font-weight: bold; font-size: 16px;" class="form-control txt-filter"
+                            id="reason_r_misc">
+                            <option value=""></option>
+                        </select>
+                    </div>
+                    <div class="input-group basis-2/4">
+                        <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">User</div>
+                        <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
+                            class="form-control" id="user_r_misc" readonly>
+                    </div>
+                </div>
+                <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                    <div class="input-group basis-2/4">
+                        <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">Acct</div>
+                        <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
+                            class="form-control" id="acct" readonly>
+                    </div>
+                    <div class="input-group basis-2/4">
+                        <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">AcctUnit1</div>
+                        <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
+                            class="form-control" id="acct_unit1" readonly>
+                    </div>
+                </div>
+                <div class="hidden">
+                    <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">Line</div>
+                    <input style="font-weight: bold; font-size: 16px;" type="number" autocomplete="off"
+                        class="form-control" id="line_id_item" readonly>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="SaveMiscIssue"
+                    onclick="SaveMiscIssue()">บันทึก</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade bd-example-modal-lg" id="ModalMiscIssueByLot" role="dialog" aria-labelledby="myLargeModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-center" id="exampleModalLabel">ตัดสต๊อก By Lot</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+            </div>
+            <div class="modal-body">
+                <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                    <div class="input-group basis-2/4">
+                        <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">Item</div>
+                        <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
+                            class="form-control" id="item_r_misc_lot" readonly>
+                    </div>
+                    <div class="input-group basis-2/4">
+                        <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">Lot *
+                        </div>
+                        <select style="font-weight: bold; font-size: 16px;" class="form-control txt-filter"
+                            id="lot_r_misc">
+                            <option value=""></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                    <div class="input-group basis-2/4">
+                        <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">From Loc</div>
+                        <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
+                            class="form-control" id="from_loc_r_misc" readonly>
+                    </div>
+                    <div class="input-group basis-2/4">
+                        <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">To Loc</div>
+                        <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
+                            class="form-control" id="to_loc_r_misc" readonly>
+                    </div>
+                </div>
+                <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                    <div class="input-group basis-2/4">
+                        <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">Qty *
+                        </div>
+                        <input style="font-weight: bold; font-size: 16px;" type="number" autocomplete="off"
+                            class="form-control" id="qty_r_misc_lot" readonly>
+                    </div>
+                    <div class="input-group basis-2/4">
+                        <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">User</div>
+                        <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
+                            class="form-control" id="user_r_misc_lot" readonly>
+                    </div>
+                </div>
+                <div class="hidden">
+                    <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">Line</div>
+                    <input style="font-weight: bold; font-size: 16px;" type="number" autocomplete="off"
+                        class="form-control" id="line_id_lot" readonly>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="SaveMiscIssueByLot"
+                    onclick="SaveMiscIssueByLot()">บันทึก</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bwip-js/4.5.1/bwip-js-min.js"
+    integrity="sha512-nyvUcUIS1L4Z+cowD7We9KKcq/ivAJhTlhZTjBfBFGYV1I+RAqSrHS/WEcWDp1CVKRw1j5SxYCPCSYOQxuIE1w=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script type="text/javascript">
     var username_session = GetUserProp("login_username");
-    
+
     getDocNumList();
+
+    var data_withdraw = [];
+
+    function generateBarcode(text) {
+        const canvas = document.createElement('canvas');
+        try {
+            bwipjs.toCanvas(canvas, {
+                bcid: 'code128',
+                text: text,
+                scale: 3,
+                height: 10,
+                includetext: true,
+                textxalign: 'center',
+                textfont: 'Arial',
+                textsize: 10
+
+
+            });
+            return canvas.toDataURL('image/png');
+        } catch (error) {
+            console.error('Error generating barcode:', error);
+            throw error;
+        }
+    }
 
     function getDocNumList() {
         $.ajax({
@@ -173,12 +358,28 @@
             url: "././module/APP_STORE_WITHDRAW/data.php",
             dataType: "json",
             data: {
-                load: "GetDocList"
+                load: "GetDocListByApprove"
             },
             success: function (data) {
-                let doc = [{ id: '', text: '' }].concat(data.map((item) => ({
+
+                // want uique doc_no but total qty_rcvd and qty_stockOut of each doc_no
+                var doc_no = data.map((item) => item.doc_no).filter((value, index, self) => self.indexOf(value) === index);
+                var uniqueDocNo = doc_no.map((doc) => ({
+                    doc_no: doc,
+                    qty_rcvd: data.filter((item) => item.doc_no === doc).reduce((total, item) => total + Number(item.qty_rcvd), 0),
+                    qty_stockOut: data.filter((item) => item.doc_no === doc).reduce((total, item) => total + Number(item.qty_stockOut), 0),
+                    userApprove: data.filter((item) => item.doc_no === doc)[0].userApprove,
+                    stockOUT: data.filter((item) => item.doc_no === doc).some((item) => item.qty_rcvd == null)
+                }));
+
+    
+
+                let doc = [{ id: '', text: '' }].concat(uniqueDocNo.map((item) => ({
                     id: item.doc_no,
-                    text: item.doc_no
+                    text: item.doc_no,
+                    userApprove: item.userApprove,
+                    stock: item.qty_rcvd == item.qty_stockOut ? true : false,
+                    stockOUT: item.stockOUT
                 })));
 
                 $("#doc_no_w_2").select2({
@@ -190,27 +391,123 @@
                         noResults: function () {
                             return "ไม่พบข้อมูล";
                         }
+                    },
+                    templateResult: function (state) {
+                        if (!state.id) return state.text;
+
+                        var $state = $('<div></div>');
+                        var docNo = state.id;
+                        var statusHtml = '';
+
+                        // สร้าง badge สำหรับ userApprove
+                        var approveStatus = '';
+                        if (state.userApprove == 1) {
+                            approveStatus = '<span style="background-color: #28a745; color: white; padding: 2px 6px; border-radius: 3px; font-size: 12px; margin-right: 4px;">รับของแล้ว</span>  ';
+                        } else {
+                            approveStatus = '<span style="background-color: #dc3545; color: white; padding: 2px 6px; border-radius: 3px; font-size: 12px; margin-right: 4px;">ยังไม่รับของ</span>  ';
+                        }
+
+                        // สร้าง badge สำหรับ stock
+                        var stockStatus = '';
+                        if (state.stock == true && state.stockOUT == false) {
+                            stockStatus = '<span style="background-color: #28a745; color: white; padding: 2px 6px; border-radius: 3px; font-size: 12px;">ตัดสต๊อกแล้ว</span>';
+                        } else {
+                            stockStatus = '<span style="background-color: #dc3545; color: white; padding: 2px 6px; border-radius: 3px; font-size: 12px;">ยังไม่ตัดสต๊อก</span>';
+                        }
+
+                        // รวมทั้งสอง status
+                        $state.html(docNo + ' - ' + approveStatus + stockStatus);
+
+                        return $state;
+                    },
+                    escapeMarkup: function (markup) {
+                        return markup; // สำคัญ! ต้องมีเพื่อให้ HTML render ได้
                     }
                 });
             }
         });
     }
 
+
+    $.ajax({
+        type: "GET",
+        url: "././module/APP_STORE_WITHDRAW/data.php",
+        dataType: "json",
+        data: { load: "GetReason" },
+        success: function (data) {
+            let city = [{ id: '', text: '' }].concat(data.map((item) => ({
+                id: item.reason_code,
+                text: item.reason_code + ' - ' + item.description
+            })));
+
+            $("#reason_r_misc").select2({
+                placeholder: 'กรุณาเลือก Location',
+                allowClear: true,
+                width: '100%',
+                data: city,
+                language: {
+                    noResults: function () {
+                        return "ไม่พบข้อมูล";
+                    }
+                }
+            }).on('select2:select', function (e) {
+                var code = e.target.value;
+                var newData = data.filter(item => item.reason_code == code);
+                $('#acct').val(newData[0].Acct);
+                $('#acct_unit1').val(newData[0].AcctUnit1);
+            });
+        }
+    });
+
     var tableReceive = $('#tbItemWithdrawR').DataTable({
         "columnDefs": [
             { "targets": '_all', "className": 'text-center' },
+            { "targets": 0, "width": "80" },
+            { "targets": 1, "width": "200" },
+            { "targets": 2, "width": "100" },
+            { "targets": 3, "width": "60" },
+            { "targets": 4, "width": "120" },
+            { "targets": 5, "width": "100" },
+            { "targets": 6, "width": "120" },
+            { "targets": 7, "width": "120" },
+            { "targets": 8, "width": "120" },
         ],
         columns: [
-            { "data": "0" },
-            { "data": "1" },
+            { "data": "item", },
+            { "data": "itemDesc" },
+            { "data": "qty_wd" },
+            { "data": "u_m" },
             {
-                "data": "2",
+                "data": "qty_rcvd",
                 render: function (data, type, row, meta) {
-                    return `<input type="text" class="form-control" value="${data ?? ''}" onchange="UpdateDataTable(this.value, ${meta.row})">`;
+                    // if row.stockOUT == 1, disable input
+                    return `<input type="number" class="form-control" value="${data ?? ''}" onchange="UpdateDataTable(this.value, '${row.doc_no}', '${row.item}', '${row.wc_dest}', '${meta.row}')" ${row.userApprove == 1 ? 'disabled' : ''}>`;
                 }
             },
-            { "data": "3" },
-            { "data": "4" },
+            {
+                "data": "wc_dest",
+                render: function (data, type, row, meta) {
+                    return (data) + ' ' + (row.wcDestDesc ?? '');
+                }
+            },
+            {
+                "data": "return",
+                render: function (data, type, row, meta) {
+                    return `<input type="number" class="form-control" value="${data ?? ''}" onchange="UpdateDataTableReturn(this.value, '${row.doc_no}', '${row.item}', '${row.wc_dest}')">`;
+                }
+            },
+            { "data": "remark" },
+            {
+                "data": "stockOUT",
+                render: function (data, type, row, meta) {
+                    if (data == null) {
+                        return '';
+                    } else if (row.qty_stockOUT !== row.qty_rcvd) {
+                        return `<span style='font-weight: bold; font-size: 16px; color: red'>ตัดสต๊อกไปแล้ว ${row.qty_stockOUT} / ${row.qty_rcvd} </span>`;
+                    } else
+                        return "<span style='font-weight: bold; font-size: 16px; color: green'>ตัดสต๊อกใน Syteline เรียบร้อยแล้ว</span>";
+                }
+            },
         ],
         paging: false,
         searching: false,
@@ -220,9 +517,194 @@
             "<'row'<'col-md-12'tr>>" +
             "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
         buttons: [
-           
+            {
+                text: `<button type="button" class="btn btn-danger">ตัดสต๊อก Item</button>`,
+                action: function (e, dt, node, config) {
+                    var selectedRows = dt.rows('.selected').data().toArray();
+                    if (selectedRows.length == 0) {
+                        swal("กรุณารายการที่ต้องการตัดสต๊อก!", "", "warning");
+                        return false;
+                    }
+
+                    if (selectedRows[0].userApprove == null) {
+                        swal("เอกสารนี้ยังไม่ได้อนุมัติรับของจากผู้เบิก!", "", "warning");
+                        return false;
+                    }
+
+                    if (selectedRows[0].qty_rcvd == null) {
+                        swal("รายการนี้ยังไม่ได้ใส่จํานวนที่เบิกได้!", "", "warning");
+                        return false;
+                    }
+
+                    if (selectedRows[0].stockOUT != null) {
+                        swal("รายการนี้ถูกตัดสต๊อกแล้ว!", "", "warning");
+                        return false;
+                    }
+
+                    $.ajax({
+                        type: "GET",
+                        url: "././module/APP_STORE_WITHDRAW/data.php",
+                        dataType: "json",
+                        data: { load: "GetLocItem", item: selectedRows[0].item },
+                        success: function (data) {
+                            let city = [{ id: '', text: '' }].concat(data.map((item) => ({
+                                id: item.loc,
+                                text: item.loc
+                            })));
+
+                            $("#loc_r_misc").empty();
+                            $("#loc_r_misc").select2({
+                                placeholder: 'กรุณาเลือก Location',
+                                allowClear: true,
+                                width: '100%',
+                                data: city,
+                                language: {
+                                    noResults: function () {
+                                        return "ไม่พบข้อมูล";
+                                    }
+                                }
+                            });
+                        }
+                    });
+
+                    $.ajax({
+                        type: "GET",
+                        url: "././module/APP_STORE_WITHDRAW/data.php",
+                        dataType: "json",
+                        data: { load: "GetLot", item: selectedRows[0].item },
+                        success: function (lot) {
+                            if (lot.length > 0) {
+                                swal("Item นี้มี Lot กรุณาตัดสต๊อก Lot", "", "warning");
+                                // end function
+                            } else {
+                                $.ajax({
+                                    type: "GET",
+                                    url: "././module/APP_STORE_WITHDRAW/data.php",
+                                    dataType: "json",
+                                    data: { load: "GetUM", item: selectedRows[0].item },
+                                    success: function (um) {
+                                        console.log(um);
+
+                                        $("#u_m_misc").val(um[0].u_m);
+                                    }
+                                });
+                                $("#item_r_misc").val(selectedRows[0].item);
+                                $("#qty_r_misc").val(selectedRows[0].qty_rcvd);
+                                $("#user_r_misc").val(username_session);
+                                $("#line_id_item").val(selectedRows[0].line_id);
+                                $("#ModalMiscIssue").modal("show");
+                            }
+                        }
+                    });
+                }
+            },
+            {
+                text: `<button type="button" class="btn btn-warning">ตัดสต๊อก Lot</button>`,
+                action: async function (e, dt, node, config) {
+                    var selectedRows = dt.rows('.selected').data().toArray();
+                    var rs
+                    if (selectedRows.length == 0) {
+                        swal("กรุณารายการที่ต้องการตัดสต๊อก!", "", "warning");
+                        return false;
+                    }
+
+                    if (selectedRows[0].userApprove == null) {
+                        swal("เอกสารนี้ยังไม่ได้อนุมัติรับของจากผู้เบิก!", "", "warning");
+                        return false;
+                    }
+
+                    if (selectedRows[0].qty_rcvd == null) {
+                        swal("รายการนี้ยังไม่ได้ใส่จํานวนที่เบิกได้!", "", "warning");
+                        return false;
+                    }
+
+                    if (selectedRows[0].stockOUT != null) {
+                        let stock = false;
+                        let response = await $.ajax({
+                            type: "GET",
+                            url: "././module/APP_STORE_WITHDRAW/data.php",
+                            dataType: "json",
+                            data: { load: "CheckStockComplete", doc_no: selectedRows[0].doc_no, item: selectedRows[0].item },
+                        });
+
+                        if (response.length == 0) {
+                            stock = true;
+                        }
+
+                        if (stock == true) {
+                            swal("รายการนี้ถูกตัดสต๊อกแล้ว!", "", "warning");
+                            return false;
+                        }
+                    }
+
+                    $.ajax({
+                        type: "GET",
+                        url: "././module/APP_STORE_WITHDRAW/data.php",
+                        dataType: "json",
+                        data: { load: "GetToLocLot", wc: selectedRows[0].wc_dest },
+                        success: function (loc) {
+                            $("#to_loc_r_misc").val(loc[0].loc);
+                           
+                        }
+                    })
+
+
+                    $.ajax({
+                        type: "GET",
+                        url: "././module/APP_STORE_WITHDRAW/data.php",
+                        dataType: "json",
+                        data: { load: "GetLot", item: selectedRows[0].item },
+                        success: function (data) {
+
+                            if (data.length == 0) {
+                                swal("Item นี้ไม่มี Lot กรุณาตัดสต๊อก Item", "", "warning");
+                                return;
+                            } else {
+                                $("#item_r_misc_lot").val(selectedRows[0].item);
+                                $("#user_r_misc_lot").val(username_session);
+                                $("#line_id_lot").val(selectedRows[0].line_id);
+                                $("#ModalMiscIssueByLot").modal("show");
+                            }
+
+                            let lotOptions = [{ id: '', text: '' }].concat(data.map((item) => ({
+                                id: item.lot,
+                                text: item.lot + '  (' + item.loc + ' : ' + Number(item.qty_on_hand).toFixed(2) + ')'
+                            })));
+
+                           
+                            $("#lot_r_misc").empty();
+                            $("#lot_r_misc").select2({
+                                placeholder: 'กรุณาเลือก Lot',
+                                allowClear: true,
+                                width: '100%',
+                                data: lotOptions,
+                                language: {
+                                    noResults: function () {
+                                        return "ไม่พบข้อมูล";
+                                    }
+                                }
+                            }).on('select2:select', function (e) {
+                                var lot = e.target.value;
+                                var dataLot = data.filter((item) => item.lot == lot);
+                                $("#from_loc_r_misc").val(dataLot[0].loc);
+                                $("#qty_r_misc_lot").val(dataLot[0].qty_on_hand);
+                                
+                            });;
+
+                        }
+                    });
+
+                }
+            },
+            {
+                text: `<button type="button" class="btn btn-info">พิมพ์ใบเบิก</button>`,
+                action: function (e, dt, node, config) {
+                    makePDF();
+                }
+            }
         ],
     });
+
 
     $("#btnResetReceive").click(function () {
         tableReceive.clear().draw();
@@ -234,7 +716,7 @@
         // reset btn disabled and text
 
 
-        $("#stock").text("ลงชื่อตัดสต็อก");
+        $("#stock").text("ลงชื่อตัดสต๊อก");
         $("#stock").attr("disabled", false);
     })
 
@@ -242,7 +724,7 @@
         var doc_no = $("#doc_no_w_2").val();
 
         if (doc_no == '') {
-            alert("กรุณาระบุ Doc No");
+            swal("กรุณาเลือกเลขที่ใบเบิกที่ต้องการค้นหา!", "", "warning");
             return false;
         }
 
@@ -257,27 +739,27 @@
             success: function (data) {
 
                 tableReceive.clear();
-                data.forEach(item => {
-                    tableReceive.row.add([item.item, item.qty_wd, item.qty_rcvd, item.wc_dest, item.remark]).draw();
-                })
+                tableReceive.rows.add(data).draw();
                 $("#dept_w_2").val(data[0].dept);
                 $("#wc_w_2").val(data[0].wc);
-                $("#user_w_2").val(data[0].user);
+                $("#user_w_2").val(data[0].user_hdr);
                 $("#remark_withdraw_2").val(data[0].remark_h);
 
 
                 if (data[0].stock !== null) {
-                    $("#stock").text("ตัดสต็อกแล้ว");
+                    $("#stock").text("ตัดสต๊อกแล้ว");
                     $("#stock").attr("disabled", true);
                 } else {
-                    $("#stock").text("ลงชื่อตัดสต็อก");
+                    $("#stock").text("ลงชื่อตัดสต๊อก");
                     $("#stock").attr("disabled", false);
                 }
+
+                data_withdraw = data;
 
 
             },
             error: function (xhr, status, error) {
-                alert('Error');
+                swal("เกิดข้อผิดพลาด กรุณาลองใหม่", "", "warning");
             }
         });
     });
@@ -294,16 +776,17 @@
         var remark = [];
 
         if ($("#doc_no_w_2").val() == '' || dept == '') {
-            alert("กรุณาเลือก Doc No");
+            swal("กรุณาเลือกเลขที่ใบเบิกก่อน", "", "warning");
             return false;
         }
 
+
         tableReceive.rows().data().each(function (data, index) {
-            item.push(data[0]);
-            qty.push(data[1]);
-            qty_rcvd.push(data[2]);
-            wc_dest.push(data[3]);
-            remark.push(data[4]);
+            item.push(data.item);
+            qty.push(data.qty_wd);
+            qty_rcvd.push(data.qty_rcvd);
+            wc_dest.push(data.wc_dest);
+            remark.push(data.remark);
         });
 
         $.ajax({
@@ -324,7 +807,7 @@
                 remark: JSON.stringify(remark)
             },
             success: function (data) {
-                alert("บันทึกข้อมูลสําเร็จ");
+                swal("อัปเดตข้อมูลสําเร็จ!", "", "success");
             },
             error: function (xhr, status, error) {
                 alert('Error');
@@ -333,9 +816,48 @@
     });
 
 
-    function UpdateDataTable(val, row) {
-        // update datatable val by row
-        tableReceive.cell(row, 2).data(val);
+    function UpdateDataTable(val, doc_no, item, wc_dest, row) {
+
+        $.ajax({
+            type: "POST",
+            url: "././module/APP_STORE_WITHDRAW/data.php",
+            dataType: "json",
+            data: {
+                load: "UpdateQty_rcvd",
+                doc_no: doc_no,
+                item: item,
+                wc_dest: wc_dest,
+                val: val
+            },
+            success: function (data) {
+                tableReceive.cell(row, 4).data(val).draw();
+            },
+            error: function (xhr, status, error) {
+                alert('Error');
+            }
+        });
+    }
+
+    function UpdateDataTableReturn(val, doc_no, item, wc_dest) {
+        $.ajax({
+            type: "POST",
+            url: "././module/APP_STORE_WITHDRAW/data.php",
+            dataType: "json",
+            data: {
+                load: "UpdateQty_return",
+                doc_no: doc_no,
+                item: item,
+                wc_dest: wc_dest,
+                val: val
+            },
+            success: function (data) {
+                console.log('success');
+
+            },
+            error: function (xhr, status, error) {
+                alert('Error');
+            }
+        });
     }
 
     function approve_stock() {
@@ -346,9 +868,9 @@
         }
 
         $.confirm({
-            title: 'ตัดสต็อกโดย',
+            title: 'ตัดสต๊อกโดย',
             theme: 'modern',
-            content: '<input placeholder="ตัดสต็อก" type="text" id="i_stock" class="form-control my-2" value="' + username_session + '" autofocus>',
+            content: '<input placeholder="ตัดสต๊อก" type="text" id="i_stock" class="form-control my-2" value="' + username_session + '" autofocus>',
             buttons: {
                 confirm: function () {
                     var stock = $("#i_stock").val();
@@ -363,16 +885,16 @@
                             stock: stock
                         },
                         success: function (data) {
-                            alert("ตัดสต็อกสําเร็จ");
+                            alert("ตัดสต๊อกสําเร็จ");
                             // edit text btn approve_stock
-                            $("#stock").text("ตัดสต็อกแล้ว");
+                            $("#stock").text("ตัดสต๊อกแล้ว");
                             $("#stock").attr("disabled", true);
                         },
                         error: function (xhr, status, error) {
                             alert('Error');
                         }
                     });
-                    
+
                 },
                 cancel: function () {
                     window.close();
@@ -382,5 +904,334 @@
         });
 
     }
+
+    function SaveMiscIssue() {
+
+        const btn = $("#SaveMiscIssue");
+        btn.prop('disabled', true);
+
+        var doc_no = $("#doc_no_w_2").val();
+        var item = $("#item_r_misc").val();
+        var qty = $("#qty_r_misc").val();
+        var loc = $("#loc_r_misc").val();
+        var user = $("#user_r_misc").val();
+        var reason = $("#reason_r_misc").val();
+        var line_id = $("#line_id_item").val();
+        var acct = $("#acct").val();
+        var acct_unit1 = $("#acct_unit1").val();
+        var um = $("#u_m_misc").val();
+
+        if (doc_no == '' || item == '' || qty == '' || loc == '' || user == '' || reason == '' || line_id == '' || acct == '' || acct_unit1 == '' || um == '') {
+            swal("กรุณากรอกข้อมูลให้ครบ", "", "warning");
+            btn.prop('disabled', false);
+            return false;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "././module/APP_STORE_WITHDRAW/data.php",
+            dataType: "json",
+            data: {
+                load: "SaveMiscIssue",
+                doc_no: doc_no,
+                item: item,
+                qty: qty,
+                loc: loc,
+                user: user,
+                reason: reason,
+                line_id: line_id,
+                acct: acct,
+                acct_unit1: acct_unit1,
+                um: um
+            },
+            success: function (data) {
+                tableReceive.clear();
+                tableReceive.rows.add(data).draw();
+                $("#ModalMiscIssue").modal("hide");
+                var item = $("#item_r_misc").val('');
+                var qty = $("#qty_r_misc").val('');
+                var loc = $("#loc_r_misc").val('').trigger('change');
+                var reason = $("#reason_r_misc").val('').trigger('change');
+                var line_id = $("#line_id_item").val('');
+                swal("ตัดสต๊อกสําเร็จ", "", "success");
+                btn.prop('disabled', false);
+            },
+            error: function (xhr, status, error) {
+                btn.prop('disabled', false);
+                alert('Error');
+            }
+        });
+    }
+
+    function SaveMiscIssueByLot() {
+
+        const btn = $("#SaveMiscIssueByLot");
+        btn.attr("disabled", true);
+
+        var doc_no = $("#doc_no_w_2").val();
+        var item = $("#item_r_misc_lot").val();
+        var lot = $("#lot_r_misc").val();
+        var qty = $("#qty_r_misc_lot").val();
+        var fromLoc = $("#from_loc_r_misc").val();
+        var toLoc = $("#to_loc_r_misc").val();
+        var user = $("#user_r_misc_lot").val();
+        var line_id = $("#line_id_lot").val();
+
+        if (doc_no == '' || item == '' || lot == '' || qty == '' || fromLoc == '' || toLoc == '' || user == '' || line_id == '') {
+            swal("กรุณากรอกข้อมูลให้ครบ", "", "warning");
+            btn.attr("disabled", false);
+            return false;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "././module/APP_STORE_WITHDRAW/data.php",
+            dataType: "json",
+            data: {
+                load: "SaveMiscIssueByLot",
+                doc_no: doc_no,
+                item: item,
+                lot: lot,
+                qty: qty,
+                fromLoc: fromLoc,
+                toLoc: toLoc,
+                user: user,
+                line_id: line_id
+            },
+            success: function (data) {
+                tableReceive.clear();
+                tableReceive.rows.add(data).draw();
+                $("#ModalMiscIssueByLot").modal("hide");
+                var item = $("#item_r_misc_lot").val('');
+                var lot = $("#lot_r_misc").val('');
+                var qty = $("#qty_r_misc_lot").val('');
+                var fromLoc = $("#from_loc_r_misc").val('').trigger('change');
+                // var toLoc = $("#to_loc_r_misc").val('').trigger('change');
+                var line_id = $("#line_id_lot").val('');
+                swal("ตัดสต๊อก Lot สําเร็จ!", "", "success");
+                btn.attr("disabled", false);
+            },
+            error: function (xhr, status, error) {
+                btn.attr("disabled", false);
+                alert('Error');
+            }
+        });
+    }
+
+    function makePDF(newData) {
+
+        pdfMake.fonts = {
+            THSarabunNew: {
+                normal: 'THSarabunNew.ttf',
+                bold: 'THSarabunNew Bold.ttf',
+                italics: 'THSarabunNew-Italic.ttf',
+                bolditalics: 'THSarabunNew-BoldItalic.ttf'
+            },
+            FontAwesome: {
+                normal: 'fontawesome-webfont.ttf',
+            }
+        };
+
+        const logo = () => {
+            let img = 'data:image/jpeg;base64,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'
+            return img;
+        }
+        // how to cal 10% from totalTax
+
+        const data = [];
+        console.log(data_withdraw);
+
+
+        data.push([
+            { text: 'รายการ', fontSize: 18, bold: true, alignment: 'center' },
+            { text: 'รายละเอียด', fontSize: 18, bold: true, alignment: 'center' },
+            { text: 'ขอเบิก', fontSize: 18, bold: true, alignment: 'center' },
+            { text: 'เบิกได้', fontSize: 18, bold: true, alignment: 'center' },
+            { text: 'นำไปใช้', fontSize: 18, bold: true, alignment: 'center' },
+        ])
+
+        for (let i = 0; i < data_withdraw.length; i++) {
+            data.push([
+                { text: data_withdraw[i].item, fontSize: 13, alignment: 'center' },
+                { text: data_withdraw[i].itemDesc ? data_withdraw[i].itemDesc : '', fontSize: 13, alignment: 'center' },
+                { text: data_withdraw[i].qty_wd ? data_withdraw[i].qty_wd : '', fontSize: 13, alignment: 'center' },
+                { text: '', fontSize: 13, alignment: 'center' },
+                { text: `${data_withdraw[i].wc_dest}  ${data_withdraw[i].wcDestDesc ? data_withdraw[i].wcDestDesc : ''}`, fontSize: 13, alignment: 'center' },
+            ])
+        }
+
+        var docDefinition = {
+            pageSize: 'A4',
+
+            pageMargins: [10, 140, 50, 150],
+            header: function (currentPage, pageCount, pageSize) {
+                return {
+                    margin: [20, 20, 20, 10],
+                    stack: [
+                        {
+                            columns: [
+                                { text: "ใบเบิกของ", fontSize: 30, bold: true, alignment: 'center', margin: [0, 0, 0, 0] },
+                            ],
+                            margin: [0, 5, 0, 0]
+                        },
+                        {
+                            columns: [
+                                { text: `วันที่ : ${new Date().toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' })}`, fontSize: 18, bold: true, alignment: 'left', margin: [0, 2, 0, 0] },
+                                { image: generateBarcode(data_withdraw[0].doc_no), width: 130, height: 30, alignment: 'center' },
+                            ]
+                        },
+                        {
+                            columns: [
+                                { text: `แผนก : ${data_withdraw[0].dept}`, fontSize: 18, bold: true, alignment: 'left', margin: [0, 2, 0, 0] },
+                                { text: `เลขที่เอกสาร : ${data_withdraw[0].doc_no}`, fontSize: 18, bold: true, alignment: 'right', margin: [0, 2, 0, 0] },
+                            ]
+                        }
+                    ]
+                };
+            },
+            footer: function (currentPage, pageCount) {
+                return {
+                    margin: [10, 0, 0, 0],
+                    table: {
+                        widths: [150, 200, 200, 200],
+                        body: [
+                            [
+                                {
+                                    border: [false, false, false, false],
+                                    fontSize: 18,
+                                    bold: true,
+                                    colSpan: 2,
+                                    text: "ผู้จ่าย..................................................",
+                                    alignment: "left",
+
+                                },
+                                {
+                                    border: [false, false, false, false],
+                                    fontSize: 18,
+                                    bold: true,
+                                    text: ``,
+                                    alignment: "center",
+                                },
+                                {
+                                    border: [false, false, false, false],
+                                    fontSize: 18,
+                                    bold: true,
+                                    text: `ผู้เบิก..............${data_withdraw[0].user_hdr}................`,
+                                    alignment: "center",
+                                }
+                            ],
+                            [
+                                {
+                                    border: [false, false, false, false],
+                                    fontSize: 18,
+                                    bold: true,
+                                    colSpan: 2,
+                                    text: "ตัดสต๊อก..................................................",
+                                    alignment: "left",
+
+                                },
+                                {
+                                    border: [false, false, false, false],
+                                    fontSize: 18,
+                                    bold: true,
+                                    text: ``,
+                                    alignment: "center",
+                                },
+                                {
+                                    border: [false, false, false, false],
+                                    fontSize: 18,
+                                    bold: true,
+                                    text: `อนุมัติโดย.............${data_withdraw[0].approver2 ?? '..........'}.............`,
+                                    alignment: "center",
+                                }
+                            ],
+                            [
+                                {
+                                    border: [false, false, false, false],
+                                    fontSize: 18,
+                                    bold: true,
+                                    text: "FOMPC-07 / 07-APR-01",
+                                    alignment: "center",
+
+
+                                },
+                                {
+                                    border: [false, false, false, false],
+                                    fontSize: 14,
+                                    text: ``,
+                                    alignment: "center",
+                                },
+                                {
+                                    border: [false, false, false, false],
+                                    fontSize: 14,
+                                    text: ``,
+                                    alignment: "center",
+                                }
+                            ]
+                        ]
+                    }
+                };
+
+            },
+            content: [
+                {
+                    margin: [0, 0, 0, 0],
+                    columns: [
+                        {
+
+                            table: {
+                                widths: [50, 180, 60, 60, 180],
+                                headerRows: 1,
+                                body: data,
+                            },
+                        },
+                    ],
+                }
+            ],
+            defaultStyle: {
+                font: 'THSarabunNew',
+            },
+        };
+
+        pdfMake.createPdf(docDefinition).open()
+
+    }
+
+
+    /* $("#lot_r_misc").on('select2:select', function (e) {
+                                    var lot = e.target.value;
+                                     $.ajax({
+                                    type: "GET",
+                                    url: "././module/APP_STORE_WITHDRAW/data.php",
+                                    dataType: "json",
+                                    data: { load: "GetFromLoc", item: selectedRows[0].item, lot: lot },
+                                    success: function (fromLoc) {
+                                        var fromLocOptions = [{ id: '', text: '' }].concat(fromLoc.map((item) => ({
+                                            id: item.loc,
+                                            text: item.loc
+                                        })))
+                                        $("#from_loc_r_misc").empty();
+                                        $("#from_loc_r_misc").select2({
+                                            placeholder: 'กรุณาเลือก From Loc',
+                                            allowClear: true,
+                                            width: '100%',
+                                            data: fromLocOptions,
+                                            language: {
+                                                noResults: function () {
+                                                    return "ไม่พบข้อมูล";
+                                                }
+                                            }
+                                        }).on('change', function (e) {
+                                            var lot = $("#lot_r_misc").val();
+                                            var val = e.target.value;
+                                            var qty_on_hand = data.filter((item) => item.loc == val && item.lot == lot);
+                                            if (qty_on_hand.length > 0) {
+                                                $("#qty_r_misc_lot").val(qty_on_hand[0].qty_on_hand);
+                                            } else {
+                                                $("#qty_r_misc_lot").val('');
+                                            }
+                                        });
+                                    }
+                                }); */
 
 </script>

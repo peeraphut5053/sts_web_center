@@ -133,7 +133,7 @@
 
 
 <script type="text/javascript">
-
+    var username_session = GetUserProp("login_username");
 
 
     $(".panel-heading").click(function () {
@@ -165,7 +165,6 @@
         });
     });
 
-
     $(".tabs").on("click", "a", function (e) {
         e.preventDefault();
         $('.tabs a').removeClass("active");
@@ -186,6 +185,13 @@
 
         Url = "././module/APP_STORE_WITHDRAW/render.php"
         pageHtml = "content_" + tab_name;
+        
+        /// receive can only admin , Nattawut , Thanatcha
+        if (tab_name == "receive" && !(username_session === "admin" || username_session === "Nattawut" || username_session === "Thanatcha" || username_session === "Rattanapat" || username_session === "Wachirarak")) {
+           swal("คุณไม่มีสิทธิ์เข้าถึงหน้านี้", "", "warning");
+           return false;
+        }
+        
         $("#content_" + tab_name).load(Url, {"pageHtml": pageHtml}, function (response, status, xhr) {
             if (status == "error") {
                 var msg = "Sorry, error: ";
