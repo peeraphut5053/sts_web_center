@@ -449,20 +449,24 @@
                 if (!userApproveOne.map(x => x.trim().toLowerCase()).includes(username_session_trim) && !userApproveTwo.map(x => x.trim().toLowerCase()).includes(username_session_trim)) {
                  var newData = data.filter(x => x.user.trim().toLowerCase() == username_session_trim);
                  doc = [{ id: '', text: '' }].concat(newData.map((item) => ({
-                     id: item.doc_no,
-                     text: item.doc_no
-                 })))
+                        id: item.doc_no,
+                        text: item.doc_no,
+                        userApprove: item.userApprove,
+                        approver1: item.approver1,
+                        approver2: item.approver2
+                 })));
              
                 } else {
                     doc = [{ id: '', text: '' }].concat(data.map((item) => ({
                         id: item.doc_no,
-                        text: item.doc_no
-                    })))
+                        text: item.doc_no,
+                        userApprove: item.userApprove,
+                        approver1: item.approver1,
+                        approver2: item.approver2
+                    })));
                 }
-              
-                // clear select2
-                $("#doc_no_w").empty();
 
+          
                 $("#doc_no_w").select2({
                     placeholder: 'Doc No',
                     allowClear: true,
@@ -472,8 +476,48 @@
                         noResults: function () {
                             return "ไม่พบข้อมูล";
                         }
+                    },
+                    templateResult: function (state) {
+                        if (!state.id) return state.text;
+
+                        var $state = $('<div></div>');
+                        var docNo = `<span style="font-weight: bold; font-size: 15px;">${state.id}</span>`;
+                        var statusHtml = '';
+
+                        // สร้าง badge สำหรับ userApprove
+                        var approveStatus = '';
+                        if (state.userApprove == 1) {
+                            approveStatus = '<span style="background-color: #28a745; color: white; padding: 2px 6px; border-radius: 3px; font-size: 12px; margin-right: 4px;">รับของแล้ว</span>';
+                        } else {
+                            approveStatus = '<span style="background-color: #dc3545; color: white; padding: 2px 6px; border-radius: 3px; font-size: 12px; margin-right: 4px;">ยังไม่รับของ</span>';
+                        }
+
+                        // สร้าง badge สำหรับ stock
+                        var approver1 = '';
+                        if (state.approver1 !== null && state.approver1 !== '') {
+                            approver1 = '<span style="background-color: #28a745; color: white; padding: 2px 6px; border-radius: 3px; font-size: 12px;">อนุมัติ 1</span> ';
+                        } else {
+                            approver1 = '<span style="background-color: #dc3545; color: white; padding: 2px 6px; border-radius: 3px; font-size: 12px;">อนุมัติ 1</span> ';
+                        }
+
+                        var approver2 = '';
+                        if (state.approver2 !== null && state.approver2 !== '') {
+                            approver2 = '<span style="background-color: #28a745; color: white; padding: 2px 6px; border-radius: 3px; font-size: 12px;">อนุมัติ 2</span> ';
+                        } else {
+                            approver2 = '<span style="background-color: #dc3545; color: white; padding: 2px 6px; border-radius: 3px; font-size: 12px;">อนุมัติ 2</span> ';
+                        }
+
+                        // รวมทั้งสอง status
+                        $state.html(docNo + ' - ' + approver1 + approver2 + approveStatus);
+
+                        return $state;
+                    },
+                    escapeMarkup: function (markup) {
+                        return markup; // สำคัญ! ต้องมีเพื่อให้ HTML render ได้
                     }
                 });
+              
+
             }
         });
     }

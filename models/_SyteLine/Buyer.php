@@ -200,7 +200,7 @@ from location_mst";
     }
 
     function GetDocList(){
-        $query = "SELECT doc_no, [user] FROM STS_store_withdraw_hdr WHERE doc_no like 'W%' ORDER BY doc_no DESC";
+        $query = "SELECT * FROM STS_store_withdraw_hdr WHERE doc_no like 'W%' ORDER BY doc_no DESC";
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
