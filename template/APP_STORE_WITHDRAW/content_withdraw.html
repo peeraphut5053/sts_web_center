@@ -15,6 +15,10 @@
         box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
         padding: 6rem;
         margin-top: 2.5rem;
+        @media (max-width: 768px) {
+            padding: 1rem;
+            flex-direction: column;;
+        }
     }
 
     .mybox {
@@ -24,7 +28,20 @@
         flex-grow: 1;
         gap: 1.5rem;
         margin-bottom: 1.25rem;
+        @media (max-width: 768px) {
+            padding: 1rem;
+            flex-direction: column;
+        }
     }
+
+    .item {
+        width: 50%;
+        @media (max-width: 768px) {
+            width: 100%;
+        }
+    }
+
+  
 
     .mybox2 {
         display: flex;
@@ -32,7 +49,13 @@
         align-items: center;
         flex-grow: 1;
         margin-bottom: 1.25rem;
+        @media (max-width: 768px) {
+            padding: 1rem;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
     }
+
 </style>
 <div class="">
     <div class="col-xs-12">
@@ -44,7 +67,7 @@
 <div class="mycontainer mb-12">
     <div class="row col-xs-12">
         <div class="mybox">
-            <div class="input-group basis-3/6">
+            <div class="sm:basis-3/6 w-full">
                 <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">Doc No</div>
                 <select style="font-weight: bold; font-size: 16px;" class="form-control txt-filter" id="doc_no_w">
                     <option value=""></option>
@@ -55,8 +78,6 @@
                     <button type="button" class="btn btn-primary btn-lg" id="btnSearchBooking">Search</button>
                     <button type="button" class="btn btn-warning btn-lg" id="btnResetWithdraw">Reset Form</button>
                 </div>
-            </div>
-            <div class="input-group basis-2/6">
             </div>
         </div>
         <hr />
@@ -76,7 +97,7 @@
             </div>
         </div>
         <div class="mybox">
-            <div class="input-group basis-3/6">
+            <div class="input-group item">
                 <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">แผนก *</div>
                 <select style="font-weight: bold; font-size: 16px;" class="form-control txt-filter" id="dept_w">
                     <option value=""></option>
@@ -150,7 +171,7 @@
     </div>
 </div>
 <div class="row">
-    <table class="table table-condensed table-bordered table-striped" id="tbItemWithdraw">
+    <table width="100%" class="table table-condensed table-bordered table-striped" id="tbItemWithdraw">
         <thead>
             <tr>
                 <th class="bg-gray">Item</th>
@@ -303,7 +324,7 @@
         "yajai",
         "Theerawut",
         "Amorn",
-        "Nittaya"
+        "Nittaya",
     ];
 
     var userApproveTwo = [
@@ -487,9 +508,9 @@
                         // สร้าง badge สำหรับ userApprove
                         var approveStatus = '';
                         if (state.userApprove == 1) {
-                            approveStatus = '<span style="background-color: #28a745; color: white; padding: 2px 6px; border-radius: 3px; font-size: 12px; margin-right: 4px;">รับของแล้ว</span>';
+                            approveStatus = '<span style="background-color: #28a745; color: white; padding: 2px 6px; border-radius: 3px; font-size: 12px; margin-right: 4px;">รับของ</span>';
                         } else {
-                            approveStatus = '<span style="background-color: #dc3545; color: white; padding: 2px 6px; border-radius: 3px; font-size: 12px; margin-right: 4px;">ยังไม่รับของ</span>';
+                            approveStatus = '<span style="background-color: #dc3545; color: white; padding: 2px 6px; border-radius: 3px; font-size: 12px; margin-right: 4px;">รับของ</span>';
                         }
 
                         // สร้าง badge สำหรับ stock
@@ -631,6 +652,9 @@
         paging: false,
         searching: false,
         select: true,
+  
+        scrollX: true,
+        scrollCollapse: true,
         dom:
             "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
             "<'row'<'col-md-12'tr>>" +
