@@ -261,8 +261,7 @@ from reason_mst where reason_class = 'MISC ISSUE'";
         try {
             $year = date('y');
             $month = date('m');
-            $day = date('d');
-            $prefix = "W{$year}{$month}{$day}";
+            $prefix = "W{$year}{$month}";
 
             // วิธีที่ 1: ใช้ Table Lock (แนะนำ)
             $lockSql = "SELECT TOP 1 1 FROM STS_store_withdraw_hdr WITH (TABLOCKX)";
@@ -290,7 +289,7 @@ from reason_mst where reason_class = 'MISC ISSUE'";
                 $newNumber = 1;
             }
 
-            $docNumber = sprintf("W%s%s%s%03d", $year, $month, $day, $newNumber);
+            $docNumber = sprintf("W%s%02d%03d", $year, $month, $newNumber);
 
             // ใส่ Unique Constraint ที่ table
             // ALTER TABLE STS_store_withdraw_hdr ADD CONSTRAINT UQ_doc_no UNIQUE (doc_no)
