@@ -185,6 +185,7 @@
                 <th class="bg-gray">Cust</th>
                 <th class="bg-gray">Size</th>
                 <th class="bg-gray">Spec</th>
+                <th class="bg-gray">Grade</th>
                 <th class="bg-gray">Sch.</th>
                 <th class="bg-gray">Length</th>
                 <th class="bg-gray">Type</th>
@@ -366,7 +367,9 @@ var result;
             { "data": "sts_po" },
             { "data": "cust_po" },
             { "data": "size" },
+      
             { "data": "spec" },
+                  { "data": "grade" },
             { "data": "schedule" },
             { "data": "length" },
             { "data": "type" },
@@ -850,7 +853,7 @@ var result;
                 }
 
                 // reset column visible
-                for (let i = 16; i <= 30; i++) {
+                for (let i = 17; i <= 30; i++) {
                     table.column(i).visible(false);
                 }
 
@@ -886,10 +889,10 @@ var result;
                                 max_cont_no = item.cont_no;
                             }
                         });
-                        let con_no = 16;
+                        let con_no = 17;
                         // loop check every row at field name 1 - 30 if not null + 1
                         // visible column over con_no
-                        for (let i = 16; i <= max_cont_no + 16; i++) {
+                        for (let i = 17; i <= max_cont_no + 17; i++) {
                             table.column(i).visible(true);
                         }
 
@@ -902,10 +905,10 @@ var result;
 
                         if (data.length > 0) {
                             for (let i = 1; i <= 30; i++) {
-                                table.column(i + 15).header().innerHTML = '<span>' + i + '</span>';
+                                table.column(i + 16).header().innerHTML = '<span>' + i + '</span>';
                             }
                             data.forEach(function (item) {
-                            var columnIndex = item.cont_no + 15; // เพิ่ม 15 เพื่อให้ 1 กลายเป็น 16
+                            var columnIndex = item.cont_no + 16; // เพิ่ม 15 เพื่อให้ 1 กลายเป็น 16
                             table.column(columnIndex).header().innerHTML =
                                 '<span>' + item.cont_no + '</span><br>' +
                                 '<span style="color: ' + (item.total_weight > maxWeight ? 'red' : 'black') + ';">' + addCommas(item.total_weight) + '</span><br>' +
@@ -915,7 +918,7 @@ var result;
                         }  else {
                             // reset name 1-30
                             for (let i = 1; i <= 30; i++) {
-                                table.column(i + 15).header().innerHTML = '<span>' + i + '</span>';
+                                table.column(i + 16).header().innerHTML = '<span>' + i + '</span>';
                             }
                         }
                     }
@@ -1028,7 +1031,7 @@ var result;
                 success: function (data) {
 
                     data.forEach(function (item) {
-                            var columnIndex = item.cont_no + 15; // เพิ่ม 15 เพื่อให้ 1 กลายเป็น 16
+                            var columnIndex = item.cont_no + 16; // เพิ่ม 15 เพื่อให้ 1 กลายเป็น 16
                             table.column(columnIndex).header().innerHTML =
                                 '<span>' + item.cont_no + '</span><br>' +
                                 '<span style="color: ' + (item.total_weight > maxWeight ? 'red' : 'black') + ';">' + addCommas(item.total_weight) + '</span><br>' +
