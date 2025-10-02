@@ -1084,10 +1084,20 @@
 
     $('#btnUpdateW').click(function () {
         // add data to table #tbItemWithdraw
-        var doc_no = $("#doc_no_w").val();
+        var doc_no = $("#doc_no_w_old").val();
         var dept = $("#dept_w").val();
         var remark = $("#remark_withdraw").val();
 
+        if (doc_no == '') {
+            swal("กรุณาระบุเลขที่ใบเบิก", "", "warning");
+            return false;
+        }
+
+        if (dept == '') {
+            swal("กรุณาระบุแผนก", "", "warning");
+            return false;
+        }
+        
         $.ajax({
             type: "POST",
             url: "././module/APP_STORE_WITHDRAW/data.php",
