@@ -255,65 +255,76 @@ from reason_mst where reason_class = 'MISC ISSUE'";
     function CreateWithdraw($dept, $user, $remark_h, $arr_item, $arr_qty, $arr_wc_dest, $arr_remark)
     {
         if (sqlsrv_begin_transaction($this->StrConn) === false) {
-        die("Transaction failed: " . print_r(sqlsrv_errors(), true));
-    }
-    
-    try {
-        $year = date('y');
-        $month = date('m');
-        
-        // Lock และ query เลขล่าสุด
-        $sql = "SELECT TOP 1 doc_no 
-                FROM STS_store_withdraw_hdr WITH (UPDLOCK, HOLDLOCK)
-                WHERE doc_no LIKE 'W{$year}{$month}%' 
-                ORDER BY doc_no DESC";
-        
-        $cSql = new SqlSrv();
-        $result = $cSql->SqlQuery($this->StrConn, $sql);
-        array_splice($result, count($result) - 1, 1);
-
-        if (count($result) > 0) {
-            $lastDoc = $result[0]['doc_no'];
-            $lastNumber = intval(substr($lastDoc, -3));
-            $newNumber = $lastNumber + 1;
-        } else {
-            $newNumber = 1;
+            die("Transaction failed: " . print_r(sqlsrv_errors(), true));
         }
-        
-        $docNumber = sprintf("W%s%02d%03d", $year, $month, $newNumber);
-        
-        // Escape ข้อมูล
-        $dept = str_replace("'", "''", $dept);
-        $remark_h = str_replace("'", "''", $remark_h);
-        $user = str_replace("'", "''", $user);
-        
-        // Insert header
-        $query = "INSERT INTO STS_store_withdraw_hdr (doc_no, dept, remark, [user]) 
+
+        try {
+            $year = date('y');
+            $month = date('m');
+            $day = date('d');
+            $prefix = "W{$year}{$month}{$day}";
+
+            // วิธีที่ 1: ใช้ Table Lock (แนะนำ)
+            $lockSql = "SELECT TOP 1 1 FROM STS_store_withdraw_hdr WITH (TABLOCKX)";
+            $cSql = new SqlSrv();
+            $cSql->SqlQuery($this->StrConn, $lockSql);
+
+            // หรือวิธีที่ 2: Lock ด้วย Application Lock
+            // $lockSql = "EXEC sp_getapplock @Resource='withdraw_doc_no', @LockMode='Exclusive', @LockTimeout=5000";
+            // $cSql->SqlQuery($this->StrConn, $lockSql);
+
+            // Query เลขล่าสุดหลัง lock แล้ว
+            $sql = "SELECT TOP 1 doc_no 
+                FROM STS_store_withdraw_hdr 
+                WHERE doc_no LIKE '{$prefix}%' 
+                ORDER BY doc_no DESC";
+
+            $result = $cSql->SqlQuery($this->StrConn, $sql);
+            array_splice($result, count($result) - 1, 1);
+
+            if (count($result) > 0) {
+                $lastDoc = $result[0]['doc_no'];
+                $lastNumber = intval(substr($lastDoc, -3));
+                $newNumber = $lastNumber + 1;
+            } else {
+                $newNumber = 1;
+            }
+
+            $docNumber = sprintf("W%s%s%s%03d", $year, $month, $day, $newNumber);
+
+            // ใส่ Unique Constraint ที่ table
+            // ALTER TABLE STS_store_withdraw_hdr ADD CONSTRAINT UQ_doc_no UNIQUE (doc_no)
+
+            // Escape ข้อมูล
+            $dept = str_replace("'", "''", $dept);
+            $remark_h = str_replace("'", "''", $remark_h);
+            $user = str_replace("'", "''", $user);
+
+            // Insert header
+            $query = "INSERT INTO STS_store_withdraw_hdr (doc_no, dept, remark, [user]) 
                   VALUES ('$docNumber', '$dept', '$remark_h', '$user')";
-        $cSql->SqlQuery($this->StrConn, $query);
-        
-        // Insert lines
-        foreach ($arr_item as $key => $item) {
-            $seq = $key + 1;
-            $item_escaped = str_replace("'", "''", $arr_item[$key]);
-            $qty = floatval($arr_qty[$key]);
-            $wc_dest = str_replace("'", "''", $arr_wc_dest[$key]);
-            $remark_l = str_replace("'", "''", $arr_remark[$key]);
-            
-            $query2 = "INSERT INTO STS_store_withdraw_line 
+            $cSql->SqlQuery($this->StrConn, $query);
+
+            // Insert lines
+            foreach ($arr_item as $key => $item) {
+                $seq = $key + 1;
+                $item_escaped = str_replace("'", "''", $arr_item[$key]);
+                $qty = floatval($arr_qty[$key]);
+                $wc_dest = str_replace("'", "''", $arr_wc_dest[$key]);
+                $remark_l = str_replace("'", "''", $arr_remark[$key]);
+
+                $query2 = "INSERT INTO STS_store_withdraw_line 
                        (doc_no, line_id, item, qty_wd, wc_dest, remark) 
                        VALUES ('$docNumber', $seq, '$item_escaped', $qty, '$wc_dest', '$remark_l')";
-            $cSql->SqlQuery($this->StrConn, $query2);
+                $cSql->SqlQuery($this->StrConn, $query2);
+            }
+
+            sqlsrv_commit($this->StrConn);
+            return $docNumber;
+        } catch (Exception $e) {
+            sqlsrv_rollback($this->StrConn);
+            throw $e;
         }
-        
-        // Commit
-        sqlsrv_commit($this->StrConn);
-        return $docNumber;
-        
-    } catch (Exception $e) {
-        sqlsrv_rollback($this->StrConn);
-        throw $e;
-    }
     }
 
     function UpdateWithdraw($doc_no, $dept, $wc, $user, $remark_h, $arr_item, $arr_qty, $arr_qty_rcvd, $arr_wc_dest, $arr_remark)

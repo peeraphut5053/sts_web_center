@@ -503,6 +503,7 @@
                 }
 
           
+                $("#doc_no_w").empty();
                 $("#doc_no_w").select2({
                     placeholder: 'Doc No',
                     allowClear: true,
@@ -712,10 +713,16 @@
              {
                 text: `<button type="button" class="btn btn-danger">Delete</button>`,
                 action: function (e, dt, node, config) {
+                    var all = dt.rows().data().toArray();
                     var select = dt.rows('.selected').data().toArray();
                     var rowIndex = dt.rows('.selected').indexes()[0];
                     var approve_one = $("#approve_one").text();
                     var approve_two = $("#approve_two").text();
+
+                    if (all.length == 1) {
+                        alert('ใบเบิกเดียวนี้มีรายการอยู่ 1 รายการ ไม่สามารถลบได้');
+                        return false;
+                    }
 
         
                     if (select.length == 0) {
