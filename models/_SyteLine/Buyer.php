@@ -595,7 +595,7 @@ having  sum(mat.qty) < line.qty_rcvd";
         return $rs;
     }
 
-    function GetReportWithdraw($doc_no, $startDate, $endDate, $dept, $userApprove, $approve1,$approve2,$stock): array{
+    function GetReportWithdraw($doc_no, $startDate, $endDate, $dept, $userApprove, $approve1,$approve2,$stock, $wc): array{
         $wh = '';
 
         if ($doc_no != "") {
@@ -619,7 +619,7 @@ having  sum(mat.qty) < line.qty_rcvd";
         if ($approve1 == "1") {
             $wh = $wh . "and hdr.approver1 is not null ";
         } else if ($approve1 == "2") {
-            $wh = $wh . "and hdr.approver1 is null";
+            $wh = $wh . "and hdr.approver1 is null ";
         }
 
         if ($approve2 == "1") {
@@ -634,8 +634,13 @@ having  sum(mat.qty) < line.qty_rcvd";
             $wh = $wh . "and line.stockOUT is null ";
         }
 
+        if ($wc != "") {
+            $wh = $wh . "and line.wc_dest = '$wc' ";
+        }
+
         $query = "select hdr.doc_no, [date] = hdr.createdate
 	  , hdr.dept
+      , hdr.[user]
 	  , นำไปใช้ = line.wc_dest
 	  , line.item
 	  , item.[description]
