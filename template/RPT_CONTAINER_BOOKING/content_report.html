@@ -162,6 +162,11 @@
           <th class="bg-gray">Co Number</th>
           <th class="bg-gray">Co Line</th>
           <th class="bg-gray">Item</th>
+          <th class="bg-gray">Size</th>
+          <th class="bg-gray">Sch.</th>
+          <th class="bg-gray">Length</th>
+          <th class="bg-gray">Type</th>
+          <th class="bg-gray">Unit Weight</th>
           <th class="bg-gray">Container No.</th>
           <th class="bg-gray">Bundle</th>
           <th class="bg-gray">มัดเศษ</th>
@@ -315,6 +320,27 @@
                 {
                   data: "item",
                   className: "text-center",
+                },
+                {
+                  data: "size",
+                  className: "text-center",
+                },
+                {
+                  data: "schedule",
+                  className: "text-center",
+                },
+                {
+                  data: "length",
+                  className: "text-center",
+                },
+                {
+                  data: "type",
+                  className: "text-center",
+                },
+                {
+                  data: "unit_weight",
+                  className: "text-center",
+                  render: $.fn.dataTable.render.number(",", ".", 2, ""),
                 },
                 {
                   data: "cont_no",
