@@ -232,10 +232,10 @@ from location_mst";
 
     function GetItemList()
     {
-        $query = "select item,[description],u_m 
-from item_mst 
-where (item like 'ST%' or item like 'RZI%' or item like 'RC%')
-and [description] not like '%ยกเลิก%' order by item";
+        $query = "select itm.item,itm.[description],itm.u_m 
+from item_mst itm inner join itemwhse_mst whse on whse.item = itm.item and qty_on_hand > 0
+where (itm.item like 'ST%' or itm.item like 'RZI%' or itm.item like 'RC%')
+and itm.[description] not like '%ยกเลิก%' order by itm.item";
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
