@@ -935,7 +935,7 @@
                 }
 
                  var username_session_trim = username_session.trim().toLowerCase();
-                 if (userApproveTwo.map(x => x.trim().toLowerCase()).includes(username_session_trim) && data[0].userApprove == null) {
+                 if (userApproveTwo.map(x => x.trim().toLowerCase()).includes(username_session_trim) && data[0].userApprove == null && data[0].qty_rcvd == null) {
                    $("#approve_two").attr("disabled", false);
                  }
 
@@ -1127,6 +1127,11 @@
             return false;
         }
 
+        if (data_withdraw[0].approver1 == null || data_withdraw[0].approver2 == null) {
+            alert('ไม่สามารถรับของได้ เนื่องยังอนุมัติไม่ครบ กรุณาติดต่อผู้อนุมัติ');
+            return false;
+        }
+
         for (var i = 0; i < data_withdraw.length; i++) {
             if (data_withdraw[i].qty_rcvd == null) {
                 swal("ไม่สามารถรับของได้ เนื่องจากทางคลังยังไม่ได้กรอกจํานวนที่เบิกได้", "", "warning");
@@ -1227,7 +1232,8 @@
 
     function approve_two() {
 
-        var load = 'ApproveTwoWithdraw';
+        var load = 'ApproveTwoWithdraw'
+        var title = 'อนุมัติ 2 โดย';
 
         if ($("#doc_no").val() == '' || $("#dept_w").val() == '') {
             alert("กรุณาเลือก Doc No");
@@ -1242,11 +1248,12 @@
 
         if ($("#approve_two").text().trim() === 'อนุมัติ 2 แล้ว') {
             load = 'CancelApproveTwoWithdraw';
+            title = 'ยกเลิกอนุมัติ 2 โดย';
         }
 
 
         $.confirm({
-            title: 'อนุมัติ 2 โดย',
+            title: title,
             theme: 'modern',
             content: '<input placeholder="ผู้อนุมัติ" type="text" id="i_approve_two" class="form-control my-2" value="' + username_session + '" readonly>',
             buttons: {
