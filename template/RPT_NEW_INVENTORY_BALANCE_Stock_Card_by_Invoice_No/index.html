@@ -140,7 +140,7 @@
     </div>
     <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 ">
         <div class="input-group">
-            <div class="input-group-addon">Inv Number</div>
+            <div class="input-group-addon">Doc. Number</div>
             <input type="text" value='PO20001072' id="ThVendInvNum" class="form-control" name="ThVendInvNum">
         </div>
 
@@ -411,7 +411,7 @@
                                 text: 'Custom PDF',
                                 extend: 'pdfHtml5',
                                 download: 'open',
-                                filename: 'Stock Card by Invoice No',
+                                filename: 'Stock Card by Document No.',
                                 orientation: 'portrait', //portrait,landscape
                                 pageSize: 'A4', //A3 , A5 , A6 , legal , letter
                                 exportOptions: {
@@ -713,7 +713,7 @@
                                     //insert
                                     var r1 = Addrow(1, [{ key: 'A', value: '' }]);
                                     //                                    var r2 = Addrow(2, [{key: 'A', value: '3'}, {key: 'B', value: '4'}, {key: 'C', value: '4'}]);
-                                    var r2 = Addrow(2, [{ key: 'A', value: 'Stock Card by Invoice No.' },
+                                    var r2 = Addrow(2, [{ key: 'A', value: 'Stock Card by Document No.' },
                                         //                                        {key: 'I', value: 'Chemical analysis from supplier'},
                                         //                                        {key: 'AC', value: 'Chemical analysis from Lab.STS'}
                                     ]);
