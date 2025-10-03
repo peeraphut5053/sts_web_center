@@ -283,9 +283,13 @@
                 </div>
                 <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
                     <div class="input-group basis-2/4">
-                        <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">From Loc</div>
-                        <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
-                            class="form-control" id="from_loc_r_misc" readonly>
+                        <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">From Loc
+                            *
+                        </div>
+                        <select style="font-weight: bold; font-size: 16px;" class="form-control txt-filter"
+                            id="from_loc_r_misc">
+                            <option value=""></option>
+                        </select>
                     </div>
                     <div class="input-group basis-2/4">
                         <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">To Loc</div>
@@ -372,7 +376,7 @@
                     stockOUT: data.filter((item) => item.doc_no === doc).some((item) => item.qty_rcvd == null)
                 }));
 
-    
+
 
                 let doc = [{ id: '', text: '' }].concat(uniqueDocNo.map((item) => ({
                     id: item.doc_no,
@@ -644,7 +648,7 @@
                         data: { load: "GetToLocLot", wc: selectedRows[0].wc_dest },
                         success: function (loc) {
                             $("#to_loc_r_misc").val(loc[0].loc);
-                           
+
                         }
                     })
 
@@ -671,7 +675,7 @@
                                 text: item.lot + '  (' + item.loc + ' : ' + Number(item.qty_on_hand).toFixed(2) + ')'
                             })));
 
-                           
+
                             $("#lot_r_misc").empty();
                             $("#lot_r_misc").select2({
                                 placeholder: 'กรุณาเลือก Lot',
@@ -686,9 +690,24 @@
                             }).on('select2:select', function (e) {
                                 var lot = e.target.value;
                                 var dataLot = data.filter((item) => item.lot == lot);
-                                $("#from_loc_r_misc").val(dataLot[0].loc);
+                                let loCOptions = [{ id: '', text: '' }].concat(dataLot.map((item) => ({
+                                    id: item.loc,
+                                    text: item.loc
+                                })));
+                                $("#from_loc_r_misc").empty();
+                                $("#from_loc_r_misc").select2({
+                                    placeholder: 'กรุณาเลือก Location',
+                                    allowClear: true,
+                                    width: '100%',
+                                    data: loCOptions,
+                                    language: {
+                                        noResults: function () {
+                                            return "ไม่พบข้อมูล";
+                                        }
+                                    }
+                                })
                                 $("#qty_r_misc_lot").val(dataLot[0].qty_on_hand);
-                                
+
                             });;
 
                         }
