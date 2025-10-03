@@ -17,6 +17,7 @@
     --color-blue-300: oklch(80.9% 0.105 251.813);
     --color-blue-400: oklch(70.7% 0.165 254.624);
     --color-blue-500: oklch(62.3% 0.214 259.815);
+    --color-indigo-400: oklch(67.3% 0.182 276.935);
     --color-indigo-500: oklch(58.5% 0.233 277.117);
     --color-indigo-600: oklch(51.1% 0.262 276.966);
     --color-gray-100: oklch(96.7% 0.003 264.542);
@@ -650,8 +651,14 @@
   .h-auto {
     height: auto;
   }
+  .w-3 {
+    width: calc(var(--spacing) * 3);
+  }
   .w-3\/4 {
     width: calc(3/4 * 100%);
+  }
+  .w-5 {
+    width: calc(var(--spacing) * 5);
   }
   .w-5\/6 {
     width: calc(5/6 * 100%);
@@ -704,8 +711,14 @@
   .grow {
     flex-grow: 1;
   }
+  .basis-1 {
+    flex-basis: calc(var(--spacing) * 1);
+  }
   .basis-1\/6 {
     flex-basis: calc(1/6 * 100%);
+  }
+  .basis-2 {
+    flex-basis: calc(var(--spacing) * 2);
   }
   .basis-2\/4 {
     flex-basis: calc(2/4 * 100%);
@@ -713,8 +726,14 @@
   .basis-2\/6 {
     flex-basis: calc(2/6 * 100%);
   }
+  .basis-3 {
+    flex-basis: calc(var(--spacing) * 3);
+  }
   .basis-3\/6 {
     flex-basis: calc(3/6 * 100%);
+  }
+  .basis-6 {
+    flex-basis: calc(var(--spacing) * 6);
   }
   .basis-6\/12 {
     flex-basis: calc(6/12 * 100%);
@@ -899,6 +918,10 @@
   }
   .from-blue-300 {
     --tw-gradient-from: var(--color-blue-300);
+    --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));
+  }
+  .from-indigo-400 {
+    --tw-gradient-from: var(--color-indigo-400);
     --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));
   }
   .from-indigo-500 {

@@ -228,8 +228,7 @@ left join do_hdr_mst do on (do.uf_bookingNo = book.booking_num40 or do.uf_bookin
         isnull(((line.bundle_pcs - item.uf_pack) * item.unit_weight * 1.003)  ,0)))
  , area = convert(decimal(10,2),sum(isnull(line.bundle,0) * isnull(item.pp_area,0) / 100))
 from STS_EX_booking_line_cont line 
- inner join coitem_mst coi on coi.co_num = line.co_num and coi.item = line.item
- inner join item_mst item on coi.item = item.item
+ inner join item_mst item on line.item = item.item
 where line.cont_no is not null and line.bundle is not null and line.doc_num = '$doc_num'
 group by line.doc_num ,line.cont_no";
         $cSql = new SqlSrv();

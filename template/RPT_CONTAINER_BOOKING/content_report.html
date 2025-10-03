@@ -317,6 +317,10 @@
                 {
                   data: "co_line",
                   className: "text-center",
+                  render: function (data, type, row, meta) {
+                      var ret = data.split(",").join("-");
+                      return ret;
+                  }
                 },
                 {
                   data: "item",
