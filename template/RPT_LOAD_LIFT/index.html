@@ -117,6 +117,7 @@
       <thead>
         <tr>
           <th class="bg-gray">Doc Num</th>
+          <th class="bg-gray">Do Num</th>
           <th class="bg-gray">Booking Number</th>
           <th class="bg-gray">Port</th>
           <th class="bg-gray">จำนวนตู้</th>
@@ -149,11 +150,6 @@
       var booknum = $("#book_num_lift").val();
       var port = $("#port_lift").val();
       var cust = $("#cust_lift").val();
-  
-
-      if (booknum === "" && port === "" && cust === "") {
-        return alert("กรุณากรอกข้อมูลสําหรับการค้นหาอย่างน้อย 1 ช่อง");
-      }
   
         $("#BtnReportPO").html("<i class='fa fa-spinner fa-spin'></i>");
         $("#tblReportPO").loading();
@@ -189,11 +185,11 @@
                columnDefs: [
                     {
                         targets: [0],
-                        width: 100,
+                        width: 60,
                     },
                     {
                         targets: [1],
-                        width: 100,
+                        width: 60,
                     },
                     {
                         targets: [2],
@@ -201,11 +197,11 @@
                     },
                     {
                         targets: [3],
-                        width: 60,
+                        width: 100,
                     },
                     {
                         targets: [4],
-                        width: 80,
+                        width: 60,
                     },
                     {
                         targets: [5],
@@ -213,7 +209,7 @@
                     },
                     {
                         targets: [6],
-                        width: 300,
+                        width: 80,
                     },
                     {
                         targets: [7],
@@ -221,12 +217,20 @@
                     },
                     {
                         targets: [8],
+                        width: 300,
+                    },
+                    {
+                        targets: [9],
                         width: 60,
                     },
                 ],
               columns: [
                 {
                   data: "doc_num",
+                  className: "text-center",
+                },
+                 {
+                  data: "do_num",
                   className: "text-center",
                 },
                 {
