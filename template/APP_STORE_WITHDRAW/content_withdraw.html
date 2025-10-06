@@ -670,7 +670,7 @@
             { "data": "qty_rcvd" },
             { "data": "u_m" },
             { "data": "wc_dest"
-                , "render": function (data, type, row) {
+            ,"render": function (data, type, row) {
                     var w = wc.filter((item) => item.id == data)
                     return w[0]?.text || '';
                 }

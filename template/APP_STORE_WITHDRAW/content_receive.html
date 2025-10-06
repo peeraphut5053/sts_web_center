@@ -512,7 +512,10 @@
             }).on('select2:select', function (e) {
                 var code = e.target.value;
                 var newData = data.reason.filter(item => item.reason_code == code);
+                console.log(newData);
+                
                 $('#acct').val(newData[0].Acct).trigger('change');
+                $('#acct_unit1').val(newData[0].AcctUnit1).trigger('change');
             });
 
         }
@@ -600,8 +603,7 @@
                         return false;
                     }
 
-                    $("#acct_unit1").val(selectedRows[0].wc_dest).trigger('change');
-
+                
                     $.ajax({
                         type: "GET",
                         url: "././module/APP_STORE_WITHDRAW/data.php",

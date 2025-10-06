@@ -217,11 +217,12 @@ from location_mst";
 
     function GetWithdrawByDocNo($doc_no)
     {
-        $query = "SELECT h.*, l.*, h.remark as remark_h, h.[user] as user_hdr, w.[description] as deptDesc, i.[description] as itemDesc, w2.[description] as wcDestDesc, i.u_m FROM STS_store_withdraw_hdr h
+        $query = "SELECT h.*, l.*, h.remark as remark_h, h.[user] as user_hdr, w.[description] as deptDesc, i.[description] as itemDesc, w2.[description] as wcDestDesc, i.u_m, u.[description] as unit FROM STS_store_withdraw_hdr h
         left join STS_store_withdraw_line l on h.doc_no = l.doc_no
         left join wc_mst w on h.dept = w.wc
         left join item_mst i on l.item = i.item
         left join wc_mst w2 on l.wc_dest = w2.wc
+        left join unitcd1_mst u on l.wc_dest = u.unit1
         where h.doc_no = '$doc_no'";
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
