@@ -546,7 +546,7 @@
             {
                 "data": "wc_dest",
                 render: function (data, type, row, meta) {
-                    return (data) + ' ' + (row.wcDestDesc ?? '');
+                    return (data) + ' ' + (row.wcDestDesc ?? '') + ' ' + (row.unit ?? '');
                 }
             },
             {
