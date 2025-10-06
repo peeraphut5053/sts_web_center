@@ -436,10 +436,10 @@ where [description] not like '%ยกเลิก%'";
     function SaveMiscIssue($doc_no, $item, $loc, $reason, $qty, $user, $line_id,$acct, $acct_unit1, $um)
     {
         $query = "EXEC [dbo].[STS_EnhanceItemMiscIssueSp]
-  @_Item = $item
+  @_Item = '$item'
 , @_Qty =  $qty
-, @_UM = $um
-, @_DocNum = $doc_no
+, @_UM = '$um'
+, @_DocNum = '$doc_no'
 , @_Whse = MAIN
 , @_Loc = $loc
 , @MiscReason = '$reason'
