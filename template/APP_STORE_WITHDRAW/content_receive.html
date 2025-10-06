@@ -545,9 +545,8 @@
             },
             {
                 "data": "wc_dest",
-               "render": function (data, type, row) {
-                    var w = wc_desc.filter((item) => item.id == data)
-                    return w[0]?.text || '';
+                render: function (data, type, row, meta) {
+                    return (data) + ' ' + (row.wcDestDesc ?? '');
                 }
             },
             {
