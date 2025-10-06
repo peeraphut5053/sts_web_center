@@ -180,8 +180,8 @@ WHERE h.doc_no = '$doc_no'";
 where [description] not like '%ลบ%' and [description] not like '%ยกเลิก%' 
 and [description] not like '%กลุ่ม%' and wc not like 'PM%' 
 union 
-select unit1,[description] from unitcd1_mst
-where [description] not like '%ยกเลิก%'";
+select wc, [description] = '' from STS_repair_wc
+order by wc";
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
