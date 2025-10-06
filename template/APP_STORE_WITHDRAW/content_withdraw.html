@@ -493,7 +493,8 @@
                         text: item.doc_no,
                         userApprove: item.userApprove,
                         approver1: item.approver1,
-                        approver2: item.approver2
+                        approver2: item.approver2,
+                        dept: item.dept
                  })));
              
                 } else {
@@ -502,7 +503,8 @@
                         text: item.doc_no,
                         userApprove: item.userApprove,
                         approver1: item.approver1,
-                        approver2: item.approver2
+                        approver2: item.approver2,
+                        dept: item.dept
                     })));
                 }
 
@@ -548,8 +550,13 @@
                             approver2 = '<span style="background-color: #dc3545; color: white; padding: 2px 6px; border-radius: 3px; font-size: 12px;">อนุมัติ 2</span> ';
                         }
 
+                        var dept = '';
+                        if (state.dept !== null && state.dept !== '') {
+                            dept = '<span style="background-color: #28a745; color: white; padding: 2px 6px; border-radius: 3px; font-size: 12px;">' + state.dept + '</span> ';
+                        }
+
                         // รวมทั้งสอง status
-                        $state.html(docNo + ' - ' + approver1 + approver2 + approveStatus);
+                        $state.html(docNo + ' - ' + approver1 + approver2 + approveStatus + dept);
 
                         return $state;
                     },
