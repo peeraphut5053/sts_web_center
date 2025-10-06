@@ -86,7 +86,7 @@ order by isnull(addr.addr##2,addr.name)";
         $query = "select distinct co.co_num
 from co_mst co inner join custaddr_mst addr on co.cust_num = addr.cust_num and co.cust_seq = addr.cust_seq
 where co.stat = 'O' and co.co_num like 'ex%' and city = '$city'
-  and isnull(addr.addr##2,addr.name) = '$customer'
+  and isnull(addr.addr##2,addr.name) like '%[$customer]%'
 order by co.co_num";
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
