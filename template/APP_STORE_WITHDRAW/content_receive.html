@@ -229,14 +229,19 @@
                 </div>
                 <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
                     <div class="input-group basis-2/4">
-                        <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">Acct</div>
-                        <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
-                            class="form-control" id="acct" readonly>
+                        <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">Acct *</div>
+                        <select style="font-weight: bold; font-size: 16px;" class="form-control txt-filter"
+                            id="acct">
+                            <option value=""></option>
+                        </select>
                     </div>
                     <div class="input-group basis-2/4">
-                        <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">AcctUnit1</div>
-                        <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
-                            class="form-control" id="acct_unit1" readonly>
+                         <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">AcctUnit1 *
+                        </div>
+                        <select style="font-weight: bold; font-size: 16px;" class="form-control txt-filter"
+                            id="acct_unit1">
+                            <option value=""></option>
+                        </select>
                     </div>
                 </div>
                 <div class="hidden">
@@ -356,6 +361,22 @@
         }
     }
 
+    var wc_desc = [];
+
+     $.ajax({
+        type: "GET",
+        url: "././module/APP_STORE_WITHDRAW/data.php",
+        dataType: "json",
+        data: { load: "GetDept" },
+        success: function (data) {
+            let city = [{ id: '', text: '' }].concat(data.map((item) => ({
+                id: item.wc,
+                text: item.wc + ' ' + item.description
+            })));
+            wc_desc = city;
+        }
+    });
+
     function getDocNumList() {
         $.ajax({
             type: "GET",
@@ -439,13 +460,47 @@
         dataType: "json",
         data: { load: "GetReason" },
         success: function (data) {
-            let city = [{ id: '', text: '' }].concat(data.map((item) => ({
+            let city = [{ id: '', text: '' }].concat(data.reason.map((item) => ({
                 id: item.reason_code,
                 text: item.reason_code + ' - ' + item.description
             })));
 
+            let acct = [{ id: '', text: '' }].concat(data.acct.map((item) => ({
+                id: item.acct,
+                text: item.acct + ' - ' + item.description
+            })));
+
+            let acct_unit1 = [{ id: '', text: '' }].concat(data.unit1.map((item) => ({
+                id: item.unit1,
+                text: item.unit1 + ' - ' + item.description
+            })));
+
+            $("#acct").select2({
+                placeholder: 'กรุณาเลือก Acct',
+                allowClear: true,
+                width: '100%',
+                data: acct,
+                language: {
+                    noResults: function () {
+                        return "ไม่พบข้อมูล";
+                    }
+                }
+            });
+
+             $("#acct_unit1").select2({
+                placeholder: 'กรุณาเลือก Acct Unit1',
+                allowClear: true,
+                width: '100%',
+                data: acct_unit1,
+                language: {
+                    noResults: function () {
+                        return "ไม่พบข้อมูล";
+                    }
+                }
+            });
+
             $("#reason_r_misc").select2({
-                placeholder: 'กรุณาเลือก Location',
+                placeholder: 'กรุณาเลือกเหตุผล',
                 allowClear: true,
                 width: '100%',
                 data: city,
@@ -456,10 +511,10 @@
                 }
             }).on('select2:select', function (e) {
                 var code = e.target.value;
-                var newData = data.filter(item => item.reason_code == code);
-                $('#acct').val(newData[0].Acct);
-                $('#acct_unit1').val(newData[0].AcctUnit1);
+                var newData = data.reason.filter(item => item.reason_code == code);
+                $('#acct').val(newData[0].Acct).trigger('change');
             });
+
         }
     });
 
@@ -490,8 +545,9 @@
             },
             {
                 "data": "wc_dest",
-                render: function (data, type, row, meta) {
-                    return (data) + ' ' + (row.wcDestDesc ?? '');
+               "render": function (data, type, row) {
+                    var w = wc_desc.filter((item) => item.id == data)
+                    return w[0]?.text || '';
                 }
             },
             {
@@ -544,6 +600,8 @@
                         swal("รายการนี้ถูกตัดสต๊อกแล้ว!", "", "warning");
                         return false;
                     }
+
+                    $("#acct_unit1").val(selectedRows[0].wc_dest).trigger('change');
 
                     $.ajax({
                         type: "GET",

@@ -180,3 +180,13 @@ if ($load == 'DeleteItemWithdraw') {
     $rs = $STS_Custom->DeleteItemWithdraw($doc_no, $line_id);
     echo json_encode($rs);
 }
+
+if ($load == 'GetAcct') {
+    $rs = $STS_Custom->GetAcct();
+    echo json_encode($rs);
+}
+
+if ($load == 'GetAcctUnit') {
+    $rs = $STS_Custom->GetAcctUnit();
+    echo json_encode($rs);
+}

@@ -176,13 +176,12 @@ WHERE h.doc_no = '$doc_no'";
 
     function GetDept()
     {
-        $query = "
-select wc,[description] from wc_mst 
+        $query = "select wc,[description] from wc_mst 
 where [description] not like '%ลบ%' and [description] not like '%ยกเลิก%' 
 and [description] not like '%กลุ่ม%' and wc not like 'PM%' 
 union 
-select wc, [description] = '' from STS_repair_wc
-order by wc";
+select unit1,[description] from unitcd1_mst
+where [description] not like '%ยกเลิก%'";
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
@@ -242,13 +241,25 @@ and itm.[description] not like '%ยกเลิก%' order by itm.item";
         return $rs;
     }
 
-    function GetReasonCode()
-    {
+    function GetReasonCode(){
         $query = "select reason_code, [description], Acct = inv_adj_acct, AcctUnit1 = inv_adj_acct_unit1 
 from reason_mst where reason_class = 'MISC ISSUE'";
         $cSql = new SqlSrv();
-        $rs = $cSql->SqlQuery($this->StrConn, $query);
-        array_splice($rs, count($rs) - 1, 1);
+        $rs1 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs1, count($rs1) - 1, 1);
+        $query2 = "select acct,[description] from chart_mst
+where [description] not like '%ยกเลิก%'";
+        $rs2 = $cSql->SqlQuery($this->StrConn, $query2);
+        array_splice($rs2, count($rs2) - 1, 1);
+        $query3 = "select unit1,[description] from unitcd1_mst
+where [description] not like '%ยกเลิก%'";
+        $rs3 = $cSql->SqlQuery($this->StrConn, $query3);
+        array_splice($rs3, count($rs3) - 1, 1);
+        $rs = [
+            'reason' => $rs1,
+            'acct' => $rs2,
+            'unit1' => $rs3
+        ];
         return $rs;
     }
 
@@ -672,5 +683,25 @@ where 1 = 1 $wh";
         array_splice($rs, count($rs) - 1, 1);
         return $rs;
     }
+
+    function GetAcct(){
+        $query = "select acct,[description] from chart_mst
+where [description] not like '%ยกเลิก%'";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+    function GetAcctUnit(){
+        $query = "select unit1,[description] from unitcd1_mst
+where [description] not like '%ยกเลิก%'";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+
     
 }
