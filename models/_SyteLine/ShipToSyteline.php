@@ -224,13 +224,16 @@ left join do_hdr_mst do on (do.uf_bookingNo = book.booking_num40 or do.uf_bookin
      function GetTotalWeightContainer($doc_num) {
         $query = "select  line.doc_num ,line.cont_no
  , [total_bundle] = sum(line.bundle)
-    ,[total_weight] = convert(decimal(10,0),sum((item.uf_pack * line.bundle * item.unit_weight * 1.003)  +
-        isnull(((line.bundle_pcs - item.uf_pack) * item.unit_weight * 1.003)  ,0)))
+    ,[total_weight] = convert(decimal(10,0),sum((coalesce(conv.conv_factor,item.uf_pack,1) * line.bundle * item.unit_weight * 1.003)  +
+        isnull(((line.bundle_pcs - coalesce(conv.conv_factor,item.uf_pack,1)) * item.unit_weight * 1.003)  ,0)))
  , area = convert(decimal(10,2),sum(isnull(line.bundle,0) * isnull(item.pp_area,0) / 100))
 from STS_EX_booking_line_cont line 
  inner join item_mst item on line.item = item.item
+ left join co_mst co on line.co_num = co.co_num
+ left join u_m_conv_mst conv on co.cust_num = conv.vend_num and line.item = conv.item
 where line.cont_no is not null and line.bundle is not null and line.doc_num = '$doc_num'
-group by line.doc_num ,line.cont_no";
+group by line.doc_num ,line.cont_no
+";
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
