@@ -271,6 +271,15 @@ order by main.item";
         return $rs0;
     }
 
+    function Insert_Stock_Card_by_Invoice_No($date, $item_number, $item_name, $ref_type, $tran_type, $doc_no, $qty) {
+        $query = " INSERT INTO STS_report_pee_pen ([date],item_number,item_name,ref_type,tran_type,doc_no,qty) "
+                . " VALUES ('$date','$item_number','$item_name','$ref_type','$tran_type','$doc_no',$qty) ";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+
+    }
     Function GetReportStockMove($item, $txtStartDate, $txtEndDate, $ThVendInvNum) {
 
         $searchItem = "";
