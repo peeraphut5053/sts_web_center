@@ -237,24 +237,23 @@ order by main.item";
 
     Function RPT_NEW_INVENTORY_BALANCE_Stock_Card_by_Invoice_No($item, $txtStartDate, $txtEndDate, $ThVendInvNum) {
 
-        $searchItem = "";
+        $wh = "";
 
-        if ($item) {
-            if (substr($item, -1) == "*") {
-                $item = str_replace('*', '', $item);
-                $searchItem = " AND ( a.item like '$item%' ) ";
-            } else {
-                $searchItem = " AND ( a.item like '%$item%' ) ";
-            }
+        if ($item != "") {
+            $wh = $wh . "and item_number like '%$item%' ";
         }
 
 //        $txtStartDate= '2018-12-31';
 //        $txtEndDate='2020-08-21';
 //        $ThVendInvNum = 'IN19060762';
         //     $search_date = "AND  convert(date,a.transdate, 103)  BETWEEN '$txtStartDate' AND '$txtEndDate'";
-        $search_date = "AND  convert(date,date, 103)  BETWEEN '$txtStartDate' AND '$txtEndDate'";
+        if ($txtStartDate != "" && $txtEndDate != "") {
+            $wh =  $wh . "AND  (convert(datetime,date, 103) BETWEEN '$txtStartDate' AND '$txtEndDate') ";
+        }
 
-        $search_ThVendInvNum = "and doc_no like '%$ThVendInvNum%'";
+        if ($ThVendInvNum != "") {
+            $wh = $wh . "and doc_no like '%$ThVendInvNum%' ";
+        }
         //      $search_ThVendInvNum = "and a.ThVendInvNum like '%$ThVendInvNum%'";
         /*
           $query = " select convert(date,a.transdate, 103) as TransdateCon ,a.* , b.lot , b.loc from matltran2_detail_mst a left join matltran_mst b on cast(a.transnum as int) = cast(b.trans_num as int)  where 1=1  ";
@@ -263,12 +262,9 @@ order by main.item";
           $query = $query . $search_ThVendInvNum;
           $query = $query . "ORDER BY CONVERT (date , TransDate ,103) ASC , CASE WHEN left(TransDescription ,1) ='R' OR left(TransDescription ,1) ='F' THEN 0 ELSE 1 END , CAST(TransNum as int) ASC ";
          */
-        $query = " select * FROM STS_report_pee_pen  where 1=1  ";
+        $query = " select * FROM STS_report_pee_pen  where 1=1 $wh";
 //        $query = " select convert(date,trans_date) as date , matltran_mst.item , item_mst.description , item_mst.unit_weight , concat(matltran_mst.ref_type, ' ',ref_type_mst.ref_description) , concat(matltran_mst.trans_type, ' ',trans_type_mst.trans_description) , TH_vend_inv_num , matltran_mst.qty from matltran_mst inner join item_mst on matltran_mst.item = item_mst.item inner join ref_type_mst on matltran_mst.ref_type = ref_type_mst.ref_type inner join trans_type_mst on matltran_mst.trans_type = trans_type_mst.trans_type where matltran_mst.ref_type = 'O' and convert(date, trans_date) > '2018-12-31' and TH_vend_inv_num is not null ";
-
-        $query = $query . $searchItem;
-        $query = $query . $search_date;
-        $query = $query . $search_ThVendInvNum;
+      
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);
