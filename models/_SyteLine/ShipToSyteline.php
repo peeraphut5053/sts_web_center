@@ -29,7 +29,7 @@ class CustomerAddrSyteline {
     }
 
     function GetDocBookingList() {
-        $query = "select distinct doc_num from sts_ex_booking order by doc_num desc";
+        $query = "select distinct doc_num from sts_ex_booking where status = 'ดำเนินการ' order by doc_num desc";
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
