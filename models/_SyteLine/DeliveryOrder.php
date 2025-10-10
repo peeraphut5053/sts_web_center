@@ -643,4 +643,282 @@ where do_num = '$do_num'";
         array_splice($rs0, count($rs0) - 1, 1);
         return $rs0;
     }
+
+    function GetDoNumReturn() {
+        $query = "select distinct pre.do_num 
+from ait_preship_do_seq pre
+  inner join coitem_mst coi on pre.co_num = coi.co_num and pre.co_line = coi.co_line and pre.co_release = coi.co_release
+   and coi.qty_shipped <> 0 and pre.qty <> 0 and pre.do_num like 'do%'
+   and pre.item not like 'ZR-%' 
+where DATEDIFF(month, pre.createdate, getdate()) < 4 
+order by do_num desc";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+    function GetCoByDo($do_num) {
+        $query = "select distinct pre.co_num 
+from ait_preship_do_seq pre
+  inner join coitem_mst coi on pre.co_num = coi.co_num and pre.co_line = coi.co_line and pre.co_release = coi.co_release
+   and coi.qty_shipped <> 0 and pre.qty <> 0 and pre.do_num like 'do%'
+   and pre.item not like 'ZR-%' 
+where pre.do_num = '$do_num'";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+    function GetItemByCo($do_num, $co_num) {
+        $query = "select distinct pre.item, item.[description], item.u_m
+from ait_preship_do_seq pre
+  inner join coitem_mst coi on pre.co_num = coi.co_num and pre.co_line = coi.co_line and pre.co_release = coi.co_release
+   and coi.qty_shipped <> 0 and pre.qty <> 0 and pre.do_num like 'do%'
+   and pre.item not like 'ZR-%' 
+     inner join item_mst item on pre.item = item.item
+where pre.do_num = '$do_num' and pre.co_num = '$co_num'";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+
+    function CreateItemReturn($user,$remark_h, $arr_do_num, $arr_co_num, $arr_item, $arr_qty, $arr_issue, $arr_remark, $stat) {
+        if (sqlsrv_begin_transaction($this->StrConn) === false) {
+            die("Transaction failed: " . print_r(sqlsrv_errors(), true));
+        }
+
+        try {
+            $year = date('y');
+            $month = date('m');
+            $prefix = "C{$year}{$month}";
+
+            // วิธีที่ 1: ใช้ Table Lock (แนะนำ)
+            $lockSql = "SELECT TOP 1 1 FROM STS_return_hdr WITH (TABLOCKX)";
+            $cSql = new SqlSrv();
+            $cSql->SqlQuery($this->StrConn, $lockSql);
+
+            // หรือวิธีที่ 2: Lock ด้วย Application Lock
+            // $lockSql = "EXEC sp_getapplock @Resource='withdraw_doc_no', @LockMode='Exclusive', @LockTimeout=5000";
+            // $cSql->SqlQuery($this->StrConn, $lockSql);
+
+            // Query เลขล่าสุดหลัง lock แล้ว
+            $sql = "SELECT TOP 1 doc_no 
+                FROM STS_return_hdr 
+                WHERE doc_no LIKE '{$prefix}%' 
+                ORDER BY doc_no DESC";
+
+            $result = $cSql->SqlQuery($this->StrConn, $sql);
+            array_splice($result, count($result) - 1, 1);
+
+            if (count($result) > 0) {
+                $lastDoc = $result[0]['doc_no'];
+                $lastNumber = intval(substr($lastDoc, -3));
+                $newNumber = $lastNumber + 1;
+            } else {
+                $newNumber = 1;
+            }
+
+            $docNumber = sprintf("C%s%02d%03d", $year, $month, $newNumber);
+
+            // ใส่ Unique Constraint ที่ table
+            // ALTER TABLE STS_store_withdraw_hdr ADD CONSTRAINT UQ_doc_no UNIQUE (doc_no)
+
+            // Insert header
+            $query = "INSERT INTO STS_return_hdr (doc_no, remark, createdby, stat) 
+                  VALUES ('$docNumber', '$remark_h', '$user', '$stat')";
+            $cSql->SqlQuery($this->StrConn, $query);
+
+            // Insert lines
+            foreach ($arr_item as $key => $item) {
+                $seq = $key + 1;
+                $do_num = str_replace("'", "''", $arr_do_num[$key]);
+                $co_num = str_replace("'", "''", $arr_co_num[$key]);
+                $item_escaped = str_replace("'", "''", $arr_item[$key]);
+                $qty = floatval($arr_qty[$key]);
+                $issue = str_replace("'", "''", $arr_issue[$key]);
+                $remark_l = str_replace("'", "''", $arr_remark[$key]);
+
+                $query2 = "INSERT INTO STS_return_line 
+                       (doc_no, do_num, co_num, item, qty, issue, remark, [user]) 
+                       VALUES ('$docNumber', '$do_num', '$co_num', '$item_escaped', $qty, '$issue', '$remark_l', '$user')";
+                $cSql->SqlQuery($this->StrConn, $query2);
+            }
+
+            sqlsrv_commit($this->StrConn);
+            return $docNumber;
+        } catch (Exception $e) {
+            sqlsrv_rollback($this->StrConn);
+            throw $e;
+        }
+    
+    }
+
+    function GetDocNoReturn() {
+        $query = "SELECT doc_no FROM STS_return_hdr ORDER BY doc_no DESC";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+
+    function GetReasonCause() {
+        $query = "SELECT * FROM STS_return_cause";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+
+    function GetIssueReturn() {
+        $query = "SELECT * FROM STS_return_issue";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+
+    function GetItemReturnByDocNo($doc_no) {
+        $query = "SELECT h.*, l.*, h.remark as remark_h, h.stat as stat_h
+   ,item.[description], customer = case when co.cust_num like 'EX%' then isnull(cust.addr##1,cust.name) else cust.name end
+FROM STS_return_hdr h 
+ LEFT JOIN STS_return_line l ON h.doc_no = l.doc_no
+ left join co_mst co on co.co_num = l.co_num
+ left join custaddr_mst cust on co.cust_num = cust.cust_num and co.cust_seq = cust.cust_seq
+ left join item_mst item on item.item = l.item 
+        WHERE h.doc_no = '$doc_no'";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+
+    function CreateReturnPic($doc_no, $file_type) {
+        $s = "SELECT doc_no FROM STS_return_pic WHERE doc_no = '$doc_no' ORDER BY doc_no DESC";
+        $cSql = new SqlSrv();
+        $doc = $cSql->SqlQuery($this->StrConn, $s);
+        $doc_count = count($doc);
+        if ($doc_count > 1) {
+            $doc_count = $doc_count + 0;
+        } else {
+            $doc_count = 1;
+        }
+        $pathName = $doc_no . "_" . $doc_count . "." . $file_type;
+        $query = "INSERT INTO STS_return_pic (doc_no,path) OUTPUT INSERTED.* VALUES('$doc_no','$pathName')";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+    function AddItemReturn($doc_no, $do_num, $co_num, $item, $qty, $issue, $remark, $user) {
+        $cSql = new SqlSrv();
+        $query = "INSERT INTO STS_return_line (doc_no,do_num,co_num,item,qty,issue,remark,[user]) OUTPUT INSERTED.* VALUES('$doc_no','$do_num','$co_num','$item',$qty,'$issue','$remark','$user')";
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+    function UpdateItemReturn($doc_no, $do_num, $do_num_old, $co_num, $co_num_old, $item, $item_old, $qty, $remark, $issue) {
+        $cSql = new SqlSrv();
+        $query = "UPDATE STS_return_line  
+        SET do_num = '$do_num', co_num = '$co_num', item = '$item', qty = $qty, issue = '$issue', remark = '$remark'
+        WHERE doc_no = '$doc_no' AND do_num = '$do_num_old' AND co_num = '$co_num_old' AND item = '$item_old'";
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+    
+    function DeleteItemReturn($doc_no, $do_num, $co_num, $item) {
+        $cSql = new SqlSrv();
+        $query = "DELETE FROM STS_return_line WHERE doc_no = '$doc_no' AND do_num = '$do_num' AND co_num = '$co_num' AND item = '$item'";
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+    function UpdateReturnHeader($doc_no, $remark, $stat) {
+        $cSql = new SqlSrv();
+        $query = "UPDATE STS_return_hdr SET remark = '$remark', stat = '$stat', updatedate = getdate() WHERE doc_no = '$doc_no'";
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+    function ReceiveItemReturn($doc_no, $returned) {
+        $cSql = new SqlSrv();
+        $query = "UPDATE STS_return_hdr SET returned = '$returned', updatedate = getdate() WHERE doc_no = '$doc_no'";
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+    function ApproveReturnByQc($doc_no, $qc) {
+        $cSql = new SqlSrv();
+        $query = "UPDATE STS_return_hdr SET qc = '$qc', updatedate = getdate() WHERE doc_no = '$doc_no'";
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+    function GetReturnPicByDocNo($doc_no) {
+        $cSql = new SqlSrv();
+        $query = "SELECT * FROM STS_return_pic WHERE doc_no = '$doc_no'";
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+    function UpdateCauseReturn($doc_no, $do_num, $co_num, $item, $cause) {
+        $cSql = new SqlSrv();
+        $query = "UPDATE STS_return_line SET cause = '$cause' WHERE doc_no = '$doc_no' AND do_num = '$do_num' AND co_num = '$co_num' AND item = '$item'";
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+    function UpdateStatusReturn($doc_no, $do_num, $co_num, $item, $status) {
+        $cSql = new SqlSrv();
+        $query = "UPDATE STS_return_line SET stat = '$status' WHERE doc_no = '$doc_no' AND do_num = '$do_num' AND co_num = '$co_num' AND item = '$item'";
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+    
+    function UpdateRemarkQcReturn($doc_no, $do_num, $co_num, $item, $remark) {
+        $cSql = new SqlSrv();
+        $query = "UPDATE STS_return_line SET remark = '$remark' WHERE doc_no = '$doc_no' AND do_num = '$do_num' AND co_num = '$co_num' AND item = '$item'";
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+    function GetReportReturn($StartDate, $EndDate, $doc_no) {
+        $wh = "";
+        if ($StartDate != '' && $EndDate != '') {
+            $wh .= " AND h.createdate BETWEEN '$StartDate' AND '$EndDate' ";
+        }
+        if ($doc_no != '') {
+            $wh .= " AND h.doc_no = '$doc_no' ";
+        }
+        $cSql = new SqlSrv();
+        $query = "SELECT h.*, l.*, h.remark as remark_h, h.stat as stat_h
+   ,item.[description], customer = case when co.cust_num like 'EX%' then isnull(cust.addr##1,cust.name) else cust.name end
+FROM STS_return_hdr h 
+ LEFT JOIN STS_return_line l ON h.doc_no = l.doc_no
+ left join co_mst co on co.co_num = l.co_num
+ left join custaddr_mst cust on co.cust_num = cust.cust_num and co.cust_seq = cust.cust_seq
+ left join item_mst item on item.item = l.item 
+        WHERE 1=1 $wh";
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+    function SalesApproveReturn($doc_no, $sales) {
+        $cSql = new SqlSrv();
+        $query = "UPDATE STS_return_hdr SET sales = '$sales', updatedate = getdate() WHERE doc_no = '$doc_no'";
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+    
 }

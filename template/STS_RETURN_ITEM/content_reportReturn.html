@@ -1,0 +1,326 @@
+<style>
+    .col-search {
+        padding-left: 3px;
+        padding-right: 3px;
+    }
+
+    /*    table.dataTable thead .sorting:after,
+          table.dataTable thead .sorting:before,
+          table.dataTable thead .sorting_asc:after,
+          table.dataTable thead .sorting_asc:before,
+          table.dataTable thead .sorting_asc_disabled:after,
+          table.dataTable thead .sorting_asc_disabled:before,
+          table.dataTable thead .sorting_desc:after,
+          table.dataTable thead .sorting_desc:before,
+          table.dataTable thead .sorting_desc_disabled:after,
+          table.dataTable thead .sorting_desc_disabled:before {
+              bottom: .5em;
+          }*/
+    .table thead th {
+        text-align: center;
+    }
+
+    .col-flt-page {
+        padding-top: 10px;
+        font-weight: bold;
+    }
+
+    #tblReportWithdraw tbody tr td a {
+        cursor: pointer;
+    }
+
+    table.dataTable.fixedHeader-floating,
+    table.dataTable.fixedHeader-locked {
+        background-color: white;
+        margin-top: 50px !important;
+        margin-bottom: 0 !important;
+    }
+
+    @media print {
+        table th:nth-child(0) {
+            width: 200px;
+            word-break: break-all;
+            white-space: pre-line;
+        }
+
+        table td:nth-child(0) {
+            width: 200px;
+            word-break: break-all;
+            white-space: pre-line;
+        }
+    }
+
+    .text-header {
+        font-weight: bold;
+        font-size: 20px;
+    }
+
+    .text-wrap {
+        white-space: normal;
+    }
+
+    .width-200 {
+        width: 200px;
+    }
+
+    input[type="checkbox"] {
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+
+    /*
+      .cb_lb{
+          margin-top:-5px;
+      }*/
+    .item-center {
+        display: flex;
+        justify-content: center;
+    }
+</style>
+<div class="row">
+    <h4 class="text-header text-center">รายงานใบคืนของ</h4>
+</div>
+<div class="row item-center">
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+        <div class="input-group w-full">
+            <div class="input-group-addon">เลขที่ใบเบิก</div>
+            <input type="text" class="form-control" id="doc_no_report_return" autocomplete="off" />
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+        <div class="input-group w-full">
+            <div class="input-group-addon">From Date</div>
+            <input type="text" class="form-control" id="from_date_return" autocomplete="off" />
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+        <div class="input-group w-full">
+            <div class="input-group-addon">To Date</div>
+            <input type="text" class="form-control" id="to_date_return" autocomplete="off" />
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+        
+    </div>
+       <div class="col-lg-2 col-md-2 col-sm-1 col-xs-6  col-search">
+        <button id="BtnReportReturn" class="btn btn-info"><i class="fa fa-search"></i>&nbsp;Search</button>
+    </div>
+</div>
+<div class="row item-center">
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+       
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+       
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+        
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+        
+    </div>
+       <div class="col-lg-2 col-md-2 col-sm-1 col-xs-6  col-search">
+    </div>
+</div>
+<div class="row">
+    
+</div>
+<div class="row" id="rowResultTable">
+    <table class="table table-condensed table-bordered table-striped" width="100%" id="tblReportWithdraw">
+        <thead>
+            <tr>
+                <th class="bg-gray">Doc No</th>
+                <th class="bg-gray">Date</th>
+                <th class="bg-gray">User</th>
+                <th class="bg-gray">Sales</th>
+                <th class="bg-gray">Claim</th>
+                <th class="bg-gray">หมายเหตุ</th>
+                <th class="bg-gray">Do Num</th>
+                <th class="bg-gray">Co Num</th>
+                <th class="bg-gray">Customer</th>
+                <th class="bg-gray">Item</th>
+                <th class="bg-gray">Desc</th>
+                <th class="bg-gray">จํานวน</th>
+                <th class="bg-gray">ปัญหา</th>
+                <th class="bg-gray">สาเหตุ</th>
+                <th class="bg-gray">Status</th>
+                <th class="bg-gray">หมายเหตุ Item</th>
+                <th class="bg-gray">รับของคืน</th>
+            </tr>
+        </thead>
+        <!--        <tbody id="tblReportWithdrawList">
+                      <tr><td align="center" colspan="12">.... No item search ....</td></tr>
+     </tbody>-->
+    </table>
+</div>
+<script type="text/javascript">
+
+    $("#BtnReportReturn").click(function () {
+        console.log("click");
+        
+        ReportItemSearch();
+    });
+   
+    $("#from_date_return,#to_date_return").datepicker({
+        dateFormat: "yy-mm-dd",
+    });
+
+    function ReportItemSearch() {
+        var OldHtml = $("#BtnReportReturn").html();
+        var StartDate = $("#from_date_return").val();
+        var EndDate = $("#to_date_return").val();
+        var doc_no = $("#doc_no_report_return").val();
+
+
+        $("#BtnReportReturn").html("<i class='fa fa-spinner fa-spin'></i>");
+        $("#tblReportWithdraw").loading();
+        $("#tblReportWithdraw tfoot").remove();
+        $.ajax({
+            type: "POST",
+            url: "././module/STS_RETURN_ITEM/data.php",
+            dataType: "json",
+            beforeSend: function () {
+                $("#BtnReportReturn").html("<i class='fa fa-spinner fa-spin'>");
+            },
+            data: {
+                load: "GetReportReturn",
+                StartDate: StartDate,
+                EndDate: EndDate,
+                doc_no: doc_no,
+            },
+            success: function (data) {
+                $("#tblReportWithdraw").DataTable().clear();
+                $("#tblReportWithdraw").append(
+                    "<tfoot><tr><td></td><td></td><td></td><td></td><td></td></tr></tfoot>"
+                );
+                $("#tblReportWithdraw").dataTable({
+                    aaData: data,
+                    paging: false,
+                    fixedHeader: true,
+                    destroy: true,
+                    processing: true,
+                    scrollY: "65vh",
+                    scrollCollapse: true,
+                    scrollX: true,
+                    select: false,
+                    columns: [
+                        {
+                            data: "doc_no",
+                            className: "text-center",
+                        },
+                        {
+                            data: "createdate.date",
+                            className: "text-center",
+                            render: function (data, type, row) {
+                                return moment(data).format("DD/MM/YYYY");
+                            }
+                        },
+                        {
+                            data: "createdby",
+                            className: "text-center",
+                        },
+                        {
+                            data: "sales",
+                            className: "text-center",
+                        },
+                       
+                        {
+                            data: "stat_h",
+                            className: "text-center",
+                        },
+                        {
+                            data: "remark_h",
+                            className: "text-center",
+                        },
+                        {
+                            data: "do_num",
+                            className: "text-center",
+                        },
+                        {
+                            data: "co_num",
+                            className: "text-center",
+                        },
+                        {
+                            data: "customer",
+                            className: "text-center",
+                        },
+                        {
+                            data: "item",
+                            className: "text-center",
+                        },
+                        {
+                            data: "description",
+                            className: "text-center",
+                        },
+                        {
+                            data: "qty",
+                            className: "text-center",
+                        },
+                        {
+                            data: "issue",
+                            className: "text-center"
+                        },
+                        {
+                            data: "cause",
+                            className: "text-center",
+                        },
+                        {
+                            data: "stat",
+                            className: "text-center",
+                        },
+                        {
+                            data: "remark",
+                            className: "text-center",
+                        },
+                        {
+                            data: "returned",
+                            className: "text-center",
+                        },
+                    ],
+                    dom:
+                        "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                        "<'row'<'col-md-12'tr>>" +
+                        "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                    buttons: [
+                        {
+                            extend: "print",
+                            text: "<i class='fa fa-print'></i>&nbsp;Print",
+                            title: "",
+                        },
+                        {
+                            extend: "excel",
+                            footer: true,
+                            text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                            title:
+                                "รายงานขอเบิกสินค้า จากวัน" +
+                                StartDate +
+                                "_to_" +
+                                EndDate,
+                        }
+                    ],
+                    "footerCallback": function (row, data, start, end, display) {
+                        var api = this.api(),
+                            data;
+                        var intVal = function (i) {
+                            return typeof i === 'string' ?
+                                i.replace(/[\$,]/g, '') * 1 :
+                                typeof i === 'number' ?
+                                    i : 0;
+                        };
+                    },
+                });
+                $("#tblReportWithdraw").loading("stop");
+                $("#BtnReportReturn").html(OldHtml);
+            },
+
+            error: function (e) {
+                $("#tblReportWithdraw").loading("stop");
+                $("#BtnReportReturn").html(OldHtml);
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            },
+        });
+    }
+
+
+</script>

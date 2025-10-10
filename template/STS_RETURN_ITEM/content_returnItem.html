@@ -1,0 +1,1140 @@
+<style>
+    .mycontainer {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 90%;
+        margin-left: auto;
+        margin-right: auto;
+        border-width: 4px;
+        border-bottom-color: #60a5fa;
+        border-top-color: white;
+        border-left-color: white;
+        border-right-color: white;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        padding: 6rem;
+        margin-top: 2.5rem;
+    }
+
+    .mybox {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        flex-grow: 1;
+        gap: 1.5rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .mybox2 {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        flex-grow: 1;
+        margin-bottom: 1.25rem;
+    }
+
+    .modal-xl {
+     width: 100% !important;
+    }
+</style>
+<div class="">
+    <div class="col-xs-12">
+        <div class="page-header">
+            <h1 class="text-header text-left">เปิดใบคืนของ</h1>
+        </div>
+    </div>
+</div>
+<div class="mycontainer mb-12">
+    <div class="row col-xs-12">
+        <div class="mybox">
+            <div class="input-group basis-3/6">
+                <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">Doc No</div>
+                <select style="font-weight: bold; font-size: 16px;" class="form-control txt-filter" id="doc_no_return">
+                    <option value=""></option>
+                </select>
+            </div>
+            <div class="input-group basis-3/6">
+                <div class="flex gap-6">
+                    <button type="button" class="btn btn-primary btn-lg" id="btnSearchReturn">Search</button>
+                    <button type="button" class="btn btn-warning btn-lg" id="btnResetReturn">Reset Form</button>
+                </div>
+            </div>
+            <div class="input-group basis-2/6">
+            </div>
+        </div>
+        <hr />
+        <div class="mybox">
+            <div class="input-group basis-3/6">
+                <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">User</div>
+                <input type="text" style="font-weight: bold; font-size: 16px;" class="form-control txt-filter"
+                    id="user_return" readonly>
+            </div>
+
+            <div class="input-group basis-3/6 hidden">
+                <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">Doc</div>
+                <input type="text" style="font-weight: bold; font-size: 16px;" class="form-control txt-filter"
+                    id="doc_no_return_old" readonly>
+            </div>
+        </div>
+        <div class="mybox">
+            <div class="input-group basis-3/6">
+                <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">สถานะสำหรับจัดส่ง</div>
+                <select style="font-weight: bold; font-size: 16px;" class="form-control txt-filter" id="stat_return">
+                    <option value=""> </option>
+                    <option value="ส่งเข้าคลัง">ส่งเข้าคลัง</option>
+                    <option value="ส่ง QC ตรวจสอบ">ส่ง QC ตรวจสอบ</option>
+                </select>
+            </div>
+            <div class="input-group basis-3/6">
+                <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">หมายเหตุ</div>
+                <input type="text" style="font-weight: bold; font-size: 16px;" class="form-control txt-filter"
+                    id="remark_return">
+            </div>
+            <!-- <div class="input-group basis-3/6">
+                <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">เครื่อง *</div>
+                <select style="font-weight: bold; font-size: 16px;" class="form-control txt-filter" id="wc_w">
+                    <option value=""></option>
+                </select> 
+            </div> -->
+        </div>
+        <hr />
+        <div class="mybox">
+            <div class="input-group basis-3/6">
+                <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">Do num *</div>
+                <select style="font-weight: bold; font-size: 16px;" class="form-control txt-filter" id="do_num_return">
+                    <option value=""></option>
+                </select>
+            </div>
+            <div class="input-group basis-3/6">
+                <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">ปัญหา *
+                </div>
+                <select style="font-weight: bold; font-size: 16px;" class="form-control txt-filter" id="issue_return">
+                    <option value=""></option>
+                </select>
+            </div>
+        </div>
+        <div class="mybox">
+            <div class="input-group basis-3/6">
+                <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">Co num *
+                </div>
+                <select style="font-weight: bold; font-size: 16px;" class="form-control txt-filter" id="co_num_return">
+
+                </select>
+            </div>
+             <div class="input-group basis-3/6">
+                <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">หมายเหตุ </div>
+                <input type="text" style="font-weight: bold; font-size: 16px;" class="form-control txt-filter"
+                    id="remark_item_return">
+            </div>
+        </div>
+        <div class="mybox2">
+            <div class="input-group basis-3/6 mr-5">
+                <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">Item *
+                </div>
+                <select style="font-weight: bold; font-size: 16px;" class="form-control txt-filter" id="item_return">
+
+                </select>
+            </div>
+            <div class="input-group basis-2/6">
+                <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">จำนวน *</div>
+                <input type="text" style="font-weight: bold; font-size: 16px;" class="form-control txt-filter"
+                    id="qty_return">
+            </div>
+            <div class="input-group basis-1/6 pl-4">
+                <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">หน่วย</div>
+                <input type="text" style="font-weight: bold; font-size: 16px;" class="form-control txt-filter"
+                    id="um_return" readonly>
+            </div>
+        </div>
+        <div class="mybox">
+           
+        </div>
+        <div class="flex justify-between">
+            <div class="flex gap-12">
+                <button type="button" class="btn btn-success btn-lg" id="btnAddItemReturn">1 Add Item</button>
+                <button type="button" class="btn btn-info btn-lg" id="btnSalesApprove" onclick="SalesApprove()"
+                    disabled>Sales Approve</button>
+                <button type="button" class="btn btn-info btn-lg" id="btnReceiveItem" onclick="ReceiveItem()"
+                    disabled>รับของคืน</button>
+
+            </div>
+            <div>
+                <button type="button" class="btn btn-success btn-lg" id="btnAddReturn">2 Create</button>
+                <button type="button" class="btn btn-info btn-lg" id="btnUpdateReturn" disabled>Update</button>
+            </div>
+        </div>
+        <input type="text" style="font-weight: bold; font-size: 16px;" class="hidden" id="old_co_num">
+    </div>
+</div>
+<div class="row">
+    <table width="100%" class="table table-condensed table-bordered table-striped" id="tbItemReturn">
+        <thead>
+            <tr>
+                <th class="bg-gray">do num</th>
+                <th class="bg-gray">co num</th>
+                <th class="bg-gray">ลูกค้า</th>
+                <th class="bg-gray">Item</th>
+                <th class="bg-gray">Desc</th>
+                <th class="bg-gray">จำนวน</th>
+                <th class="bg-gray">สาเหตุ</th>
+                <th class="bg-gray">ปัญหา</th>
+                <th class="bg-gray">หมายเหตุ</th>
+            </tr>
+        </thead>
+        <!--        <tbody id="tblReportList">
+                      <tr><td align="center" colspan="12">.... No item search ....</td></tr>
+     </tbody>-->
+    </table>
+</div>
+<!-- Modal -->
+<div class="modal fade bd-example-modal-lg" id="ModalReturn" role="dialog" aria-labelledby="myLargeModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-center" id="exampleModalLabel">แก้ไขข้อมูล Item</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+            </div>
+            <div class="modal-body">
+                <div class="mybox">
+                    <div class="input-group basis-3/6">
+                        <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">Do num *
+                        </div>
+                        <select style="font-weight: bold; font-size: 16px;" class="form-control txt-filter"
+                            id="do_num_return_edit">
+                            <option value=""></option>
+                        </select>
+                    </div>
+                    <div class="input-group basis-3/6">
+                        <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">ปัญหา *
+                        </div>
+                        <select style="font-weight: bold; font-size: 16px;" class="form-control txt-filter"
+                            id="issue_return_edit">
+                            <option value=""></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="mybox">
+                    <div class="input-group basis-3/6">
+                        <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">Co num *
+                        </div>
+                        <select style="font-weight: bold; font-size: 16px;" class="form-control txt-filter"
+                            id="co_num_return_edit">
+                        </select>
+                    </div>
+                     <div class="input-group basis-3/6">
+                        <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">หมายเหตุ </div>
+                        <input type="text" style="font-weight: bold; font-size: 16px;" class="form-control txt-filter"
+                            id="remark_item_return_edit">
+                    </div>
+                </div>
+                <div class="mybox2">
+                    <div class="input-group basis-3/6 mr-4">
+                        <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">Item *
+                        </div>
+                        <select style="font-weight: bold; font-size: 16px;" class="form-control txt-filter"
+                            id="item_return_edit">
+                        </select>
+                    </div>
+                    <div class="input-group basis-2/6">
+                        <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">จำนวน *
+                        </div>
+                        <input type="text" style="font-weight: bold; font-size: 16px;" class="form-control txt-filter"
+                            id="qty_return_edit">
+                    </div>
+                    <div class="input-group basis-1/6 pl-4">
+                        <input type="text" style="font-weight: bold; font-size: 16px;" class="form-control txt-filter"
+                            id="um_return_edit" readonly>
+                    </div>
+                </div>
+                <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
+                    class="form-control hidden" id="do_num_return_edit_old">
+                <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
+                    class="form-control hidden" id="co_num_return_edit_old">
+                <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
+                    class="form-control hidden" id="item_return_edit_old">
+                <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
+                    class="form-control hidden" id="row">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="SaveCalibration"
+                    onclick="SaveWithdrawItem()">บันทึก</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bwip-js/4.5.1/bwip-js-min.js"
+    integrity="sha512-nyvUcUIS1L4Z+cowD7We9KKcq/ivAJhTlhZTjBfBFGYV1I+RAqSrHS/WEcWDp1CVKRw1j5SxYCPCSYOQxuIE1w=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script type="text/javascript">
+
+    var username_session = GetUserProp("login_username");
+    $("#user_return").val(username_session);
+
+    // create select2
+
+
+    getDocNumList();
+
+    var issue = [];
+    var cause = [];
+
+    $.ajax({
+        type: "GET",
+        url: "././module/STS_RETURN_ITEM/data.php",
+        dataType: "json",
+        data: { load: "GetReasonCause" },
+        success: function (result) {
+            cause = result;
+        }
+    });
+
+    $.ajax({
+        type: "GET",
+        url: "././module/STS_RETURN_ITEM/data.php",
+        dataType: "json",
+        data: { load: "GetIssueReturn" },
+        success: function (result) {
+            issue = result;
+            issueOptions = [{ id: '', text: '' }].concat(result.map((item) => ({
+                id: item.id,
+                text: item.issue
+            })))
+
+            $("#issue_return").select2({
+                placeholder: 'กรุณาเลือกปัญหา',
+                allowClear: true,
+                width: '100%',
+                data: issueOptions,
+                language: {
+                    noResults: function () {
+                        return "ไม่พบข้อมูล";
+                    }
+                }
+            });
+
+            $("#issue_return_edit").select2({
+                placeholder: 'กรุณาเลือกปัญหา',
+                allowClear: true,
+                width: '100%',
+                data: issueOptions,
+                language: {
+                    noResults: function () {
+                        return "ไม่พบข้อมูล";
+                    }
+                }
+            });
+        }
+    })
+
+
+    function getDocNumList() {
+        $.ajax({
+            type: "GET",
+            url: "././module/STS_RETURN_ITEM/data.php",
+            dataType: "json",
+            data: {
+                load: "GetDocNoReturn"
+            },
+            success: function (data) {
+                let doc = [{ id: '', text: '' }].concat(data.map((item) => ({
+                    id: item.doc_no,
+                    text: item.doc_no
+                })));
+
+                // clear select2
+                $("#doc_no_return").empty();
+
+                $("#doc_no_return").select2({
+                    placeholder: 'Doc No',
+                    allowClear: true,
+                    width: '100%',
+                    data: doc,
+                    language: {
+                        noResults: function () {
+                            return "ไม่พบข้อมูล";
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    $.ajax({
+        type: "GET",
+        url: "././module/STS_RETURN_ITEM/data.php",
+        dataType: "json",
+        data: { load: "GetDo" },
+        success: function (data) {
+            let do_num = [{ id: '', text: '' }].concat(data.map((item) => ({
+                id: item.do_num,
+                text: item.do_num
+            })));
+            items = data;
+            $("#do_num_return").select2({
+                placeholder: 'กรุณาเลือก do num',
+                allowClear: true,
+                width: '100%',
+                data: do_num,
+                language: {
+                    noResults: function () {
+                        return "ไม่พบข้อมูล";
+                    }
+                }
+            }).on('select2:select', function (e) {
+                $("#co_num_return").empty();
+                $.ajax({
+                    type: "GET",
+                    url: "././module/STS_RETURN_ITEM/data.php",
+                    dataType: "json",
+                    data: { load: "GetCoByDo", do_num: e.target.value },
+                    success: function (co) {
+                        let coOption = [{ id: '', text: '' }].concat(co.map((item) => ({
+                            id: item.co_num,
+                            text: item.co_num
+                        })));
+
+                        $("#co_num_return").select2({
+                            placeholder: 'กรุณาเลือก Co Num',
+                            allowClear: true,
+                            width: '100%',
+                            data: coOption,
+                            language: {
+                                noResults: function () {
+                                    return "ไม่พบข้อมูล";
+                                }
+                            }
+                        }).on('select2:select', function (e) {
+                            $("#item_return").empty();
+                            $.ajax({
+                                type: "GET",
+                                url: "././module/STS_RETURN_ITEM/data.php",
+                                dataType: "json",
+                                data: { load: "GetItemByCo", do_num: $("#do_num_return").val(), co_num: e.target.value },
+                                success: function (item) {
+                                    let itemOption = [{ id: '', text: '' }].concat(item.map((item) => ({
+                                        id: item.item,
+                                        text: item.item + ' - ' + item.description,
+                                    })));
+
+                                    $("#item_return").select2({
+                                        placeholder: 'กรุณาเลือก Item',
+                                        allowClear: true,
+                                        width: '100%',
+                                        data: itemOption,
+                                        language: {
+                                            noResults: function () {
+                                                return "ไม่พบข้อมูล";
+                                            }
+                                        }
+                                    }).on('select2:select', function (e) {
+                                        console.log(item);
+
+                                        var um = item.filter((i) => i.item == e.target.value)[0]?.u_m || '';
+
+                                        $("#um_return").val(um);
+
+
+                                    });
+                                }
+                            });
+
+                        });
+                    }
+                });
+            });
+
+            $("#do_num_return_edit").select2({
+                placeholder: 'กรุณาเลือก Item',
+                allowClear: true,
+                width: '100%',
+                data: do_num,
+                language: {
+                    noResults: function () {
+                        return "ไม่พบข้อมูล";
+                    }
+                }
+            });
+
+        }
+    });
+
+    var table = $('#tbItemReturn').DataTable({
+        "columnDefs": [
+            { "targets": '_all', "className": 'text-center' },
+            { "targets": 0, "width": "60" },
+            { "targets": 1, "width": "60" },
+            { "targets": 2, "width": "120" },
+            { "targets": 3, "width": "160" },
+            { "targets": 4, "width": "180" },
+            { "targets": 5, "width": "30" },
+            { "targets": 6, "width": "100" },
+            { "targets": 7, "width": "200" },
+            { "targets": 8, "width": "100" },
+        ],
+        columns: [
+            { "data": "do_num" },
+            { "data": "co_num" },
+            { "data": "customer" },
+            { "data": "item" },
+            { "data": "description" },
+            { "data": "qty" },
+            {
+                "data": "cause",
+                render: function (data, type, row) {
+                    return cause.filter((item) => item.id == row.cause)[0]?.cause || '';
+                }
+            },
+            {
+                "data": "issue",
+                render: function (data, type, row) {
+                    var desc = issue.filter((item) => item.id == row.issue)[0]?.issue || '';
+                    return desc;
+                }
+            },
+            { "data": "remark" },
+        ],
+        paging: false,
+        searching: false,
+        select: true,
+        dom:
+            "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+            "<'row'<'col-md-12'tr>>" +
+            "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+        buttons: [
+            {
+                text: `<button type="button" class="btn btn-warning">Edit</button>`,
+                action: function (e, dt, node, config) {
+                    var select = dt.rows('.selected').data().toArray();
+                    var rowIndex = dt.rows('.selected').indexes()[0];
+                    console.log(select);
+                    
+                    if (select.sales != null) {
+                        swal("ไม่สามารถแก้ไขข้อมูลได้ เนื่องจากมีการอนุมัติแล้ว", "", "warning");
+                        return false;
+                    }
+
+                    if (select.qc != null) {
+                        swal("ไม่สามารถแก้ไขข้อมูลได้ เนื่องจาก QC แล้ว", "", "warning");
+                        return false;
+                    }
+
+                    if (select[0].returned != null) {
+                        swal("ไม่สามารถแก้ไขข้อมูลได้ เนื่องจากมีการรับของคืนแล้ว", "", "warning");
+                        return false;
+                    }
+
+                    $.ajax({
+                        type: "GET",
+                        url: "././module/STS_RETURN_ITEM/data.php",
+                        dataType: "json",
+                        data: { load: "GetDo" },
+                        success: function (data) {
+                            let do_num = [{ id: '', text: '' }].concat(data.map((item) => ({
+                                id: item.do_num,
+                                text: item.do_num
+                            })));
+
+                            $("#do_num_return_edit").empty();
+                            $("#do_num_return_edit").select2({
+                                placeholder: 'กรุณาเลือก do num',
+                                allowClear: true,
+                                width: '100%',
+                                data: do_num,
+                                language: {
+                                    noResults: function () {
+                                        return "ไม่พบข้อมูล";
+                                    }
+                                }
+                            });
+
+                            // *** Bind event ก่อน trigger ***
+                            $("#do_num_return_edit").on('change', function (e) {
+                                $("#co_num_return_edit").empty();
+                                $.ajax({
+                                    type: "GET",
+                                    url: "././module/STS_RETURN_ITEM/data.php",
+                                    dataType: "json",
+                                    data: { load: "GetCoByDo", do_num: e.target.value },
+                                    success: function (co) {
+                                        let coOption = [{ id: '', text: '' }].concat(co.map((item) => ({
+                                            id: item.co_num,
+                                            text: item.co_num
+                                        })));
+
+                                        $("#co_num_return_edit").empty();
+                                        $("#co_num_return_edit").select2({
+                                            placeholder: 'กรุณาเลือก Co Num',
+                                            allowClear: true,
+                                            width: '100%',
+                                            data: coOption,
+                                            language: {
+                                                noResults: function () {
+                                                    return "ไม่พบข้อมูล";
+                                                }
+                                            }
+                                        });
+
+                                        // *** Bind event ก่อน trigger ***
+                                        $("#co_num_return_edit").on('change', function (e) {
+                                            $("#item_return_edit").empty();
+                                            $.ajax({
+                                                type: "GET",
+                                                url: "././module/STS_RETURN_ITEM/data.php",
+                                                dataType: "json",
+                                                data: { load: "GetItemByCo", do_num: $("#do_num_return_edit").val(), co_num: e.target.value },
+                                                success: function (item) {
+                                                    let itemOption = [{ id: '', text: '' }].concat(item.map((item) => ({
+                                                        id: item.item,
+                                                        text: item.item + ' - ' + item.description,
+                                                    })));
+
+                                                    $("#item_return_edit").empty();
+                                                    $("#item_return_edit").select2({
+                                                        placeholder: 'กรุณาเลือก Item',
+                                                        allowClear: true,
+                                                        width: '100%',
+                                                        data: itemOption,
+                                                        language: {
+                                                            noResults: function () {
+                                                                return "ไม่พบข้อมูล";
+                                                            }
+                                                        }
+                                                    });
+
+                                                    $("#item_return_edit").on('change', function (e) {
+                                                        var um = item.filter((i) => i.item == e.target.value)[0]?.u_m || '';
+
+                                                        $("#um_return_edit").val(um);
+                                                    });
+                                                    $("#item_return_edit").val(select[0].item).trigger('change');
+                                                     $("#ModalReturn").modal("show");
+                                                }
+                                            });
+                                        });
+                                        $("#co_num_return_edit").val(select[0].co_num).trigger('change');
+                                    }
+                                });
+                            });
+
+                            $("#do_num_return_edit").val(select[0].do_num).trigger('change');
+                        }
+                    });
+
+                    $("#do_num_return_edit_old").val(select[0].do_num);
+                    $("#item_return_edit_old").val(select[0].item);
+                    $("#co_num_return_edit_old").val(select[0].co_num);
+                    $("#co_num_return_edit").val(select[0].co_num);
+                    $("#qty_return_edit").val(select[0].qty);
+                    $("#um_return_edit").val('');
+                    $("#issue_return_edit").val(select[0].issue).trigger('change');
+                    $("#remark_item_return_edit").val(select[0].remark);
+                    $("#row").val(rowIndex);
+                   
+
+                }
+            },
+            {
+                text: `<button type="button" class="btn btn-danger">Delete</button>`,
+                action: function (e, dt, node, config) {
+                    var all = dt.rows().data().toArray();
+                    var select = dt.rows('.selected').data().toArray();
+                    var rowIndex = dt.rows('.selected').indexes()[0];
+                    var doc_no = $("#doc_no_return_old").val();
+                    var do_num = select[0].do_num;
+                    var co_num = select[0].co_num;
+                    var item = select[0].item;
+
+                    if (all.length == 1) {
+                        swal("ไม่สามารถลบข้อมูลได้", "", "warning");
+                        return false;
+                    }
+
+                    if (select.sales != null) {
+                        swal("ไม่สามารถแก้ไขข้อมูลได้ เนื่องจากมีการอนุมัติแล้ว", "", "warning");
+                        return false;
+                    }
+
+                    if (select.qc != null) {
+                        swal("ไม่สามารถแก้ไขข้อมูลได้ เนื่องจาก QC แล้ว", "", "warning");
+                        return false;
+                    }
+
+                    if (select[0].returned != null) {
+                        swal("ไม่สามารถแก้ไขข้อมูลได้ เนื่องจากมีการรับของคืนแล้ว", "", "warning");
+                        return false;
+                    }
+
+                    $.confirm({
+                        title: 'ยืนยันการลบ',
+                        message: 'คุณต้องการลบข้อมูลใช่หรือไม่ ?',
+                        buttons: {
+                            confirm: {
+                                text: 'ยืนยัน',
+                                btnClass: 'btn-blue',
+                                action: function () {
+                                    $.ajax({
+                                        type: 'POST',
+                                        url: '././module/STS_RETURN_ITEM/data.php',
+                                        dataType: 'json',
+                                        data: {
+                                            load: 'DeleteItemReturn',
+                                            doc_no: doc_no,
+                                            do_num: do_num,
+                                            co_num: co_num,
+                                            item: item,
+                                        },
+                                        success: function (data) {
+                                            swal("ลบข้อมูลสําเร็จ", "", "success");
+                                        },
+                                        error: function (xhr, status, error) {
+                                            alert('Error');
+                                        }
+                                    });
+                                }
+                            },
+                            cancel: {
+                                text: 'ยกเลิก',
+                                btnClass: 'btn-red'
+                            }
+                        }
+                    });
+                }
+            }
+        ],
+    });
+
+    $('#btnAddItemReturn').click(function () {
+        // add data to table 
+        let doc_no = $("#doc_no_return_old").val();
+        let do_num = $("#do_num_return").val();
+        let co_num = $("#co_num_return").val();
+        // split first - and get all remain
+        let item = $("#item_return").val();
+        let qty = $("#qty_return").val();
+        let u_m = $("#um_return").val();
+        let issue = $("#issue_return").val();
+        let remark = $("#remark_item_return").val();
+        let description = $("#item_return option:selected").text().split(' - ').slice(1).join(' - ');
+
+        if (item == '') {
+            swal("กรุณาระบุ Item", "", "warning");
+            return false;
+        } else if (qty == '') {
+            swal("กรุณาระบุ จํานวน", "", "warning");
+            return false;
+        } else if (co_num == '') {
+            swal("กรุณาระบุ co num", "", "warning");
+            return false;
+        } else if (do_num == '') {
+            swal("กรุณาระบุ do num", "", "warning");
+            return false;
+        } else if (issue == '') {
+            swal("กรุณาระบุ ปัญหา", "", "warning");
+            return false;
+        }
+
+        if (doc_no != '') {
+            $.ajax({
+                type: "POST",
+                url: "././module/STS_RETURN_ITEM/data.php",
+                dataType: "json",
+                data: {
+                    load: "AddItemReturn",
+                    doc_no: doc_no,
+                    do_num: do_num,
+                    co_num: co_num,
+                    item: item,
+                    qty: qty,
+                    remark: remark,
+                    user: username_session,
+                    issue: issue
+                },
+                success: function (data) {
+                    if (data == 1) {
+                        alert("Doc No นี้ถูกใช้ไปแล้ว");
+                        return false;
+                    }
+
+                    const newData = [{
+                        "do_num": do_num,
+                        "co_num": co_num,
+                        "customer": '',
+                        "item": item,
+                        "description": description,
+                        "qty": qty,
+                        "cause": '',
+                        "issue": issue,
+                        "remark": remark
+                    }]
+
+                    table.rows.add(newData).draw();
+                }
+            })
+        } else {
+            const newData = [{
+                "do_num": do_num,
+                "co_num": co_num,
+                "customer": '',
+                "item": item,
+                "description": description,
+                "qty": qty,
+                "cause": '',
+                "issue": issue,
+                "remark": remark
+            }]
+
+            table.rows.add(newData).draw();
+        }
+
+
+
+        // clear form
+        $("#do_num_return").val('').trigger('change');
+        $("#co_num_return").val('').trigger('change');
+        $("#item_return").val('').trigger('change');
+        $("#issue_return").val('').trigger('change');
+        $("#qty_return").val('');
+        $("#remark_item_return").val('');
+    });
+
+    $("#btnResetReturn").click(function () {
+        table.clear().draw();
+        $("#doc_no_return").val('').trigger('change');
+        $("#do_num_return").val('').trigger('change');
+        $("#co_num_return").val('').trigger('change');
+        $("#item_return").val('').trigger('change');
+        $("#issue_return").val('').trigger('change');
+        $("#qty_return").val('');
+        $("#remark_item_return").val('');
+        $("#doc_no_return_old").val('');
+        $("#remark_return").val('');
+        $("#stat_return").val('').trigger('change');
+        // um_return
+        $("#um_return").val('');
+
+
+        $("#btnAddReturn").attr("disabled", false);
+        $("#btnUpdateReturn").attr("disabled", true);
+        $("#btnAddItemReturn").attr("disabled", false);
+
+        $("#btnSalesApprove").attr("disabled", true)
+
+        $("#btnReceiveItem").text("รับของคืน");
+        $("#btnReceiveItem").attr("disabled", true)
+        $("#user_return").val(username_session);
+        // show approve button
+
+    });
+
+    $("#btnSearchReturn").click(function () {
+        var doc_no = $("#doc_no_return").val();
+
+        if (doc_no == '') {
+            swal("กรุณาระบุ Doc No", "", "warning");
+            return false;
+        }
+
+        $.ajax({
+            type: "GET",
+            url: "././module/STS_RETURN_ITEM/data.php",
+            dataType: "json",
+            data: {
+                load: "GetItemReturnByDocNo",
+                doc_no: doc_no
+            },
+            success: function (data) {
+
+                table.clear();
+                table.rows.add(data).draw();
+
+                $("#dept_w").val(data[0].dept).trigger('change');
+                $("#remark_return").val(data[0].remark_h);
+                $("#stat_return").val(data[0].stat_h).trigger('change');
+
+                $("#item_retrun").val('').trigger('change');
+                $("#wc_dest").val('').trigger('change');
+                $("#qty_return").val('');
+                $("#remark_w").val('');
+                $("#doc_no_return_old").val(data[0].doc_no);
+
+                //
+                // disable button
+                $("#btnAddReturn").attr("disabled", true);
+                $("#btnUpdateReturn").attr("disabled", false);
+
+                if (data[0].sales !== null) {
+                    $("#btnSalesApprove").attr("disabled", true)
+                    $("#btnAddItemReturn").attr("disabled", true)
+                } else {
+                    $("#btnSalesApprove").attr("disabled", false)
+                    $("#btnAddItemReturn").attr("disabled", false)
+                }
+
+                if (data[0].returned !== null) {
+                    $("#btnReceiveItem").text("รับของคืนแล้วโดยคลัง");
+                    $("#btnReceiveItem").attr("disabled", true);
+                } else {
+                    $("#btnReceiveItem").text("รับของคืน");
+                    $("#btnReceiveItem").attr("disabled", false);
+                }
+
+                data_withdraw = data;
+
+            },
+            error: function (xhr, status, error) {
+                alert('Error');
+            }
+        });
+    });
+
+
+    $('#btnAddReturn').click(function () {
+        // add data to table 
+        var reason = $("#reason_return").val();
+        var stat = $("#stat_return").val();
+        var remark_h = $("#remark_return").val();
+        var do_num = [];
+        var co_num = [];
+        var item = [];
+        var qty = [];
+        var cause = [];
+        var issue = [];
+        var remark = [];
+
+        // get data from table #tbItemReturn
+        table.rows().data().each(function (data, index) {
+            do_num.push(data.do_num);
+            co_num.push(data.co_num);
+            item.push(data.item);
+            qty.push(data.qty);
+            cause.push(data.cause);
+            issue.push(data.issue);
+            remark.push(data.remark);
+        });
+
+        if (item.length == 0) {
+            swal("กรุณากรอกรายการ Item ที่ต้องการคืน อย่างน้อย 1 รายการ", "", "warning");
+            return false;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "././module/STS_RETURN_ITEM/data.php",
+            dataType: "json",
+            data: {
+                load: "CreateItemReturn",
+                user: username_session,
+                cause: JSON.stringify(cause),
+                issue: JSON.stringify(issue),
+                remark_h: remark_h,
+                do_num: JSON.stringify(do_num),
+                co_num: JSON.stringify(co_num),
+                item: JSON.stringify(item),
+                qty: JSON.stringify(qty),
+                remark: JSON.stringify(remark),
+                stat: stat,
+            },
+            success: function (data) {
+                swal("บันทึกข้อมูลสําเร็จ", "เลขที่ใบคืนของ: " + data, "success");
+                table.clear().draw();
+                $("#item_retrun").val('').trigger('change');
+                $("#do_num_return").val('').trigger('change');
+                $("#co_num_return").val('').trigger('change');
+                $("#item_return").val('').trigger('change');
+                $("#qty_return").val('');
+                $("#issue_return").val('').trigger('change');
+                $("#remark_return").val('');
+                $("#remark_item_return").val('');
+                $("#doc_no_w").val('').trigger('change');
+                $("#reason_return").val('').trigger('change');
+
+                $("#btnAddReturn").attr("disabled", false);
+                $("#btnUpdateReturn").attr("disabled", true);
+                $("#btnAddItemReturn").attr("disabled", false);
+                $("#approve_user").hide();
+                getDocNumList();
+            }
+        });
+    });
+
+    function SaveWithdrawItem() {
+        var doc_no = $("#doc_no_return_old").val();
+        var do_num = $("#do_num_return_edit").val();
+        var do_num_old = $("#do_num_return_edit_old").val();
+        var co_num = $("#co_num_return_edit").val();
+        var co_num_old = $("#co_num_return_edit_old").val();
+        var item = $("#item_return_edit").val();
+        let description = $("#item_return_edit option:selected").text().split(' - ').slice(1).join(' - ');
+        var item_old = $("#item_return_edit_old").val();
+        var qty = $("#qty_return_edit").val();
+        var issue = $("#issue_return_edit").val();
+        var remark = $("#remark_item_return_edit").val();
+
+        if (item == '') {
+            swal("กรุณาระบุ Item", "", "warning");
+            return false;
+        } else if (qty == '') {
+            swal("กรุณาระบุ จํานวน", "", "warning");
+            return false;
+        } else if (co_num == '') {
+            swal("กรุณาระบุ co num", "", "warning");
+            return false;
+        } else if (do_num == '') {
+            swal("กรุณาระบุ do num", "", "warning");
+            return false;
+        } else if (issue == '') {
+            swal("กรุณาระบุ ปัญหา", "", "warning");
+            return false;
+        }
+
+
+        $.ajax({
+            type: "POST",
+            url: "././module/STS_RETURN_ITEM/data.php",
+            dataType: "json",
+            data: {
+                load: "UpdateItemReturn",
+                doc_no: doc_no,
+                do_num: do_num,
+                do_num_old: do_num_old,
+                co_num: co_num,
+                co_num_old: co_num_old,
+                item: item,
+                item_old: item_old,
+                qty: qty,
+                remark: remark,
+                issue: issue
+
+            },
+            success: function (data) {
+
+                $("#item_w_edit").val('').trigger('change');
+                $("#wc_dest_edit").val('').trigger('change');
+                $("#qty_w_edit").val('');
+                $("#remark_w_edit").val('');
+                $("#item_w_edit_old").val('');
+                $("#wc_dest_edit_old").val('');
+                $("#ModalReturn").modal("hide");
+                // update table cell
+                table.cell($("#row").val(), 0).data(do_num);
+                table.cell($("#row").val(), 1).data(co_num);
+                table.cell($("#row").val(), 3).data(item);
+                table.cell($("#row").val(), 4).data(description);
+                table.cell($("#row").val(), 5).data(qty);
+                table.cell($("#row").val(), 7).data(issue);
+                table.cell($("#row").val(), 8).data(remark);
+
+                swal("แก้ไขข้อมูลสําเร็จ", "", "success");
+            }
+        });
+
+    }
+
+    $('#btnUpdateReturn').click(function () {
+        // add data to table #tbItemReturn
+        var doc_no = $("#doc_no_return_old").val();
+        var remark = $("#remark_return").val();
+        var stat = $("#stat_return").val();
+
+        $.ajax({
+            type: "POST",
+            url: "././module/STS_RETURN_ITEM/data.php",
+            dataType: "json",
+            data: {
+                load: "UpdateReturnHeader",
+                doc_no: doc_no,
+                remark: remark,
+                stat: stat
+
+            },
+            success: function (data) {
+                swal("อัปเดตข้อมูลสําเร็จ", "", "success");
+            }
+        });
+    });
+
+    function ReceiveItem() {
+
+        $.confirm({
+            title: 'ยืนยันรับของคืน',
+            columnClass: 'medium',
+            theme: 'modern',
+            buttons: {
+                confirm: function () {
+                    var approve = $("#i_user").val();
+                    $.ajax({
+                        type: "POST",
+                        url: "././module/STS_RETURN_ITEM/data.php",
+                        dataType: "json",
+                        data: {
+                            load: "ReceiveItem",
+                            doc_no: $("#doc_no_return_old").val(),
+                            returned: username_session
+                        },
+                        success: function (data) {
+                            swal("รับของคืนสําเร็จ", "", "success");
+                            // edit text btn approve_stock
+                            $("#btnReceiveItem").text("รับของคืนแล้วโดยคลัง");
+                            $("#btnReceiveItem").attr("disabled", true);
+                        },
+                        error: function (xhr, status, error) {
+                            alert('Error');
+                        }
+                    });
+
+                },
+                cancel: function () {
+                    window.close();
+                }
+
+            }
+        });
+
+    }
+
+    function SalesApprove() {
+
+        $.confirm({
+            title: 'Sales Approve',
+            content: 'คุณต้องการอนุมัติเอกสารใช่หรือไม่',
+            columnClass: 'medium',
+            theme: 'modern',
+            buttons: {
+                confirm: function () {
+                    var approve = $("#i_user").val();
+                    $.ajax({
+                        type: "POST",
+                        url: "././module/STS_RETURN_ITEM/data.php",
+                        dataType: "json",
+                        data: {
+                            load: "SalesApprove",
+                            doc_no: $("#doc_no_return_old").val(),
+                            sale: username_session
+                        },
+                        success: function (data) {
+                            swal("Sales Approve สําเร็จ", "", "success");
+                            // edit text btn approve_stock
+                            $("#btnSalesApprove").attr("disabled", true);
+                        },
+                        error: function (xhr, status, error) {
+                            alert('Error');
+                        }
+                    });
+
+                },
+                cancel: function () {
+                    window.close();
+                }
+
+            }
+        });
+
+    }
+
+</script>
