@@ -273,7 +273,8 @@ where [description] not like '%ยกเลิก%'";
         try {
             $year = date('y');
             $month = date('m');
-            $prefix = "W{$year}{$month}";
+            $day = date('d');
+            $prefix = "W{$year}{$month}{$day}";
 
             // วิธีที่ 1: ใช้ Table Lock (แนะนำ)
             $lockSql = "SELECT TOP 1 1 FROM STS_store_withdraw_hdr WITH (TABLOCKX)";
@@ -301,7 +302,7 @@ where [description] not like '%ยกเลิก%'";
                 $newNumber = 1;
             }
 
-            $docNumber = sprintf("W%s%02d%03d", $year, $month, $newNumber);
+            $docNumber = sprintf("W%s%s%s%03d", $year, $month, $day, $newNumber);
 
             // ใส่ Unique Constraint ที่ table
             // ALTER TABLE STS_store_withdraw_hdr ADD CONSTRAINT UQ_doc_no UNIQUE (doc_no)
