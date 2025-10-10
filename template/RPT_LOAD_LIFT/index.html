@@ -296,12 +296,14 @@
                   data: "pick_date_end.date",
                   className: "text-center",
                    render: function (data, type, row) {
-                      let valdata = data ? moment(data).format("YYYY-MM-DD") : "";
+                      let valdata = data ? moment(data).format("YYYY-MM-DD HH:mm") : "";
                       if (username_session !== "kannikar" && username_session !== "vorawut") {
                           return valdata;
                       }
-                      $(`#end_${row.doc_num}`).datepicker({
+                      $(`#end_${row.doc_num}`).datetimepicker({
                           dateFormat: 'yy-mm-dd',
+                          timeFormat: 'HH:mm',
+                          stepMinute: 1
                       });
                       let ret = `<span hidden>${(valdata)}</span><input type='text' id='end_${row.doc_num}' class='form-control container-input' size='15' onchange="SavePickDate('${row.doc_num}',value,'pick_date_end');" value='${(valdata)}' />`;
                       return ret;
