@@ -234,7 +234,7 @@ from location_mst";
     {
         $query = "select itm.item,itm.[description],itm.u_m 
 from item_mst itm inner join itemwhse_mst whse on whse.item = itm.item and qty_on_hand > 0
-where (itm.item like 'ST%' or itm.item like 'RZI%' or itm.item like 'RC%')
+where (itm.item like 'ST%' or itm.item like 'RZI%' or itm.item like 'RC%' or itm.item like 'P%')
 and itm.[description] not like '%ยกเลิก%' order by itm.item";
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
