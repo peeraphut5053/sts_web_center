@@ -282,4 +282,11 @@ group by line.doc_num ,line.cont_no
         return $rs;
     }
     
+    function ApproveBooking($doc_num, $approve) {
+        $query = "UPDATE STS_EX_booking SET approve = $approve, updatedate = GETDATE() WHERE doc_num = '$doc_num'";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
 }

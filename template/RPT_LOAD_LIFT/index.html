@@ -119,13 +119,15 @@
           <th class="bg-gray">Doc Num</th>
           <th class="bg-gray">Do Num</th>
           <th class="bg-gray">Booking Number</th>
+          <th class="bg-gray">sts po</th>
+          <th class="bg-gray">Cust Po</th>
+          <th class="bg-gray">Cust Name</th>
           <th class="bg-gray">Port</th>
           <th class="bg-gray">จำนวนตู้</th>
           <th class="bg-gray">Pick Date Start</th>
           <th class="bg-gray">Pick Date End</th>
           <th class="bg-gray">Co Num</th>
-          <th class="bg-gray">Cust Po</th>
-          <th class="bg-gray">Cust Name</th>
+         
           <th class="bg-gray">Ship</th>
         </tr>
       </thead>
@@ -170,7 +172,7 @@
           success: function (data) {
             $("#tblReportPO").DataTable().clear();
             $("#tblReportPO").append(
-              "<tfoot><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></tfoot>"
+              "<tfoot><tr><td colspan='12'></td></tr></tfoot>"
             );
             $("#tblReportPO").dataTable({
               aaData: data,
@@ -197,11 +199,11 @@
                     },
                     {
                         targets: [3],
-                        width: 100,
+                        width: 200,
                     },
                     {
                         targets: [4],
-                        width: 60,
+                        width: 200,
                     },
                     {
                         targets: [5],
@@ -213,21 +215,39 @@
                     },
                     {
                         targets: [7],
-                        width: 300,
+                        width: 60,
                     },
                     {
                         targets: [8],
-                        width: 300,
+                        width: 80,
                     },
                     {
                         targets: [9],
                         width: 60,
                     },
+                    {
+                        targets: [10],
+                        width: 60,
+                    },
+                    {
+                        targets: [11],
+                        width: 60,
+                    },
+
                 ],
               columns: [
                 {
                   data: "doc_num",
                   className: "text-center",
+                  render: function (data, type, row) {
+                    console.log(row.approve);
+                    
+                    if (row.approve == 1) {
+                      return `<span style="color:green;font-weight:bold;">${data}</span>`;
+                    } else {
+                      return data;
+                    }
+                  },
                 },
                  {
                   data: "do_num",
@@ -235,6 +255,18 @@
                 },
                 {
                   data: "bookNum",
+                  className: "text-center",
+                },
+                {
+                  data: "sts_po",
+                  className: "text-center",
+                },
+                 {
+                  data: "cust_po",
+                  className: "text-center",
+                },
+                {
+                  data: "cust_name",
                   className: "text-center",
                 },
                 {
@@ -277,14 +309,6 @@
                 },
                 {
                   data: "co_num",
-                  className: "text-center",
-                },
-                {
-                  data: "cust_po",
-                  className: "text-center",
-                },
-                {
-                  data: "cust_name",
                   className: "text-center",
                 },
                  {

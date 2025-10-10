@@ -25,6 +25,60 @@
   gap: 1.5rem;
   margin-bottom: 1.25rem;
 }
+
+    /* ซ่อน Checkbox ดั้งเดิม */
+  .custom-checkbox input[type="checkbox"] {
+    display: none;
+  }
+
+  /* ตำแหน่งและขนาดของ Checkbox */
+  .custom-checkbox {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 20px;
+    margin: 3px;
+  }
+
+  /* สไตล์สำหรับ Checkmark */
+  .custom-checkbox .checkmark {
+    width: 20px;
+    height: 20px;
+    background-color: #ccc;
+    border-radius: 4px;
+    display: inline-block;
+    margin-right: 10px;
+    position: relative;
+    transition: background-color 0.3s;
+  }
+
+  /* สไตล์สำหรับ Checkbox เมื่อถูกเลือก */
+  .custom-checkbox input[type="checkbox"]:checked+.checkmark {
+    background-color: #4CAF50;
+  }
+
+  /* สไตล์สำหรับเครื่องหมายถูก */
+  .custom-checkbox .checkmark::after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
+
+  /* แสดงเครื่องหมายถูกเมื่อ Checkbox ถูกเลือก */
+  .custom-checkbox input[type="checkbox"]:checked+.checkmark::after {
+    display: block;
+  }
+
+  /* รูปแบบของเครื่องหมายถูก */
+  .custom-checkbox .checkmark::after {
+    left: 8px;
+    top: 3px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    transform: rotate(45deg);
+  }
 </style>
 <div class="">
     <div class="col-xs-12">
@@ -104,9 +158,14 @@
                 </select>
             </div>
         </div>
-        <div>
+        <div class="flex justify-end gap-8">
             <button type="button" class="btn btn-success btn-lg" id="btnAddContainer">Add Booking</button>
             <button type="button" class="btn btn-info btn-lg" id="btnUpdateBooking" disabled>Update Booking</button>
+            <label class="custom-checkbox">
+                      <input type="checkbox" name='approveBooking' />
+                       <span class="checkmark"></span>
+                          Approve
+            </label>
         </div>
         <input type="text" style="font-weight: bold; font-size: 16px;" class="hidden" id="old_co_num">
     </div>
@@ -465,7 +524,12 @@
                     },
                 });
                 
-           
+            if (data[0].approve == 1) {
+                $("input[name='approveBooking']").prop("checked", true);
+            } else {
+                $("input[name='approveBooking']").prop("checked", false);
+            }
+            
             $("#co_num_booking").val('').trigger('change');
             $("#container_40").val('');
             $("#container_45").val('');
@@ -609,6 +673,26 @@
     $("#booking_date").datepicker({
         dateFormat: "yy-mm-dd",
         showAnim: "slideDown"
+    });
+
+    // approveBooking on change
+    $("input[name='approveBooking']").change(function() {
+        $.ajax({
+            type: "POST",
+            url: "././module/RPT_CONTAINER_BOOKING/data.php",
+            dataType: "json",
+            data: {
+                load: "ApproveBooking",
+                doc_num: $("#doc_num_booking").val(),
+                approve: this.checked ? 1 : 0
+            },
+            success: function (data) {
+                console.log(data);
+            },
+            error: function (xhr, status, error) {
+                alert('Error');
+            }
+        });
     });
 
 

@@ -68,3 +68,8 @@ if ($load == "DeleteByDocNum") {
     $Data = $Data->DeleteByDocNum($doc_num, $co_num);
     echo json_encode($Data);
 }
+
+if ($load == "ApproveBooking") {
+    $Data = $Data->ApproveBooking($doc_num, $approve);
+    echo json_encode($Data);
+}
