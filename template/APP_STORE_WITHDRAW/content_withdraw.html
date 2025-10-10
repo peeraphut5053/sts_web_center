@@ -675,7 +675,15 @@
                     return w[0]?.text || '';
                 }
              },
-            { "data": "remark" },
+            { "data": "remark",
+               "render": function (data, type, row) {
+                    if (row.doc_no !== null) {
+                         return `<input type="text" class="form-control" value="${data ?? ''}" onchange="UpdateDataTableRemark(this.value, '${row.doc_no}', '${row.item}', '${row.line_id}')">`;
+                    } else {
+                        return data;
+                    }
+             },
+            }
         ],
         paging: false,
         searching: false,
@@ -834,6 +842,7 @@
             })
         } else {
             const newData = [{
+                "doc_no": null,
                 "item": item,
                 "itemDesc": desc,
                 "qty_wd": qty,
@@ -1121,6 +1130,29 @@
             }
         });
     });
+
+    function UpdateDataTableRemark(val, doc_no, item, line_id) {
+        $.ajax({
+            type: "POST",
+            url: "././module/APP_STORE_WITHDRAW/data.php",
+            dataType: "json",
+            data: {
+                load: "UpdateItemRemark",
+                doc_no: doc_no,
+                item: item,
+                line_id: line_id,
+                val: val,
+                user: username_session
+            },
+            success: function (data) {
+                console.log('success');
+
+            },
+            error: function (xhr, status, error) {
+                alert('Error');
+            }
+        });
+    }
 
     function approve_user() {
 

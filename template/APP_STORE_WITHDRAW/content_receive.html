@@ -558,7 +558,11 @@
                     return `<input type="number" class="form-control" value="${data ?? ''}" onchange="UpdateDataTableReturn(this.value, '${row.doc_no}', '${row.item}', '${row.line_id}')">`;
                 }
             },
-            { "data": "remark" },
+            { "data": "remark",
+                render: function (data, type, row, meta) {
+                    return `<input type="text" class="form-control" value="${data ?? ''}" onchange="UpdateDataTableRemark(this.value, '${row.doc_no}', '${row.item}', '${row.line_id}')">`;
+                }
+             },
             {
                 "data": "stockOUT",
                 render: function (data, type, row, meta) {
@@ -916,7 +920,7 @@
         });
     }
 
-    function UpdateDataTableReturn(val, doc_no, line_id, wc_dest) {
+    function UpdateDataTableReturn(val, doc_no, item, line_id) {
         $.ajax({
             type: "POST",
             url: "././module/APP_STORE_WITHDRAW/data.php",
@@ -927,6 +931,29 @@
                 item: item,
                 line_id: line_id,
                 val: val
+            },
+            success: function (data) {
+                console.log('success');
+
+            },
+            error: function (xhr, status, error) {
+                alert('Error');
+            }
+        });
+    }
+
+    function UpdateDataTableRemark(val, doc_no, item, line_id) {
+        $.ajax({
+            type: "POST",
+            url: "././module/APP_STORE_WITHDRAW/data.php",
+            dataType: "json",
+            data: {
+                load: "UpdateItemRemark",
+                doc_no: doc_no,
+                item: item,
+                line_id: line_id,
+                val: val,
+                user: username_session
             },
             success: function (data) {
                 console.log('success');

@@ -273,8 +273,7 @@ where [description] not like '%ยกเลิก%'";
         try {
             $year = date('y');
             $month = date('m');
-            $day = date('d');
-            $prefix = "W{$year}{$month}{$day}";
+            $prefix = "W{$year}{$month}";
 
             // วิธีที่ 1: ใช้ Table Lock (แนะนำ)
             $lockSql = "SELECT TOP 1 1 FROM STS_store_withdraw_hdr WITH (TABLOCKX)";
@@ -289,20 +288,20 @@ where [description] not like '%ยกเลิก%'";
             $sql = "SELECT TOP 1 doc_no 
                 FROM STS_store_withdraw_hdr 
                 WHERE doc_no LIKE '{$prefix}%' 
-                ORDER BY doc_no DESC";
+                ORDER BY createdate DESC";
 
             $result = $cSql->SqlQuery($this->StrConn, $sql);
             array_splice($result, count($result) - 1, 1);
 
             if (count($result) > 0) {
                 $lastDoc = $result[0]['doc_no'];
-                $lastNumber = intval(substr($lastDoc, -3));
+                $lastNumber = intval(substr($lastDoc, -4));
                 $newNumber = $lastNumber + 1;
             } else {
                 $newNumber = 1;
             }
-
-            $docNumber = sprintf("W%s%s%s%03d", $year, $month, $day, $newNumber);
+            // W25100001
+            $docNumber = sprintf("W%s%02d%04d", $year, $month, $newNumber);
 
             // ใส่ Unique Constraint ที่ table
             // ALTER TABLE STS_store_withdraw_hdr ADD CONSTRAINT UQ_doc_no UNIQUE (doc_no)
@@ -510,7 +509,16 @@ where [description] not like '%ยกเลิก%'";
 
     function UpdateQty_return($doc_no, $item, $line_id, $val)
     {
-        $query = "UPDATE STS_store_withdraw_line SET [return] = '$val', updatedate = getdate() WHERE doc_no = '$doc_no' AND item = '$item' AND wc_dest = '$line_id'";
+        $query = "UPDATE STS_store_withdraw_line SET [return] = $val, updatedate = getdate() WHERE doc_no = '$doc_no' AND item = '$item' AND line_id = '$line_id'";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+    function UpdateItemRemark($doc_no, $item, $line_id, $val, $user)
+    {
+        $query = "UPDATE STS_store_withdraw_line SET remark = '$val', [user] = '$user', updatedate = getdate() WHERE doc_no = '$doc_no' AND item = '$item' AND line_id = '$line_id'";
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);

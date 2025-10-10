@@ -126,6 +126,11 @@ if ($load == "UpdateQty_return") {
     echo json_encode($rs);
 }
 
+if ($load == "UpdateItemRemark") {
+    $rs = $STS_Custom->UpdateItemRemark($doc_no, $item, $line_id, $val, $user);
+    echo json_encode($rs);
+}
+
 if ($load == "GetLot") {
     $rs = $STS_Custom->GetLot($item);
     echo json_encode($rs);
