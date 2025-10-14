@@ -661,7 +661,7 @@ order by do_num desc";
 from ait_preship_do_seq pre
   inner join coitem_mst coi on pre.co_num = coi.co_num and pre.co_line = coi.co_line and pre.co_release = coi.co_release
    and coi.qty_shipped <> 0 and pre.qty <> 0 and pre.do_num like 'do%'
-   and pre.item not like 'ZR-%' 
+   and coi.item not like 'ZR-%' 
 where pre.do_num = '$do_num'";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
@@ -669,12 +669,12 @@ where pre.do_num = '$do_num'";
         return $rs0;
     }
     function GetItemByCo($do_num, $co_num) {
-        $query = "select distinct pre.item, item.[description], item.u_m
+        $query = "select distinct coi.item, item.[description], item.u_m
 from ait_preship_do_seq pre
   inner join coitem_mst coi on pre.co_num = coi.co_num and pre.co_line = coi.co_line and pre.co_release = coi.co_release
    and coi.qty_shipped <> 0 and pre.qty <> 0 and pre.do_num like 'do%'
-   and pre.item not like 'ZR-%' 
-     inner join item_mst item on pre.item = item.item
+   and coi.item not like 'ZR-%' 
+     inner join item_mst item on coi.item = item.item
 where pre.do_num = '$do_num' and pre.co_num = '$co_num'";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
