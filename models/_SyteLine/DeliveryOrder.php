@@ -650,7 +650,6 @@ from ait_preship_do_seq pre
   inner join coitem_mst coi on pre.co_num = coi.co_num and pre.co_line = coi.co_line and pre.co_release = coi.co_release
    and coi.qty_shipped <> 0 and pre.qty <> 0 and pre.do_num like 'do%'
    and pre.item not like 'ZR-%' 
-where DATEDIFF(month, pre.createdate, getdate()) < 4 
 order by do_num desc";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
