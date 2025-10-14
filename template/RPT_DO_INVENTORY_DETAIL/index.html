@@ -90,6 +90,12 @@
         </div>
     </div>
     <div class="col-lg-2">   
+        <div class="input-group">
+            <div class="input-group-addon">Cust Num</div>
+            <input type="text" class="form-control txt-filter" id="cust_num">
+        </div>
+    </div>
+    <div class="col-lg-2 hidden">   
         <label class="custom-checkbox">
             <input type="checkbox" name='duplicate' />
             <span class="checkmark"></span>
@@ -138,6 +144,7 @@
                 <th>co num</th>
                 <th>co line</th>  
                 <th>CUST PO</th>
+                <th>CUST NAME</th>
                 <th>STS PO</th>
                 <th>item</th>
                 <th>Type/End</th>
@@ -187,6 +194,7 @@
                 do_num: $("#do_num").val(),
                 sts_no: $("#sts_no").val(),
                 cust_po: $("#cust_po").val(),
+                cust_num: $("#cust_num").val(),
             },
             success: function (data) {
                 if ($("input[name='duplicate']").is(':checked')) {
@@ -429,6 +437,7 @@
                 do_num: $("#do_num").val(),
                 sts_no: $("#sts_no").val(),
                 cust_po: $("#cust_po").val(),
+                cust_num: $("#cust_num").val(),
             },
             success: function (data) {
                 // remove duplicate data field lot 
@@ -474,6 +483,14 @@
                         },
                         {
                             "data": "cust_po",
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                var ret = data;
+                                return ret;
+                            }
+                        },
+                        {
+                            "data": "cust",
                             "className": "text-center",
                             "render": function (data, type, row, meta) {
                                 var ret = data;

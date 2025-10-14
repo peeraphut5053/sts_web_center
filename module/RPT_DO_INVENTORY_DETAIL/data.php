@@ -11,7 +11,7 @@ $CallModel->SyteLine_Models();
 if ($load == "ajax") {
     $Do = new DeliveryOrder();
     $Do->setConn($ConnSL);
-    $Do = $Do->GetDoInventoryDetail($do_num, $sts_no,$cust_po);
+    $Do = $Do->GetDoInventoryDetail($do_num, $sts_no,$cust_po,$cust_num);
     echo json_encode($Do);
 } elseif ($load == "GetCarSelect") {
     $Do = new DeliveryOrder();

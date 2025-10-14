@@ -72,7 +72,7 @@ class DeliveryOrder {
         return $rs0;
     }
 
-    function GetDoInventoryDetail($do_num, $sts_no, $cust_po) {
+    function GetDoInventoryDetail($do_num, $sts_no, $cust_po, $cust_num) {
         $Searchdo_num = "";
         $Searchsts_no = "";
         $Searchcust_po = "";
@@ -88,7 +88,8 @@ class DeliveryOrder {
         $query = " EXEC [dbo].[STS_WebApp_QC_DO_detail]
                     @do_num = N'$do_num',
                     @sts_no = '$sts_no',
-                    @cust_po = '$cust_po' ";
+                    @cust_po = '$cust_po',
+                    @cust_num = '$cust_num' ";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);
