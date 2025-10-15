@@ -657,6 +657,20 @@ order by do_num desc";
         array_splice($rs0, count($rs0) - 1, 1);
         return $rs0;
     }
+
+    function GetDoBySearch($search) {
+        $query = "select distinct pre.do_num 
+from ait_preship_do_seq pre
+  inner join coitem_mst coi on pre.co_num = coi.co_num and pre.co_line = coi.co_line and pre.co_release = coi.co_release
+   and coi.qty_shipped <> 0 and pre.qty <> 0 and pre.do_num like 'do%'
+   and coi.item not like 'ZR-%' 
+where pre.do_num like '%$search%'
+order by do_num desc";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
     function GetCoByDo($do_num) {
         $query = "select distinct pre.co_num 
 from ait_preship_do_seq pre

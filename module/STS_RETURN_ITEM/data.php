@@ -22,6 +22,11 @@ if ($load == "GetDo") {
     echo json_encode($rs);
 }
 
+if ($load == "GetDoBySearch") {
+    $rs = $STS_Custom->GetDoBySearch($search);
+    echo json_encode($rs);
+}
+
 if ($load == "GetCoByDo") {
     $rs = $STS_Custom->GetCoByDo($do_num);
     echo json_encode($rs);

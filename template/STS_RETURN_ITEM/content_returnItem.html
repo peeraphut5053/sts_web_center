@@ -35,7 +35,7 @@
     }
 
     .modal-xl {
-     width: 100% !important;
+        width: 100% !important;
     }
 </style>
 <div class="">
@@ -122,7 +122,7 @@
 
                 </select>
             </div>
-             <div class="input-group basis-3/6">
+            <div class="input-group basis-3/6">
                 <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">หมายเหตุ </div>
                 <input type="text" style="font-weight: bold; font-size: 16px;" class="form-control txt-filter"
                     id="remark_item_return">
@@ -148,7 +148,7 @@
             </div>
         </div>
         <div class="mybox">
-           
+
         </div>
         <div class="flex justify-between">
             <div class="flex gap-12">
@@ -225,7 +225,7 @@
                             id="co_num_return_edit">
                         </select>
                     </div>
-                     <div class="input-group basis-3/6">
+                    <div class="input-group basis-3/6">
                         <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">หมายเหตุ </div>
                         <input type="text" style="font-weight: bold; font-size: 16px;" class="form-control txt-filter"
                             id="remark_item_return_edit">
@@ -376,93 +376,113 @@
                 text: item.do_num
             })));
             items = data;
-            $("#do_num_return").select2({
-                placeholder: 'กรุณาเลือก do num',
-                allowClear: true,
-                width: '100%',
-                data: do_num,
-                language: {
-                    noResults: function () {
-                        return "ไม่พบข้อมูล";
-                    }
-                }
-            }).on('select2:select', function (e) {
-                $("#co_num_return").empty();
-                $.ajax({
-                    type: "GET",
-                    url: "././module/STS_RETURN_ITEM/data.php",
-                    dataType: "json",
-                    data: { load: "GetCoByDo", do_num: e.target.value },
-                    success: function (co) {
-                        let coOption = [{ id: '', text: '' }].concat(co.map((item) => ({
-                            id: item.co_num,
-                            text: item.co_num
-                        })));
-
-                        $("#co_num_return").select2({
-                            placeholder: 'กรุณาเลือก Co Num',
-                            allowClear: true,
-                            width: '100%',
-                            data: coOption,
-                            language: {
-                                noResults: function () {
-                                    return "ไม่พบข้อมูล";
-                                }
-                            }
-                        }).on('select2:select', function (e) {
-                            $("#item_return").empty();
-                            $.ajax({
-                                type: "GET",
-                                url: "././module/STS_RETURN_ITEM/data.php",
-                                dataType: "json",
-                                data: { load: "GetItemByCo", do_num: $("#do_num_return").val(), co_num: e.target.value },
-                                success: function (item) {
-                                    let itemOption = [{ id: '', text: '' }].concat(item.map((item) => ({
-                                        id: item.item,
-                                        text: item.item + ' - ' + item.description,
-                                    })));
-
-                                    $("#item_return").select2({
-                                        placeholder: 'กรุณาเลือก Item',
-                                        allowClear: true,
-                                        width: '100%',
-                                        data: itemOption,
-                                        language: {
-                                            noResults: function () {
-                                                return "ไม่พบข้อมูล";
-                                            }
-                                        }
-                                    }).on('select2:select', function (e) {
-                                        console.log(item);
-
-                                        var um = item.filter((i) => i.item == e.target.value)[0]?.u_m || '';
-
-                                        $("#um_return").val(um);
-
-
-                                    });
-                                }
-                            });
-
-                        });
-                    }
-                });
-            });
-
-            $("#do_num_return_edit").select2({
-                placeholder: 'กรุณาเลือก Item',
-                allowClear: true,
-                width: '100%',
-                data: do_num,
-                language: {
-                    noResults: function () {
-                        return "ไม่พบข้อมูล";
-                    }
-                }
-            });
-
         }
     });
+
+    $(document).ready(function () {
+        $("#do_num_return").select2({
+            placeholder: 'กรุณาเลือก do num',
+            allowClear: true,
+            width: '100%',
+            ajax: {
+                url: '././module/STS_RETURN_ITEM/data.php',
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        load: 'GetDoBySearch',
+                        search: params.term,
+                        limit: 10000
+                    };
+                },
+                processResults: function (data) {
+                    return {
+                        results: data.map(function (item) {
+                            return {
+                                id: item.do_num,
+                                text: item.do_num
+                            };
+                        })
+                    };
+                },
+                cache: true
+            },
+            minimumInputLength: 6,
+            language: {
+                inputTooShort: function () {
+                    return 'กรุณาพิมพ์อย่างน้อย 6 ตัวอักษร';
+                },
+                noResults: function () {
+                    return "ไม่พบข้อมูล";
+                },
+                searching: function () {
+                    return "กำลังค้นหา...";
+                }
+            }
+        }).on('select2:select', function (e) {
+            $("#co_num_return").empty();
+            $.ajax({
+                type: "GET",
+                url: "././module/STS_RETURN_ITEM/data.php",
+                dataType: "json",
+                data: { load: "GetCoByDo", do_num: e.target.value },
+                success: function (co) {
+                    let coOption = [{ id: '', text: '' }].concat(co.map((item) => ({
+                        id: item.co_num,
+                        text: item.co_num
+                    })));
+
+                    $("#co_num_return").select2({
+                        placeholder: 'กรุณาเลือก Co Num',
+                        allowClear: true,
+                        width: '100%',
+                        data: coOption,
+                        language: {
+                            noResults: function () {
+                                return "ไม่พบข้อมูล";
+                            }
+                        }
+                    }).on('select2:select', function (e) {
+                        $("#item_return").empty();
+                        $.ajax({
+                            type: "GET",
+                            url: "././module/STS_RETURN_ITEM/data.php",
+                            dataType: "json",
+                            data: { load: "GetItemByCo", do_num: $("#do_num_return").val(), co_num: e.target.value },
+                            success: function (item) {
+                                let itemOption = [{ id: '', text: '' }].concat(item.map((item) => ({
+                                    id: item.item,
+                                    text: item.item + ' - ' + item.description,
+                                })));
+
+                                $("#item_return").select2({
+                                    placeholder: 'กรุณาเลือก Item',
+                                    allowClear: true,
+                                    width: '100%',
+                                    data: itemOption,
+                                    language: {
+                                        noResults: function () {
+                                            return "ไม่พบข้อมูล";
+                                        }
+                                    }
+                                }).on('select2:select', function (e) {
+                                    console.log(item);
+
+                                    var um = item.filter((i) => i.item == e.target.value)[0]?.u_m || '';
+
+                                    $("#um_return").val(um);
+
+
+                                });
+                            }
+                        });
+
+                    });
+                }
+            });
+        });
+    });
+
 
     var table = $('#tbItemReturn').DataTable({
         "columnDefs": [
@@ -513,7 +533,7 @@
                     var select = dt.rows('.selected').data().toArray();
                     var rowIndex = dt.rows('.selected').indexes()[0];
                     console.log(select);
-                    
+
                     if (select.sales != null) {
                         swal("ไม่สามารถแก้ไขข้อมูลได้ เนื่องจากมีการอนุมัติแล้ว", "", "warning");
                         return false;
@@ -613,7 +633,7 @@
                                                         $("#um_return_edit").val(um);
                                                     });
                                                     $("#item_return_edit").val(select[0].item).trigger('change');
-                                                     $("#ModalReturn").modal("show");
+                                                    $("#ModalReturn").modal("show");
                                                 }
                                             });
                                         });
@@ -635,7 +655,7 @@
                     $("#issue_return_edit").val(select[0].issue).trigger('change');
                     $("#remark_item_return_edit").val(select[0].remark);
                     $("#row").val(rowIndex);
-                   
+
 
                 }
             },
@@ -856,7 +876,7 @@
                 $("#dept_w").val(data[0].dept).trigger('change');
                 $("#remark_return").val(data[0].remark_h);
                 $("#stat_return").val(data[0].stat_h).trigger('change');
-                $("#user_return").val(data[0].createdby)
+                $("#user_return").val(data[0].createdby).trigger('change');
 
                 $("#item_retrun").val('').trigger('change');
                 $("#wc_dest").val('').trigger('change');
