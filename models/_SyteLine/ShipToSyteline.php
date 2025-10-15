@@ -291,4 +291,24 @@ group by line.doc_num ,line.cont_no
         array_splice($rs, count($rs) - 1, 1);
         return $rs;
     }
+
+    function GetPrintLoadLift($do_num) {
+        $query = "EXEC [dbo].[Rpt_Mv_DeliveryOrderReportExportSp]
+	@DOnumStarting			  = '$do_num'
+	,@DOnumEnding				   = '$do_num'
+	,@CUSTnumStarting			     = Null
+	,@CUSTnumEnding				      = Null
+	,@TransactionDateStarting	       = NULL
+	,@TransactionDateEnding		       = NULL
+	,@COnumStarting				     = Null
+	,@COnumEnding				    = Null
+	,@ItemStarting				   = Null
+	,@ItemEnding				   = Null
+	,@TransactionDateStarting1	    = NULL
+	,@TransactionDateEnding1        = NULL";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
 }

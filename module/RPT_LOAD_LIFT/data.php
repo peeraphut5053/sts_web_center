@@ -23,3 +23,8 @@ if ($load == "SavePickDate") {
     $Data = $Data->SavePickDate($doc_no, $val, $type);
     echo json_encode($Data);
 }
+
+if ($load == "PrintLoadLift") {
+    $Data = $Data->GetPrintLoadLift($do_num);
+    echo json_encode($Data);
+}
