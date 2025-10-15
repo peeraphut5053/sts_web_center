@@ -31,6 +31,7 @@
             <option>ฝ่ายขาย</option>
             <option>ฝ่ายผลิต</option>
             <option>ฝ่ายตรวจสอบคุณภาพ</option>
+            <option>ฝ่ายจัดส่ง</option>
           </select>
         </div>
       </div>
