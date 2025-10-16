@@ -111,6 +111,7 @@ from STS_QA_LAB inner join sts_po_qc
             @standard_sub = " . ($standard !== null ? "'$standard'" : "null") . ",
             @prod_FM_no = " . ($prod_FM_no !== null ? "'$prod_FM_no'" : "null") . ",
             @prod_date = " . ($prod_date !== null ? "'$prod_date'" : "null");
+        
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);
@@ -560,5 +561,181 @@ left join vendaddr_mst ven on ven.vend_num = po.vend_num
         array_splice($rs0, count($rs0) - 1, 1);
         return $rs0;
     }
+
+    function NewQaDocumentRequest($req, $doc, $user, $dept, $type, $code, $remark) {
+        if (sqlsrv_begin_transaction($this->StrConn) === false) {
+            die("Transaction failed: " . print_r(sqlsrv_errors(), true));
+        }
+
+        try {
+            $year = date('y');
+            $month = date('m');
+            $prefix = "DC{$year}{$month}";
+
+            // วิธีที่ 1: ใช้ Table Lock (แนะนำ)
+            $lockSql = "SELECT TOP 1 1 FROM STS_QA_DocReq WITH (TABLOCKX)";
+            $cSql = new SqlSrv();
+            $cSql->SqlQuery($this->StrConn, $lockSql);
+
+            // หรือวิธีที่ 2: Lock ด้วย Application Lock
+            // $lockSql = "EXEC sp_getapplock @Resource='withdraw_doc_no', @LockMode='Exclusive', @LockTimeout=5000";
+            // $cSql->SqlQuery($this->StrConn, $lockSql);
+
+            // Query เลขล่าสุดหลัง lock แล้ว
+            $sql = "SELECT TOP 1 ID 
+                FROM STS_QA_DocReq 
+                WHERE ID LIKE '{$prefix}%' 
+                ORDER BY createdate DESC";
+
+            $result = $cSql->SqlQuery($this->StrConn, $sql);
+            array_splice($result, count($result) - 1, 1);
+
+            if (count($result) > 0) {
+                $lastDoc = $result[0]['ID'];
+                $lastNumber = intval(substr($lastDoc, -3));
+                $newNumber = $lastNumber + 1;
+            } else {
+                $newNumber = 1;
+            }
+            // DC2510001
+            $docNumber = sprintf("DC%s%02d%04d", $year, $month, $newNumber);
+         
+            // Insert 
+            $query = "INSERT INTO STS_QA_DocReq (ID, cat, doc, [user], dept, [type], code, remark) VALUES ('$docNumber', $req, '$doc', '$user', '$dept', '$type', '$code', '$remark')";
+            $cSql->SqlQuery($this->StrConn, $query);
+            sqlsrv_commit($this->StrConn);
+            return $docNumber;
+        } catch (Exception $e) {
+            sqlsrv_rollback($this->StrConn);
+            throw $e;
+        }
+    }
+
+    function UpdateQaDocumentRequest($req, $doc, $user, $dept, $code, $prev_revision, $new_revision, $description, $remark,$type) {
+        if (sqlsrv_begin_transaction($this->StrConn) === false) {
+            die("Transaction failed: " . print_r(sqlsrv_errors(), true));
+        }
+
+        try {
+            $year = date('y');
+            $month = date('m');
+            $prefix = "DC{$year}{$month}";
+
+            // วิธีที่ 1: ใช้ Table Lock (แนะนำ)
+            $lockSql = "SELECT TOP 1 1 FROM STS_QA_DocReq WITH (TABLOCKX)";
+            $cSql = new SqlSrv();
+            $cSql->SqlQuery($this->StrConn, $lockSql);
+
+            // หรือวิธีที่ 2: Lock ด้วย Application Lock
+            // $lockSql = "EXEC sp_getapplock @Resource='withdraw_doc_no', @LockMode='Exclusive', @LockTimeout=5000";
+            // $cSql->SqlQuery($this->StrConn, $lockSql);
+
+            // Query เลขล่าสุดหลัง lock แล้ว
+            $sql = "SELECT TOP 1 ID 
+                FROM STS_QA_DocReq 
+                WHERE ID LIKE '{$prefix}%' 
+                ORDER BY createdate DESC";
+
+            $result = $cSql->SqlQuery($this->StrConn, $sql);
+            array_splice($result, count($result) - 1, 1);
+
+            if (count($result) > 0) {
+                $lastDoc = $result[0]['ID'];
+                $lastNumber = intval(substr($lastDoc, -3));
+                $newNumber = $lastNumber + 1;
+            } else {
+                $newNumber = 1;
+            }
+            // DC2510001
+            $docNumber = sprintf("DC%s%02d%04d", $year, $month, $newNumber);
+         
+            // Insert 
+            $query = "INSERT INTO STS_QA_DocReq (ID, cat, doc, [user], dept, code, prev_rev, new_rev, Detail, remark, [type]) VALUES ('$docNumber', $req, '$doc', '$user', '$dept', '$code', '$prev_revision', '$new_revision', '$description', '$remark', '$type')";
+            $cSql->SqlQuery($this->StrConn, $query);
+            sqlsrv_commit($this->StrConn);
+            return $docNumber;
+        } catch (Exception $e) {
+            sqlsrv_rollback($this->StrConn);
+            throw $e;
+        }
+    }
+
+    function GetReportQaDocumentRequest($StartDate, $EndDate, $ID, $cat, $type) {
+
+        $wh = '';
+
+        if ($StartDate !== '' && $EndDate !== '') {
+            $wh  = $wh . "and createdate between '$StartDate' and '$EndDate' ";
+        }
+
+        if ($ID !== '') {
+            $wh  = $wh . "and ID = '$ID' ";
+        }
+
+        if ($cat !== '') {
+            $wh  = $wh . "and cat = '$cat' ";
+        }
+
+        if ($type !== '') {
+            $wh  = $wh . "and type = '$type' ";
+        }
+
+        $query = "SELECT * FROM STS_QA_DocReq WHERE 1=1 $wh";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+    function UpdateNewQaDocumentRequest ($ID,$doc, $dept, $type, $code, $remark) {
+        $query = "UPDATE STS_QA_DocReq SET doc = '$doc', dept = '$dept', type = '$type', code = '$code', remark = '$remark', updatedate = GETDATE() WHERE ID = '$ID'";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+    
+    function EditUpdateQaDocumentRequest ($ID, $doc,  $dept,  $code, $prev_revision, $new_revision, $description, $remark, $type) {
+        $query = "UPDATE STS_QA_DocReq SET doc = '$doc', dept = '$dept', code = '$code', prev_rev = '$prev_revision', new_rev = '$new_revision', Detail = '$description', remark = '$remark', [type] = '$type', updatedate = GETDATE() WHERE ID = '$ID'";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+    function DeleteQaDocumentRequest ($ID) {
+        $query = "DELETE FROM STS_QA_DocReq WHERE ID = '$ID'";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+    function MgrApproveQaDocumentRequest ($ID, $user) {
+        $query = "UPDATE STS_QA_DocReq SET Mgr_appr = '$user' WHERE ID = '$ID'";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+    function QaApproveQaDocumentRequest ($ID, $user) {
+        $query = "UPDATE STS_QA_DocReq SET Qa_appr = '$user' WHERE ID = '$ID'";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+    function QaUploadQaDocumentRequest ($ID, $user) {
+        $query = "UPDATE STS_QA_DocReq SET Qa_upload = 1 WHERE ID = '$ID'";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+
+
 }
 ?>

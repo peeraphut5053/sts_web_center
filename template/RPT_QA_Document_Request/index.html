@@ -1,0 +1,1114 @@
+<style>
+    .col-search {
+        padding-left: 3px;
+        padding-right: 3px;
+    }
+
+    /*    table.dataTable thead .sorting:after,
+            table.dataTable thead .sorting:before,
+            table.dataTable thead .sorting_asc:after,
+            table.dataTable thead .sorting_asc:before,
+            table.dataTable thead .sorting_asc_disabled:after,
+            table.dataTable thead .sorting_asc_disabled:before,
+            table.dataTable thead .sorting_desc:after,
+            table.dataTable thead .sorting_desc:before,
+            table.dataTable thead .sorting_desc_disabled:after,
+            table.dataTable thead .sorting_desc_disabled:before {
+                bottom: .5em;
+            }*/
+    .table thead th {
+        text-align: center;
+    }
+
+    .col-flt-page {
+        padding-top: 10px;
+        font-weight: bold;
+    }
+
+    #tblReportQaDocumentReq tbody tr td a {
+        cursor: pointer;
+    }
+
+    table.dataTable.fixedHeader-floating,
+    table.dataTable.fixedHeader-locked {
+        background-color: white;
+        margin-top: 50px !important;
+        margin-bottom: 0 !important;
+    }
+
+    .text-header {
+        font-weight: bold;
+        font-size: 20px;
+    }
+
+    .text-wrap {
+        white-space: normal;
+    }
+
+    .width-200 {
+        width: 200px;
+    }
+
+    input[type="checkbox"] {
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+
+    /*
+        .cb_lb{
+            margin-top:-5px;
+        }*/
+    .item-center {
+        display: flex;
+        justify-content: center;
+    }
+
+    .type_qa {
+        width: 200px;
+    }
+</style>
+<div class="row">
+    <h4 class="text-header text-center">QA Document Request</h4>
+</div>
+<div class="row item-center">
+    <div class="col-lg-2 col-md-3 col-sm-6 col-xs-6">
+        <div class="input-group">
+            <div class="input-group-addon">Start Date</div>
+            <input type="text" class="form-control" id="Start_Date_Qa_req" autocomplete="off" />
+        </div>
+    </div>
+    <div class="col-lg-2 col-md-3 col-sm-6 col-xs-6">
+        <div class="input-group">
+            <div class="input-group-addon">End Date</div>
+            <input type="text" class="form-control" id="End_Date_Qa_req" autocomplete="off" />
+        </div>
+    </div>
+    <div class="col-lg-2 col-md-3 col-sm-6 col-xs-6">
+        <div class="input-group">
+            <div class="input-group-addon">ID</div>
+            <input type="text" class="form-control" id="id_qa_req" autocomplete="off" />
+        </div>
+    </div>
+    <div class="col-lg-2 col-md-3 col-sm-6 col-xs-6">
+        <div class="input-group">
+            <div class="input-group-addon">Type</div>
+                        <select class="form-control" id="type_req_search">
+                            <option value="">ทั้งหมด</option>
+                            <option value="Procedure">Procedure</option>
+                            <option value="Standard">Standard</option>
+                            <option value="Drawing">Drawing</option>
+                            <option value="WI">Work Instruction</option>
+                            <option value="Form">Form</option>
+                        </select>
+        </div>
+    </div>
+    <div class="col-lg-2 col-md-3 col-sm-6 col-xs-6">
+        <div class="input-group">
+            <div class="input-group-addon">ประเภท</div>
+            <select class="form-control" id="cat">
+                <option value="">ทั้งหมด</option>
+                <option value="0">ขอออกเอกสาร</option>
+                <option value="1">ขอแก้ไข</option>
+            </select>
+        </div>
+    </div>
+    <div class="col-lg-1 col-md-2 col-sm-1 col-xs-6  col-search">
+        <button id="BtnSearchQaReq" class="btn btn-info"><i class="fa fa-search"></i>&nbsp; Search</button>
+    </div>
+    <div class="col-lg-1 col-md-1 col-sm-6 col-xs-6 text-left">
+        <div class="flex">
+            <button id="btnAddQaDocumentRequest" class="btn btn-success"><i class="fa fa-searh"></i>Request</button>
+            <!-- <a class="btn btn-success ml-32" href="module/STS_Custom_Data/Import_Excel_In.php"  id="btnTransfer">&nbsp;Import Excel (IN)</a> -->
+        </div>
+    </div>
+</div>
+
+<div class="row" id="rowResultTable">
+    <table width="100%" class="table table-condensed table-bordered table-striped" id="tblReportQaDocumentReq">
+        <thead>
+            <tr class="bg-gray">
+                <th>ID</th>
+                <th>ประเภท</th>
+                <th>Documents</th>
+                <th>User</th>
+                <th>แผนก</th>
+                <th>วันที่</th>
+                <th>Type of Doc.</th>
+                <th>Code</th>
+                <th>Prev Revision</th>
+                <th>Next Revision</th>
+                <th>Description</th>
+                <th>หมายเหตุ</th>
+                <th>Manager Approval</th>
+                <th>QA Approval</th>
+                <th>QA Upload</th>
+            </tr>
+        </thead>
+        <!--        <tbody id="tblReportQaDocumentReqList">
+                        <tr><td align="center" colspan="12">.... No item search ....</td></tr>
+       </tbody>-->
+    </table>
+</div>
+<!-- Modal -->
+<div class="modal fade bd-example-modal-lg" id="ModalQaAddReq" role="dialog" aria-labelledby="myLargeModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-center" id="exampleModalLabel">Request</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+            </div>
+            <div class="modal-body">
+                <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                    <div class="input-group basis-2/4">
+                        <div class="input-group-addon">Req.</div>
+                        <select class="form-control" id="request">
+                            <option value="0">ขอออกเอกสาร</option>
+                            <option value="1">ขอแก้ไข</option>
+                        </select>
+                    </div>
+                    <div class="input-group basis-2/4">
+                        <div class="input-group-addon">Documents</div>
+                        <input type="text" autocomplete="off" class="form-control" id="documents_req">
+                    </div>
+                </div>
+                <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                    <div class="input-group basis-2/4">
+                        <div class="input-group-addon">User</div>
+                        <input type="text" autocomplete="off" class="form-control" id="user_req" disabled>
+                    </div>
+                    <div class="input-group basis-2/4">
+                      
+                        <div class="input-group-addon">แผนก</div>
+                        <input type="text" autocomplete="off" class="form-control" id="dept_req">
+                    </div>
+                </div>
+                <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                    <div class="input-group basis-2/4">
+                        <div class="input-group-addon">Type</div>
+                        <select class="form-control" id="type_req">
+                            <option value=""></option>
+                            <option value="Procedure">Procedure</option>
+                            <option value="Standard">Standard</option>
+                            <option value="Drawing">Drawing</option>
+                            <option value="WI">Work Instruction</option>
+                            <option value="Form">Form</option>
+                        </select>
+                    </div>
+                    <div class="input-group basis-2/4">
+                        <div class="input-group-addon">Code</div>
+                        <input type="text" autocomplete="off" class="form-control" id="code_req">
+                    </div>
+                </div>
+                <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                    <div class="input-group basis-2/4">
+                        <div class="input-group-addon">Prev Revision</div>
+                        <input type="text" autocomplete="off" class="form-control" id="prev_revision">
+                    </div>
+                    <div class="input-group basis-2/4">
+                        <div class="input-group-addon">New Revision</div>
+                        <input type="text" autocomplete="off" class="form-control" id="new_revision">
+                    </div>
+                </div>
+                <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                    <div class="input-group basis-full">
+                        <div class="input-group-addon">Description</div>
+                        <input type="text" autocomplete="off" class="form-control" id="description_req">
+                    </div>
+                </div>
+                <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                    <div class="input-group basis-full">
+                        <div class="input-group-addon">หมายเหตุ</div>
+                        <input type="text" autocomplete="off" class="form-control" id="remark_req">
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="SaveQaDocumentRequest()">บันทึก</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade bd-example-modal-lg" id="ModalQaAddReqEdit" role="dialog" aria-labelledby="myLargeModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-center" id="exampleModalLabel">Request Edit</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+            </div>
+            <div class="modal-body">
+                <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                    <div class="input-group basis-2/4">
+                        <div class="input-group-addon">Req.</div>
+                        <select class="form-control" id="request_edit" disabled>
+                            <option value="0">ขอออกเอกสาร</option>
+                            <option value="1">ขอแก้ไข</option>
+                        </select>
+                    </div>
+                    <div class="input-group basis-2/4">
+                        <div class="input-group-addon">Documents</div>
+                        <input type="text" autocomplete="off" class="form-control" id="documents_req_edit">
+                    </div>
+                </div>
+                <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                    <div class="input-group basis-2/4">
+                        <div class="input-group-addon">User</div>
+                        <input type="text" autocomplete="off" class="form-control" id="user_req_edit" disabled>
+                    </div>
+                    <div class="input-group basis-2/4">
+                       <div class="input-group-addon">Documents</div>
+                        <input type="text" autocomplete="off" class="form-control" id="dept_req_edit">
+                    </div>
+                </div>
+                <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                    <div class="input-group basis-2/4">
+                        <div class="input-group-addon">Type</div>
+                        <select class="form-control" id="type_req_edit">
+                            <option value=""></option>
+                            <option value="Procedure">Procedure</option>
+                            <option value="Standard">Standard</option>
+                            <option value="Drawing">Drawing</option>
+                            <option value="WI">Work Instruction</option>
+                            <option value="Form">Form</option>
+                        </select>
+                    </div>
+                    <div class="input-group basis-2/4">
+                        <div class="input-group-addon">Code</div>
+                        <input type="text" autocomplete="off" class="form-control" id="code_req_edit">
+                    </div>
+                </div>
+                <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                    <div class="input-group basis-2/4">
+                        <div class="input-group-addon">Prev Revision</div>
+                        <input type="text" autocomplete="off" class="form-control" id="prev_revision_edit">
+                    </div>
+                    <div class="input-group basis-2/4">
+                        <div class="input-group-addon">New Revision</div>
+                        <input type="text" autocomplete="off" class="form-control" id="new_revision_edit">
+                    </div>
+                </div>
+                <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                    <div class="input-group basis-full">
+                        <div class="input-group-addon">Description</div>
+                        <input type="text" autocomplete="off" class="form-control" id="description_req_edit">
+                    </div>
+                </div>
+                <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                    <div class="input-group basis-full">
+                        <div class="input-group-addon">หมายเหตุ</div>
+                        <input type="text" autocomplete="off" class="form-control" id="remark_req_edit">
+                    </div>
+                </div>
+                <input type="text" class="hidden" id="ID_req">
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="EditQaDocumentRequest()">บันทึก</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var username_session = GetUserProp("login_username");
+
+    var arr_dept = [
+        "วางแผน",
+        "คลังวัดถุดิบ",
+        "คลังขายในประเทศ",
+        "คลังขายต่างประเทศ",
+        "จัดส่ง",
+        "จัดซื้อ",
+        "บัญชี",
+        "ตรวจสอบภายใน",
+        "ขายต่างประเทศ",
+        "ขายในประเทศ",
+        "ฝ่ายบุคคล",
+        "IT",
+        "เตาชุบ",
+        "พิมพ์ตรา",
+        "ต๊าปเกลียว",
+        "กรุ๊ปปลายท่อ",
+        "พ่นสี",
+        "ตัดแบ่งความยาว",
+        "มัดท่อ",
+        "ฟอร์มมิ่ง",
+        "เทสน้ำ",
+        "ดัดตรง",
+        "คว้านหัว",
+        "เครื่องตัด /สลิต",
+        "ไฟฟ้า เครื่องกลึง",
+        "ซ่อมบำรุง วิศวกร",
+        "QC ห้องแล็ป",
+        "วังน้อย-ฟอร์มมิ่ง",
+        "วังน้อย-เทสน้ำ",
+        "วังน้อย-ดัดตรง",
+        "วังน้อย-เครื่องตัด /สลิต",
+        "วังน้อย-กรุ๊ปปลายท่อ",
+        "วังน้อย-มัดท่อ",
+        "วังน้อย-ฝ่ายจัดซื้อ(สโตร์)",
+        "วังน้อย-วางแผนการผลิต",
+        "วังน้อย-จัดส่งสินค้า",
+        "วังน้อย-แผนกคลังวัตถุดิบ",
+        "วังน้อย-แผนกคลังสินค้าสำเร็จรูป",
+        "วังน้อย-ไฟฟ้า",
+        "วังน้อย-ซ่อมบำรุง",
+        "วังน้อย-เครื่องกลึง",
+        "วังน้อย-ส่วนกลางโรงงาน",
+        "วังน้อย-สำนักงานกลาง",
+        "วังน้อย-ฝ่ายบุคคล-ธุรการ",
+        "วังน้อย-QC"
+    ];
+
+    var deptOption = arr_dept.map(function (item) {
+        return {
+            id: item,
+            text: item
+        };
+    })
+
+    
+
+    $("#BtnSearchQaReq").click(function () {
+        ReportItemSearch();
+    });
+
+    $("#btnAddQaDocumentRequest").click(function () {
+        var req = $("#request").val();
+        $("#user_req").val(username_session);
+
+        if (req == 0) {
+            $("#prev_revision").val('');
+            $("#new_revision").val('');
+            $("#description_req").val('');
+            $("#prev_revision").attr('disabled', true);
+            $("#new_revision").attr('disabled', true);
+            $("#description_req").attr('disabled', true);
+            $("#ModalQaAddReq").modal("show");
+        } else {
+            $("#type_req").val('');
+           
+            $("#prev_revision").attr('disabled', false);
+            $("#new_revision").attr('disabled', false);
+            $("#description_req").attr('disabled', false);
+            $("#ModalQaAddReq").modal("show");
+        }
+    });
+
+    $("#request").change(function () {
+        var req = $("#request").val();
+        if (req == 0) {
+            $("#prev_revision").val('');
+            $("#new_revision").val('');
+            $("#description_req").val('');
+          
+            $("#prev_revision").attr('disabled', true);
+            $("#new_revision").attr('disabled', true);
+            $("#description_req").attr('disabled', true);
+        } else {
+            $("#type_req").val('');
+         
+            $("#prev_revision").attr('disabled', false);
+            $("#new_revision").attr('disabled', false);
+            $("#description_req").attr('disabled', false);
+        }
+    })
+
+    $("#qa_issue , #qa_issue_edit, #Start_Date_Qa_req, #End_Date_Qa_req").datepicker({
+        dateFormat: "yy-mm-dd",
+    });
+
+
+    $("#btnRemove").click(function () {
+        $("#tblReportQaDocumentReq").DataTable().clear().destroy();
+    });
+
+
+    function ReportItemSearch() {
+        var OldHtml = $("#BtnSearchQaReq").html();
+        var StartDate = $("#Start_Date_Qa_req").val();
+        var EndDate = $("#End_Date_Qa_req").val();
+        var id = $("#id_qa_req").val();
+        var type = $("#type_req_search").val();
+        var cat = $("#cat").val();
+
+
+        $("#BtnSearchQaReq").html("<i class='fa fa-spinner fa-spin'></i>");
+        $("#tblReportQaDocumentReq").loading();
+        $("#tblReportQaDocumentReq tfoot").remove();
+        $.ajax({
+            type: "POST",
+            url: "././module/RPT_QA_Document_Request/data.php",
+            dataType: "json",
+            beforeSend: function () {
+                $("#BtnSearchQaReq").html("<i class='fa fa-spinner fa-spin'>");
+            },
+            data: {
+                load: "GetReportQaDocumentRequest",
+                StartDate: StartDate,
+                EndDate: EndDate,
+                ID: id,
+                cat: cat,
+                type: type
+            },
+            success: function (data) {
+
+                $("#tblReportQaDocumentReq").DataTable().clear();
+                $("#tblReportQaDocumentReq").dataTable({
+                    aaData: data,
+                    paging: false,
+                    fixedHeader: true,
+                    destroy: true,
+                    processing: true,
+                    scrollY: "65vh",
+                    scrollCollapse: true,
+                    scrollX: true,
+                    select: true,
+                    columns: [
+                        {
+                            data: "ID",
+                            className: "text-center",
+
+                        },
+                        {
+                            data: "cat",
+                            className: "text-center",
+                            render: function (data, type, row) {
+                                if (data == 0) {
+                                    return "ขอออกเอกสาร";
+                                } else {
+                                    return "ขอแก้ไข";
+                                }
+                            }
+
+                        },
+                        {
+                            data: "Doc",
+                            className: "text-left",
+
+
+                        },
+                        {
+                            data: "user",
+                            className: "text-left",
+
+                        },
+                        {
+                            data: "Dept",
+                            className: "text-center",
+
+
+                        },
+                        {
+                            data: "createdate.date",
+                            className: "text-center",
+                            render: function (data, type, row) {
+                                return moment(data).format("DD/MM/YYYY");
+                            }
+
+                        },
+                        {
+                            data: "Type",
+                            className: "text-center",
+                        },
+                        {
+                            data: "Code",
+                            className: "text-center",
+                        },
+                        {
+                            data: "Prev_rev",
+                            className: "text-center",
+                        },
+                        {
+                            data: "New_rev",
+                            className: "text-center",
+                        },
+                        {
+                            data: "Detail",
+                            className: "text-center",
+                        },
+                        {
+                            data: "remark",
+                            className: "text-center",
+                        },
+                        {
+                            data: "Mgr_appr",
+                            className: "text-center",
+                            render: function (data, type, row, meta) {
+                                if (data == null) {
+                                    return `<button type="button" class="btn btn-danger" onclick='MgrApprove("${row.ID}", ${meta.row})'>อนุมัติ</button>`
+                                } else {
+                                    return data;
+                                }
+                            }
+                        },
+                        {
+                            data: "QA_appr",
+                            className: "text-center",
+                            render: function (data, type, row, meta) {
+                                if (data == null) {
+                                    return `<button type="button" class="btn btn-danger" onclick='QaApprove("${row.ID}", ${meta.row})'>อนุมัติ</button>`
+                                } else {
+                                    return data;
+                                }
+                            }
+                        },
+                        {
+                            data: "QA_upload",
+                            className: "text-center",
+                            render: function (data, type, row, meta) {
+                                if (data == null) {
+                                    return `<button type="button" class="btn btn-danger" onclick='QaUpload("${row.ID}", ${meta.row})'>อนุมัติ</button>`
+                                } else {
+                                    return 'อัปโหลดไฟล์แล้ว';
+                                }
+                            }
+                        },
+                    ],
+                    dom:
+                        "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                        "<'row'<'col-md-12'tr>>" +
+                        "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                    buttons: [
+                        {
+                            extend: "print",
+                            text: "<i class='fa fa-print'></i>&nbsp;Print",
+                            title: "",
+                        },
+                        {
+                            extend: "excel",
+                            footer: true,
+                            text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                            title:
+                                "รายงาน QA Document Request ",
+                        },
+                        {
+                            text: `<button type="button" class="btn btn-info">Edit</button>`,
+                            action: function (e, dt, node, config) {
+                                // on selected
+                                let selected = Array.from(dt.rows('.selected').data());
+                                if (selected.length == 0) {
+                                    alert("กรุณารายการที่ต้องการแก้ไข");
+                                    return false;
+                                }
+
+                                if (selected[0].Mgr_appr != null) {
+                                    swal("ไม่สามารถแก้ไขได้ เนื่องจากอนุมัติแล้ว", "", "warning");
+                                    return false;
+                                }
+
+                                if (selected[0].QA_appr != null) {
+                                    swal("ไม่สามารถแก้ไขได้ เนื่องจากอนุมัติแล้ว", "", "warning");
+                                    return false;
+                                }
+
+                                if (selected[0].QA_upload != null) {
+                                    swal("ไม่สามารถแก้ไขได้ เนื่องจากอนุมัติแล้ว", "", "warning");
+                                    return false;
+                                }
+
+
+                                var req = selected[0].cat;
+                                $("#user_req_edit").val(selected[0].user);
+                                $("#request_edit").val(selected[0].cat);
+                                $("#ID_req").val(selected[0].ID);
+
+                                console.log(selected);
+                                
+
+
+                                if (req == 0) {
+                                    $("#prev_revision_edit").val('');
+                                    $("#new_revision_edit").val('');
+                                    $("#description_req_edit").val('');
+                                    $("#documents_req_edit").val(selected[0].Doc);
+                                    $("#dept_req_edit").val(selected[0].Dept)
+                             
+                                    $("#type_req_edit").val(selected[0].Type);
+                                    $("#code_req_edit").val(selected[0].Code);
+                                    $("#remark_req_edit").val(selected[0].remark);
+                                    $("#prev_revision_edit").attr('disabled', true);
+                                    $("#new_revision_edit").attr('disabled', true);
+                                    $("#description_req_edit").attr('disabled', true);
+                                    $("#ModalQaAddReqEdit").modal("show");
+                                } else {
+                                    $("#type_req_edit").val('');
+                                     $("#type_req_edit").val(selected[0].Type);
+                                    $("#documents_req_edit").val(selected[0].Doc);
+                                    $("#dept_req_edit").val(selected[0].Dept)
+                                    $("#code_req_edit").val(selected[0].Code);
+                                    $("#prev_revision_edit").val(selected[0].Prev_rev);
+                                    $("#new_revision_edit").val(selected[0].New_rev);
+                                    $("#description_req_edit").val(selected[0].Detail);
+                                    $("#remark_req_edit").val(selected[0].remark);
+                                
+                                    $("#prev_revision_edit").attr('disabled', false);
+                                    $("#new_revision_edit").attr('disabled', false);
+                                    $("#description_req_edit").attr('disabled', false);
+                                    $("#ModalQaAddReqEdit").modal("show");
+                                }
+
+
+                            }
+                        },
+                        {
+                            text: `<button type="button" class="btn btn-danger">Delete</button>`,
+                            action: function (e, dt, node, config) {
+                                // on selected
+                                let selected = Array.from(dt.rows('.selected').data());
+                                if (selected.length == 0) {
+                                    alert("กรุณารายการที่ต้องการลบ");
+                                    return false;
+                                }
+
+                                if (selected[0].Mgr_appr != null) {
+                                    swal("ไม่สามารถลบได้ เนื่องจากอนุมัติแล้ว", "", "warning");
+                                    return false;
+                                }
+
+                                if (selected[0].QA_appr != null) {
+                                       swal("ไม่สามารถลบได้ เนื่องจากอนุมัติแล้ว", "", "warning");
+                                    return false;
+                                }
+
+                                if (selected[0].QA_upload != null) {
+                                       swal("ไม่สามารถลบได้ เนื่องจากอนุมัติแล้ว", "", "warning");;
+                                    return false;
+                                }
+
+                                $.confirm({
+                                    title: 'กรุณาใส่ Password',
+                                    theme: 'modern',
+                                    content: '<input placeholder="Password" type="password" id="Pass" class="form-control my-2" name="Pass" autofocus>',
+                                    buttons: {
+                                        confirm: function () {
+                                            var Pass = $("#Pass").val();
+
+                                            if (Pass == "QA1234") {
+                                                if (confirm("ยืนยันการลบ")) {
+                                                    $.ajax({
+                                                        type: "POST",
+                                                        url: "././module/RPT_QA_Document_Request/data.php",
+                                                        dataType: "json",
+                                                        data: {
+                                                            load: "DeleteQaDocumentRequest",
+                                                            ID: selected[0].ID
+
+                                                        },
+                                                        success: function (data) {
+                                                            $.alert("ลบข้อมูลสําเร็จ");
+                                                            dt.rows('.selected').remove().draw();
+                                                        },
+                                                        error: function (xhr, status, error) {
+                                                            $.alert("ลบข้อมูลไม่สําเร็จ");
+                                                        },
+                                                        //            dataType: "json"
+                                                    });
+
+                                                }
+                                            } else {
+                                                $('#Pass').attr('placeholder', 'Password ไม่ถูกต้อง');
+                                                $("#Pass").val('');
+                                                return false;
+                                            }
+                                        },
+                                        cancel: function () {
+                                            window.close();
+                                        }
+
+                                    }
+                                });
+                            }
+                        }
+                    ],
+                });
+                $("#tblReportQaDocumentReq").loading("stop");
+                $("#BtnSearchQaReq").html(OldHtml);
+            },
+            error: function (e) {
+                $("#tblReportQaDocumentReq").loading("stop");
+                $("#BtnSearchQaReq").html(OldHtml);
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            },
+        });
+    }
+
+
+    function SaveQaDocumentRequest() {
+        var req = $("#request").val();
+        var doc = $("#documents_req").val();
+        var user = $("#user_req").val();
+        var dept = $("#dept_req").val();
+        var type = $("#type_req").val();
+        var code = $("#code_req").val();
+        var prev_revision = $("#prev_revision").val();
+        var new_revision = $("#new_revision").val();
+        var description = $("#description_req").val();
+        var remark = $("#remark_req").val();
+
+        if (req == 0) {
+            if (doc == "") {
+                swal("กรุณากรอกชื่อเอกสาร", "", "warning");
+                return false;
+            }
+
+            if (dept == "") {
+                swal("กรุณาเลือกแผนก", "", "warning");
+                return false;
+            }
+
+            if (code == "") {
+                swal("กรุณาระบุรหัสเอกสาร", "", "warning");
+                return false;
+            }
+
+            if (type == "") {
+                swal("กรุณาระบุ Type", "", "warning");
+                return false;
+            }
+            $.ajax({
+                type: "POST",
+                url: "././module/RPT_QA_Document_Request/data.php",
+                dataType: "json",
+                data: {
+                    load: "NewQaDocumentRequest",
+                    req: req,
+                    doc: doc,
+                    user: user,
+                    dept: dept,
+                    type: type,
+                    code: code,
+                    remark: remark
+                },
+                success: function (data) {
+                    swal("บันทึกข้อมูลสําเร็จ", "เลขที่เอกสาร " + data, "success");
+                    $("#documents_req").val('');
+                    $("#dept_req").val('');
+                    $("#type_req").val('');
+                    $("#code_req").val('');
+                    $("#prev_revision").val('');
+                    $("#new_revision").val('');
+                    $("#description_req").val('');
+                    $("#remark_req").val('');
+                    $("#ModalQaAddReq").modal("hide");
+
+                },
+                error: function (e) {
+                    swal("บันทึกข้อมูลไม่สําเร็จ", "", "error");
+                },
+            });
+        } else {
+            if (doc == "") {
+                swal("กรุณากรอกชื่อเอกสาร", "", "warning");
+                return false;
+            }
+
+            if (dept == "") {
+                swal("กรุณาเลือกแผนก", "", "warning");
+                return false;
+            }
+
+            if (code == "") {
+                swal("กรุณากรอก Code", "", "warning");
+                return false;
+            }
+
+            if (prev_revision == "") {
+                swal("กรุณากรอก Prev Revision", "", "warning");
+                return false;
+            }
+
+            if (new_revision == "") {
+                swal("กรุณากรอก New Revision", "", "warning");
+                return false;
+            }
+
+            if (description == "") {
+                swal("กรุณากรอก Description", "", "warning");
+                return false;
+            }
+
+            if (type == "") {
+                swal("กรุณาระบุ Type", "", "warning");
+                return false;
+            }
+
+
+            $.ajax({
+                type: "POST",
+                url: "././module/RPT_QA_Document_Request/data.php",
+                dataType: "json",
+                data: {
+                    load: "UpdateQaDocumentRequest",
+                    req: req,
+                    doc: doc,
+                    user: user,
+                    dept: dept,
+                    code: code,
+                    prev_revision: prev_revision,
+                    new_revision: new_revision,
+                    description: description,
+                    code: code,
+                    remark: remark,
+                    type: type
+                },
+                success: function (data) {
+                    swal("บันทึกข้อมูลสําเร็จ", "เลขที่เอกสาร " + data, "success");
+                    // rest form
+                    $("#documents_req").val('');
+                    $("#dept_req").val('');
+                    $("#type_req").val('');
+                    $("#code_req").val('');
+                    $("#prev_revision").val('');
+                    $("#new_revision").val('');
+                    $("#description_req").val('');
+                    $("#remark_req").val('');
+                    $("#ModalQaAddReq").modal("hide");
+                },
+                error: function (e) {
+                    swal("บันทึกข้อมูลไม่สําเร็จ", "", "error");
+                },
+            });
+        }
+    }
+
+    function EditQaDocumentRequest() {
+        var ID = $("#ID_req").val();
+        var req = $("#request_edit").val();
+        var doc = $("#documents_req_edit").val();
+        var user = $("#user_req_edit").val();
+        var dept = $("#dept_req_edit").val();
+        var type = $("#type_req_edit").val();
+        var code = $("#code_req_edit").val();
+        var prev_revision = $("#prev_revision_edit").val();
+        var new_revision = $("#new_revision_edit").val();
+        var description = $("#description_req_edit").val();
+        var remark = $("#remark_req_edit").val();
+
+        if (req == 0) {
+            if (doc == "") {
+                swal("กรุณากรอกชื่อเอกสาร", "", "warning");
+                return false;
+            }
+
+            if (dept == "") {
+                swal("กรุณาเลือกแผนก", "", "warning");
+                return false;
+            }
+            $.ajax({
+                type: "POST",
+                url: "././module/RPT_QA_Document_Request/data.php",
+                dataType: "json",
+                data: {
+                    load: "UpdateNewQaDocumentRequest",
+                    ID: ID,
+                    doc: doc,
+                    dept: dept,
+                    type: type,
+                    code: code,
+                    remark: remark
+                },
+                success: function (data) {
+                    swal("บันทึกข้อมูลสําเร็จ", "", "success");
+                    $("#documents_req_edit").val('');
+                    $("#dept_req_edit").val('');
+                    $("#type_req_edit").val('');
+                    $("#code_req_edit").val('');
+                    $("#prev_revision_edit").val('');
+                    $("#new_revision_edit").val('');
+                    $("#description_req_edit").val('');
+                    $("#remark_req_edit").val('');
+                    $("#ModalQaAddReqEdit").modal("hide");
+
+                },
+                error: function (e) {
+                    swal("บันทึกข้อมูลไม่สําเร็จ", "", "error");
+                },
+            });
+        } else {
+            if (doc == "") {
+                swal("กรุณากรอกชื่อเอกสาร", "", "warning");
+                return false;
+            }
+
+            if (dept == "") {
+                swal("กรุณาเลือกแผนก", "", "warning");
+                return false;
+            }
+
+            if (code == "") {
+                swal("กรุณากรอก Code", "", "warning");
+                return false;
+            }
+
+            if (prev_revision == "") {
+                swal("กรุณากรอก Prev Revision", "", "warning");
+                return false;
+            }
+
+            if (new_revision == "") {
+                swal("กรุณากรอก New Revision", "", "warning");
+                return false;
+            }
+
+            if (description == "") {
+                swal("กรุณากรอก Description", "", "warning");
+                return false;
+            }
+
+            if (type == "") {
+                swal("กรุณาระบุ Type", "", "warning");
+                return false;
+            }
+
+
+            $.ajax({
+                type: "POST",
+                url: "././module/RPT_QA_Document_Request/data.php",
+                dataType: "json",
+                data: {
+                    load: "EditUpdateQaDocumentRequest",
+                    ID: ID,
+                    doc: doc,
+                    dept: dept,
+                    code: code,
+                    prev_revision: prev_revision,
+                    new_revision: new_revision,
+                    description: description,
+                    code: code,
+                    remark: remark,
+                    type: type
+                },
+                success: function (data) {
+                    swal("บันทึกข้อมูลสําเร็จ", "", "success");
+                    // rest form
+                    $("#documents_req_edit").val('');
+                    $("#dept_req_edit").val('');
+                    $("#type_req_edit").val('');
+                    $("#code_req_edit").val('');
+                    $("#prev_revision_edit").val('');
+                    $("#new_revision_edit").val('');
+                    $("#description_req_edit").val('');
+                    $("#remark_req_edit").val('');
+                    $("#ModalQaAddReqEdit").modal("hide");
+                },
+                error: function (e) {
+                    swal("บันทึกข้อมูลไม่สําเร็จ", "", "error");
+                },
+            });
+        }
+    }
+
+    function MgrApprove(ID, row) {
+        $.confirm({
+            title: 'ยืนยันการอนุมัติ',
+            content: '<input type="text" id="mgr_approve" class="form-control" value="' + username_session + '" readonly>',
+            theme: 'modern',
+            buttons: {
+                confirm: function () {
+                    $.ajax({
+                        type: "POST",
+                        url: "././module/RPT_QA_Document_Request/data.php",
+                        dataType: "json",
+                        data: {
+                            load: "MgrApprove",
+                            user: username_session,
+                            ID: ID
+                        },
+                        success: function (data) {
+                            swal("อนุมัติสําเร็จ", "", "success");
+                            var table = $('#tblReportQaDocumentReq').DataTable();
+                            table.cell(row, 12).data(username_session).draw();
+                
+                        },
+                        error: function (e) {
+                            swal("อนุมัติไม่สําเร็จ", "", "error");
+                        },
+                    });
+                },
+                cancel: function () {
+
+                },
+            }
+        });
+    }
+
+    function QaApprove(ID, row) {
+        $.confirm({
+            title: 'ยืนยันการอนุมัติ',
+            content: '<input type="text" id="qa_approve" class="form-control" value="' + username_session + '" readonly>',
+            theme: 'modern',
+            buttons: {
+                confirm: function () {
+                    $.ajax({
+                        type: "POST",
+                        url: "././module/RPT_QA_Document_Request/data.php",
+                        dataType: "json",
+                        data: {
+                            load: "QaApprove",
+                            user: username_session,
+                            ID: ID
+                        },
+                        success: function (data) {
+                            swal("อนุมัติสําเร็จ", "", "success");
+                            var table = $('#tblReportQaDocumentReq').DataTable();
+                            table.cell(row, 13).data(username_session).draw();
+                        },
+                        error: function (e) {
+                            swal("อนุมัติไม่สําเร็จ", "", "error");
+                        },
+                    });
+                },
+                cancel: function () {
+
+                },
+            }
+        });
+    }
+
+    function QaUpload(ID, row) {
+        $.confirm({
+            title: 'ยืนยันการอัปโหลด',
+            content: '<input type="text" id="qa_upload" class="form-control" value="' + username_session + '" readonly>',
+            theme: 'modern',
+            buttons: {
+                confirm: function () {
+                    $.ajax({
+                        type: "POST",
+                        url: "././module/RPT_QA_Document_Request/data.php",
+                        dataType: "json",
+                        data: {
+                            load: "QaUpload",
+                            user: username_session,
+                            ID: ID
+                        },
+                        success: function (data) {
+                            swal("อนุมัติสําเร็จ", "", "success");
+                            var table = $('#tblReportQaDocumentReq').DataTable();
+                            table.cell(row, 14).data(1).draw();
+                            
+                        },
+                        error: function (e) {
+                            swal("อนุมัติไม่สําเร็จ", "", "error");
+                        },
+                    });
+                },
+                cancel: function () {
+
+                },
+            }
+        });
+        
+    }
+
+
+</script>
