@@ -18,7 +18,7 @@ $STS_Custom = new PurchaseOrder();
 $STS_Custom->setConn($ConnSL);
 
 if ($load == "GetReportPurchaseBySupplier") {
-    $rs = $STS_Custom->GetReportPurchaseBySupplier($supplier, $from_date, $to_date);
+    $rs = $STS_Custom->GetReportPurchaseBySupplier($supplier, $from_date, $to_date, $item);
     echo json_encode($rs);
 }
 
@@ -29,5 +29,10 @@ if ($load == "GetSupplierList") {
 
 if ($load == "GetReportPurchaseByAll") {
     $rs = $STS_Custom->GetReportPurchaseByAll($from_date, $to_date);
+    echo json_encode($rs);
+}
+
+if ($load == "GetItemPurchaseList") {
+    $rs = $STS_Custom->GetItemPurchaseList();
     echo json_encode($rs);
 }

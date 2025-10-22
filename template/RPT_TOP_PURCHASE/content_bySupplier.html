@@ -3,6 +3,7 @@
         padding-left: 3px;
         padding-right: 3px;
     }
+
     /*    table.dataTable thead .sorting:after,
           table.dataTable thead .sorting:before,
           table.dataTable thead .sorting_asc:after,
@@ -27,38 +28,47 @@
     #tblReportPurchase tbody tr td a {
         cursor: pointer;
     }
+
     table.dataTable.fixedHeader-floating,
     table.dataTable.fixedHeader-locked {
         background-color: white;
         margin-top: 50px !important;
         margin-bottom: 0 !important;
     }
+
     @media print {
         table th:nth-child(0) {
             width: 200px;
             word-break: break-all;
             white-space: pre-line;
         }
+
         table td:nth-child(0) {
             width: 200px;
             word-break: break-all;
             white-space: pre-line;
         }
     }
+
     .text-header {
         font-weight: bold;
         font-size: 20px;
     }
+
     .text-wrap {
         white-space: normal;
     }
+
     .width-200 {
         width: 200px;
     }
+
     input[type="checkbox"] {
         margin-left: 5px;
         margin-right: 5px;
-    } /*
+    }
+
+    /*
       .cb_lb{
           margin-top:-5px;
       }*/
@@ -71,43 +81,35 @@
     <h2 class="text-left m-4">รายงานจัดซื้อ By Supplier</h2>
 </div>
 <div class="row items-start">
-    <div class="col-lg-4 col-md-3 col-sm-6 col-xs-3">
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-3">
         <div class="input-group w-full">
-            <div
-                style="font-weight: bold; font-size: 16px"
-                class="input-group-addon"
-            >
+            <div style="font-weight: bold; font-size: 16px" class="input-group-addon">
                 Supplier
             </div>
-            <select
-                style="font-weight: bold; font-size: 16px"
-                class="form-control txt-filter"
-                id="supplier"
-            >
+            <select style="font-weight: bold; font-size: 16px" class="form-control txt-filter" id="supplier">
                 <option value=""></option>
             </select>
         </div>
     </div>
-    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-3">
         <div class="input-group w-full">
-            <div class="input-group-addon">From Date</div>
-            <input
-                type="text"
-                class="form-control"
-                id="from_date_s"
-                autocomplete="off"
-            />
+            <div class="input-group-addon">Item</div>
+            <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off" class="form-control"
+                list="item_purchase" id="item_purchase_input" />
+            <datalist id="item_purchase">
+            </datalist>
         </div>
     </div>
-    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+    <div class="col-lg-2 col-md-3 col-sm-6 col-xs-6">
+        <div class="input-group w-full">
+            <div class="input-group-addon">From Date</div>
+            <input type="text" class="form-control" id="from_date_s" autocomplete="off" />
+        </div>
+    </div>
+    <div class="col-lg-2 col-md-3 col-sm-6 col-xs-6">
         <div class="input-group w-full">
             <div class="input-group-addon">To Date</div>
-            <input
-                type="text"
-                class="form-control"
-                id="to_date_s"
-                autocomplete="off"
-            />
+            <input type="text" class="form-control" id="to_date_s" autocomplete="off" />
         </div>
     </div>
     <div class="col-lg-1 col-md-1 col-sm-6 col-xs-6 text-left">
@@ -118,11 +120,7 @@
 </div>
 
 <div class="row" id="rowResultTable">
-    <table
-        class="table table-condensed table-bordered table-striped"
-        width="100%"
-        id="tblReportPurchase"
-    >
+    <table class="table table-condensed table-bordered table-striped" width="100%" id="tblReportPurchase">
         <thead>
             <tr>
                 <th class="bg-gray">Vendor</th>
@@ -145,14 +143,15 @@
 <script type="text/javascript">
     $(document).ready(function () {
         getSupplierList();
+        getItemPurchaseList();
     });
 
     $("#from_date_s,#to_date_s").datepicker({
-      dateFormat: "yy-mm-dd",
-      changeMonth: true,
-      changeYear: true,
-      yearRange: "-10:+10",
-   });
+        dateFormat: "yy-mm-dd",
+        changeMonth: true,
+        changeYear: true,
+        yearRange: "-10:+10",
+    });
 
     function getSupplierList() {
         $.ajax({
@@ -185,6 +184,26 @@
         });
     }
 
+    function getItemPurchaseList() {
+        $.ajax({
+            type: "GET",
+            url: "././module/RPT_TOP_PURCHASE/data.php",
+            dataType: "json",
+            data: {
+                load: "GetItemPurchaseList",
+            },
+            success: function (data) {
+                let item_list = document.getElementById("item_purchase");
+                data.forEach((item) => {
+                    let option = document.createElement("option");
+                    option.value = item.item;  // เก็บเฉพาะรหัสสินค้า
+                    option.textContent = item.item + " : " + item.description;  // ข้อความที่แสดง
+                    item_list.appendChild(option);
+                });
+            },
+        });
+    }
+
     $("#btnSearchReportPurchase").click(function () {
         ReportItemSearch();
     });
@@ -194,6 +213,7 @@
         var supplier = $("#supplier").val();
         var from_date = $("#from_date_s").val();
         var to_date = $("#to_date_s").val();
+        var item_input = $("#item_purchase_input").val();
 
         if (
             supplier == "" &&
@@ -220,9 +240,18 @@
                     supplier: supplier,
                     from_date: from_date,
                     to_date: to_date,
+                    item: item_input,
                 },
                 success: function (data) {
+                    var total_cost = data.reduce(function (sum, record) {
+                        return sum + parseFloat(record.TotalCost);
+                    }, 0);
+                    console.log(total_cost);
+
                     $("#tblReportPurchase").DataTable().clear();
+                    $("#tblReportPurchase").append(
+                        "<tfoot><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></tfoot>",
+                    )
                     $("#tblReportPurchase").dataTable({
                         aaData: data,
                         paging: false,
@@ -274,7 +303,7 @@
                                 targets: [9],
                                 width: 80,
                             },
-    
+
                         ],
                         columns: [
                             {
@@ -296,7 +325,7 @@
                                     return moment(data).format("DD/MM/YYYY");
                                 },
                             },
-                        
+
                             {
                                 data: "item",
                                 className: "text-center",
@@ -314,7 +343,7 @@
                                     2,
                                     "",
                                 ),
-                              
+
                             },
                             {
                                 data: "u_m",
@@ -360,8 +389,26 @@
                                     moment().format("YYYY-MM-DD HH:mm:ss"),
                             },
                         ],
-                    });
+                        "footerCallback": function (row, data, start, end, display) {
+                            var api = this.api(),
+                                data;
+                            var intVal = function (i) {
+                                return typeof i === 'string' ?
+                                    i.replace(/[\$,]/g, '') * 1 :
+                                    typeof i === 'number' ?
+                                        i : 0;
+                            };
+                            var totalCost = api
+                                .column(9)
+                                .data()
+                                .reduce(function (a, b) {
+                                    return intVal(a) + intVal(b);
+                                }, 0);
 
+                            $(api.column(8).footer()).html("<b>รวม</b>");
+                            $(api.column(9).footer()).html(addCommas(totalCost.toFixed(2)));
+                        },
+                    });
                     $("#tblReportPurchase").loading("stop");
                     $("#btnSearchReportPurchase").html(OldHtml);
                 },

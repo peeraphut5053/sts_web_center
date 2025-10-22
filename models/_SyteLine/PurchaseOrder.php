@@ -87,13 +87,13 @@ class PurchaseOrder {
         return $ArrLG;
     }
 
-    function GetReportPurchaseBySupplier($supplier, $from_date, $to_date)
+    function GetReportPurchaseBySupplier($supplier, $from_date, $to_date, $item)
     {
         $query = "EXEC [dbo].[MV_PURCHASE_ORDER_REPORT_BY_PO_DATE_BY_ITEM_BY_VENDOR]
           @TransactionDateStarting = N'$from_date',
           @TransactionDateEnding = N'$to_date',
-          @ItemStarting = NULL,
-          @ItemEnding = NULL,
+          @ItemStarting = " . ($item == "" ? "NULL" : "'" . $item . "'") . ",
+          @ItemEnding = " . ($item == "" ? "NULL" : "'" . $item . "'") . ",
           @POType = NULL,
           @POStatus = NULL,
           @POLINEStatus = NULL,
@@ -113,6 +113,17 @@ class PurchaseOrder {
 FROM       vendaddr_mst 
 where (vend_num like 'IM%' or vend_num like 'TH%')
   and name not like '%ยกเลิก%'";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+    function GetItemPurchaseList()
+    {
+        $query = "select distinct item, [description] 
+from poitem_mst where item is not null
+order by item";
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
