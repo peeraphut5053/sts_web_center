@@ -1,0 +1,377 @@
+<style>
+    .col-search {
+        padding-left: 3px;
+        padding-right: 3px;
+    }
+    /*    table.dataTable thead .sorting:after,
+          table.dataTable thead .sorting:before,
+          table.dataTable thead .sorting_asc:after,
+          table.dataTable thead .sorting_asc:before,
+          table.dataTable thead .sorting_asc_disabled:after,
+          table.dataTable thead .sorting_asc_disabled:before,
+          table.dataTable thead .sorting_desc:after,
+          table.dataTable thead .sorting_desc:before,
+          table.dataTable thead .sorting_desc_disabled:after,
+          table.dataTable thead .sorting_desc_disabled:before {
+              bottom: .5em;
+          }*/
+    .table thead th {
+        text-align: center;
+    }
+
+    .col-flt-page {
+        padding-top: 10px;
+        font-weight: bold;
+    }
+
+    #tblReportPurchase tbody tr td a {
+        cursor: pointer;
+    }
+    table.dataTable.fixedHeader-floating,
+    table.dataTable.fixedHeader-locked {
+        background-color: white;
+        margin-top: 50px !important;
+        margin-bottom: 0 !important;
+    }
+    @media print {
+        table th:nth-child(0) {
+            width: 200px;
+            word-break: break-all;
+            white-space: pre-line;
+        }
+        table td:nth-child(0) {
+            width: 200px;
+            word-break: break-all;
+            white-space: pre-line;
+        }
+    }
+    .text-header {
+        font-weight: bold;
+        font-size: 20px;
+    }
+    .text-wrap {
+        white-space: normal;
+    }
+    .width-200 {
+        width: 200px;
+    }
+    input[type="checkbox"] {
+        margin-left: 5px;
+        margin-right: 5px;
+    } /*
+      .cb_lb{
+          margin-top:-5px;
+      }*/
+    .item-center {
+        display: flex;
+        justify-content: center;
+    }
+</style>
+<div class="m-6">
+    <h2 class="text-left m-4">รายงานจัดซื้อ By Supplier</h2>
+</div>
+<div class="row items-start">
+    <div class="col-lg-4 col-md-3 col-sm-6 col-xs-3">
+        <div class="input-group w-full">
+            <div
+                style="font-weight: bold; font-size: 16px"
+                class="input-group-addon"
+            >
+                Supplier
+            </div>
+            <select
+                style="font-weight: bold; font-size: 16px"
+                class="form-control txt-filter"
+                id="supplier"
+            >
+                <option value=""></option>
+            </select>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+        <div class="input-group w-full">
+            <div class="input-group-addon">From Date</div>
+            <input
+                type="text"
+                class="form-control"
+                id="from_date_s"
+                autocomplete="off"
+            />
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+        <div class="input-group w-full">
+            <div class="input-group-addon">To Date</div>
+            <input
+                type="text"
+                class="form-control"
+                id="to_date_s"
+                autocomplete="off"
+            />
+        </div>
+    </div>
+    <div class="col-lg-1 col-md-1 col-sm-6 col-xs-6 text-left">
+        <button class="btn btn-info" id="btnSearchReportPurchase">
+            <i class="fa fa-search"></i>&nbsp; Search
+        </button>
+    </div>
+</div>
+
+<div class="row" id="rowResultTable">
+    <table
+        class="table table-condensed table-bordered table-striped"
+        width="100%"
+        id="tblReportPurchase"
+    >
+        <thead>
+            <tr>
+                <th class="bg-gray">Vendor</th>
+                <th class="bg-gray">Name</th>
+                <th class="bg-gray">PO.No</th>
+                <th class="bg-gray">Date</th>
+                <th class="bg-gray">Item</th>
+                <th class="bg-gray">Item Desc</th>
+                <th class="bg-gray">Order Qty</th>
+                <th class="bg-gray">U/M</th>
+                <th class="bg-gray">Unit Cost</th>
+                <th class="bg-gray">Total Cost</th>
+            </tr>
+        </thead>
+        <!--        <tbody id="tblReportPurchaseList">
+                      <tr><td align="center" colspan="12">.... No item search ....</td></tr>
+     </tbody>-->
+    </table>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        getSupplierList();
+    });
+
+    $("#from_date_s,#to_date_s").datepicker({
+      dateFormat: "yy-mm-dd",
+      changeMonth: true,
+      changeYear: true,
+      yearRange: "-10:+10",
+   });
+
+    function getSupplierList() {
+        $.ajax({
+            type: "GET",
+            url: "././module/RPT_TOP_PURCHASE/data.php",
+            dataType: "json",
+            data: {
+                load: "GetSupplierList",
+            },
+            success: function (data) {
+                let doc = [{ id: "", text: "" }].concat(
+                    data.map((item) => ({
+                        id: item.vend_num,
+                        text: item.vend_num + " : " + item.name,
+                    })),
+                );
+                $("#supplier").empty();
+                $("#supplier").select2({
+                    placeholder: "เลือก Doc Num",
+                    allowClear: true,
+                    width: "100%",
+                    data: doc,
+                    language: {
+                        noResults: function () {
+                            return "ไม่พบข้อมูล";
+                        },
+                    },
+                });
+            },
+        });
+    }
+
+    $("#btnSearchReportPurchase").click(function () {
+        ReportItemSearch();
+    });
+
+    function ReportItemSearch() {
+        var OldHtml = $("#btnSearchReportPurchase").html();
+        var supplier = $("#supplier").val();
+        var from_date = $("#from_date_s").val();
+        var to_date = $("#to_date_s").val();
+
+        if (
+            supplier == "" &&
+            from_date == "" &&
+            to_date == ""
+        ) {
+            $.alert("กรุณากรอกข้อมูลอย่างน้อย 1 ช่อง");
+            return false;
+        } else {
+            $("#btnSearchReportPurchase").html("<i class='fa fa-spinner fa-spin'></i>");
+            $("#tblReportPurchase").loading();
+            $("#tblReportPurchase tfoot").remove();
+            $.ajax({
+                type: "POST",
+                url: "././module/RPT_TOP_PURCHASE/data.php",
+                dataType: "json",
+                beforeSend: function () {
+                    $("#btnSearchReportPurchase").html(
+                        "<i class='fa fa-spinner fa-spin'>",
+                    );
+                },
+                data: {
+                    load: "GetReportPurchaseBySupplier",
+                    supplier: supplier,
+                    from_date: from_date,
+                    to_date: to_date,
+                },
+                success: function (data) {
+                    $("#tblReportPurchase").DataTable().clear();
+                    $("#tblReportPurchase").dataTable({
+                        aaData: data,
+                        paging: false,
+                        fixedHeader: true,
+                        destroy: true,
+                        processing: true,
+                        scrollY: "80vh",
+                        scrollCollapse: true,
+                        scrollX: true,
+                        select: false,
+                        columnDefs: [
+                            {
+                                targets: [0],
+                                width: 60,
+                            },
+                            {
+                                targets: [1],
+                                width: 200,
+                            },
+                            {
+                                targets: [2],
+                                width: 80,
+                            },
+                            {
+                                targets: [3],
+                                width: 60,
+                            },
+                            {
+                                targets: [4],
+                                width: 60,
+                            },
+                            {
+                                targets: [5],
+                                width: 200,
+                            },
+                            {
+                                targets: [6],
+                                width: 80,
+                            },
+                            {
+                                targets: [7],
+                                width: 60,
+                            },
+                            {
+                                targets: [8],
+                                width: 80,
+                            },
+                            {
+                                targets: [9],
+                                width: 80,
+                            },
+    
+                        ],
+                        columns: [
+                            {
+                                data: "vend_num",
+                                className: "text-center",
+                            },
+                            {
+                                data: "name",
+                                className: "text-center",
+                            },
+                            {
+                                data: "po_num",
+                                className: "text-center",
+                            },
+                            {
+                                data: "order_date.date",
+                                className: "text-center",
+                                render: function (data, type, row, meta) {
+                                    return moment(data).format("DD/MM/YYYY");
+                                },
+                            },
+                        
+                            {
+                                data: "item",
+                                className: "text-center",
+                            },
+                            {
+                                data: "description",
+                                className: "text-center",
+                            },
+                            {
+                                data: "qty_ordered_conv",
+                                className: "text-center",
+                                render: $.fn.dataTable.render.number(
+                                    ",",
+                                    ".",
+                                    2,
+                                    "",
+                                ),
+                              
+                            },
+                            {
+                                data: "u_m",
+                                className: "text-center",
+                            },
+                            {
+                                data: "item_cost_conv",
+                                className: "text-center",
+                                render: $.fn.dataTable.render.number(
+                                    ",",
+                                    ".",
+                                    2,
+                                    "",
+                                ),
+                            },
+                            {
+                                data: "TotalCost",
+                                className: "text-center",
+                                render: $.fn.dataTable.render.number(
+                                    ",",
+                                    ".",
+                                    2,
+                                    "",
+                                ),
+                            },
+                        ],
+                        dom:
+                            "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                            "<'row'<'col-md-12'tr>>" +
+                            "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                        buttons: [
+                            {
+                                extend: "print",
+                                text: "<i class='fa fa-print'></i>&nbsp;Print",
+                                title: "",
+                            },
+                            {
+                                extend: "excel",
+                                footer: true,
+                                text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                                title:
+                                    "รายงานจัดซื้อ By Supplier วันที่" +
+                                    moment().format("YYYY-MM-DD HH:mm:ss"),
+                            },
+                        ],
+                    });
+
+                    $("#tblReportPurchase").loading("stop");
+                    $("#btnSearchReportPurchase").html(OldHtml);
+                },
+                error: function (e) {
+                    $("#tblReportPurchase").loading("stop");
+                    $("#btnSearchReportPurchase").html(OldHtml);
+                    console.log("There was an error with your request...");
+                    console.log("error: " + JSON.stringify(e));
+                },
+            });
+        }
+    }
+</script>

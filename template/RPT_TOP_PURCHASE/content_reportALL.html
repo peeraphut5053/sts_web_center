@@ -1,0 +1,228 @@
+<style>
+    .col-search {
+        padding-left: 3px;
+        padding-right: 3px;
+    }
+    /*    table.dataTable thead .sorting:after,
+          table.dataTable thead .sorting:before,
+          table.dataTable thead .sorting_asc:after,
+          table.dataTable thead .sorting_asc:before,
+          table.dataTable thead .sorting_asc_disabled:after,
+          table.dataTable thead .sorting_asc_disabled:before,
+          table.dataTable thead .sorting_desc:after,
+          table.dataTable thead .sorting_desc:before,
+          table.dataTable thead .sorting_desc_disabled:after,
+          table.dataTable thead .sorting_desc_disabled:before {
+              bottom: .5em;
+          }*/
+    .table thead th {
+        text-align: center;
+    }
+
+    .col-flt-page {
+        padding-top: 10px;
+        font-weight: bold;
+    }
+
+    #tblReportPurchaseAll tbody tr td a {
+        cursor: pointer;
+    }
+    table.dataTable.fixedHeader-floating,
+    table.dataTable.fixedHeader-locked {
+        background-color: white;
+        margin-top: 50px !important;
+        margin-bottom: 0 !important;
+    }
+    @media print {
+        table th:nth-child(0) {
+            width: 200px;
+            word-break: break-all;
+            white-space: pre-line;
+        }
+        table td:nth-child(0) {
+            width: 200px;
+            word-break: break-all;
+            white-space: pre-line;
+        }
+    }
+    .text-header {
+        font-weight: bold;
+        font-size: 20px;
+    }
+    .text-wrap {
+        white-space: normal;
+    }
+    .width-200 {
+        width: 200px;
+    }
+    input[type="checkbox"] {
+        margin-left: 5px;
+        margin-right: 5px;
+    } /*
+      .cb_lb{
+          margin-top:-5px;
+      }*/
+    .item-center {
+        display: flex;
+        justify-content: center;
+    }
+</style>
+<div class="m-6">
+    <h2 class="text-left m-4">รายงานจัดซื้อ</h2>
+</div>
+<div class="row items-start">
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+        <div class="input-group w-full">
+            <div class="input-group-addon">From Date</div>
+            <input
+                type="text"
+                class="form-control"
+                id="from_date_all"
+                autocomplete="off"
+            />
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+        <div class="input-group w-full">
+            <div class="input-group-addon">To Date</div>
+            <input
+                type="text"
+                class="form-control"
+                id="to_date_all"
+                autocomplete="off"
+            />
+        </div>
+    </div>
+    <div class="col-lg-1 col-md-1 col-sm-6 col-xs-6 text-left">
+        <button class="btn btn-info" id="btnSearchReportAll">
+            <i class="fa fa-search"></i>&nbsp; Search
+        </button>
+    </div>
+</div>
+
+<div class="row" id="rowResultTable">
+    <table
+        class="table table-condensed table-bordered table-striped"
+        width="100%"
+        id="tblReportPurchaseAll"
+    >
+        <thead>
+            <tr>
+                <th class="bg-gray">Vendor</th>
+                <th class="bg-gray">Name</th>
+                <th class="bg-gray">Total Cost</th>
+            </tr>
+        </thead>
+        <!--        <tbody id="tblReportPurchaseAllList">
+                      <tr><td align="center" colspan="12">.... No item search ....</td></tr>
+     </tbody>-->
+    </table>
+</div>
+<script type="text/javascript">
+    $("#from_date_all,#to_date_all").datepicker({
+      dateFormat: "yy-mm-dd",
+      changeMonth: true,
+      changeYear: true,
+      yearRange: "-10:+10",
+   });
+
+    $("#btnSearchReportAll").click(function () {
+        ReportItemSearch();
+    });
+
+    function ReportItemSearch() {
+        var OldHtml = $("#btnSearchReportAll").html();
+        var from_date = $("#from_date_all").val();
+        var to_date = $("#to_date_all").val();
+
+        if (
+            from_date == "" &&
+            to_date == ""
+        ) {
+            $.alert("กรุณากรอกข้อมูลอย่างน้อย 1 ช่อง");
+            return false;
+        } else {
+            $("#btnSearchReportAll").html("<i class='fa fa-spinner fa-spin'></i>");
+            $("#tblReportPurchaseAll").loading();
+            $("#tblReportPurchaseAll tfoot").remove();
+            $.ajax({
+                type: "POST",
+                url: "././module/RPT_TOP_PURCHASE/data.php",
+                dataType: "json",
+                beforeSend: function () {
+                    $("#btnSearchReportAll").html(
+                        "<i class='fa fa-spinner fa-spin'>",
+                    );
+                },
+                data: {
+                    load: "GetReportPurchaseByAll",
+                    from_date: from_date,
+                    to_date: to_date,
+                },
+                success: function (data) {
+                    $("#tblReportPurchaseAll").DataTable().clear();
+                    $("#tblReportPurchaseAll").dataTable({
+                        aaData: data,
+                        paging: false,
+                        fixedHeader: true,
+                        destroy: true,
+                        processing: true,
+                        scrollY: "80vh",
+                        scrollCollapse: true,
+                        scrollX: true,
+                        select: false,
+                        order: [[2, "desc"]],
+                        columns: [
+                            {
+                                data: "vend_num",
+                                className: "text-center",
+                            },
+                            {
+                                data: "name",
+                                className: "text-center",
+                            },
+                            {
+                                data: "total_cost",
+                                className: "text-center",
+                                render: $.fn.dataTable.render.number(
+                                    ",",
+                                    ".",
+                                    2,
+                                    "",
+                                ),
+                            },
+                        ],
+                        dom:
+                            "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                            "<'row'<'col-md-12'tr>>" +
+                            "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                        buttons: [
+                            {
+                                extend: "print",
+                                text: "<i class='fa fa-print'></i>&nbsp;Print",
+                                title: "",
+                            },
+                            {
+                                extend: "excel",
+                                footer: true,
+                                text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                                title:
+                                    "รายงานจัดซื้อ By All วันที่" +
+                                    moment().format("YYYY-MM-DD HH:mm:ss"),
+                            },
+                        ],
+                    });
+
+                    $("#tblReportPurchaseAll").loading("stop");
+                    $("#btnSearchReportAll").html(OldHtml);
+                },
+                error: function (e) {
+                    $("#tblReportPurchaseAll").loading("stop");
+                    $("#btnSearchReportAll").html(OldHtml);
+                    console.log("There was an error with your request...");
+                    console.log("error: " + JSON.stringify(e));
+                },
+            });
+        }
+    }
+</script>

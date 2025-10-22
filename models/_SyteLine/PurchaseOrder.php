@@ -87,4 +87,47 @@ class PurchaseOrder {
         return $ArrLG;
     }
 
+    function GetReportPurchaseBySupplier($supplier, $from_date, $to_date)
+    {
+        $query = "EXEC [dbo].[MV_PURCHASE_ORDER_REPORT_BY_PO_DATE_BY_ITEM_BY_VENDOR]
+          @TransactionDateStarting = N'$from_date',
+          @TransactionDateEnding = N'$to_date',
+          @ItemStarting = NULL,
+          @ItemEnding = NULL,
+          @POType = NULL,
+          @POStatus = NULL,
+          @POLINEStatus = NULL,
+          @pStartPoNum = NULL,
+          @pEndPoNum = NULL,
+          @pStartvendor = N'$supplier',
+          @pEndVendor = N'$supplier'";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+    function GetSupplierList()
+    {
+        $query = "SELECT    vend_num, name
+FROM       vendaddr_mst 
+where (vend_num like 'IM%' or vend_num like 'TH%')
+  and name not like '%ยกเลิก%'";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+    function GetReportPurchaseByAll($from_date, $to_date)
+    {
+        $query = "EXEC [dbo].[MV_PURCHASE_ORDER_REPORT_BY_PO_DATE_BY_ITEM_BY_VENDOR_SUM]
+  @TransactionDateStarting = N'$from_date',
+  @TransactionDateEnding = N'$to_date'";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
 }
