@@ -70,6 +70,14 @@
                 <input type="text" style="font-weight: bold; font-size: 16px;" class="form-control txt-filter"
                     id="user_return" readonly>
             </div>
+            <div class="input-group basis-3/6">
+                <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">วิธีคืนของ</div>
+                <select style="font-weight: bold; font-size: 16px;" class="form-control txt-filter" id="return_type">
+                    <option value=""> </option>
+                    <option value="CN">CN</option>
+                    <option value="Ship">Ship</option>
+                </select>
+            </div>
 
             <div class="input-group basis-3/6 hidden">
                 <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">Doc</div>
@@ -835,6 +843,8 @@
         $("#doc_no_return_old").val('');
         $("#remark_return").val('');
         $("#stat_return").val('').trigger('change');
+        $("#return_type").val('').trigger('change');
+
         // um_return
         $("#um_return").val('');
 
@@ -877,6 +887,8 @@
                 $("#remark_return").val(data[0].remark_h);
                 $("#stat_return").val(data[0].stat_h).trigger('change');
                 $("#user_return").val(data[0].createdby).trigger('change');
+                $("#return_type").val(data[0].return_method).trigger('change');
+
 
                 $("#item_retrun").val('').trigger('change');
                 $("#wc_dest").val('').trigger('change');
@@ -919,6 +931,7 @@
         // add data to table 
         var reason = $("#reason_return").val();
         var stat = $("#stat_return").val();
+        var return_type = $("#return_type").val();
         var remark_h = $("#remark_return").val();
         var do_num = [];
         var co_num = [];
@@ -960,6 +973,7 @@
                 qty: JSON.stringify(qty),
                 remark: JSON.stringify(remark),
                 stat: stat,
+                return_type: return_type,
             },
             success: function (data) {
                 swal("บันทึกข้อมูลสําเร็จ", "เลขที่ใบคืนของ: " + data, "success");
@@ -968,6 +982,8 @@
                 $("#do_num_return").val('').trigger('change');
                 $("#co_num_return").val('').trigger('change');
                 $("#item_return").val('').trigger('change');
+                $("#stat_return").val('').trigger('change');
+                $("#return_type").val('').trigger('change');
                 $("#qty_return").val('');
                 $("#issue_return").val('').trigger('change');
                 $("#remark_return").val('');
@@ -1062,6 +1078,7 @@
         var doc_no = $("#doc_no_return_old").val();
         var remark = $("#remark_return").val();
         var stat = $("#stat_return").val();
+        var return_type = $("#return_type").val();
 
         $.ajax({
             type: "POST",
@@ -1071,7 +1088,8 @@
                 load: "UpdateReturnHeader",
                 doc_no: doc_no,
                 remark: remark,
-                stat: stat
+                stat: stat,
+                return_type: return_type
 
             },
             success: function (data) {

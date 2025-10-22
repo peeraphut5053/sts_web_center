@@ -65,7 +65,7 @@ if ($load == "CreateItemReturn") {
     $arr_cause = json_decode($cause);
     $arr_issue = json_decode($issue);
     $arr_remark = json_decode($remark);
-    $rs = $STS_Custom->CreateItemReturn($user, $remark_h, $arr_do_num, $arr_co_num, $arr_item, $arr_qty, $arr_issue, $arr_remark, $stat);
+    $rs = $STS_Custom->CreateItemReturn($user, $remark_h, $arr_do_num, $arr_co_num, $arr_item, $arr_qty, $arr_issue, $arr_remark, $stat, $return_type);
     echo json_encode($rs);
 }
 
@@ -88,7 +88,7 @@ if ($load == "DeleteItemReturn") {
 }
 
 if ($load == "UpdateReturnHeader") {
-    $rs = $STS_Custom->UpdateReturnHeader($doc_no, $remark, $stat);
+    $rs = $STS_Custom->UpdateReturnHeader($doc_no, $remark, $stat, $return_type);
     echo json_encode($rs);
     # code...
 }

@@ -697,7 +697,7 @@ where pre.do_num = '$do_num' and pre.co_num = '$co_num'";
         return $rs0;
     }
 
-    function CreateItemReturn($user,$remark_h, $arr_do_num, $arr_co_num, $arr_item, $arr_qty, $arr_issue, $arr_remark, $stat) {
+    function CreateItemReturn($user,$remark_h, $arr_do_num, $arr_co_num, $arr_item, $arr_qty, $arr_issue, $arr_remark, $stat, $return_type) {
         if (sqlsrv_begin_transaction($this->StrConn) === false) {
             die("Transaction failed: " . print_r(sqlsrv_errors(), true));
         }
@@ -739,8 +739,8 @@ where pre.do_num = '$do_num' and pre.co_num = '$co_num'";
             // ALTER TABLE STS_store_withdraw_hdr ADD CONSTRAINT UQ_doc_no UNIQUE (doc_no)
 
             // Insert header
-            $query = "INSERT INTO STS_return_hdr (doc_no, remark, createdby, stat) 
-                  VALUES ('$docNumber', '$remark_h', '$user', '$stat')";
+            $query = "INSERT INTO STS_return_hdr (doc_no, remark, createdby, stat, return_method) 
+                  VALUES ('$docNumber', '$remark_h', '$user', '$stat', '$return_type')";
             $cSql->SqlQuery($this->StrConn, $query);
 
             // Insert lines
@@ -851,9 +851,9 @@ FROM STS_return_hdr h
         return $rs;
     }
 
-    function UpdateReturnHeader($doc_no, $remark, $stat) {
+    function UpdateReturnHeader($doc_no, $remark, $stat, $return_type) {
         $cSql = new SqlSrv();
-        $query = "UPDATE STS_return_hdr SET remark = '$remark', stat = '$stat', updatedate = getdate() WHERE doc_no = '$doc_no'";
+        $query = "UPDATE STS_return_hdr SET remark = '$remark', stat = '$stat', return_method = '$return_type', updatedate = getdate() WHERE doc_no = '$doc_no'";
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
         return $rs;
