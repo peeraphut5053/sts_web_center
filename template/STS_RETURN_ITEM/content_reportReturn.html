@@ -375,12 +375,12 @@
         for (let i = 0; i < selectedData.length; i++) {
             data.push([
                 { text: i + 1, fontSize: 13, alignment: 'center' },
-                { text: selectedData[i].customer, fontSize: 13, alignment: 'center' },
-                { text: selectedData[i].item, fontSize: 13, alignment: 'center' },
-                { text: selectedData[i].description, fontSize: 13, alignment: 'center' },
-                { text: selectedData[i].qty, fontSize: 13, alignment: 'center' },
-                { text: selectedData[i].cause_name, fontSize: 13, alignment: 'center' },
-                { text: selectedData[i].remark, fontSize: 13, alignment: 'center' },
+                { text: selectedData[i].customer ? selectedData[i].customer : '', fontSize: 13, alignment: 'center' },
+                { text: selectedData[i].item ? selectedData[i].item : '', fontSize: 13, alignment: 'center' },
+                { text: selectedData[i].description ? selectedData[i].description : '', fontSize: 13, alignment: 'center' },
+                { text: selectedData[i].qty ? selectedData[i].qty : '', fontSize: 13, alignment: 'center' },
+                { text: selectedData[i].cause_name ? selectedData[i].cause_name : '', fontSize: 13, alignment: 'center' },
+                { text: selectedData[i].remark ? selectedData[i].remark : '', fontSize: 13, alignment: 'center' },
             ]);
 
         }
