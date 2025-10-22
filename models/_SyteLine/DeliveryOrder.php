@@ -914,13 +914,15 @@ FROM STS_return_hdr h
             $wh .= " AND h.doc_no = '$doc_no' ";
         }
         $cSql = new SqlSrv();
-        $query = "SELECT h.*, l.*, h.remark as remark_h, h.stat as stat_h
+        $query = "SELECT h.*, l.*, h.remark as remark_h, h.stat as stat_h, rc.cause as cause_name, ri.issue as issue_name
    ,item.[description], customer = case when co.cust_num like 'EX%' then isnull(cust.addr##1,cust.name) else cust.name end
 FROM STS_return_hdr h 
  LEFT JOIN STS_return_line l ON h.doc_no = l.doc_no
  left join co_mst co on co.co_num = l.co_num
  left join custaddr_mst cust on co.cust_num = cust.cust_num and co.cust_seq = cust.cust_seq
  left join item_mst item on item.item = l.item 
+ left join STS_return_cause rc on l.cause = rc.id
+ left join STS_return_issue ri on l.issue = ri.id
         WHERE 1=1 $wh";
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
