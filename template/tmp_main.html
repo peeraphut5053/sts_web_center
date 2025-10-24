@@ -36,10 +36,12 @@
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script src="node_modules/moment/min/moment.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bwip-js/4.5.1/bwip-js-min.js" integrity="sha512-nyvUcUIS1L4Z+cowD7We9KKcq/ivAJhTlhZTjBfBFGYV1I+RAqSrHS/WEcWDp1CVKRw1j5SxYCPCSYOQxuIE1w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bwip-js/4.5.1/bwip-js-min.js"
+        integrity="sha512-nyvUcUIS1L4Z+cowD7We9KKcq/ivAJhTlhZTjBfBFGYV1I+RAqSrHS/WEcWDp1CVKRw1j5SxYCPCSYOQxuIE1w=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="node_modules/sweetalert/dist/sweetalert.min.js"></script>
     <!--<script src="js/main.js" ></script>-->
-    
+
 </head>
 <!--sidebar-collapse-->
 
@@ -218,8 +220,10 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
     <script type="text/javascript"
         src="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.21/af-2.3.5/b-1.6.3/b-colvis-1.6.3/b-flash-1.6.3/b-html5-1.6.3/b-print-1.6.3/cr-1.5.2/fc-3.3.1/fh-3.1.7/kt-2.5.2/r-2.2.5/rg-1.1.2/rr-1.2.7/sc-2.0.2/sp-1.1.1/sl-1.3.1/datatables.min.js"></script>
-<script src='https://cdn.jsdelivr.net/npm/big.js@7.0.1/big.min.js'></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/shim.min.js" integrity="sha512-nPnkC29R0sikt0ieZaAkk28Ib7Y1Dz7IqePgELH30NnSi1DzG4x+envJAOHz8ZSAveLXAHTR3ai2E9DZUsT8pQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src='https://cdn.jsdelivr.net/npm/big.js@7.0.1/big.min.js'></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/shim.min.js"
+        integrity="sha512-nPnkC29R0sikt0ieZaAkk28Ib7Y1Dz7IqePgELH30NnSi1DzG4x+envJAOHz8ZSAveLXAHTR3ai2E9DZUsT8pQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 </body>
 
@@ -322,11 +326,13 @@
                 $("body").addClass("sidebar-collapse");
             }
             $("i[id^='LeftCircle_']").removeClass("active");
+
             var prj_id = ThisId.split("_")[1];
             var prj_link = $("#" + ThisId).attr("link");
             var Module1 = prj_link.split("/")[0];
             var ModuleName = Module1.split("?")[1];
             var LinkLoad = "././module/" + ModuleName + "/index.php";
+
             //==========Remember Control ========
             $.ajax({
                 type: 'POST',
@@ -340,14 +346,20 @@
                     $("#MainContent").loading();
                 },
                 success: function (data) {
-                    $("#CurrentPage").val(ModuleName)
-                    // console.log(data);
-                    $("#MainContent").load(LinkLoad
-                        , function () {
-                            //                                    $("#" + ThisId).addClass("active");
-                            $("#LeftCircle_" + prj_id).addClass("active");
-                            $("#MainContent").loading("stop");
-                        });
+                    $("#CurrentPage").val(ModuleName);
+
+                    $("#MainContent").load(LinkLoad, function () {
+                        $("#LeftCircle_" + prj_id).addClass("active");
+                        $("#MainContent").loading("stop");
+
+                        // ✅ เพิ่มส่วนนี้เพื่อเปลี่ยน URL
+                        var newUrl = '/sts_web_center/#/' + ModuleName;
+                        history.pushState({
+                            module: ModuleName,
+                            link: LinkLoad,
+                            menuId: ThisId
+                        }, '', newUrl);
+                    });
                 },
                 error: function (e) {
                     console.log("There was an error with your request...");
@@ -355,6 +367,96 @@
                 }
             });
         }
+
+        // ฟังก์ชันโหลดหน้าจาก URL hash
+        function loadPageFromHash() {
+            var hash = window.location.hash;
+
+            // ตรวจสอบว่ามี hash และไม่ใช่แค่ #
+            if (hash && hash.length > 2) {
+                // ตัด #/ ออก → RPT_PACKING
+                var ModuleName = hash.substring(2).replace(/^\//, '');
+
+                // ถ้ามี / ต่อท้าย ให้ตัดออก
+                ModuleName = ModuleName.replace(/\/$/, '');
+
+                console.log("Loading module: " + ModuleName);
+
+                var LinkLoad = "././module/" + ModuleName + "/index.php";
+
+                // ค้นหาเมนูที่ตรงกับ module
+                var menuItem = $("a[link*='?" + ModuleName + "']");
+
+                if (menuItem.length === 0) {
+                    // ลองหาแบบอื่น ถ้าไม่เจอ
+                    menuItem = $("a").filter(function () {
+                        var link = $(this).attr('link');
+                        return link && link.indexOf(ModuleName) > -1;
+                    });
+                }
+
+                if (menuItem.length > 0) {
+                    var ThisId = menuItem.first().attr('id');
+                    var prj_id = ThisId.split("_")[1];
+
+                    // ปิด sidebar
+                    if (ThisId != "LeftMainBtn_999") {
+                        $("body").addClass("sidebar-collapse");
+                    } else {
+                        $("body").removeClass("sidebar-collapse");
+                    }
+
+                    $("#MainContent").loading();
+
+                    // บันทึก session
+                    $.ajax({
+                        type: 'POST',
+                        url: "./module/PageController.php",
+                        data: {
+                            "CurrentPageLiving": ModuleName,
+                            "CurrentPageUrl": LinkLoad,
+                            "CurrentPageLeftMenuId": ThisId,
+                        },
+                        success: function (data) {
+                            $("#CurrentPage").val(ModuleName);
+                        },
+                        error: function (e) {
+                            console.log("Error saving session: " + JSON.stringify(e));
+                        }
+                    });
+
+                    // โหลดเนื้อหา
+                    $("#MainContent").load(LinkLoad, function (response, status, xhr) {
+                        if (status == "success") {
+                            $("i[id^='LeftCircle_']").removeClass("active");
+                            $("#LeftCircle_" + prj_id).addClass("active");
+                            $("#MainContent").loading("stop");
+                        } else if (status == "error") {
+                            console.error("Error loading page: " + xhr.status + " " + xhr.statusText);
+                            $("#MainContent").html("<div class='alert alert-danger'>ไม่สามารถโหลดหน้านี้ได้</div>");
+                            $("#MainContent").loading("stop");
+                        }
+                    });
+
+                } else {
+                    console.warn("ไม่พบเมนูสำหรับ module: " + ModuleName);
+                    $("#MainContent").html("<div class='alert alert-warning'>ไม่พบหน้าที่ต้องการ</div>");
+                }
+            }
+        }
+
+        // เรียกใช้เมื่อโหลดหน้าครั้งแรก
+        $(document).ready(function () {
+            // รอให้เมนูโหลดเสร็จก่อน (ถ้าเมนูโหลดด้วย AJAX)
+            setTimeout(function () {
+                loadPageFromHash();
+            }, 500); // ปรับเวลาตามความเหมาะสม
+        });
+
+        // เรียกใช้เมื่อกดปุ่ม back/forward
+        window.addEventListener('hashchange', function () {
+            loadPageFromHash();
+        });
 
         if (username_session == 'guest') {
             let Url = "././template/USER_MNG/_From.html";
