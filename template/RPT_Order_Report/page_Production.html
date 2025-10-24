@@ -324,7 +324,7 @@ function generateBarcode(text) {
                             }
                         },
                         {
-                            text: "<button class='btn btn-default btn-sm' >พนักงานโหลดสินค้า</button>",
+                            text: "<button class='btn btn-warning' >ใบสั่งงานผลิต</button>",
                             action: function (e, dt, node, config) {
 
                                 var selected = $('#tblReportPro').DataTable().rows('.selected').data();
@@ -434,20 +434,6 @@ function generateBarcode(text) {
                 { text: selected?.Uf_length_Max ? selected?.Uf_length_Max : '', fontSize: 12, bold: true, alignment: 'center', style: 'header' },
                 { text: "ชม.", fontSize: 12, bold: true, alignment: 'center', style: 'header' },
                 { text: ``,border: [false, false, false, false], fontSize: 12, bold: true, alignment: 'left', style: 'header', colSpan: 4, margin: [20, 0, 0, 0] },
-                { text: "",border: [false, false, false, false], fontSize: 12, bold: true, alignment: 'left', style: 'header' },
-                { text: "", fontSize: 12, bold: true, alignment: 'center', style: 'header' },
-                { text: "", fontSize: 12, bold: true, alignment: 'center', style: 'header' },
-            ]);
-
-            data.push([
-                { text: `หน้ากว้าง`, fontSize: 12, bold: true, alignment: 'center', style: 'header' },
-                { text: selected?.Uf_length ? selected?.Uf_length : '', fontSize: 12, bold: true, alignment: 'center', style: 'header' },
-                { text: "มม.", fontSize: 14, bold: true, alignment: 'center', style: 'header' },
-                { text: "", fontSize: 12, bold: true, alignment: 'center', style: 'header' },
-                { text: "", fontSize: 12, bold: true, alignment: 'center', style: 'header' },
-                { text: "", fontSize: 12, bold: true, alignment: 'center', style: 'header' },
-                { text: "", fontSize: 12, bold: true, alignment: 'center', style: 'header' },
-                { text: "",border: [false, false, false, false], fontSize: 12, bold: true, alignment: 'center', style: 'header', colSpan: 4 },
                 { text: "",border: [false, false, false, false], fontSize: 12, bold: true, alignment: 'left', style: 'header' },
                 { text: "", fontSize: 12, bold: true, alignment: 'center', style: 'header' },
                 { text: "", fontSize: 12, bold: true, alignment: 'center', style: 'header' },
