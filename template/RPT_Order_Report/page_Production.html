@@ -185,50 +185,6 @@
                         }
                     ],
                     select: true,
-                    rowCallback: function (row, data, index) {
-                        var currentItem = data.item;
-                        var colors = [
-                            '#FFE4E1', // MistyRose
-                            '#E6E6FA', // Lavender
-                            '#F0FFF0', // HoneyDew
-                            '#FFF0F5', // LavenderBlush
-                            '#F0FFFF', // Azure
-                            '#F0F8FF',  // AliceBlue
-                            '#FAFAD2', // LightGoldenrodYellow
-                            '#E0FFFF', // LightCyan
-                            '#FFE4B5', // Moccasin
-                            '#F0F8FF', // AliceBlue
-                            '#FFF5EE', // SeaShell
-                            '#F5F5F5', // WhiteSmoke
-                            '#FFFACD', // LemonChiffon
-                            '#E0FFFF', // LightCyan
-                            '#FFE4C4', // Bisque
-                            '#FFF0F5', // LavenderBlush
-                            '#F0FFF0', // Honeydew
-                            '#F5FFFA', // MintCream
-                            '#FFFFF0', // Ivory
-                            '#F5F5DC', // Beige
-                        ];
-
-                        // เก็บ Item และสีที่ใช้ไว้ใน object
-                        if (!this.itemColors) {
-                            this.itemColors = {};
-                            this.colorIndex = 0;
-                        }
-
-                        // ถ้า Item นี้ยังไม่เคยกำหนดสี
-                        if (!this.itemColors[currentItem]) {
-                            // กำหนดสีใหม่ให้กับ Item นี้
-                            this.itemColors[currentItem] = colors[this.colorIndex % colors.length];
-                            this.colorIndex++;
-                        }
-
-                        // ใช้สีที่กำหนดไว้สำหรับ Item นี้
-                        $(row).css('background-color', this.itemColors[currentItem]);
-
-                        // เพิ่มเส้นขอบด้านล่างเพื่อแยกแถวให้ชัดเจนขึ้น
-                        $(row).css('border-bottom', '1px solid #ddd');
-                    },
                     "columns": [
                         {
                             "data": "ordernum",
@@ -347,7 +303,8 @@
                                         load: "GetReportProduction",
                                         job: selected[0].job
                                     },
-                                    success: function (response) {  
+                                    success: function (response) {
+  
                                         PrintDeliveryImport(selected[0], response);
                                         $('#btnPrintDelivery').prop("disabled", false);
                                          $('#btnPrintDelivery').html("ใบสั่งงานผลิต");
