@@ -26,4 +26,8 @@ if ($load == "Plated") {
 } else if ($load == "Hot") {
     $Data = $Data->HotRollReport($item,$wc);
     echo json_encode($Data);
+} else if ($load == "GetReportProduction") {
+    $Data = $Data->GetReportProduction($job);
+    echo json_encode($Data);
 }
+

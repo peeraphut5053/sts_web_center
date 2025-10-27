@@ -1629,6 +1629,24 @@ WHERE id = '$id' ";
         array_splice($rs, count($rs) - 1, 1);
         return $rs;
     }
+    function GetReportProduction($job) {
+        $query = "EXEC MV_PRODUCTION_ORDER_REPORT 
+     @JobStatus	= 'R'
+	,@JobStarting = '$job'
+	,@JobEnding	= '$job'
+	,@SuffixStarting	= NULL
+	,@SuffixEnding	= NULL
+	,@ItemStarting	   = NULL
+	,@ItemEnding   = NULL
+	,@TransactionDateStarting  = NULL
+	,@TransactionDateEnding		= NULL
+	,@OperNumStarting = NULL
+	,@OperNumEnding	= NULL";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
 
     function HotRollReport($item,$wc) {
         $query = " EXEC MV_HOT_ROLL_SLIT_REPORT_web @TransactionDateStarting= NULL,"
