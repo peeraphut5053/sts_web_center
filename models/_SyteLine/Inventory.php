@@ -358,7 +358,7 @@ order by main.item";
 //        $txtEndDate='2020-08-21';
 //        $ThVendInvNum = 'IN19060762';
         //     $search_date = "AND  convert(date,a.transdate, 103)  BETWEEN '$txtStartDate' AND '$txtEndDate'";
-        $search_date = "AND  convert(date,date, 103)  BETWEEN '$txtStartDate' AND '$txtEndDate'";
+        $search_date = "AND  convert(date,createdate)  BETWEEN '$txtStartDate' AND '$txtEndDate'";
 
         $search_ThVendInvNum = "and doc_no like '%$ThVendInvNum%'";
         //      $search_ThVendInvNum = "and a.ThVendInvNum like '%$ThVendInvNum%'";
