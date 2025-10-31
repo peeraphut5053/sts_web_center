@@ -559,7 +559,15 @@
                 },
                 data: datapost,
                 success: function (data) {
-                    console.log(data);
+
+                    // if date == 'B/F' move position to first row
+
+                    var bfIndex = data.findIndex(item => item.date === 'B/F');
+                    if (bfIndex > -1) {
+                        var bfItem = data.splice(bfIndex, 1)[0];
+                        data.unshift(bfItem);
+                    }
+
                     $('#tblReportStockByItem').dataTable({
                         "aaData": data,
                         "paging": false,
