@@ -656,6 +656,12 @@
                                 "data": "qty",
                                 "className": "text-right",
                                 "render": function (data, type, row, meta) {
+
+                                    if (data == null || data == '') {
+                                        return '';
+                                    }
+
+
                                     var ret = addCommas(parseFloat(data).toFixed(2));
                                     return ret;
                                 }
