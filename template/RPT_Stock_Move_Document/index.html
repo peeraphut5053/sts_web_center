@@ -113,6 +113,11 @@
         background: #3c8dbc;
     }
 
+    .modal-xl {
+        width: 100%;
+        /* หรือ 1200px */
+    }
+
     /*    .barcode{
             font-family: 'Libre Barcode 39'
         }*/
@@ -130,20 +135,17 @@
     <h2> Stock Move by Document No. </h2>
 </div>
 <div class='row'>
-
     <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 ">
-        <div class="input-group">
+        <div class="input-group w-full">
             <div class="input-group-addon">ITEM</div>
             <input type="text" id="item" class="form-control" name="item">
         </div>
-
     </div>
-    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 ">
+    <div class="col-lg-2 col-md-3 col-sm-3 col-xs-3 ">
         <div class="input-group">
             <div class="input-group-addon">Doc. Number</div>
             <input type="text" value='PO20001072' id="ThVendInvNum" class="form-control" name="ThVendInvNum">
         </div>
-
     </div>
     <div class="col-lg-2 col-md-2 col-sm-6 col-xs-6 ">
         <div class="input-group">
@@ -158,12 +160,15 @@
             <input type="text" id="txtEndDate" class="form-control" name="txtEndDate" autocomplete="off">
         </div>
     </div>
-    <div class="col-xs-2 ">
-        <div class="col-xs-6 ">
+    <div class="flex flex-row justify-center items-center flex-grow gap-6 col-lg-3 col-md-3 col-sm-12 col-xs-12">
+        <div>
             <button class="btn btn-info" id="btnSearch"><i class="fa fa-search"></i>&nbsp;Search </button>
         </div>
-        <div class="col-xs-6 ">
+        <div>
             <input type="button" onclick="PrintPanel('printableArea')" value="พิมพ์รายงาน" class="btn btn-info" />
+        </div>
+        <div>
+            <button class="btn" id="btnOpenStockMove"></i>&nbsp;... </button>
         </div>
     </div>
     <div class="row" id="rowResultTable">
@@ -183,6 +188,53 @@
                 </tr>
             </thead>
         </table>
+    </div>
+    <div class="modal fade bd-example-modal-lg" id="ModalStockMove" role="dialog" aria-labelledby="myLargeModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title text-center" id="exampleModalLabel">Stock Move</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                </div>
+                <div class="modal-body">
+                    <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                        <div class="input-group basis-2/4">
+                            <div class="imagBox" style="margin-left: 20px;">
+                                <input type="file" id="file-input-excel-move" accept=".xlsx, .xls"
+                                    class="block w-full px-3 py-2 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-indigo-200">
+                            </div>
+                        </div>
+                        <div class="input-group basis-2/4">
+                            <button style="margin-right: 10px;" type="button" class="btn btn-info"
+                                id="btnImportExcelMove">อัพโหลด Excel</button>
+                            <button type="button" class="btn btn-warning" id="btnResetStockMove">Reset</button>
+                        </div>
+                    </div>
+                    <table class="table table-condensed table-striped " width="100%" id="tblReportStockMove">
+                        <thead>
+                            <tr>
+                                 <th>Date</th>
+                    <th>Item Number</th>
+                    <th>Item Name</th>
+                    <th>Warehouse</th>
+                    <th>Tran. Type</th>
+                    <!--                    <th>Ref. No.</th>
+                                        <th>Doc. No. 1</th>-->
+                    <th>Doc. No. </th>
+                    <th>Quantity</th>
+                                <!--<th>Balance Quantity</th>-->
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
     </div>
     <!--
         <div id="printableArea" >
@@ -224,7 +276,7 @@
     
         </div>-->
 
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script type="text/javascript">
 
 
@@ -293,9 +345,195 @@
         $("#txtStartDate,#txtEndDate").datepicker({
             dateFormat: 'yy-mm-dd'
         });
+
         $("#txtEndDate").val(GetToday());
 
+        $("#btnOpenStockMove").click(function () {
+            $('#ModalStockMove').modal('show');
+        });
 
+        $("#btnImportExcelMove").click(function () {
+            const fileInput = document.getElementById('file-input-excel-move');
+            const file = fileInput.files[0];
+
+            if (!file) {
+                alert("กรุณาเลือกไฟล์ Excel");
+                return false;
+            }
+
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    const sheetName = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[sheetName];
+                    const jsonData = XLSX.utils.sheet_to_json(worksheet, {
+                        header: 1,
+                        raw: false,  // แปลงวันที่เป็น string
+                        dateNF: 'dd/mm/yyyy' // รูปแบบวันที่
+                    });
+
+                    if (jsonData.length > 0) {
+                        const headers = jsonData[0];
+
+                        // กรองแถวว่างออก (แถวที่ทุก cell เป็น undefined/null/empty)
+                        const allData = jsonData.slice(1).filter(function (row) {
+                            return row.some(function (cell) {
+                                return cell !== undefined && cell !== null && cell !== '';
+                            });
+                        });
+
+                        console.log('Headers:', headers);
+                        console.log('Data rows:', allData.length);
+                        console.log('Data:', allData);
+
+                        /*
+                        const rows = allData.map(function (row) {
+                            const obj = {};
+                            headers.forEach(function (header, index) {
+                                obj[header] = row[index];
+                            });
+                            return obj;
+                        });
+                        console.log('Mapped Rows:', rows);
+                        */
+                        $('#tblReportStockMove').dataTable({
+                            "aaData": allData,
+                            "paging": false,
+                            fixedHeader: true,
+                            destroy: true,
+                            'processing': true,
+                            "order": false,
+                            scrollY: 400,
+                            "columns": [
+                                {
+                                    "data": 0,
+                                    "className": "text-right",
+                                    "render": function (data, type, row, meta) {
+                                        var ret = data;
+                                        return ret;
+                                    }
+                                },
+                                {
+                                    "data": 1,
+                                    "className": "text-center",
+                                    "render": function (data, type, row, meta) {
+                                        var ret = data;
+                                        return ret;
+                                    }
+                                },
+                                {
+                                    "data": 2,
+                                    "className": "text-left",
+                                    "render": function (data, type, row, meta) {
+                                        var ret = data;
+                                        return ret;
+                                    }
+                                },
+                                {
+                                    "data": 3,
+                                    "className": "text-right",
+                                    "render": function (data, type, row, meta) {
+                                        var ret = data;
+                                        return ret;
+                                    }
+                                },
+                                {
+                                    "data": 4,
+                                    "className": "text-right",
+                                    "render": function (data, type, row, meta) {
+                                        var ret = data;
+                                        return ret;
+                                    }
+                                },
+                                {
+                                    "data": 5,
+                                    "className": "text-right",
+                                    "render": function (data, type, row, meta) {
+                                        var ret = data;
+                                        return ret;
+                                    }
+                                },
+                                {
+                                    "data": 6,
+                                    "className": "text-right",
+                                    "render": function (data, type, row, meta) {
+                                        var ret = data;
+                                        return ret;
+                                    }
+                                }
+                            ],
+                            'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                                "<'row'<'col-md-12'tr>>" +
+                                "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                            'buttons': [
+                                {
+                                    text: '<button class="btn btn-success">Upload Data</button>',
+                                    action: function (e, dt, node, config) {
+                                        // After button click, disable the button
+                                        this.disable();
+                                        var dataToSend = dt.rows().data().toArray();
+
+                                        if (dataToSend.length === 0) {
+                                            alert('ไม่มีข้อมูลที่จะส่ง');
+                                            // Re-enable the button if no data to send
+                                            this.enable();
+                                            return;
+                                        }
+
+                                        $.ajax({
+                                            type: "POST",
+                                            url: "././module/RPT_Stock_Move_Document/data.php",
+                                            dataType: "json",
+                                            data: {
+                                                load: "InsertStockMove",
+                                                dataToSend: JSON.stringify(dataToSend)
+                                            },
+                                            success: function (response) {
+                                                if (response.status === 'success') {
+                                                    alert('อัพโหลดข้อมูลสำเร็จ');
+                                                    $('#ModalStockMove').modal('hide');
+                                                }
+                                            },
+                                            error: function (xhr, status, error) {
+                                                swal('เกิดข้อผิดพลาดในการอัพโหลดข้อมูล: ' + error);
+                                            }
+                                        });
+
+                                        // clear table
+                                        dt.clear().draw();
+                                        // Re-enable the button
+                                        this.enable();
+                                    }
+                                }
+                            ],
+                        });
+                    } else {
+                        alert('ไฟล์ Excel ว่างเปล่า');
+                    }
+                } catch (error) {
+                    alert('เกิดข้อผิดพลาดในการอ่านไฟล์: ' + error.message);
+                    console.error(error);
+                }
+            };
+
+            reader.onerror = function () {
+                alert('ไม่สามารถอ่านไฟล์ได้');
+            };
+
+            reader.readAsArrayBuffer(file);
+    
+        });
+
+        
+        $("#btnResetStockMove").click(function () {
+            // clear input file
+            $('#file-input-excel-move').val('');
+            // clear table
+            $('#tblReportStockMove').DataTable().clear().draw();
+        });
 
 
         function ReportItemSearch() {

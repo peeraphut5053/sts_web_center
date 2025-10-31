@@ -280,6 +280,17 @@ order by main.item";
         return $rs;
 
     }
+
+    function Insert_Stock_Move_by_Document_No($date, $item_number, $item_name, $whse, $tran_type, $doc_no, $qty) {
+        $query = " INSERT INTO STS_report_pee_pen2 ([date],item_number,item_name,whse,tran_type,doc_no,qty) "
+                . " VALUES ('$date','$item_number','$item_name','$whse','$tran_type','$doc_no',$qty) ";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+
+    }
+
     Function GetReportStockMove($item, $txtStartDate, $txtEndDate, $ThVendInvNum) {
 
         $searchItem = "";
