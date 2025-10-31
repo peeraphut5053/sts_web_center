@@ -293,7 +293,7 @@ order by main.item";
 
     function Insert_Stock_Move_by_Item($date, $item_number, $item_name, $ref_type, $tran_type, $doc_no, $qty, $bal_qty) {
         $query = " INSERT INTO STS_stock_card_by_items ([date],item_number,item_name,ref_type,tran_type,doc_no,qty,bal_qty,createdate) "
-                . " VALUES ('$date','$item_number','$item_name','$ref_type','$tran_type','$doc_no',$qty,$bal_qty,getdate()) ";
+                . " VALUES ('$date','$item_number','$item_name','$ref_type','$tran_type','$doc_no','$qty','$bal_qty',getdate()) ";
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
