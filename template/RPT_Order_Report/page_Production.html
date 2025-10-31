@@ -31,17 +31,19 @@
             <tr>
                 <th>ลำดับ</th>
                 <th>พิมพ์แท็ก Job</th>
-                <th>Wc</th>
-                <th>Ref no.</th>
-                <th>Item</th>
-                <th>Description</th>
-                <th>Material</th>
-                <th>Spec</th>
-                <th>Matl qty</th>
-                <th>แผนก</th>
-                <th>ชื่อลูกค้า</th>
-                <th>จำนวนเส้น/มัด</th>
-                <th>ปริมาณที่ผลิต</th>
+                <th style="padding: 5px;">Item</th>
+                <th style="padding: 5px;">WC</th>
+        
+                <th style="padding: 5px;">STS PO</th>
+                <th style="padding: 5px;">SIZE</th>
+                <th style="padding: 5px;">SPEC</th>
+                <th style="padding: 5px;">GRADE</th>
+                <th style="padding: 5px;">SCH.</th>
+                <th style="padding: 5px;">Length</th>
+                <th style="padding: 5px;">Type</th>
+                <th style="padding: 5px;">ผลิตแล้ว</th>
+                <th style="padding: 5px;">สั่งผลิต</th>
+                <th>เส้น/มัด</th>
                 <th>เส้น/ชม.</th>
                 <th>Remark</th>
             </tr>
@@ -197,58 +199,53 @@
                                 return '<a style="padding: 5px; font-size: 14px;" class="btn btn-info btn-xs" href="http://172.18.1.194/sts_tag/?tag_history_forming_coProduct&jobno=+' + data + '%2B0%2B10&act=start" target="_blank">' + row.jobbarcode2 + '</a>';
                             }
                         },
-                        {
-                            "data": "wc",
+                        {"data": "item",
+                            "className": "text-center",
+                        },
+                        {"data": "wc",
+                            "className": "text-center",
+                        },
+                     
+                        {"data": "Uf_refno",
+                            "className": "text-center",
+                        },
+            
+                        {"data": "size",
+                            "className": "text-center",
+                        },
+                        {"data": "Uf_Spec",
+                            "className": "text-center",
+                        },
+                        {"data": "Uf_Grade",
+                            "className": "text-center",
+                        },
+                        {"data": "Uf_Schedule",
+                            "className": "text-center",
+                        },
+                        {"data": "Uf_length",
+                            "className": "text-center",
+                        },
+                        {"data": "Uf_TypeEnd",
+                            "className": "text-center",
+                        },
+                        {"data": "qty_complete",
                             "className": "text-center",
                             "render": function (data, type, row) {
-                                return data + " - " + row.WC_desc;
+                                let val = Number(data).toLocaleString();
+                                let rt = "<span style='color:blue; font-weight:bold;'>" + val + "</span>";
+                                return rt;
                             }
                         },
-                        {
-                            "data": "Uf_refno",
-                            "className": "text-center",
-                        },
-                        {
-                            "data": "item",
-                            "className": "text-center",
-                        },
-                        {
-                            "data": "description",
-                            "className": "text-center",
-                        },
-                        {
-                            "data": "matlitem",
-                            "className": "text-center",
-                        },
-                        {
-                            "data": "uf_spec",
-                            "className": "text-center",
-                        },
-                        {
-                            "data": "matl_qty",
+                        {"data": "qty_released",
                             "className": "text-center",
                             "render": function (data, type, row) {
-                                return Number(data).toFixed(2);
+                                 let val = Number(data).toLocaleString();
+                                let rt = "<span style='font-weight:bold;'>" + val + "</span>";
+                                return rt;
                             }
                         },
-                        {
-                            "data": "DeptdDesc",
+                            {"data": "Uf_pack",
                             "className": "text-center",
-                        },
-                        {
-                            "data": "Uf_customer",
-                            "className": "text-center",
-                        },
-                        {
-                            "data": "Uf_pack",
-                            "className": "text-center",
-                        },
-                        {
-                            "data": "qty_released",
-                            "className": "text-center",
-                            "render": function (data, type, row) {
-                                return Number(data);
-                            }
                         },
                         {
                             "data": "pcs_per_mch_hr",
@@ -304,10 +301,10 @@
                                         job: selected[0].job
                                     },
                                     success: function (response) {
-  
+
                                         PrintDeliveryImport(selected[0], response);
                                         $('#btnPrintDelivery').prop("disabled", false);
-                                         $('#btnPrintDelivery').html("ใบสั่งงานผลิต");
+                                        $('#btnPrintDelivery').html("ใบสั่งงานผลิต");
                                     },
                                     error: function (e) {
                                         swal("Error", "เกิดข้อผิดพลาดในการดึงข้อมูล", "error");
