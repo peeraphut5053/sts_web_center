@@ -348,9 +348,9 @@ order by main.item";
         if ($item) {
             if (substr($item, -1) == "*") {
                 $item = str_replace('*', '', $item);
-                $searchItem = " AND ( a.item like '$item%' ) ";
+                $searchItem = " AND ( item_number like '$item%' ) ";
             } else {
-                $searchItem = " AND ( a.item like '%$item%' ) ";
+                $searchItem = " AND ( item_number like '%$item%' ) ";
             }
         }
 
