@@ -238,7 +238,7 @@ class API_FreeZone {
 
     function GetDoList() {
         $query = "select do_num from do_hdr_mst
-where (do_num like 'DO%' or do_num like 'DX%')
+where (do_num like 'DO%' or do_num like 'DX%') and convert(date,createdate) > '2025-06-30'
 order by do_num desc";
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
