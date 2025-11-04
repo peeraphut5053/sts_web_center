@@ -133,6 +133,40 @@
      </tbody>-->
     </table>
   </div>
+  <div class="modal fade bd-example-modal-lg" id="ModalCountPipeImg" role="dialog" aria-labelledby="myLargeModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-center" id="exampleModalLabel">รูปภาพทั้งหมด</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <table width="100%" class="table table-condensed table-bordered table-striped"
+                        id="tbItemCountPipeImg">
+                        <thead>
+                            <tr>
+                                <th class="bg-gray">do num</th>
+                                <th class="bg-gray">รูปภาพ</th>
+                                <th class="bg-gray">User</th>
+                            </tr>
+                        </thead>
+                        <!--        <tbody id="tblReportList">
+                      <tr><td align="center" colspan="12">.... No item search ....</td></tr>
+     </tbody>-->
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                
+            </div>
+        </div>
+    </div>
+</div>
   <script type="text/javascript">
     var username_session = GetUserProp("login_username");
     $("#btnSearchReportCountPipe").click(function () {
@@ -182,9 +216,6 @@
           },
           success: function (data) {
             $("#tblReportCountPipe").DataTable().clear();
-            $("#tblReportCountPipe").append(
-              "<tfoot><tr><td align='center' colspan='7'>.... No item search ....</tr></tfoot>"
-            );
             $("#tblReportCountPipe").dataTable({
               aaData: data,
               paging: false,
@@ -217,7 +248,8 @@
                   data: "path",
                   className: "text-center",
                   "render": function (data, type, row){
-                    return '<div style="display: flex; align-items: center; justify-content: center;"><img src="module/APP_COUNT_PIPE/upload/' + data + '?v=' + Date.now() + '" style="width: 50px; height: 50px; " onclick="openImage(this.src)"></div>';
+                    return '<button class="btn btn-info btn-sm" onclick="OpenModalCountPipeImg(\'' + row.do_num + '\')"><i class="fa fa-image"></i>&nbsp;รูปภาพ</button>';
+                    // return '<div style="display: flex; align-items: center; justify-content: center;"><img src="module/APP_COUNT_PIPE/upload/' + data + '?v=' + Date.now() + '" style="width: 50px; height: 50px; " onclick="openImage(this.src)"></div>';
                   }
                 },
                 {
@@ -262,6 +294,66 @@
           error: function (e) {
             $("#tblReportCountPipe").loading("stop");
             $("#btnSearchReportCountPipe").html(OldHtml);
+            console.log("There was an error with your request...");
+            console.log("error: " + JSON.stringify(e));
+          },
+        });
+      }
+
+      function OpenModalCountPipeImg(do_num) {
+        var tableImg = $('#tbItemCountPipeImg').DataTable({
+            "columnDefs": [
+                { "targets": '_all', "className": 'text-center' },
+                { "targets": 0, "width": "200" },
+                { "targets": 1, "width": "400" },
+                { "targets": 2, "width": "200" },
+
+            ],
+            columns: [
+                 {
+                  data: "do_num",
+                  className: "text-center",
+                },
+                {
+                  data: "path",
+                  className: "text-center",
+                  "render": function (data, type, row){
+                    return '<div style="display: flex; align-items: center; justify-content: center;"><img src="module/APP_COUNT_PIPE/upload/' + data + '?v=' + Date.now() + '" style="width: 50px; height: 50px; " onclick="openImage(this.src)"></div>';
+                  }
+                },
+                {
+                  data: "user",
+                  className: "text-center",
+                },
+            ],
+            paging: false,
+            searching: false,
+            select: false,
+            destroy: true,
+            dom:
+                "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                "<'row'<'col-md-12'tr>>" +
+                "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+            buttons: [
+
+            ],
+        });
+        $.ajax({
+          type: "POST",
+          url: "././module/APP_COUNT_PIPE/data.php",
+          dataType: "json",
+          beforeSend: function () {
+          },
+          data: {
+            load: "GetCountPipeImg",
+            do_num: do_num,
+          },
+          success: function (data) {
+            tableImg.clear();
+            tableImg.rows.add(data).draw();
+            $("#ModalCountPipeImg").modal("show");
+          },
+          error: function (e) {
             console.log("There was an error with your request...");
             console.log("error: " + JSON.stringify(e));
           },

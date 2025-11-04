@@ -263,8 +263,16 @@ order by do_num desc";
         return $rs;
     }
 
-    function CreateCountPipe($do_num, $qty_system, $qty_human, $user, $file_type, $remark) {
-        $s = "SELECT do_num FROM STS_count_pipe WHERE do_num = '$do_num' ORDER BY do_num DESC";
+    function CreateCountPipe($do_num, $qty_system, $qty_human, $user, $remark) {
+        $query = "INSERT INTO STS_count_pipe (do_num,qty_system_count,qty_human_count,path,[user],remark) OUTPUT INSERTED.* VALUES('$do_num','$qty_system','$qty_human','$pathName','$user' ,'$remark')";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+    function InsertImagePath($do_num, $file_type, $user) {
+        $s = "SELECT do_num FROM STS_count_pipe_pic WHERE do_num = '$do_num' ORDER BY do_num DESC";
         $cSql = new SqlSrv();
         $do = $cSql->SqlQuery($this->StrConn, $s);
         $do_count = count($do);
@@ -274,11 +282,22 @@ order by do_num desc";
             $do_count = 1;
         }
         $pathName = $do_num . "_" . $do_count . "_" . $user . "." . $file_type;
-        $query = "INSERT INTO STS_count_pipe (do_num,qty_system_count,qty_human_count,path,[user],remark) OUTPUT INSERTED.* VALUES('$do_num','$qty_system','$qty_human','$pathName','$user' ,'$remark')";
+        $query = "INSERT INTO STS_count_pipe_pic (do_num,path,[user]) OUTPUT INSERTED.* VALUES('$do_num','$pathName','$user')";
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
         return $rs;
     }
+
+
+     function GetCountPipeImg($do_num) {
+         $query = "SELECT * FROM STS_count_pipe_pic WHERE do_num = '$do_num'";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+    
 
 }

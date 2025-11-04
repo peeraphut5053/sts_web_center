@@ -30,3 +30,12 @@ if ($load == "GetReportCountPipe") {
     $rs = $STS_COUNT->GetReportCountPipe($do_num, $start_date, $end_date);
     echo json_encode($rs);
 }
+
+if ($load == "GetCountPipeImg") {
+    $CM = new CallModel();
+    $CM->SyteLine_Models();
+    $STS_COUNT = new API_FreeZone();
+    $STS_COUNT->setConn($ConnSL);
+    $rs = $STS_COUNT->GetCountPipeImg($do_num);
+    echo json_encode($rs);
+}
