@@ -264,7 +264,7 @@ order by do_num desc";
     }
 
     function CreateCountPipe($do_num, $qty_system, $qty_human, $user, $remark) {
-        $query = "INSERT INTO STS_count_pipe (do_num,qty_system_count,qty_human_count,path,[user],remark) OUTPUT INSERTED.* VALUES('$do_num','$qty_system','$qty_human','$pathName','$user' ,'$remark')";
+        $query = "INSERT INTO STS_count_pipe (do_num,qty_system_count,qty_human_count,[user],remark) OUTPUT INSERTED.* VALUES('$do_num','$qty_system','$qty_human','$user' ,'$remark')";
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
