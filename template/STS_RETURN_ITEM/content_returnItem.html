@@ -856,7 +856,10 @@
         $("#btnSalesApprove").attr("disabled", true)
 
         $("#btnReceiveItem").text("รับของคืน");
-        $("#btnReceiveItem").attr("disabled", true)
+        $("#btnReceiveItem").attr("disabled", true);
+        // remove css
+        $("#btnReceiveItem").removeClass("btn-default").addClass("btn-info");
+        $("#btnSalesApprove").removeClass("btn-default").addClass("btn-info");
         $("#user_return").val(username_session);
         // show approve button
 
@@ -904,17 +907,22 @@
                 if (data[0].sales !== null) {
                     $("#btnSalesApprove").attr("disabled", true)
                     $("#btnAddItemReturn").attr("disabled", true)
+                    $("#btnSalesApprove").removeClass("btn-info").addClass("btn-default");
                 } else {
                     $("#btnSalesApprove").attr("disabled", false)
                     $("#btnAddItemReturn").attr("disabled", false)
+                    $("#btnSalesApprove").removeClass("btn-default").addClass("btn-info");
                 }
 
                 if (data[0].returned !== null) {
                     $("#btnReceiveItem").text("รับของคืนแล้วโดยคลัง");
                     $("#btnReceiveItem").attr("disabled", true);
+                    // add css
+                    $("#btnReceiveItem").removeClass("btn-info").addClass("btn-default");
                 } else {
                     $("#btnReceiveItem").text("รับของคืน");
                     $("#btnReceiveItem").attr("disabled", false);
+                    $("#btnReceiveItem").removeClass("btn-default").addClass("btn-info");
                 }
 
                 data_withdraw = data;
@@ -1120,7 +1128,9 @@
                             swal("รับของคืนสําเร็จ", "", "success");
                             // edit text btn approve_stock
                             $("#btnReceiveItem").text("รับของคืนแล้วโดยคลัง");
+                            $("#btnReceiveItem").removeClass("btn-info").addClass("btn-default");
                             $("#btnReceiveItem").attr("disabled", true);
+
                         },
                         error: function (xhr, status, error) {
                             alert('Error');
