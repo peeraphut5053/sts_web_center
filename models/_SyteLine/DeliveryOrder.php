@@ -769,7 +769,7 @@ where pre.do_num = '$do_num' and pre.co_num = '$co_num'";
     }
 
     function GetDocNoReturn() {
-        $query = "SELECT doc_no FROM STS_return_hdr ORDER BY doc_no DESC";
+        $query = "SELECT doc_no, sales, returned FROM STS_return_hdr ORDER BY doc_no DESC";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);
@@ -833,10 +833,10 @@ FROM STS_return_hdr h
         return $rs;
     }
 
-    function UpdateItemReturn($doc_no, $do_num, $do_num_old, $co_num, $co_num_old, $item, $item_old, $qty, $remark, $issue) {
+    function UpdateItemReturn($doc_no, $do_num, $do_num_old, $co_num, $co_num_old, $item, $item_old, $qty, $remark, $issue, $user) {
         $cSql = new SqlSrv();
         $query = "UPDATE STS_return_line  
-        SET do_num = '$do_num', co_num = '$co_num', item = '$item', qty = $qty, issue = '$issue', remark = '$remark'
+        SET do_num = '$do_num', co_num = '$co_num', item = '$item', qty = $qty, issue = '$issue', remark = '$remark', updatedby = '$user', updatedate = getdate()
         WHERE doc_no = '$doc_no' AND do_num = '$do_num_old' AND co_num = '$co_num_old' AND item = '$item_old'";
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
@@ -851,9 +851,9 @@ FROM STS_return_hdr h
         return $rs;
     }
 
-    function UpdateReturnHeader($doc_no, $remark, $stat, $return_type) {
+    function UpdateReturnHeader($doc_no, $remark, $stat, $return_type, $user) {
         $cSql = new SqlSrv();
-        $query = "UPDATE STS_return_hdr SET remark = '$remark', stat = '$stat', return_method = '$return_type', updatedate = getdate() WHERE doc_no = '$doc_no'";
+        $query = "UPDATE STS_return_hdr SET remark = '$remark', stat = '$stat', return_method = '$return_type', updatedby = '$user', updatedate = getdate() WHERE doc_no = '$doc_no'";
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
         return $rs;

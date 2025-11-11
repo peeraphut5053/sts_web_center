@@ -76,7 +76,7 @@ if ($load == "AddItemReturn") {
 }
 
 if ($load == "UpdateItemReturn") {
-    $rs = $STS_Custom->UpdateItemReturn($doc_no, $do_num, $do_num_old, $co_num, $co_num_old, $item, $item_old, $qty, $remark, $issue);
+    $rs = $STS_Custom->UpdateItemReturn($doc_no, $do_num, $do_num_old, $co_num, $co_num_old, $item, $item_old, $qty, $remark, $issue, $user);
     echo json_encode($rs);
     # code...
 }
@@ -88,7 +88,7 @@ if ($load == "DeleteItemReturn") {
 }
 
 if ($load == "UpdateReturnHeader") {
-    $rs = $STS_Custom->UpdateReturnHeader($doc_no, $remark, $stat, $return_type);
+    $rs = $STS_Custom->UpdateReturnHeader($doc_no, $remark, $stat, $return_type, $user);
     echo json_encode($rs);
     # code...
 }

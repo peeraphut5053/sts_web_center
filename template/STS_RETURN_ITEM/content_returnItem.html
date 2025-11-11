@@ -352,7 +352,9 @@
             success: function (data) {
                 let doc = [{ id: '', text: '' }].concat(data.map((item) => ({
                     id: item.doc_no,
-                    text: item.doc_no
+                    text: item.doc_no,
+                    sales: item.sales,
+                    returned: item.returned,
                 })));
 
                 // clear select2
@@ -367,6 +369,37 @@
                         noResults: function () {
                             return "ไม่พบข้อมูล";
                         }
+                    },
+                      templateResult: function (state) {
+                        if (!state.id) return state.text;
+
+                        var $state = $('<div></div>');
+                        var docNo = `<span style="font-weight: bold; font-size: 15px;">${state.id}</span>`;
+                        var statusHtml = '';
+
+                        // สร้าง badge สำหรับ userApprove
+                        var salesApprove = '';
+                        if (state.sales !== null && state.sales !== '') {
+                            salesApprove = '<span style="background-color: #28a745; color: white; padding: 2px 6px; border-radius: 3px; font-size: 12px; margin-right: 4px;">Sales Approve</span>';
+                        } else {
+                            salesApprove = '<span style="background-color: #dc3545; color: white; padding: 2px 6px; border-radius: 3px; font-size: 12px; margin-right: 4px;">Sales Approve</span>';
+                        }
+
+                        // สร้าง badge สำหรับ stock
+                        var returned = '';
+                        if (state.returned !== null && state.returned !== '') {
+                            returned = '<span style="background-color: #28a745; color: white; padding: 2px 6px; border-radius: 3px; font-size: 12px;">รับของคืน</span> ';
+                        } else {
+                            returned = '<span style="background-color: #dc3545; color: white; padding: 2px 6px; border-radius: 3px; font-size: 12px;">รับของคืน</span> ';
+                        }
+
+                        // รวมทั้งสอง status
+                        $state.html(docNo + ' - ' + salesApprove + returned);
+
+                        return $state;
+                    },
+                    escapeMarkup: function (markup) {
+                        return markup; // สำคัญ! ต้องมีเพื่อให้ HTML render ได้
                     }
                 });
             }
@@ -1054,7 +1087,8 @@
                 item_old: item_old,
                 qty: qty,
                 remark: remark,
-                issue: issue
+                issue: issue,
+                user: username_session
 
             },
             success: function (data) {
@@ -1097,7 +1131,8 @@
                 doc_no: doc_no,
                 remark: remark,
                 stat: stat,
-                return_type: return_type
+                return_type: return_type,
+                user: username_session
 
             },
             success: function (data) {
@@ -1170,6 +1205,7 @@
                             swal("Sales Approve สําเร็จ", "", "success");
                             // edit text btn approve_stock
                             $("#btnSalesApprove").attr("disabled", true);
+                            $("#btnSalesApprove").removeClass("btn-info").addClass("btn-default");
                         },
                         error: function (xhr, status, error) {
                             alert('Error');
