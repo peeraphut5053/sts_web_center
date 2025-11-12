@@ -71,7 +71,7 @@
                     id="user_return" readonly>
             </div>
             <div class="input-group basis-3/6">
-                <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">วิธีคืนของ</div>
+                <div style=" color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">วิธีคืนของ *</div>
                 <select style="font-weight: bold; font-size: 16px;" class="form-control txt-filter" id="return_type">
                     <option value=""> </option>
                     <option value="CN">CN</option>
@@ -995,6 +995,11 @@
 
         if (item.length == 0) {
             swal("กรุณากรอกรายการ Item ที่ต้องการคืน อย่างน้อย 1 รายการ", "", "warning");
+            return false;
+        }
+
+        if (return_type == '') {
+            swal("กรุณาระบุวิธีการคืน", "", "warning");
             return false;
         }
 
