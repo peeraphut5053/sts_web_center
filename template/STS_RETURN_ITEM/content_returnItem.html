@@ -95,7 +95,7 @@
                 </select>
             </div>
             <div class="input-group basis-3/6">
-                <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">หมายเหตุ</div>
+                <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">หมายเหตุ (Sales)</div>
                 <input type="text" style="font-weight: bold; font-size: 16px;" class="form-control txt-filter"
                     id="remark_return">
             </div>
@@ -131,9 +131,9 @@
                 </select>
             </div>
             <div class="input-group basis-3/6">
-                <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">หมายเหตุ </div>
+                <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">หมายเหตุ (QC)</div>
                 <input type="text" style="font-weight: bold; font-size: 16px;" class="form-control txt-filter"
-                    id="remark_item_return">
+                    id="remark_item_return" readonly>
             </div>
         </div>
         <div class="mybox2">
@@ -162,7 +162,7 @@
             <div class="flex gap-12">
                 <button type="button" class="btn btn-success btn-lg" id="btnAddItemReturn">1 Add Item</button>
                 <button type="button" class="btn btn-info btn-lg" id="btnSalesApprove" onclick="SalesApprove()"
-                    disabled>Sales Approve</button>
+                    disabled>Sales อนุมัติปิดเคส</button>
                 <button type="button" class="btn btn-info btn-lg" id="btnReceiveItem" onclick="ReceiveItem()"
                     disabled>รับของคืน</button>
 
@@ -187,7 +187,7 @@
                 <th class="bg-gray">จำนวน</th>
                 <th class="bg-gray">สาเหตุ</th>
                 <th class="bg-gray">ปัญหา</th>
-                <th class="bg-gray">หมายเหตุ</th>
+                <th class="bg-gray">หมายเหตุ (QC)</th>
             </tr>
         </thead>
         <!--        <tbody id="tblReportList">
@@ -234,9 +234,9 @@
                         </select>
                     </div>
                     <div class="input-group basis-3/6">
-                        <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">หมายเหตุ </div>
+                        <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">หมายเหตุ (QC)</div>
                         <input type="text" style="font-weight: bold; font-size: 16px;" class="form-control txt-filter"
-                            id="remark_item_return_edit">
+                            id="remark_item_return_edit" readonly>
                     </div>
                 </div>
                 <div class="mybox2">
@@ -380,9 +380,9 @@
                         // สร้าง badge สำหรับ userApprove
                         var salesApprove = '';
                         if (state.sales !== null && state.sales !== '') {
-                            salesApprove = '<span style="background-color: #28a745; color: white; padding: 2px 6px; border-radius: 3px; font-size: 12px; margin-right: 4px;">Sales Approve</span>';
+                            salesApprove = '<span style="background-color: #28a745; color: white; padding: 2px 6px; border-radius: 3px; font-size: 12px; margin-right: 4px;">Sales อนุมัติปิดเคส</span>';
                         } else {
-                            salesApprove = '<span style="background-color: #dc3545; color: white; padding: 2px 6px; border-radius: 3px; font-size: 12px; margin-right: 4px;">Sales Approve</span>';
+                            salesApprove = '<span style="background-color: #dc3545; color: white; padding: 2px 6px; border-radius: 3px; font-size: 12px; margin-right: 4px;">Sales อนุมัติปิดเคส</span>';
                         }
 
                         // สร้าง badge สำหรับ stock
@@ -575,12 +575,12 @@
                     var rowIndex = dt.rows('.selected').indexes()[0];
                     console.log(select);
 
-                    if (select.sales != null) {
+                    if (select[0].sales != null) {
                         swal("ไม่สามารถแก้ไขข้อมูลได้ เนื่องจากมีการอนุมัติแล้ว", "", "warning");
                         return false;
                     }
 
-                    if (select.qc != null) {
+                    if (select[0].qc != null) {
                         swal("ไม่สามารถแก้ไขข้อมูลได้ เนื่องจาก QC แล้ว", "", "warning");
                         return false;
                     }
@@ -716,12 +716,12 @@
                         return false;
                     }
 
-                    if (select.sales != null) {
+                    if (select[0].sales != null) {
                         swal("ไม่สามารถแก้ไขข้อมูลได้ เนื่องจากมีการอนุมัติแล้ว", "", "warning");
                         return false;
                     }
 
-                    if (select.qc != null) {
+                    if (select[0].qc != null) {
                         swal("ไม่สามารถแก้ไขข้อมูลได้ เนื่องจาก QC แล้ว", "", "warning");
                         return false;
                     }
@@ -1190,7 +1190,7 @@
     function SalesApprove() {
 
         $.confirm({
-            title: 'Sales Approve',
+            title: 'Sales อนุมัติปิดเคส',
             content: 'คุณต้องการอนุมัติเอกสารใช่หรือไม่',
             columnClass: 'medium',
             theme: 'modern',
@@ -1207,7 +1207,7 @@
                             sale: username_session
                         },
                         success: function (data) {
-                            swal("Sales Approve สําเร็จ", "", "success");
+                            swal("Sales อนุมัติปิดเคส สําเร็จ", "", "success");
                             // edit text btn approve_stock
                             $("#btnSalesApprove").attr("disabled", true);
                             $("#btnSalesApprove").removeClass("btn-info").addClass("btn-default");

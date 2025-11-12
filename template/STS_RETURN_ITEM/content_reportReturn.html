@@ -219,10 +219,20 @@
                         {
                             data: "createdby",
                             className: "text-center",
+                            render: function (data, type, row) {
+                                return data.toLowerCase();
+                            }
                         },
                         {
                             data: "sales",
                             className: "text-center",
+                            render: function (data, type, row) {
+                               if (data == '' || data == null) {
+                                 return data;
+                               } else {
+                                 return data.toLowerCase();
+                               }
+                            }
                         },
                        
                         {
@@ -276,6 +286,13 @@
                         {
                             data: "returned",
                             className: "text-center",
+                            render: function (data, type, row) {
+                               if (data == '' || data == null) {
+                                 return data;
+                               } else {
+                                 return data.toLowerCase();
+                               }
+                            }
                         },
                          {
                             data: "return_method",

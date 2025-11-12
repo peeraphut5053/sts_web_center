@@ -365,17 +365,20 @@
                 data: "cause",
                 render: function (data, type, row, meta) {
                     var selected = data || '';
-                    return '<select class="form-control txt-filter reason_select cause-select" data-row="' + meta.row + '" data-selected="' + selected + '" style="width: 100%;"></select>';
+                    var disable = (row.qc != null || row.sales != null) ? 'disabled' : '';
+                    return '<select class="form-control txt-filter reason_select cause-select" data-row="' + meta.row + '" data-selected="' + selected + '" style="width: 100%;" ' + disable + '></select>';
                 }
             },
             { "data": "stat",
                 render: function (data, type, row, meta) {
                     var status = data || '';
-                    return '<select class="form-control txt-filter status_select" data-row="' + meta.row + '" data-selected="' + status + '" style="width: 100%;"></select>';
+                    var disable = (row.qc != null || row.sales != null) ? 'disabled' : '';
+                    return '<select class="form-control txt-filter status_select" data-row="' + meta.row + '" data-selected="' + status + '" style="width: 100%;" ' + disable + '></select>';
             }},
             { "data": "remark",
                 render: function (data, type, row, meta) {
-                    return '<input type="text" class="form-control txt-filter remark-input" data-row="' + meta.row + '" value="' + (data || '') + '" onchange="SaveRemarkQc(this, ' + meta.row + ')"/>';
+                    var disable = (row.qc != null || row.sales != null) ? 'disabled' : '';
+                    return '<input type="text" class="form-control txt-filter remark-input" data-row="' + meta.row + '" value="' + (data || '') + '" onchange="SaveRemarkQc(this, ' + meta.row + ')" ' + disable + '/>';
                 }
             },
         ],
