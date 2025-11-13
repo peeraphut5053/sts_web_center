@@ -99,6 +99,12 @@ if ($load == "ReceiveItem") {
     # code...
 }
 
+if ($load == "ApproveShip") {
+    $rs = $STS_Custom->ApproveShipItemReturn($doc_no,$user);
+    echo json_encode($rs);
+    # code...
+}
+
 if ($load == "ApproveQc") {
     $rs = $STS_Custom->ApproveReturnByQc($doc_no , $qc);
     echo json_encode($rs);

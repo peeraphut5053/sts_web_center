@@ -75,7 +75,7 @@
                 <select style="font-weight: bold; font-size: 16px;" class="form-control txt-filter" id="return_type">
                     <option value=""> </option>
                     <option value="CN">CN</option>
-                    <option value="Ship">Ship</option>
+                    <option value="ถอย Ship">ถอย Ship</option>
                 </select>
             </div>
 
@@ -165,6 +165,8 @@
                     disabled>Sales อนุมัติปิดเคส</button>
                 <button type="button" class="btn btn-info btn-lg" id="btnReceiveItem" onclick="ReceiveItem()"
                     disabled>รับของคืน</button>
+                <button type="button" class="btn btn-danger btn-lg" id="btnApproveShip" onclick="ApproveShip()"
+                    disabled>อนุมัติถอย Ship</button>
 
             </div>
             <div>
@@ -893,6 +895,9 @@
         // remove css
         $("#btnReceiveItem").removeClass("btn-default").addClass("btn-info");
         $("#btnSalesApprove").removeClass("btn-default").addClass("btn-info");
+
+        $("#btnApproveShip").removeClass("btn-danger").addClass("btn-default");
+        $("#btnApproveShip").attr("disabled", true);
         $("#user_return").val(username_session);
         // show approve button
 
@@ -956,6 +961,20 @@
                     $("#btnReceiveItem").text("รับของคืน");
                     $("#btnReceiveItem").attr("disabled", false);
                     $("#btnReceiveItem").removeClass("btn-default").addClass("btn-info");
+                }
+
+                if (data[0].APPROVEship !== null) {
+                    $("#btnApproveShip").removeClass("btn-danger").addClass("btn-default");
+                    $("#btnApproveShip").attr("disabled", true);
+                } else {
+                    if (data[0].return_method == 'ถอย Ship') {
+                        $("#btnApproveShip").removeClass("btn-default").addClass("btn-danger");
+                        $("#btnApproveShip").attr("disabled", false);
+                    } else {
+                        $("#btnApproveShip").removeClass("btn-danger").addClass("btn-default");
+                        $("#btnApproveShip").attr("disabled", true); 
+                    }
+
                 }
 
                 data_withdraw = data;
@@ -1211,6 +1230,53 @@
                             // edit text btn approve_stock
                             $("#btnSalesApprove").attr("disabled", true);
                             $("#btnSalesApprove").removeClass("btn-info").addClass("btn-default");
+                        },
+                        error: function (xhr, status, error) {
+                            alert('Error');
+                        }
+                    });
+
+                },
+                cancel: function () {
+                    window.close();
+                }
+
+            }
+        });
+
+    }
+
+    function ApproveShip() {
+
+        var approveUser = ['kanthanat', 'admin', 'kasemkit'];
+
+        if (approveUser.indexOf(username_session) === -1) {
+            swal("ไม่มีสิทธิในการอนุมัติ", "", "warning");
+            return false;
+        }
+
+        $.confirm({
+            title: 'ยืนยันการอนุมัติถอย Ship',
+            columnClass: 'medium',
+            theme: 'modern',
+            buttons: {
+                confirm: function () {
+                    var approve = $("#i_user").val();
+                    $.ajax({
+                        type: "POST",
+                        url: "././module/STS_RETURN_ITEM/data.php",
+                        dataType: "json",
+                        data: {
+                            load: "ApproveShip",
+                            doc_no: $("#doc_no_return_old").val(),
+                            user: username_session
+                        },
+                        success: function (data) {
+                            swal("อนุมัติถอย Ship สําเร็จ", "", "success");
+                            // edit text btn approve_stock
+                            $("#btnApproveShip").removeClass("btn-danger").addClass("btn-default");
+                            $("#btnApproveShip").attr("disabled", true);
+
                         },
                         error: function (xhr, status, error) {
                             alert('Error');

@@ -867,6 +867,14 @@ FROM STS_return_hdr h
         return $rs;
     }
 
+    function ApproveShipItemReturn($doc_no, $user) {
+        $cSql = new SqlSrv();
+        $query = "UPDATE STS_return_hdr SET APPROVEship = '$user', updatedate = getdate() WHERE doc_no = '$doc_no'";
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
     function ApproveReturnByQc($doc_no, $qc) {
         $cSql = new SqlSrv();
         $query = "UPDATE STS_return_hdr SET qc = '$qc', updatedate = getdate() WHERE doc_no = '$doc_no'";
