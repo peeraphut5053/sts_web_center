@@ -24,58 +24,64 @@
     .mybox {
         display: flex;
         justify-content: flex-start;
-        align-items: center;
+        align-items: stretch;
         flex-grow: 1;
         gap: 1.5rem;
         margin-bottom: 1.25rem;
-    
+    }
+    .item {
+        flex: 1 1 0;
+    }
+
+    .date {
+       margin-top: 1.5rem;
+       margin-left: 1.5rem;
     }
 </style>
-<div class="">
-    <div class="col-xs-12">
-        <div class="page-header">
-            <h1 class="text-header text-left">นับสต๊อก</h1>
-        </div>
-    </div>
+<div class="row" style="border-bottom:solid 1px #e8e8e8;">
+   <div style="margin-top: 10px; margin-bottom: 20px;">
+      <h1 class="my-header">นับสต๊อก</h1>
+     </div>
 </div>
 <div class="mycontainer mb-12">
     <div class="row col-xs-12">
-           <div class="mybox max-sm:flex-col">
-            <div class="input-group basis-3/6 max-sm:w-full">
+           <div class="mybox">
+            <div class="input-group item">
                 <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">Location *</div>
                 <select style="font-weight: bold; font-size: 16px;" class="form-control txt-filter" id="location_stock">
                     <option value=""></option>
                 </select>
             </div>
-            <div class="input-group basis-3/6 max-sm:w-full">
+            <div class="input-group item">
                 <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">User</div>
                 <input type="text" style="font-weight: bold; font-size: 16px;" class="form-control txt-filter"
                     id="user_stock" readonly>
             </div>
         </div>
-        <div class="mybox max-sm:flex-col">
-             <div class="input-group basis-3/6 max-sm:w-full">
+        <div class="mybox">
+             <div class="input-group item">
                 <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">Tag</div>
                 <input type="text" style="font-weight: bold; font-size: 16px;" class="form-control txt-filter"
                     id="tag_stock" onkeypress="onScanTag(event)">
             </div>
-            <div class="input-group basis-3/6 max-sm:w-full">
+            <div class="input-group item">
                 <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">Item *</div>
                 <select style="font-weight: bold; font-size: 16px;" class="form-control txt-filter" id="item_scan">
                     <option value=""></option>
                 </select>
             </div>
         </div>
-        <div class="mybox max-sm:flex-col">
-             <div class="input-group basis-3/6 max-sm:w-full">
+        <div class="mybox">
+             <div class="input-group item">
                 <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">qty *</div>
                 <input type="number" style="font-weight: bold; font-size: 16px;" class="form-control txt-filter"
                     id="qty_stock">
             </div>
-                <div class="input-group basis-3/6 max-sm:w-full">
-                <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">หมายเหตุ</div>
+            <div class="input-group item">
+                <div style=" font-weight: bold; font-size: 16px;" class="input-group-addon">หมายเหตุ </div>
                 <input type="text" style="font-weight: bold; font-size: 16px;" class="form-control txt-filter"
                     id="remark_stock">
+            </div>
             </div>
         </div>
         <div class="flex justify-between">
@@ -87,13 +93,13 @@
         <input type="text" style="font-weight: bold; font-size: 16px;" class="hidden" id="old_co_num">
     </div>
 </div>
-<div class="input-group basis-3/6 m-6" >
+<div class="input-group date">
     <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">วันที่</div>
     <input type="text" style="font-weight: bold; font-size: 16px;" class="form-control txt-filter"
                     id="date_stock">
 </div>
 <div class="row">
-    <table class="table table-condensed table-bordered table-striped" id="tbItemWithdraw">
+    <table width="100%" class="table table-condensed table-bordered table-striped" id="tbItemWithdraw">
         <thead>
             <tr>
                 <th class="bg-gray">Location</th>
