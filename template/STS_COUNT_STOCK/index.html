@@ -158,7 +158,7 @@
                 },
                success: function (data) {
                    if (data.length > 0) {
-                       $("#lot_stock").val(data[0].tag);
+                       $("#lot_stock").val(data[0].lot);
                        $("#item_scan").val(data[0].item);
                        $("#item_scan").trigger("change");
                    } else {
