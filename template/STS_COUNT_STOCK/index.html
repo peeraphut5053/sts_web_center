@@ -93,6 +93,11 @@
         <input type="text" style="font-weight: bold; font-size: 16px;" class="hidden" id="old_co_num">
     </div>
 </div>
+<div class="hidden">
+                <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">Lot</div>
+                <input type="text" style="font-weight: bold; font-size: 16px;" class="form-control txt-filter"
+                    id="lot_stock" readonly>
+</div>
 <div class="input-group date">
     <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">วันที่</div>
     <input type="text" style="font-weight: bold; font-size: 16px;" class="form-control txt-filter"
@@ -103,6 +108,7 @@
         <thead>
             <tr>
                 <th class="bg-gray">Location</th>
+                <th class="bg-gray">Lot</th>
                 <th class="bg-gray">Item</th>
                 <th class="bg-gray">Qty</th>
                 <th class="bg-gray">Qty Stock</th>
@@ -129,7 +135,7 @@
     function onScanTag(e) {
         var tag = $("#tag_stock").val();
         var loc = $("#location_stock").val();
-
+        $("#lot_stock").val('');
         if (loc == '') {
             alert("กรุณาระบุ Location");
             return false;
@@ -152,6 +158,7 @@
                 },
                success: function (data) {
                    if (data.length > 0) {
+                       $("#lot_stock").val(data[0].tag);
                        $("#item_scan").val(data[0].item);
                        $("#item_scan").trigger("change");
                    } else {
@@ -206,6 +213,7 @@
             data.forEach((item) => {
                 let row = tableStock.row.add([
                     item.location,
+                    item.tag,
                     item.item,
                     item.qty,
                     item.qty_stock,
@@ -354,7 +362,7 @@
                     alert("ไม่มี Item นี้ในระบบ");
                 } else {
                     console.log('data', data);
-                    tableStock.row.add([location, data[0]["item"], qty, data[0]["qty_stock"], remark, user]).draw();
+                    tableStock.row.add([location, "", data[0]["item"], qty, data[0]["qty_stock"], remark, user]).draw();
                 }
 
                 $("#item_scan").val('').trigger('change');
@@ -369,7 +377,7 @@
      $('#btnCheckLot').click(function () {
         // add data to table 
         var location = $("#location_stock").val();
-        var tag = $("#tag_stock").val();
+        var tag = $("#lot_stock").val();
         var qty = $("#qty_stock").val();
         var remark = $("#remark_stock").val();
         var user = $("#user_stock").val();
@@ -409,10 +417,11 @@
                 if (data == false) {
                     alert("ไม่มี Item นี้ในระบบ");
                 } else {
-                    tableStock.row.add([location, data[0]["item"], qty, data[0]["qty_stock"], remark, user]).draw();
+                    tableStock.row.add([location, tag, data[0]["item"], qty, data[0]["qty_stock"], remark, user]).draw();
                 }
 
                 $("#tag_stock").val('');
+                $("#lot_stock").val('');
                 $("#qty_stock").val('');
                 $("#remark_stock").val('');
                 $("#item_scan").val('').trigger('change');

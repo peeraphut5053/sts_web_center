@@ -250,13 +250,16 @@ and whse.qty_on_hand <> 0 and loc.qty_on_hand <> 0";
     }
 
      function GetItemByTag($tag,$loc) {
-        $query = "select itm.item, itm.[description], itm.u_m 
- , loc = isnull(lot.loc, loc.loc), lot = isnull(lot.lot,'0'), qty_on_hand = coalesce(lot.qty_on_hand, loc.qty_on_hand, whse.qty_on_hand)
-from item_mst itm 
-left join lot_loc_mst lot on lot.item = itm.item and lot.loc = '$loc'
-left join itemloc_mst loc on loc.item = itm.item and loc.loc = '$loc'
-left join itemwhse_mst whse on whse.item = itm.item 
-where lot.lot = '$tag'";
+        $query = "select distinct tag.id, itm.item, itm.[description], itm.u_m 
+ , loc = isnull(lot.loc, loc.loc), lot = isnull(lot.lot,'0')
+ , qty_on_hand = coalesce(lot.qty_on_hand, loc.qty_on_hand, whse.qty_on_hand)
+from mv_bc_tag tag  
+inner join item_mst itm on tag.item = itm.item 
+inner join lot_loc_mst lot on lot.item = tag.item and lot.lot = tag.lot and lot.loc = '$loc'
+left join itemloc_mst loc on loc.item = tag.item and lot.lot = tag.lot and loc.loc = '$loc'
+inner join itemwhse_mst whse on whse.item = itm.item 
+where tag.id = '$tag'
+";
         $cSql2 = new SqlSrv();
         $rs = $cSql2->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
