@@ -135,12 +135,8 @@
             return false;
         }
 
-        if (tag == '') {
-            alert("กรุณาระบุ Tag");
-            return false;
-        }
 
-        if (e.keyCode == 49) {
+        if (tag.length > 6) {
            $.ajax({
                type: "GET",
                url: "././module/STS_COUNT_STOCK/data.php",
