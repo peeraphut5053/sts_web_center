@@ -317,13 +317,57 @@
             });
         }
 
+        // Function สำหรับจัดการ active state
+        function setActiveMenu(prj_id, ThisId) {
+            console.log("=== setActiveMenu ===");
+            console.log("prj_id:", prj_id);
+            console.log("ThisId:", ThisId);
+
+            // ลบ active ทั้งหมดก่อน
+            $(".sidebar-menu .treeview").removeClass("active");
+            $(".sidebar-menu .treeview-menu li").removeClass("active");
+
+            // ✅ แก้ไขส่วนนี้ - อย่าลบ class "active" ออกจาก icon ทันที
+            // แค่เปลี่ยน icon กลับเป็น circle-o
+            $("i[id^='LeftCircle_']").each(function () {
+                $(this).removeClass("fa-circle").addClass("fa-circle-o");
+                // ไม่ต้องลบ "active" ออก เพราะมันอาจจะเป็น class สำหรับสี
+            });
+
+            console.log("Cleared all active states");
+
+            // เพิ่ม active ให้เมนูที่เลือก
+            if (prj_id && ThisId) {
+                var $button = $("#" + ThisId);
+                var $li = $button.closest("li");
+                var $treeview = $button.closest(".treeview");
+                var $icon = $("#LeftCircle_" + prj_id);
+
+                console.log("Button found:", $button.length);
+                console.log("Icon found:", $icon.length);
+                console.log("Icon classes before:", $icon.attr("class"));
+
+                $li.addClass("active");
+                $treeview.addClass("active");
+
+                // ✅ เปลี่ยน icon โดยไม่ลบ class อื่น
+                $icon.removeClass("fa-circle-o").addClass("fa-circle");
+
+                console.log("Icon classes after:", $icon.attr("class"));
+
+                // เก็บลง localStorage
+                localStorage.setItem('active_prj_id', prj_id);
+                localStorage.setItem('active_menu_id', ThisId);
+
+                console.log("Saved to localStorage");
+            }
+        }
         function LeftMenuClick(ThisId) {
             if (ThisId == "LeftMainBtn_999") {
                 $("body").removeClass("sidebar-collapse");
             } else {
                 $("body").addClass("sidebar-collapse");
             }
-            $("i[id^='LeftCircle_']").removeClass("active");
 
             var prj_id = ThisId.split("_")[1];
             var prj_link = $("#" + ThisId).attr("link");
@@ -347,15 +391,18 @@
                     $("#CurrentPage").val(ModuleName);
 
                     $("#MainContent").load(LinkLoad, function () {
-                        $("#LeftCircle_" + prj_id).addClass("active");
+                        // ✅ เรียกใช้ function เพื่อ set active
+                        setActiveMenu(prj_id, ThisId);
+
                         $("#MainContent").loading("stop");
 
-                        // ✅ เพิ่มส่วนนี้เพื่อเปลี่ยน URL
+                        // เพิ่มส่วนนี้เพื่อเปลี่ยน URL
                         var newUrl = '/sts_web_center/#/' + ModuleName;
                         history.pushState({
                             module: ModuleName,
                             link: LinkLoad,
-                            menuId: ThisId
+                            menuId: ThisId,
+                            prjId: prj_id
                         }, '', newUrl);
                     });
                 },
@@ -426,8 +473,9 @@
                     // โหลดเนื้อหา
                     $("#MainContent").load(LinkLoad, function (response, status, xhr) {
                         if (status == "success") {
-                            $("i[id^='LeftCircle_']").removeClass("active");
-                            $("#LeftCircle_" + prj_id).addClass("active");
+                            // ✅ เรียกใช้ function เพื่อ set active
+                            setActiveMenu(prj_id, ThisId);
+
                             $("#MainContent").loading("stop");
                         } else if (status == "error") {
                             console.error("Error loading page: " + xhr.status + " " + xhr.statusText);
@@ -439,6 +487,14 @@
                 } else {
                     console.warn("ไม่พบเมนูสำหรับ module: " + ModuleName);
                     $("#MainContent").html("<div class='alert alert-warning'>ไม่พบหน้าที่ต้องการ</div>");
+                }
+            } else {
+                // ✅ ถ้าไม่มี hash ให้โหลดจาก localStorage
+                var savedPrjId = localStorage.getItem('active_prj_id');
+                var savedMenuId = localStorage.getItem('active_menu_id');
+
+                if (savedPrjId && savedMenuId) {
+                    setActiveMenu(savedPrjId, savedMenuId);
                 }
             }
         }
@@ -582,5 +638,4 @@
                 transform: translateX(0);
             }
         }
-
     </style>
