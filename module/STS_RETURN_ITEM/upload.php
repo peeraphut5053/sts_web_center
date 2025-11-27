@@ -98,3 +98,20 @@ if ($_POST['load'] == 'CreateReturnPic') {
         'errors' => $errors
     ));
 }
+
+if ($_POST['load'] == 'DeleteReturnPic') {
+    $upload_dir = 'upload/';
+    $CallModel = new CallModel();
+    $CallModel->SyteLine_Models();
+    $STS_Custom = new DeliveryOrder();
+    $STS_Custom->setConn($ConnSL);
+    $STS_Custom->DeleteReturnPic($_POST['path']);
+
+    if (file_exists($upload_dir . $_POST['path'])) {
+        unlink($upload_dir . $_POST['path']);
+    }
+
+    echo json_encode(array(
+        'success' => true
+    ));
+}

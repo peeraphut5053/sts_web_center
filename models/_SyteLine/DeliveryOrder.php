@@ -825,6 +825,14 @@ FROM STS_return_hdr h
         return $rs;
     }
 
+    function DeleteReturnPic($path) {
+        $s = "DELETE FROM STS_return_pic WHERE path = '$path'";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $s);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
     function AddItemReturn($doc_no, $do_num, $co_num, $item, $qty, $issue, $remark, $user) {
         $cSql = new SqlSrv();
         $query = "INSERT INTO STS_return_line (doc_no,do_num,co_num,item,qty,issue,remark,[user]) OUTPUT INSERTED.* VALUES('$doc_no','$do_num','$co_num','$item',$qty,'$issue','$remark','$user')";
@@ -940,6 +948,14 @@ FROM STS_return_hdr h
     function SalesApproveReturn($doc_no, $sales) {
         $cSql = new SqlSrv();
         $query = "UPDATE STS_return_hdr SET sales = '$sales', updatedate = getdate() WHERE doc_no = '$doc_no'";
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+    function CountReturnPicByDocNo($doc_no) {
+        $cSql = new SqlSrv();
+        $query = "SELECT COUNT(*) AS pic_count FROM STS_return_pic WHERE doc_no = '$doc_no'";
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
         return $rs;

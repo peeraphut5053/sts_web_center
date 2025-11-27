@@ -190,6 +190,7 @@
                             <tr>
                                 <th class="bg-gray">do num</th>
                                 <th class="bg-gray">รูปภาพ</th>
+                                <th class="bg-gray"></th>
                             </tr>
                         </thead>
                         <!--        <tbody id="tblReportList">
@@ -200,7 +201,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                
+
             </div>
         </div>
     </div>
@@ -215,7 +216,6 @@
     getDocNumList();
 
     var data_withdraw = [];
-
 
     function openImage(src) {
         var win = window.open(src, '_blank');
@@ -297,6 +297,13 @@
                         return '<div style="display: flex; align-items: center; justify-content: center;"><img src="module/STS_RETURN_ITEM/upload/' + data + '?v=' + Date.now() + '" style="width: 50px; height: 50px; " onclick="openImage(this.src)"></div>';
                     }
                 },
+                {
+                    "data": "path",
+                    "render": function (data, type, row, meta) {
+                        // send meta.row to DeleteReturnPic
+                        return '<button type="button" class="btn btn-lg btn-danger" onclick="DeleteReturnPic(\'' + data + '\', ' + meta.row + ')">ลบ</button>';
+                    }
+                },
             ],
             paging: false,
             searching: false,
@@ -352,12 +359,13 @@
             { "data": "item" },
             { "data": "description" },
             { "data": "qty" },
-            { "data": "issue",
+            {
+                "data": "issue",
                 render: function (data, type, row, meta) {
                     return issue.find(issue => issue.id === data)?.issue || '';
-                    
+
                 }
-             },
+            },
             {
                 data: "cause",
                 render: function (data, type, row, meta) {
@@ -366,13 +374,16 @@
                     return '<select class="form-control txt-filter reason_select cause-select" data-row="' + meta.row + '" data-selected="' + selected + '" style="width: 100%;" ' + disable + '></select>';
                 }
             },
-            { "data": "stat",
+            {
+                "data": "stat",
                 render: function (data, type, row, meta) {
                     var status = data || '';
                     var disable = (row.qc != null || row.sales != null) ? 'disabled' : '';
                     return '<select class="form-control txt-filter status_select" data-row="' + meta.row + '" data-selected="' + status + '" style="width: 100%;" ' + disable + '></select>';
-            }},
-            { "data": "remark",
+                }
+            },
+            {
+                "data": "remark",
                 render: function (data, type, row, meta) {
                     var disable = (row.qc != null || row.sales != null) ? 'disabled' : '';
                     return '<input type="text" class="form-control txt-filter remark-input" data-row="' + meta.row + '" value="' + (data || '') + '" onchange="SaveRemarkQc(this, ' + meta.row + ')" ' + disable + '/>';
@@ -503,7 +514,7 @@
         var value = $(input).val();
         var rowData = tableReceive.row(row).data();
         console.log(rowData);
-        
+
 
         // Update DataTable
         $.ajax({
@@ -534,7 +545,7 @@
         $("#remark_qc").val('');
         // reset btn disabled and text
 
-
+         document.getElementById('file-input').value = '';
         $("#return_qc").text("ลงชื่อ QC");
         $("#return_qc").attr("disabled", false);
     })
@@ -569,7 +580,7 @@
                     $("#return_qc").text("ลงชื่อ QC");
                     $("#return_qc").attr("disabled", false);
                 }
-
+                 document.getElementById('file-input').value = '';
                 data_withdraw = data;
 
 
@@ -636,6 +647,13 @@
         const fileInputs = document.getElementById('file-input').files;
         const doc_no = $("#doc_no_return_qc").val();
 
+        // limit 10 files
+        if (fileInputs.length > 10) {
+            swal("คุณสามารถอัพโหลดได้ไม่เกิน 10 รูปภาพต่อใบคืนของ!", "", "warning");
+            document.getElementById('file-input').value = '';
+            return false;
+        }
+
         if (doc_no == '') {
             swal("กรุณาเลือกเลขที่ใบเบิกที่ต้องการอัพโหลดรูปภาพ!", "", "warning");
             return false;
@@ -646,35 +664,60 @@
             return false;
         }
 
-        // สร้าง FormData เพื่อส่งไฟล์
-        const formData = new FormData();
-        formData.append('load', 'CreateReturnPic');
-        formData.append('doc_no', doc_no);
-
-        // ส่งไฟล์ที่เลือกทั้งหมด
-        for (let i = 0; i < fileInputs.length; i++) {
-            const file = fileInputs[i];
-            if (file.type !== 'image/jpg' && file.type !== 'image/jpeg' && file.type !== 'image/png') {
-                alert("กรุณาเลือกไฟล์รูปภาพ");
-                return false;
-            }
-            formData.append('file[]', file);
-        }
-
         $.ajax({
-            type: "POST",
-            url: "././module/STS_RETURN_ITEM/upload.php",
+            type: "GET",
+            url: "././module/STS_RETURN_ITEM/data.php",
             dataType: "json",
-            data: formData,
-            processData: false, // สำคัญ: ห้าม jQuery ประมวลผลข้อมูล
-            contentType: false,
-            success: function (data) {
-                swal("อัปโหลดรูปภาพสําเร็จ!", "", "success");
+            data: {
+                load: "CountReturnPicByDocNo",
+                doc_no: doc_no
+            },
+            success: function (dataPic) {
+                var existingCount = dataPic.count;
+                var totalCount = existingCount + fileInputs.length;
+
+                if (totalCount > 10) {
+                    swal("คุณสามารถอัพโหลดได้ไม่เกิน 10 รูปภาพต่อใบคืนของ!", "", "warning");
+                    document.getElementById('file-input').value = '';
+                    return false;
+                } else {
+                    // สร้าง FormData เพื่อส่งไฟล์
+                    const formData = new FormData();
+                    formData.append('load', 'CreateReturnPic');
+                    formData.append('doc_no', doc_no);
+
+                    // ส่งไฟล์ที่เลือกทั้งหมด
+                    for (let i = 0; i < fileInputs.length; i++) {
+                        const file = fileInputs[i];
+                        if (file.type !== 'image/jpg' && file.type !== 'image/jpeg' && file.type !== 'image/png') {
+                            alert("กรุณาเลือกไฟล์รูปภาพ");
+                            return false;
+                        }
+                        formData.append('file[]', file);
+                    }
+
+                    $.ajax({
+                        type: "POST",
+                        url: "././module/STS_RETURN_ITEM/upload.php",
+                        dataType: "json",
+                        data: formData,
+                        processData: false, // สำคัญ: ห้าม jQuery ประมวลผลข้อมูล
+                        contentType: false,
+                        success: function (data) {
+                            swal("อัปโหลดรูปภาพสําเร็จ!", "", "success");
+                            document.getElementById('file-input').value = '';
+                        },
+                        error: function (xhr, status, error) {
+                            alert('Error');
+                        }
+                    });
+                }
             },
             error: function (xhr, status, error) {
                 alert('Error');
             }
-        });
+        })
+
     });
 
 
@@ -767,117 +810,35 @@
 
     }
 
-    function SaveMiscIssue() {
+    function DeleteReturnPic(path, row) {
 
-        const btn = $("#SaveMiscIssue");
-        btn.prop('disabled', true);
-
-        var doc_no = $("#doc_no_w_2").val();
-        var item = $("#item_r_misc").val();
-        var qty = $("#qty_r_misc").val();
-        var loc = $("#loc_r_misc").val();
-        var user = $("#user_r_misc").val();
-        var reason = $("#reason_r_misc").val();
-        var line_id = $("#line_id_item").val();
-        var acct = $("#acct").val();
-        var acct_unit1 = $("#acct_unit1").val();
-        var um = $("#u_m_misc").val();
-
-        if (doc_no == '' || item == '' || qty == '' || loc == '' || user == '' || reason == '' || line_id == '' || acct == '' || acct_unit1 == '' || um == '') {
-            swal("กรุณากรอกข้อมูลให้ครบ", "", "warning");
-            btn.prop('disabled', false);
+        if (username_session != 'admin' && username_session != 'nantawan' && username_session != 'suriyakan' && username_session != 'thanittha' && username_session != 'natchalida') {
+            swal("คุณไม่มีสิทธิ์ลบรูปภาพนี้!", "", "warning");
             return false;
         }
 
-        $.ajax({
-            type: "POST",
-            url: "././module/APP_STORE_WITHDRAW/data.php",
-            dataType: "json",
-            data: {
-                load: "SaveMiscIssue",
-                doc_no: doc_no,
-                item: item,
-                qty: qty,
-                loc: loc,
-                user: user,
-                reason: reason,
-                line_id: line_id,
-                acct: acct,
-                acct_unit1: acct_unit1,
-                um: um
-            },
-            success: function (data) {
-                tableReceive.clear();
-                tableReceive.rows.add(data).draw();
-                $("#ModalMiscIssue").modal("hide");
-                var item = $("#item_r_misc").val('');
-                var qty = $("#qty_r_misc").val('');
-                var loc = $("#loc_r_misc").val('').trigger('change');
-                var reason = $("#reason_r_misc").val('').trigger('change');
-                var line_id = $("#line_id_item").val('');
-                swal("ตัดสต๊อกสําเร็จ", "", "success");
-                btn.prop('disabled', false);
-            },
-            error: function (xhr, status, error) {
-                btn.prop('disabled', false);
-                alert('Error');
-            }
-        });
-    }
-
-    function SaveMiscIssueByLot() {
-
-        const btn = $("#SaveMiscIssueByLot");
-        btn.attr("disabled", true);
-
-        var doc_no = $("#doc_no_w_2").val();
-        var item = $("#item_r_misc_lot").val();
-        var lot = $("#lot_r_misc").val();
-        var qty = $("#qty_r_misc_lot").val();
-        var fromLoc = $("#from_loc_r_misc").val();
-        var toLoc = $("#to_loc_r_misc").val();
-        var user = $("#user_r_misc_lot").val();
-        var line_id = $("#line_id_lot").val();
-
-        if (doc_no == '' || item == '' || lot == '' || qty == '' || fromLoc == '' || toLoc == '' || user == '' || line_id == '') {
-            swal("กรุณากรอกข้อมูลให้ครบ", "", "warning");
-            btn.attr("disabled", false);
+        if (confirm("คุณต้องการลบรูปภาพนี้ใช่หรือไม่?")) {
+            $.ajax({
+                type: "POST",
+                url: "././module/STS_RETURN_ITEM/upload.php",
+                dataType: "json",
+                data: {
+                    load: "DeleteReturnPic",
+                    path: path
+                },
+                success: function (data) {
+                    swal("ลบรูปภาพสําเร็จ!", "", "success");
+                    // delete row from datatable
+                    var tableImg = $('#tbItemReturnQcImg').DataTable();
+                    tableImg.row(row).remove().draw();
+                },
+                error: function (xhr, status, error) {
+                    alert('Error');
+                }
+            });
+        } else {
             return false;
         }
-
-        $.ajax({
-            type: "POST",
-            url: "././module/APP_STORE_WITHDRAW/data.php",
-            dataType: "json",
-            data: {
-                load: "SaveMiscIssueByLot",
-                doc_no: doc_no,
-                item: item,
-                lot: lot,
-                qty: qty,
-                fromLoc: fromLoc,
-                toLoc: toLoc,
-                user: user,
-                line_id: line_id
-            },
-            success: function (data) {
-                tableReceive.clear();
-                tableReceive.rows.add(data).draw();
-                $("#ModalMiscIssueByLot").modal("hide");
-                var item = $("#item_r_misc_lot").val('');
-                var lot = $("#lot_r_misc").val('');
-                var qty = $("#qty_r_misc_lot").val('');
-                var fromLoc = $("#from_loc_r_misc").val('').trigger('change');
-                // var toLoc = $("#to_loc_r_misc").val('').trigger('change');
-                var line_id = $("#line_id_lot").val('');
-                swal("ตัดสต๊อก Lot สําเร็จ!", "", "success");
-                btn.attr("disabled", false);
-            },
-            error: function (xhr, status, error) {
-                btn.attr("disabled", false);
-                alert('Error');
-            }
-        });
     }
 
     /* $("#lot_r_misc").on('select2:select', function (e) {

@@ -146,3 +146,11 @@ if ($load == "SalesApprove") {
     echo json_encode($rs);
     # code...
 }
+
+if ($load == "CountReturnPicByDocNo") {
+    $rs = $STS_Custom->CountReturnPicByDocNo($doc_no);
+    echo json_encode(array(
+        'count' => $rs[0]['pic_count']
+    ));
+    # code...
+}
