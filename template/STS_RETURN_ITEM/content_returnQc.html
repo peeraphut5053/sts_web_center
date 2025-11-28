@@ -772,6 +772,13 @@
             return false;
         }
 
+        var user = username_session.trim().toLowerCase();
+
+        if (user != 'admin' && user != 'nittaya') {
+            swal("คุณไม่มีสิทธิ์อนุมัติ!", "", "warning");
+            return false;
+        }
+
         $.confirm({
             title: 'ตรวจสอบโดย',
             theme: 'modern',
