@@ -812,7 +812,9 @@
 
     function DeleteReturnPic(path, row) {
 
-        if (username_session != 'admin' && username_session != 'nantawan' && username_session != 'Suriyakan' && username_session != 'Thanittha' && username_session != 'Natchalida') {
+        var user = username_session.toLowerCase().trim();
+
+        if (user != 'admin' && user != 'nantawan' && user != 'Suriyakan' && user != 'Thanittha' && user != 'Natchalida') {
             swal("คุณไม่มีสิทธิ์ลบรูปภาพนี้!", "", "warning");
             return false;
         }
