@@ -782,7 +782,7 @@
         $.confirm({
             title: 'ตรวจสอบโดย',
             theme: 'modern',
-            content: '<input placeholder="ตัดสต๊อก" type="text" id="i_return_qc" class="form-control my-2" value="' + username_session + '" autofocus>',
+            content: '<input readonly type="text" id="i_return_qc" class="form-control my-2" value="' + username_session + '">',
             buttons: {
                 confirm: function () {
                     var stock = $("#i_return_qc").val();
