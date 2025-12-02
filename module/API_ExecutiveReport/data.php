@@ -219,3 +219,8 @@ if ($load == "STS_execRpt_W_bySizeType_Live_Detail") {
     $JsonValue = $CallModelObj->STS_execRpt_W_bySizeType_Live_Detail($daystart, $dayend, $country);
     echo json_encode($JsonValue);
 }
+
+if ($load == "GetLocationStock") {
+    $JsonValue = $CallModelObj->GetLocationStock();
+    echo json_encode($JsonValue);
+}
