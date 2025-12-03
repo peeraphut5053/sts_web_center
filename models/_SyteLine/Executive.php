@@ -383,5 +383,15 @@ group by loc_group";
         array_splice($rs, count($rs) - 1, 1);
         return $rs;
     }
+	  function GetLocationStockDetail($loc) {
+        $query = "select item = [description], qty = sum(qtyPCS) , [weight_ton]= sum(qtyWeight)
+from V_STS_stock_loc
+where loc_group = '$loc'
+group by [description]";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
 
 }

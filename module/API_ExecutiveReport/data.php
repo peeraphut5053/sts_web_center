@@ -224,3 +224,9 @@ if ($load == "GetLocationStock") {
     $JsonValue = $CallModelObj->GetLocationStock();
     echo json_encode($JsonValue);
 }
+
+
+if ($load == "GetLocationStockDetail") {
+    $JsonValue = $CallModelObj->GetLocationStockDetail($loc);
+    echo json_encode($JsonValue);
+}
