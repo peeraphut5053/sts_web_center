@@ -118,19 +118,19 @@ if ($load == "GetReturnPicByDocNo") {
 }
 
 if ($load == "UpdateCause") {
-    $rs = $STS_Custom->UpdateCauseReturn($doc_no, $do_num, $co_num, $item, $cause);
+    $rs = $STS_Custom->UpdateCauseReturn($doc_no, $do_num, $co_num, $item, $cause, $user);
     echo json_encode($rs);
     # code...
 }
 
 if ($load == "UpdateStatus") {
-    $rs = $STS_Custom->UpdateStatusReturn($doc_no, $do_num, $co_num, $item, $status);
+    $rs = $STS_Custom->UpdateStatusReturn($doc_no, $do_num, $co_num, $item, $status, $user);
     echo json_encode($rs);
     # code...
 }
 
 if ($load == "UpdateRemarkQc") {
-    $rs = $STS_Custom->UpdateRemarkQcReturn($doc_no, $do_num, $co_num, $item, $remark);
+    $rs = $STS_Custom->UpdateRemarkQcReturn($doc_no, $do_num, $co_num, $item, $remark, $user);
     echo json_encode($rs);
     # code...
 }

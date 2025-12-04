@@ -898,25 +898,25 @@ FROM STS_return_hdr h
         return $rs;
     }
 
-    function UpdateCauseReturn($doc_no, $do_num, $co_num, $item, $cause) {
+    function UpdateCauseReturn($doc_no, $do_num, $co_num, $item, $cause, $user) {
         $cSql = new SqlSrv();
-        $query = "UPDATE STS_return_line SET cause = '$cause' WHERE doc_no = '$doc_no' AND do_num = '$do_num' AND co_num = '$co_num' AND item = '$item'";
+        $query = "UPDATE STS_return_line SET cause = '$cause', updatedby = '$user', updatedate = getdate() WHERE doc_no = '$doc_no' AND do_num = '$do_num' AND co_num = '$co_num' AND item = '$item'";
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
         return $rs;
     }
 
-    function UpdateStatusReturn($doc_no, $do_num, $co_num, $item, $status) {
+    function UpdateStatusReturn($doc_no, $do_num, $co_num, $item, $status, $user) {
         $cSql = new SqlSrv();
-        $query = "UPDATE STS_return_line SET stat = '$status' WHERE doc_no = '$doc_no' AND do_num = '$do_num' AND co_num = '$co_num' AND item = '$item'";
+        $query = "UPDATE STS_return_line SET stat = '$status', updatedby = '$user', updatedate = getdate() WHERE doc_no = '$doc_no' AND do_num = '$do_num' AND co_num = '$co_num' AND item = '$item'";
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
         return $rs;
     }
     
-    function UpdateRemarkQcReturn($doc_no, $do_num, $co_num, $item, $remark) {
+    function UpdateRemarkQcReturn($doc_no, $do_num, $co_num, $item, $remark, $user) {
         $cSql = new SqlSrv();
-        $query = "UPDATE STS_return_line SET remark = '$remark' WHERE doc_no = '$doc_no' AND do_num = '$do_num' AND co_num = '$co_num' AND item = '$item'";
+        $query = "UPDATE STS_return_line SET remark = '$remark' , updatedby = '$user', updatedate = getdate() WHERE doc_no = '$doc_no' AND do_num = '$do_num' AND co_num = '$co_num' AND item = '$item'";
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
         return $rs;
