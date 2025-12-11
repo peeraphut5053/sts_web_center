@@ -290,14 +290,14 @@ class JOBORDER {
         $ref_num = $this->_ref_num;
         $job_type = $this->_job_type;
         $w_c = $this->_w_c;
-
-        $query = "EXEC STS_JOB_REPORT_DIARY_SUB_QUERY "
-                . " @start_date  = N'$start_date',"
-                . " @end_date = N'$end_date',"
-                . " @wc_group_query  = '$wc_group_query' ,"
-                . " @item = '$txtItem' ,"
-                . " @ref_num   = '$txtref_num',"
-                . " @wc   ='$txtw_c'";
+        
+        $query = "EXEC [dbo].[STS_JOB_REPORT_DIARY_SUB]
+  @start_date = N'$start_date',
+  @end_date = N'$end_date',
+  @wc_group_query = '$wc_group_query' ,
+   @item = '$txtItem' ,
+   @ref_num ='$txtref_num',
+   @wc = '$txtw_c'";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);
