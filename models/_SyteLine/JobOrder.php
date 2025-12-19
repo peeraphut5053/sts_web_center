@@ -1062,7 +1062,7 @@ group by tag_status, mv.item, item.description, lt.loc, mv.lot, mv.qty1,  isnull
         return $rs0;
     }
 
-    function LocationByDo($do) {
+    function LocationByDo($do,$startDate,$endDate) {
         $query = "select distinct location_mst.loc ,location_mst.description  
         from mv_bc_tag tag 
           inner join job_mst on tag.job = job_mst.job 
@@ -1072,7 +1072,7 @@ group by tag_status, mv.item, item.description, lt.loc, mv.lot, mv.qty1,  isnull
           inner join STS_list_of_do_group gr on gr.do_group_list like '%'+preship.do_num+'%' and preship.do_num <> '1'
           inner join location_mst on location_mst.loc like 'CL%' and location_mst.loc = STS_qty_move_hrd.loc
     inner join co_ship_mst cosh on cosh.do_num = preship.do_num and cosh.co_num = preship.co_num and cosh.co_line = preship.co_line
-        where gr.do_group_name = '$do' ";
+        where gr.do_group_name = '$do' and STS_qty_move_hrd.create_date between '$startDate' and '$endDate' ";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);

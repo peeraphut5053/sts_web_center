@@ -245,7 +245,7 @@ if ($load == "LocationByDo") {
     $CallModel->SyteLine_Models();
     $Trans = new JobOrder();
     $Trans->setConn($ConnSL);
-    $Trans = $Trans->LocationByDo($do);
+    $Trans = $Trans->LocationByDo($do,$startDate,$endDate);
     echo json_encode($Trans);
 }
 

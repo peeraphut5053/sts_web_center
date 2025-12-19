@@ -53,14 +53,13 @@ class BcTag {
                 $do_num_list = $do_num_list . ",";
             }
         }
-        $query = "select distinct tag.id, tag.job, tag.lot, tag.item, tag.qty1, preship.do_num, preship.do_line
-  , preship.co_num --, preship.co_line 
+        $query = "select distinct tag.id, tag.job, tag.lot, tag.item, tag.qty1, preship.do_num, preship.do_line , preship.co_num --, preship.co_line 
+ , line.doc_num
 from mv_bc_tag tag 
   inner join job_mst on tag.job = job_mst.job and tag.item=job_mst.item
   left join AIT_Preship_Do_Seq preship on job_mst.ord_num = preship.co_num 
-    --and job_mst.ord_line = preship.co_line 
-where tag.job is not null and job_mst.item = tag.item and tag.id = '$tag_id' and preship.do_num in ( " . $do_num_list . " ) ";
-//        echo $query;
+  inner JOIN STS_qty_move_line line on line.lot = tag.lot and line.tag_id = tag.id 
+where tag.job is not null and line.doc_num = '$tag_id' and preship.do_num in ( " . $do_num_list . " ) ";
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
         return $rs;
@@ -443,7 +442,7 @@ order by id desc";
 
     Function STS_qty_move_hrd_ship() {
         $cSql = new SqlSrv();
-        $query = "select top 3500 doc_num, loc, create_date, doc_type, destination, round FROM STS_qty_move_hrd where doc_type = 'ship' order by doc_num desc ";
+        $query = "select top 1000 doc_num, loc, create_date, doc_type, destination, round FROM STS_qty_move_hrd where doc_type = 'ship' order by doc_num desc ";
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
         return $rs;
@@ -479,7 +478,7 @@ order by id desc";
 
     Function STS_qty_move_hrd_Truck() {
         $cSql = new SqlSrv();
-        $query = "select top 3500 doc_num, loc, create_date, doc_type, destination, round FROM STS_qty_move_hrd where doc_type in ('Truck','Boat','Cont') order by doc_num desc ";
+        $query = "select top 1000 doc_num, loc, create_date, doc_type, destination, round FROM STS_qty_move_hrd where doc_type in ('Truck','Boat','Cont') order by doc_num desc ";
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
         return $rs;
