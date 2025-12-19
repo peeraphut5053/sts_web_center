@@ -129,7 +129,7 @@ where tag.job is not null and line.doc_num = '$tag_id' and preship.do_num in ( "
         $query = "select STS_qty_move_line.id,fromloc as loc,mv_bc_tag.id
         , CONVERT(int, mv_bc_tag.qty1) as qty1
         , STS_qty_move_line.lot
-  ,lot_mst.item
+  ,lot_mst.item, HRD.loc as toLoc
         ,item_mst.u_m,STS_qty_move_line.boat_position 
    , case when HRD.doc_type <> 'Truck' then
    case when mv_bc_tag.ship_stat = 1 then 'shipped' 
