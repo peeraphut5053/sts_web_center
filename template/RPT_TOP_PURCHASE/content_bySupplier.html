@@ -91,7 +91,7 @@
             </select>
         </div>
     </div>
-    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-3">
+    <div class="col-lg-2 col-md-3 col-sm-6 col-xs-3">
         <div class="input-group w-full">
             <div class="input-group-addon">Item</div>
             <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off" class="form-control"
@@ -112,6 +112,16 @@
             <input type="text" class="form-control" id="to_date_s" autocomplete="off" />
         </div>
     </div>
+     <div class="col-lg-2 col-md-3 col-sm-6 col-xs-6">
+          <div class="input-group w-full">
+            <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">รับของ</div>
+            <select style="font-weight: bold; font-size: 16px;" class="form-control txt-filter" id="status_receive">
+                <option value="" selected>ทั้งหมด</option>
+                <option value="1">รับของแล้ว</option>
+                <option value="2">ยังไม่ได้รับ</option>
+            </select>
+        </div>
+    </div>
     <div class="col-lg-1 col-md-1 col-sm-6 col-xs-6 text-left">
         <button class="btn btn-info" id="btnSearchReportPurchase">
             <i class="fa fa-search"></i>&nbsp; Search
@@ -130,6 +140,8 @@
                 <th class="bg-gray">Item</th>
                 <th class="bg-gray">Item Desc</th>
                 <th class="bg-gray">Order Qty</th>
+                <th class="bg-gray">Rcvd Qty</th>
+                <th class="bg-gray">Qty Remain</th>
                 <th class="bg-gray">U/M</th>
                 <th class="bg-gray">Unit Cost</th>
                 <th class="bg-gray">Total Cost</th>
@@ -246,8 +258,18 @@
                     var total_cost = data.reduce(function (sum, record) {
                         return sum + parseFloat(record.TotalCost);
                     }, 0);
-                    console.log(total_cost);
-
+                    
+                    var receive = $("#status_receive").val();
+                    if (receive == "1") {
+                        data = data.filter(function (record) {
+                            return record.qty_ordered_conv - record.QtyReceive <= 0;
+                        });
+                    } else if (receive == "2") {
+                        data = data.filter(function (record) {
+                            return record.qty_ordered_conv - record.QtyReceive > 0;
+                        });
+                    }
+                
                     $("#tblReportPurchase").DataTable().clear();
                     $("#tblReportPurchase").append(
                         "<tfoot><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></tfoot>",
@@ -336,6 +358,28 @@
                             },
                             {
                                 data: "qty_ordered_conv",
+                                className: "text-center",
+                                render: $.fn.dataTable.render.number(
+                                    ",",
+                                    ".",
+                                    2,
+                                    "",
+                                ),
+
+                            },
+                            {
+                                data: "QtyReceive",
+                                className: "text-center",
+                                render: $.fn.dataTable.render.number(
+                                    ",",
+                                    ".",
+                                    2,
+                                    "",
+                                ),
+
+                            },
+                            {
+                                data: "qty_remain",
                                 className: "text-center",
                                 render: $.fn.dataTable.render.number(
                                     ",",
