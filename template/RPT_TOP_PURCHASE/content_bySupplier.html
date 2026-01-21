@@ -119,7 +119,7 @@
                 <option value="" selected>ทั้งหมด</option>
                 <option value="1">รับของแล้ว</option>
                 <option value="2">รับของแล้วบางส่วน</option>
-                <option value="3">ยังไม่ได้รับ</option>
+                <option value="3">ยังไม่ได้รับของ</option>
             </select>
         </div>
     </div>
@@ -272,7 +272,7 @@
                     }
                     else if (receive == "3") {
                         data = data.filter(function (record) {
-                            return record.qty_ordered_conv - record.QtyReceive > 0;
+                            return record.qty_ordered_conv - record.QtyReceive == 0;
                         });
                     }
                 
