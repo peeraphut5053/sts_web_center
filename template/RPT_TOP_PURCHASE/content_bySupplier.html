@@ -272,7 +272,7 @@
                     }
                     else if (receive == "3") {
                         data = data.filter(function (record) {
-                            return record.qty_ordered_conv - record.QtyReceive == 0;
+                            return record.QtyReceive == 0;
                         });
                     }
                 
