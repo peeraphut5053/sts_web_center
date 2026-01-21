@@ -376,6 +376,8 @@ class Executive {
 
 	  function GetLocationStock() {
         $query = "select loc_group, qty = sum(qtyPCS) , [weight_ton]= sum(qtyWeight)
+    , qty_FIN = sum(qtyPCS_Fin), [weight_ton_FIN] = sum(qtyWeight_Fin)
+    , qty_WIP = sum(qtyPCS_WIP), [weight_ton_WIP] = sum(qtyWeight_WIP)
 from V_STS_stock_loc
 group by loc_group";
         $cSql = new SqlSrv();
