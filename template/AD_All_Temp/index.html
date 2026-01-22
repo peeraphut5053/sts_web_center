@@ -1,10 +1,12 @@
 <style>
-    table.dataTable thead th, table.dataTable tbody td {
-        padding-left:2px;
-        padding-right:2px;
+    table.dataTable thead th,
+    table.dataTable tbody td {
+        padding-left: 2px;
+        padding-right: 2px;
         text-align: center;
     }
-    .input-text-value{
+
+    .input-text-value {
         padding-left: 3px;
         margin-left: 2px;
         margin-right: 2px;
@@ -14,9 +16,9 @@
     }
 </style>
 <div class="row" style="border-bottom:solid 1px #e8e8e8;">
-   <div style="margin-top: 10px; margin-bottom: 20px;">
-      <h1 class="my-header">AD All Temp</h1>
-</div>
+    <div style="margin-top: 10px; margin-bottom: 20px;">
+        <h1 class="my-header">AD All Tempf</h1>
+    </div>
     <!-- <div class="col-md-6 text-right" >
         <a class="btn btn-success" href="module/Entry_Summary/upexcel_main.php"  id="btnTransfer">&nbsp;import excel (MAIN)</a>
         <a class="btn btn-success" href="module/Entry_Summary/upexcel_sub.php"  id="btnTransfer">&nbsp;import excel (SUB)</a>
@@ -109,7 +111,7 @@
                 <th>ENTVALUE1</th>
                 <th>ENTVALUE2</th>
                 <th>amount_FOB</th>
-                <th>N_WT_MT</th> 
+                <th>N_WT_MT</th>
                 <th>G_WT_MT</th>
                 <th>recpt_date</th>
                 <th>recpt_amount</th>
@@ -117,6 +119,24 @@
                 <th>Uf_Weight_metre</th>
                 <th>Shipped_To</th>
                 <th>AMT_BHT</th>
+                <th>sum_N_WT_MT</th>
+                <th>transport</th>
+                <th>trans_BahtMT</th>
+                <th>Lighterage</th>
+                <th>Light_BahtMT</th>
+                <th>Brokerage</th>
+                <th>Broke_BahtMT</th>
+                <th>Inland</th>
+                <th>Inland_BahtMT</th>
+                <th>BLcharge</th>
+                <th>BLcharge_BahtMT</th>
+                <th>OCfreight</th>
+                <th>OCfreight_BahtMT</th>
+                <th>ExtraCharge</th>
+                <th>ExtraCharge_BahtMT</th>
+                <th>FreightRev</th>
+                <th>FreightRev_BahtMT</th>
+
             </tr>
         </thead>
     </table>
@@ -127,228 +147,357 @@
 <script type="text/javascript">
 
     $("#BtnSearch").click(function () {
-            ReportItemSearch();
-        });
- 
-        $("#fromDate , #toDate").datepicker({
+        ReportItemSearch();
+    });
+
+    $("#fromDate , #toDate").datepicker({
         dateFormat: 'yy-mm-dd',
     });
 
-function ReportItemSearch() {
-    var OldHtml = $("#btnSearch").html();
-    var from_invnum = $("#from_invnum").val();
-    var to_invnum = $("#to_invnum").val();
+    function ReportItemSearch() {
+        var OldHtml = $("#btnSearch").html();
+        var from_invnum = $("#from_invnum").val();
+        var to_invnum = $("#to_invnum").val();
 
-    var fromDate = $("#fromDate").val();
-    var toDate = $("#toDate").val();
+        var fromDate = $("#fromDate").val();
+        var toDate = $("#toDate").val();
 
-    if (((from_invnum == "") || (to_invnum == ""))&&((fromDate == "") || (toDate == ""))) {
-        $.alert("กรุณาป้อนรายละเอียดเพื่อกรองข้อมูล");
-    } else {
-        $.ajax({
-            type: 'POST',
-            url: "././module/AD_All_Temp/data.php",
-            dataType: 'json',
-            beforeSend: function () {
-                $("#BtnSearch").html("<i class='fa fa-spinner fa-spin'>");
-            },
-            data: {
-                "load": "search",
-                "from_invnum": from_invnum,
-                "to_invnum": to_invnum,
-                "fromDate": fromDate,
-                "toDate": toDate,
-            },
-            success: function (data) {
-                console.log(data)
-                $("#tblReport").dataTable().fnDestroy();
-                var table = $('#tblReport').DataTable({
-                    scrollY: "400px",
-                    "scrollX": true,
-                    scrollCollapse: true,
-                    "aaData": data,
-                    "paging": false,
-//                        fixedColumns: {
-//                            leftColumns: 1,
-//                        },
-                    "searching": false,
-                    "bInfo": false,
+        if (((from_invnum == "") || (to_invnum == "")) && ((fromDate == "") || (toDate == ""))) {
+            $.alert("กรุณาป้อนรายละเอียดเพื่อกรองข้อมูล");
+        } else {
+            $.ajax({
+                type: 'POST',
+                url: "././module/AD_All_Temp/data.php",
+                dataType: 'json',
+                beforeSend: function () {
+                    $("#BtnSearch").html("<i class='fa fa-spinner fa-spin'>");
+                },
+                data: {
+                    "load": "STS_AD_AllTemp_ADformat",
+                    "from_invnum": from_invnum,
+                    "to_invnum": to_invnum,
+                    "fromDate": fromDate,
+                    "toDate": toDate,
+                },
+                success: function (data) {
+                    console.log(data)
+                    $("#tblReport").dataTable().fnDestroy();
+                    var table = $('#tblReport').DataTable({
+                        scrollY: "500px",
+                        "scrollX": true,
+                        scrollCollapse: true,
+                        "aaData": data,
+                        "paging": false,
+                        //                        fixedColumns: {
+                        //                            leftColumns: 1,
+                        //                        },
+                        "searching": false,
+                        "bInfo": false,
 
-                    "columns": [
-                        {"data": "inv_num",
-                            "className": "text-center",
-                        },
-                        {"data": "inv_date",
-                            "className": "text-center",
-                        },
-                        {"data": "cust_num",
-                            "className": "text-center",
-                        },
-                        {"data": "terms_code",
-                            "className": "text-center",
-                        },
-                        {"data": "item",
-                            "className": "text-center",
-                        },
-                        {"data": "Qty_Shipt",
-                            "className": "text-center",
-                        },
-                        {"data": "Amount_US",
-                            "className": "text-center",
-                        },
-                        {"data": "amt_service",
-                            "className": "text-center",
-                        },
-                        {"data": "AmountUSD2",
-                            "className": "text-center",
-                        },
-                        {"data": "AmountUSD",
-                            "className": "text-center",
-                        },
-                        {"data": "ShippedTerm",
-                            "className": "text-center",
-                        },
-                        {"data": "temp",
-                            "className": "text-left",
-                        },
-                        {"data": "sales_term",
-                            "className": "text-left",
-                        },
-                        {"data": "BL_date",
-                            "className": "text-left",
-                        },
-                        // {"data": "ship_date",
-                        //     "className": "text-left",
-                        // },
-                        {"data": "entry_num1",
-                            "className": "text-left",
-                        },
-                        {"data": "entry_num2",
-                            "className": "text-left",
-                        },
-                        {"data": "entry_type1",
-                            "className": "text-left",
-                        },
-                        {"data": "entry_type2",
-                            "className": "text-left",
-                        },
-                        {"data": "port_code1",
-                            "className": "text-left",
-                        },
-                        {"data": "port_code2",
-                            "className": "text-left",
-                        },
-                        {"data": "ENTDATEU1",
-                            "className": "text-left",
-                        },
-                        {"data": "ENTDATEU2",
-                            "className": "text-left",
-                        },
-                        {"data": "BL_num1",
-                            "className": "text-left",
-                        },
-                        {"data": "BL_num2",
-                            "className": "text-left",
-                        },
-                        {"data": "importer1",
-                            "className": "text-left",
-                        },
-                        {"data": "importer2",
-                            "className": "text-left",
-                        },
-                        {"data": "AD_rate1",
-                            "className": "text-left",
-                        },
-                        {"data": "AD_rate2",
-                            "className": "text-left",
-                        },
-                        {"data": "AD_amount1",
-                            "className": "text-left",
-                        },
-                        {"data": "AD_amount2",
-                            "className": "text-left",
-                        },
-                        {"data": "ENTVALUE1",
-                            "className": "text-left",
-                        },
-                        {"data": "ENTVALUE2",
-                            "className": "text-left",
-                        },
-                        {"data": "amount_FOB",
-                            "className": "text-left",
-                        },
-                        {"data": "N_WT_MT",
-                            "className": "text-left",
-                        },
-                        {"data": "G_WT_MT",
-                            "className": "text-left",
-                        },
-                        {"data": "recpt_date",
-                            "className": "text-left",
-                        },
-                        {"data": "recpt_amount",
-                            "className": "text-left",
-                        },
-                        {"data": "Uf_Weight_FT",
-                            "className": "text-left",
-                        },
-                        {"data": "Uf_Weight_metre",
-                            "className": "text-left",
-                        },
-                        {"data": "Shipped_To",
-                            "className": "text-left",
-                        },
-                        {"data": "AMT_BHT",
-                            "className": "text-left",
-                        },
-                    ],
-                    'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                        "columns": [
+                            {
+                                "data": "inv_num",
+                                "className": "text-center",
+                            },
+                            {
+                                "data": "inv_date.date",
+                                "className": "text-center",
+                                "render": function (data, type, row) {
+                                    return data.substr(0, 10);
+                                }
+                            },
+                            {
+                                "data": "cust_num",
+                                "className": "text-center",
+                            },
+                            {
+                                "data": "terms_code",
+                                "className": "text-center",
+                            },
+                            {
+                                "data": "item",
+                                "className": "text-center",
+                            },
+                            {
+                                "data": "Qty_Shipt",
+                                "className": "text-center",
+                            },
+                            {
+                                "data": "Amount_US",
+                                "className": "text-center",
+                            },
+                            {
+                                "data": "amt_service",
+                                "className": "text-center",
+                            },
+                            {
+                                "data": "AmountUSD2",
+                                "className": "text-center",
+                            },
+                            {
+                                "data": "AmountUSD",
+                                "className": "text-center",
+                            },
+                            {
+                                "data": "ShippedTerm",
+                                "className": "text-center",
+                            },
+                            {
+                                "data": "temp",
+                                "className": "text-left",
+                            },
+                            {
+                                "data": "sales_term",
+                                "className": "text-left",
+                            },
+                            {
+                                "data": "BL_date",
+                                "className": "text-left",
+                            },
+                            // {"data": "ship_date",
+                            //     "className": "text-left",
+                            // },
+                            {
+                                "data": "entry_num1",
+                                "className": "text-left",
+                            },
+                            {
+                                "data": "entry_num2",
+                                "className": "text-left",
+                            },
+                            {
+                                "data": "entry_type1",
+                                "className": "text-left",
+                            },
+                            {
+                                "data": "entry_type2",
+                                "className": "text-left",
+                            },
+                            {
+                                "data": "port_code1",
+                                "className": "text-left",
+                            },
+                            {
+                                "data": "port_code2",
+                                "className": "text-left",
+                            },
+                            {
+                                "data": "ENTDATEU1",
+                                "className": "text-left",
+                            },
+                            {
+                                "data": "ENTDATEU2",
+                                "className": "text-left",
+                            },
+                            {
+                                "data": "BL_num1",
+                                "className": "text-left",
+                            },
+                            {
+                                "data": "BL_num2",
+                                "className": "text-left",
+                            },
+                            {
+                                "data": "importer1",
+                                "className": "text-left",
+                            },
+                            {
+                                "data": "importer2",
+                                "className": "text-left",
+                            },
+                            {
+                                "data": "AD_rate1",
+                                "className": "text-left",
+                            },
+                            {
+                                "data": "AD_rate2",
+                                "className": "text-left",
+                            },
+                            {
+                                "data": "AD_amount1",
+                                "className": "text-left",
+                            },
+                            {
+                                "data": "AD_amount2",
+                                "className": "text-left",
+                            },
+                            {
+                                "data": "ENTVALUE1",
+                                "className": "text-left",
+                            },
+                            {
+                                "data": "ENTVALUE2",
+                                "className": "text-left",
+                            },
+                            {
+                                "data": "amount_FOB",
+                                "className": "text-left",
+                            },
+                            {
+                                "data": "N_WT_MT",
+                                "className": "text-left",
+                            },
+                            {
+                                "data": "G_WT_MT",
+                                "className": "text-left",
+                            },
+                            {
+                                "data": "recpt_date",
+                                "className": "text-left",
+                            },
+                            {
+                                "data": "recpt_amount",
+                                "className": "text-left",
+                            },
+                            {
+                                "data": "Uf_Weight_FT",
+                                "className": "text-left",
+                            },
+                            {
+                                "data": "Uf_Weight_metre",
+                                "className": "text-left",
+                            },
+                            {
+                                "data": "Shipped_To",
+                                "className": "text-left",
+                            },
+                            {
+                                "data": "AMT_BHT",
+                                "className": "text-left",
+                            },
+                            {
+                                "data": "sum_N_WT_MT",
+                                "className": "text-right",
+                                "render": $.fn.dataTable.render.number(2, '.', 2, '')
+                            },
+                            {
+                                "data": "transport",
+                                "className": "text-right",
+                                "render": $.fn.dataTable.render.number(2, '.', 2, '')
+                            },
+                            {
+                                "data": "trans_BahtMT",
+                                "className": "text-right",
+                                "render": $.fn.dataTable.render.number(2, '.', 2, '')
+                            },
+                            {
+                                "data": "Lighterage",
+                                "className": "text-right",
+                                "render": $.fn.dataTable.render.number(2, '.', 2, '')
+                            },
+                            {
+                                "data": "Light_BahtMT",
+                                "className": "text-right",
+                                "render": $.fn.dataTable.render.number(2, '.', 2, '')
+                            },
+                            {
+                                "data": "Brokerage",
+                                "className": "text-right",
+                                "render": $.fn.dataTable.render.number(2, '.', 2, '')
+                            },
+                            {
+                                "data": "Broke_BahtMT",
+                                "className": "text-right",
+                                "render": $.fn.dataTable.render.number(2, '.', 2, '')
+                            },
+                            {
+                                "data": "Inland",
+                                "className": "text-right",
+                                "render": $.fn.dataTable.render.number(2, '.', 2, '')
+                            },
+                            {
+                                "data": "Inland_BahtMT",
+                                "className": "text-right",
+                                "render": $.fn.dataTable.render.number(2, '.', 2, '')
+                            },
+                            {
+                                "data": "BLcharge",
+                                "className": "text-right",
+                                "render": $.fn.dataTable.render.number(2, '.', 2, '')
+                            },
+                            {
+                                "data": "BLcharge_BahtMT",
+                                "className": "text-right",
+                                "render": $.fn.dataTable.render.number(2, '.', 2, '')
+                            },
+                            {
+                                "data": "OCfreight",
+                                "className": "text-right",
+                                "render": $.fn.dataTable.render.number(2, '.', 2, '')
+                            },
+                            {
+                                "data": "OCfreight_BahtMT",
+                                "className": "text-right",
+                                "render": $.fn.dataTable.render.number(2, '.', 2, '')
+                            },
+                            {
+                                "data": "ExtraCharge",
+                                "className": "text-right",
+                                "render": $.fn.dataTable.render.number(2, '.', 2, '')
+                            },
+                            {
+                                "data": "ExtraCharge_BahtMT",
+                                "className": "text-right",
+                                "render": $.fn.dataTable.render.number(2, '.', 2, '')
+                            },
+                            {
+                                "data": "FreightRev",
+                                "className": "text-right",
+                                "render": $.fn.dataTable.render.number(2, '.', 2, '')
+                            },
+                            {
+                                "data": "FreightRev_BahtMT",
+                                "className": "text-right",
+                                "render": $.fn.dataTable.render.number(2, '.', 2, '')
+                            },
+                        ],
+                        'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
                             "<'row'<'col-md-12'tr>>" +
                             "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
-                    buttons: [
-                        {
-                            extend: 'print',
-                            text: "<i class='fa fa-print'></i>&nbsp;Print",
-                            title: ''
-                        },
-                        {
-                            extend: 'excel',
-                            text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
-                            title: 'AD All Temp',
-                            customize: function (xlsx) {
-                                var sheet = xlsx.xl.worksheets['sheet1.xml'];
-                                var numrows = 2;
-                            }
-                        },
-                    ],
+                        buttons: [
+                            {
+                                extend: 'print',
+                                text: "<i class='fa fa-print'></i>&nbsp;Print",
+                                title: ''
+                            },
+                            {
+                                extend: 'excel',
+                                text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                                title: 'AD All Temp',
+                                customize: function (xlsx) {
+                                    var sheet = xlsx.xl.worksheets['sheet1.xml'];
+                                    var numrows = 2;
+                                }
+                            },
+                        ],
 
-                });
+                    });
 
-                $('.details-control').on('click', function () {
-                    var tr = $(this).closest('tr');
-                    var row = table.row(tr);
-                    if (row.child.isShown()) {
-                        // This row is already open - close it
-                        row.child.hide();
-                        tr.removeClass('shown');
+                    $('.details-control').on('click', function () {
+                        var tr = $(this).closest('tr');
+                        var row = table.row(tr);
+                        if (row.child.isShown()) {
+                            // This row is already open - close it
+                            row.child.hide();
+                            tr.removeClass('shown');
 
-                    } else {
-                        // Open this row
-                        row.child(format(row.data())).show();
-                        tr.addClass('shown');
-                    }
-                });
+                        } else {
+                            // Open this row
+                            row.child(format(row.data())).show();
+                            tr.addClass('shown');
+                        }
+                    });
 
-                $('#tblReport').loading("stop");
-                $("#BtnSearch").html("<i class='fa fa-search'></i>Search");
-            },
-            error: function (e) {
-                console.log("There was an error with your request...");
-                console.log("error: " + JSON.stringify(e));
-            }
-        });
+                    $('#tblReport').loading("stop");
+                    $("#BtnSearch").html("<i class='fa fa-search'></i>Search");
+                },
+                error: function (e) {
+                    console.log("There was an error with your request...");
+                    console.log("error: " + JSON.stringify(e));
+                }
+            });
+        }
     }
-}
 
 
 </script>

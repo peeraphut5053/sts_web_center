@@ -1400,6 +1400,28 @@ FROM V_WebApp_InvItem_IN_noVAT where 1=1 ";
         return $rs0;
     }
 
+    function STS_AD_AllTemp_ADformat($from_invnum, $to_invnum, $fromDate, $toDate) {
+
+        // $fromDate == "" ? $fromDate = 'NUll' : $fromDate = "$fromDate";
+        // $toDate == "" ? $toDate = 'NUll' : $toDate = "$toDate";
+        // $from_invnum == "" ? $from_invnum = 'NUll' : $from_invnum = "$from_invnum";
+        // $to_invnum == "" ? $to_invnum = 'NUll' : $to_invnum = "$to_invnum";
+        
+
+        $query = "EXEC [dbo].[STS_AD_AllTemp_ADformat]
+        @vSite = STS,
+        @vInvStr = '$from_invnum',
+        @vInvEnd = '$to_invnum',
+        @vDateStr = '$fromDate',
+        @vDateEnd = '$toDate',
+        @vCustStr = NULL,
+        @vCustEnd = NULL ";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+
     function Report_AD($inv_num, $StartDate, $EndDate) {
         
         $date = "";

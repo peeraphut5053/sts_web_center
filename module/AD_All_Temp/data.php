@@ -15,3 +15,8 @@ if ($load == "search") {
     $AD_All_Temp = $AD_All_Temp->Report_AD_All_Temp($from_invnum, $to_invnum, $fromDate, $toDate);
     echo json_encode($AD_All_Temp);
 }
+
+if ($load == "STS_AD_AllTemp_ADformat") {
+    $AD_All_Temp = $AD_All_Temp->STS_AD_AllTemp_ADformat($from_invnum, $to_invnum, $fromDate, $toDate);
+    echo json_encode($AD_All_Temp);
+}
