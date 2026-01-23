@@ -527,6 +527,14 @@ where trans_type = 'F'
         return $rs;
     }
 
+    function UploadFileCalDocument($RptNo, $new_filename) {
+        $query = "UPDATE STS_QA_LAB_CalPlan SET Doc  = '$new_filename' WHERE RptNo = '$RptNo'";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
     function GetRowsWithCond2($Where) {
         $query = "SELECT qc.* , vendor_name = ven.name, ven.city
 FROM STS_po_qc qc 

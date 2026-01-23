@@ -64,7 +64,7 @@
   }
 </style>
 <div style="margin-top: 10px; margin-bottom: 20px;">
-      <h1 class="my-header">Calibration Plan</h1>
+  <h1 class="my-header">Calibration Plan</h1>
 </div>
 <div class="row item-center">
   <div class="col-lg-2 col-md-3 col-sm-6 col-xs-6">
@@ -96,8 +96,7 @@
   </div>
   <div class="col-lg-1 col-md-1 col-sm-6 col-xs-6 text-left">
     <div class="flex gap-16">
-      <button id="btnAddCalPlan" class="btn btn-success"><i
-          class="fa fa-searh"></i>เพิ่มข้อมูลรายงาน</button>
+      <button id="btnAddCalPlan" class="btn btn-success"><i class="fa fa-searh"></i>เพิ่มข้อมูลรายงาน</button>
       <!-- <a class="btn btn-success ml-32" href="module/STS_Custom_Data/Import_Excel_In.php"  id="btnTransfer">&nbsp;Import Excel (IN)</a> -->
     </div>
   </div>
@@ -120,6 +119,7 @@
         <th rowspan="2" class="bg-gray">Frequency </th>
         <th rowspan="2" class="bg-gray">Location</th>
         <th rowspan="2" class="bg-gray">Report no.</th>
+        <th rowspan="2" class="bg-gray">Documents</th>
       </tr>
       <tr>
         <th class="bg-gray">Due date</th>
@@ -323,7 +323,7 @@
               <option value="Calibration Laboratory Co.,Ltd.">Calibration Laboratory Co.,Ltd.</option>
               <option value="Department of Science Service">Department of Science Service</option>
               <option value="Microtech Calibration Laboratory">Microtech Calibration Laboratory</option>
-               <option value="NA Caltechnologies Co., Ltd.">NA Caltechnologies Co., Ltd.</option>
+              <option value="NA Caltechnologies Co., Ltd.">NA Caltechnologies Co., Ltd.</option>
               <option value="National Institute of Metrology (Thailand)">National Institute of Metrology (Thailand)
               </option>
               <option value="QES (Thailand) Co.,Ltd.">QES (Thailand) Co.,Ltd.</option>
@@ -366,29 +366,29 @@
   });
 
   $("#btnAddCalPlan").click(function () {
-         $.confirm({
-                                    title: 'กรุณาใส่ Password',
-                                    theme: 'modern',
-                                    content: '<input placeholder="Password" type="password" id="Pass" class="form-control my-2" name="Pass" autofocus>',
-                                    buttons: {
-                                        confirm: function () {
-                                            var Pass = $("#Pass").val();
+    $.confirm({
+      title: 'กรุณาใส่ Password',
+      theme: 'modern',
+      content: '<input placeholder="Password" type="password" id="Pass" class="form-control my-2" name="Pass" autofocus>',
+      buttons: {
+        confirm: function () {
+          var Pass = $("#Pass").val();
 
-                                            if (Pass == "QA1234") {
-                                                $("#ModalCalibration").modal("show");
-                                            } else {
-                                                $('#Pass').attr('placeholder', 'Password ไม่ถูกต้อง');
-                                                $("#Pass").val('');
-                                                return false;
-                                            }
-                                        },
-                                        cancel: function () {
-                                            window.close();
-                                        }
+          if (Pass == "QA1234") {
+            $("#ModalCalibration").modal("show");
+          } else {
+            $('#Pass').attr('placeholder', 'Password ไม่ถูกต้อง');
+            $("#Pass").val('');
+            return false;
+          }
+        },
+        cancel: function () {
+          window.close();
+        }
 
-                                    }
-                                });
+      }
     });
+  });
 
   $("#Start_Date_Plan, #End_Date_Plan").datepicker({
     dateFormat: "yy-mm-dd",
@@ -485,6 +485,10 @@
             {
               targets: [14],
               width: 100,
+            },
+            {
+              targets: [15],
+              width: 200,
             },
           ],
           columns: [
@@ -609,6 +613,29 @@
               data: "RptNo",
               className: "text-center",
             },
+            {
+              data: "Doc",
+              className: "text-center",
+              "render": function (data, type, row, meta) {
+                var uniqueId = 'file-' + row.RptNo.replace(/[^a-zA-Z0-9]/g, '_');
+                var fileName = data ? `<div style="font-size: 11px; color: #28a745; margin-top: 3px;"><i class="fa fa-file-pdf"></i> ${data}</div>` : '';
+
+                var ret = `
+                  <div style="display: flex; flex-direction: column; align-items: center;">
+                    ${data ? `<a href='module/STS_Calibration_Plan/files/${data}' target='_blank' style='font-size: 11px;'><i class='fa fa-file-pdf'></i> ${data}</a>` : ''}
+                    <input type="file" id="${uniqueId}" name="file" accept="application/pdf" 
+                           onchange="UploadFiles('${row.RptNo}', this, '${data}')" 
+                           style="display: none;" />
+                    <button type="button" class="btn btn-sm btn-primary" 
+                            onclick="document.getElementById('${uniqueId}').click();" 
+                            style="padding: 4px 10px; font-size: 12px;">
+                      <i class="fa fa-upload"></i>
+                    </button>
+                  </div>
+                `;
+                return ret;
+              }
+            },
 
           ],
           dom:
@@ -674,7 +701,7 @@
 
                     },
                     cancel: function () {
-                       window.close();
+                      window.close();
                     }
                   }
                 })
@@ -730,7 +757,7 @@
                       }
                     },
                     cancel: function () {
-                       window.close();
+                      window.close();
                     }
 
                   }
@@ -881,6 +908,43 @@
         alert("บันทึกข้อมูลไม่สําเร็จ");
       },
     });
+  }
+
+  async function UploadFiles(RptNo, fileInput, old_file) {
+
+    const files = fileInput.files; // รับไฟล์ที่เลือกทั้งหมด
+    console.log(fileInput);
+
+
+    if (files.length == 0) {
+      return false;
+    }
+
+    const formData = new FormData();
+    formData.append('RptNo', RptNo);
+    formData.append('file', files[0]);
+    formData.append('old_file', old_file);
+    try {
+
+      const response = await fetch('././module/STS_Calibration_Plan/upload.php', {
+        method: 'POST',
+        body: formData
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success) {
+          alert('บันทึกสําเร็จ');
+          ReportItemSearch();
+        } else {
+          alert('การอัพโหลดล้มเหลว');
+        }
+      } else {
+        throw new Error('การอัพโหลดล้มเหลว');
+      }
+    } catch (error) {
+      alert('เกิดข้อผิดพลาดในการอัพโหลด: ' + error.message);
+    }
   }
 
   function SaveEdit() {
