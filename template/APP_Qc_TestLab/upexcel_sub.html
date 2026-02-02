@@ -3,649 +3,658 @@
 
 
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-<title>upexcel_sub</title>
-<link rel ='stylesheet' href='../../css/bootstrap.min.css'>
+
+<head>
+    <meta charset="utf-8">
+    <title>upexcel_sub</title>
+    <link rel='stylesheet' href='../../css/bootstrap.min.css'>
 </head>
 
 <body>
 
-<style>
-    .headingTable {
-        background-color: #cccccc;
-        text-align: center;
-        vertical-align: middle;
-    }
+    <style>
+        .headingTable {
+            background-color: #cccccc;
+            text-align: center;
+            vertical-align: middle;
+        }
 
-    .col-step1{
-        background-color:#94e8c8;
-        color:#FFFFFF;
-    }
-    .col-step2{
-        background-color:#43e8ab;
-        color:#FFFFFF;
-    }
-    .col-step3{
-        background-color:#13af75;
-        color:#FFFFFF;
-    }
-    .col-color{
-        position:fixed;
-        width:100%;
-    }
-    #ReaderExcelSub{
-        margin-top: 180px;
-    }
-    #ReaderExcel table,thead{
-         /* position:fixed; */
-    }
-</style>
+        .col-step1 {
+            background-color: #94e8c8;
+            color: #FFFFFF;
+        }
 
-<input type='hidden' id='hdfStsIdPrefix' value="">
+        .col-step2 {
+            background-color: #43e8ab;
+            color: #FFFFFF;
+        }
 
-<div class='alert alert-primary col-color'>
+        .col-step3 {
+            background-color: #13af75;
+            color: #FFFFFF;
+        }
 
-    <div class="col-md-6 text-left col-Hotroll" style='font-size: 18px;'>
-        <b>&nbsp;&nbsp;SUB import</b>
-    </div><br>
+        .col-color {
+            position: fixed;
+            width: 100%;
+        }
 
-    <div class="row " style='margin-left:5px;margin-top:10px;margin-bottom:10px;'>
-        <div class="col-md-1 text-right col-step1">
-            <b>STEP 1</b><br>
-            เลือกไฟล์
-        </div>
-        <div class="col-md-3 text-right">
-            <div class='col-md-10 col-lg-10 col-sm-10 col-xs-10'>
-                <input type="file" id="files" accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+        #ReaderExcelSub {
+            margin-top: 180px;
+        }
+
+        #ReaderExcel table,
+        thead {
+            /* position:fixed; */
+        }
+    </style>
+
+    <input type='hidden' id='hdfStsIdPrefix' value="">
+
+    <div class='alert alert-primary col-color'>
+
+        <div class="col-md-6 text-left col-Hotroll" style='font-size: 18px;'>
+            <b>&nbsp;&nbsp;SUB import</b>
+        </div><br>
+
+        <div class="row " style='margin-left:5px;margin-top:10px;margin-bottom:10px;'>
+            <div class="col-md-1 text-right col-step1">
+                <b>STEP 1</b><br>
+                เลือกไฟล์
             </div>
-            <div class='col-md-2 col-lg-2 col-sm-2 col-xs-2 colResultBrowse'>
+            <div class="col-md-3 text-right">
+                <div class='col-md-10 col-lg-10 col-sm-10 col-xs-10'>
+                    <input type="file" id="files"
+                        accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+                </div>
+                <div class='col-md-2 col-lg-2 col-sm-2 col-xs-2 colResultBrowse'>
+                </div>
             </div>
-        </div>
 
-        <div class="col-md-1 text-right col-step2">
-            <b>STEP 2</b><br>
-            เลือก Sheet
-        </div>
-        <div class="col-md-3">
-            <div class='col-md-10 col-lg-10 col-sm-10 col-xs-10'> 
-                <select class='form-control'  id='sheet_name' disabled>
-                    <option value="">... Please select ...</option>
-                </select>
+            <div class="col-md-1 text-right col-step2">
+                <b>STEP 2</b><br>
+                เลือก Sheet
             </div>
-            <div class='col-md-2 col-lg-2 col-sm-2 col-xs-2 colResultSheet'></div>
-        </div>
+            <div class="col-md-3">
+                <div class='col-md-10 col-lg-10 col-sm-10 col-xs-10'>
+                    <select class='form-control' id='sheet_name' disabled>
+                        <option value="">... Please select ...</option>
+                    </select>
+                </div>
+                <div class='col-md-2 col-lg-2 col-sm-2 col-xs-2 colResultSheet'></div>
+            </div>
 
-        <div class="col-md-1 text-right col-step3">
-            <b>STEP 3</b><br>
-            import
-        </div>
-        <div class="col-md-1">
-            <button class="btn btn-success" id="btnImport" disabled><i class='fa fa-download'></i>Import</button>
-            <label id='colResultButtonSub'></label>
+            <div class="col-md-1 text-right col-step3">
+                <b>STEP 3</b><br>
+                import
+            </div>
+            <div class="col-md-1">
+                <button class="btn btn-success" id="btnImport" disabled><i class='fa fa-download'></i>Import</button>
+                <label id='colResultButtonSub'></label>
+            </div>
         </div>
     </div>
-</div>
 
-<div id='DivResult' class='row text-center'></div>
+    <div id='DivResult' class='row text-center'></div>
 
-<div  id="ReaderExcelSub"></div>
+    <div id="ReaderExcelSub"></div>
 
-<div class="row text-center" >
-	<script type='text/javascript' src='../../js/jquery.js'></script>
-    <script type='text/javascript' src='../../js/xlsx.core.min.js'></script>
-    <script type='text/javascript' src='../../js/xlsx.full.min.js'></script>
-    <script type="text/javascript">
-        
-        var loadingDiv = "<i class='fa fa-spinner fa-spin'></i>";
-        $('#files').change(function (e) {
-            $('#ReaderExcelSub').empty();
-            $(".colResultBrowse").html(loadingDiv);
-            var sheet_name = $("#sheet_name").val();
-            $('#ReaderExcelSub').empty();
-//            alert(this.files[0].mozFullPath);
-            $("#FilePath").html();
-            var reader = new FileReader();
-            reader.readAsArrayBuffer(e.target.files[0]);
-            reader.onload = function (e) {
-                var data = new Uint8Array(reader.result);
-                var wb = XLSX.read(data, {type: 'array'});
-                var sheetcount = wb.SheetNames.length;
-                var i = 0;
-                $("#sheet_name").empty();
-                $("#sheet_name").append('<option value="">... Please select ...</option>');
-                for (i = 0; i < sheetcount; i++) {
-                    $("#sheet_name").append('<option value="' + wb.SheetNames[i] + '">' + wb.SheetNames[i] + '</option>');
+    <div class="row text-center">
+        <script type='text/javascript' src='../../js/jquery.js'></script>
+        <script type='text/javascript' src='../../js/xlsx.core.min.js'></script>
+        <script type='text/javascript' src='../../js/xlsx.full.min.js'></script>
+        <script type="text/javascript">
+
+            var loadingDiv = "<i class='fa fa-spinner fa-spin'></i>";
+            $('#files').change(function (e) {
+                $('#ReaderExcelSub').empty();
+                $(".colResultBrowse").html(loadingDiv);
+                var sheet_name = $("#sheet_name").val();
+                $('#ReaderExcelSub').empty();
+                //            alert(this.files[0].mozFullPath);
+                $("#FilePath").html();
+                var reader = new FileReader();
+                reader.readAsArrayBuffer(e.target.files[0]);
+                reader.onload = function (e) {
+                    var data = new Uint8Array(reader.result);
+                    var wb = XLSX.read(data, { type: 'array' });
+                    var sheetcount = wb.SheetNames.length;
+                    var i = 0;
+                    $("#sheet_name").empty();
+                    $("#sheet_name").append('<option value="">... Please select ...</option>');
+                    for (i = 0; i < sheetcount; i++) {
+                        $("#sheet_name").append('<option value="' + wb.SheetNames[i] + '">' + wb.SheetNames[i] + '</option>');
+                    }
+                    $(".colResultBrowse").html("");
+                    $("#sheet_name").removeAttr("disabled");
                 }
-                $(".colResultBrowse").html("");
-                $("#sheet_name").removeAttr("disabled");
-            }
-        });
+            });
 
-        $("#sheet_name").change(function () {
-            $(".colResultSheet").html(loadingDiv);
-            var files_input = document.getElementById("files");
-            var file = files_input.files[0];
+            $("#sheet_name").change(function () {
+                $(".colResultSheet").html(loadingDiv);
+                var files_input = document.getElementById("files");
+                var file = files_input.files[0];
 
-            if (!file) {
-                $.alert({
-                    title: 'Can not import excel file !',
-                    content: "Please select excel file"
-                });
-                return false;
-            }
-            var sheet_name = $("#sheet_name").val();
-            var file_name = $('#files').val().replace(/C:\\fakepath\\/i, '');
-            $("#tmpXlsSheet").val(sheet_name);
-            $("#tmpXlsFile").val(file_name);
-            console.log();
-            var reader = new FileReader();
-            reader.readAsArrayBuffer(file);
-            reader.onload = function (e) {
-                var data = new Uint8Array(reader.result);
-                try {
-                    var wb = XLSX.read(data, {type: 'array'});
-                    var htmlstr = XLSX.write(wb, {sheet: sheet_name, type: 'binary', bookType: 'html'});
-                    $('#ReaderExcelSub').empty();
-                    $('#ReaderExcelSub')[0].innerHTML += htmlstr;
-                    $('#ReaderExcelSub table').addClass('table table-striped table-bordered table-condensed');
-                   
-                   
-                    $("tbody tr").each(function() {
-                    let row = $(this);
-                    let hasASTM = row.find("td:eq(5)").text().indexOf("ASTM") !== -1;
-                    let hasJIS = row.find("td:eq(5)").text().indexOf("JIS") !== -1;
-                    let hasBS = row.find("td:eq(5)").text().indexOf("BS") !== -1;
-                    let hasTIS107 = row.find("td:eq(5)").text().indexOf("TIS.107") !== -1;
-                    let hasTIS276 = row.find("td:eq(5)").text().indexOf("TIS.276") !== -1;
-                    let hasTIS1228 = row.find("td:eq(5)").text().indexOf("TIS.1228") !== -1;
-                    let hasEN = row.find("td:eq(5)").text().indexOf("EN") !== -1;
-                    let hasSTS_S = row.find("td:eq(5)").text().indexOf("STS-S") !== -1;
-                    let hasSTS_M = row.find("td:eq(5)").text().indexOf("STS-M") !== -1;
-                    let hasMK = row.find("td:eq(5)").text().indexOf("MK") !== -1;
-                    let hasMTO = row.find("td:eq(5)").text().indexOf("MTO") !== -1;
-
-                    // check item empty
-                    if (row.find("td:eq(0)").text() == "") {
-                        row.find("td:eq(0)").css("background-color", "red");
-                    }
-    
-                    if (hasASTM) {
-                        // ASTM 330-520
-                       if (row.find("td:eq(8)").text() < 330 || row.find("td:eq(8)").text() > 520) {
-                           row.find("td:eq(8)").css("color", "red");
-                       }
-
-                       if (row.find("td:eq(9)").text() < 205) {
-                           row.find("td:eq(9)").css("color", "red");
-                       }
-                       
-                       if (row.find("td:eq(10)").text() < 24) {
-                           row.find("td:eq(10)").css("color", "red");
-                       }
-                    }
-
-                    if (hasJIS) {
-                        // JIS 350-510
-                        if (row.find("td:eq(8)").text() < 350 || row.find("td:eq(8)").text() > 510) {
-                           row.find("td:eq(8)").css("color", "red");
-                        }
-
-                        if (row.find("td:eq(9)").text() < 215 || row.find("td:eq(9)").text() > 400) {
-                           row.find("td:eq(9)").css("color", "red");
-                        }
-                        
-                        if (row.find("td:eq(10)").text() < 15) {
-                           row.find("td:eq(10)").css("color", "red");
-                        }
-                        
-                    }
-
-                    if (hasBS) {
-                        // BS 350-510
-                        if (row.find("td:eq(8)").text() < 320 || row.find("td:eq(8)").text() > 460) {
-                           row.find("td:eq(8)").css("color", "red");
-                        }
-
-                        if (row.find("td:eq(9)").text() < 195) {
-                           row.find("td:eq(9)").css("color", "red");
-                        }
-                        
-                        if (row.find("td:eq(10)").text() < 20) {
-                           row.find("td:eq(10)").css("color", "red");
-                        }
-                    }
-
-                    if (hasTIS107 || hasTIS276) {
-                        // TIS 350-510
-                        if (row.find("td:eq(8)").text() < 320 || row.find("td:eq(8)").text() > 520) {
-                           row.find("td:eq(8)").css("color", "red");
-                        }
-
-                        if (row.find("td:eq(9)").text() < 195) {
-                           row.find("td:eq(9)").css("color", "red");
-                        }
-                        
-                        if (row.find("td:eq(10)").text() < 20) {
-                           row.find("td:eq(10)").css("color", "red");
-                        }
-                    }
-
-                    if (hasTIS1228) {
-                        // TIS 350-510
-                        if (row.find("td:eq(8)").text() < 400 || row.find("td:eq(8)").text() > 510) {
-                           row.find("td:eq(8)").css("color", "red");
-                        }
-
-                        if (row.find("td:eq(9)").text() < 245) {
-                           row.find("td:eq(9)").css("color", "red");
-                        }
-                        
-                        if (row.find("td:eq(10)").text() < 17) {
-                           row.find("td:eq(10)").css("color", "red");
-                        }
-                    }
-
-                    if (hasEN) {    
-                        if (row.find("td:eq(8)").text() < 330 || row.find("td:eq(8)").text() > 520) {
-                           row.find("td:eq(8)").css("color", "red");
-                        }
-
-                        if (row.find("td:eq(9)").text() < 195 || row.find("td:eq(9)").text() > 400) {
-                           row.find("td:eq(9)").css("color", "red");
-                        }
-                        
-                        if (row.find("td:eq(10)").text() < 20) {
-                           row.find("td:eq(10)").css("color", "red");
-                        }
-
-                    }
-
-                    if (hasSTS_S || hasSTS_M || hasMK || hasMTO) {
-                        if (row.find("td:eq(8)").text() < 320 || row.find("td:eq(8)").text() > 460) {
-                           row.find("td:eq(8)").css("color", "red");
-                        }
-                        
-                        if (row.find("td:eq(10)").text() < 20) {
-                           row.find("td:eq(10)").css("color", "red");
-                        }
-                        
-                    }
-                  
-                    const size = row.find("td:eq(0)").text().substring(3,6);
-                    const sch = row.find("td:eq(3)").text();
-                    const grade = row.find("td:eq(6)").text();
-                    const el = row.find("td:eq(10)").text();
-                    const standard = row.find("td:eq(5)").text().substring(0,4);
-                    console.log(standard);
-                    
-           
-                    if (size == 112 && sch == 10 && grade == 'A' && el < 22 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 112 && sch == 10 && grade == 'B' && el < 18 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 112 && sch == 40 && grade == 'A' && el < 24 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 112 && sch == 40 && grade == 'B' && el < 19 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 112 && sch == 80 && grade == 'A' && el < 25 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 112 && sch == 80 && grade == 'B' && el < 21 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 114 && sch == 10 && grade == 'A' && el < 22 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 114 && sch == 10 && grade == 'B' && el < 18 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 114 && sch == 40 && grade == 'A' && el < 24 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 114 && sch == 40 && grade == 'B' && el < 19 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 114 && sch == 80 && grade == 'A' && el < 24 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 114 && sch == 80 && grade == 'B' && el < 19 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 200 && sch == 10 && grade == 'A' && el < 22 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 200 && sch == 10 && grade == 'B' && el < 18 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 200 && sch == 40 && grade == 'A' && el < 24 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 200 && sch == 40 && grade == 'B' && el < 20 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 200 && sch == 80 && grade == 'A' && el < 26 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 200 && sch == 80 && grade == 'B' && el < 21 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 212 && sch == 10 && grade == 'A' && el < 23 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 212 && sch == 10 && grade == 'B' && el < 19 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 212 && sch == 40 && grade == 'A' && el < 25 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 212 && sch == 40 && grade == 'B' && el < 21 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 212 && sch == 80 && grade == 'A' && el < 27 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 212 && sch == 80 && grade == 'B' && el < 22 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 300 && sch == 10 && grade == 'A' && el < 22 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 300 && sch == 10 && grade == 'B' && el < 18 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 300 && sch == 40 && grade == 'A' && el < 26 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 300 && sch == 40 && grade == 'B' && el < 21 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 300 && sch == 80 && grade == 'A' && el < 27 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 300 && sch == 80 && grade == 'B' && el < 22 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 312 && sch == 10 && grade == 'A' && el < 22 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 312 && sch == 10 && grade == 'B' && el < 18 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 312 && sch == 40 && grade == 'A' && el < 26 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 312 && sch == 40 && grade == 'B' && el < 21 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 312 && sch == 80 && grade == 'A' && el < 28 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 312 && sch == 80 && grade == 'B' && el < 23 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 400 && sch == 10 && grade == 'A' && el < 22 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 400 && sch == 10 && grade == 'B' && el < 18 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 400 && sch == 40 && grade == 'A' && el < 27 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 400 && sch == 40 && grade == 'B' && el < 22 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 400 && sch == 80 && grade == 'A' && el < 29 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 400 && sch == 80 && grade == 'B' && el < 24 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 500 && sch == 10 && grade == 'A' && el < 23 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 500 && sch == 10 && grade == 'B' && el < 19 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 500 && sch == 40 && grade == 'A' && el < 27 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 500 && sch == 40 && grade == 'B' && el < 22 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 500 && sch == 80 && grade == 'A' && el < 30 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 500 && sch == 80 && grade == 'B' && el < 24 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 600 && sch == 10 && grade == 'A' && el < 23 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 600 && sch == 10 && grade == 'B' && el < 19 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 600 && sch == 40 && grade == 'A' && el < 28 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 600 && sch == 40 && grade == 'B' && el < 23 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 600 && sch == 80 && grade == 'A' && el < 30 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 600 && sch == 80 && grade == 'B' && el < 25 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 800 && sch == 10 && grade == 'A' && el < 25 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 800 && sch == 10 && grade == 'B' && el < 20 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 800 && sch == 40 && grade == 'A' && el < 28 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 800 && sch == 40 && grade == 'B' && el < 23 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 800 && sch == 80 && grade == 'A' && el < 31 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 800 && sch == 80 && grade == 'B' && el < 26 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 380 && sch == 40 && grade == 'A' && el < 28 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 380 && sch == 40 && grade == 'B' && el < 23 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 120 && sch == 40 && grade == 'A' && el < 29 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 120 && sch == 40 && grade == 'B' && el < 24 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 120 && sch == 80 && grade == 'A' && el < 30 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 120 && sch == 80 && grade == 'B' && el < 25 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 340 && sch == 10 && grade == 'A' && el < 29 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 340 && sch == 10 && grade == 'B' && el < 24 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 340 && sch == 40 && grade == 'A' && el < 31 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 340 && sch == 40 && grade == 'B' && el < 25 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 340 && sch == 80 && grade == 'A' && el < 32 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 340 && sch == 80 && grade == 'B' && el < 26 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 100 && sch == 10 && grade == 'A' && el < 32 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 100 && sch == 10 && grade == 'B' && el < 26 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 100 && sch == 40 && grade == 'A' && el < 33 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 100 && sch == 40 && grade == 'B' && el < 27 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 100 && sch == 80 && grade == 'A' && el < 35 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    } else if (size == 100 && sch == 80 && grade == 'B' && el < 29 && standard == 'ASTM') {
-                        row.find("td:eq(10)").css("color", "red");
-                    }
-                      
+                if (!file) {
+                    $.alert({
+                        title: 'Can not import excel file !',
+                        content: "Please select excel file"
                     });
-
-                   
-                    
-
-        
-                            
-                           
-                     
-                    
-	//========== remove head =========
-			$('table tbody tr:eq(0)').remove();
-            $('table tbody tr:eq(0)').remove();
-//=========add nre head =========
-                    $('table').prepend("<thead> <th>item</th> <th>opr_no</th> <th>size</th> <th>schedule</th> <th>length</th> <th>standard</th> <th>grade</th> <th>sts_no</th> <th>Mec_test_TS</th> <th>Mec_test_YS</th> <th>Mec_test_EI</th> <th>Mec_test_TS_2</th> <th>Mec_test_YS_2</th> <th>Mec_test_EL_2</th> <th>Not_Mec_test_TS</th> <th>Not_Mec_test_YS</th> <th>Not_Mec_test_EI</th> <th>Not_Mec_test_TS_1</th> <th>Not_Mec_test_YS_2</th> <th>Not_Mec_test_EL_2</th> <th>charpy_mean</th> <th>charpy1</th> <th>charpy2</th> <th>charpy3</th>  <th>prod_FM_no</th> <th>prod_date</th> <th>test_date</th> <th>remark</th></tr></thead>"); 
-			$('table thead').find('tr').each(function(){
-              
-		   });
-            var x = 0 ;
-            var i=0 ;
-
-            $('td:eq(8)', this).addClass('bg-danger');  
-		    var CountTr = $("tbody tr").length ;
-			
-			var LastStsId = $('#LastStsId').text().trim();
-
-			var StsNo = $('#StsNo').text().trim();
-
-		
-			for(i=0;i<CountTr;i++){				
-				x++;
-
-				$('table tbody tr:eq('+i+') ').find('td:eq(0)').text();
-			}
-                    //============render datatable========//                  
-                    //=================================//
-                    $(".colResultSheet").html("");
-                   
-                    $("#colResultButtonSub").html(CountTr + ' Rows');
-                    $("#btnImport").removeAttr("disabled");
-                } catch (err) {
-					alert(err);
-                //    $.alert({
-                      //  title: 'Can not import excel file !',
-                     //   content: err,
-                  //  });
-                    $(".colResultSheet").html("");
+                    return false;
                 }
-            }
-        });
-		function pad (str, max) {
-		  str = str.toString();
-		  return str.length < max ? pad("0" + str, max) : str;
-		}
-        $("#btnImport").click(function () {
-          if(confirm('Do you want to Import data ? ')==true){
-			PackDataToArrayAndSave();
-		  }
-        });
+                var sheet_name = $("#sheet_name").val();
+                var file_name = $('#files').val().replace(/C:\\fakepath\\/i, '');
+                $("#tmpXlsSheet").val(sheet_name);
+                $("#tmpXlsFile").val(file_name);
+                console.log();
+                var reader = new FileReader();
+                reader.readAsArrayBuffer(file);
+                reader.onload = function (e) {
+                    var data = new Uint8Array(reader.result);
+                    try {
+                        var wb = XLSX.read(data, { type: 'array' });
+                        var htmlstr = XLSX.write(wb, { sheet: sheet_name, type: 'binary', bookType: 'html' });
+                        $('#ReaderExcelSub').empty();
+                        $('#ReaderExcelSub')[0].innerHTML += htmlstr;
+                        $('#ReaderExcelSub table').addClass('table table-striped table-bordered table-condensed');
 
-        function PackDataToArrayAndSave() {
-            var i = 0;
-            var load = "InsertQcTestLab_Sub";
-            var item = [];
-            var opr_no = [];
-			var size = [];
-			var schedule=[];
-			var length =[];
-            var standard = [];
-            var grade = [];
-            var sts_no = [];
-            var Mec_test_TS = [];
-            var Mec_test_YS = [];
-            var Mec_test_EI = [];
-            var Mec_test_TS_2 = [];
-            var Mec_test_YS_2 = [];
-            var Mec_test_EL_2 = [];
-            var Not_Mec_test_TS = [];
-            var Not_Mec_test_YS = [];
-            var Not_Mec_test_EI = [];
-            var Not_Mec_test_TS_2 = [];
-            var Not_Mec_test_YS_2 = [];
-            var Not_Mec_test_EL_2 = [];
-            var charpy_mean = [];
-			var charpy1=[];
-            var charpy2=[];
-			var charpy3 =[];
-            // var Metal_P = [];
-            // var Metal_F = [];
-            // var Metal_M = [];
-            // var Hydro_test = [];
-            var prod_FM_no = [];
-            var prod_date = [];
-            var test_date = [];
-            var remark = [];
 
-            var CountItem = 0;
-            var itemEmpty = false;
-           
-            $("tbody tr").each(function () {
-                if (i >= 0) {
+                        $("tbody tr").each(function () {
+                            let row = $(this);
+                            let hasASTM = row.find("td:eq(5)").text().indexOf("ASTM") !== -1;
+                            let hasJIS = row.find("td:eq(5)").text().indexOf("JIS") !== -1;
+                            let hasBS = row.find("td:eq(5)").text().indexOf("BS") !== -1;
+                            let hasTIS107 = row.find("td:eq(5)").text().indexOf("TIS.107") !== -1;
+                            let hasTIS276 = row.find("td:eq(5)").text().indexOf("TIS.276") !== -1;
+                            let hasTIS1228 = row.find("td:eq(5)").text().indexOf("TIS.1228") !== -1;
+                            let hasEN = row.find("td:eq(5)").text().indexOf("EN") !== -1;
+                            let hasSTS_S = row.find("td:eq(5)").text().indexOf("STS-S") !== -1;
+                            let hasSTS_M = row.find("td:eq(5)").text().indexOf("STS-M") !== -1;
+                            let hasMK = row.find("td:eq(5)").text().indexOf("MK") !== -1;
+                            let hasMTO = row.find("td:eq(5)").text().indexOf("MTO") !== -1;
 
-                    if ($(this).find('td:eq(0)').text() == "") {
-                        alert("กรุณากรอกข้อมูล Item ให้ครบทุกช่อง");
-                        itemEmpty = true;
-                        return false;
+                            // check item empty
+                            if (row.find("td:eq(0)").text() == "") {
+                                row.find("td:eq(0)").css("background-color", "red");
+                            }
+
+                            if (hasASTM) {
+                                // ASTM 330-520
+                                if (row.find("td:eq(8)").text() < 330 || row.find("td:eq(8)").text() > 520) {
+                                    row.find("td:eq(8)").css("color", "red");
+                                }
+
+                                if (row.find("td:eq(9)").text() < 205) {
+                                    row.find("td:eq(9)").css("color", "red");
+                                }
+
+                                if (row.find("td:eq(10)").text() < 24) {
+                                    row.find("td:eq(10)").css("color", "red");
+                                }
+                            }
+
+                            if (hasJIS) {
+                                // JIS 350-510
+                                if (row.find("td:eq(8)").text() < 350 || row.find("td:eq(8)").text() > 510) {
+                                    row.find("td:eq(8)").css("color", "red");
+                                }
+
+                                if (row.find("td:eq(9)").text() < 215 || row.find("td:eq(9)").text() > 400) {
+                                    row.find("td:eq(9)").css("color", "red");
+                                }
+
+                                if (row.find("td:eq(10)").text() < 15) {
+                                    row.find("td:eq(10)").css("color", "red");
+                                }
+
+                            }
+
+                            if (hasBS) {
+                                // BS 350-510
+                                if (row.find("td:eq(8)").text() < 320 || row.find("td:eq(8)").text() > 460) {
+                                    row.find("td:eq(8)").css("color", "red");
+                                }
+
+                                if (row.find("td:eq(9)").text() < 195) {
+                                    row.find("td:eq(9)").css("color", "red");
+                                }
+
+                                if (row.find("td:eq(10)").text() < 20) {
+                                    row.find("td:eq(10)").css("color", "red");
+                                }
+                            }
+
+                            if (hasTIS107 || hasTIS276) {
+                                // TIS 350-510
+                                if (row.find("td:eq(8)").text() < 320 || row.find("td:eq(8)").text() > 520) {
+                                    row.find("td:eq(8)").css("color", "red");
+                                }
+
+                                if (row.find("td:eq(9)").text() < 195) {
+                                    row.find("td:eq(9)").css("color", "red");
+                                }
+
+                                if (row.find("td:eq(10)").text() < 20) {
+                                    row.find("td:eq(10)").css("color", "red");
+                                }
+                            }
+
+                            if (hasTIS1228) {
+                                // TIS 350-510
+                                if (row.find("td:eq(8)").text() < 400 || row.find("td:eq(8)").text() > 510) {
+                                    row.find("td:eq(8)").css("color", "red");
+                                }
+
+                                if (row.find("td:eq(9)").text() < 245) {
+                                    row.find("td:eq(9)").css("color", "red");
+                                }
+
+                                if (row.find("td:eq(10)").text() < 17) {
+                                    row.find("td:eq(10)").css("color", "red");
+                                }
+                            }
+
+                            if (hasEN) {
+                                if (row.find("td:eq(8)").text() < 330 || row.find("td:eq(8)").text() > 520) {
+                                    row.find("td:eq(8)").css("color", "red");
+                                }
+
+                                if (row.find("td:eq(9)").text() < 195 || row.find("td:eq(9)").text() > 400) {
+                                    row.find("td:eq(9)").css("color", "red");
+                                }
+
+                                if (row.find("td:eq(10)").text() < 20) {
+                                    row.find("td:eq(10)").css("color", "red");
+                                }
+
+                            }
+
+                            if (hasSTS_S || hasSTS_M || hasMK || hasMTO) {
+                                if (row.find("td:eq(8)").text() < 320 || row.find("td:eq(8)").text() > 460) {
+                                    row.find("td:eq(8)").css("color", "red");
+                                }
+
+                                if (row.find("td:eq(10)").text() < 20) {
+                                    row.find("td:eq(10)").css("color", "red");
+                                }
+
+                            }
+
+                            const size = row.find("td:eq(0)").text().substring(3, 6);
+                            const sch = row.find("td:eq(3)").text();
+                            const grade = row.find("td:eq(6)").text();
+                            const el = row.find("td:eq(10)").text();
+                            const standard = row.find("td:eq(5)").text().substring(0, 4);
+                            console.log(standard);
+
+
+                            if (size == 112 && sch == 10 && grade == 'A' && el < 22 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 112 && sch == 10 && grade == 'B' && el < 18 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 112 && sch == 40 && grade == 'A' && el < 24 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 112 && sch == 40 && grade == 'B' && el < 19 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 112 && sch == 80 && grade == 'A' && el < 25 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 112 && sch == 80 && grade == 'B' && el < 21 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 114 && sch == 10 && grade == 'A' && el < 22 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 114 && sch == 10 && grade == 'B' && el < 18 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 114 && sch == 40 && grade == 'A' && el < 24 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 114 && sch == 40 && grade == 'B' && el < 19 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 114 && sch == 80 && grade == 'A' && el < 24 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 114 && sch == 80 && grade == 'B' && el < 19 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 200 && sch == 10 && grade == 'A' && el < 22 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 200 && sch == 10 && grade == 'B' && el < 18 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 200 && sch == 40 && grade == 'A' && el < 24 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 200 && sch == 40 && grade == 'B' && el < 20 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 200 && sch == 80 && grade == 'A' && el < 26 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 200 && sch == 80 && grade == 'B' && el < 21 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 212 && sch == 10 && grade == 'A' && el < 23 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 212 && sch == 10 && grade == 'B' && el < 19 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 212 && sch == 40 && grade == 'A' && el < 25 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 212 && sch == 40 && grade == 'B' && el < 21 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 212 && sch == 80 && grade == 'A' && el < 27 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 212 && sch == 80 && grade == 'B' && el < 22 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 300 && sch == 10 && grade == 'A' && el < 22 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 300 && sch == 10 && grade == 'B' && el < 18 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 300 && sch == 40 && grade == 'A' && el < 26 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 300 && sch == 40 && grade == 'B' && el < 21 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 300 && sch == 80 && grade == 'A' && el < 27 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 300 && sch == 80 && grade == 'B' && el < 22 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 312 && sch == 10 && grade == 'A' && el < 22 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 312 && sch == 10 && grade == 'B' && el < 18 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 312 && sch == 40 && grade == 'A' && el < 26 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 312 && sch == 40 && grade == 'B' && el < 21 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 312 && sch == 80 && grade == 'A' && el < 28 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 312 && sch == 80 && grade == 'B' && el < 23 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 400 && sch == 10 && grade == 'A' && el < 22 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 400 && sch == 10 && grade == 'B' && el < 18 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 400 && sch == 40 && grade == 'A' && el < 27 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 400 && sch == 40 && grade == 'B' && el < 22 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 400 && sch == 80 && grade == 'A' && el < 29 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 400 && sch == 80 && grade == 'B' && el < 24 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 500 && sch == 10 && grade == 'A' && el < 23 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 500 && sch == 10 && grade == 'B' && el < 19 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 500 && sch == 40 && grade == 'A' && el < 27 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 500 && sch == 40 && grade == 'B' && el < 22 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 500 && sch == 80 && grade == 'A' && el < 30 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 500 && sch == 80 && grade == 'B' && el < 24 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 600 && sch == 10 && grade == 'A' && el < 23 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 600 && sch == 10 && grade == 'B' && el < 19 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 600 && sch == 40 && grade == 'A' && el < 28 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 600 && sch == 40 && grade == 'B' && el < 23 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 600 && sch == 80 && grade == 'A' && el < 30 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 600 && sch == 80 && grade == 'B' && el < 25 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 800 && sch == 10 && grade == 'A' && el < 25 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 800 && sch == 10 && grade == 'B' && el < 20 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 800 && sch == 40 && grade == 'A' && el < 28 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 800 && sch == 40 && grade == 'B' && el < 23 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 800 && sch == 80 && grade == 'A' && el < 31 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 800 && sch == 80 && grade == 'B' && el < 26 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 380 && sch == 40 && grade == 'A' && el < 28 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 380 && sch == 40 && grade == 'B' && el < 23 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 120 && sch == 40 && grade == 'A' && el < 29 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 120 && sch == 40 && grade == 'B' && el < 24 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 120 && sch == 80 && grade == 'A' && el < 30 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 120 && sch == 80 && grade == 'B' && el < 25 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 340 && sch == 10 && grade == 'A' && el < 29 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 340 && sch == 10 && grade == 'B' && el < 24 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 340 && sch == 40 && grade == 'A' && el < 31 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 340 && sch == 40 && grade == 'B' && el < 25 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 340 && sch == 80 && grade == 'A' && el < 32 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 340 && sch == 80 && grade == 'B' && el < 26 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 100 && sch == 10 && grade == 'A' && el < 32 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 100 && sch == 10 && grade == 'B' && el < 26 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 100 && sch == 40 && grade == 'A' && el < 33 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 100 && sch == 40 && grade == 'B' && el < 27 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 100 && sch == 80 && grade == 'A' && el < 35 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            } else if (size == 100 && sch == 80 && grade == 'B' && el < 29 && standard == 'ASTM') {
+                                row.find("td:eq(10)").css("color", "red");
+                            }
+
+                        });
+
+
+
+
+
+
+
+
+
+                        //========== remove head =========
+                        $('table tbody tr:eq(0)').remove();
+                        $('table tbody tr:eq(0)').remove();
+                        //=========add nre head =========
+                        $('table').prepend("<thead> <th>item</th> <th>opr_no</th> <th>size</th> <th>schedule</th> <th>length</th> <th>standard</th> <th>grade</th> <th>sts_no</th> <th>Mec_test_TS</th> <th>Mec_test_YS</th> <th>Mec_test_EI</th> <th>Mec_test_TS_2</th> <th>Mec_test_YS_2</th> <th>Mec_test_EL_2</th> <th>Not_Mec_test_TS</th> <th>Not_Mec_test_YS</th> <th>Not_Mec_test_EI</th> <th>Not_Mec_test_TS_1</th> <th>Not_Mec_test_YS_2</th> <th>Not_Mec_test_EL_2</th> <th>charpy_mean</th> <th>charpy1</th> <th>charpy2</th> <th>charpy3</th>  <th>prod_FM_no</th> <th>prod_date</th> <th>test_date</th> <th>remark</th></tr></thead>");
+                        $('table thead').find('tr').each(function () {
+
+                        });
+                        var x = 0;
+                        var i = 0;
+
+                        $('td:eq(8)', this).addClass('bg-danger');
+                        var CountTr = $("tbody tr").length;
+
+                        var LastStsId = $('#LastStsId').text().trim();
+
+                        var StsNo = $('#StsNo').text().trim();
+
+
+                        for (i = 0; i < CountTr; i++) {
+                            x++;
+
+                            $('table tbody tr:eq(' + i + ') ').find('td:eq(0)').text();
+                        }
+                        //============render datatable========//                  
+                        //=================================//
+                        $(".colResultSheet").html("");
+
+                        $("#colResultButtonSub").html(CountTr + ' Rows');
+                        $("#btnImport").removeAttr("disabled");
+                    } catch (err) {
+                        alert(err);
+                        //    $.alert({
+                        //  title: 'Can not import excel file !',
+                        //   content: err,
+                        //  });
+                        $(".colResultSheet").html("");
                     }
-
-                    item.push($(this).find('td:eq(0)').text());
-                    opr_no.push($(this).find('td:eq(1)').text());
-					size.push($(this).find('td:eq(2)').text());
-					schedule.push($(this).find('td:eq(3)').text());
-					length.push($(this).find('td:eq(4)').text());
-                    standard.push($(this).find('td:eq(5)').text());
-                    grade.push($(this).find('td:eq(6)').text());
-                    sts_no.push($(this).find('td:eq(7)').text());
-                    Mec_test_TS.push($(this).find('td:eq(8)').text());                    
-                    Mec_test_YS.push($(this).find('td:eq(9)').text());
-                    Mec_test_EI.push($(this).find('td:eq(10)').text());
-					Mec_test_TS_2.push($(this).find('td:eq(11)').text());
-                    Mec_test_YS_2.push($(this).find('td:eq(12)').text());
-                    Mec_test_EL_2.push($(this).find('td:eq(13)').text());
-                    Not_Mec_test_TS.push($(this).find('td:eq(14)').text());                    
-                    Not_Mec_test_YS.push($(this).find('td:eq(15)').text());
-                    Not_Mec_test_EI.push($(this).find('td:eq(16)').text());
-					Not_Mec_test_TS_2.push($(this).find('td:eq(17)').text());
-                    Not_Mec_test_YS_2.push($(this).find('td:eq(18)').text());
-                    Not_Mec_test_EL_2.push($(this).find('td:eq(19)').text());
-                    charpy_mean.push($(this).find('td:eq(20)').text());
-					charpy1.push($(this).find('td:eq(21)').text());
-					charpy2.push($(this).find('td:eq(22)').text());
-                    charpy3.push($(this).find('td:eq(23)').text());                    
-                    // Metal_P.push($(this).find('td:eq(22)').text());
-                    // Metal_F.push($(this).find('td:eq(23)').text());
-					// Metal_M.push($(this).find('td:eq(24)').text());
-                    // Hydro_test.push($(this).find('td:eq(25)').text());
-                    prod_FM_no.push($(this).find('td:eq(24)').text());
-                    prod_date.push($(this).find('td:eq(25)').text());
-                    test_date.push($(this).find('td:eq(26)').text());
-                    remark.push($(this).find('td:eq(27)').text());
-                    
-                    CountItem++;
                 }
-                i++;
             });
-
-            if (itemEmpty == true) {
-                return false;
+            function pad(str, max) {
+                str = str.toString();
+                return str.length < max ? pad("0" + str, max) : str;
             }
-        
-            $.ajax({
-                url: "../../module/APP_Qc_TestLab/data.php",
-                type: 'POST',
-                dataType: 'text',
-                data: {
-                    load : load, 
-                    item : item,
-                    opr_no : opr_no,               
-                    size : size,
-                    schedule : schedule,
-                    length : length,
-                    standard : standard,
-                    grade : grade,
-                    sts_no : sts_no,
-                    Mec_test_TS : Mec_test_TS,
-                    Mec_test_YS : Mec_test_YS,
-                    Mec_test_EI : Mec_test_EI,
-                    Mec_test_TS_2 : Mec_test_TS_2,
-                    Mec_test_YS_2 : Mec_test_YS_2,
-                    Mec_test_EL_2 : Mec_test_EL_2,
-                    Not_Mec_test_TS : Not_Mec_test_TS,
-                    Not_Mec_test_YS : Not_Mec_test_YS,
-                    Not_Mec_test_EI : Not_Mec_test_EI,
-                    Not_Mec_test_TS_2 : Not_Mec_test_TS_2,
-                    Not_Mec_test_YS_2 : Not_Mec_test_YS_2,
-                    Not_Mec_test_EL_2 : Not_Mec_test_EL_2,
-                    charpy_mean : charpy_mean,
-                    charpy1 : charpy1,
-                    charpy2 : charpy2,
-                    charpy3 : charpy3,
-                    // Metal_P : Metal_P,
-                    // Metal_F : Metal_F,
-                    // Metal_M : Metal_M,
-                    // Hydro_test : Hydro_test,
-                    prod_FM_no : prod_FM_no,
-                    prod_date : prod_date,
-                    test_date : test_date,
-                    remark : remark
-                },
-                success: function (data) {
-                 
-                    if(data!=''){
-						// alert(`complete ${(data.length)} rows`);
-                        alert(`complete`);
-						// location.reload();
-					}
-                },
-                error: function (xhr, status, error) {
-                    var err = eval("(" + xhr.responseText + ")");
-                    $("#colResultButtonSub").html("Error!");
-                    $("#btnImport").attr("disabled", true);
-
-                },
+            $("#btnImport").click(function () {
+                if (confirm('Do you want to Import data ? ') == true) {
+                    PackDataToArrayAndSave();
+                }
             });
 
-        }
-     
-    </script>
+            function PackDataToArrayAndSave() {
+                var i = 0;
+                var load = "InsertQcTestLab_Sub";
+                var item = [];
+                var opr_no = [];
+                var size = [];
+                var schedule = [];
+                var length = [];
+                var standard = [];
+                var grade = [];
+                var sts_no = [];
+                var Mec_test_TS = [];
+                var Mec_test_YS = [];
+                var Mec_test_EI = [];
+                var Mec_test_TS_2 = [];
+                var Mec_test_YS_2 = [];
+                var Mec_test_EL_2 = [];
+                var Not_Mec_test_TS = [];
+                var Not_Mec_test_YS = [];
+                var Not_Mec_test_EI = [];
+                var Not_Mec_test_TS_2 = [];
+                var Not_Mec_test_YS_2 = [];
+                var Not_Mec_test_EL_2 = [];
+                var charpy_mean = [];
+                var charpy1 = [];
+                var charpy2 = [];
+                var charpy3 = [];
+                // var Metal_P = [];
+                // var Metal_F = [];
+                // var Metal_M = [];
+                // var Hydro_test = [];
+                var prod_FM_no = [];
+                var prod_date = [];
+                var test_date = [];
+                var remark = [];
+
+                var CountItem = 0;
+                var itemEmpty = false;
+
+                $("tbody tr").each(function () {
+                    if (i >= 0) {
+
+                        if ($(this).find('td:eq(0)').text() == "") {
+                            alert("กรุณาใส่ข้อมูล Item ให้ครบทุกบรรทัด");
+                            itemEmpty = true;
+                            return false;
+                        }
+
+                        item.push($(this).find('td:eq(0)').text());
+                        opr_no.push($(this).find('td:eq(1)').text());
+                        size.push($(this).find('td:eq(2)').text());
+                        schedule.push($(this).find('td:eq(3)').text());
+                        length.push($(this).find('td:eq(4)').text());
+                        standard.push($(this).find('td:eq(5)').text());
+                        grade.push($(this).find('td:eq(6)').text());
+                        sts_no.push($(this).find('td:eq(7)').text());
+                        Mec_test_TS.push($(this).find('td:eq(8)').text());
+                        Mec_test_YS.push($(this).find('td:eq(9)').text());
+                        Mec_test_EI.push($(this).find('td:eq(10)').text());
+                        Mec_test_TS_2.push($(this).find('td:eq(11)').text());
+                        Mec_test_YS_2.push($(this).find('td:eq(12)').text());
+                        Mec_test_EL_2.push($(this).find('td:eq(13)').text());
+                        Not_Mec_test_TS.push($(this).find('td:eq(14)').text());
+                        Not_Mec_test_YS.push($(this).find('td:eq(15)').text());
+                        Not_Mec_test_EI.push($(this).find('td:eq(16)').text());
+                        Not_Mec_test_TS_2.push($(this).find('td:eq(17)').text());
+                        Not_Mec_test_YS_2.push($(this).find('td:eq(18)').text());
+                        Not_Mec_test_EL_2.push($(this).find('td:eq(19)').text());
+                        charpy_mean.push($(this).find('td:eq(20)').text());
+                        charpy1.push($(this).find('td:eq(21)').text());
+                        charpy2.push($(this).find('td:eq(22)').text());
+                        charpy3.push($(this).find('td:eq(23)').text());
+                        // Metal_P.push($(this).find('td:eq(22)').text());
+                        // Metal_F.push($(this).find('td:eq(23)').text());
+                        // Metal_M.push($(this).find('td:eq(24)').text());
+                        // Hydro_test.push($(this).find('td:eq(25)').text());
+                        prod_FM_no.push($(this).find('td:eq(24)').text());
+                        prod_date.push($(this).find('td:eq(25)').text());
+                        test_date.push($(this).find('td:eq(26)').text());
+                        remark.push($(this).find('td:eq(27)').text());
+
+                        CountItem++;
+                    }
+                    i++;
+                });
+
+                if (itemEmpty == true) {
+                    return false;
+                }
+
+                $.ajax({
+                    url: "../../module/APP_Qc_TestLab/data.php",
+                    type: 'POST',
+                    dataType: 'text',
+                    data: {
+                        load: load,
+                        item: item,
+                        opr_no: opr_no,
+                        size: size,
+                        schedule: schedule,
+                        length: length,
+                        standard: standard,
+                        grade: grade,
+                        sts_no: sts_no,
+                        Mec_test_TS: Mec_test_TS,
+                        Mec_test_YS: Mec_test_YS,
+                        Mec_test_EI: Mec_test_EI,
+                        Mec_test_TS_2: Mec_test_TS_2,
+                        Mec_test_YS_2: Mec_test_YS_2,
+                        Mec_test_EL_2: Mec_test_EL_2,
+                        Not_Mec_test_TS: Not_Mec_test_TS,
+                        Not_Mec_test_YS: Not_Mec_test_YS,
+                        Not_Mec_test_EI: Not_Mec_test_EI,
+                        Not_Mec_test_TS_2: Not_Mec_test_TS_2,
+                        Not_Mec_test_YS_2: Not_Mec_test_YS_2,
+                        Not_Mec_test_EL_2: Not_Mec_test_EL_2,
+                        charpy_mean: charpy_mean,
+                        charpy1: charpy1,
+                        charpy2: charpy2,
+                        charpy3: charpy3,
+                        // Metal_P : Metal_P,
+                        // Metal_F : Metal_F,
+                        // Metal_M : Metal_M,
+                        // Hydro_test : Hydro_test,
+                        prod_FM_no: prod_FM_no,
+                        prod_date: prod_date,
+                        test_date: test_date,
+                        remark: remark
+                    },
+                    success: function (data) {
+
+                        if (data != '') {
+                            // alert(`complete ${(data.length)} rows`);
+                            alert(`complete`);
+                            // location.reload();
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        var err = eval("(" + xhr.responseText + ")");
+                        $("#colResultButtonSub").html("Error!");
+                        $("#btnImport").attr("disabled", true);
+
+                    },
+                });
+
+            }
+
+        </script>
 </body>
 <script type='text/javascript' src='../../js/jquery.js'></script>
+
 </html>
