@@ -179,6 +179,7 @@
                 <th class="bg-gray">ขอเบิก</th>
                 <th class="bg-gray">เบิกได้</th>
                 <th class="bg-gray">ตัดสต๊อก</th>
+                <th class="bg-gray">plan_cost</th>
                 <th class="bg-gray">หน่วย</th>
                 <th class="bg-gray">หมายเหตุ Item</th>
                 <th class="bg-gray">รับของ</th>
@@ -397,6 +398,13 @@
                         {
                             data: "ตัดสต๊อก",
                             className: "text-center",
+                        },
+                        {
+                            data: "plan_cost",
+                            className: "text-center",
+                            render: function (data, type, row) {
+                                return parseFloat(data).toFixed(2);
+                            }
                         },
                         {
                             data: "u_m",

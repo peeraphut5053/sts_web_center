@@ -674,6 +674,7 @@ having  sum(mat.qty) < line.qty_rcvd";
 	  , ขอเบิก = line.qty_wd
 	  , เบิกได้ = line.qty_rcvd
 	  , ตัดสต๊อก = convert(decimal(10,2), qty_stockOUT)
+      , plan_cost = (select top 1 plan_cost from poitem_mst poi where line.item = poi.item order by poi.po_num desc)
 from STS_store_withdraw_hdr hdr 
 	inner join STS_store_withdraw_line line on hdr.doc_no = line.doc_no
 	left join item_mst item on item.item = line.item
