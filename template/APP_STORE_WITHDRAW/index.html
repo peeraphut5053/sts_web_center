@@ -187,7 +187,7 @@
         pageHtml = "content_" + tab_name;
         
         /// receive can only admin , Nattawut , Thanatcha
-        if (tab_name == "receive" && !(username_session === "admin" || username_session === "Nattawut" || username_session === "Thanatcha" || username_session === "Rattanapat" || username_session === "Wachirarak" || username_session === "store")) {
+        if (tab_name == "receive" && !(username_session === "admin" || username_session === "Nattawut" || username_session === "Thanatcha" || username_session === "Rattanapat" || username_session === "Wachirarak" || username_session === "store" || username_session === "sittha" || username_session === "chotiphat")) {
            swal("คุณไม่มีสิทธิ์เข้าถึงหน้านี้", "", "warning");
            return false;
         }
