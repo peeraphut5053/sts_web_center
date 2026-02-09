@@ -132,7 +132,22 @@
                 <th>TOTAL</th>   -->
                 <th>recpt_date</th>  
                 <th>recpt_amount</th>  
-                <th>orig_inv_num</th> 
+                <th>orig_inv_num</th>
+                <th>SUBJECT</th>
+                <th>STANDARDH</th>
+                <th>NWTH</th>
+                <th>KGMETERH</th>
+                <th>NLPH</th>
+                <th>GRADEH</th>
+                <th>SIZEH</th>
+                <th>WALLH</th>
+                <th>SCHH</th>
+                <th>FINISHH</th>
+                <th>EFINISHH</th>
+                <th>66100</th>
+                <th>sumWeight</th>
+                <th>INLFTCH</th>
+                <th>PACKH</th>
             </tr>
         </thead>
     </table>
@@ -383,7 +398,7 @@
                         $("#tblReport").DataTable().clear();
                         var RowFooterBuild = "";
                         var ColBuild = "";
-                        var ColCount = 20;
+                        var ColCount = 35;
                         var i = 0;
                         RowFooterBuild = "<tfoot><tr>!!ColBuild!!</tr></tfoot>";
                         for (i = 1; i <= ColCount; i++) {
@@ -690,7 +705,69 @@
                                         }
                                         return data; 
                                     }
+                                },
+                                {
+                                    "data": "SUBJECT",
+                                    "className": "text-center",
+                                },
+                                {
+                                    "data": "STANDARDH",
+                                    "className": "text-center",
+                                },
+                                {
+                                    "data": "NWTH",
+                                    "className": "text-center",
+                                },
+                                {
+                                    "data": "KGMETERH",
+                                    "className": "text-center",
+                                },
+                                {
+                                    "data": "NLPH",
+                                    "className": "text-center",
+                                },
+                                {
+                                    "data": "GRADEH",
+                                    "className": "text-center",
+                                },
+                                {
+                                    "data": "SIZEH",
+                                    "className": "text-center",
+                                },
+                                {
+                                    "data": "WALLH",
+                                    "className": "text-center",
+                                },
+                                {
+                                    "data": "SCHH",
+                                    "className": "text-center",
+                                },
+                                {
+                                    "data": "FINISHH",
+                                    "className": "text-center",
+                                },
+                                {
+                                    "data": "EFINISHH",
+                                    "className": "text-center",
+                                },
+                                {
+                                    "data": "66100",
+                                    "className": "text-center",
+                                },
+                                {
+                                    "data": "sumWeight",
+                                    "className": "text-center",
+                                },
+                                {
+                                    "data": "INLFTCH",
+                                    "className": "text-center",
+                                },
+                                {
+                                    "data": "PACKH",
+                                    "className": "text-center",
                                 }
+
+
 
                             ],
                             'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +

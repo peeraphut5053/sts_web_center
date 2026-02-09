@@ -460,7 +460,7 @@ WHERE 1=1";
 
         $cust_num = isset($this->_Customers[0]) ? $this->_Customers[0] : '';
 
-        $query = "EXEC [dbo].[SP_WebApp_InvItem]
+        $query = "EXEC [dbo].[SP_WebApp_InvItem_AD]
   @InvDateStart = N'$start_invdate',
   @InvDateEnd = N'$end_invdate',
   @InvNumStart = " . ($start_inv !== '' ? "'$start_inv'" : "null") . ",
