@@ -27,7 +27,7 @@ if (!file_exists($upload_dir)) {
 if (isset($_FILES['file'])) {
     $file = $_FILES['file'];
     $response = array();
-    $allowed_types = ['pdf'];
+    $allowed_types = ['pdf', 'xls', 'xlsx'];
 
     // ตรวจสอบข้อผิดพลาด
     if ($file['error'] === UPLOAD_ERR_OK) {
