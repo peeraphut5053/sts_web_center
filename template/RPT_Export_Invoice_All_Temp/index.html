@@ -64,6 +64,15 @@
     </div>
 </div>
 
+  <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-2">   
+            <div class="input-group">
+                <div class="input-group-addon">POR</div>
+                <select class="form-control txt-filter" id="selPOR_AllTemp">
+                    <option value="" selected>All</option>
+                    <option value="TEST">TEST</option>
+                </select>
+            </div>
+    </div>
 <br>
 <br>
 
@@ -136,7 +145,17 @@
                 <th>ExtraCharge_USDMT</th>
                 <th>FreightRev</th>
                 <th>FreightRev_USDMT</th>
-
+                <th>SUBJECT</th>
+                <th>STANDARDH</th>
+                <th>NWTH</th>
+                <th>KGMETERH</th>
+                <th>NLPH</th>
+                <th>GRADEH</th>
+                <th>SIZEH</th>
+                <th>WALLH</th>
+                <th>FINISHH</th>
+                <th>EFINISHH</th>
+                <th>PACKH</th>
             </tr>
         </thead>
     </table>
@@ -177,6 +196,7 @@
 
         var fromDate = $("#fromDate").val();
         var toDate = $("#toDate").val();
+        var selPOR = $("#selPOR_AllTemp").val();
 
         if (((from_invnum == "") || (to_invnum == "")) && ((fromDate == "") || (toDate == ""))) {
             $.alert("กรุณาป้อนรายละเอียดเพื่อกรองข้อมูล");
@@ -194,6 +214,7 @@
                     "to_invnum": to_invnum,
                     "fromDate": fromDate,
                     "toDate": toDate,
+                    "selPOR": selPOR,
                 },
                 success: function (data) {
                     console.log(data)
@@ -462,6 +483,50 @@
                                 "data": "FreightRev_USDMT",
                                 "className": "text-right",
                                 
+                            },
+                            {
+                                "data": "SUBJECT",
+                                "className": "text-right",
+                            },
+                            {
+                                "data": "STANDARDH",
+                                "className": "text-right",
+                            },
+                            {
+                                "data": "NWTH",
+                                "className": "text-right",
+                            },
+                            {
+                                "data": "KGMETERH",
+                                "className": "text-right",
+                            },
+                            {
+                                "data": "NLPH",
+                                "className": "text-right",
+                            },
+                            {
+                                "data": "GRADEH",
+                                "className": "text-right",
+                            },
+                            {
+                                "data": "SIZEH",
+                                "className": "text-right",
+                            },
+                            {
+                                "data": "WALLH",
+                                "className": "text-right",
+                            },
+                            {
+                                "data": "FINISHH",
+                                "className": "text-right",
+                            },
+                            {
+                                "data": "EFINISHH",
+                                "className": "text-right",
+                            },
+                            {
+                                "data": "PACKH",
+                                "className": "text-right",
                             },
                         ],
                         'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +

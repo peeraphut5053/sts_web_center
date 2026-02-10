@@ -1401,7 +1401,7 @@ FROM V_WebApp_InvItem_IN_noVAT where 1=1 ";
         return $rs0;
     }
 
-    function STS_AD_AllTemp_ADformat($from_invnum, $to_invnum, $fromDate, $toDate) {
+    function STS_AD_AllTemp_ADformat($from_invnum, $to_invnum, $fromDate, $toDate, $selPOR) {
 
         // $fromDate == "" ? $fromDate = 'NUll' : $fromDate = "$fromDate";
         // $toDate == "" ? $toDate = 'NUll' : $toDate = "$toDate";
@@ -1416,7 +1416,8 @@ FROM V_WebApp_InvItem_IN_noVAT where 1=1 ";
         @vDateStr = '$fromDate',
         @vDateEnd = '$toDate',
         @vCustStr = NULL,
-        @vCustEnd = NULL ";
+        @vCustEnd = NULL,
+        @POR = '$selPOR'";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);
