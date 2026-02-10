@@ -73,13 +73,13 @@
 </div> 
 <div class="row quicksearch" >
     <div class="col-12 col-xs-12 col-sm-12 col-md-9 col-lg-9"  style="padding-left:0px;">
-        <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3" style="padding-left:0px;">   
+        <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-2" style="padding-left:0px;">   
             <div class="input-group">
                 <div class="input-group-addon">From date</div>
                 <input value="" type="text" autocomplete="off"  class="form-control txt-filter" id="txtFromDate_Q">
             </div>
         </div>
-        <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3">   
+        <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-2">   
             <div class="input-group">
                 <div class="input-group-addon">To date</div>
                 <input value="" type="text" autocomplete="off"  class="form-control txt-filter" id="txtToDate_Q">
@@ -97,11 +97,22 @@
                 <input type="text" class="form-control txt-filter" id="txtToInv_Q">
             </div>
         </div>
+        <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-2">   
+            <div class="input-group">
+                <div class="input-group-addon">POR</div>
+                <select class="form-control txt-filter" id="selPOR_Q">
+                    <option value="" selected>All</option>
+                    <option value="TEST">TEST</option>
+                </select>
+            </div>
+        </div>
+    
     </div>
     <div class="col-12 col-xs-12 col-sm-12 col-md-3 col-lg-3" >
         <button id="btnQuickSearch" class="btn btn-info"><i class="fa fa-search"></i>&nbsp;Quick Search</button>
         <button class="btn btn-success" id="btnModalAdvSearch"><i class="fa fa-search-plus"></i>&nbsp;Advance Search</button>
     </div>
+
 </div>
 <div class="row" id="divReport" >
     <table class="table table-condensed table-bordered table-striped" id="tblReport" style="width:100%;max-width: 100%;">
@@ -250,8 +261,24 @@
 </div>
 <script type="text/javascript">
 
-    $("#txtFromDate_Q , #txtToDate_Q").datepicker({
+    $("#txtFromDate_Q").datepicker({
+        // select months and years
+        changeMonth: true,
+        changeYear: true,
+        dateFormat: 'yy-mm-01',
+    });
+
+    $("#txtToDate_Q").datepicker({
+        // select months and years
+        changeMonth: true,
+        changeYear: true,
         dateFormat: 'yy-mm-dd',
+        // want to select last date of month
+        onSelect: function (dateText, inst) {
+            var date = new Date(dateText);
+            var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+            $(this).datepicker('setDate', new Date(date.getFullYear(), date.getMonth(), lastDay));
+        }
     });
     $("#txtFromDate_A , #txtToDate_A").datepicker(
             {singleDatePicker: true,
@@ -348,6 +375,7 @@
         var txtSize = $("#txtSize").val();
         var txtThick = $("#txtThick").val();
         var txtWidth = $("#txtWidth").val();
+        var selPOR = $("#selPOR_Q").val();
         if (typeSearch == "A") {
             $("#modalAdvSearch").modal("hide");
         }
@@ -392,6 +420,7 @@
                         "txtToDate": txtToDate,
                         "txtFromInv": txtFromInv,
                         "txtToInv": txtToInv,
+                        "selPOR": selPOR,
                     },
                     success: function (data) {
                         console.log(data);

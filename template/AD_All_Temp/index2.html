@@ -17,7 +17,7 @@
 </style>
 <div class="row" style="border-bottom:solid 1px #e8e8e8;">
     <div style="margin-top: 10px; margin-bottom: 20px;">
-        <h1 class="my-header">Export Invoice All Temp</h1>
+        <h1 class="my-header">AD All Temp</h1>
     </div>
     <!-- <div class="col-md-6 text-right" >
         <a class="btn btn-success" href="module/Entry_Summary/upexcel_main.php"  id="btnTransfer">&nbsp;import excel (MAIN)</a>
@@ -52,14 +52,14 @@
 
 <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2  col-search">
     <div class="input-group">
-        <div class="input-group-addon">From Month</div>
+        <div class="input-group-addon">From date</div>
         <input type="text" class="form-control txt-filter" id="fromDate">
     </div>
 </div>
 
 <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2  col-search">
     <div class="input-group">
-        <div class="input-group-addon">To Month</div>
+        <div class="input-group-addon">To date</div>
         <input type="text" class="form-control txt-filter" id="toDate">
     </div>
 </div>
@@ -119,24 +119,6 @@
                 <th>Uf_Weight_metre</th>
                 <th>Shipped_To</th>
                 <th>AMT_BHT</th>
-                <th>sum_N_WT_MT</th>
-                <th>transport</th>
-                <th>trans_BahtMT</th>
-                <th>Lighterage</th>
-                <th>Light_BahtMT</th>
-                <th>Brokerage</th>
-                <th>Broke_BahtMT</th>
-                <th>Inland</th>
-                <th>Inland_BahtMT</th>
-                <th>BLcharge</th>
-                <th>BLcharge_BahtMT</th>
-                <th>OCfreight</th>
-                <th>OCfreight_BahtMT</th>
-                <th>ExtraCharge</th>
-                <th>ExtraCharge_USDMT</th>
-                <th>FreightRev</th>
-                <th>FreightRev_USDMT</th>
-
             </tr>
         </thead>
     </table>
@@ -150,24 +132,8 @@
         ReportItemSearch();
     });
 
-    $("#fromDate").datepicker({
-        // select months and years
-        changeMonth: true,
-        changeYear: true,
-        dateFormat: 'yy-mm-01',
-    });
-
-    $("#toDate").datepicker({
-        // select months and years
-        changeMonth: true,
-        changeYear: true,
+    $("#fromDate , #toDate").datepicker({
         dateFormat: 'yy-mm-dd',
-        // want to select last date of month
-        onSelect: function (dateText, inst) {
-            var date = new Date(dateText);
-            var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
-            $(this).datepicker('setDate', new Date(date.getFullYear(), date.getMonth(), lastDay));
-        }
     });
 
     function ReportItemSearch() {
@@ -189,7 +155,7 @@
                     $("#BtnSearch").html("<i class='fa fa-spinner fa-spin'>");
                 },
                 data: {
-                    "load": "STS_AD_AllTemp_ADformat",
+                    "load": "search",
                     "from_invnum": from_invnum,
                     "to_invnum": to_invnum,
                     "fromDate": fromDate,
@@ -199,7 +165,7 @@
                     console.log(data)
                     $("#tblReport").dataTable().fnDestroy();
                     var table = $('#tblReport').DataTable({
-                        scrollY: "500px",
+                        scrollY: "400px",
                         "scrollX": true,
                         scrollCollapse: true,
                         "aaData": data,
@@ -216,11 +182,8 @@
                                 "className": "text-center",
                             },
                             {
-                                "data": "inv_date.date",
+                                "data": "inv_date",
                                 "className": "text-center",
-                                "render": function (data, type, row) {
-                                    return data.substr(0, 10);
-                                }
                             },
                             {
                                 "data": "cust_num",
@@ -380,88 +343,6 @@
                             {
                                 "data": "AMT_BHT",
                                 "className": "text-left",
-                            },
-                            {
-                                "data": "sum_N_WT_MT",
-                                "className": "text-right",
-                            },
-                            {
-                                "data": "transport",
-                                "className": "text-right",
-                            },
-                            {
-                                "data": "trans_BahtMT",
-                                "className": "text-right"
-                            },
-                            {
-                                "data": "Lighterage",
-                                "className": "text-right",
-                                
-                            },
-                            {
-                                "data": "Light_BahtMT",
-                                "className": "text-right",
-                                
-                            },
-                            {
-                                "data": "Brokerage",
-                                "className": "text-right",
-                                
-                            },
-                            {
-                                "data": "Broke_BahtMT",
-                                "className": "text-right",
-                                
-                            },
-                            {
-                                "data": "Inland",
-                                "className": "text-right",
-                                
-                            },
-                            {
-                                "data": "Inland_BahtMT",
-                                "className": "text-right",
-                                
-                            },
-                            {
-                                "data": "BLcharge",
-                                "className": "text-right",
-                                
-                            },
-                            {
-                                "data": "BLcharge_BahtMT",
-                                "className": "text-right",
-                                
-                            },
-                            {
-                                "data": "OCfreight",
-                                "className": "text-right",
-                                
-                            },
-                            {
-                                "data": "OCfreight_BahtMT",
-                                "className": "text-right",
-                                
-                            },
-                            {
-                                "data": "ExtraCharge",
-                                "className": "text-right",
-                                
-                            },
-                            {
-                                "data": "ExtraCharge_USDMT",
-                                "className": "text-right",
-                                
-                            },
-                            {
-                                "data": "FreightRev",
-                                "className": "text-right",
-                                
-                            },
-                            {
-                                "data": "FreightRev_USDMT",
-                                "className": "text-right",
-                                
                             },
                         ],
                         'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +

@@ -34,7 +34,7 @@ if ($load == "form") {
     $InvItem->_item = $txtItem;
     $InvItem->_start_inv = $txtFromInv;
     $InvItem->_end_inv = $txtToInv;
-    $InvItems = $InvItem->GetInvItem_IN2021();
+    $InvItems = $InvItem->GetInvItem_IN2021($selPOR);
     $InvItem = null;
     $CallModel = null;
     echo json_encode($InvItems);

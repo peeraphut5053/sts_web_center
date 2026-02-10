@@ -1,0 +1,367 @@
+<style>
+    .col-search {
+      padding-left: 3px;
+      padding-right: 3px;
+    }
+    /*    table.dataTable thead .sorting:after,
+          table.dataTable thead .sorting:before,
+          table.dataTable thead .sorting_asc:after,
+          table.dataTable thead .sorting_asc:before,
+          table.dataTable thead .sorting_asc_disabled:after,
+          table.dataTable thead .sorting_asc_disabled:before,
+          table.dataTable thead .sorting_desc:after,
+          table.dataTable thead .sorting_desc:before,
+          table.dataTable thead .sorting_desc_disabled:after,
+          table.dataTable thead .sorting_desc_disabled:before {
+              bottom: .5em;
+          }*/
+    .table thead th {
+      text-align: center;
+    }
+  
+    .col-flt-page {
+      padding-top: 10px;
+      font-weight: bold;
+    }
+  
+    #tblReportitemSIZEH tbody tr td a {
+      cursor: pointer;
+    }
+    table.dataTable.fixedHeader-floating,
+    table.dataTable.fixedHeader-locked {
+      background-color: white;
+      margin-top: 50px !important;
+      margin-bottom: 0 !important;
+    }
+    @media print {
+      table th:nth-child(0) {
+        width: 200px;
+        word-break: break-all;
+        white-space: pre-line;
+      }
+      table td:nth-child(0) {
+        width: 200px;
+        word-break: break-all;
+        white-space: pre-line;
+      }
+    }
+    .text-header {
+      font-weight: bold;
+      font-size: 20px;
+    }
+    .text-wrap {
+      white-space: normal;
+    }
+    .width-200 {
+      width: 200px;
+    }
+    input[type="checkbox"] {
+      margin-left: 5px;
+      margin-right: 5px;
+    } /*
+      .cb_lb{
+          margin-top:-5px;
+      }*/
+    .item-center {
+      display: flex;
+      justify-content: center;
+    }
+  </style>
+<div style="margin-top: 10px; margin-bottom: 20px;">
+      <h1 class="my-header">รายงาน AD_itemGradeSch</h1>
+</div>
+  <div class="row item-center">
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+      <div class="input-group">
+        <div class="input-group-addon">Item</div>
+        <input
+          type="text"
+          class="form-control"
+          id="txtItemGradeSch"
+          autocomplete="off"
+        />
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+      <div class="input-group">
+        <div class="input-group-addon">Spec</div>
+        <input
+          type="text"
+          class="form-control"
+          id="txtSpecGradeSch"
+          autocomplete="off"
+        />
+      </div>
+    </div>
+    <div class="col-lg-1 col-md-1 col-sm-6 col-xs-6 text-left">
+      <button class="btn btn-info" id="btnSearchitemGradeSch">
+        <i class="fa fa-search"></i>&nbsp; Search
+      </button>
+    </div>
+    <div class="col-lg-1 col-md-1 col-sm-6 col-xs-6 text-left">
+      <button class="btn btn-success" id="btnAdditemGradeSch" data-toggle="modal" data-target="#ModalADitemGradeSch">
+        <i class="fa fa-plus"></i>&nbsp; Add Data
+      </button>
+    </div>
+  </div>
+  
+  <div class="row" id="rowResultTable">
+    <table
+      class="table table-condensed table-bordered table-striped"
+      width="100%"
+      id="tblReportitemGradeSch"
+    >
+      <thead>
+        <tr>
+          <th class="bg-gray">item</th>
+          <th class="bg-gray">spec</th>
+          <th class="bg-gray">GRADEH</th>
+          <th class="bg-gray">SCHH</th>
+          <th class="bg-gray">  </th>
+        </tr>
+      </thead>
+      <!--        <tbody id="tblReportitemSIZEHList">
+                      <tr><td align="center" colspan="12">.... No item search ....</td></tr>
+     </tbody>-->
+    </table>
+  </div>
+  <!-- Modal -->
+<div class="modal fade bd-example-modal-lg" id="ModalADitemGradeSch" role="dialog" aria-labelledby="myLargeModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-center" id="exampleModalLabel">ADD Data itemGradeSch</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+            </div>
+            <div class="modal-body">
+                <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                    <div class="input-group basis-2/4">
+                        <div class="input-group-addon">Item</div>
+                        <input type="text" autocomplete="off" class="form-control" id="item_gradeSch">
+                    </div>
+                    <div class="input-group basis-2/4">
+                        <div class="input-group-addon">Spec</div>
+                        <input type="text" autocomplete="off" class="form-control" id="spec">
+                    </div>
+                </div>
+                <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+                    <div class="input-group basis-2/4">
+                        <div class="input-group-addon">GRADEH</div>
+                        <input type="text" autocomplete="off" class="form-control" id="gradeh">
+                    </div>
+                    <div class="input-group basis-2/4">
+                        <div class="input-group-addon">SCHH</div>
+                        <input type="text" autocomplete="off" class="form-control" id="schh">
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="SaveADitemGradeSch()">บันทึก</button>
+            </div>
+        </div>
+    </div>
+</div>
+  <div id="printpopup"></div>
+  <script type="text/javascript">
+ 
+    $("#btnSearchitemGradeSch").click(function () {
+      ReportItemSearch();
+    });
+  
+    function ReportItemSearch() {
+      var OldHtml = $("#btnSearchitemGradeSch").html();
+        let item = $("#txtItemGradeSch").val();
+        let spec = $("#txtSpecGradeSch").val();
+  
+        $("#btnSearch").html("<i class='fa fa-spinner fa-spin'></i>");
+        $("#tblReportitemSIZEH").loading();
+        $("#tblReportitemSIZEH tfoot").remove();
+        $.ajax({
+          type: "POST",
+          url: "././module/STS_AD/data.php",
+          dataType: "json",
+          beforeSend: function () {
+            $("#btnSearchitemGradeSch").html("<i class='fa fa-spinner fa-spin'>");
+          },
+          data: {
+            load: "Report_AD_itemGradeSch",
+            item: item,
+            spec: spec
+          },
+          success: function (data) {
+            $("#tblReportitemGradeSch").DataTable().clear();
+            $("#tblReportitemGradeSch").dataTable({
+              aaData: data,
+              paging: false,
+              fixedHeader: true,
+              destroy: true,
+              processing: true,
+              scrollY: "65vh",
+              scrollCollapse: true,
+              scrollX: true,
+              columns: [
+                {
+                  data: "item",
+                  className: "text-center",
+                },
+                {
+                  data: "spec",
+                  className: "text-center",
+                  "render": function (data, type, row, meta) {
+                    if (data == null) {
+                        data = "";
+                    }
+                    return `<input type="text" value="` + data + `" style="text-align:center;" onchange="handleChange(this, '` + row.item + `', 'SPEC')" />`;
+                  }
+                },
+                {
+                  data: "GRADEH",
+                  className: "text-center",
+                  "render": function (data, type, row, meta) {
+                    if (data == null) {
+                        data = "";
+                    }
+                    return `<input type="text" value="` + data + `" style="text-align:center;" onchange="handleChange(this, '` + row.item + `', 'GRADEH')" />`;
+                  }
+                },
+                {
+                  data: "SCHH",
+                  className: "text-center",
+                  "render": function (data, type, row, meta) {
+                    if (data == null) {
+                        data = "";
+                    }
+                    return `<input type="text" value="` + data + `" style="text-align:center;" onchange="handleChange(this, '` + row.item + `', 'SCHH')" />`;
+                  }
+                },
+                {
+                  data: null,
+                  className: "text-center",
+                  "render": function (data, type, row, meta) {
+                    return `<button class="btn btn-danger btn-sm" onclick="DeleteADitemGradeSch('` + row.item + `')"><i class="fa fa-trash"></i>&nbsp; Delete</button>`;
+                  }
+                }
+              ],
+              dom:
+                "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                "<'row'<'col-md-12'tr>>" +
+                "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+              buttons: [
+                {
+                  extend: "print",
+                  text: "<i class='fa fa-print'></i>&nbsp;Print",
+                  title: "",
+                },
+                {
+                  extend: "excel",
+                  footer: true,
+                  text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                  title:
+                    "Report_itemGradeSch_" +
+                    moment().format("YYYYMMDD_HHmmss"),
+                },
+              ]
+            });
+  
+            $("#tblReportitemGradeSch").loading("stop");
+            $("#btnSearchitemGradeSch").html(OldHtml);
+          },
+          error: function (e) {
+            $("#tblReportitemGradeSch").loading("stop");
+            $("#btnSearchitemGradeSch").html(OldHtml);
+            console.log("There was an error with your request...");
+            console.log("error: " + JSON.stringify(e));
+          },
+        });
+      }
+    
+    $("#btnExportExcel").click(function () {
+      //        onclick="javascript:
+      //       xport.toCSV('tblReportitemSIZEH');
+    });
+  
+    $("#StartDate,#EndDate").datepicker({
+      dateFormat: "yy-mm-dd",
+    });
+
+    function SaveADitemGradeSch () {
+      var item = $("#item_gradeSch").val();
+      var spec = $("#spec").val();
+      var gradeh = $("#gradeh").val();
+      var schh = $("#schh").val();
+      $.ajax({
+        type: "POST",
+        url: "././module/STS_AD/data.php",
+        dataType: "json",
+        data: {
+          load: "SaveADitemGradeSch",
+          item: item,
+          spec: spec,
+          gradeh: gradeh,
+          schh: schh,
+        },
+        success: function (data) {
+          swal.fire({
+            title: "บันทึกข้อมูลเรียบร้อย",
+            icon: "success",
+          });
+          // Clear Modal
+            $("#item_gradeSch").val("");
+            $("#spec").val("");
+            $("#gradeh").val("");
+            $("#schh").val("");
+            $("#ModalADitemGradeSch").modal("hide");
+        } 
+      });
+    }
+
+    function handleChange (element, item, field) {
+      var value = $(element).val();
+      $.ajax({
+        type: "POST",
+        url: "././module/STS_AD/data.php",
+        dataType: "json",
+        data: {
+          load: "UpdateADitemGradeSch",
+          item: item,
+          field: field,
+          value: value
+        },
+        success: function (data) {
+          console.log("Data updated successfully");
+        },
+        error: function (xhr, status, error) {
+          console.log("Error updating data:", error);
+        }
+      });
+    }
+
+    function DeleteADitemGradeSch (item) {
+      if (confirm("ยืนยันการลบข้อมูล item: " + item + " ?")) {
+        $.ajax({
+          type: "POST",
+          url: "././module/STS_AD/data.php",
+          dataType: "json",
+          data: {
+            load: "DeleteADitemGradeSch",
+            item: item,
+          },
+          success: function (data) {
+            swal({
+                title: "ลบข้อมูลเรียบร้อย",
+                icon: "success",
+            })
+            ReportItemSearch();
+          } 
+        });
+      }
+    }
+  
+
+  </script>
+  

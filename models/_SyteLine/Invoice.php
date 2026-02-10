@@ -449,7 +449,7 @@ WHERE 1=1";
         return $rs0;
     }
 
-    function GetInvItem_IN2021() {
+    function GetInvItem_IN2021($selPOR) {
         $start_invdate = $this->_start_invdate;
         $end_invdate = $this->_end_invdate;
 
@@ -461,6 +461,7 @@ WHERE 1=1";
         $cust_num = isset($this->_Customers[0]) ? $this->_Customers[0] : '';
 
         $query = "EXEC [dbo].[SP_WebApp_InvItem_AD]
+  @POR = '$selPOR',
   @InvDateStart = N'$start_invdate',
   @InvDateEnd = N'$end_invdate',
   @InvNumStart = " . ($start_inv !== '' ? "'$start_inv'" : "null") . ",
