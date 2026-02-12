@@ -122,6 +122,11 @@
         <th>รวมระยะเวลางาน</th>
         <th>ช่างซ่อม</th>
         <th>หมายเหตุ</th>
+        <th>วันที่เริ่มซ่อม (แก้ไข)</th>
+        <th>เวลาเริ่มงาน (แก้ไข)</th>
+        <th>วันที่ซ่อมเสร็จ (แก้ไข)</th>
+        <th>เวลาจบงาน (แก้ไข)</th>
+        <th>รวมระยะเวลางาน (แก้ไข)</th>
         </tr>
       </thead>
     </table>
@@ -411,7 +416,8 @@
                   return "";
                 } else {
                   var ret = moment(data).format('DD/MM/YYYY');
-                  return ret;
+                  var val = `<span style='color:green;'>${ret}</span>`;
+                  return val;
                 }
               }
             },
@@ -423,7 +429,8 @@
                   return "";
                 } else {
                   var ret = moment(data).format('HH:mm');
-                  return ret;
+                  var val = `<span style='color:green;'>${ret}</span>`;
+                  return val;
                 }
               }
             },
@@ -435,7 +442,8 @@
                   return "";
                 } else {
                   var ret = moment(data).format('DD/MM/YYYY');
-                  return ret;
+                  var val = `<span style='color:green;'>${ret}</span>`;
+                  return val;
                 }
               }
             },
@@ -447,7 +455,8 @@
                   return "";
                 } else {
                   var ret = moment(data).format('HH:mm');
-                  return ret;
+                  var val = `<span style='color:green;'>${ret}</span>`;
+                  return val;
                 }
               }
             },
@@ -460,7 +469,8 @@
 
                 if (StartDate && EndDate) {
                   var ret = moment(EndDate).diff(moment(StartDate), 'minutes');
-                  return minutesToHours(ret);
+                  var val = `<span style='color:green;'>${minutesToHours(ret)}</span>`;
+                  return val;
                 } else {
                   return "";
                 }
@@ -474,6 +484,74 @@
               "data": "Remark2",
               "className": "text-center",
             },
+            {
+              "data": "DateRepairStart_en.date",
+              "className": "text-center",
+              "render": function (data, type, row, meta) {
+                if (!data) {
+                  return "";
+                } else {
+                  var ret = moment(data).format('DD/MM/YYYY');
+                  var val = `<span style='color:red;'>${ret}</span>`;
+                  return val;
+                }
+              }
+            },
+            {
+              "data": "DateRepairStart_en.date",
+              "className": "text-center",
+              "render": function (data, type, row, meta) {
+                if (!data) {
+                  return "";
+                } else {
+                  var ret = moment(data).format('HH:mm');
+                  var val = `<span style='color:red;'>${ret}</span>`;
+                  return val;
+                }
+              }
+            },
+            {
+              "data": "DateRepairEnd_en.date",
+              "className": "text-center",
+              "render": function (data, type, row, meta) {
+                if (!data) {
+                  return "";
+                } else {
+                  var ret = moment(data).format('DD/MM/YYYY');
+                  var val = `<span style='color:red;'>${ret}</span>`;
+                  return val;
+                }
+              }
+            },
+            {
+              "data": "DateRepairEnd_en.date",
+              "className": "text-center",
+              "render": function (data, type, row, meta) {
+                if (!data) {
+                  return "";
+                } else {
+                  var ret = moment(data).format('HH:mm');
+                  var val = `<span style='color:red;'>${ret}</span>`;
+                  return val;
+                }
+              }
+            },
+            {
+              "data": null,
+              "className": "text-center",
+              "render": function (data, type, row, meta) {
+                var StartDate = row.DateRepairStart_en?.date;
+                var EndDate = row.DateRepairEnd_en?.date;
+
+                if (StartDate && EndDate) {
+                  var ret = moment(EndDate).diff(moment(StartDate), 'minutes');
+                  var val = `<span style='color:red;'>${minutesToHours(ret)}</span>`;
+                  return val;
+                } else {
+                  return "";
+                }
+              }
+            }
             ],
             dom:
             "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
