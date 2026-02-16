@@ -1,7 +1,7 @@
 <div class="row" style="border-bottom:solid 1px #e8e8e8;">
-   <div style="margin-top: 10px; margin-bottom: 20px;">
-      <h1 class="my-header">Tag Status</h1>
-</div>
+    <div style="margin-top: 10px; margin-bottom: 20px;">
+        <h1 class="my-header">Tag Status</h1>
+    </div>
 </div>
 
 <div class="row">
@@ -193,10 +193,10 @@
                         },
                         success: function (data) {
                             $.alert("เปลี่ยนสถานะเรียบร้อยแล้ว");
-                            $("#tag_status").val(selectedStatus);4
+                            $("#tag_status").val(selectedStatus); 4
                             ReportAllSearchShow();
-                            
-                            
+
+
                         },
                         error: function (xhr, ajaxOptions, thrownError) {
                             $.alert("เปลี่ยนสถานะไม่สําเร็จ");
@@ -889,6 +889,8 @@
             return "นายนนน์นนันน์ รอดทุกข์"
         } else if (Pass == '010235') {
             return "นายณัฐพล คัมภิรานนท์"
+        } else if (Pass == '8245') {
+            return "นายโยธิน เรืองแก้ว"
         }
     }
 </script>
