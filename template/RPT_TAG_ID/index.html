@@ -78,6 +78,9 @@
             <input type="text" class="form-control" id="QcTagID" onkeyup="onEnterSearch()" />
         </div>
     </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+        <button type="button" class="btn btn-danger" id="btnClear">Clear</button>
+    </div>
 </div>
 
 <div class="row" id="rowResultTable">
@@ -107,8 +110,10 @@
 
     var tag_id_list = [];
 
-    $("#btnSearch").click(function () {
-        ReportItemSearch();
+    $("#btnClear").click(function () {
+        tag_id_list = [];
+        $("#tblReportTag").DataTable().clear().draw();
+        $("#QcTagID").val("");
     });
 
     function onEnterSearch(e) {
