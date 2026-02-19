@@ -1,0 +1,274 @@
+<style>
+    .col-search {
+        padding-left: 3px;
+        padding-right: 3px;
+    }
+
+    /*    table.dataTable thead .sorting:after,
+            table.dataTable thead .sorting:before,
+            table.dataTable thead .sorting_asc:after,
+            table.dataTable thead .sorting_asc:before,
+            table.dataTable thead .sorting_asc_disabled:after,
+            table.dataTable thead .sorting_asc_disabled:before,
+            table.dataTable thead .sorting_desc:after,
+            table.dataTable thead .sorting_desc:before,
+            table.dataTable thead .sorting_desc_disabled:after,
+            table.dataTable thead .sorting_desc_disabled:before {
+                bottom: .5em;
+            }*/
+    .table thead th {
+        text-align: center;
+    }
+
+    .col-flt-page {
+        padding-top: 10px;
+        font-weight: bold;
+    }
+
+    #tblReport tbody tr td a {
+        cursor: pointer;
+    }
+
+    table.dataTable.fixedHeader-floating,
+    table.dataTable.fixedHeader-locked {
+        background-color: white;
+        margin-top: 50px !important;
+        margin-bottom: 0 !important;
+    }
+
+    .text-header {
+        font-weight: bold;
+        font-size: 20px;
+    }
+
+    .text-wrap {
+        white-space: normal;
+    }
+
+    .width-200 {
+        width: 200px;
+    }
+
+    input[type="checkbox"] {
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+
+    /*
+        .cb_lb{
+            margin-top:-5px;
+        }*/
+    .item-center {
+        display: flex;
+        justify-content: center;
+    }
+
+    .type_qa {
+        width: 200px;
+    }
+</style>
+<div class="row">
+    <div style="margin-top: 10px; margin-bottom: 20px;"></div>
+    <h1 class="my-header">ข้อมูลแท็ก</h1>
+</div>
+<div class="row item-center">
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+        <div class="input-group">
+            <div class="input-group-addon">Tag ID</div>
+            <input type="text" class="form-control" id="QcTagID" onkeyup="onEnterSearch()" />
+        </div>
+    </div>
+</div>
+
+<div class="row" id="rowResultTable">
+    <table class="table table-condensed table-bordered table-striped" width="100%" id="tblReportTag">
+        <thead>
+            <tr>
+                <!--<th >#</th>-->
+                <th class="bg-gray">Tag ID</th>
+                <th class="bg-gray">WC</th>
+                <th class="bg-gray">Item Desc</th>
+                <th class="bg-gray">Spec</th>
+                <th class="bg-gray">Grade</th>
+                <th class="bg-gray">Uf_NPS</th>
+                <th class="bg-gray">Uf_Schedule</th>
+                <th class="bg-gray">Uf_length</th>
+                <th class="bg-gray">Lot</th>
+                <th class="bg-gray">MFD.</th>
+                <th class="bg-gray">NET WT.</th>
+                <th class="bg-gray">Total (Pcs./Pack)</th>
+                <th class="bg-gray">Pack No.</th>
+                <th class="bg-gray">H/N</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+<script type="text/javascript">
+
+    var tag_id_list = [];
+
+    $("#btnSearch").click(function () {
+        ReportItemSearch();
+    });
+
+    function onEnterSearch(e) {
+        if ($('#QcTagID').val() == '') {
+            return false;
+        }
+
+        // Check Duplicate id In tag_id_list
+        let isDuplicate = false;
+        for (let i = 0; i < tag_id_list.length; i++) {
+            if (tag_id_list[i].id == $('#QcTagID').val()) {
+                isDuplicate = true;
+                break;
+            }
+        }
+
+        if (isDuplicate) {
+            alert("Tag ID นี้มีอยู่แล้ว");
+            return false;
+        }
+
+
+        var keycode;
+        if (window.event) keycode = window.event.keyCode; //  IE
+        else if (e) keycode = e.which; //  Firefox 		
+        if (keycode == 13) {
+            ReportItemSearch();
+        }
+    }
+
+    function ReportItemSearch() {
+        var OldHtml = $("#btnSearch").html();
+        let TagID = $("#QcTagID").val();
+
+        $("#btnSearch").html("<i class='fa fa-spinner fa-spin'></i>");
+        $("#tblReportTag").loading();
+        $("#tblReportTag tfoot").remove();
+        $.ajax({
+            type: "POST",
+            url: "././module/RPT_TAG_ID/data.php",
+            dataType: "json",
+            beforeSend: function () {
+                $("#btnSearch").html("<i class='fa fa-spinner fa-spin'>");
+            },
+            data: {
+                load: "Scan",
+                tag_id: TagID,
+            },
+            success: function (data) {
+
+                tag_id_list.push(data[0]);
+
+                $("#tblReportTag").DataTable().clear();
+                $("#tblReportTag").dataTable({
+                    aaData: tag_id_list,
+                    paging: false,
+                    fixedHeader: true,
+                    destroy: true,
+                    processing: true,
+                    scrollY: "65vh",
+                    scrollCollapse: true,
+                    scrollX: true,
+                    select: false,
+                    ordering: false,
+                    columns: [
+                        {
+                            data: "id",
+                            className: "text-center",
+                        },
+                        {
+                            data: "wc",
+                            className: "text-center",
+                        },
+                        {
+                            data: "item_desc",
+                            className: "text-center",
+                        },
+                        {
+                            data: "uf_spec",
+                            className: "text-center",
+                            render: function (data, type, row) {
+                                if (data == "" || data == null) {
+                                    return row.uf_class;
+                                }
+                                return data;
+                            }
+                        },
+                        {
+                            data: "uf_grade",
+                            className: "text-center",
+                        },
+                        {
+                            data: "uf_nps",
+                            className: "text-center",
+                        },
+                        {
+                            data: "uf_schedule",
+                            className: "text-center",
+                        },
+                        {
+                            data: "uf_length",
+                            className: "text-center",
+                        },
+                        {
+                            data: "lot",
+                            className: "text-center",
+                        },
+                        {
+                            data: "print_date",
+                            className: "text-center",
+                        },
+                        {
+                            data: "uf_act_Weight",
+                            className: "text-center",
+                        },
+                        {
+                            data: "qty1",
+                            className: "text-center",
+                        },
+                        {
+                            data: "uf_pack",
+                            className: "text-center",
+                        },
+                        {
+                            data: "sts_no",
+                            className: "text-center",
+                        },
+
+                    ],
+                    dom:
+                        "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                        "<'row'<'col-md-12'tr>>" +
+                        "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                    buttons: [
+                        {
+                            extend: "print",
+                            text: "<i class='fa fa-print'></i>&nbsp;Print",
+                            title: "",
+                        },
+                        {
+                            extend: "excel",
+                            footer: true,
+                            text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                            title:
+                                "ข้อมูลแท็ก"
+
+                        },
+                    ]
+                });
+
+                $("#tblReportTag").loading("stop");
+                $("#btnSearch").html(OldHtml);
+            },
+            error: function (e) {
+                $("#tblReportTag").loading("stop");
+                $("#btnSearch").html(OldHtml);
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            },
+        });
+    }
+
+</script>

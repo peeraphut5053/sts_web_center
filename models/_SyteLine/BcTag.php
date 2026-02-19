@@ -822,6 +822,23 @@ VALUES('$wc', GETDATE());";
         return $rs;
     }
 
+    function GetTagData($tag_id) {
+        $query = "select distinct mv.*, CONVERT(VARCHAR(16), mv.print_date, 120)  AS print_date 
+  ,remark = case when item.uf_market in ('AUS', 'USA') then 'เหล็กนำเข้าตามมาตรา 21 ตรี'
+        else '' end 
+  , item.uf_spec, item.uf_class, item.uf_nps, item.uf_schedule, item.uf_length, item.uf_grade
+  , job.wc , job.item_desc
+from Mv_Bc_tag mv
+  inner join mv_job job on job.item = mv.item and job.job = mv.job
+  inner join item_mst item on mv.item = item.item
+where mv.id = '$tag_id'";
+
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
 
 }
 
