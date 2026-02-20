@@ -1,56 +1,60 @@
-
 <style>
-    #ui-datepicker-div{
+    #ui-datepicker-div {
         z-index: 9999999 !important;
     }
+
     ::-webkit-scrollbar {
         width: 8px;
         height: 8px;
     }
+
     ::-webkit-scrollbar-thumb {
-        background: #3c8dbc; 
+        background: #3c8dbc;
         border-radius: 10px;
     }
+
     ::-webkit-scrollbar-thumb:hover {
-        background: #3c8dbc; 
+        background: #3c8dbc;
     }
 </style>
 
 
-<div class="row quicksearch" >
-    <div class="col-12 col-xs-12 col-sm-12 col-md-9 col-lg-9"  style="padding-left:0px;">
-        <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3" style="padding-left:0px;">   
+<div class="row quicksearch">
+    <div class="col-12 col-xs-12 col-sm-12 col-md-9 col-lg-9" style="padding-left:0px;">
+        <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3" style="padding-left:0px;">
             <div class="input-group">
                 <div class="input-group-addon">From date</div>
-                <input value="" type="text" autocomplete="off"  class="form-control txt-filter" id="txtFromDate_Q">
+                <input value="" type="text" autocomplete="off" class="form-control txt-filter" id="txtFromDate_Q">
             </div>
         </div>
-        <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3">   
+        <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3">
             <div class="input-group">
                 <div class="input-group-addon">To date</div>
-                <input value="" type="text" autocomplete="off"  class="form-control txt-filter" id="txtToDate_Q">
+                <input value="" type="text" autocomplete="off" class="form-control txt-filter" id="txtToDate_Q">
             </div>
         </div>
-        <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3">   
+        <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3">
             <div class="input-group">
                 <div class="input-group-addon">From INV.</div>
                 <input type="text" class="form-control txt-filter" id="txtFromInv_Q">
             </div>
         </div>
-        <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3">   
+        <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3">
             <div class="input-group">
                 <div class="input-group-addon">To INV.</div>
                 <input type="text" class="form-control txt-filter" id="txtToInv_Q">
             </div>
         </div>
     </div>
-    <div class="col-12 col-xs-12 col-sm-12 col-md-3 col-lg-3" >
+    <div class="col-12 col-xs-12 col-sm-12 col-md-3 col-lg-3">
         <button id="btnQuickSearch" class="btn btn-info"><i class="fa fa-search"></i>&nbsp;Quick Search</button>
-        <button class="btn btn-success" id="btnModalAdvSearch"><i class="fa fa-search-plus"></i>&nbsp;Advance Search</button>
+        <button class="btn btn-success" id="btnModalAdvSearch"><i class="fa fa-search-plus"></i>&nbsp;Advance
+            Search</button>
     </div>
 </div>
-<div class="row" id="divReport" >
-    <table class="table table-condensed table-bordered table-striped" id="tblReport" style="width:100%;max-width: 100%;">
+<div class="row" id="divReport">
+    <table class="table table-condensed table-bordered table-striped" id="tblReport"
+        style="width:100%;max-width: 100%;">
         <thead>
             <tr>
                 <th>Inv Date</th>
@@ -59,24 +63,24 @@
                 <th>Cust Num</th>
                 <th>Customer</th>
                 <th>Terms Code</th>
-                <th>Item</th>  
-                <th>Description</th>  
-                <th>Group</th>  
+                <th>Item</th>
+                <th>Description</th>
+                <th>Group</th>
                 <th>uf_weight_FT</th>
                 <th>uf_weight_metre</th>
                 <th>Unit Weight</th>
                 <th>U_M</th>
                 <th>QTY(PCS)</th>
-                <th>Weight(KG)</th>                
+                <th>Weight(KG)</th>
                 <th>Price/KG</th>
                 <th>Price/PCS</th>
                 <th>AMT</th>
                 <th>total_INVamount</th>
                 <!-- <th>VAT</th>    
                 <th>TOTAL</th>   -->
-                <th>recpt_date</th>  
-                <th>recpt_amount</th>  
-                <th>orig_inv_num</th> 
+                <th>recpt_date</th>
+                <th>recpt_amount</th>
+                <th>orig_inv_num</th>
             </tr>
         </thead>
     </table>
@@ -97,7 +101,7 @@
                     Customer Select ( multiple selection )
                 </div>
                 <div class='row'>
-                    <select class="form-control" id="selCust"  multiple="multiple" style="height:100px;">
+                    <select class="form-control" id="selCust" multiple="multiple" style="height:100px;">
                         <!--<option value="" selected>ทั้งหมด</option>-->
                         {customer_data}
                     </select>
@@ -105,25 +109,25 @@
                 <!--                    </div>
                                     <div class="col-12 col-xs-12 col-sm-12 col-md-8 col-lg-8" style="padding-top:25px;">-->
                 <div class="row">
-                    <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3">                            
+                    <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3">
                         <div class="input-group">
                             <div class="input-group-addon">Item</div>
                             <input type="text" class="form-control txt-filter" id="txtItem">
                         </div>
                     </div>
-                    <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3">    
+                    <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3">
                         <div class="input-group">
                             <div class="input-group-addon">ขนาด</div>
                             <input type="text" class="form-control txt-filter" id="txtSize">
                         </div>
                     </div>
-                    <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3">      
+                    <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3">
                         <div class="input-group">
                             <div class="input-group-addon">หนา</div>
                             <input type="text" class="form-control txt-filter" id="txtThick">
                         </div>
                     </div>
-                    <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3">    
+                    <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3">
                         <div class="input-group">
                             <div class="input-group-addon">ยาว</div>
                             <input type="text" class="form-control txt-filter" id="txtWidth">
@@ -132,25 +136,25 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3">   
+                    <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3">
                         <div class="input-group">
                             <div class="input-group-addon">From date</div>
-                            <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtFromDate_A">
+                            <input type="text" autocomplete="off" class="form-control txt-filter" id="txtFromDate_A">
                         </div>
                     </div>
-                    <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3">   
+                    <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3">
                         <div class="input-group">
                             <div class="input-group-addon">To date</div>
-                            <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtToDate_A">
+                            <input type="text" autocomplete="off" class="form-control txt-filter" id="txtToDate_A">
                         </div>
                     </div>
-                    <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3">   
+                    <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3">
                         <div class="input-group">
                             <div class="input-group-addon">From INV.</div>
                             <input type="text" class="form-control txt-filter" id="txtFromInv_A">
                         </div>
                     </div>
-                    <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3">   
+                    <div class="col-6 col-xs-6 col-sm-6 col-md-3 col-lg-3">
                         <div class="input-group">
                             <div class="input-group-addon">To INV.</div>
                             <input type="text" class="form-control txt-filter" id="txtToInv_A">
@@ -159,13 +163,14 @@
 
                 </div>
                 <div class="row">
-                    <div class="col-6 col-xs-6 col-sm-6 col-md-10 col-lg-10">   
+                    <div class="col-6 col-xs-6 col-sm-6 col-md-10 col-lg-10">
                         <h6 style="color:red;">
-                            *เลือกความ หนา-ยาว ตามช่วงให้ใช้ '-' เช่น เลือกตั้งแต่ 1 ถึง 6 ให้ใส่ '1-6' แต่ถ้าหากระบุ 6 ตัวเดียวระบบจะหาข้อมูลที่เป็น 6 เท่านั้น*</h6>
+                            *เลือกความ หนา-ยาว ตามช่วงให้ใช้ '-' เช่น เลือกตั้งแต่ 1 ถึง 6 ให้ใส่ '1-6' แต่ถ้าหากระบุ 6
+                            ตัวเดียวระบบจะหาข้อมูลที่เป็น 6 เท่านั้น*</h6>
 
                     </div>
-                    <div class="col-6 col-xs-6 col-sm-6 col-md-2 col-lg-2 text-right">   
-                        <button id="btnSearch" class="btn btn-info"><i class="fa fa-search"></i>&nbsp;ค้นหา</button>  
+                    <div class="col-6 col-xs-6 col-sm-6 col-md-2 col-lg-2 text-right">
+                        <button id="btnSearch" class="btn btn-info"><i class="fa fa-search"></i>&nbsp;ค้นหา</button>
                     </div>
                 </div>
 
@@ -186,11 +191,12 @@
         dateFormat: 'yy-mm-dd',
     });
     $("#txtFromDate_A , #txtToDate_A").datepicker(
-            {singleDatePicker: true,
-                showDropdowns: true,
-                parentEl: '#dispatch_modal',
-                dateFormat: 'yy-mm-dd',
-            });
+        {
+            singleDatePicker: true,
+            showDropdowns: true,
+            parentEl: '#dispatch_modal',
+            dateFormat: 'yy-mm-dd',
+        });
     $("#btnSearch").click(function () {
         SearchItemNormal("A");
     });
@@ -211,8 +217,8 @@
             success: function (data) {
                 $.each(data, function (key, value) {
                     $('#selCust').append($("<option></option>")
-                            .attr("value", value["cust_num"])
-                            .text(value["cust_name"]));
+                        .attr("value", value["cust_num"])
+                        .text(value["cust_name"]));
                 });
                 $('#selCust').selectize({
                     plugins: ['remove_button'],
@@ -255,7 +261,7 @@
         $("#tblReport tfoot tr:eq(0)").find("td:eq(14)").text(addCommas(GrandAmount.toFixed(2)));
         $("#tblReport tfoot tr:eq(0)").find("td:eq(15)").text(addCommas(GrandVat.toFixed(2)));
         $("#tblReport tfoot tr:eq(0)").find("td:eq(16)").text(addCommas(GrandTotal.toFixed(2)));
-//        $("#tblReport tfoot tr:eq(0)").append(footline);
+        //        $("#tblReport tfoot tr:eq(0)").append(footline);
     }
     function getRootAppPath() {
         var loc = window.location;
@@ -314,7 +320,7 @@
                         $('#tblReport').loading();
                     },
                     data: {
-                        "load": "ajax",
+                        "load": "SP_WebApp_InvItem",
                         "txtItem": txtItem,
                         "Customers": Customers,
                         "txtSize": txtSize,
@@ -341,7 +347,7 @@
                             scrollX: true,
                             scrollY: 400,
                             "scrollX": true,
-                                    "aaData": data,
+                            "aaData": data,
                             "paging": false,
                             "searching": false,
                             "initComplete": function (settings, json) {
@@ -497,17 +503,17 @@
                                         return ret;
                                     }
                                 },
-//                                {
-//                                    "data": "PricePerPCS",
-//                                    "className": "text-right",
-//                                    "render": function (data, type, row) {
-//                                        var ret = data;
-//                                        if (row["inv_num"].substring(0, 2) == "CN") {
-//                                            ret = "<span style='color:red;'>" + data + "</span>";
-//                                        }
-//                                        return ret;
-//                                    }
-//                                },
+                                //                                {
+                                //                                    "data": "PricePerPCS",
+                                //                                    "className": "text-right",
+                                //                                    "render": function (data, type, row) {
+                                //                                        var ret = data;
+                                //                                        if (row["inv_num"].substring(0, 2) == "CN") {
+                                //                                            ret = "<span style='color:red;'>" + data + "</span>";
+                                //                                        }
+                                //                                        return ret;
+                                //                                    }
+                                //                                },
                                 {
                                     "data": "QtyKG",
                                     "className": "text-right",
@@ -548,20 +554,20 @@
                                     "className": "text-right",
                                     "render": function (data, type, row) {
                                         ret = parseFloat(data).toLocaleString('th', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-                                           if  (row["inv_num"].substring(0, 2) == "CN") {
+                                        if (row["inv_num"].substring(0, 2) == "CN") {
                                             ret = "<span style='color:red;'>" + ret + "</span>";
                                         }
                                         return ret;
                                     }
-                                }, 
+                                },
                                 {
                                     "data": "total_INVamount",
                                     "className": "text-right",
                                     "render": function (data, type, row) {
-                                          var ret = data;
-                                           if  (row["inv_num"].substring(0, 2) == "CN") {
-											
-										
+                                        var ret = data;
+                                        if (row["inv_num"].substring(0, 2) == "CN") {
+
+
                                             ret = "<span style='color:red;'>" + data + "</span>";
                                         }
                                         return ret;
@@ -573,7 +579,7 @@
                                 //     "render": function (data, type, row) {
                                 //         var ret = data;
                                 //         if  (row["inv_num"].substring(0, 2) == "CN"){
-									 
+
                                 //             ret = "<span style='color:red;'>" + formatMoney(data) + "</span>";
                                 //         }
                                 //         return ret;
@@ -610,7 +616,7 @@
                                         if (row["inv_num"].substring(0, 2) == "CN") {
                                             ret = "<span style='color:red;'>" + parseFloat(data).toFixed(2) + "</span>";
                                         }
-                                        return data; 
+                                        return data;
                                     }
                                 },
                                 {
@@ -621,69 +627,69 @@
                                         if (row["inv_num"].substring(0, 2) == "CN") {
                                             ret = "<span style='color:red;'>" + parseFloat(data).toFixed(2) + "</span>";
                                         }
-                                        return data; 
+                                        return data;
                                     }
                                 }
 
                             ],
                             'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
-                                    "<'row'<'col-md-12'tr>>" +
-                                    "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                                "<'row'<'col-md-12'tr>>" +
+                                "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
                             buttons: [{
-                                    extend: 'print',
-                                    text: "<i class='fa fa-print'></i>&nbsp;Print",
-                                    title: ''
-                                },
-                                {
-                                    extend: 'excel',
-                                    footer: true,
-                                    text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
-                                    title: 'รายงาน inv item ' + GetCurrDateTime()
-                                },
+                                extend: 'print',
+                                text: "<i class='fa fa-print'></i>&nbsp;Print",
+                                title: ''
+                            },
+                            {
+                                extend: 'excel',
+                                footer: true,
+                                text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                                title: 'รายงาน inv item ' + GetCurrDateTime()
+                            },
                             ],
                             "footerCallback": function (row, data, start, end, display) {
                                 var api = this.api(), data;
                                 var intVal = function (i) {
                                     return typeof i === 'string' ?
-                                            i.replace(/[\$,]/g, '') * 1 :
-                                            typeof i === 'number' ?
+                                        i.replace(/[\$,]/g, '') * 1 :
+                                        typeof i === 'number' ?
                                             i : 0;
                                 };
                                 // computing column Total of the complete result
                                 var totalPCS = api
-                                        .column(9)
-                                        .data()
-                                        .reduce(function (a, b) {
-                                            return intVal(a) + intVal(b);
-                                        }, 0);
+                                    .column(9)
+                                    .data()
+                                    .reduce(function (a, b) {
+                                        return intVal(a) + intVal(b);
+                                    }, 0);
                                 var totalWeight = api
-                                        .column(10)
-                                        .data()
-                                        .reduce(function (a, b) {
-                                            return intVal(a) + intVal(b);
-                                        }, 0);
-                            
+                                    .column(10)
+                                    .data()
+                                    .reduce(function (a, b) {
+                                        return intVal(a) + intVal(b);
+                                    }, 0);
 
 
-                            
+
+
                                 var totalAmt = api
-                                        .column(13)
-                                        .data()
-                                        .reduce(function (a, b) {
-                                            return intVal(a) + intVal(b);
-                                        }, 0);
+                                    .column(13)
+                                    .data()
+                                    .reduce(function (a, b) {
+                                        return intVal(a) + intVal(b);
+                                    }, 0);
                                 var totalVat = api
-                                        .column(14)
-                                        .data()
-                                        .reduce(function (a, b) {
-                                            return intVal(a) + intVal(b);
-                                        }, 0);
+                                    .column(14)
+                                    .data()
+                                    .reduce(function (a, b) {
+                                        return intVal(a) + intVal(b);
+                                    }, 0);
                                 var totalGrand = api
-                                        .column(15)
-                                        .data()
-                                        .reduce(function (a, b) {
-                                            return intVal(a) + intVal(b);
-                                        }, 0);
+                                    .column(15)
+                                    .data()
+                                    .reduce(function (a, b) {
+                                        return intVal(a) + intVal(b);
+                                    }, 0);
                                 // $(api.column(0).footer()).html("<b></b>");
                                 // $(api.column(1).footer()).html("<b></b>");
                                 // $(api.column(2).footer()).html("<b></b>");
@@ -695,8 +701,8 @@
                                 // $(api.column(8).footer()).html("<b>TOTAL</b>");
                                 // $(api.column(9).footer()).html(formatMoney(totalPCS));
                                 // $(api.column(10).footer()).html(formatMoney(totalWeight));
-                              //  $(api.column(11).footer()).html(addCommas(totalPricePerKG.toFixed(2)));
-                              //    $(api.column(12).footer()).html(addCommas(totalPricePerPCS.toFixed(2)));
+                                //  $(api.column(11).footer()).html(addCommas(totalPricePerKG.toFixed(2)));
+                                //    $(api.column(12).footer()).html(addCommas(totalPricePerPCS.toFixed(2)));
                                 // $(api.column(13).footer()).html(formatMoney(totalAmt));
                                 // $(api.column(14).footer()).html(formatMoney(totalVat));
                                 // $(api.column(15).footer()).html(addCommas(totalGrand));
@@ -721,7 +727,7 @@
     });
     var tabs = $('.tabs');
     var selector = $('.tabs').find('a').length;
-//var selector = $(".tabs").find(".selector");
+    //var selector = $(".tabs").find(".selector");
     var activeItem = tabs.find('.active');
     var activeWidth = activeItem.innerWidth();
     $(".selector").css({
