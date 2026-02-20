@@ -521,6 +521,77 @@ WHERE 1=1";
         return $rs0;
     }
 
+    function GetInvItem_IN2026() {
+        $start_invdate = $this->_start_invdate;
+        $end_invdate = $this->_end_invdate;
+
+        $start_inv = $this->_start_inv;
+        $end_inv = $this->_end_inv;
+
+        $item = $this->_item;
+
+        $cust_num = isset($this->_Customers[0]) ? $this->_Customers[0] : '';
+
+        $query = "EXEC [dbo].[SP_WebApp_InvItem]
+  @InvDateStart = N'$start_invdate',
+  @InvDateEnd = N'$end_invdate',
+  @InvNumStart = " . ($start_inv !== '' ? "'$start_inv'" : "null") . ",
+  @InvNumEnd = " . ($end_inv !== '' ? "'$end_inv'" : "null") . ",
+  @Item = " . ($this->_item !== '' ? "'$this->_item'" : "null") . ",
+  @cust_num = " . ($cust_num !== '' ? "'$cust_num'" : "null") . "
+  ";
+        
+
+        /*if (($start_inv) && ($end_inv)) {
+            $query .= " AND ( inv_num between '$start_inv' AND '$end_inv' ) ";
+        }
+        if (($start_invdate) && ($end_invdate)) {
+            $query .= " AND ( inv_date BETWEEN '$start_invdate 00:00:00' AND '$end_invdate 23:59:59' ) ";
+        }*/
+        if ($this->_item != "") {
+            $query = $query . "AND ( CONCAT(item , ' ' , description)  LIKE '%" . trim($this->_item) . "%' ) ";
+        }
+        if ($this->_size != "") {
+            $query = $query . "AND ( item_size LIKE '%" . trim($this->_size) . "%' ) ";
+        }
+        if ($this->_item != "") {
+            $query = $query . "AND ( item LIKE '%" . trim($this->_item) . "%' ) ";
+        }
+        if ($this->_thick != "") {
+            if (strpos($this->_thick, '-') !== false) {
+                $thickExplode = explode("-", $this->_thick);
+                $query = $query . "AND ( CAST(item_thick_conv as decimal(15,5))  BETWEEN   " . $thickExplode[0] . " AND  " . $thickExplode[1] . " ) ";
+            } else {
+                $query = $query . "AND ( CAST(item_thick_conv as decimal(15,5))  =   " . $this->_thick . "  ) ";
+            }
+        }
+        if ($this->_width != "") {
+            if (strpos($this->_width, '-') !== false) {
+                $widthExplode = explode("-", $this->_width);
+                $query = $query . "AND ( CAST(item_width_conv as decimal(15,5)) BETWEEN   " . $widthExplode[0] . " AND  " . $widthExplode[1] . " ) ";
+            } else {
+                $query = $query . "AND ( CAST(item_width_conv as decimal(15,5))  BETWEEN 0 AND  " . trim($this->_width) . "  ) ";
+            }
+        }
+
+        {/*$Customers = $this->_Customers;
+        $Criteria = "";
+        if (isset($Customers[0])) {
+            $Criteria .= " AND ( ";
+            foreach ($Customers as $ii => $rr) {
+                $Criteria .= " cust_num = '$rr' OR ";
+            }
+            $query .= substr($Criteria, 0, -3) . " ) ";
+        }
+        */}
+       
+        // $query = $query . " ORDER BY inv_date , inv_num , co_num, co_line , Uf_DoHdr_car_num, item";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+
     function GetInvItem_INNew() {
         $start_invdate = $this->_start_invdate;
         $end_invdate = $this->_end_invdate;

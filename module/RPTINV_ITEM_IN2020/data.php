@@ -56,4 +56,18 @@ if ($load == "form") {
     $InvItem = null;
     $CallModel = null;
     echo json_encode($InvItems);
+} else if ($load == "SP_WebApp_InvItem") {
+    if (isset($_POST["Customers"])) {
+        $Customers = $_POST["Customers"];
+        $InvItem->_Customers = $Customers;
+    }
+    $InvItem->_start_invdate = $txtFromDate;
+    $InvItem->_end_invdate = $txtToDate;
+    $InvItem->_item = $txtItem;
+    $InvItem->_start_inv = $txtFromInv;
+    $InvItem->_end_inv = $txtToInv;
+    $InvItems = $InvItem->GetInvItem_IN2026();
+    $InvItem = null;
+    $CallModel = null;
+    echo json_encode($InvItems);
 }
