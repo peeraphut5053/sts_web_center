@@ -670,7 +670,7 @@
                                         {
                                             border: [false, false, false, false],
                                             fontSize: 16,
-                                            text: `วันที่ส่งของ : ${(pageData[currentPage - 1]?.[0]?.Uf_Shipped_date && pageData[currentPage - 1][0].Uf_Shipped_date !== 'null' && pageData[currentPage - 1][0].Uf_Shipped_date.date) ? moment(pageData[currentPage - 1][0].Uf_Shipped_date.date).format('DD/MM/YYYY') : ''}`,
+                                            text: `Pickup Date : ${(pageData[currentPage - 1]?.[0]?.pickup_date && pageData[currentPage - 1][0].pickup_date !== 'null' && pageData[currentPage - 1][0].pickup_date.date) ? moment(pageData[currentPage - 1][0].pickup_date.date).format('DD/MM/YYYY') : ''} \n วันที่ส่งของ    : ${(pageData[currentPage - 1]?.[0]?.Uf_Shipped_date && pageData[currentPage - 1][0].Uf_Shipped_date !== 'null' && pageData[currentPage - 1][0].Uf_Shipped_date.date) ? moment(pageData[currentPage - 1][0].Uf_Shipped_date.date).format('DD/MM/YYYY') : ''}`,
                                             alignment: 'left',
                                         },
                                     ],
