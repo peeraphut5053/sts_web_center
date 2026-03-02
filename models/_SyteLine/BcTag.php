@@ -517,7 +517,8 @@ order by id desc";
 		@docline = N'$docline',
 		@tagNum = N'$tagnum',
 		@toLoc = N'$toLoc',
-        @boatPosition = NULL";
+        @boatPosition = NULL,
+        @groupID = NULL";
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         return $rs[0];
