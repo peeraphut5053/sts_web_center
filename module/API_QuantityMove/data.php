@@ -17,6 +17,10 @@ if ($load == "SearchTagDetailCheckByDO") {
     $mv_bc_tag = $CallModelObj->SearchTagDetailCheckByDO($tag_id,$do_num);
     echo json_encode($mv_bc_tag);
 }
+if ($load == "SearchTagDetailCheckByDOBoat") {
+    $mv_bc_tag = $CallModelObj->SearchTagDetailCheckByDOBoat($tag_id,$do_num);
+    echo json_encode($mv_bc_tag);
+}
 
 if ($load == "location_mst") {
     $location_mst = $CallModelObj->location_mst();
