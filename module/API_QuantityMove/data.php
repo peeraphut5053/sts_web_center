@@ -178,7 +178,7 @@ if ($load == "moveqty_create_line_BoatNoteOnly") {
         $docline = $i+1;
         $moveqty_create_line_BoatNoteOnly[$i] = new BcTag();
         $moveqty_create_line_BoatNoteOnly[$i]->setConn($ConnSL);
-        $moveqty_create_line_BoatNoteOnly[$i] = $CallModelObj->moveqty_create_line_BoatNoteOnly($tagnum[$i], $toLoc, $boatPosition[$i], $docline, $doc_num, $do_group_list_id);
+        $moveqty_create_line_BoatNoteOnly[$i] = $CallModelObj->moveqty_create_line_BoatNoteOnly($tagnum[$i], $toLoc, $boatPosition[$i], $docline, $doc_num);
         echo json_encode($i);
     }
 }

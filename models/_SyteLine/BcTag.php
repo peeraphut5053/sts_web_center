@@ -482,7 +482,7 @@ order by id desc";
     }
 
     
-    Function moveqty_create_line_BoatNoteOnly($tagnum, $toLoc, $boatPosition, $docline, $doc_num, $do_group_list_id) {
+    Function moveqty_create_line_BoatNoteOnly($tagnum, $toLoc, $boatPosition, $docline, $doc_num) {
         $query2 = " select top (1)* FROM STS_qty_move_hrd order by id desc";
         $cSql2 = new SqlSrv();
         $rs2 = $cSql2->SqlQuery($this->StrConn, $query2);
@@ -492,8 +492,7 @@ order by id desc";
 		@docline = N'$docline',
 		@tagNum = N'$tagnum',
 		@toLoc = N'$toLoc',
-		@boatPosition = N'$boatPosition',
-        @groupID = $do_group_list_id";
+		@boatPosition = N'$boatPosition'";
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         return $rs[0];
@@ -517,8 +516,7 @@ order by id desc";
 		@docline = N'$docline',
 		@tagNum = N'$tagnum',
 		@toLoc = N'$toLoc',
-        @boatPosition = NULL,
-        @groupID = 0";
+        @boatPosition = NULL";
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         return $rs[0];
