@@ -204,8 +204,7 @@
 
         // console.log(tab_name);
 
-        if (tab_name == "Edit"){ //tab_name == "Importexcel" || 
-            loadPage(tab_name)
+        if (tab_name == "Importexcel"){ //tab_name == "Importexcel" || 
                 $.confirm({
                     title: 'กรุณาใส่ Password',
                     theme: 'modern',
@@ -214,7 +213,7 @@
                         confirm: function checked() {
                             var Pass = $("#Pass").val();
                             // console.log('P ',Pass);
-                            if (Pass == 1234){
+                            if (Pass == "QA1234"){
                                 loadPage(tab_name)
                             }else{
                                 $('#Pass').attr('placeholder','Password ไม่ถูกต้อง');
@@ -223,11 +222,18 @@
                             }
                         }, 
                         cancel: function close() {
-                            window.close()
+                            loadPage('ReportZinc');
+                            $(".selector").css({
+                                // to ReportZinc
+                                "left": $('#tab_ReportZinc').position().left + "px",
+                                "width": $('#tab_ReportZinc').innerWidth() + "px"
+                             });
                         }
                     }
                 });
-            } else {loadPage(tab_name)}
+            } else{
+                loadPage(tab_name)
+            }
 
         function loadPage(tab_name){
         console.log('loadPage:',tab_name)
