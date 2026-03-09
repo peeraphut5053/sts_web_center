@@ -57,3 +57,9 @@ if ($load == "UpdateHdr") {
     $rs = $STS_Custom->UpdateReworkHdr($doc_rework, $due_rework, $user_req, $dep_req, $remark);
     echo json_encode($rs);
 }
+
+if ($load == "GetJobReport") {
+    $STS_Custom->setConn($ConnSL);
+    $rs = $STS_Custom->GetJobReport($job, $wc);
+    echo json_encode($rs);
+}

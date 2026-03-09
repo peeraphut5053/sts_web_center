@@ -190,4 +190,14 @@ order by hdr.docNo, line.seq";
         return $response;
     }
 
+    function GetJobReport($job, $wc) {
+        $cSql = new SqlSrv();
+        $query = "EXEC [dbo].[STS_ProductionRpt]
+  @job = N'$job',
+  @wc = N'$wc'";
+        $response = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($response, count($response) - 1, 1);
+        return $response;
+    }
+
 }
