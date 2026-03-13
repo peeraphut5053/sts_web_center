@@ -1415,6 +1415,7 @@ FROM V_WebApp_InvItem_IN_noVAT where 1=1 ";
 		STS_AD_Entry_Summary.AD_amount2,
 		STS_AD_Entry_Summary.ENTVALUE1,
 		STS_AD_Entry_Summary.ENTVALUE2,
+        STS_AD_Entry_Summary.DUTY,
         CONVERT (varchar , STS_AD_Entry_Summary.ETA ,120) as ETA
         from inv_hdr_mst
 		left join STS_AD_Entry_Summary
