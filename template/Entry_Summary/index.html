@@ -79,6 +79,7 @@
                 <th>ENTVALUE1</th>
                 <th>ENTDATEU2</th>
                 <th>ENTVALUE2</th>
+                <th>DUTY</th>
                 <th>BL_num1</th>
                 <th>BL_num2</th>
                 <th>importer1</th>
@@ -120,6 +121,7 @@
                 <th>ENTVALUE1</th>
                 <th>ENTDATEU2</th>
                 <th>ENTVALUE2</th>
+                <th>DUTY</th>
                 <th>BL_num1</th>
                 <th>BL_num2</th>
                 <th>importer1</th>
@@ -407,6 +409,19 @@
                                 return ret;
                             }
                         },
+                        {
+                            "data": {DUTY: "DUTY", inv_num: "inv_num"},
+                            "className": "text-left",
+                            "render": function (data, type, row, meta) {
+                                let col_name = 'DUTY';
+                                let valdata = data.DUTY;
+                                let iddata = `${col_name}_${data.inv_num}`;
+                                let inv_num = data.inv_num;
+                                ((valdata == null) ? valdata = "" : valdata = valdata)
+                                let ret = `<span hidden>${(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="Insert('${iddata}','${col_name}','${inv_num}');" value='${(valdata)}' />`;
+                                return ret;
+                            }
+                        },
                         {"data": {BL_num1: "BL_num1", inv_num: "inv_num"},
                             "className": "text-left",
                             "render": function (data, type, row, meta) {
@@ -637,6 +652,9 @@ function ReportItemSearchHid() {
                             "className": "text-left",
                         },
                         {"data": "ENTVALUE2",
+                            "className": "text-left",
+                        },
+                        {"data": "DUTY",
                             "className": "text-left",
                         },
                         {"data": "BL_num1",
