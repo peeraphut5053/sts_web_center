@@ -196,7 +196,7 @@ order by hdr.docNo, line.seq";
     @job = N'$job',
     @wc = N'$wc',
     @item = N'$item',
-    @status = N'$status";
+    @status = N'$status'";
         $response = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($response, count($response) - 1, 1);
         return $response;
