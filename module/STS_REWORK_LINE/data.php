@@ -60,6 +60,6 @@ if ($load == "UpdateHdr") {
 
 if ($load == "GetJobReport") {
     $STS_Custom->setConn($ConnSL);
-    $rs = $STS_Custom->GetJobReport($job, $wc);
+    $rs = $STS_Custom->GetJobReport($job, $wc,$item,$status);
     echo json_encode($rs);
 }
