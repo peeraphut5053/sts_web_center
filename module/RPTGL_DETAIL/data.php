@@ -13,7 +13,7 @@ include "../../initial.php";
     $GL->setConn($ConnSL);
 
 if ($load == "ajax") {
-    $GLS = $GL->GetRowsGLDetail($selYear, $selMonth, $selMonth2, $Acct, $Unit1);
+    $GLS = $GL->GetRowsGLDetail($selYear, $selMonth, $selMonth2, $Acct, $Unit1, $Unit3);
     echo json_encode($GLS);
     }
     

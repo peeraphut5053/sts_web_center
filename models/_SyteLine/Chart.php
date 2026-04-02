@@ -28,6 +28,14 @@ class Chart {
         array_splice($rs, count($rs) - 1, 1);
         return $rs;
     }
+    Function GetUnit3() {
+
+        $cSql = new SqlSrv();
+        $q = "SELECT unit3 , description FROM unitcd3_mst  ";
+        $rs = $cSql->SqlQuery($this->StrConn, $q);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
 
 
 }

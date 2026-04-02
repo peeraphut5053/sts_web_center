@@ -215,14 +215,15 @@ class GeneralLedger {
         return $rs0;
     }
 
-    Function GetRowsGLDetail($selYear, $selMonth, $selMonth2, $Acct, $Unit1) {
+    Function GetRowsGLDetail($selYear, $selMonth, $selMonth2, $Acct, $Unit1, $Unit3) {
 
         $query = "EXEC STS_GL_REPORT 
                   @year  = '$selYear',
                   @monthStart  = '$selMonth',
                   @monthEnd  = '$selMonth2',
                   @acct = '$Acct',
-                  @unit1 = '$Unit1' ";
+                  @unit1 = '$Unit1',
+                  @unit3 = '$Unit3' ";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);

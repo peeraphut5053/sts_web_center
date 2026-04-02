@@ -31,6 +31,15 @@ foreach ($GetModelValue as $ii => $rr) {
                     . "<option value='" . $rr["unit1"] . "'>" . $rr["unit1"] . " - " . $rr["description"] . "</option>";
 }
 $temp->setReplace("{options_unit1}", $options_unit1);
+
+$GetModelValue = $GetModel->GetUnit3();
+$options_unit3 = "";
+foreach ($GetModelValue as $ii => $rr) {
+    $options_unit3 .= "<option selected disabled value=''></option>"
+                    . "<option value='" . $rr["unit3"] . "'>" . $rr["unit3"] . " - " . $rr["description"] . "</option>";
+}
+$temp->setReplace("{options_unit3}", $options_unit3);
+
 echo $temp->getReplace();
 
 

@@ -56,11 +56,27 @@
     Department            
 </div>
 
-<div class="col-6 col-sm-6 col-xs-6 col-md-6 col-lg-6" style="padding-right:50px;padding-left:0px;">
+<div class="col-6 col-sm-6 col-xs-6 col-md-4 col-lg-4" style="padding-right:50px;padding-left:0px;">
 
     <div class="row" style="margin-top:0px;margin-bottom:0px;padding-top:0px;padding-left:0px;padding-bottom:0px;">
         <select class="form-control" id="SelUnit1" >
             {options_unit1}
+        </select>
+
+    </div>
+</div>
+<!-- --- -->
+
+<!-- -- -->
+<div class="col-lg-2 col-md-2 col-sm-6 col-xs-2 text-left input-group-addon" style="width:100px;padding-top:7px;border-top-left-radius: 5px;border-bottom-left-radius: 5px;">
+    Department            
+</div>
+
+<div class="col-6 col-sm-6 col-xs-6 col-md-4 col-lg-4" style="padding-right:50px;padding-left:0px;">
+
+    <div class="row" style="margin-top:0px;margin-bottom:0px;padding-top:0px;padding-left:0px;padding-bottom:0px;">
+        <select class="form-control" id="SelUnit3" >
+            {options_unit3}
         </select>
 
     </div>
@@ -117,6 +133,18 @@
                 }
             }
         });
+
+            $('#SelUnit3').selectize({
+                // plugins: ['remove_button'],
+                // delimiter: ',',
+                persist: false,
+                create: function (input) {
+                    return {
+                        value: input,
+                        text: input
+                    }
+                }
+            });
     });
     GetYearMonth("selYear", "selMonth");
     GetYearMonth("selYear2", "selMonth2");
@@ -132,6 +160,7 @@
         // var Acct = [];
         var Acct = $("#SelAcct").val();
         var Unit1 = $("#SelUnit1").val();
+        var Unit3 = $("#SelUnit3").val();
         // console.log(Acct);
         // console.log(Unit1);
         var selYear = $("#selYear").val();
@@ -163,7 +192,8 @@
                     "selMonth": selMonth,
                     "selMonth2": selMonth2,
                     "Acct": Acct,
-                    "Unit1": Unit1
+                    "Unit1": Unit1,
+                    "Unit3": Unit3
                 },
                 success: function (data) {
 
