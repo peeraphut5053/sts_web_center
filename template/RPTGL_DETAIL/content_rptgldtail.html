@@ -167,13 +167,6 @@
         var selMonth = $("#selMonth").val();
         var selMonth2 = $("#selMonth2").val();
 
-        if (Acct == "" && Unit1 == "")  {
-            $.alert("Please select Account or Department ");
-            return false;
-        } else if (Acct == null && Unit1 == "") {
-            $.alert("กรุณาเลือก Account or Department ");
-            return false;
-        } else {
         //     Acct = Acct + ',';
 //            console.log("Year : " + selYear + " Month : " + selMonth + " Acct : " + Acct);
             $("#btnSearch").html("<i class='fa fa-spinner fa-spin'></i>");
@@ -317,7 +310,7 @@
                 }
             });
         }
-    }
+
 
     $("#StartDate,#EndDate").datepicker({
         dateFormat: 'yy-mm-dd'
