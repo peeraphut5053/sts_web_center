@@ -31,6 +31,9 @@ if ($load == "ajax") {
 } else if ($load == "V_WebApp_OrderProcessing") {
      $V_WebApp_OrderProcessing = $OrderProcessing->V_WebApp_OrderProcessing($cust_po,$name,$Port);
     echo json_encode($V_WebApp_OrderProcessing);
+} else if ($load == "STS_EX_order") {
+     $STS_EX_order = $OrderProcessing->STS_EX_order($job,$co,$stsPO,$custpo,$orderdate);
+    echo json_encode($STS_EX_order);
 }
 
 

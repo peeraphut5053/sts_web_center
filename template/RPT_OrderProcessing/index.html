@@ -1,8 +1,7 @@
-
 <div class="row">
-      <div style="margin-top: 10px; margin-bottom: 20px;">
-      <h1 class="my-header">Order Processing</h1>
-</div>
+    <div style="margin-top: 10px; margin-bottom: 20px;">
+        <h1 class="my-header">Order Processing</h1>
+    </div>
     <!--    <div class="col-lg-2" >   
             <div class="input-group">
                 <div class="input-group-addon">From Date</div>
@@ -15,282 +14,191 @@
                 <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtToDate">
             </div>
         </div>-->
-    <div class="col-lg-2">   
+    <div class="col-lg-2">
         <div class="input-group">
-            <div class="input-group-addon">cust_po</div>
-            <input type="text" class="form-control txt-filter" id="cust_po">
+            <div class="input-group-addon">Job</div>
+            <input type="text" class="form-control txt-filter" id="job">
         </div>
     </div>
-    <div class="col-lg-2">   
+    <div class="col-lg-2">
         <div class="input-group">
-            <div class="input-group-addon">name</div>
-            <input type="text" class="form-control txt-filter" id="name">
+            <div class="input-group-addon">CO</div>
+            <input type="text" class="form-control txt-filter" id="co">
         </div>
-    </div>     
-    <div class="col-lg-2">   
+    </div>
+    <div class="col-lg-2">
         <div class="input-group">
-            <div class="input-group-addon">Port</div>
-            <input type="text" class="form-control txt-filter" id="Port">
+            <div class="input-group-addon">STS PO</div>
+            <input type="text" class="form-control txt-filter" id="stsPO">
         </div>
-    </div>   
-    <div class="col-lg-2">   
+    </div>
+    <div class="col-lg-2">
+        <div class="input-group">
+            <div class="input-group-addon">Cust PO</div>
+            <input type="text" class="form-control txt-filter" id="custpo">
+        </div>
+    </div>
+    <div class="col-lg-2">
+        <div class="input-group">
+            <div class="input-group-addon">Order Date</div>
+            <input type="text" autocomplete="off" class="form-control txt-filter" id="orderdate">
+        </div>
+    </div>
+    <div class="col-lg-2">
         <button id="btnSearch" class="btn btn-info"><i class="fa fa-searh"></i>&nbsp;ค้นหา</button>
     </div>
 </div>
 
-<div class="row" id="divReport" >
+<div class="row" id="divReport">
     <table class="table table-condensed table-bordered table-striped" id="tblReport">
         <thead>
             <tr>
-                <th>Customer</th>
-                <th>PO.No</th>  
+                <th>Job</th>
+                <th>Item</th>
+                <th>Lot</th>
+                <th>End User</th>
+                <th>STS PO</th>
+                <th>Cust PO</th>
                 <th>Port</th>
                 <th>Size</th>
                 <th>Spec</th>
                 <th>Grade</th>
-                <th>Schedule</th>
+                <th>Sch</th>
                 <th>Length</th>
                 <th>Type</th>
-                <th>PCS/B'dle</th>
-                <th>B'dle</th>
-                <th>Produced(bundle)</th>
-                <th>Short produced</th>
-                <th>Balance(bundle)</th>
-                <th>Due date</th>
-                <th>End customer</th>
-                <th>Process</th>
+                <th>Unit Weight</th>
+                <th>Pack</th>
+                <th>Bundle</th>
+                <th>Ord Num</th>
+                <th>Ord Line</th>
+                <th>Remark</th>
+                <th>Prod</th>
+                <th>Pcs Left</th>
+                <th>In Process</th>
+                <th>In Process Pcs</th>
+                <th>Balance BDL</th>
+                <th>Balance MT</th>
+                <th>Ready Bundle</th>
+                <th>Ready Bundle MT</th>
+                <th>Shipment</th>
             </tr>
         </thead>
     </table>
 </div>
 <script type="text/javascript">
-    $("#txtFromDate,#txtToDate").datepicker({
+    $("#orderdate").datepicker({
         dateFormat: 'yy-mm-dd',
     });
-    $("#txtFromDate,#txtToDate").val(GetToday());
+    // $("#orderdate").val(GetToday());
     $("#btnSearch").click(function () {
         ReportItemSearch();
     });
 
     function ReportItemSearch() {
-      var OldHtml = $("#btnSearch").html();
-      var cust_po = $("#cust_po").val();
-      var name = $("#name").val();
-      var Port = $("#Port").val();
+        var OldHtml = $("#btnSearch").html();
+        var job = $("#job").val();
+        var co = $("#co").val();
+        var stsPO = $("#stsPO").val();
+        var custpo = $("#custpo").val();
+        var orderdate = $("#orderdate").val();
 
         $("#btnSearch").html("<i class='fa fa-spinner fa-spin'></i>");
         $("#tblReport").loading();
         $("#tblReport tfoot").remove();
         $.ajax({
-          type: "POST",
-          url: "././module/RPT_OrderProcessing/data.php",
-          dataType: "json",
-          beforeSend: function () {
-            $("#btnSearch").html("<i class='fa fa-spinner fa-spin'>");
-          },
-          data: {
-            load: "V_WebApp_OrderProcessing",
-            cust_po: cust_po,
-            name: name,
-            Port: Port
-          },
-          success: function (data) {
-            $("#tblReport").DataTable().clear();
-            $("#tblReport").append(
-              "<tfoot><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></tfoot>"
-            );
-            $("#tblReport").dataTable({
-              aaData: data,
-              paging: false,
-              fixedHeader: true,
-              destroy: true,
-              processing: true,
-              scrollY: "65vh",
-              scrollCollapse: true,
-              scrollX: true,
-              select: false,
-              columnDefs: [
-                 {
-                  targets: [6],
-                  width: 10,
-                },
-                 {
-                  targets: [8],
-                  width: 20,
-                },
-                 {
-                  targets: [14],
-                  width: 60,
-                },
-            
-             ],
-              columns: [
-                 {
-            "data": "cust_name",
-            "render": function (data, type, row) {
-                var ret = data;
-                return ret;
-            }
-        },
-        {
-            "data": "cust_po",
-            "className": "text-center",
-            "render": function (data, type, row, meta) {
-                var ret = data;
-                return ret;
-            }
-        },
+            type: "POST",
+            url: "././module/RPT_OrderProcessing/data.php",
+            dataType: "json",
+            beforeSend: function () {
+                $("#btnSearch").html("<i class='fa fa-spinner fa-spin'>");
+            },
+            data: {
+                load: "STS_EX_order",
+                job: job,
+                co: co,
+                stsPO: stsPO,
+                custpo: custpo,
+                orderdate: orderdate
+            },
+            success: function (data) {
+                $("#tblReport").DataTable().clear();
+                $("#tblReport").append(
+                    "<tfoot><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></tfoot>"
+                );
+                $("#tblReport").dataTable({
+                    aaData: data,
+                    paging: false,
+                    fixedHeader: true,
+                    destroy: true,
+                    processing: true,
+                    scrollY: "65vh",
+                    scrollCollapse: true,
+                    scrollX: true,
+                    select: false,
+                    columns: [
+                        { "data": "job" },
+                        { "data": "item" },
+                        { "data": "Lot" },
+                        { "data": "endUser" },
+                        { "data": "sts_po" },
+                        { "data": "cust_po" },
+                        { "data": "Port" },
+                        { "data": "size" },
+                        { "data": "spec" },
+                        { "data": "grade" },
+                        { "data": "sch" },
+                        { "data": "length" },
+                        { "data": "type" },
+                        { "data": "unit_weight" },
+                        { "data": "pack" },
+                        { "data": "bundle" },
+                        { "data": "ord_num" },
+                        { "data": "ord_line" },
+                        { "data": "uf_remark" },
+                        { "data": "prod" },
+                        { "data": "pcsLeft" },
+                        { "data": "inProcess" },
+                        { "data": "inProcessPCS" },
+                        { "data": "balanceBDL" },
+                        { "data": "balanceMT" },
+                        { "data": "ReadyBundle" },
+                        { "data": "ReadyBundleMT" },
+                        {
+                            "data": "shipment.date", render: function (data, type, row) {
+                                return moment(data).format("DD/MM/YYYY");
+                            }
+                        }
+                    ],
+                    dom:
+                        "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                        "<'row'<'col-md-12'tr>>" +
+                        "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                    buttons: [
+                        {
+                            extend: "print",
+                            text: "<i class='fa fa-print'></i>&nbsp;Print",
+                            title: "",
+                        },
+                        {
+                            extend: "excel",
+                            footer: true,
+                            text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                            title:
+                                "Report Order Processing " + moment().format("DD-MM-YYYY HH:mm:ss"),
+                        },
+                    ]
+                });
 
-        {
-            "data": "Port",
-            "className": "text-right",
-            "render": function (data, type, row, meta) {
-                var ret = data;
-                return ret;
-            }
-        },
-        {
-            "data": "Size",
-            "render": function (data, type, row, meta) {
-                var ret = data;
-                return ret;
-            }
-        },
-        {
-            "data": "Spec",
-            "render": function (data, type, row) {
-                var ret = data;
-                return ret;
-            }
-        },
-        {
-            "data": "Grade",
-            "render": function (data, type, row) {
-                var ret = data;
-                return ret;
-            }
-        },
-        {
-            "data": "Schedule",
-            "render": function (data, type, row) {
-                var ret = data;
-                return ret;
-            }
-        },
-        {
-            "data": "Length",
-            "render": function (data, type, row) {
-                var ret = data;
-                return ret;
-            }
-        },
-        {
-            "data": "TypeEnd",
-            "render": function (data, type, row) {
-                var ret = data;
-                return ret;
-            }
-        },
-        {
-            "data": "PcsPerBndl",
-            "className": "text-right",
-            "render": function (data, type, row) {
-                var ret = formatMoney(data);
-                return ret;
-            }
-        },
-        {
-            "data": "BndlOrdered",
-            "render": function (data, type, row) {
-                var ret = data;
-                return ret;
-            }
-        },
-        {
-            "data": "BndlProduce",
-            "className": "text-right",
-            "render": function (data, type, row) {
-                var ret = formatMoney(data);
-                return ret;
-            }
-        },
-        {
-            "data": "BalanceBndl",
-            "className": "text-right",
-            "render": function (data, type, row) {
-                var ret = formatMoney(data);
-                return ret;
-            }
-        },
-        {
-            "data": "end_cust_name",
-            "className": "text-right",
-            "render": function (data, type, row) {
-                var ret = formatMoney(data);
-                return ret;
-            }
-        },
-        {
-            "data": "due_date",
-            "className": "text-right",
-            "render": function (data, type, row) {
-                if (data != null) {
-                    d = formatDate(data);
-                } else {
-                    d = '-';
-                }
-                ret = d;
-                return ret;
-
-            }
-        },
-
-        {
-            "data": "end_cust_name",
-            "className": "text-right",
-            "render": function (data, type, row) {
-                var ret = data;
-                return ret;
-            }
-        },
-        {
-            "data": "Process",
-            "render": function (data, type, row) {
-                var ret = data;
-                return ret;
-            }
-        },
-              ],
-              dom:
-                "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
-                "<'row'<'col-md-12'tr>>" +
-                "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
-              buttons: [
-                {
-                  extend: "print",
-                  text: "<i class='fa fa-print'></i>&nbsp;Print",
-                  title: "",
-                },
-                {
-                  extend: "excel",
-                  footer: true,
-                  text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
-                  title:
-                    "Report Order Processing " + moment().format("DD-MM-YYYY HH:mm:ss"),
-                },
-              ]
-            });
-  
-            $("#tblReport").loading("stop");
-            $("#btnSearch").html(OldHtml);
-          },
-          error: function (e) {
-            $("#tblReport").loading("stop");
-            $("#btnSearch").html(OldHtml);
-            console.log("There was an error with your request...");
-            console.log("error: " + JSON.stringify(e));
-          },
+                $("#tblReport").loading("stop");
+                $("#btnSearch").html(OldHtml);
+            },
+            error: function (e) {
+                $("#tblReport").loading("stop");
+                $("#btnSearch").html(OldHtml);
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            },
         });
-      }
+    }
 
 </script>

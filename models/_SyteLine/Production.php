@@ -202,4 +202,121 @@ order by hdr.docNo, line.seq";
         return $response;
     }
 
+    function GetWC() {
+        $cSql = new SqlSrv();
+        $query = "select wc from wc_mst where wc like 'p2%' or wc like 'w2%' order by wc";
+        $response = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($response, count($response) - 1, 1);
+        return $response;
+    }
+
+    function GetItemPlanning() {
+        $cSql = new SqlSrv();
+        $query = "select item from item_mst where (item like 'F%' or item like 'W%') and item not like 'WS%' order by item";
+        $response = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($response, count($response) - 1, 1);
+        return $response;
+    }
+
+    function GetItemInfoPlanning($item) {
+        $cSql = new SqlSrv();
+        $query = "
+            select top 1
+                uf_TypeEnd as [type],
+                uf_NPS as size,
+                uf_class as spec,
+                Uf_Grade as grade,
+                Uf_Schedule as sch,
+                Uf_thickness as thick,
+                Uf_length as [length],
+                Uf_pack as [pack],
+                Uf_length_FT as length_m,
+                unit_weight as weight_pcs,
+                (select top 1 CASE WHEN jr.run_basis_mch  = 'P' 
+                             and js.run_mch_hrs <> 0 
+                      THEN  js.pcs_per_mch_hr
+                      ELSE js.run_mch_hrs 
+                      END
+                 from item_mst item2 
+                 inner join jobroute_mst jr on jr.job = item2.job and jr.suffix = item2.suffix
+                 inner join jrt_sch_mst js on js.job = item2.job and js.suffix = item2.suffix
+                 where item2.item = item_mst.item
+                ) as pcs_hr
+            from item_mst
+            where item = '$item'
+        ";
+        $response = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($response, count($response) - 1, 1);
+        return $response;
+    }
+
+    function SavePlanning($dataArray) {
+        $cSql = new SqlSrv();
+        $successCount = 0;
+        foreach($dataArray as $row) {
+            $year = $row['year'];
+            $month = $row['month'];
+            $wc = $row['wc'];
+            $item = $row['item'];
+            $job = isset($row['job']) ? $row['job'] : '';
+            $qty = $row['qty'];
+            
+            // SQL Injection prevention is generally handled by PDO or sqlsrv_query parameterization if using it, but since SqlQuery expects string let's replace single quotes to be safe.
+            $year = str_replace("'", "''", $year);
+            $month = str_replace("'", "''", $month);
+            $wc = str_replace("'", "''", $wc);
+            $item = str_replace("'", "''", $item);
+            $job = str_replace("'", "''", $job);
+            $qty = str_replace("'", "''", $qty);
+
+            $checkQuery = "SELECT * FROM STS_Prod_policy WHERE [year] = '$year' AND [month] = '$month' AND wc = '$wc' AND Item = '$item'";
+            $check = $cSql->SqlQuery($this->StrConn, $checkQuery);
+            if (is_array($check) && count($check) > 1) {
+                // Remove the last false row from SqlQuery function implementation logic if applicable
+                // Check if existing record
+                $query = "UPDATE STS_Prod_policy SET job = '$job', qty = '$qty', createdate = GETDATE() WHERE [year] = '$year' AND [month] = '$month' AND wc = '$wc' AND Item = '$item'";
+                $cSql->SqlQuery($this->StrConn, $query);
+            } else {
+                $query = "INSERT INTO STS_Prod_policy ([year], [month], wc, Item, job, qty, createdate) VALUES ('$year', '$month', '$wc', '$item', '$job', '$qty', GETDATE())";
+                $cSql->SqlQuery($this->StrConn, $query);
+            }
+            $successCount++;
+        }
+        return $successCount;
+    }
+
+    function GetSavedPlanning($year, $month) {
+        $cSql = new SqlSrv();
+        $query = "
+            select p.[year], p.[month], p.wc, p.Item as item, p.job, p.qty,
+                i.uf_TypeEnd as [type],
+                i.uf_NPS as size,
+                i.uf_class as spec,
+                i.Uf_Grade as grade,
+                i.Uf_Schedule as sch,
+                i.Uf_thickness as thick,
+                i.Uf_length as [length],
+                i.Uf_pack as [pack],
+                i.Uf_length_FT as length_m,
+                i.unit_weight as weight_pcs,
+                (select top 1 CASE WHEN jr.run_basis_mch  = 'P' 
+                             and js.run_mch_hrs <> 0 
+                      THEN  js.pcs_per_mch_hr
+                      ELSE js.run_mch_hrs 
+                      END
+                 from item_mst item2 
+                 inner join jobroute_mst jr on jr.job = item2.job and jr.suffix = item2.suffix
+                 inner join jrt_sch_mst js on js.job = item2.job and js.suffix = item2.suffix
+                 where item2.item = p.Item
+                ) as pcs_hr
+            from STS_Prod_policy p
+            left join item_mst i on p.Item = i.item
+            where p.[year] = '$year' and p.[month] = '$month'
+            order by p.wc, p.Item
+        ";
+        $response = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($response, count($response) - 1, 1);
+        return $response;
+    }
+
 }

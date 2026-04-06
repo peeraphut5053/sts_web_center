@@ -396,4 +396,22 @@ group by [description]";
         return $rs;
     }
 
+      function GetProductionReportByMonth($year, $month, $volume) {
+        $query = "EXEC STS_PROD_volume_P
+  @Volume = N'$volume',
+  @year = '$year',
+  @month = $month";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        $query = "EXEC STS_PROD_volume_W
+  @Volume = N'$volume',
+  @year = '$year',
+  @month = $month";
+        $cSql = new SqlSrv();
+        $rs2 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs2, count($rs2) - 1, 1);
+        return array("P" => $rs, "W" => $rs2);
+    }
+
 }

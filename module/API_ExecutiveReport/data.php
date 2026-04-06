@@ -230,3 +230,8 @@ if ($load == "GetLocationStockDetail") {
     $JsonValue = $CallModelObj->GetLocationStockDetail($loc);
     echo json_encode($JsonValue);
 }
+
+if ($load == "GetProductionReportByMonth") {
+    $JsonValue = $CallModelObj->GetProductionReportByMonth($year, $month, $volume);
+    echo json_encode($JsonValue);
+}
