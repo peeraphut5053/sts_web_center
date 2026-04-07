@@ -233,6 +233,19 @@
                             text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
                             title:
                                 "Report Order Processing " + moment().format("DD-MM-YYYY HH:mm:ss"),
+                            exportOptions: {
+                                format: {
+                                    body: function (data, row, column, node) {
+                                        var $node = $(node);
+                                        if ($node.find('select').length > 0) {
+                                            return $node.find('select').val() || '';
+                                        } else if ($node.find('input').length > 0) {
+                                            return $node.find('input').val() || '';
+                                        }
+                                        return typeof data === 'string' ? data.replace(/<[^>]*>?/gm, '') : data;
+                                    }
+                                }
+                            }
                         },
                     ]
                 });
