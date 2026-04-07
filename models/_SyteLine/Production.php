@@ -319,4 +319,68 @@ order by hdr.docNo, line.seq";
         return $response;
     }
 
+    function GetReport($year, $month) {
+        $cSql = new SqlSrv();
+        $query = "
+           SELECT * FROM (
+select item.uf_market, pol.wc, [weight] = isnull(pol.qty,0) * item.unit_weight / 1000 
+from STS_Prod_policy pol inner join item_mst item on item.item = pol.item
+where [year] = $year and [month] = $month ) AS SourceTable
+PIVOT (sum([weight]) for wc in ([P2FM01],[P2FM05],[P2FM06],[P2FM08],[P2FM09],[P2FM10],[W2FM02],[W2FM04],[W2FM07],[W2FM11],[W2FMC1])) AS PivotTable;
+        ";
+        $response = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($response, count($response) - 1, 1);
+        return $response;
+    }
+    
+    function GetTarget($year, $month) {
+        $cSql = new SqlSrv();
+        $query = "
+            SELECT [year], [month], wc, time, [weight]
+            FROM STS_Prod_policy_weight
+            WHERE [year] = '$year' AND [month] = '$month'
+            ORDER BY wc
+        ";
+        $response = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($response, count($response) - 1, 1);
+        return $response;
+    }
+
+    function SaveTarget($data) {
+        $cSql = new SqlSrv();
+        
+        foreach($data as $row) {
+            $year = $row['year'];
+            $month = $row['month'];
+            $wc = $row['wc'];
+            $time = $row['time'];
+            $weight = $row['weight'];
+            
+            $year = str_replace("'", "''", $year);
+            $month = str_replace("'", "''", $month);
+            $wc = str_replace("'", "''", $wc);
+            $time = str_replace("'", "''", $time);
+            $weight = str_replace("'", "''", $weight);
+            
+            $checkQry = "SELECT top 1 wc FROM STS_Prod_policy_weight WHERE [year] = '$year' AND [month] = '$month' AND wc = '$wc'";
+            $checkRs = $cSql->SqlQuery($this->StrConn, $checkQry);
+            array_splice($checkRs, count($checkRs) - 1, 1);
+            $cnt = count($checkRs);
+            
+            if ($cnt > 0) {
+                // UPDATE
+                $query = "UPDATE STS_Prod_policy_weight SET [time] = '$time', [weight] = '$weight', createdate = GETDATE() WHERE [year] = '$year' AND [month] = '$month' AND wc = '$wc'";
+                $cSql->SqlQuery($this->StrConn, $query);
+                echo $query;
+            } else {
+                // INSERT
+                $query = "INSERT INTO STS_Prod_policy_weight ([year], [month], wc, [time], [weight], createdate) VALUES ('$year', '$month', '$wc', '$time', '$weight', GETDATE())";
+                $cSql->SqlQuery($this->StrConn, $query);
+                echo $query;
+            }
+        }
+        
+        return array('status' => 'success');
+    }
+
 }

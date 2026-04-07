@@ -48,6 +48,12 @@
         <button id="btnSearch" class="btn btn-info"><i class="fa fa-searh"></i>&nbsp;ค้นหา</button>
     </div>
 </div>
+<div class="col-lg-2">
+    <div class="input-group">
+        <div class="input-group-addon">Item</div>
+        <input type="text" autocomplete="off" class="form-control txt-filter" id="item">
+    </div>
+</div>
 
 <div class="row" id="divReport">
     <table class="table table-condensed table-bordered table-striped" id="tblReport">
@@ -76,11 +82,14 @@
                 <th>Pcs Left</th>
                 <th>In Process</th>
                 <th>In Process Pcs</th>
+                <th>เศษ</th>
                 <th>Balance BDL</th>
                 <th>Balance MT</th>
                 <th>Ready Bundle</th>
                 <th>Ready Bundle MT</th>
                 <th>Shipment</th>
+                <th>Status</th>
+                <th>Ready To Ship</th>
             </tr>
         </thead>
     </table>
@@ -89,6 +98,8 @@
     $("#orderdate").datepicker({
         dateFormat: 'yy-mm-dd',
     });
+
+
     // $("#orderdate").val(GetToday());
     $("#btnSearch").click(function () {
         ReportItemSearch();
@@ -101,6 +112,7 @@
         var stsPO = $("#stsPO").val();
         var custpo = $("#custpo").val();
         var orderdate = $("#orderdate").val();
+        var item = $("#item").val();
 
         $("#btnSearch").html("<i class='fa fa-spinner fa-spin'></i>");
         $("#tblReport").loading();
@@ -118,12 +130,13 @@
                 co: co,
                 stsPO: stsPO,
                 custpo: custpo,
-                orderdate: orderdate
+                orderdate: orderdate,
+                item: item
             },
             success: function (data) {
                 $("#tblReport").DataTable().clear();
                 $("#tblReport").append(
-                    "<tfoot><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></tfoot>"
+                    "<tfoot><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></tfoot>"
                 );
                 $("#tblReport").dataTable({
                     aaData: data,
@@ -159,13 +172,48 @@
                         { "data": "pcsLeft" },
                         { "data": "inProcess" },
                         { "data": "inProcessPCS" },
+                        { "data": "เศษ" },
                         { "data": "balanceBDL" },
-                        { "data": "balanceMT" },
+                        {
+                            "data": "balanceMT", render: function (data, type, row) {
+                                return data.toFixed(2);
+                            }
+                        },
                         { "data": "ReadyBundle" },
-                        { "data": "ReadyBundleMT" },
+                        {
+                            "data": "ReadyBundleMT", render: function (data, type, row) {
+                                return data.toFixed(2);
+                            }
+                        },
                         {
                             "data": "shipment.date", render: function (data, type, row) {
                                 return moment(data).format("DD/MM/YYYY");
+                            }
+                        },
+                        {
+                            "data": "job", render: function (data, type, row) {
+                                var val = row.ex_status || row.status || '';
+                                var opts = ['', 'Forming', 'Hydro Test', 'Painting', 'Packing', 'Cargo Ready'];
+                                var html = '<select class="form-control input-sm txt-ex-status" data-job="' + data + '" style="padding:0;">';
+                                $.each(opts, function (i, opt) {
+                                    var sel = (val === opt) ? ' selected' : '';
+                                    var label = opt === '' ? '- Select -' : opt;
+                                    html += '<option value="' + opt + '"' + sel + '>' + label + '</option>';
+                                });
+                                html += '</select>';
+                                return html;
+                            }
+                        },
+                        {
+                            "data": "job", render: function (data, type, row) {
+                                var val = row.ex_date || row.Date || '';
+                                if (val && val.date) {
+                                    val = moment(val.date).format("YYYY-MM-DD");
+                                } else if (val) {
+                                    val = moment(val).format("YYYY-MM-DD");
+                                    if (val === 'Invalid date') val = '';
+                                }
+                                return '<input type="date" class="form-control input-sm txt-ex-date" data-job="' + data + '" value="' + val + '"/>';
                             }
                         }
                     ],
@@ -200,5 +248,40 @@
             },
         });
     }
+
+    $(document).on('change', '.txt-ex-status, .txt-ex-date', function () {
+        var tr = $(this).closest('tr');
+        var job = $(this).data('job');
+        var status = tr.find('.txt-ex-status').val() || '';
+        var date = tr.find('.txt-ex-date').val() || '';
+
+        var input = $(this);
+        input.css('background-color', '#fff3cd');
+
+        $.ajax({
+            type: "POST",
+            url: "././module/RPT_OrderProcessing/data.php",
+            dataType: "json",
+            data: {
+                load: "SaveExJob",
+                job: job,
+                status: status,
+                date: date
+            },
+            success: function (res) {
+                if (res && res.status == 'success') {
+                    input.css('background-color', '#d4edda');
+                    setTimeout(function () {
+                        input.css('background-color', '');
+                    }, 2000);
+                } else {
+                    input.css('background-color', '#f8d7da');
+                }
+            },
+            error: function () {
+                input.css('background-color', '#f8d7da');
+            }
+        });
+    });
 
 </script>

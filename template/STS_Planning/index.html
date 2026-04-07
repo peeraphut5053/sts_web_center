@@ -1,0 +1,716 @@
+<div class="row">
+    <div style="margin-top: 10px; margin-bottom: 20px;">
+        <h1 class="my-header">Planning Entry</h1>
+    </div>
+</div>
+
+<ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active">
+        <a href="#planning-entry" aria-controls="planning-entry" role="tab" data-toggle="tab">Planning 1</a>
+    </li>
+    <li role="presentation">
+        <a href="#additional-page" aria-controls="additional-page" role="tab" data-toggle="tab">Planning 2</a>
+    </li>
+</ul>
+
+<div class="tab-content" style="padding-top: 15px;">
+    <!-- Tab 1: Planning Entry -->
+    <div role="tabpanel" class="tab-pane active" id="planning-entry">
+        <div class="row">
+            <div class="col-md-12 mb-3 text-right" style="margin-bottom: 10px;">
+                <button class="btn btn-success" id="btnAddRow"><i class="fa fa-plus"></i> เพิ่มข้อมูล (Add Row)</button>
+            </div>
+        </div>
+
+        <div class="row" id="divReport" style="overflow-x: auto;">
+            <datalist id="item-list"></datalist>
+            <table class="table table-bordered table-striped text-center" id="tblPlanningEntry"
+                style="white-space: nowrap; font-size: 12px;">
+                <thead>
+                    <tr style="background-color: #5cb85c; color: white;">
+                        <th>Action</th>
+                        <th style="background-color: #f0ad4e; color: black;">ปี</th>
+                        <th style="background-color: #f0ad4e; color: black;">เดือน</th>
+                        <th style="background-color: #f0ad4e; color: black;">wc</th>
+                        <th style="background-color: #f0ad4e; color: black;">item</th>
+                        <th style="background-color: #f0ad4e; color: black;">Job</th>
+                        <th>TYPE</th>
+                        <th>SIZE</th>
+                        <th>SPEC</th>
+                        <th>GRADE</th>
+                        <th>SCH.</th>
+                        <th>LENGTH</th>
+                        <th style="background-color: #f0ad4e; color: black;">จำนวน</th>
+                        <th>Speed M/min.</th>
+                        <th>PCS./min</th>
+                        <th>PCS./hr.</th>
+                        <th>เป้าหมายเวลาผลิต [hr.]</th>
+                        <th>เป้าหมายเวลาผลิต (+ 20%) [hr.]</th>
+                        <th>Length [M]</th>
+                        <th>Weight / pcs.</th>
+                        <th style="color: blue;">Weight [Ton]</th>
+                    </tr>
+                </thead>
+                <tbody id="tbodyPlanning">
+                    <!-- Dynamic rows will be appended here -->
+                </tbody>
+            </table>
+        </div>
+    </div> <!-- End Tab 1 -->
+
+    <!-- Tab 2: Additional Page -->
+    <div role="tabpanel" class="tab-pane" id="additional-page">
+        <!-- Input Year Month -->
+        <div class="row">
+            <div class="col-md-6 text-left">
+                <div class="form-group form-inline" style="margin-top: 5px;">
+                    <label>ปี: </label>
+                    <select id="selReportYear" class="form-control input-sm"
+                        style="margin-right: 15px; width: 100px;"></select>
+                    <label>เดือน: </label>
+                    <select id="selReportMonth" class="form-control input-sm" style="width: 150px;"></select>
+                </div>
+            </div>
+            <div class="col-md-6 text-right">
+                <div style="margin-bottom: 10px;">
+                    <button class="btn btn-primary" id="btnLoadReport"><i class="fa fa-refresh"></i> โหลดรายงาน (Load
+                        Report)</button>
+                </div>
+            </div>
+
+            <table class="table table-bordered text-center table-striped" id="tblReportSummary"
+                style="font-size: 13px;">
+                <thead>
+                    <tr>
+                        <td colspan="14" class="text-center"
+                            style="font-weight: bold; font-size: 16px; background-color: #f2f2f2;">
+                            นโยบาย 15,000 Tons/month
+                        </td>
+                    </tr>
+                    <tr>
+                        <th colspan="7" class="text-center" style="background-color: #e9ecef;">ผลิตเครื่องฟอร์มมิ่ง</th>
+                        <th colspan="5" class="text-center" style="background-color: #e9ecef;"><span
+                                id="reportHeaderDate">1-31/3/2569</span></th>
+                        <th rowspan="3" colspan="2" class="align-middle text-center" style="vertical-align: middle;">
+                            รวมทั้งหมด<br>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th rowspan="2" class="align-middle text-center"
+                            style="vertical-align: middle; background-color: #e9ecef;">เครื่องผลิต</th>
+                        <th colspan="6" class="text-center" style="background-color: #dff0d8;">ปู่เจ้า</th>
+                        <th colspan="5" class="text-center" style="background-color: #d9edf7;">วังน้อย</th>
+                    </tr>
+                    <tr>
+                        <!-- ปู่เจ้า -->
+                        <th class="text-center" style="background-color: #dff0d8;">F1.</th>
+                        <th class="text-center" style="background-color: #dff0d8;">F5.</th>
+                        <th class="text-center" style="background-color: #dff0d8;">F6.</th>
+                        <th class="text-center" style="background-color: #dff0d8;">F8.</th>
+                        <th class="text-center" style="background-color: #dff0d8;">F9.</th>
+                        <th class="text-center" style="background-color: #dff0d8;">F10.</th>
+
+                        <!-- วังน้อย -->
+                        <th class="text-center" style="background-color: #d9edf7;">F2.</th>
+                        <th class="text-center" style="background-color: #d9edf7;">F4.</th>
+                        <th class="text-center" style="background-color: #d9edf7;">F7.</th>
+                        <th class="text-center" style="background-color: #d9edf7;">F11.</th>
+                        <th class="text-center" style="background-color: #d9edf7;">FC.</th>
+                    </tr>
+                </thead>
+                <tbody id="tbodyReportSummary">
+                    <tr>
+                        <td colspan="13">กดปุ่ม "โหลดรายงาน" เพื่อดูข้อมูล</td>
+                    </tr>
+                </tbody>
+                <tfoot id="tfootReportSummary">
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div> <!-- End Tab 2 -->
+</div> <!-- End Tab Content -->
+
+<script type="text/javascript">
+    var globalWcOptions = "";
+
+    $(document).ready(function () {
+
+        // Fetch WC and Item list first
+        $.ajax({
+            url: "././module/STS_Planning/data.php",
+            type: "POST",
+            dataType: "json",
+            data: { load: 'GetWC' },
+            success: function (res) {
+                if (res) {
+                    $.each(res, function (i, val) {
+                        globalWcOptions += `<option value="${val.wc}">${val.wc}</option>`;
+                    });
+                }
+
+                // Fetch Items for datalist
+                $.ajax({
+                    url: "././module/STS_Planning/data.php",
+                    type: "POST",
+                    dataType: "json",
+                    data: { load: 'GetItemPlanning' },
+                    success: function (res2) {
+                        if (res2) {
+                            var itemDatalist = "";
+                            $.each(res2, function (i, val) {
+                                itemDatalist += `<option value="${val.item}">`;
+                            });
+                            $("#item-list").html(itemDatalist);
+                        }
+                        // After loading options, fetch saved table data
+                        $.ajax({
+                            url: "././module/STS_Planning/data.php",
+                            type: "POST",
+                            dataType: "json",
+                            data: {
+                                load: 'GetSavedPlanning',
+                                year: new Date().getFullYear(),
+                                month: new Date().getMonth() + 1
+                            },
+                            success: function (saved) {
+                                if (saved && saved.length > 0) {
+                                    $.each(saved, function (idx, rowdata) {
+                                        addRow(rowdata);
+                                    });
+                                } else {
+                                    // Add initial empty row if no data
+                                    addRow();
+                                }
+                            }
+                        });
+                    }
+                });
+            }
+        });
+
+        // Bind Add Row button
+        $("#btnAddRow").click(function () {
+            addRow();
+        });
+
+        // Bind per-row Save button
+        $(document).on('click', '.btn-save-row', function () {
+            var tr = $(this).closest('tr');
+            var year = tr.find('.input-year').val();
+            var month = tr.find('.input-month').val();
+            var wc = tr.find('.input-wc').val();
+            var item = tr.find('.input-item').val();
+            var job = tr.find('.input-job').val();
+            var qty = tr.find('.input-qty').val();
+            var btnSelect = $(this);
+
+            if (!item || item.trim() === '') {
+                alert('โปรดระบุ Item ให้ชัดเจนก่อนทำการบันทึก!');
+                return;
+            }
+
+            var rows = [{
+                year: year,
+                month: month,
+                wc: wc,
+                item: item,
+                job: job,
+                qty: qty || 0
+            }];
+
+            $.ajax({
+                url: "././module/STS_Planning/data.php",
+                type: "POST",
+                dataType: "json",
+                data: {
+                    load: 'SavePlanning',
+                    data: rows
+                },
+                beforeSend: function () {
+                    btnSelect.html("<i class='fa fa-spinner fa-spin'></i>").attr('disabled', true);
+                },
+                success: function (res) {
+                    if (res && res.status === 'success') {
+                        btnSelect.removeClass('btn-primary').addClass('btn-success').html("<i class='fa fa-check'></i> บันทึกแล้ว");
+                        setTimeout(function () {
+                            btnSelect.removeClass('btn-success').addClass('btn-primary').html("บันทึก <i class='fa fa-save'></i>").attr('disabled', false);
+                        }, 2000);
+                    } else {
+                        alert('เกิดข้อผิดพลาด: ' + (res.message || 'Unknown error'));
+                        btnSelect.html("บันทึก <i class='fa fa-save'></i>").attr('disabled', false);
+                    }
+                },
+                error: function (e) {
+                    alert('Error: บันทึกข้อมูลไม่สำเร็จ กรุณาตรวจสอบข้อมูล');
+                    btnSelect.html("บันทึก <i class='fa fa-save'></i>").attr('disabled', false);
+                }
+            });
+        });
+
+        // Delete Row
+        $(document).on('click', '.btn-delete-row', function () {
+            $(this).closest('tr').remove();
+        });
+
+        // When item changes, fetch data from DB
+        $(document).on('change', '.input-item', function () {
+            var inputItem = $(this).val();
+            var tr = $(this).closest('tr');
+
+            if (inputItem.trim() !== '') {
+                // Find item details
+                $.ajax({
+                    url: "././module/STS_Planning/data.php",
+                    type: "POST",
+                    dataType: "json",
+                    data: {
+                        load: 'GetItemInfo',
+                        item: inputItem
+                    },
+                    beforeSend: function () {
+                        tr.find('.val-size').html('<i class="fa fa-spinner fa-spin"></i>');
+                    },
+                    success: function (res) {
+                        if (res && res.status === 'success') {
+                            var data = res.data;
+                            tr.find('.val-type').text(data.type || '-');
+                            tr.find('.val-size').text(data.size || '-');
+                            tr.find('.val-spec').text(data.spec || '-');
+                            tr.find('.val-grade').text(data.grade || '-');
+                            tr.find('.val-sch').text(data.sch || '-');
+                            tr.find('.val-length').text(data.length || '-');
+
+                            var pcs_hr = parseFloat(data.pcs_hr) || 0;
+                            var pcs_min = pcs_hr / 60;
+                            tr.find('.val-pcs-min').text(pcs_hr > 0 ? pcs_min.toFixed(2) : '-');
+                            tr.find('.val-pcs-hr').text(data.pcs_hr || '-').data('val', data.pcs_hr);
+
+                            tr.find('.val-length-m').text(data.length_m || '-');
+                            tr.find('.val-weight-pcs').text(data.weight_pcs || '-').data('val', data.weight_pcs);
+
+                            calculateRow(tr);
+                        } else {
+                            resetRowData(tr);
+                        }
+                    },
+                    error: function () {
+                        resetRowData(tr);
+                    }
+                });
+            } else {
+                resetRowData(tr);
+            }
+        });
+
+        // Compute formulas when quantity changes
+        $(document).on('keyup change', '.input-qty', function () {
+            calculateRow($(this).closest('tr'));
+        });
+
+        // Setup Year and Month selects
+        var currentYear = new Date().getFullYear();
+        var yearHtml = "";
+        for (var y = currentYear - 2; y <= currentYear + 2; y++) {
+            var sel = (y === 2026) ? "selected" : "";
+            yearHtml += "<option value='" + y + "' " + sel + ">" + y + "</option>";
+        }
+        $("#selReportYear").html(yearHtml);
+
+        var monthHtml = "";
+        var monthNames = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
+        for (var m = 1; m <= 12; m++) {
+            var sel = (m === 4) ? "selected" : "";
+            monthHtml += "<option value='" + m + "' " + sel + ">" + monthNames[m - 1] + "</option>";
+        }
+        $("#selReportMonth").html(monthHtml);
+
+        // Setup the report button
+        $("#btnLoadReport").click(function () {
+            loadSummaryReport();
+        });
+
+        $(document).on('change', '.target-time, .target-weight', function () {
+            var input = $(this);
+            var wc = input.data('wc');
+            var timeInput = $(".target-time[data-wc='" + wc + "']").val();
+            var weightInput = $(".target-weight[data-wc='" + wc + "']").val();
+
+            input.css('background-color', '#fff3cd');
+
+            var targets = [{
+                year: $("#selReportYear").val() || 2026,
+                month: $("#selReportMonth").val() || 4,
+                wc: wc,
+                time: timeInput || "00:00",
+                weight: weightInput || 0
+            }];
+
+            $.ajax({
+                url: "././module/STS_Planning/data.php",
+                type: "POST",
+                dataType: "json",
+                data: {
+                    load: "SaveTarget",
+                    data: targets
+                },
+                success: function (res) {
+                    if (res && res.status === 'success') {
+                        input.css('background-color', '#d4edda');
+                        setTimeout(function () {
+                            input.css('background-color', '');
+                        }, 2000);
+                    } else {
+                        input.css('background-color', '#f8d7da');
+                        console.error('Save failed', res);
+                    }
+                },
+                error: function (e) {
+                    input.css('background-color', '#f8d7da');
+                    console.error('Connection error');
+                }
+            });
+        });
+    });
+
+    function calculateRow(tr) {
+        var qty = parseFloat(tr.find('.input-qty').val()) || 0;
+        var pcs_hr = parseFloat(tr.find('.val-pcs-hr').data('val')) || 0;
+        var weight_pcs = parseFloat(tr.find('.val-weight-pcs').data('val')) || 0;
+
+        if (pcs_hr > 0) {
+            var target_hr = qty / pcs_hr;
+            var target_20_hr = target_hr * 1.2;
+            tr.find('.val-target-hr').text(target_hr.toFixed(2));
+            tr.find('.val-target-20-hr').text(target_20_hr.toFixed(2));
+        } else {
+            tr.find('.val-target-hr').text('-');
+            tr.find('.val-target-20-hr').text('-');
+        }
+
+        if (weight_pcs > 0) {
+            var ton = (qty * weight_pcs) / 1000;
+            tr.find('.val-weight-ton').text(ton.toFixed(4));
+        } else {
+            tr.find('.val-weight-ton').text('-');
+        }
+    }
+
+    function addRow(data) {
+        var currentYear = new Date().getFullYear();
+        var yearOptions = "";
+        for (var i = currentYear - 1; i <= currentYear + 2; i++) {
+            yearOptions += `<option value="${i}" ${(!data && i === currentYear) ? 'selected' : ''}>${i}</option>`;
+        }
+
+        var monthOptions = "";
+        for (var m = 1; m <= 12; m++) {
+            monthOptions += `<option value="${m}" ${(!data && m === (new Date().getMonth() + 1)) ? 'selected' : ''}>${m}</option>`;
+        }
+
+        var wcOptions = globalWcOptions !== '' ? globalWcOptions : `<option value="">No WC</option>`;
+
+        var trHtml = `
+            <tr>
+                <td>
+                    <button class="btn btn-primary btn-sm btn-save-row" title="บันทึก (Save)">บันทึก <i class="fa fa-save"></i></button>
+                </td>
+                <td><select class="form-control input-sm input-year" style="width: 80px;">${yearOptions}</select></td>
+                <td><select class="form-control input-sm input-month" style="width: 70px;">${monthOptions}</select></td>
+                <td><select class="form-control input-sm input-wc" style="width: 100px;">${wcOptions}</select></td>
+                <td><input type="text" class="form-control input-sm input-item" list="item-list" placeholder="Enter Item..." style="width: 150px;"></td>
+                <td><input type="text" class="form-control input-sm input-job" placeholder="Enter Job..." style="width: 120px;"></td>
+                <td class="val-type align-middle">-</td>
+                <td class="val-size align-middle">-</td>
+                <td class="val-spec align-middle">-</td>
+                <td class="val-grade align-middle">-</td>
+                <td class="val-sch align-middle">-</td>
+                <td class="val-length align-middle">-</td>
+                <td><input type="number" class="form-control input-sm input-qty" style="width: 100px;" value="0"></td>
+                <td class="val-speed align-middle">-</td>
+                <td class="val-pcs-min align-middle">-</td>
+                <td class="val-pcs-hr align-middle">-</td>
+                <td class="val-target-hr align-middle">-</td>
+                <td class="val-target-20-hr align-middle">-</td>
+                <td class="val-length-m align-middle">-</td>
+                <td class="val-weight-pcs align-middle">-</td>
+                <td class="val-weight-ton align-middle text-primary fw-bold">-</td>
+            </tr>
+        `;
+
+        var tr = $(trHtml);
+
+
+        if (data) {
+            tr.find('.input-year').val(data.year);
+            tr.find('.input-month').val(data.month);
+            tr.find('.input-wc').val(data.wc);
+            tr.find('.input-item').val(data.item);
+            tr.find('.input-job').val(data.job || '');
+            tr.find('.input-qty').val(data.qty || 0);
+
+            tr.find('.val-type').text(data.type || '-');
+            tr.find('.val-size').text(data.size || '-');
+            tr.find('.val-spec').text(data.spec || '-');
+            tr.find('.val-grade').text(data.grade || '-');
+            tr.find('.val-sch').text(data.sch || '-');
+            tr.find('.val-length').text(data.length || '-');
+
+            var pcs_hr = parseFloat(data.pcs_hr) || 0;
+            var pcs_min = pcs_hr / 60;
+            tr.find('.val-pcs-min').text(pcs_hr > 0 ? pcs_min.toFixed(2) : '-');
+            tr.find('.val-pcs-hr').text(data.pcs_hr || '-').data('val', data.pcs_hr);
+
+            tr.find('.val-length-m').text(data.length_m || '-');
+            tr.find('.val-weight-pcs').text(data.weight_pcs || '-').data('val', data.weight_pcs);
+
+            $("#tbodyPlanning").append(tr);
+            calculateRow(tr);
+        } else {
+            $("#tbodyPlanning").append(tr);
+        }
+    }
+
+    function resetRowData(tr) {
+        tr.find('td[class^="val-"]').text('-');
+        tr.find('.val-weight-ton').text('-');
+        tr.find('.val-pcs-hr').data('val', '');
+        tr.find('.val-weight-pcs').data('val', '');
+    }
+
+    function loadSummaryReport() {
+        var selectedYear = $("#selReportYear").val() || 2026;
+        var selectedMonth = $("#selReportMonth").val() || 4;
+
+        var daysInMonth = new Date(selectedYear, selectedMonth, 0).getDate();
+        var thaiYear = parseInt(selectedYear) + 543;
+        $("#reportHeaderDate").text("1-" + daysInMonth + "/" + selectedMonth + "/" + thaiYear);
+
+        var workingDays = 0;
+        for (var d = 1; d <= daysInMonth; d++) {
+            var date = new Date(selectedYear, parseInt(selectedMonth) - 1, d);
+            if (date.getDay() !== 0) { // 0 is Sunday
+                workingDays++;
+            }
+        }
+
+        var btn = $("#btnLoadReport");
+        btn.html("<i class='fa fa-spinner fa-spin'></i> กำลังโหลด...").attr('disabled', true);
+        $("#tbodyReportSummary").html("<tr><td colspan='14'><i class='fa fa-spinner fa-spin'></i> กำลังโหลดข้อมูล...</td></tr>");
+        $("#tfootReportSummary").empty();
+
+        $.ajax({
+            url: "././module/STS_Planning/data.php",
+            type: "POST",
+            dataType: "json",
+            data: { load: 'GetReport', year: selectedYear, month: selectedMonth },
+            success: function (res) {
+                var html = "";
+                var sumCols = {
+                    P2FM01: 0, P2FM05: 0, P2FM06: 0, P2FM08: 0, P2FM09: 0, P2FM10: 0,
+                    W2FM02: 0, W2FM04: 0, W2FM07: 0, W2FM11: 0, W2FMC1: 0,
+                    totalAll: 0
+                };
+
+                if (res && res.length > 0) {
+                    var rowsArray = [];
+                    $.each(res, function (i, row) {
+                        var m1 = parseFloat(row.P2FM01) || 0;
+                        var m5 = parseFloat(row.P2FM05) || 0;
+                        var m6 = parseFloat(row.P2FM06) || 0;
+                        var m8 = parseFloat(row.P2FM08) || 0;
+                        var m9 = parseFloat(row.P2FM09) || 0;
+                        var m10 = parseFloat(row.P2FM10) || 0;
+
+                        var w2 = parseFloat(row.W2FM02) || 0;
+                        var w4 = parseFloat(row.W2FM04) || 0;
+                        var w7 = parseFloat(row.W2FM07) || 0;
+                        var w11 = parseFloat(row.W2FM11) || 0;
+                        var wc1 = parseFloat(row.W2FMC1) || 0;
+
+                        var rowTotal = m1 + m5 + m6 + m8 + m9 + m10 + w2 + w4 + w7 + w11 + wc1;
+
+                        sumCols.P2FM01 += m1;
+                        sumCols.P2FM05 += m5;
+                        sumCols.P2FM06 += m6;
+                        sumCols.P2FM08 += m8;
+                        sumCols.P2FM09 += m9;
+                        sumCols.P2FM10 += m10;
+
+                        sumCols.W2FM02 += w2;
+                        sumCols.W2FM04 += w4;
+                        sumCols.W2FM07 += w7;
+                        sumCols.W2FM11 += w11;
+                        sumCols.W2FMC1 += wc1;
+
+                        sumCols.totalAll += rowTotal;
+
+                        rowsArray.push({
+                            title: row.uf_market || 'ไม่ระบุ',
+                            m1: m1, m5: m5, m6: m6, m8: m8, m9: m9, m10: m10,
+                            w2: w2, w4: w4, w7: w7, w11: w11, wc1: wc1,
+                            rowTotal: rowTotal
+                        });
+                    });
+
+                    var formatNumber = function (val) {
+                        return val > 0 ? val.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '-';
+                    };
+
+                    // Top total row
+                    html += "<tr style='font-weight: bold; background-color: #eaeaea;'>";
+                    html += "<td class='text-left'>น้ำหนักตามแผนผลิต<br>(คิดจาก Speed)</td>";
+                    html += "<td>" + formatNumber(sumCols.P2FM01) + "</td>";
+                    html += "<td>" + formatNumber(sumCols.P2FM05) + "</td>";
+                    html += "<td>" + formatNumber(sumCols.P2FM06) + "</td>";
+                    html += "<td>" + formatNumber(sumCols.P2FM08) + "</td>";
+                    html += "<td>" + formatNumber(sumCols.P2FM09) + "</td>";
+                    html += "<td>" + formatNumber(sumCols.P2FM10) + "</td>";
+
+                    html += "<td>" + formatNumber(sumCols.W2FM02) + "</td>";
+                    html += "<td>" + formatNumber(sumCols.W2FM04) + "</td>";
+                    html += "<td>" + formatNumber(sumCols.W2FM07) + "</td>";
+                    html += "<td>" + formatNumber(sumCols.W2FM11) + "</td>";
+                    html += "<td>" + formatNumber(sumCols.W2FMC1) + "</td>";
+
+                    html += "<td colspan='2'  style='font-size: 15px;'>" + formatNumber(sumCols.totalAll) + "</td>";
+                    html += "</tr>";
+
+                    // Top avg row
+                    html += "<tr style='font-weight: bold; background-color: #f5f5f5;'>";
+                    html += "<td class='text-left'>เฉลี่ยต่อวัน<br>(" + workingDays + " วัน)</td>";
+                    html += "<td>" + formatNumber(workingDays > 0 ? sumCols.P2FM01 / workingDays : 0) + "</td>";
+                    html += "<td>" + formatNumber(workingDays > 0 ? sumCols.P2FM05 / workingDays : 0) + "</td>";
+                    html += "<td>" + formatNumber(workingDays > 0 ? sumCols.P2FM06 / workingDays : 0) + "</td>";
+                    html += "<td>" + formatNumber(workingDays > 0 ? sumCols.P2FM08 / workingDays : 0) + "</td>";
+                    html += "<td>" + formatNumber(workingDays > 0 ? sumCols.P2FM09 / workingDays : 0) + "</td>";
+                    html += "<td>" + formatNumber(workingDays > 0 ? sumCols.P2FM10 / workingDays : 0) + "</td>";
+
+                    html += "<td>" + formatNumber(workingDays > 0 ? sumCols.W2FM02 / workingDays : 0) + "</td>";
+                    html += "<td>" + formatNumber(workingDays > 0 ? sumCols.W2FM04 / workingDays : 0) + "</td>";
+                    html += "<td>" + formatNumber(workingDays > 0 ? sumCols.W2FM07 / workingDays : 0) + "</td>";
+                    html += "<td>" + formatNumber(workingDays > 0 ? sumCols.W2FM11 / workingDays : 0) + "</td>";
+                    html += "<td>" + formatNumber(workingDays > 0 ? sumCols.W2FMC1 / workingDays : 0) + "</td>";
+
+                    html += "<td colspan='2' style='font-size: 15px;'>" + formatNumber(workingDays > 0 ? sumCols.totalAll / workingDays : 0) + "</td>";
+                    html += "</tr>";
+
+                    // Data Rows
+                    $.each(rowsArray, function (i, row) {
+                        var pct = sumCols.totalAll > 0 ? ((row.rowTotal / sumCols.totalAll) * 100).toFixed(2) + '%' : '0%';
+
+                        html += "<tr>";
+                        html += "<td class='text-left'>" + row.title + "</td>";
+                        html += "<td>" + formatNumber(row.m1) + "</td>";
+                        html += "<td>" + formatNumber(row.m5) + "</td>";
+                        html += "<td>" + formatNumber(row.m6) + "</td>";
+                        html += "<td>" + formatNumber(row.m8) + "</td>";
+                        html += "<td>" + formatNumber(row.m9) + "</td>";
+                        html += "<td>" + formatNumber(row.m10) + "</td>";
+
+                        html += "<td>" + formatNumber(row.w2) + "</td>";
+                        html += "<td>" + formatNumber(row.w4) + "</td>";
+                        html += "<td>" + formatNumber(row.w7) + "</td>";
+                        html += "<td>" + formatNumber(row.w11) + "</td>";
+                        html += "<td>" + formatNumber(row.wc1) + "</td>";
+
+                        html += "<td style='font-weight: bold; background-color: #fcf8e3;'>" + formatNumber(row.rowTotal) + "</td>";
+                        html += "<td style='font-weight: bold; background-color: #fcf8e3;'>" + pct + "</td>";
+                        html += "</tr>";
+                    });
+
+                } else {
+                    html = "<tr><td colspan='14'>ไม่พบข้อมูล</td></tr>";
+                }
+
+                $("#tbodyReportSummary").html(html);
+
+                // Build tfoot
+                var formatTfoot = function (val) {
+                    return val > 0 ? val.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '-';
+                };
+                var tfoot = "<tr style='font-weight: bold; background-color: #f2dede;'>";
+
+                var timeOpts = "<option value=''></option>";
+                timeOpts += "<option value='08.00-18.30'>08.00-18.30</option>";
+                timeOpts += "<option value='08.00-17.00'>08.00-17.00</option>";
+                timeOpts += "<option value='08.00-21.00'>08.00-21.00</option>";
+                timeOpts += "<option value='08.00-22.00'>08.00-22.00</option>";
+                timeOpts += "<option value='08.00-24.00'>08.00-24.00</option>";
+
+                // Input rows for Target
+                tfoot += "<tr style='background-color: #fcedde;'>";
+                tfoot += "<td class='text-right font-weight-bold align-middle'>เวลาทำงาน<br><small>(HH:mm)</small></td>";
+                tfoot += "<td><select class='form-control input-sm text-center target-time' data-wc='P2FM01' style='padding:0;'>" + timeOpts + "</select></td>";
+                tfoot += "<td><select class='form-control input-sm text-center target-time' data-wc='P2FM05' style='padding:0;'>" + timeOpts + "</select></td>";
+                tfoot += "<td><select class='form-control input-sm text-center target-time' data-wc='P2FM06' style='padding:0;'>" + timeOpts + "</select></td>";
+                tfoot += "<td><select class='form-control input-sm text-center target-time' data-wc='P2FM08' style='padding:0;'>" + timeOpts + "</select></td>";
+                tfoot += "<td><select class='form-control input-sm text-center target-time' data-wc='P2FM09' style='padding:0;'>" + timeOpts + "</select></td>";
+                tfoot += "<td><select class='form-control input-sm text-center target-time' data-wc='P2FM10' style='padding:0;'>" + timeOpts + "</select></td>";
+
+                tfoot += "<td><select class='form-control input-sm text-center target-time' data-wc='W2FM02' style='padding:0;'>" + timeOpts + "</select></td>";
+                tfoot += "<td><select class='form-control input-sm text-center target-time' data-wc='W2FM04' style='padding:0;'>" + timeOpts + "</select></td>";
+                tfoot += "<td><select class='form-control input-sm text-center target-time' data-wc='W2FM07' style='padding:0;'>" + timeOpts + "</select></td>";
+                tfoot += "<td><select class='form-control input-sm text-center target-time' data-wc='W2FM11' style='padding:0;'>" + timeOpts + "</select></td>";
+                tfoot += "<td><select class='form-control input-sm text-center target-time' data-wc='W2FMC1' style='padding:0;'>" + timeOpts + "</select></td>";
+                tfoot += "<td></td>";
+                tfoot += "<td></td>";
+                tfoot += "</tr>";
+
+                tfoot += "<tr style='background-color: #deebf2;'>";
+                tfoot += "<td class='text-right font-weight-bold align-middle'>เป้าหมายการผลิต<br><small>(ตามตาราง Policy)</small></td>";
+                tfoot += "<td><input type='number' class='form-control input-sm text-center target-weight' placeholder='...' data-wc='P2FM01'></td>";
+                tfoot += "<td><input type='number' class='form-control input-sm text-center target-weight' placeholder='...' data-wc='P2FM05'></td>";
+                tfoot += "<td><input type='number' class='form-control input-sm text-center target-weight' placeholder='...' data-wc='P2FM06'></td>";
+                tfoot += "<td><input type='number' class='form-control input-sm text-center target-weight' placeholder='...' data-wc='P2FM08'></td>";
+                tfoot += "<td><input type='number' class='form-control input-sm text-center target-weight' placeholder='...' data-wc='P2FM09'></td>";
+                tfoot += "<td><input type='number' class='form-control input-sm text-center target-weight' placeholder='...' data-wc='P2FM10'></td>";
+
+                tfoot += "<td><input type='number' class='form-control input-sm text-center target-weight' placeholder='...' data-wc='W2FM02'></td>";
+                tfoot += "<td><input type='number' class='form-control input-sm text-center target-weight' placeholder='...' data-wc='W2FM04'></td>";
+                tfoot += "<td><input type='number' class='form-control input-sm text-center target-weight' placeholder='...' data-wc='W2FM07'></td>";
+                tfoot += "<td><input type='number' class='form-control input-sm text-center target-weight' placeholder='...' data-wc='W2FM11'></td>";
+                tfoot += "<td><input type='number' class='form-control input-sm text-center target-weight' placeholder='...' data-wc='W2FMC1'></td>";
+                tfoot += "<td></td>";
+                tfoot += "<td></td>";
+                tfoot += "</tr>";
+
+                $("#tfootReportSummary").html(tfoot);
+
+                // Fetch previously saved targets to populate inputs
+                $.ajax({
+                    url: "././module/STS_Planning/data.php",
+                    type: "POST",
+                    dataType: "json",
+                    data: {
+                        load: 'GetTarget',
+                        year: selectedYear,
+                        month: selectedMonth
+                    },
+                    success: function (resTarget) {
+                        if (resTarget && resTarget.length > 0) {
+                            $.each(resTarget, function (i, row) {
+                                var wcTrim = $.trim(row.wc);
+
+                                var timeVal = row.time;
+
+                                if (timeVal) {
+                                    $(".target-time[data-wc='" + wcTrim + "']").val(timeVal);
+                                }
+                                if (row.weight && parseFloat(row.weight) > 0) {
+                                    $(".target-weight[data-wc='" + wcTrim + "']").val(row.weight);
+                                }
+                            });
+                        }
+                    }
+                });
+            },
+            error: function () {
+                $("#tbodyReportSummary").html("<tr><td colspan='13' class='text-danger'>เกิดข้อผิดพลาดในการโหลดข้อมูล</td></tr>");
+            },
+            complete: function () {
+                btn.html("<i class='fa fa-refresh'></i> โหลดรายงาน (Load Report)").attr('disabled', false);
+            }
+        });
+    }
+</script>

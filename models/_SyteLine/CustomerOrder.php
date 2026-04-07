@@ -122,12 +122,13 @@ WHERE LEFT(cust_num,2) = 'TT' AND item ='$item'";
         return $rs0;
     }
 
-    function STS_EX_order($job,$co,$stsPO,$custpo,$orderdate) {
+    function STS_EX_order($job,$co,$stsPO,$custpo,$orderdate,$item) {
         $query = "EXEC [dbo].[STS_EX_order] 
 	 @job  = '$job' ,
 	 @co  = '$co',
 	 @stsPO = '$stsPO',
 	 @custpo = '$custpo',
+     @item = '$item',
 	 @orderdate = '$orderdate'";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
@@ -141,6 +142,21 @@ WHERE LEFT(cust_num,2) = 'TT' AND item ='$item'";
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
 //        array_splice($rs0, count($rs0) - 1, 1);
         return $rs0;
+    }
+
+    function SaveExJob($job, $status, $date) {
+        $cSql = new SqlSrv();
+        $query = "SELECT job FROM STS_EX_job WHERE job = '$job'";
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        
+        if (is_array($rs0) && count($rs0) > 1) {
+            $update = "UPDATE STS_EX_job SET status = '$status', [Date] = '$date' WHERE job = '$job'";
+            $cSql->SqlQuery($this->StrConn, $update);
+        } else {
+            $insert = "INSERT INTO STS_EX_job (job, status, [Date], CreateDate) VALUES ('$job', '$status', '$date', GETDATE())";
+            $cSql->SqlQuery($this->StrConn, $insert);
+        }
+        return ['status' => 'success'];
     }
 
 }
