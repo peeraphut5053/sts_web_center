@@ -274,8 +274,8 @@
                             },
                             {
                                 stack: [
-                                    { text: `${newData[i].Co_num ? newData[i].Co_num : ''}`, fontSize: 11, bold: true, font: 'Roboto', alignment: 'left' },
-                                    { text: `${newData[i].cust_po ? newData[i].cust_po : ''}`, fontSize: 11, bold: true, font: 'Roboto', alignment: 'right' },
+                                    { text: `${newData[i].Co_num ? newData[i].Co_num : ''}`, fontSize: 9, bold: true, font: 'Roboto', alignment: 'left' },
+                                    { text: `${newData[i].cust_po ? newData[i].cust_po : ''}`, fontSize: 9, bold: true, font: 'Roboto', alignment: 'right' },
                                 ]
                             },
                             { text: `[${newData[i].Co_line ? newData[i].Co_line : ''}]`, fontSize: 11, bold: true, font: 'Roboto', alignment: 'center' },
@@ -396,18 +396,18 @@
                             if (newData.length == 5) {
                                 for (let i = 0; i < 1; i++) {
                                     data.push([
-                                        { border: [false, false, false, false], text: " ", fontSize: 12, alignment: 'center' },
-                                        { border: [false, false, false, false], text: " ", fontSize: 12, alignment: 'center' },
-                                        { border: [false, false, false, false], text: " ", fontSize: 12, alignment: 'center' },
-                                        { border: [false, false, false, false], text: " ", fontSize: 12, alignment: 'center' },
-                                        { border: [false, false, false, false], text: " ", fontSize: 12, alignment: 'center' },
-                                        { border: [false, false, false, false], text: " ", fontSize: 12, alignment: 'center' },
-                                        { border: [false, false, false, false], text: " ", fontSize: 12, alignment: 'center' },
-                                        { border: [false, false, false, false], text: " ", fontSize: 12, alignment: 'center' },
-                                        { border: [false, false, false, false], text: " ", fontSize: 12, alignment: 'center' },
-                                        { border: [false, false, false, false], text: " ", fontSize: 12, alignment: 'center' },
-                                        { border: [false, false, false, false], text: " ", fontSize: 12, alignment: 'center' },
-                                        { border: [false, false, false, false], text: " ", fontSize: 12, alignment: 'center' },
+                                        { border: [false, false, false, false], text: " ", fontSize: 6, alignment: 'center' },
+                                        { border: [false, false, false, false], text: " ", fontSize: 6, alignment: 'center' },
+                                        { border: [false, false, false, false], text: " ", fontSize: 6, alignment: 'center' },
+                                        { border: [false, false, false, false], text: " ", fontSize: 6, alignment: 'center' },
+                                        { border: [false, false, false, false], text: " ", fontSize: 6, alignment: 'center' },
+                                        { border: [false, false, false, false], text: " ", fontSize: 6, alignment: 'center' },
+                                        { border: [false, false, false, false], text: " ", fontSize: 6, alignment: 'center' },
+                                        { border: [false, false, false, false], text: " ", fontSize: 6, alignment: 'center' },
+                                        { border: [false, false, false, false], text: " ", fontSize: 6, alignment: 'center' },
+                                        { border: [false, false, false, false], text: " ", fontSize: 6, alignment: 'center' },
+                                        { border: [false, false, false, false], text: " ", fontSize: 6, alignment: 'center' },
+                                        { border: [false, false, false, false], text: " ", fontSize: 6, alignment: 'center' },
                                     ])
                                 }
                             }
@@ -554,7 +554,7 @@
                             tables.push({
                                 table: {
                                     headerRows: 1,
-                                    widths: [25, 25, 220, 80, 25, 40, 30, 40, 30, 50, 50, 80],
+                                    widths: [25, 25, 220, 100, 25, 40, 30, 40, 30, 30, 50, 80],
                                     body: createData(newRes, isLastPage, result),
                                 },
                                 pageBreak: j + 5 < result.length || i < filter.length - 1 ? 'after' : '',
