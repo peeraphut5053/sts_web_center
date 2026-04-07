@@ -231,15 +231,10 @@
                     btnSelect.html("<i class='fa fa-spinner fa-spin'></i>").attr('disabled', true);
                 },
                 success: function (res) {
-                    if (res && res.status === 'success') {
                         btnSelect.removeClass('btn-primary').addClass('btn-success').html("<i class='fa fa-check'></i> บันทึกแล้ว");
                         setTimeout(function () {
                             btnSelect.removeClass('btn-success').addClass('btn-primary').html("บันทึก <i class='fa fa-save'></i>").attr('disabled', false);
                         }, 2000);
-                    } else {
-                        alert('เกิดข้อผิดพลาด: ' + (res.message || 'Unknown error'));
-                        btnSelect.html("บันทึก <i class='fa fa-save'></i>").attr('disabled', false);
-                    }
                 },
                 error: function (e) {
                     alert('Error: บันทึกข้อมูลไม่สำเร็จ กรุณาตรวจสอบข้อมูล');
