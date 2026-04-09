@@ -212,7 +212,7 @@ order by hdr.docNo, line.seq";
 
     function GetItemPlanning() {
         $cSql = new SqlSrv();
-        $query = "select item from item_mst where (item like 'F%' or item like 'W%') and item not like 'WS%' order by item";
+        $query = "select item from item_mst where (item like 'F%N' or item like 'W%N') and item not like 'WS%' order by item";
         $response = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($response, count($response) - 1, 1);
         return $response;
@@ -254,39 +254,48 @@ order by hdr.docNo, line.seq";
         $cSql = new SqlSrv();
         $successCount = 0;
         foreach($dataArray as $row) {
-            $year = $row['year'];
-            $month = $row['month'];
-            $wc = $row['wc'];
-            $item = $row['item'];
-            $job = isset($row['job']) ? $row['job'] : '';
-            $qty = $row['qty'];
-            
-            // SQL Injection prevention is generally handled by PDO or sqlsrv_query parameterization if using it, but since SqlQuery expects string let's replace single quotes to be safe.
-            $year = str_replace("'", "''", $year);
-            $month = str_replace("'", "''", $month);
-            $wc = str_replace("'", "''", $wc);
-            $item = str_replace("'", "''", $item);
-            $job = str_replace("'", "''", $job);
-            $qty = str_replace("'", "''", $qty);
+            $year = isset($row['year']) ? str_replace("'", "''", $row['year']) : '';
+            $month = isset($row['month']) ? str_replace("'", "''", $row['month']) : '';
+            $wc = isset($row['wc']) ? str_replace("'", "''", $row['wc']) : '';
+            $item = isset($row['item']) ? str_replace("'", "''", $row['item']) : '';
+            $job = isset($row['job']) ? str_replace("'", "''", $row['job']) : '';
+            $qty = isset($row['qty']) ? str_replace("'", "''", $row['qty']) : '';
 
-            $checkQuery = "SELECT * FROM STS_Prod_policy WHERE [year] = '$year' AND [month] = '$month' AND wc = '$wc' AND Item = '$item'";
-            $check = $cSql->SqlQuery($this->StrConn, $checkQuery);
-            if (is_array($check) && count($check) > 1) {
-                // Remove the last false row from SqlQuery function implementation logic if applicable
-                // Check if existing record
-                $query = "UPDATE STS_Prod_policy SET job = '$job', qty = '$qty', createdate = GETDATE() WHERE [year] = '$year' AND [month] = '$month' AND wc = '$wc' AND Item = '$item'";
+            $old_year = isset($row['old_year']) ? str_replace("'", "''", $row['old_year']) : '';
+            $old_month = isset($row['old_month']) ? str_replace("'", "''", $row['old_month']) : '';
+            $old_wc = isset($row['old_wc']) ? str_replace("'", "''", $row['old_wc']) : '';
+            $old_item = isset($row['old_item']) ? str_replace("'", "''", $row['old_item']) : '';
+
+            if ($old_item != '' && $old_wc != '') {
+                // If there's an old value, we update the existing row directly (handles PK change)
+                $query = "UPDATE STS_Prod_policy SET [year] = '$year', [month] = '$month', wc = '$wc', Item = '$item', job = '$job', qty = '$qty', createdate = GETDATE() WHERE [year] = '$old_year' AND [month] = '$old_month' AND wc = '$old_wc' AND Item = '$old_item'";
                 $cSql->SqlQuery($this->StrConn, $query);
             } else {
-                $query = "INSERT INTO STS_Prod_policy ([year], [month], wc, Item, job, qty, createdate) VALUES ('$year', '$month', '$wc', '$item', '$job', '$qty', GETDATE())";
-                $cSql->SqlQuery($this->StrConn, $query);
+                // Check if existing record
+                $checkQuery = "SELECT * FROM STS_Prod_policy WHERE [year] = '$year' AND [month] = '$month' AND wc = '$wc' AND Item = '$item'";
+                $check = $cSql->SqlQuery($this->StrConn, $checkQuery);
+                if (is_array($check) && count($check) > 1) {
+                    $query = "UPDATE STS_Prod_policy SET job = '$job', qty = '$qty', createdate = GETDATE() WHERE [year] = '$year' AND [month] = '$month' AND wc = '$wc' AND Item = '$item'";
+                    $cSql->SqlQuery($this->StrConn, $query);
+                } else {
+                    $query = "INSERT INTO STS_Prod_policy ([year], [month], wc, Item, job, qty, createdate) VALUES ('$year', '$month', '$wc', '$item', '$job', '$qty', GETDATE())";
+                    $cSql->SqlQuery($this->StrConn, $query);
+                }
             }
             $successCount++;
         }
         return $successCount;
     }
 
-    function GetSavedPlanning($year, $month) {
+    function GetSavedPlanning($year, $month, $wc = '') {
         $cSql = new SqlSrv();
+        
+        $wcFilter = "";
+        if ($wc !== '') {
+            $wc = str_replace("'", "''", $wc);
+            $wcFilter = " AND p.wc = '$wc'";
+        }
+
         $query = "
             select p.[year], p.[month], p.wc, p.Item as item, p.job, p.qty,
                 i.uf_TypeEnd as [type],
@@ -311,7 +320,7 @@ order by hdr.docNo, line.seq";
                 ) as pcs_hr
             from STS_Prod_policy p
             left join item_mst i on p.Item = i.item
-            where p.[year] = '$year' and p.[month] = '$month'
+            where p.[year] = '$year' and p.[month] = '$month' $wcFilter
             order by p.wc, p.Item
         ";
         $response = $cSql->SqlQuery($this->StrConn, $query);

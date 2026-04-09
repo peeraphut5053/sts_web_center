@@ -16,9 +16,34 @@
 <div class="tab-content" style="padding-top: 15px;">
     <!-- Tab 1: Planning Entry -->
     <div role="tabpanel" class="tab-pane active" id="planning-entry">
-        <div class="row">
-            <div class="col-md-12 mb-3 text-right" style="margin-bottom: 10px;">
-                <button class="btn btn-success" id="btnAddRow"><i class="fa fa-plus"></i> เพิ่มข้อมูล (Add Row)</button>
+        <div class="row"
+            style="margin-bottom: 20px; background-color: #f9f9f9; padding: 15px; border-radius: 5px; border: 1px solid #ddd; display: flex; align-items: center;">
+            <div class="col-md-8 text-left">
+                <form class="form-inline" onsubmit="return false;"
+                    style="display: flex; align-items: center; flex-wrap: wrap;">
+                    <div class="form-group" style="margin-right: 20px;">
+                        <label style="font-weight: bold; margin-right: 10px;">ปี (Year):</label>
+                        <select class="form-control input-sm" id="filterYear" style="width: 120px;"></select>
+                    </div>
+                    <div class="form-group" style="margin-right: 20px;">
+                        <label style="font-weight: bold; margin-right: 10px;">เดือน (Month):</label>
+                        <select class="form-control input-sm" id="filterMonth" style="width: 100px;"></select>
+                    </div>
+                    <div class="form-group" style="margin-right: 20px;">
+                        <label style="font-weight: bold; margin-right: 10px;">WC:</label>
+                        <select class="form-control input-sm" id="filterWc" style="width: 100px;">
+                            <option value="">ทั้งหมด (All)</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary btn-sm" id="btnLoadData">
+                        <i class="fa fa-search"></i> ค้นหา (Search)
+                    </button>
+                </form>
+            </div>
+            <div class="col-md-4 text-right">
+                <button class="btn btn-success btn-sm" id="btnAddRow">
+                    <i class="fa fa-plus-circle"></i> เพิ่มข้อมูล (Add Row)
+                </button>
             </div>
         </div>
 
@@ -136,6 +161,20 @@
 
     $(document).ready(function () {
 
+        var currentYear = new Date().getFullYear();
+        var currentMonth = new Date().getMonth() + 1;
+        var yOptions = "";
+        for (var i = currentYear - 2; i <= currentYear + 2; i++) {
+            yOptions += `<option value="${i}" ${i === currentYear ? 'selected' : ''}>${i}</option>`;
+        }
+        $("#filterYear").html(yOptions);
+
+        var mOptions = "";
+        for (var m = 1; m <= 12; m++) {
+            mOptions += `<option value="${m}" ${m === currentMonth ? 'selected' : ''}>${m}</option>`;
+        }
+        $("#filterMonth").html(mOptions);
+
         // Fetch WC and Item list first
         $.ajax({
             url: "././module/STS_Planning/data.php",
@@ -144,9 +183,12 @@
             data: { load: 'GetWC' },
             success: function (res) {
                 if (res) {
+                    var wcFilterOpts = `<option value="">ทั้งหมด (All)</option>`;
                     $.each(res, function (i, val) {
                         globalWcOptions += `<option value="${val.wc}">${val.wc}</option>`;
+                        wcFilterOpts += `<option value="${val.wc}">${val.wc}</option>`;
                     });
+                    $("#filterWc").html(wcFilterOpts);
                 }
 
                 // Fetch Items for datalist
@@ -164,29 +206,15 @@
                             $("#item-list").html(itemDatalist);
                         }
                         // After loading options, fetch saved table data
-                        $.ajax({
-                            url: "././module/STS_Planning/data.php",
-                            type: "POST",
-                            dataType: "json",
-                            data: {
-                                load: 'GetSavedPlanning',
-                                year: new Date().getFullYear(),
-                                month: new Date().getMonth() + 1
-                            },
-                            success: function (saved) {
-                                if (saved && saved.length > 0) {
-                                    $.each(saved, function (idx, rowdata) {
-                                        addRow(rowdata);
-                                    });
-                                } else {
-                                    // Add initial empty row if no data
-                                    addRow();
-                                }
-                            }
-                        });
+                        loadSavedData();
                     }
                 });
             }
+        });
+
+        // Search Button
+        $("#btnLoadData").click(function () {
+            loadSavedData();
         });
 
         // Bind Add Row button
@@ -205,6 +233,11 @@
             var qty = tr.find('.input-qty').val();
             var btnSelect = $(this);
 
+            var old_year = tr.data('old-year');
+            var old_month = tr.data('old-month');
+            var old_wc = tr.data('old-wc');
+            var old_item = tr.data('old-item');
+
             if (!item || item.trim() === '') {
                 alert('โปรดระบุ Item ให้ชัดเจนก่อนทำการบันทึก!');
                 return;
@@ -216,7 +249,11 @@
                 wc: wc,
                 item: item,
                 job: job,
-                qty: qty || 0
+                qty: qty || 0,
+                old_year: old_year,
+                old_month: old_month,
+                old_wc: old_wc,
+                old_item: old_item
             }];
 
             $.ajax({
@@ -231,10 +268,15 @@
                     btnSelect.html("<i class='fa fa-spinner fa-spin'></i>").attr('disabled', true);
                 },
                 success: function (res) {
-                        btnSelect.removeClass('btn-primary').addClass('btn-success').html("<i class='fa fa-check'></i> บันทึกแล้ว");
-                        setTimeout(function () {
-                            btnSelect.removeClass('btn-success').addClass('btn-primary').html("บันทึก <i class='fa fa-save'></i>").attr('disabled', false);
-                        }, 2000);
+                    tr.data('old-year', year);
+                    tr.data('old-month', month);
+                    tr.data('old-wc', wc);
+                    tr.data('old-item', item);
+
+                    btnSelect.removeClass('btn-primary').addClass('btn-success').html("<i class='fa fa-check'></i> บันทึกแล้ว");
+                    setTimeout(function () {
+                        btnSelect.removeClass('btn-success').addClass('btn-primary').html("บันทึก <i class='fa fa-save'></i>").attr('disabled', false);
+                    }, 2000);
                 },
                 error: function (e) {
                     alert('Error: บันทึกข้อมูลไม่สำเร็จ กรุณาตรวจสอบข้อมูล');
@@ -368,6 +410,43 @@
         });
     });
 
+    function loadSavedData() {
+        var fYear = $("#filterYear").val();
+        var fMonth = $("#filterMonth").val();
+        var fWc = $("#filterWc").val();
+
+        $("#tbodyPlanning").empty(); // clear existing table data first
+
+        $.ajax({
+            url: "././module/STS_Planning/data.php",
+            type: "POST",
+            dataType: "json",
+            data: {
+                load: 'GetSavedPlanning',
+                year: fYear,
+                month: fMonth,
+                wc: fWc
+            },
+            beforeSend: function () {
+                $("#btnLoadData").html("<i class='fa fa-spinner fa-spin'></i> กำลังโหลด...").attr('disabled', true);
+            },
+            success: function (saved) {
+                if (saved && saved.length > 0) {
+                    $.each(saved, function (idx, rowdata) {
+                        addRow(rowdata);
+                    });
+                } else {
+                    addRow(); // Add an empty row
+                }
+                $("#btnLoadData").html("<i class='fa fa-search'></i> ค้นหา (Search)").attr('disabled', false);
+            },
+            error: function () {
+                alert('เกิดข้อผิดพลาดในการโหลดข้อมูล');
+                $("#btnLoadData").html("<i class='fa fa-search'></i> ค้นหา (Search)").attr('disabled', false);
+            }
+        });
+    }
+
     function calculateRow(tr) {
         var qty = parseFloat(tr.find('.input-qty').val()) || 0;
         var pcs_hr = parseFloat(tr.find('.val-pcs-hr').data('val')) || 0;
@@ -458,6 +537,11 @@
 
             tr.find('.val-length-m').text(data.length_m || '-');
             tr.find('.val-weight-pcs').text(data.weight_pcs || '-').data('val', data.weight_pcs);
+
+            tr.data('old-year', data.year);
+            tr.data('old-month', data.month);
+            tr.data('old-wc', data.wc);
+            tr.data('old-item', data.item);
 
             $("#tbodyPlanning").append(tr);
             calculateRow(tr);

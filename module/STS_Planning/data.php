@@ -62,7 +62,8 @@ if ($load == "SavePlanning") {
 if ($load == "GetSavedPlanning") {
     $year = isset($_POST['year']) ? $_POST['year'] : date('Y');
     $month = isset($_POST['month']) ? $_POST['month'] : date('n');
-    $rs = $STS_Custom->GetSavedPlanning($year, $month);
+    $wc = isset($_POST['wc']) ? $_POST['wc'] : '';
+    $rs = $STS_Custom->GetSavedPlanning($year, $month, $wc);
     echo json_encode($rs);
 }
 
