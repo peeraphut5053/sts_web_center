@@ -306,7 +306,8 @@ order by hdr.docNo, line.seq";
   from item_mst item2 inner join jobroute_mst jr on jr.job = item2.job and jr.suffix = item2.suffix 
   inner join jrt_sch_mst js on js.job = item2.job and js.suffix = item2.suffix where item2.item = p.Item ) as pcs_hr 
 , job.qty_complete
-from STS_Prod_policy p left join item_mst i on p.Item = i.item left join job_mst job on job.job = p.job
+, multiplier = case when substring(i.item,22,1) = 'M' then 1 when substring(i.item,22,1) = 'F' then 0.3048 end * convert(decimal(10,4),isnull(i.uf_length_FT,0))
+from STS_Prod_policy p left join item_mst i on p.Item = i.item left join jobitem_mst job on job.job = p.job and job.item = p.item
 where p.[year] = '$year' and p.[month] = '$month' $wcFilter order by p.wc, p.Item
         ";
       

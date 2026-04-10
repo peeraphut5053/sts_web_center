@@ -18,7 +18,7 @@
     <div role="tabpanel" class="tab-pane active" id="planning-entry">
         <div class="row"
             style="margin-bottom: 20px; background-color: #f9f9f9; padding: 15px; border-radius: 5px; border: 1px solid #ddd; display: flex; align-items: center;">
-            <div class="col-md-8 text-left">
+            <div class="col-md-7 text-left">
                 <form class="form-inline" onsubmit="return false;"
                     style="display: flex; align-items: center; flex-wrap: wrap;">
                     <div class="form-group" style="margin-right: 20px;">
@@ -40,7 +40,16 @@
                     </button>
                 </form>
             </div>
-            <div class="col-md-4 text-right">
+            <div class="col-md-5 text-right">
+                <a href="http://172.18.1.194:5000/app/ProductionReportByMonth" target="_blank"
+                    class="btn btn-sm text-white font-weight-bold"
+                    style="margin-right: 5px; color: white; background: linear-gradient(45deg, #17a2b8, #138496); border: none; box-shadow: 0 2px 4px rgba(0,0,0,0.15);">
+                    <i class="fa fa-bar-chart"></i> ปริมาณการผลิต
+                </a>
+                <button class="btn btn-warning btn-sm" id="btnExportExcel" onclick="exportToExcel()"
+                    style="margin-right: 5px;">
+                    <i class="fa fa-file-excel-o"></i> Export Excel
+                </button>
                 <button class="btn btn-success btn-sm" id="btnAddRow">
                     <i class="fa fa-plus-circle"></i> เพิ่มข้อมูล (Add Row)
                 </button>
@@ -475,6 +484,9 @@
     }
 
     function addRow(data) {
+
+
+
         var currentYear = new Date().getFullYear();
         var yearOptions = "";
         for (var i = currentYear - 1; i <= currentYear + 2; i++) {
@@ -528,6 +540,7 @@
             tr.find('.input-job').val(data.job || '');
             tr.find('.input-qty').val(data.qty || 0);
             tr.find('.val-qty-complete').text(Number(data.qty_complete).toLocaleString() || '-');
+            tr.find('.val-speed').text(Number(data.multiplier * data.pcs_hr / 60).toFixed(0) || '-');
 
             tr.find('.val-type').text(data.type || '-');
             tr.find('.val-size').text(data.size || '-');
@@ -564,6 +577,53 @@
         tr.find('.val-weight-pcs').data('val', '');
     }
 
+    function exportToExcel() {
+        var tableHTML = '<html xmlns:x="urn:schemas-microsoft-com:office:excel">';
+        tableHTML += '<head><meta charset="utf-8"><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>Planning_Entry</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body>';
+
+        var tableData = '<table border="1">';
+        // Get Headers
+        tableData += '<tr>';
+        $('#tblPlanningEntry thead th').each(function (index) {
+            if (index !== 0) { // Skip Action column
+                tableData += '<th>' + $(this).text() + '</th>';
+            }
+        });
+        tableData += '</tr>';
+
+        // Get Data from rows
+        $('#tbodyPlanning tr').each(function () {
+            tableData += '<tr>';
+            $(this).find('td').each(function (index) {
+                if (index !== 0) { // Skip Action column
+                    var val = $(this).find('input, select').length > 0 ? $(this).find('input, select').val() : $(this).text();
+                    tableData += '<td>' + $.trim(val) + '</td>';
+                }
+            });
+            tableData += '</tr>';
+        });
+
+        tableData += '</table>';
+        tableHTML += tableData + '</body></html>';
+
+        var dataType = 'application/vnd.ms-excel';
+        var fileName = 'Planning_Entry.xls';
+
+        var blob = new Blob([tableHTML], {
+            type: dataType
+        });
+
+        if (navigator.msSaveOrOpenBlob) {
+            navigator.msSaveOrOpenBlob(blob, fileName);
+        } else {
+            var a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+    }
     function loadSummaryReport() {
         var selectedYear = $("#selReportYear").val() || 2026;
         var selectedMonth = $("#selReportMonth").val() || 4;
