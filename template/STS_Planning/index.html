@@ -66,6 +66,7 @@
                         <th>SCH.</th>
                         <th>LENGTH</th>
                         <th style="background-color: #f0ad4e; color: black;">จำนวน</th>
+                        <th style="background-color: #f0ad4e; color: black;">Qty Complete</th>
                         <th>Speed M/min.</th>
                         <th>PCS./min</th>
                         <th>PCS./hr.</th>
@@ -237,6 +238,7 @@
             var old_month = tr.data('old-month');
             var old_wc = tr.data('old-wc');
             var old_item = tr.data('old-item');
+            var old_job = tr.data('old-job');
 
             if (!item || item.trim() === '') {
                 alert('โปรดระบุ Item ให้ชัดเจนก่อนทำการบันทึก!');
@@ -253,7 +255,8 @@
                 old_year: old_year,
                 old_month: old_month,
                 old_wc: old_wc,
-                old_item: old_item
+                old_item: old_item,
+                old_job: old_job
             }];
 
             $.ajax({
@@ -272,6 +275,7 @@
                     tr.data('old-month', month);
                     tr.data('old-wc', wc);
                     tr.data('old-item', item);
+                    tr.data('old-job', job);
 
                     btnSelect.removeClass('btn-primary').addClass('btn-success').html("<i class='fa fa-check'></i> บันทึกแล้ว");
                     setTimeout(function () {
@@ -501,6 +505,7 @@
                 <td class="val-sch align-middle">-</td>
                 <td class="val-length align-middle">-</td>
                 <td><input type="number" class="form-control input-sm input-qty" style="width: 100px;" value="0"></td>
+                <td class="val-qty-complete align-middle">-</td>
                 <td class="val-speed align-middle">-</td>
                 <td class="val-pcs-min align-middle">-</td>
                 <td class="val-pcs-hr align-middle">-</td>
@@ -522,6 +527,7 @@
             tr.find('.input-item').val(data.item);
             tr.find('.input-job').val(data.job || '');
             tr.find('.input-qty').val(data.qty || 0);
+            tr.find('.val-qty-complete').text(Number(data.qty_complete).toLocaleString() || '-');
 
             tr.find('.val-type').text(data.type || '-');
             tr.find('.val-size').text(data.size || '-');
@@ -542,6 +548,7 @@
             tr.data('old-month', data.month);
             tr.data('old-wc', data.wc);
             tr.data('old-item', data.item);
+            tr.data('old-job', data.job);
 
             $("#tbodyPlanning").append(tr);
             calculateRow(tr);

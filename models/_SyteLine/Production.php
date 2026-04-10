@@ -265,10 +265,11 @@ order by hdr.docNo, line.seq";
             $old_month = isset($row['old_month']) ? str_replace("'", "''", $row['old_month']) : '';
             $old_wc = isset($row['old_wc']) ? str_replace("'", "''", $row['old_wc']) : '';
             $old_item = isset($row['old_item']) ? str_replace("'", "''", $row['old_item']) : '';
+            $old_job = isset($row['old_job']) ? str_replace("'", "''", $row['old_job']) : '';
 
             if ($old_item != '' && $old_wc != '') {
                 // If there's an old value, we update the existing row directly (handles PK change)
-                $query = "UPDATE STS_Prod_policy SET [year] = '$year', [month] = '$month', wc = '$wc', Item = '$item', job = '$job', qty = '$qty', createdate = GETDATE() WHERE [year] = '$old_year' AND [month] = '$old_month' AND wc = '$old_wc' AND Item = '$old_item'";
+                $query = "UPDATE STS_Prod_policy SET [year] = '$year', [month] = '$month', wc = '$wc', Item = '$item', job = '$job', qty = '$qty', createdate = GETDATE() WHERE [year] = '$old_year' AND [month] = '$old_month' AND wc = '$old_wc' AND Item = '$old_item' AND job = '$old_job'";
                 $cSql->SqlQuery($this->StrConn, $query);
             } else {
                 // Check if existing record
@@ -297,32 +298,18 @@ order by hdr.docNo, line.seq";
         }
 
         $query = "
-            select p.[year], p.[month], p.wc, p.Item as item, p.job, p.qty,
-                i.uf_TypeEnd as [type],
-                i.uf_NPS as size,
-                i.uf_class as spec,
-                i.Uf_Grade as grade,
-                i.Uf_Schedule as sch,
-                i.Uf_thickness as thick,
-                i.Uf_length as [length],
-                i.Uf_pack as [pack],
-                i.Uf_length_FT as length_m,
-                i.unit_weight as weight_pcs,
-                (select top 1 CASE WHEN jr.run_basis_mch  = 'P' 
-                             and js.run_mch_hrs <> 0 
-                      THEN  js.pcs_per_mch_hr
-                      ELSE js.run_mch_hrs 
-                      END
-                 from item_mst item2 
-                 inner join jobroute_mst jr on jr.job = item2.job and jr.suffix = item2.suffix
-                 inner join jrt_sch_mst js on js.job = item2.job and js.suffix = item2.suffix
-                 where item2.item = p.Item
-                ) as pcs_hr
-            from STS_Prod_policy p
-            left join item_mst i on p.Item = i.item
-            where p.[year] = '$year' and p.[month] = '$month' $wcFilter
-            order by p.wc, p.Item
+            select p.[year], p.[month], p.wc, p.Item as item, p.job
+, p.qty, i.uf_TypeEnd as [type], i.uf_NPS as size, i.uf_class as spec
+, i.Uf_Grade as grade, i.Uf_Schedule as sch, i.Uf_thickness as thick
+, i.Uf_length as [length], i.Uf_pack as [pack], i.Uf_length_FT as length_m, i.unit_weight as weight_pcs
+, (select top 1 CASE WHEN jr.run_basis_mch = 'P' and js.run_mch_hrs <> 0 THEN js.pcs_per_mch_hr ELSE js.run_mch_hrs END 
+  from item_mst item2 inner join jobroute_mst jr on jr.job = item2.job and jr.suffix = item2.suffix 
+  inner join jrt_sch_mst js on js.job = item2.job and js.suffix = item2.suffix where item2.item = p.Item ) as pcs_hr 
+, job.qty_complete
+from STS_Prod_policy p left join item_mst i on p.Item = i.item left join job_mst job on job.job = p.job
+where p.[year] = '$year' and p.[month] = '$month' $wcFilter order by p.wc, p.Item
         ";
+      
         $response = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($response, count($response) - 1, 1);
         return $response;
