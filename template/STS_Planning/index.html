@@ -217,6 +217,10 @@
                         }
                         // After loading options, fetch saved table data
                         loadSavedData();
+                    },
+                    error: function () {
+                        // โหลด item list ไม่สำเร็จ แต่ยังโหลดข้อมูลตารางได้
+                        loadSavedData();
                     }
                 });
             }
@@ -298,10 +302,7 @@
             });
         });
 
-        // Delete Row
-        $(document).on('click', '.btn-delete-row', function () {
-            $(this).closest('tr').remove();
-        });
+
 
         // When item changes, fetch data from DB
         $(document).on('change', '.input-item', function () {
@@ -358,11 +359,10 @@
             calculateRow($(this).closest('tr'));
         });
 
-        // Setup Year and Month selects
-        var currentYear = new Date().getFullYear();
+        // Setup Year and Month selects (ใช้ currentYear/currentMonth ที่ประกาศไว้แล้วด้านบน)
         var yearHtml = "";
         for (var y = currentYear - 2; y <= currentYear + 2; y++) {
-            var sel = (y === 2026) ? "selected" : "";
+            var sel = (y === currentYear) ? "selected" : "";
             yearHtml += "<option value='" + y + "' " + sel + ">" + y + "</option>";
         }
         $("#selReportYear").html(yearHtml);
@@ -370,7 +370,7 @@
         var monthHtml = "";
         var monthNames = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
         for (var m = 1; m <= 12; m++) {
-            var sel = (m === 4) ? "selected" : "";
+            var sel = (m === currentMonth) ? "selected" : "";
             monthHtml += "<option value='" + m + "' " + sel + ">" + monthNames[m - 1] + "</option>";
         }
         $("#selReportMonth").html(monthHtml);
@@ -539,8 +539,8 @@
             tr.find('.input-item').val(data.item);
             tr.find('.input-job').val(data.job || '');
             tr.find('.input-qty').val(data.qty || 0);
-            tr.find('.val-qty-complete').text(Number(data.qty_complete).toLocaleString() || '-');
-            tr.find('.val-speed').text(Number(data.multiplier * data.pcs_hr / 60).toFixed(0) || '-');
+            tr.find('.val-qty-complete').text((data.qty_complete != null && data.qty_complete !== '') ? Number(data.qty_complete).toLocaleString() : '-');
+            tr.find('.val-speed').text((data.multiplier > 0 && data.pcs_hr > 0) ? Number(data.multiplier * data.pcs_hr / 60).toFixed(0) : '-');
 
             tr.find('.val-type').text(data.type || '-');
             tr.find('.val-size').text(data.size || '-');
@@ -571,8 +571,7 @@
     }
 
     function resetRowData(tr) {
-        tr.find('td[class^="val-"]').text('-');
-        tr.find('.val-weight-ton').text('-');
+        tr.find('td[class*="val-"]').text('-'); // ใช้ *= แทน ^= เพื่อรองรับ class ที่ไม่ได้ขึ้นต้นด้วย val-
         tr.find('.val-pcs-hr').data('val', '');
         tr.find('.val-weight-pcs').data('val', '');
     }
@@ -772,10 +771,7 @@
                 $("#tbodyReportSummary").html(html);
 
                 // Build tfoot
-                var formatTfoot = function (val) {
-                    return val > 0 ? val.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '-';
-                };
-                var tfoot = "<tr style='font-weight: bold; background-color: #f2dede;'>";
+                var tfoot = "";
 
                 var timeOpts = "<option value=''></option>";
                 timeOpts += "<option value='08.00-18.30'>08.00-18.30</option>";
@@ -852,7 +848,7 @@
                 });
             },
             error: function () {
-                $("#tbodyReportSummary").html("<tr><td colspan='13' class='text-danger'>เกิดข้อผิดพลาดในการโหลดข้อมูล</td></tr>");
+                $("#tbodyReportSummary").html("<tr><td colspan='14' class='text-danger'>เกิดข้อผิดพลาดในการโหลดข้อมูล</td></tr>");
             },
             complete: function () {
                 btn.html("<i class='fa fa-refresh'></i> โหลดรายงาน (Load Report)").attr('disabled', false);
