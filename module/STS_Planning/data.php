@@ -73,8 +73,6 @@ if ($load == "GetReport") {
 }
 
 if ($load == "GetTarget") {
-    $year = isset($_POST['year']) ? $_POST['year'] : date('Y');
-    $month = isset($_POST['month']) ? $_POST['month'] : date('n');
     $rs = $STS_Custom->GetTarget($year, $month);
     echo json_encode($rs);
 }
