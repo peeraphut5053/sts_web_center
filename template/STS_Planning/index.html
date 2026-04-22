@@ -380,11 +380,12 @@
             loadSummaryReport();
         });
 
-        $(document).on('change', '.target-time, .target-weight', function () {
+        $(document).on('change', '.target-time, .target-weight, .target-day-work', function () {
             var input = $(this);
             var wc = input.data('wc');
             var timeInput = $(".target-time[data-wc='" + wc + "']").val();
             var weightInput = $(".target-weight[data-wc='" + wc + "']").val();
+            var dayWorkInput = $(".target-day-work[data-wc='" + wc + "']").val();
 
             input.css('background-color', '#fff3cd');
 
@@ -393,7 +394,8 @@
                 month: $("#selReportMonth").val() || 4,
                 wc: wc,
                 time: timeInput || "00:00",
-                weight: weightInput || 0
+                weight: weightInput || 0,
+                day_work: dayWorkInput || 0
             }];
 
             $.ajax({
@@ -631,18 +633,26 @@
         var thaiYear = parseInt(selectedYear) + 543;
         $("#reportHeaderDate").text("1-" + daysInMonth + "/" + selectedMonth + "/" + thaiYear);
 
-        var workingDays = 0;
-        for (var d = 1; d <= daysInMonth; d++) {
-            var date = new Date(selectedYear, parseInt(selectedMonth) - 1, d);
-            if (date.getDay() !== 0) { // 0 is Sunday
-                workingDays++;
-            }
-        }
-
         var btn = $("#btnLoadReport");
         btn.html("<i class='fa fa-spinner fa-spin'></i> กำลังโหลด...").attr('disabled', true);
         $("#tbodyReportSummary").html("<tr><td colspan='14'><i class='fa fa-spinner fa-spin'></i> กำลังโหลดข้อมูล...</td></tr>");
         $("#tfootReportSummary").empty();
+
+        var targetRows = [];
+        $.ajax({
+            url: "././module/STS_Planning/data.php",
+            type: "POST",
+            dataType: "json",
+            async: false,
+            data: {
+                load: 'GetTarget',
+                year: selectedYear,
+                month: selectedMonth
+            },
+            success: function (resTarget) {
+                targetRows = resTarget || [];
+            }
+        });
 
         $.ajax({
             url: "././module/STS_Planning/data.php",
@@ -656,6 +666,12 @@
                     W2FM02: 0, W2FM04: 0, W2FM07: 0, W2FM11: 0, W2FMC1: 0,
                     totalAll: 0
                 };
+                var dayWorkByWc = {};
+
+                $.each(targetRows, function (i, row) {
+                    var wc = $.trim(row.wc);
+                    dayWorkByWc[wc] = parseFloat(row.day_work) || 0;
+                });
 
                 if (res && res.length > 0) {
                     var rowsArray = [];
@@ -701,6 +717,15 @@
                     var formatNumber = function (val) {
                         return val > 0 ? val.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '-';
                     };
+                    var avgByDayWork = function (wc) {
+                        var dayWork = dayWorkByWc[wc] || 0;
+                        return dayWork > 0 ? sumCols[wc] / dayWork : 0;
+                    };
+                    var totalAvgByDayWork =
+                        avgByDayWork('P2FM01') + avgByDayWork('P2FM05') + avgByDayWork('P2FM06') +
+                        avgByDayWork('P2FM08') + avgByDayWork('P2FM09') + avgByDayWork('P2FM10') +
+                        avgByDayWork('W2FM02') + avgByDayWork('W2FM04') + avgByDayWork('W2FM07') +
+                        avgByDayWork('W2FM11') + avgByDayWork('W2FMC1');
 
                     // Top total row
                     html += "<tr style='font-weight: bold; background-color: #eaeaea;'>";
@@ -723,21 +748,21 @@
 
                     // Top avg row
                     html += "<tr style='font-weight: bold; background-color: #f5f5f5;'>";
-                    html += "<td class='text-left'>เฉลี่ยต่อวัน<br>(" + workingDays + " วัน)</td>";
-                    html += "<td>" + formatNumber(workingDays > 0 ? sumCols.P2FM01 / workingDays : 0) + "</td>";
-                    html += "<td>" + formatNumber(workingDays > 0 ? sumCols.P2FM05 / workingDays : 0) + "</td>";
-                    html += "<td>" + formatNumber(workingDays > 0 ? sumCols.P2FM06 / workingDays : 0) + "</td>";
-                    html += "<td>" + formatNumber(workingDays > 0 ? sumCols.P2FM08 / workingDays : 0) + "</td>";
-                    html += "<td>" + formatNumber(workingDays > 0 ? sumCols.P2FM09 / workingDays : 0) + "</td>";
-                    html += "<td>" + formatNumber(workingDays > 0 ? sumCols.P2FM10 / workingDays : 0) + "</td>";
+                    html += "<td class='text-left'>เฉลี่ยต่อวัน<br>(" + (dayWorkByWc.P2FM01 || 0) + " วัน)</td>";
+                    html += "<td>" + formatNumber(avgByDayWork('P2FM01')) + "</td>";
+                    html += "<td>" + formatNumber(avgByDayWork('P2FM05')) + "</td>";
+                    html += "<td>" + formatNumber(avgByDayWork('P2FM06')) + "</td>";
+                    html += "<td>" + formatNumber(avgByDayWork('P2FM08')) + "</td>";
+                    html += "<td>" + formatNumber(avgByDayWork('P2FM09')) + "</td>";
+                    html += "<td>" + formatNumber(avgByDayWork('P2FM10')) + "</td>";
 
-                    html += "<td>" + formatNumber(workingDays > 0 ? sumCols.W2FM02 / workingDays : 0) + "</td>";
-                    html += "<td>" + formatNumber(workingDays > 0 ? sumCols.W2FM04 / workingDays : 0) + "</td>";
-                    html += "<td>" + formatNumber(workingDays > 0 ? sumCols.W2FM07 / workingDays : 0) + "</td>";
-                    html += "<td>" + formatNumber(workingDays > 0 ? sumCols.W2FM11 / workingDays : 0) + "</td>";
-                    html += "<td>" + formatNumber(workingDays > 0 ? sumCols.W2FMC1 / workingDays : 0) + "</td>";
+                    html += "<td>" + formatNumber(avgByDayWork('W2FM02')) + "</td>";
+                    html += "<td>" + formatNumber(avgByDayWork('W2FM04')) + "</td>";
+                    html += "<td>" + formatNumber(avgByDayWork('W2FM07')) + "</td>";
+                    html += "<td>" + formatNumber(avgByDayWork('W2FM11')) + "</td>";
+                    html += "<td>" + formatNumber(avgByDayWork('W2FMC1')) + "</td>";
 
-                    html += "<td colspan='2' style='font-size: 15px;'>" + formatNumber(workingDays > 0 ? sumCols.totalAll / workingDays : 0) + "</td>";
+                    html += "<td colspan='2' style='font-size: 15px;'>" + formatNumber(totalAvgByDayWork) + "</td>";
                     html += "</tr>";
 
                     // Data Rows
@@ -817,6 +842,24 @@
                 tfoot += "<td></td>";
                 tfoot += "</tr>";
 
+                tfoot += "<tr style='background-color: #deebf2;'>";
+                tfoot += "<td class='text-right font-weight-bold align-middle'>จำนวนวันทำงาน</td>";
+                tfoot += "<td><input type='number' class='form-control input-sm text-center target-day-work' placeholder='...' data-wc='P2FM01'></td>";
+                tfoot += "<td><input type='number' class='form-control input-sm text-center target-day-work' placeholder='...' data-wc='P2FM05'></td>";
+                tfoot += "<td><input type='number' class='form-control input-sm text-center target-day-work' placeholder='...' data-wc='P2FM06'></td>";
+                tfoot += "<td><input type='number' class='form-control input-sm text-center target-day-work' placeholder='...' data-wc='P2FM08'></td>";
+                tfoot += "<td><input type='number' class='form-control input-sm text-center target-day-work' placeholder='...' data-wc='P2FM09'></td>";
+                tfoot += "<td><input type='number' class='form-control input-sm text-center target-day-work' placeholder='...' data-wc='P2FM10'></td>";
+
+                tfoot += "<td><input type='number' class='form-control input-sm text-center target-day-work' placeholder='...' data-wc='W2FM02'></td>";
+                tfoot += "<td><input type='number' class='form-control input-sm text-center target-day-work' placeholder='...' data-wc='W2FM04'></td>";
+                tfoot += "<td><input type='number' class='form-control input-sm text-center target-day-work' placeholder='...' data-wc='W2FM07'></td>";
+                tfoot += "<td><input type='number' class='form-control input-sm text-center target-day-work' placeholder='...' data-wc='W2FM11'></td>";
+                tfoot += "<td><input type='number' class='form-control input-sm text-center target-day-work' placeholder='...' data-wc='W2FMC1'></td>";
+                tfoot += "<td></td>";
+                tfoot += "<td></td>";
+                tfoot += "</tr>";
+
                 $("#tfootReportSummary").html(tfoot);
 
                 // Fetch previously saved targets to populate inputs
@@ -841,6 +884,9 @@
                                 }
                                 if (row.weight && parseFloat(row.weight) > 0) {
                                     $(".target-weight[data-wc='" + wcTrim + "']").val(row.weight);
+                                }
+                                if (row.day_work && parseFloat(row.day_work) > 0) {
+                                    $(".target-day-work[data-wc='" + wcTrim + "']").val(row.day_work);
                                 }
                             });
                         }

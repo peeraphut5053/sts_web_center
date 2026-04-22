@@ -333,7 +333,7 @@ PIVOT (sum([weight]) for wc in ([P2FM01],[P2FM05],[P2FM06],[P2FM08],[P2FM09],[P2
     function GetTarget($year, $month) {
         $cSql = new SqlSrv();
         $query = "
-            SELECT [year], [month], wc, time, [weight]
+            SELECT [year], [month], wc, time, [weight], [day_work]
             FROM STS_Prod_policy_weight
             WHERE [year] = '$year' AND [month] = '$month'
             ORDER BY wc
@@ -352,12 +352,14 @@ PIVOT (sum([weight]) for wc in ([P2FM01],[P2FM05],[P2FM06],[P2FM08],[P2FM09],[P2
             $wc = $row['wc'];
             $time = $row['time'];
             $weight = $row['weight'];
+            $day_work = isset($row['day_work']) ? $row['day_work'] : 0;
             
             $year = str_replace("'", "''", $year);
             $month = str_replace("'", "''", $month);
             $wc = str_replace("'", "''", $wc);
             $time = str_replace("'", "''", $time);
             $weight = str_replace("'", "''", $weight);
+            $day_work = str_replace("'", "''", $day_work);
             
             $checkQry = "SELECT top 1 wc FROM STS_Prod_policy_weight WHERE [year] = '$year' AND [month] = '$month' AND wc = '$wc'";
             $checkRs = $cSql->SqlQuery($this->StrConn, $checkQry);
@@ -366,18 +368,42 @@ PIVOT (sum([weight]) for wc in ([P2FM01],[P2FM05],[P2FM06],[P2FM08],[P2FM09],[P2
             
             if ($cnt > 0) {
                 // UPDATE
-                $query = "UPDATE STS_Prod_policy_weight SET [time] = '$time', [weight] = '$weight', createdate = GETDATE() WHERE [year] = '$year' AND [month] = '$month' AND wc = '$wc'";
+                $query = "UPDATE STS_Prod_policy_weight SET [time] = '$time', [weight] = '$weight', [day_work] = '$day_work', createdate = GETDATE() WHERE [year] = '$year' AND [month] = '$month' AND wc = '$wc'";
                 $cSql->SqlQuery($this->StrConn, $query);
-                echo $query;
             } else {
                 // INSERT
-                $query = "INSERT INTO STS_Prod_policy_weight ([year], [month], wc, [time], [weight], createdate) VALUES ('$year', '$month', '$wc', '$time', '$weight', GETDATE())";
+                $query = "INSERT INTO STS_Prod_policy_weight ([year], [month], wc, [time], [weight], [day_work], createdate) VALUES ('$year', '$month', '$wc', '$time', '$weight', '$day_work', GETDATE())";
                 $cSql->SqlQuery($this->StrConn, $query);
-                echo $query;
             }
         }
         
         return array('status' => 'success');
+    }
+
+    function GetTag() {
+        $cSql = new SqlSrv();
+        $query = "
+            select MV_Job.*,job_mst.ord_num,job_mst.Uf_refno, job_mst.Uf_remark       
+ , operationSpeed = case when mv_job.wc like '%FM01' then fs.FM1
+                      when mv_job.wc like '%FM02' then fs.FM2
+       when mv_job.wc like '%FM04' then fs.FM4
+       when mv_job.wc like '%FM05' then fs.FM5
+       when mv_job.wc like '%FM06' then fs.FM6
+       when mv_job.wc like '%FM07' then fs.FM7
+       when mv_job.wc like '%FM08' then fs.FM8
+       when mv_job.wc like '%FM09' then fs.FM9
+       when mv_job.wc like '%FM10' then fs.FM10
+       when mv_job.wc like '%FM11' then fs.FM11
+       when mv_job.wc like '%C%' then fs.FMC
+      else 0 end
+ from MV_Job 
+ LEFT JOIN job_mst ON MV_Job.job = job_mst.job 
+ left join STS_forming_speed fs on mv_job.item like '%'+fs.item+'%'
+ where ltrim(MV_Job.job) = 'FM26020001' and MV_Job.suffix = '0' and MV_Job.oper_num = '10';
+        ";
+        $response = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($response, count($response) - 1, 1);
+        return $response;
     }
 
 }
