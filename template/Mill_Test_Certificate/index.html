@@ -822,7 +822,7 @@
                             }
                             },
                     ],
-                    'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                    'dom': "<'row'<'col-md-8'B><'col-md-4 text-right col-flt-page'lf>>" +
                             "<'row'<'col-md-12'tr>>" +
                             "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
                    buttons: [
@@ -957,7 +957,7 @@
                             makePDF2(data,'out');
                         }
                         },
-                        {
+                        {/*
                            text: `<button type="button" class="btn btn-danger${do_num.substr(0, 2) !== 'DX' ? ' hide' : ''}">BULK</button>`,
                            action: function (e, dt, node, config ) {
                             var data = dt.rows().data().toArray();
@@ -965,7 +965,7 @@
                             $('#format').val(1);
                             $('#ModalMillTest').modal('show');
                         }
-                        },
+                        },*/},
                         {
                            text: `<button type="button" class="btn btn-info${do_num.substr(0, 2) !== 'DX' ? ' hide' : ''}">พิมพ์รายงานขายนอก Canada</button>`,
                            action: function (e, dt, node, config ) {
@@ -973,14 +973,21 @@
                             makePDF(data,'out','Canada');
                         }
                         },
-                        {
+                                                {
+                           text: `<button type="button" class="btn btn-danger${do_num.substr(0, 2) !== 'DX' ? ' hide' : ''}">ขายนอก US NAP</button>`,
+                           action: function (e, dt, node, config ) {
+                            var data = dt.rows().data().toArray();
+                            makePDF_US_NAP(data,'out','Canada');
+                        }
+                        },
+                        {/*
                            text: `<button type="button" class="btn btn-danger${do_num.substr(0, 2) !== 'DX' ? ' hide' : ''}">BULK Canada</button>`,
                            action: function (e, dt, node, config ) {
                             var data = dt.rows().data().toArray();
                             $('#dx_num_can').val(data[0].do_num);
                             $('#ModalMillTestCannada').modal('show');
                         }
-                        },
+                        },*/},
                         {
                             text: `<button type="button" class="btn btn-primary${do_num.substr(0, 2) !== 'DX' ? ' hide' : ''}">พิมพ์ใบปะหน้า</button>`,
                            action: function (e, dt, node, config ) {
@@ -2149,7 +2156,7 @@ function createTables() {
                 table: {
                     headerRows: 2,
                     background: 'red',
-                    widths: [14, 15, 20, 20, 20, 20, 20, 18, 22, 22, 22, 22, 24, 24, 24, 24, 24, 24, 24, 18, 18, 18,18, 18, 18, 20, 20, 20],
+                    widths: [10, 15, 20, 20, 20, 20, 20, 20, 22, 22, 22, 22, 24, 24, 24, 24, 24, 24, 24, 18, 18, 18,18, 18, 18, 20, 20, 20],
                     body: createData(newRes, i),
                 },
                 // Add a page break after every table except the last one
@@ -2331,6 +2338,534 @@ var docDefinition = {
         font: 'THSarabunNew',
     },
 };
+
+pdfMake.createPdf(docDefinition).open();
+
+    
+}
+});
+}
+
+function makePDF_US_NAP(dataPDF,type,load) {
+    
+    pdfMake.fonts = {
+        THSarabunNew: {
+            normal: 'THSarabunNew.ttf',
+            bold: 'THSarabunNew Bold.ttf',
+            italics: 'THSarabunNew-Italic.ttf',
+            bolditalics: 'THSarabunNew-BoldItalic.ttf'
+        },
+        Roboto: {
+            normal: 'Roboto-Regular.ttf',
+            bold: 'Roboto-Medium.ttf',
+            italics: 'Roboto-Italic.ttf',
+            bolditalics: 'Roboto-MediumItalic.ttf'
+        }
+    };
+
+    let loads = 'makePDF_US_NAP';
+
+    $.ajax({
+            type: 'POST',
+            url: "././module/APP_Qc_TestLab/data.php",
+            dataType: 'json',
+            data: {
+                "load": loads,
+                "do_num": dataPDF[0].do_num,
+                "co_num": dataPDF[0].co_num ? dataPDF[0].co_num : '',
+                "line_start": dataPDF[0].line_start ? dataPDF[0].line_start : 1,
+                "line_end": dataPDF[0].line_end ? dataPDF[0].line_end : 99,
+                "type": type
+            },
+            beforeSend: function () {
+                $(function(){
+                    $('#modal-loading').modal('show');
+                });
+            },
+            success: function (data) {
+                $('#modal-loading').modal('hide');
+                const dataNow = data
+                console.log(dataNow, 'dataNow');
+                
+
+    
+// filter duplicate size
+const filter = dataNow.filter((value, index, self) =>
+    index === self.findIndex((t) => (
+        t.ref_num + t.ref_line_suf === value.ref_num + value.ref_line_suf
+    ))
+); 
+  {/*let spec = new Set();
+    filter.forEach(element => {
+       spec.add(element.Uf_spec);
+    });
+  // covert spec set to string 
+  let specStr = '';
+    spec.forEach((key, index)=>{
+        if(index < spec.size - 1){
+            specStr += ' ' + key;
+        }else{
+            specStr += ' ' + key;
+        }
+    })*/}
+
+
+//var testOne = $("input[name='TestOne']:checked").val();
+//var testTwo = $("input[name='TestTwo']:checked").val();
+//var testThree = $("input[name='TestThree']:checked").val();
+//var testFour = $("input[name='TestFour']:checked").val();
+//var testFive = $("input[name='TestFive']:checked").val();
+var zinc = $("input[name='Zinc']:checked").val();
+
+
+let page = 0;
+function createData(res,index) {
+    let unique = res.filter((value, index, self) =>
+    index === self.findIndex((t) => (
+        t.item === value.item
+    ))
+    ); 
+    
+    let titleZinc = zinc == undefined ? 'Zinc Coating Weight                 (g/m2)' : 'Zinc Coating Thinness (um)';
+
+    let data = [];
+    data.push(
+    [
+    { text: `${type !== 'bulk' ? 'ITEM' : 'TYPE OF PIPE END'}`, rowSpan: 2, fontSize: 9, bold: true, fillColor: '#DCDCDC', alignment: 'center', style: 'header', colSpan: type !== 'bulk' ? 1 : 2 },
+    { text: 'TYPE OF PIPE END', rowSpan: 2,fillColor: '#DCDCDC', fontSize: 9,bold: true, alignment: 'center', style: 'header' },
+    { text: 'DIMENSION', colSpan: 3, fontSize: 9,bold: true, fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
+    {}, {},
+    { text: 'NUMBER OF BUNDLES', rowSpan: 2,fillColor: '#DCDCDC', fontSize: 9,bold: true, alignment: 'center', style: 'header' },
+    { text: 'NUMBER OF PIECES', rowSpan: 2,fillColor: '#DCDCDC', fontSize: 9,bold: true, alignment: 'center', style: 'header' },
+    { text: 'H/N (STS)', rowSpan: 2, fontSize: 9,bold: true,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
+    { text: 'CHEMICAL COMPOSITION %',fillColor: '#DCDCDC', colSpan: 11,bold: true, fontSize: 9, alignment: 'center', style: 'header' },
+    {}, {}, {}, {}, {}, {}, {}, {},{},{},
+    { text: 'MECHANICAL PROPERTIES', colSpan: 3, fontSize: 9,fillColor: '#DCDCDC',bold: true, alignment: 'center', style: 'header' },
+    {}, {},
+    { text: 'HYDRO-STATIC TEST', rowSpan: 2, fontSize: 9,fillColor: '#DCDCDC', bold: true,alignment: 'center', style: 'header' },
+    { text: 'Pb', rowSpan: 2, fontSize: 9,fillColor: '#DCDCDC',bold: true, alignment: 'center', style: 'header' },
+    { text: `${titleZinc}`, rowSpan: 2, fontSize: 8,fillColor: '#DCDCDC',bold: true, alignment: 'center', style: 'header' },
+  ],
+  // ชั้นที่ 2 ของ header
+  [
+    {}, {},
+    { text: 'NPS', fontSize: 9, bold: true,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
+    { text: 'Thickness', fontSize: 8,bold: true,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
+    { text: 'Length', fontSize: 9,bold: true,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
+    {}, {},{},
+    { text: 'C', fontSize: 9,bold: true,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
+    { text: 'Si', fontSize: 9,bold: true,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
+    { text: 'Mn', fontSize: 9,bold: true,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
+    { text: 'P', fontSize: 9,bold: true,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
+    { text: 'S', fontSize: 9,bold: true,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
+    { text: 'Cu', fontSize: 9,bold: true,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
+    { text: 'V', fontSize: 9,bold: true,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
+    { text: 'Ni', fontSize: 9,bold: true,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
+    { text: 'Cr', fontSize: 9,bold: true,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
+    { text: 'Mo', fontSize: 9,bold: true,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
+    { text: 'Nb', fontSize: 9,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
+    { text: 'T.S.', fontSize: 9,bold: true,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
+    { text: 'Y.P.', fontSize: 9,bold: true,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
+    { text: 'El', fontSize: 9,bold: true,fillColor: '#DCDCDC', alignment: 'center', style: 'header' },
+    {}, {}
+  ]
+)
+
+// var sumBundle = res.reduce((a, b) => a + b.TAGbundle, 0);
+var sumPiece = res.reduce((a, b) => a + Number(b.TAGsumqty), 0);
+
+for (let i = 0; i <= res.length-1; i++) {
+    data.push([
+  { text: `${type !== 'bulk' ? unique[i]?.uf_typeEnd ? index + 1 : '' : unique[i]?.uf_typeEnd ? unique[i]?.uf_typeEnd : ''}`,bold: true ,alignment: 'center', font: 'Roboto', fontSize: 6, colSpan: type !== 'bulk' ? 1 : 2 },
+  { text: `${unique[i]?.uf_typeEnd ? unique[i]?.uf_typeEnd : ''}`,bold: true , alignment: 'center', font: 'Roboto', fontSize: 6 },
+  { text: `${unique[i]?.size ? unique[i]?.size : ''}`,bold: true , alignment: 'center', font: 'Roboto', fontSize: 6 },
+  { text: `${unique[i]?.Uf_Schedule ? res[i]?.Uf_Schedule : ''}`,bold: true , alignment: 'center', font: 'Roboto', fontSize: 6 },
+  { text: `${unique[i]?.length? unique[i]?.length : ''}`,bold: true , alignment: 'center', font: 'Roboto', fontSize: 6 },
+  { text: `${unique[i]?.bundle ? unique[i].bundle : ''}`,bold: true , alignment: 'center', font: 'Roboto', fontSize: 6 },
+  { text: `${load !== 'CanadaBulk' && load !== 'Canada' ? unique[i]?.piece ? unique[i].piece : '' : res[i]?.TAGsumqty ? Number(res[i].TAGsumqty) : ''}`,bold: true , alignment: 'center', font: 'Roboto', fontSize: 6 },
+  { text: `${res[i]?.qa_sts_no ? res[i].qa_sts_no : ''}`,bold: true , alignment: 'center', font: 'Roboto', fontSize: 6 },
+  { text: `${res[i]?.sts_c ? res[i].sts_c : ''}`,bold: true , alignment: 'center', font: 'Roboto', fontSize: 6 },
+  { text: `${res[i]?.sts_si ? res[i].sts_si : ''}`,bold: true , alignment: 'center', font: 'Roboto', fontSize: 6 },
+  { text: `${res[i]?.sts_mn ? res[i].sts_mn : ''}`,bold: true , alignment: 'center', font: 'Roboto', fontSize: 6 },
+  { text: `${res[i]?.sts_p ? res[i].sts_p : ''}`,bold: true , alignment: 'center', font: 'Roboto', fontSize: 6 },
+  { text: `${res[i]?.sts_s ? res[i].sts_s : ''}`,bold: true , alignment: 'center', font: 'Roboto', fontSize: 6 },
+  { text: `${res[i]?.sts_cu ? res[i].sts_cu : ''}`,bold: true , alignment: 'center', font: 'Roboto', fontSize: 6 },
+  { text: `${res[i]?.sts_v ? res[i].sts_v : ''}`,bold: true , alignment: 'center', font: 'Roboto', fontSize: 6 },
+  { text: `${res[i]?.sts_ni ? res[i].sts_ni : ''}`,bold: true , alignment: 'center', font: 'Roboto', fontSize: 6 },
+  { text: `${res[i]?.sts_cr ? res[i].sts_cr : ''}`,bold: true , alignment: 'center', font: 'Roboto', fontSize: 6 },
+  { text: `${res[i]?.sts_mo ? res[i].sts_mo : ''}`,bold: true , alignment: 'center', font: 'Roboto', fontSize: 6 },
+  { text: `${res[i]?.sts_nb ? res[i].sts_nb : ''}`,bold: true , alignment: 'center', font: 'Roboto', fontSize: 6 },
+  { text: `${res[i]?.Mec_test_TS ? type !== 'in' ? (Number(res[i].Mec_test_TS) * 145.0377).toFixed(0) : res[i].Mec_test_TS : '-'}`,bold: true , alignment: 'center', font: 'Roboto', fontSize: 6 },
+  { text: `${res[i]?.Mec_test_YS ? type !== 'in' ? (Number(res[i].Mec_test_YS) * 145.0377).toFixed(0) : res[i].Mec_test_YS : '-'}`,bold: true , alignment: 'center', font: 'Roboto', fontSize: 6 },
+  { text: `${res[i]?.Mec_test_EI ? res[i].Mec_test_EI : '-'}`,bold: true , alignment: 'center', font: 'Roboto', fontSize: 6 },
+  { text: `${res[i]?.QC_hydro ? res[i].QC_hydro : '-'}`,bold: true , alignment: 'center', font: 'Roboto', fontSize: 6},
+  { text: `${res[i]?.QC_Pb > 0 ? parseFloat(res[i].QC_Pb) : '-'}`,bold: true , alignment: 'center', font: 'Roboto', fontSize: 6 },
+  { text: `${res[i]?.QC_weight_coat > 0 ? res[i].QC_weight_coat : '-'}`,bold: true , alignment: 'center', font: 'Roboto', fontSize: 6 },
+]);
+// Add empty rows if needed to fill the table
+}
+
+//
+const size = parseFloat(unique[0]?.item[8] + '.' + unique[0]?.item[9]);
+const item = unique[0]?.item.slice(0, 2);;
+
+function heat() {
+
+    if (item === 'FL' || item === 'WL') {
+        return ''
+    }
+
+    if (!unique[0]?.size) {
+        return ''
+    }
+
+    if (unique[0]?.size.includes('x')) {
+        return ''
+    }
+
+    if (size >= 4 && unique[0]?.uf_grade === 'B') {
+        return 'Good'
+    }
+
+    return ''
+}
+
+function flat() {
+
+    if (item === 'FL' || item === 'WL') {
+        return ''
+    }
+
+    if (!unique[0]?.size) {
+        return ''
+    }
+
+    if (unique[0]?.size.includes('x')) {
+        return ''
+    }
+
+    if (unique[0]?.Uf_spec.includes('TIS 107')) {
+        if (size >= 2) {
+            return 'Good'
+        } else {
+            return ''
+        } 
+    }
+
+    if (size >= 2.1) {
+        return 'Good'
+    }
+    
+    return ''
+}
+
+function bend() {
+
+    if (item === 'FL' || item === 'WL') {
+        return ''
+    }
+  
+    if (!unique[0]?.size) {
+        return ''
+    }
+
+    if (unique[0]?.size.includes('x')) {
+        return ''
+    }
+    
+    if (unique[0]?.Uf_spec.includes('TIS 107')) {
+        if (size <= 1.1) {
+            return 'Good'
+        } else {
+            return ''
+        }
+    } 
+
+    if (size <= 2) {
+        return 'Good'
+    }
+    
+    return ''
+}
+
+
+
+for (let i = res.length; i < 18; i++) {
+    data.push([
+  { text: ` `, alignment: 'center', fontSize: 6, colSpan: type !== 'bulk' ? 1 : 2 },
+  { text: ``, alignment: 'center', fontSize: 6 },
+  { text: ``, alignment: 'center', fontSize: 6 },
+  { text: ``, alignment: 'center', fontSize: 6 },
+  { text: ``, alignment: 'center', fontSize: 6 },
+  { text: ``, alignment: 'center', fontSize: 6 },
+  { text: ``, alignment: 'center', fontSize: 6 },
+  { text: ``, alignment: 'center', fontSize: 6 },
+  { text: ``, alignment: 'center', fontSize: 6 },
+  { text: ``, alignment: 'center', fontSize: 6 },
+  { text: ``, alignment: 'center', fontSize: 6 },
+  { text: ``, alignment: 'center', fontSize: 6 },
+  { text: ``, alignment: 'center', fontSize: 6 },
+  { text: ``, alignment: 'center', fontSize: 6 },
+  { text: ``, alignment: 'center', fontSize: 6 },
+  { text: ``, alignment: 'center', fontSize: 6 },
+  { text: ``, alignment: 'center', fontSize: 6 },
+  { text: ``, alignment: 'center', fontSize: 6 },
+  { text: ``, alignment: 'center', fontSize: 6 },
+  { text: ``, alignment: 'center', fontSize: 6 },
+  { text: ``, alignment: 'center', fontSize: 6 },
+  { text: ``, alignment: 'center', fontSize: 6 },
+  { text: ``, alignment: 'center', fontSize: 6 },
+  { text: ``, alignment: 'center', fontSize: 6 },
+  { text: ``, alignment: 'center', fontSize: 6 },
+]);
+}
+data.push([
+                { text: `SUB TOTAL `,bold: true , fontSize: 10, alignment: 'center', style: 'header', colSpan: 2 },
+                { text: "", fontSize: 10, alignment: 'center' },
+                { text: `${res[0]?.cust_po ? res[0].cust_po : ''}`,bold: true , fontSize: 10, alignment: 'center', style: 'header', colSpan: 3 },
+                { text: "", fontSize: 10, alignment: 'center' },
+                { text: "", fontSize: 10, alignment: 'center' },
+                { text: `${unique[0]?.bundle ? unique[0]?.bundle : 0}`,bold: true , fontSize: 10, alignment: 'center' },
+                { text: `${unique[0]?.piece ? unique[0]?.piece : 0}`,bold: true , fontSize: 10, alignment: 'center' },
+                { text: "", fontSize: 10, alignment: 'center' },
+                { text: "", fontSize: 10, alignment: 'center' },
+                { text: "", fontSize: 10, alignment: 'center' },
+                { text: "", fontSize: 10, alignment: 'center' },
+                { text: "", fontSize: 10, alignment: 'center' },
+                { text: "", fontSize: 10, alignment: 'center' },
+                { text: "", fontSize: 10, alignment: 'center' },
+                { text: "", fontSize: 10, alignment: 'center' },
+                { text: "", fontSize: 10, alignment: 'center' },
+                { text: "", fontSize: 10, alignment: 'center' },
+                { text: "", fontSize: 10, alignment: 'center' },
+                { text: "", fontSize: 10, alignment: 'center' },
+                { text: "", fontSize: 10, alignment: 'center' },
+                { text: "", fontSize: 10, alignment: 'center' },
+                { text: "", fontSize: 10, alignment: 'center' },
+                { text: "", fontSize: 10, alignment: 'center' },
+                { text: "", fontSize: 10, alignment: 'center' },
+                { text: "", fontSize: 10, alignment: 'center' },
+            ],
+            )
+        data.push(
+            [
+            { text: `NONDESTRUCTIVE TEST                             EDDY CURRENT `, fontSize: 10,bold: true, alignment: 'center', style: 'header', colSpan: 4 },
+                { text: "", fontSize: 10, alignment: 'center' },
+                { text: ``, fontSize: 10, alignment: 'center' },
+                { text: "", fontSize: 10, alignment: 'center' },
+                { text: "HEAT TREATMENT                  (WELD SEAM)", fontSize: 10,bold: true, alignment: 'center', style: 'header', colSpan: 3   },
+                { text: "", fontSize: 10, alignment: 'center' },
+                { text: "", fontSize: 10, alignment: 'center' },
+                { text: "FLATTENING TEST", fontSize: 10,bold: true, alignment: 'center', style: 'header', colSpan: 3  },
+                { text: "", fontSize: 10, alignment: 'center' },
+                { text: "", fontSize: 10, alignment: 'center' },
+                { text: "BENDING TEST", fontSize: 10,bold: true, alignment: 'center', style: 'header', colSpan: 4  },
+                { text: "", fontSize: 10, alignment: 'center' },
+                { text: "", fontSize: 10, alignment: 'center' },
+                { text: "", fontSize: 10, alignment: 'center' },
+                { text: "VISUAL & DIMENSON", fontSize: 10,bold: true, alignment: 'center', style: 'header', colSpan: 4  },
+                { text: "", fontSize: 10, alignment: 'center' },
+                { text: "", fontSize: 10, alignment: 'center' },
+                { text: "", fontSize: 10, alignment: 'center' },
+                { text: "WE CONFIRM THAT MATERIAL IS MERCURY AND LEAD FREE GALVANIZED STEEL PIPE IS IN ACCORDING WITH NSF/ANSI 372", fontSize: 10,bold: true, alignment: 'center', style: 'header', colSpan: 7, rowSpan: 2, margin: [0, 5, 0, 0] },
+                { text: "", fontSize: 10, alignment: 'center' },
+                { text: "", fontSize: 10, alignment: 'center' },
+                { text: "", fontSize: 10, alignment: 'center' },
+                { text: "", fontSize: 10, alignment: 'center' },
+                { text: "", fontSize: 10, alignment: 'center' },
+                { text: "", fontSize: 10, alignment: 'center' },
+            ],
+            [
+                // put Test One 
+                { text: `${item === 'FL' || item == 'WL' ? '' : 'Good'}`,bold: true , fontSize: 9, alignment: 'center', style: 'header', colSpan: 4 },
+                { text: "", fontSize: 9, alignment: 'center' },
+                { text: ``, fontSize: 9, alignment: 'center' },
+                { text: "", fontSize: 9, alignment: 'center' },
+                { text: heat(),bold: true , fontSize: 9, alignment: 'center', style: 'header', colSpan: 3   },
+                { text: "", fontSize: 9, alignment: 'center' },
+                { text: "", fontSize: 9, alignment: 'center' },
+                { text: flat(),bold: true , fontSize: 9, alignment: 'center', style: 'header', colSpan: 3  },
+                { text: "", fontSize: 9, alignment: 'center' },
+                { text: "", fontSize: 10, alignment: 'center' },
+                { text: bend(),bold: true , fontSize: 9, alignment: 'center', style: 'header', colSpan: 4  },
+                { text: "", fontSize: 10, alignment: 'center' },
+                { text: "", fontSize: 10, alignment: 'center' },
+                { text: "", fontSize: 10, alignment: 'center' },
+                { text: `Good`, fontSize: 9, alignment: 'center',bold: true , style: 'header', colSpan: 4  },
+                { text: "", fontSize: 10, alignment: 'center' },
+                { text: "", fontSize: 10, alignment: 'center' },
+                { text: "", fontSize: 10, alignment: 'center' },
+                { text: "", fontSize: 10, alignment: 'center' },
+                { text: "", fontSize: 10, alignment: 'center' },
+                { text: "", fontSize: 10, alignment: 'center' },
+                { text: "", fontSize: 10, alignment: 'center' },
+                { text: "", fontSize: 10, alignment: 'center' },
+                { text: "", fontSize: 10, alignment: 'center' },
+                { text: "", fontSize: 10, alignment: 'center' },
+            ],
+            [
+                { stack: [' ',`MATERIAL IS OF THAILAND ORIGIN. "COUNTRY OF MELT AND POUR : THAILAND"
+                WE HEREBY CERTIFY THAT THE MATERIAL DESCRIBED HEREIN HAS BEEN MADE BY SAHA THAI STEEL PIPE (PUBLIC) CO., LTD`], fontSize: 10, bold: true, alignment: 'center', style: 'header', colSpan: 18 },
+                { text: "", fontSize: 9, alignment: 'center' },
+                { text: ``, fontSize: 9, alignment: 'center' },
+                { text: "", fontSize: 9, alignment: 'center' },
+                { text: "", fontSize: 9, alignment: 'center' },
+                { text: "", fontSize: 9, alignment: 'center' },
+                { text: "", fontSize: 9, alignment: 'center' },
+                { text: "", fontSize: 9, alignment: 'center' },
+                { text: "", fontSize: 9, alignment: 'center' },
+                { text: "", fontSize: 10, alignment: 'center' },
+                { text: "", fontSize: 9, alignment: 'center' },
+                { text: "", fontSize: 10, alignment: 'center' },
+                { text: "", fontSize: 10, alignment: 'center' },
+                { text: "", fontSize: 10, alignment: 'center' },
+                { text: "", fontSize: 9, alignment: 'center' },
+                { text: "", fontSize: 10, alignment: 'center' },
+                { text: "", fontSize: 10, alignment: 'center' },
+                { text: "", fontSize: 10, alignment: 'center' },
+                { stack: [{ image: test, width: 30 }, "NITTAYA SRAJIT", "QUALITY ASSURANCE MANAGER"], fontSize: 10, alignment: 'center',bold: true, fontSize: 9, alignment: 'center', style: 'header', colSpan: 7 },
+                { text: "", fontSize: 10, alignment: 'center' },
+                { text: "", fontSize: 10, alignment: 'center' },
+                { text: "", fontSize: 10, alignment: 'center' },
+                { text: "", fontSize: 10, alignment: 'center' },
+                { text: "", fontSize: 10, alignment: 'center' },
+                { text: "", fontSize: 10, alignment: 'center', pageBreak: 'after' },
+            ]
+            );
+
+
+return data;
+}
+
+function qrCode(cur,pageData) {
+if (type === 'out' || type === 'bulk') {
+    return {} 
+} else {}
+if (pageData[cur -1][0].standard_sub === 'TIS.107') {
+    return {
+       qr: 'https://appdb.tisi.go.th/Q/i.php?d=1362737867',
+       fit: 50,
+       alignment: 'right'
+    }
+} else if (pageData[cur -1][0].standard_sub === 'TIS.276') {
+   return {
+      qr: 'https://appdb.tisi.go.th/Q/i.php?d=350563986',
+      fit: 50,
+      alignment: 'right'
+   }
+} else if (pageData[cur -1][0].standard_sub === 'TIS.1228') {
+    return {
+       qr: 'https://appdb.tisi.go.th/Q/i.php?d=1612617444',
+       fit: 50,
+       alignment: 'right'
+    }
+} else {
+    return {}
+}
+}
+console.log(filter, 'filter');
+
+var docDefinition = {
+    pageSize: 'A4',
+    pageOrientation: 'landscape',
+    pageMargins: [10, 125, 10, 50],
+    header: function (currentPage, pageCount, pageSize) {
+        const pageData = this.pageData || {};
+        
+        return {
+            headerRows: 4,
+            margin: [20, 5, 20, 5],
+            columns: [
+      {
+        width: '40%',
+        stack: [
+          { text: `CERTIFICATE NO.              : ${dataNow[0].cer_no}`, fontSize: 10, bold: true, margin: [0, 20, 0, 0] },
+          { text: `DATE                              : ${moment().format('DD-MMM-YYYY')} `, fontSize: 10,bold: true, margin: [0, 0, 0, 0] },
+          { text: `CUSTOMER                     : ${dataNow[0].cust}`, fontSize: 10,bold: true, margin: [0, 0, 0, 0] },
+          { text: `CONTRACT (P/O) No.       : ${pageData[currentPage - 1][0]?.cust_po ? pageData[currentPage - 1][0].cust_po : ''} `, fontSize: 10, bold: true,margin: [0, 0, 0, 0] },
+          { text: `INSPECTION CERTIFICATE  : ACCORDING TO EN 10204 : 2005 TYPE 3.1`, fontSize: 10, bold: true,margin: [0, 0, 0, 0] },
+          { text: `COMMODITY                   : NEWLY PRODUCED, PRIME QUALITY ERW STEEL PIPE`, fontSize: 10,bold: true, margin: [0, 0, 0, 0] },
+        ]
+      },
+      {
+        width: '20%',
+        stack: [
+          { image: logo(), width: 160, alignment: 'center', margin: [0, 10, 0, 0] },
+          { text: 'MILL TEST CERTIFICATE', fontSize: 20, bold: true, alignment: 'center', margin: [0, 10, 0, 0] }
+        ]
+      },
+      {
+        width: '40%',
+        stack: [
+                { text: [
+    { text: 'MANUFACTURER', fontSize: 12, bold: true, alignment: 'right' },
+    { text: ': SAHA THAI STEEL PIPE PCL', fontSize: 12, bold: true, alignment: 'right', margin: [0, 15, 0, 0] }
+], fontSize: 12, bold: true, alignment: 'right', margin: [0, 15, 0, 0] },
+                { text: '78 Moo 3 Poochao Road,', fontSize: 10,bold: true,  alignment: 'right', margin: [0, 0, 0, 0] },
+                { text: 'Bangyapraek, Phrapradaeng,', fontSize: 10,bold: true,  alignment: 'right', margin: [0, 0, 0, 0] },
+                { text: 'Samuthprakarn 10131 Thailand.', fontSize: 10, bold: true,  alignment: 'right', margin: [0, 0, 0, 0] },
+                { text: `Tel. +66 (0) 2385-9023` , fontSize: 10,bold: true,  alignment: 'right', margin: [0, 0, 0, 0] },
+                qrCode(currentPage,pageData),
+        ],
+       
+      },
+      { text: `SPECIFICATION                : ${pageData[currentPage -1][0]?.Uf_spec ? pageData[currentPage -1][0].Uf_spec : ''} `,alignment: 'left', fontSize: 10,bold: true, margin: [-802, 98, 0, 0] },
+    ]
+    
+        };
+    }.bind({ pageData: createTables().map(table => table.pageData)}),
+    footer: function (currentPage, pageCount) {
+        return {
+            margin: [20, 15, 80, 10],
+            columns:[
+                    { text: 'FOMQC-80/01-JAN-25', fontSize: 10, bold: true, alignment: 'left'},
+                    { text: [
+                        { text: `ISO 9001 Certificate by Bureau Veritas (#TH0` },
+                        { text: '25783' },
+                        { text: `)` }
+                    ], fontSize: 9, bold: true, alignment: 'center'},
+                    { image: logo_1, width: 20, alignment: 'right', margin: [5, 1, 0, 0],padding: 10 },
+                    { image: logo_2, width: 20, alignment: 'right', margin: [0, 4, 0, 0] },
+                    //{ image: logo_3, width: 20, alignment: 'right', margin: [-5, -2, 0, 0] },
+                    //{ image: logo_4, width: 20, alignment: 'right', margin: [-10, -2, 0, 0] },
+                ],
+        };
+            
+    },
+
+    content: createTables(),
+  
+    defaultStyle: {
+        font: 'THSarabunNew',
+    },
+};
+
+function createTables() {
+    const tables = [];
+    for (let i = 0; i < filter.length; i++) {
+        let res = dataNow.filter((value) => value.ref_num + value.ref_line_suf === filter[i].ref_num + filter[i].ref_line_suf);
+        for (let j = 0; j < res.length; j += 18) {
+            // Slice 15 rows at a time
+            const newRes = res.slice(j, j + 18);
+            tables.push({
+                table: {
+                    headerRows: 2,
+                    background: 'red',
+                    widths: [15, 20, 25, 25, 26, 27, 25, 23, 25, 25, 25, 26, 26, 26, 26, 26, 26, 26, 26, 20, 20, 20, 23, 20, 25],
+                    body: createData(newRes, i),
+                },
+                // Add a page break after every table except the last one
+                pageBreak: j + 18 < res.length || i < filter.length - 1 ? 'after' : '',
+                pageData: newRes,
+            });
+        }
+    }
+
+    return tables;
+}
+
+// create new page pdf
+
 
 pdfMake.createPdf(docDefinition).open();
 

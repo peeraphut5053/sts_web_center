@@ -413,6 +413,15 @@ if ($load == 'ChangeStatus') {
 }
 
 
+if ($load == 'makePDF_US_NAP') {
+    $CallModel = new CallModel();
+    $CallModel->SyteLine_Models();
+    $QcTestLab = new QcTestLab();
+    $QcTestLab->setConn($ConnSL);
+    $QcTestLab = $QcTestLab->makeReport_US_NAP($do_num, $co_num, $line_start, $line_end, $type);
+    echo json_encode($QcTestLab); 
+}
+
 
 
 

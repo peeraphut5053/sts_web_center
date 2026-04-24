@@ -136,6 +136,16 @@ from STS_QA_LAB inner join sts_po_qc
         return $rs0;
     }
 
+    function makeReport_US_NAP($do_num, $co_num, $line_start, $line_end, $type){
+        $query = "EXEC [dbo].[STS_QA_MILLCERT_US_NAP]
+ @DONumStarting = N'$do_num'";
+
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+
     function makeReportCanada($do_num){
         $query = "EXEC [dbo].[STS_QA_MILLCERT_CANADA]
  @DONumStarting = N'$do_num'";
