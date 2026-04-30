@@ -332,11 +332,54 @@ PIVOT (sum([weight]) for wc in ([P2FM01],[P2FM05],[P2FM06],[P2FM08],[P2FM09],[P2
     
     function GetTarget($year, $month) {
         $cSql = new SqlSrv();
+        $year = str_replace("'", "''", $year);
+        $month = str_replace("'", "''", $month);
         $query = "
-            SELECT [year], [month], wc, time, [weight], [day_work]
-            FROM STS_Prod_policy_weight
-            WHERE [year] = '$year' AND [month] = '$month'
-            ORDER BY wc
+            WITH policy AS (
+                SELECT
+                    p.wc,
+                    roll_change = COUNT(DISTINCT i.uf_NPS) - 1,
+                    thickness_change = COUNT(DISTINCT i.Uf_thickness) - 1
+                FROM STS_Prod_policy p
+                LEFT JOIN item_mst i
+                    ON p.Item = i.item
+                LEFT JOIN jobitem_mst job
+                    ON job.job = p.job
+                   AND job.item = p.item
+                WHERE p.[year] = '$year'
+                  AND p.[month] = '$month'
+                GROUP BY p.wc
+            ),
+            weight_sum AS (
+                SELECT
+                    w.wc,
+                    [time] = MAX(w.[time]),
+                    roll_std = SUM(ISNULL(TRY_CONVERT(decimal(18, 2), w.roll_std), 0)),
+                    thickness_std = SUM(ISNULL(TRY_CONVERT(decimal(18, 2), w.thickness_std), 0)),
+                    total_weight = SUM(ISNULL(TRY_CONVERT(decimal(18, 2), w.[weight]), 0)),
+                    total_day_work = SUM(ISNULL(TRY_CONVERT(decimal(18, 2), w.[day_work]), 0))
+                FROM STS_Prod_policy_weight w
+                WHERE w.[year] = '$year'
+                  AND w.[month] = '$month'
+                GROUP BY w.wc
+            )
+            SELECT
+                [year] = '$year',
+                [month] = '$month',
+                p.wc,
+                [time] = ISNULL(w.[time], ''),
+                roll_std = ISNULL(w.roll_std, 0),
+                thickness_std = ISNULL(w.thickness_std, 0),
+                roll_change = ISNULL(p.roll_change, 0),
+                thickness_change = ISNULL(p.thickness_change, 0),
+                roll = ISNULL(w.roll_std, 0) * ISNULL(p.roll_change, 0),
+                thickness = ISNULL(w.thickness_std, 0) * ISNULL(p.thickness_change, 0),
+                [weight] = ISNULL(w.total_weight, 0),
+                [day_work] = ISNULL(w.total_day_work, 0)
+            FROM policy p
+            LEFT JOIN weight_sum w
+                ON w.wc = p.wc
+            ORDER BY p.wc
         ";
         $response = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($response, count($response) - 1, 1);
@@ -353,6 +396,8 @@ PIVOT (sum([weight]) for wc in ([P2FM01],[P2FM05],[P2FM06],[P2FM08],[P2FM09],[P2
             $time = $row['time'];
             $weight = $row['weight'];
             $day_work = isset($row['day_work']) ? $row['day_work'] : 0;
+            $roll_std = isset($row['roll_std']) ? $row['roll_std'] : 0;
+            $thickness_std = isset($row['thickness_std']) ? $row['thickness_std'] : 0;
             
             $year = str_replace("'", "''", $year);
             $month = str_replace("'", "''", $month);
@@ -360,6 +405,8 @@ PIVOT (sum([weight]) for wc in ([P2FM01],[P2FM05],[P2FM06],[P2FM08],[P2FM09],[P2
             $time = str_replace("'", "''", $time);
             $weight = str_replace("'", "''", $weight);
             $day_work = str_replace("'", "''", $day_work);
+            $roll_std = str_replace("'", "''", $roll_std);
+            $thickness_std = str_replace("'", "''", $thickness_std);
             
             $checkQry = "SELECT top 1 wc FROM STS_Prod_policy_weight WHERE [year] = '$year' AND [month] = '$month' AND wc = '$wc'";
             $checkRs = $cSql->SqlQuery($this->StrConn, $checkQry);
@@ -368,11 +415,11 @@ PIVOT (sum([weight]) for wc in ([P2FM01],[P2FM05],[P2FM06],[P2FM08],[P2FM09],[P2
             
             if ($cnt > 0) {
                 // UPDATE
-                $query = "UPDATE STS_Prod_policy_weight SET [time] = '$time', [weight] = '$weight', [day_work] = '$day_work', createdate = GETDATE() WHERE [year] = '$year' AND [month] = '$month' AND wc = '$wc'";
+                $query = "UPDATE STS_Prod_policy_weight SET [time] = '$time', [weight] = '$weight', [day_work] = '$day_work', [roll_std] = '$roll_std', [thickness_std] = '$thickness_std', createdate = GETDATE() WHERE [year] = '$year' AND [month] = '$month' AND wc = '$wc'";
                 $cSql->SqlQuery($this->StrConn, $query);
             } else {
                 // INSERT
-                $query = "INSERT INTO STS_Prod_policy_weight ([year], [month], wc, [time], [weight], [day_work], createdate) VALUES ('$year', '$month', '$wc', '$time', '$weight', '$day_work', GETDATE())";
+                $query = "INSERT INTO STS_Prod_policy_weight ([year], [month], wc, [time], [weight], [day_work], [roll_std], [thickness_std], createdate) VALUES ('$year', '$month', '$wc', '$time', '$weight', '$day_work', '$roll_std', '$thickness_std', GETDATE())";
                 $cSql->SqlQuery($this->StrConn, $query);
             }
         }

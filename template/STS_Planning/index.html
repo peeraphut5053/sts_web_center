@@ -380,12 +380,14 @@
             loadSummaryReport();
         });
 
-        $(document).on('change', '.target-time, .target-weight, .target-day-work', function () {
+        $(document).on('change', '.target-time, .target-weight, .target-day-work, .target-roll-std, .target-thickness-std', function () {
             var input = $(this);
             var wc = input.data('wc');
             var timeInput = $(".target-time[data-wc='" + wc + "']").val();
             var weightInput = $(".target-weight[data-wc='" + wc + "']").val();
             var dayWorkInput = $(".target-day-work[data-wc='" + wc + "']").val();
+            var rollStdInput = $(".target-roll-std[data-wc='" + wc + "']").val();
+            var thicknessStdInput = $(".target-thickness-std[data-wc='" + wc + "']").val();
 
             input.css('background-color', '#fff3cd');
 
@@ -395,7 +397,9 @@
                 wc: wc,
                 time: timeInput || "00:00",
                 weight: weightInput || 0,
-                day_work: dayWorkInput || 0
+                day_work: dayWorkInput || 0,
+                roll_std: rollStdInput || 0,
+                thickness_std: thicknessStdInput || 0
             }];
 
             $.ajax({
@@ -667,9 +671,11 @@
                     totalAll: 0
                 };
                 var dayWorkByWc = {};
+                var targetByWc = {};
 
                 $.each(targetRows, function (i, row) {
                     var wc = $.trim(row.wc);
+                    targetByWc[wc] = row;
                     dayWorkByWc[wc] = parseFloat(row.day_work) || 0;
                 });
 
@@ -716,6 +722,28 @@
 
                     var formatNumber = function (val) {
                         return val > 0 ? val.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '-';
+                    };
+                    var wcList = ['P2FM01', 'P2FM05', 'P2FM06', 'P2FM08', 'P2FM09', 'P2FM10', 'W2FM02', 'W2FM04', 'W2FM07', 'W2FM11', 'W2FMC1'];
+                    var targetNumber = function (wc, field) {
+                        return parseFloat((targetByWc[wc] || {})[field]) || 0;
+                    };
+                    var formatTargetDecimal = function (val) {
+                        return val.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                    };
+                    var renderTargetRow = function (label, field, isDecimal) {
+                        var total = 0;
+                        var rowHtml = "<tr style='font-weight: bold; background-color: #eef7ff;'>";
+                        rowHtml += "<td class='text-left'>" + label + "</td>";
+
+                        $.each(wcList, function (i, wc) {
+                            var val = targetNumber(wc, field);
+                            total += val;
+                            rowHtml += "<td>" + (isDecimal ? formatTargetDecimal(val) : val.toFixed(0)) + "</td>";
+                        });
+
+                        rowHtml += "<td colspan='2' style='font-size: 15px;'>" + (isDecimal ? formatTargetDecimal(total) : total.toFixed(0)) + "</td>";
+                        rowHtml += "</tr>";
+                        return rowHtml;
                     };
                     var avgByDayWork = function (wc) {
                         var dayWork = dayWorkByWc[wc] || 0;
@@ -764,6 +792,11 @@
 
                     html += "<td colspan='2' style='font-size: 15px;'>" + formatNumber(totalAvgByDayWork) + "</td>";
                     html += "</tr>";
+
+                    html += renderTargetRow('roll_change', 'roll_change', false);
+                    html += renderTargetRow('thickness_change', 'thickness_change', false);
+                    html += renderTargetRow('roll', 'roll', true);
+                    html += renderTargetRow('thickness', 'thickness', true);
 
                     // Data Rows
                     $.each(rowsArray, function (i, row) {
@@ -860,6 +893,42 @@
                 tfoot += "<td></td>";
                 tfoot += "</tr>";
 
+                tfoot += "<tr style='background-color: #deebf2;'>";
+                tfoot += "<td class='text-right font-weight-bold align-middle'>roll_std</td>";
+                tfoot += "<td><input type='number' step='0.01' class='form-control input-sm text-center target-roll-std' placeholder='0.00' data-wc='P2FM01'></td>";
+                tfoot += "<td><input type='number' step='0.01' class='form-control input-sm text-center target-roll-std' placeholder='0.00' data-wc='P2FM05'></td>";
+                tfoot += "<td><input type='number' step='0.01' class='form-control input-sm text-center target-roll-std' placeholder='0.00' data-wc='P2FM06'></td>";
+                tfoot += "<td><input type='number' step='0.01' class='form-control input-sm text-center target-roll-std' placeholder='0.00' data-wc='P2FM08'></td>";
+                tfoot += "<td><input type='number' step='0.01' class='form-control input-sm text-center target-roll-std' placeholder='0.00' data-wc='P2FM09'></td>";
+                tfoot += "<td><input type='number' step='0.01' class='form-control input-sm text-center target-roll-std' placeholder='0.00' data-wc='P2FM10'></td>";
+
+                tfoot += "<td><input type='number' step='0.01' class='form-control input-sm text-center target-roll-std' placeholder='0.00' data-wc='W2FM02'></td>";
+                tfoot += "<td><input type='number' step='0.01' class='form-control input-sm text-center target-roll-std' placeholder='0.00' data-wc='W2FM04'></td>";
+                tfoot += "<td><input type='number' step='0.01' class='form-control input-sm text-center target-roll-std' placeholder='0.00' data-wc='W2FM07'></td>";
+                tfoot += "<td><input type='number' step='0.01' class='form-control input-sm text-center target-roll-std' placeholder='0.00' data-wc='W2FM11'></td>";
+                tfoot += "<td><input type='number' step='0.01' class='form-control input-sm text-center target-roll-std' placeholder='0.00' data-wc='W2FMC1'></td>";
+                tfoot += "<td></td>";
+                tfoot += "<td></td>";
+                tfoot += "</tr>";
+
+                tfoot += "<tr style='background-color: #deebf2;'>";
+                tfoot += "<td class='text-right font-weight-bold align-middle'>thickness_std</td>";
+                tfoot += "<td><input type='number' step='0.01' class='form-control input-sm text-center target-thickness-std' placeholder='0.00' data-wc='P2FM01'></td>";
+                tfoot += "<td><input type='number' step='0.01' class='form-control input-sm text-center target-thickness-std' placeholder='0.00' data-wc='P2FM05'></td>";
+                tfoot += "<td><input type='number' step='0.01' class='form-control input-sm text-center target-thickness-std' placeholder='0.00' data-wc='P2FM06'></td>";
+                tfoot += "<td><input type='number' step='0.01' class='form-control input-sm text-center target-thickness-std' placeholder='0.00' data-wc='P2FM08'></td>";
+                tfoot += "<td><input type='number' step='0.01' class='form-control input-sm text-center target-thickness-std' placeholder='0.00' data-wc='P2FM09'></td>";
+                tfoot += "<td><input type='number' step='0.01' class='form-control input-sm text-center target-thickness-std' placeholder='0.00' data-wc='P2FM10'></td>";
+
+                tfoot += "<td><input type='number' step='0.01' class='form-control input-sm text-center target-thickness-std' placeholder='0.00' data-wc='W2FM02'></td>";
+                tfoot += "<td><input type='number' step='0.01' class='form-control input-sm text-center target-thickness-std' placeholder='0.00' data-wc='W2FM04'></td>";
+                tfoot += "<td><input type='number' step='0.01' class='form-control input-sm text-center target-thickness-std' placeholder='0.00' data-wc='W2FM07'></td>";
+                tfoot += "<td><input type='number' step='0.01' class='form-control input-sm text-center target-thickness-std' placeholder='0.00' data-wc='W2FM11'></td>";
+                tfoot += "<td><input type='number' step='0.01' class='form-control input-sm text-center target-thickness-std' placeholder='0.00' data-wc='W2FMC1'></td>";
+                tfoot += "<td></td>";
+                tfoot += "<td></td>";
+                tfoot += "</tr>";
+
                 $("#tfootReportSummary").html(tfoot);
 
                 // Fetch previously saved targets to populate inputs
@@ -887,6 +956,12 @@
                                 }
                                 if (row.day_work && parseFloat(row.day_work) > 0) {
                                     $(".target-day-work[data-wc='" + wcTrim + "']").val(row.day_work);
+                                }
+                                if (row.roll_std && parseFloat(row.roll_std) > 0) {
+                                    $(".target-roll-std[data-wc='" + wcTrim + "']").val(row.roll_std);
+                                }
+                                if (row.thickness_std && parseFloat(row.thickness_std) > 0) {
+                                    $(".target-thickness-std[data-wc='" + wcTrim + "']").val(row.thickness_std);
                                 }
                             });
                         }
