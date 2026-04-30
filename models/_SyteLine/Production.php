@@ -407,6 +407,10 @@ PIVOT (sum([weight]) for wc in ([P2FM01],[P2FM05],[P2FM06],[P2FM08],[P2FM09],[P2
             $day_work = str_replace("'", "''", $day_work);
             $roll_std = str_replace("'", "''", $roll_std);
             $thickness_std = str_replace("'", "''", $thickness_std);
+            $weight = is_numeric(str_replace(',', '', $weight)) ? intval(round(floatval(str_replace(',', '', $weight)))) : 0;
+            $day_work = is_numeric(str_replace(',', '', $day_work)) ? intval(round(floatval(str_replace(',', '', $day_work)))) : 0;
+            $roll_std = is_numeric(str_replace(',', '', $roll_std)) ? str_replace(',', '', $roll_std) : 0;
+            $thickness_std = is_numeric(str_replace(',', '', $thickness_std)) ? str_replace(',', '', $thickness_std) : 0;
             
             $checkQry = "SELECT top 1 wc FROM STS_Prod_policy_weight WHERE [year] = '$year' AND [month] = '$month' AND wc = '$wc'";
             $checkRs = $cSql->SqlQuery($this->StrConn, $checkQry);
@@ -415,12 +419,16 @@ PIVOT (sum([weight]) for wc in ([P2FM01],[P2FM05],[P2FM06],[P2FM08],[P2FM09],[P2
             
             if ($cnt > 0) {
                 // UPDATE
-                $query = "UPDATE STS_Prod_policy_weight SET [time] = '$time', [weight] = '$weight', [day_work] = '$day_work', [roll_std] = '$roll_std', [thickness_std] = '$thickness_std', createdate = GETDATE() WHERE [year] = '$year' AND [month] = '$month' AND wc = '$wc'";
-                $cSql->SqlQuery($this->StrConn, $query);
+                $query = "UPDATE STS_Prod_policy_weight SET [time] = '$time', [weight] = $weight, [day_work] = $day_work, [roll_std] = $roll_std, [thickness_std] = $thickness_std, createdate = GETDATE() WHERE [year] = '$year' AND [month] = '$month' AND wc = '$wc'";
+                if (!$cSql->IsUpDel($this->StrConn, $query)) {
+                    return array('status' => 'error', 'message' => 'Update target failed');
+                }
             } else {
                 // INSERT
-                $query = "INSERT INTO STS_Prod_policy_weight ([year], [month], wc, [time], [weight], [day_work], [roll_std], [thickness_std], createdate) VALUES ('$year', '$month', '$wc', '$time', '$weight', '$day_work', '$roll_std', '$thickness_std', GETDATE())";
-                $cSql->SqlQuery($this->StrConn, $query);
+                $query = "INSERT INTO STS_Prod_policy_weight ([year], [month], wc, [time], [weight], [day_work], [roll_std], [thickness_std], createdate) VALUES ('$year', '$month', '$wc', '$time', $weight, $day_work, $roll_std, $thickness_std, GETDATE())";
+                if (!$cSql->IsUpDel($this->StrConn, $query)) {
+                    return array('status' => 'error', 'message' => 'Insert target failed');
+                }
             }
         }
         
