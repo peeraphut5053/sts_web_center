@@ -1,13 +1,19 @@
 <?php
 header("Access-Control-Allow-Origin: *");
+header("Content-Type: application/json; charset=utf-8");
 
-foreach ($_GET as $key => $value) {
-    $$key = trim($value);
+$jsonInput = json_decode(file_get_contents('php://input'), true);
+if (!is_array($jsonInput)) {
+    $jsonInput = [];
 }
 
-foreach ($_POST as $key => $value) {
-    $$key = trim($value);
+$request = array_merge($_GET, $_POST, $jsonInput);
+
+foreach ($request as $key => $value) {
+    $$key = is_array($value) ? $value : trim($value);
 }
+
+$load = isset($request['load']) ? trim($request['load']) : '';
 
 include "../../initial.php";
 $CallModel = new CallModel();
@@ -50,7 +56,7 @@ if ($load == "GetItemInfo") {
 }
 
 if ($load == "SavePlanning") {
-    $dataArray = isset($_POST['data']) ? $_POST['data'] : [];
+    $dataArray = isset($request['data']) ? $request['data'] : [];
     if (count($dataArray) > 0) {
         $rs = $STS_Custom->SavePlanning($dataArray);
         echo json_encode($rs);
@@ -60,25 +66,47 @@ if ($load == "SavePlanning") {
 }
 
 if ($load == "GetSavedPlanning") {
-    $year = isset($_POST['year']) ? $_POST['year'] : date('Y');
-    $month = isset($_POST['month']) ? $_POST['month'] : date('n');
-    $wc = isset($_POST['wc']) ? $_POST['wc'] : '';
+    $year = isset($request['year']) ? $request['year'] : date('Y');
+    $month = isset($request['month']) ? $request['month'] : date('n');
+    $wc = isset($request['wc']) ? $request['wc'] : '';
     $rs = $STS_Custom->GetSavedPlanning($year, $month, $wc);
     echo json_encode($rs);
 }
 
 if ($load == "GetReport") {
+    $year = isset($request['year']) ? $request['year'] : date('Y');
+    $month = isset($request['month']) ? $request['month'] : date('n');
     $rs = $STS_Custom->GetReport($year, $month);
     echo json_encode($rs);
 }
 
 if ($load == "GetTarget") {
+    $year = isset($request['year']) ? $request['year'] : date('Y');
+    $month = isset($request['month']) ? $request['month'] : date('n');
     $rs = $STS_Custom->GetTarget($year, $month);
     echo json_encode($rs);
 }
 
 if ($load == "SaveTarget") {
-    $data = isset($_POST['data']) ? $_POST['data'] : [];
+    $data = isset($request['data']) ? $request['data'] : [];
+
+    if (empty($data) && isset($request['wc'])) {
+        $data = [[
+            'year' => isset($request['year']) ? $request['year'] : date('Y'),
+            'month' => isset($request['month']) ? $request['month'] : date('n'),
+            'wc' => $request['wc'],
+            'time' => isset($request['time']) ? $request['time'] : '00:00',
+            'weight' => isset($request['weight']) ? $request['weight'] : 0,
+            'day_work' => isset($request['day_work']) ? $request['day_work'] : 0,
+            'roll_std' => isset($request['roll_std']) ? $request['roll_std'] : 0,
+            'thickness_std' => isset($request['thickness_std']) ? $request['thickness_std'] : 0
+        ]];
+    }
+
+    if (!empty($data) && isset($data['wc'])) {
+        $data = [$data];
+    }
+
     if(empty($data)) {
         echo json_encode(['status' => 'error', 'message' => 'No data']);
         exit;
