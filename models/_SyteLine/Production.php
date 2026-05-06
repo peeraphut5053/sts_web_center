@@ -362,11 +362,16 @@ PIVOT (sum([weight]) for wc in ([P2FM01],[P2FM05],[P2FM06],[P2FM08],[P2FM09],[P2
                 WHERE w.[year] = '$year'
                   AND w.[month] = '$month'
                 GROUP BY w.wc
+            ),
+            target_wc AS (
+                SELECT wc FROM policy
+                UNION
+                SELECT wc FROM weight_sum
             )
             SELECT
                 [year] = '$year',
                 [month] = '$month',
-                p.wc,
+                t.wc,
                 [time] = ISNULL(w.[time], ''),
                 roll_std = ISNULL(w.roll_std, 0),
                 thickness_std = ISNULL(w.thickness_std, 0),
@@ -376,10 +381,12 @@ PIVOT (sum([weight]) for wc in ([P2FM01],[P2FM05],[P2FM06],[P2FM08],[P2FM09],[P2
                 thickness = ISNULL(w.thickness_std, 0) * ISNULL(p.thickness_change, 0),
                 [weight] = ISNULL(w.total_weight, 0),
                 [day_work] = ISNULL(w.total_day_work, 0)
-            FROM policy p
+            FROM target_wc t
+            LEFT JOIN policy p
+                ON p.wc = t.wc
             LEFT JOIN weight_sum w
-                ON w.wc = p.wc
-            ORDER BY p.wc
+                ON w.wc = t.wc
+            ORDER BY t.wc
         ";
         $response = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($response, count($response) - 1, 1);

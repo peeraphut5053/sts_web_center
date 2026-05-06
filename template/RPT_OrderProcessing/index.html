@@ -48,15 +48,166 @@
         <button id="btnSearch" class="btn btn-info"><i class="fa fa-searh"></i>&nbsp;ค้นหา</button>
     </div>
 </div>
-<div class="col-lg-2">
+<div class="col-lg-2" style="margin-bottom: 10px;">
     <div class="input-group">
         <div class="input-group-addon">Item</div>
         <input type="text" autocomplete="off" class="form-control txt-filter" id="item">
     </div>
 </div>
 
-<div class="row" id="divReport">
-    <table class="table table-condensed table-bordered table-striped" id="tblReport">
+<style>
+    .op-report-panel {
+        margin-top: 24px;
+    }
+
+    .op-report-tabs {
+        border-bottom: 1px solid #d8dee8;
+        margin-bottom: 0;
+    }
+
+    .op-report-tabs > li > a {
+        border: 0;
+        border-radius: 6px 6px 0 0;
+        color: #526477;
+        font-weight: 600;
+        padding: 11px 18px;
+        transition: background-color .15s ease, color .15s ease;
+    }
+
+    .op-report-tabs > li > a:hover,
+    .op-report-tabs > li > a:focus {
+        background-color: #eef4fb;
+        color: #1f5f99;
+    }
+
+    .op-report-tabs > li.active > a,
+    .op-report-tabs > li.active > a:hover,
+    .op-report-tabs > li.active > a:focus {
+        background-color: #fff;
+        border: 1px solid #d8dee8;
+        border-bottom-color: transparent;
+        color: #1f5f99;
+    }
+
+    .op-tab-content {
+        background-color: #fff;
+        border: 1px solid #d8dee8;
+        border-top: 0;
+        padding: 18px 15px 15px;
+    }
+
+    .op-tab-title {
+        color: #2f3b48;
+        font-size: 16px;
+        font-weight: 700;
+        margin: 0 0 14px;
+    }
+
+    .op-tab-content .dt-buttons {
+        margin-bottom: 8px;
+    }
+
+    .op-tab-content .dataTables_wrapper,
+    .op-tab-content table {
+        width: 100%;
+    }
+
+    .op-tab-content .dt-button,
+    .op-tab-content .btn {
+        border-radius: 4px;
+    }
+
+    .op-tab-content table.dataTable thead th {
+        background-color: #f3f6fa;
+        border-bottom: 1px solid #cfd8e3;
+        color: #27384a;
+        font-weight: 700;
+        white-space: nowrap;
+    }
+</style>
+
+<div class="row op-report-panel">
+    <div class="col-lg-12">
+        <ul class="nav nav-tabs op-report-tabs" role="tablist">
+            <li role="presentation" class="active">
+                <a href="#tabDetail" aria-controls="tabDetail" role="tab" data-toggle="tab">Detail</a>
+            </li>
+            <li role="presentation">
+                <a href="#tabSummary" aria-controls="tabSummary" role="tab" data-toggle="tab">By STS PO</a>
+            </li>
+            <li role="presentation">
+                <a href="#tabEndUserPort" aria-controls="tabEndUserPort" role="tab" data-toggle="tab">By End User/Port</a>
+            </li>
+            <li role="presentation">
+                <a href="#tabPort" aria-controls="tabPort" role="tab" data-toggle="tab">By Port</a>
+            </li>
+        </ul>
+        <div class="tab-content op-tab-content">
+            <div role="tabpanel" class="tab-pane" id="tabSummary">
+                <div class="row" id="divSummary">
+    <div class="col-lg-12">
+        <h4 class="op-tab-title">Summary by STS PO</h4>
+        <table class="table table-condensed table-bordered table-striped" id="tblSummary" style="width:100%;">
+            <thead>
+                <tr>
+                    <th>End User</th>
+                    <th>STS PO</th>
+                    <th>Cust PO</th>
+                    <th>Port</th>
+                    <th>Balance BDL</th>
+                    <th>Balance MT</th>
+                    <th>Ready Bundle</th>
+                    <th>Ready Bundle MT</th>
+                    <th>Shipment</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="tabEndUserPort">
+                <div class="row" id="divEndUserPortSummary">
+                    <div class="col-lg-12">
+                        <h4 class="op-tab-title">Summary by End User and Port</h4>
+                        <table class="table table-condensed table-bordered table-striped" id="tblEndUserPortSummary" style="width:100%;">
+                            <thead>
+                                <tr>
+                                    <th>End User</th>
+                                    <th>Port</th>
+                                    <th>Balance BDL</th>
+                                    <th>Balance MT</th>
+                                    <th>Ready Bundle</th>
+                                    <th>Ready Bundle MT</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="tabPort">
+                <div class="row" id="divPortSummary">
+                    <div class="col-lg-12">
+                        <h4 class="op-tab-title">Summary by Port</h4>
+                        <table class="table table-condensed table-bordered table-striped" id="tblPortSummary" style="width:100%;">
+                            <thead>
+                                <tr>
+                                    <th>Port</th>
+                                    <th>Balance BDL</th>
+                                    <th>Balance MT</th>
+                                    <th>Ready Bundle</th>
+                                    <th>Ready Bundle MT</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane active" id="tabDetail">
+                <div class="row" id="divReport">
+    <div class="col-lg-12">
+        <h4 class="op-tab-title">Detail</h4>
+    </div>
+    <table class="table table-condensed table-bordered table-striped" id="tblReport" style="width:100%;">
         <thead>
             <tr>
                 <th>Job</th>
@@ -88,11 +239,15 @@
                 <th>Ready Bundle</th>
                 <th>Ready Bundle MT</th>
                 <th>Shipment</th>
-                <th>Status</th>
+                <th>Order Status</th>
                 <th>Ready To Ship</th>
             </tr>
         </thead>
     </table>
+</div>
+            </div>
+        </div>
+    </div>
 </div>
 <script type="text/javascript">
     $("#orderdate").datepicker({
@@ -104,6 +259,295 @@
     $("#btnSearch").click(function () {
         ReportItemSearch();
     });
+
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function () {
+        adjustReportTables();
+    });
+
+    function adjustReportTables() {
+        if ($.fn.DataTable.isDataTable("#tblSummary")) {
+            $("#tblSummary").DataTable().columns.adjust();
+        }
+        if ($.fn.DataTable.isDataTable("#tblEndUserPortSummary")) {
+            $("#tblEndUserPortSummary").DataTable().columns.adjust();
+        }
+        if ($.fn.DataTable.isDataTable("#tblPortSummary")) {
+            $("#tblPortSummary").DataTable().columns.adjust();
+        }
+        if ($.fn.DataTable.isDataTable("#tblReport")) {
+            $("#tblReport").DataTable().columns.adjust();
+        }
+    }
+
+    function parseReportNumber(value) {
+        var num = parseFloat((value || 0).toString().replace(/,/g, ''));
+        return isNaN(num) ? 0 : num;
+    }
+
+    function getUniqueText(list) {
+        var unique = [];
+        $.each(list, function (i, value) {
+            value = value || '';
+            if (value !== '' && $.inArray(value, unique) === -1) {
+                unique.push(value);
+            }
+        });
+        return unique.join(', ');
+    }
+
+    function formatReportDate(value) {
+        if (value && value.date) {
+            value = value.date;
+        }
+        if (value === null || value === undefined || value === '') {
+            return '';
+        }
+        var date = moment(value);
+        return date.isValid() ? date.format("YYYY-MM-DD") : value;
+    }
+
+    function buildSummaryByStsPO(data) {
+        var groups = {};
+        $.each(data || [], function (i, row) {
+            var stsPO = row.sts_po || '';
+            var key = stsPO || 'NO_STS_PO_' + i;
+
+            if (!groups[key]) {
+                groups[key] = {
+                    endUserList: [],
+                    sts_po: stsPO,
+                    custPOList: [],
+                    portList: [],
+                    balanceBDL: 0,
+                    balanceMT: 0,
+                    ReadyBundle: 0,
+                    ReadyBundleMT: 0,
+                    dateList: []
+                };
+            }
+
+            groups[key].endUserList.push(row.endUser);
+            groups[key].custPOList.push(row.cust_po);
+            groups[key].portList.push(row.Port);
+            groups[key].balanceBDL += parseReportNumber(row.balanceBDL);
+            groups[key].balanceMT += parseReportNumber(row.balanceMT);
+            groups[key].ReadyBundle += parseReportNumber(row.ReadyBundle);
+            groups[key].ReadyBundleMT += parseReportNumber(row.ReadyBundleMT);
+            groups[key].dateList.push(formatReportDate(row.shipment ? row.shipment.date : ''));
+        });
+
+        var summary = [];
+        $.each(groups, function (key, group) {
+            summary.push({
+                endUser: getUniqueText(group.endUserList),
+                sts_po: group.sts_po,
+                cust_po: getUniqueText(group.custPOList),
+                Port: getUniqueText(group.portList),
+                balanceBDL: group.balanceBDL,
+                balanceMT: group.balanceMT,
+                ReadyBundle: group.ReadyBundle,
+                ReadyBundleMT: group.ReadyBundleMT,
+                Date: getUniqueText(group.dateList)
+            });
+        });
+
+        return summary;
+    }
+
+    function buildSummaryByEndUserPort(data) {
+        var groups = {};
+        $.each(data || [], function (i, row) {
+            var endUser = row.endUser || '';
+            var port = row.Port || '';
+            var key = endUser + '|' + port;
+
+            if (!groups[key]) {
+                groups[key] = {
+                    endUser: endUser,
+                    Port: port,
+                    balanceBDL: 0,
+                    balanceMT: 0,
+                    ReadyBundle: 0,
+                    ReadyBundleMT: 0
+                };
+            }
+
+            groups[key].balanceBDL += parseReportNumber(row.balanceBDL);
+            groups[key].balanceMT += parseReportNumber(row.balanceMT);
+            groups[key].ReadyBundle += parseReportNumber(row.ReadyBundle);
+            groups[key].ReadyBundleMT += parseReportNumber(row.ReadyBundleMT);
+        });
+
+        var summary = [];
+        $.each(groups, function (key, group) {
+            summary.push(group);
+        });
+
+        return summary;
+    }
+
+    function buildSummaryByPort(data) {
+        var groups = {};
+        $.each(data || [], function (i, row) {
+            var port = row.Port || '';
+            var key = port || 'NO_PORT_' + i;
+
+            if (!groups[key]) {
+                groups[key] = {
+                    Port: port,
+                    balanceBDL: 0,
+                    balanceMT: 0,
+                    ReadyBundle: 0,
+                    ReadyBundleMT: 0
+                };
+            }
+
+            groups[key].balanceBDL += parseReportNumber(row.balanceBDL);
+            groups[key].balanceMT += parseReportNumber(row.balanceMT);
+            groups[key].ReadyBundle += parseReportNumber(row.ReadyBundle);
+            groups[key].ReadyBundleMT += parseReportNumber(row.ReadyBundleMT);
+        });
+
+        var summary = [];
+        $.each(groups, function (key, group) {
+            summary.push(group);
+        });
+
+        return summary;
+    }
+
+    function renderSimpleSummaryTable(tableId, data, columns, excelText, excelTitle) {
+        if ($.fn.DataTable.isDataTable(tableId)) {
+            $(tableId).DataTable().clear().destroy();
+        }
+
+        $(tableId).dataTable({
+            aaData: data,
+            paging: false,
+            fixedHeader: true,
+            destroy: true,
+            processing: true,
+            autoWidth: false,
+            scrollX: true,
+            searching: false,
+            info: false,
+            select: false,
+            columns: columns,
+            dom:
+                "<'row'<'col-md-5'B><'col-md-7 text-right'>>" +
+                "<'row'<'col-md-12'tr>>",
+            buttons: [
+                {
+                    extend: "excel",
+                    footer: true,
+                    text: "<i class='fa fa-file-excel'></i>&nbsp;" + excelText,
+                    title:
+                        excelTitle + " " + moment().format("DD-MM-YYYY HH:mm:ss")
+                },
+            ]
+        });
+    }
+
+    function renderSummaryTable(data) {
+        var summary = buildSummaryByStsPO(data);
+
+        if ($.fn.DataTable.isDataTable("#tblSummary")) {
+            $("#tblSummary").DataTable().clear().destroy();
+        }
+
+        $("#tblSummary").dataTable({
+            aaData: summary,
+            paging: false,
+            fixedHeader: true,
+            destroy: true,
+            processing: true,
+            autoWidth: false,
+            scrollX: true,
+            searching: false,
+            info: false,
+            select: false,
+            columns: [
+                { "data": "endUser" },
+                { "data": "sts_po" },
+                { "data": "cust_po" },
+                { "data": "Port" },
+                { "data": "balanceBDL" },
+                {
+                    "data": "balanceMT", render: function (data, type, row) {
+                        return parseReportNumber(data).toFixed(2);
+                    }
+                },
+                { "data": "ReadyBundle" },
+                {
+                    "data": "ReadyBundleMT", render: function (data, type, row) {
+                        return parseReportNumber(data).toFixed(2);
+                    }
+                },
+                { "data": "Date" }
+            ],
+            dom:
+                "<'row'<'col-md-5'B><'col-md-7 text-right'>>" +
+                "<'row'<'col-md-12'tr>>",
+            buttons: [
+                {
+                    extend: "excel",
+                    footer: true,
+                    text: "<i class='fa fa-file-excel'></i>&nbsp;Excel Summary",
+                    title:
+                        "Report Order Processing Summary " + moment().format("DD-MM-YYYY HH:mm:ss")
+                },
+            ]
+        });
+    }
+
+    function renderEndUserPortSummaryTable(data) {
+        renderSimpleSummaryTable(
+            "#tblEndUserPortSummary",
+            buildSummaryByEndUserPort(data),
+            [
+                { "data": "endUser" },
+                { "data": "Port" },
+                { "data": "balanceBDL" },
+                {
+                    "data": "balanceMT", render: function (data, type, row) {
+                        return parseReportNumber(data).toFixed(2);
+                    }
+                },
+                { "data": "ReadyBundle" },
+                {
+                    "data": "ReadyBundleMT", render: function (data, type, row) {
+                        return parseReportNumber(data).toFixed(2);
+                    }
+                }
+            ],
+            "Excel End User/Port",
+            "Report Order Processing End User Port Summary"
+        );
+    }
+
+    function renderPortSummaryTable(data) {
+        renderSimpleSummaryTable(
+            "#tblPortSummary",
+            buildSummaryByPort(data),
+            [
+                { "data": "Port" },
+                { "data": "balanceBDL" },
+                {
+                    "data": "balanceMT", render: function (data, type, row) {
+                        return parseReportNumber(data).toFixed(2);
+                    }
+                },
+                { "data": "ReadyBundle" },
+                {
+                    "data": "ReadyBundleMT", render: function (data, type, row) {
+                        return parseReportNumber(data).toFixed(2);
+                    }
+                }
+            ],
+            "Excel Port",
+            "Report Order Processing Port Summary"
+        );
+    }
 
     function ReportItemSearch() {
         var OldHtml = $("#btnSearch").html();
@@ -134,6 +578,9 @@
                 item: item
             },
             success: function (data) {
+                renderSummaryTable(data);
+                renderEndUserPortSummaryTable(data);
+                renderPortSummaryTable(data);
                 $("#tblReport").DataTable().clear();
                 $("#tblReport").append(
                     "<tfoot><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></tfoot>"
@@ -144,6 +591,7 @@
                     fixedHeader: true,
                     destroy: true,
                     processing: true,
+                    autoWidth: false,
                     scrollY: "65vh",
                     scrollCollapse: true,
                     scrollX: true,
@@ -250,6 +698,9 @@
                     ]
                 });
 
+                setTimeout(function () {
+                    adjustReportTables();
+                }, 0);
                 $("#tblReport").loading("stop");
                 $("#btnSearch").html(OldHtml);
             },
