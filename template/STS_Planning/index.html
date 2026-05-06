@@ -108,6 +108,8 @@
             </div>
             <div class="col-md-6 text-right">
                 <div style="margin-bottom: 10px;">
+                    <button class="btn btn-warning" id="btnExportReportSummary" onclick="exportReportSummaryToExcel()"
+                        style="margin-right: 5px;"><i class="fa fa-file-excel-o"></i> Export Excel</button>
                     <button class="btn btn-primary" id="btnLoadReport"><i class="fa fa-refresh"></i> โหลดรายงาน (Load
                         Report)</button>
                 </div>
@@ -582,38 +584,69 @@
         tr.find('.val-weight-pcs').data('val', '');
     }
 
-    function exportToExcel() {
-        var tableHTML = '<html xmlns:x="urn:schemas-microsoft-com:office:excel">';
-        tableHTML += '<head><meta charset="utf-8"><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>Planning_Entry</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body>';
+    function escapeExcelHtml(value) {
+        return String(value == null ? '' : value)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
 
+    function getExportCellValue(cell) {
+        var controls = cell.find('input, select, textarea');
+        if (controls.length > 0) {
+            var values = [];
+            controls.each(function () {
+                values.push($(this).val());
+            });
+            return $.trim(values.join(' '));
+        }
+        return $.trim(cell.text());
+    }
+
+    function buildExportTable(tableSelector, skipFirstColumn) {
         var tableData = '<table border="1">';
-        // Get Headers
-        tableData += '<tr>';
-        $('#tblPlanningEntry thead th').each(function (index) {
-            if (index !== 0) { // Skip Action column
-                tableData += '<th>' + $(this).text() + '</th>';
-            }
-        });
-        tableData += '</tr>';
 
-        // Get Data from rows
-        $('#tbodyPlanning tr').each(function () {
+        $(tableSelector).find('thead tr, tbody tr, tfoot tr').each(function () {
             tableData += '<tr>';
-            $(this).find('td').each(function (index) {
-                if (index !== 0) { // Skip Action column
-                    var val = $(this).find('input, select').length > 0 ? $(this).find('input, select').val() : $(this).text();
-                    tableData += '<td>' + $.trim(val) + '</td>';
+            $(this).children('th, td').each(function (index) {
+                if (skipFirstColumn && index === 0) {
+                    return true;
                 }
+
+                var cell = $(this);
+                var tagName = cell.prop('tagName').toLowerCase() === 'th' ? 'th' : 'td';
+                var attrs = '';
+                var colspan = cell.attr('colspan');
+                var rowspan = cell.attr('rowspan');
+                var style = cell.attr('style');
+
+                if (colspan) {
+                    attrs += ' colspan="' + escapeExcelHtml(colspan) + '"';
+                }
+                if (rowspan) {
+                    attrs += ' rowspan="' + escapeExcelHtml(rowspan) + '"';
+                }
+                if (style) {
+                    attrs += ' style="' + escapeExcelHtml(style) + '"';
+                }
+
+                tableData += '<' + tagName + attrs + '>' + escapeExcelHtml(getExportCellValue(cell)) + '</' + tagName + '>';
             });
             tableData += '</tr>';
         });
 
         tableData += '</table>';
-        tableHTML += tableData + '</body></html>';
+        return tableData;
+    }
+
+    function downloadExcel(exportTableHTML, sheetName, fileName) {
+        var tableHTML = '<html xmlns:x="urn:schemas-microsoft-com:office:excel">';
+        tableHTML += '<head><meta charset="utf-8"><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>' + escapeExcelHtml(sheetName) + '</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body>';
+        tableHTML += exportTableHTML + '</body></html>';
 
         var dataType = 'application/vnd.ms-excel';
-        var fileName = 'Planning_Entry.xls';
-
         var blob = new Blob([tableHTML], {
             type: dataType
         });
@@ -628,6 +661,14 @@
             a.click();
             document.body.removeChild(a);
         }
+    }
+
+    function exportToExcel() {
+        downloadExcel(buildExportTable('#tblPlanningEntry', true), 'Planning_Entry', 'Planning_Entry.xls');
+    }
+
+    function exportReportSummaryToExcel() {
+        downloadExcel(buildExportTable('#tblReportSummary', false), 'Report_Summary', 'Report_Summary.xls');
     }
     function loadSummaryReport() {
         var selectedYear = $("#selReportYear").val() || 2026;
