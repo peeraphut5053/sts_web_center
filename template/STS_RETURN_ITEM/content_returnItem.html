@@ -37,6 +37,12 @@
     .modal-xl {
         width: 100% !important;
     }
+
+    .imagBox {
+        border: 1px solid #d1d5db;
+        padding: 0.5rem 1.25rem;
+        margin-right: 1rem;
+    }
 </style>
 <div style="margin-top: 10px; margin-bottom: 20px;">
     <h1 class="my-header">เปิดใบคืนของ</h1>
@@ -58,6 +64,17 @@
             </div>
             <div class="input-group basis-2/6" style="display: flex; justify-content: flex-end;">
                 <button type="button" class="btn btn-success btn-lg" id="btnOpenImageReturn"><i class="fa fa-picture-o"></i>&nbsp;ดูรูปภาพ</button>
+            </div>
+        </div>
+        <div class="mybox">
+            <div class="input-group basis-3/6">
+                <div style="display: flex; align-items: center;" id="file_upload_return">
+                    <div style="font-weight: bold; font-size: 16px;" class="imagBox">รูปภาพ</div>
+                    <div class="imagBox">
+                        <input type="file" id="file-input-return" multiple accept="image/jpeg, image/png, image/jpg">
+                    </div>
+                    <button type="button" class="btn btn-info" id="btnUploadImageReturn"><i class="fa fa-upload"></i>&nbsp;อัปโหลดรูปภาพ</button>
+                </div>
             </div>
         </div>
         <hr />
@@ -292,7 +309,9 @@
                         <thead>
                             <tr>
                                 <th class="bg-gray">Doc No</th>
+                                <th class="bg-gray">Dept</th>
                                 <th class="bg-gray">รูปภาพ</th>
+                                <th class="bg-gray"></th>
                             </tr>
                         </thead>
                     </table>
@@ -451,14 +470,26 @@
             "columnDefs": [
                 { "targets": '_all', "className": 'text-center' },
                 { "targets": 0, "width": "200" },
-                { "targets": 1, "width": "400" },
+                { "targets": 1, "width": "100" },
+                { "targets": 2, "width": "400" },
+                { "targets": 3, "width": "120" },
             ],
             columns: [
                 { "data": "doc_no" },
+                { "data": "dept" },
                 {
                     "data": "path",
                     "render": function (data, type, row) {
                         return '<div style="display: flex; align-items: center; justify-content: center;"><img src="module/STS_RETURN_ITEM/upload/' + data + '?v=' + Date.now() + '" style="width: 50px; height: 50px; cursor: pointer;" onclick="openImage(this.src)"></div>';
+                    }
+                },
+                {
+                    "data": "path",
+                    "render": function (data, type, row, meta) {
+                        if (row.dept != 'Sales') {
+                            return '';
+                        }
+                        return '<button type="button" class="btn btn-lg btn-danger" onclick="DeleteReturnPicSales(\'' + data + '\', ' + meta.row + ')">ลบ</button>';
                     }
                 },
             ],
@@ -491,6 +522,117 @@
         });
         $('#ModalReturnImg').modal('show');
     })
+
+    $('#btnUploadImageReturn').click(function () {
+        const fileInputs = document.getElementById('file-input-return').files;
+        const doc_no = $("#doc_no_return_old").val() || $("#doc_no_return").val();
+
+        if (fileInputs.length > 5) {
+            swal("คุณสามารถอัพโหลดรูปภาพ Sales ได้ไม่เกิน 5 รูปต่อใบคืนของ!", "", "warning");
+            document.getElementById('file-input-return').value = '';
+            return false;
+        }
+
+        if (doc_no == '') {
+            swal("กรุณาเลือกเลขที่ใบคืนที่ต้องการอัพโหลดรูปภาพ!", "", "warning");
+            return false;
+        }
+
+        if (!fileInputs || fileInputs.length === 0) {
+            alert("กรุณาเลือกไฟล์รูปภาพ");
+            return false;
+        }
+
+        $.ajax({
+            type: "GET",
+            url: "././module/STS_RETURN_ITEM/data.php",
+            dataType: "json",
+            data: {
+                load: "CountReturnPicByDocNo",
+                doc_no: doc_no,
+                dept: "Sales"
+            },
+            success: function (dataPic) {
+                var existingCount = dataPic.count;
+                var totalCount = existingCount + fileInputs.length;
+
+                if (totalCount > 5) {
+                    swal("คุณสามารถอัพโหลดรูปภาพ Sales ได้ไม่เกิน 5 รูปต่อใบคืนของ!", "", "warning");
+                    document.getElementById('file-input-return').value = '';
+                    return false;
+                } else {
+                    const formData = new FormData();
+                    formData.append('load', 'CreateReturnPic');
+                    formData.append('doc_no', doc_no);
+                    formData.append('dept', 'Sales');
+
+                    for (let i = 0; i < fileInputs.length; i++) {
+                        const file = fileInputs[i];
+                        if (file.type !== 'image/jpg' && file.type !== 'image/jpeg' && file.type !== 'image/png') {
+                            alert("กรุณาเลือกไฟล์รูปภาพ");
+                            return false;
+                        }
+                        formData.append('file[]', file);
+                    }
+
+                    $.ajax({
+                        type: "POST",
+                        url: "././module/STS_RETURN_ITEM/upload.php",
+                        dataType: "json",
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function (data) {
+                            if (!data.success) {
+                                swal("คุณสามารถอัพโหลดรูปภาพ Sales ได้ไม่เกิน 5 รูปต่อใบคืนของ!", "", "warning");
+                                document.getElementById('file-input-return').value = '';
+                                return false;
+                            }
+
+                            swal("อัปโหลดรูปภาพสําเร็จ!", "", "success");
+                            document.getElementById('file-input-return').value = '';
+                        },
+                        error: function (xhr, status, error) {
+                            alert('Error');
+                        }
+                    });
+                }
+            },
+            error: function (xhr, status, error) {
+                alert('Error');
+            }
+        })
+    });
+
+    function DeleteReturnPicSales(path, row) {
+        if (confirm("คุณต้องการลบรูปภาพนี้ใช่หรือไม่?")) {
+            $.ajax({
+                type: "POST",
+                url: "././module/STS_RETURN_ITEM/upload.php",
+                dataType: "json",
+                data: {
+                    load: "DeleteReturnPic",
+                    path: path,
+                    dept: "Sales"
+                },
+                success: function (data) {
+                    if (!data.success) {
+                        swal("ไม่สามารถลบรูปภาพนี้ได้", "", "warning");
+                        return false;
+                    }
+
+                    swal("ลบรูปภาพสําเร็จ!", "", "success");
+                    var tableImg = $('#tbItemReturnImg').DataTable();
+                    tableImg.row(row).remove().draw();
+                },
+                error: function (xhr, status, error) {
+                    alert('Error');
+                }
+            });
+        } else {
+            return false;
+        }
+    }
 
     $.ajax({
         type: "GET",
@@ -963,6 +1105,7 @@
         $("#remark_return").val('');
         $("#stat_return").val('').trigger('change');
         $("#return_type").val('').trigger('change');
+        document.getElementById('file-input-return').value = '';
 
         // um_return
         $("#um_return").val('');
@@ -1020,6 +1163,7 @@
                 $("#qty_return").val('');
                 $("#remark_w").val('');
                 $("#doc_no_return_old").val(data[0].doc_no);
+                document.getElementById('file-input-return').value = '';
 
                 //
                 // disable button

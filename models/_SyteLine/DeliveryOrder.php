@@ -807,7 +807,7 @@ FROM STS_return_hdr h
         return $rs0;
     }
 
-    function CreateReturnPic($doc_no, $file_type) {
+    function CreateReturnPic($doc_no, $file_type, $dept = '') {
         $s = "SELECT doc_no FROM STS_return_pic WHERE doc_no = '$doc_no' ORDER BY doc_no DESC";
         $cSql = new SqlSrv();
         $doc = $cSql->SqlQuery($this->StrConn, $s);
@@ -818,17 +818,27 @@ FROM STS_return_hdr h
             $doc_count = 1;
         }
         $pathName = $doc_no . "_" . $doc_count . "." . $file_type;
-        $query = "INSERT INTO STS_return_pic (doc_no,path) OUTPUT INSERTED.* VALUES('$doc_no','$pathName')";
+        $query = "INSERT INTO STS_return_pic (doc_no,path,dept) OUTPUT INSERTED.* VALUES('$doc_no','$pathName','$dept')";
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
         return $rs;
     }
 
-    function DeleteReturnPic($path) {
-        $s = "DELETE FROM STS_return_pic WHERE path = '$path'";
+    function DeleteReturnPic($path, $dept = '') {
+        $whDept = $dept != '' ? " AND dept = '$dept'" : "";
+        $s = "DELETE FROM STS_return_pic WHERE path = '$path' $whDept";
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $s);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+    function GetReturnPicByPath($path, $dept = '') {
+        $whDept = $dept != '' ? " AND dept = '$dept'" : "";
+        $query = "SELECT * FROM STS_return_pic WHERE path = '$path' $whDept";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
         return $rs;
     }
@@ -953,9 +963,10 @@ FROM STS_return_hdr h
         return $rs;
     }
 
-    function CountReturnPicByDocNo($doc_no) {
+    function CountReturnPicByDocNo($doc_no, $dept = '') {
         $cSql = new SqlSrv();
-        $query = "SELECT COUNT(*) AS pic_count FROM STS_return_pic WHERE doc_no = '$doc_no'";
+        $whDept = $dept != '' ? " AND dept = '$dept'" : "";
+        $query = "SELECT COUNT(*) AS pic_count FROM STS_return_pic WHERE doc_no = '$doc_no' $whDept";
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
         return $rs;

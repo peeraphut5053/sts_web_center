@@ -148,7 +148,8 @@ if ($load == "SalesApprove") {
 }
 
 if ($load == "CountReturnPicByDocNo") {
-    $rs = $STS_Custom->CountReturnPicByDocNo($doc_no);
+    $dept = isset($dept) ? $dept : '';
+    $rs = $STS_Custom->CountReturnPicByDocNo($doc_no, $dept);
     echo json_encode(array(
         'count' => $rs[0]['pic_count']
     ));

@@ -27,6 +27,7 @@ if ($_POST['load'] == 'CreateReturnPic') {
 
     $files = $_FILES['file'];
     $allowed_types = array('jpg', 'jpeg', 'png');
+    $dept = isset($_POST['dept']) ? $_POST['dept'] : '';
     $STS_Custom->setConn($ConnSL);
 
     if (!file_exists($upload_dir)) {
@@ -38,6 +39,29 @@ if ($_POST['load'] == 'CreateReturnPic') {
 
     // วนลูปไฟล์ทั้งหมด
     $file_count = count($files['name']);
+    $dept_limit = 0;
+
+    if ($dept == 'Sales') {
+        $dept_limit = 5;
+    } else if ($dept == 'QC') {
+        $dept_limit = 10;
+    }
+
+    if ($dept_limit > 0) {
+        $pic_count = $STS_Custom->CountReturnPicByDocNo($_POST['doc_no'], $dept);
+        $existing_count = count($pic_count) > 0 ? intval($pic_count[0]['pic_count']) : 0;
+
+        if (($existing_count + $file_count) > $dept_limit) {
+            echo json_encode(array(
+                'success' => false,
+                'uploaded' => 0,
+                'total' => $file_count,
+                'message' => 'upload limit exceeded',
+                'errors' => array()
+            ));
+            exit;
+        }
+    }
 
     for ($i = 0; $i < $file_count; $i++) {
         // ข้าม file ที่ว่าง
@@ -66,7 +90,7 @@ if ($_POST['load'] == 'CreateReturnPic') {
         }
 
         // สร้าง record ในฐานข้อมูล
-        $rs = $STS_Custom->CreateReturnPic($_POST['doc_no'], $file_type);
+        $rs = $STS_Custom->CreateReturnPic($_POST['doc_no'], $file_type, $dept);
 
         if (count($rs) > 0) {
             $file_name = $rs[0]['path'];
@@ -105,7 +129,18 @@ if ($_POST['load'] == 'DeleteReturnPic') {
     $CallModel->SyteLine_Models();
     $STS_Custom = new DeliveryOrder();
     $STS_Custom->setConn($ConnSL);
-    $STS_Custom->DeleteReturnPic($_POST['path']);
+    $dept = isset($_POST['dept']) ? $_POST['dept'] : '';
+    $pic = $STS_Custom->GetReturnPicByPath($_POST['path'], $dept);
+
+    if (count($pic) == 0) {
+        echo json_encode(array(
+            'success' => false,
+            'message' => 'picture not found'
+        ));
+        exit;
+    }
+
+    $STS_Custom->DeleteReturnPic($_POST['path'], $dept);
 
     if (file_exists($upload_dir . $_POST['path'])) {
         unlink($upload_dir . $_POST['path']);

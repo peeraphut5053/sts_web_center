@@ -189,6 +189,7 @@
                         <thead>
                             <tr>
                                 <th class="bg-gray">do num</th>
+                                <th class="bg-gray">Dept</th>
                                 <th class="bg-gray">รูปภาพ</th>
                                 <th class="bg-gray"></th>
                             </tr>
@@ -286,11 +287,14 @@
             "columnDefs": [
                 { "targets": '_all', "className": 'text-center' },
                 { "targets": 0, "width": "200" },
-                { "targets": 1, "width": "400" },
+                { "targets": 1, "width": "100" },
+                { "targets": 2, "width": "400" },
+                { "targets": 3, "width": "120" },
 
             ],
             columns: [
                 { "data": "doc_no" },
+                { "data": "dept" },
                 {
                     "data": "path",
                     "render": function (data, type, row) {
@@ -300,6 +304,9 @@
                 {
                     "data": "path",
                     "render": function (data, type, row, meta) {
+                        if (row.dept != 'QC') {
+                            return '';
+                        }
                         // send meta.row to DeleteReturnPic
                         return '<button type="button" class="btn btn-lg btn-danger" onclick="DeleteReturnPic(\'' + data + '\', ' + meta.row + ')">ลบ</button>';
                     }
@@ -673,7 +680,8 @@
             dataType: "json",
             data: {
                 load: "CountReturnPicByDocNo",
-                doc_no: doc_no
+                doc_no: doc_no,
+                dept: "QC"
             },
             success: function (dataPic) {
                 var existingCount = dataPic.count;
@@ -688,6 +696,7 @@
                     const formData = new FormData();
                     formData.append('load', 'CreateReturnPic');
                     formData.append('doc_no', doc_no);
+                    formData.append('dept', 'QC');
 
                     // ส่งไฟล์ที่เลือกทั้งหมด
                     for (let i = 0; i < fileInputs.length; i++) {
@@ -707,6 +716,12 @@
                         processData: false, // สำคัญ: ห้าม jQuery ประมวลผลข้อมูล
                         contentType: false,
                         success: function (data) {
+                            if (!data.success) {
+                                swal("คุณสามารถอัพโหลดรูปภาพ QC ได้ไม่เกิน 10 รูปต่อใบคืนของ!", "", "warning");
+                                document.getElementById('file-input').value = '';
+                                return false;
+                            }
+
                             swal("อัปโหลดรูปภาพสําเร็จ!", "", "success");
                             document.getElementById('file-input').value = '';
                         },
@@ -836,9 +851,15 @@
                 dataType: "json",
                 data: {
                     load: "DeleteReturnPic",
-                    path: path
+                    path: path,
+                    dept: "QC"
                 },
                 success: function (data) {
+                    if (!data.success) {
+                        swal("ไม่สามารถลบรูปภาพนี้ได้", "", "warning");
+                        return false;
+                    }
+
                     swal("ลบรูปภาพสําเร็จ!", "", "success");
                     // delete row from datatable
                     var tableImg = $('#tbItemReturnQcImg').DataTable();
