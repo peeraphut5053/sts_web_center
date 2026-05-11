@@ -1,0 +1,295 @@
+<style>
+    #RPT_PO_TRACE {
+        color: #263238;
+    }
+
+    #RPT_PO_TRACE .report-head {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 14px;
+        padding: 14px 16px;
+        border-left: 4px solid #00897b;
+        background: #ffffff;
+        box-shadow: 0 1px 0 rgba(0, 0, 0, .06);
+    }
+
+    #RPT_PO_TRACE .report-title {
+        margin: 0;
+        font-size: 26px;
+        font-weight: 600;
+        letter-spacing: 0;
+        color: #1f2d33;
+    }
+
+    #RPT_PO_TRACE .report-subtitle {
+        margin-top: 4px;
+        color: #607d8b;
+        font-size: 12px;
+    }
+
+    #RPT_PO_TRACE .report-badge {
+        display: inline-block;
+        padding: 5px 9px;
+        border: 1px solid #b0bec5;
+        background: #f7fafb;
+        color: #455a64;
+        font-size: 11px;
+        text-transform: uppercase;
+    }
+
+    #RPT_PO_TRACE .filter-panel {
+        margin-bottom: 14px;
+        padding: 14px 14px 10px;
+        border: 1px solid #d9e2e6;
+        background: #fbfcfd;
+    }
+
+    #RPT_PO_TRACE .input-group-addon {
+        min-width: 84px;
+        border-color: #cfd8dc;
+        background: #eef3f5;
+        color: #37474f;
+        font-size: 12px;
+        font-weight: 600;
+        text-align: left;
+    }
+
+    #RPT_PO_TRACE .filter-row {
+        margin-bottom: 0;
+    }
+
+    #RPT_PO_TRACE .filter-row>div {
+        margin-bottom: 8px;
+    }
+
+    #RPT_PO_TRACE .form-control {
+        border-color: #cfd8dc;
+        box-shadow: none;
+        color: #263238;
+    }
+
+    #RPT_PO_TRACE .form-control:focus {
+        border-color: #00897b;
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, .03), 0 0 0 2px rgba(0, 137, 123, .12);
+    }
+
+    #RPT_PO_TRACE .btn-search {
+        border-color: #00796b;
+        background: #00897b;
+        color: #ffffff;
+        font-weight: 600;
+    }
+
+    #RPT_PO_TRACE .btn-search:hover,
+    #RPT_PO_TRACE .btn-search:focus {
+        border-color: #00695c;
+        background: #00796b;
+        color: #ffffff;
+    }
+
+    #RPT_PO_TRACE .report-table-wrap {
+        border: 1px solid #d9e2e6;
+        background: #ffffff;
+        padding: 3px;
+    }
+
+    #RPT_PO_TRACE #tblReport {
+        margin-bottom: 0;
+    }
+
+    #RPT_PO_TRACE #tblReport thead th {
+        border-bottom: 2px solid #90a4ae;
+        background: #eef3f5;
+        color: #263238;
+        font-size: 14px;
+        font-weight: 700;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+
+    #RPT_PO_TRACE table.dataTable tbody td {
+        vertical-align: middle;
+        font-size: 14px;
+        white-space: nowrap;
+    }
+
+    #RPT_PO_TRACE .dataTables_wrapper .dt-buttons .btn {
+        border-radius: 0;
+        border-color: #b0bec5;
+        background: #ffffff;
+        color: #37474f;
+    }
+
+    @media (max-width: 767px) {
+        #RPT_PO_TRACE .report-head {
+            display: block;
+        }
+
+        #RPT_PO_TRACE .report-badge {
+            margin-top: 10px;
+        }
+    }
+</style>
+
+<div id="RPT_PO_TRACE">
+    <div class="report-head">
+        <div>
+            <h1 class="report-title">PO Trace</h1>
+        </div>
+    </div>
+
+    <div class="filter-panel">
+        <div class="row filter-row">
+            <div class="col-lg-2 col-md-4">
+                <div class="input-group">
+                    <div class="input-group-addon">Cust PO</div>
+                    <input type="text" autocomplete="off" class="form-control txt-filter" id="txtCustPo" maxlength="4">
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-4">
+                <div class="input-group">
+                    <div class="input-group-addon">CO Num</div>
+                    <input type="text" autocomplete="off" class="form-control txt-filter" id="txtCoNum">
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-4"">
+                <div class=" input-group">
+                <div class="input-group-addon">DO Num</div>
+                <input type="text" autocomplete="off" class="form-control txt-filter" id="txtDoNum">
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-4"">
+                <div class=" input-group">
+            <div class="input-group-addon">Inv Num</div>
+            <input type="text" autocomplete="off" class="form-control txt-filter" id="txtInvNum">
+        </div>
+    </div>
+    <div class="col-lg-2 col-md-4"">
+                <span class=" input-group-btn">
+        <button id="btnSearch" class="btn btn-search" type="button"><i class="fa fa-search"></i>&nbsp;Search</button>
+        </span>
+    </div>
+</div>
+</div>
+
+<div class="row" id="divReport">
+    <div>
+        <div class="report-table-wrap">
+            <table class="table table-condensed table-bordered table-striped" id="tblReport" style="width:100%;">
+                <thead>
+                    <tr>
+                        <th>cust_po</th>
+                        <th>co_num</th>
+                        <th>do_num</th>
+                        <th>inv_num</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+</div>
+
+<script type="text/javascript">
+    $("#btnSearch").click(function () {
+        SearchPOTrace();
+    });
+
+    $(".txt-filter").keypress(function (e) {
+        if (e.which == 13) {
+            SearchPOTrace();
+        }
+    });
+
+    function SearchPOTrace() {
+        var tblReport = "#tblReport";
+        var btnSearch = "#btnSearch";
+        var oldHtml = $(btnSearch).html();
+
+        $.ajax({
+            type: "GET",
+            url: "module/RPT_PO_TRACE/data.php",
+            dataType: "json",
+            data: {
+                load: "ajax",
+                txtCustPo: $("#txtCustPo").val(),
+                txtCoNum: $("#txtCoNum").val(),
+                txtDoNum: $("#txtDoNum").val(),
+                txtInvNum: $("#txtInvNum").val()
+            },
+            beforeSend: function () {
+                $(btnSearch).html("<i class='fa fa-spinner fa-spin'></i>&nbsp;Search");
+                $(tblReport).loading();
+            },
+            success: function (data) {
+                if (data && data.error) {
+                    alert("Cannot load PO Trace data.");
+                    console.log(data.message);
+                    return;
+                }
+
+                if ($.fn.DataTable.isDataTable(tblReport)) {
+                    $(tblReport).DataTable().clear();
+                }
+
+                $(tblReport).dataTable({
+                    scrollY: '60vh',
+                    scrollX: true,
+                    aaData: data,
+                    paging: false,
+                    searching: false,
+                    fixedHeader: true,
+                    destroy: true,
+                    processing: true,
+                    columns: [
+                        { data: "cust_po", className: "text-left" },
+                        { data: "co_num", className: "text-center" },
+                        { data: "do_num", className: "text-center" },
+                        { data: "inv_num", className: "text-center" }
+                    ],
+                    dom: "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                        "<'row'<'col-md-12'tr>>" +
+                        "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                    buttons: [
+                        {
+                            extend: "print",
+                            text: "<i class='fa fa-print'></i>&nbsp;Print",
+                            title: ""
+                        },
+                        {
+                            extend: "excel",
+                            text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                            title: "PO Trace " + GetCurrDateTime()
+                        }
+                    ]
+                });
+            },
+            error: function (e) {
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+                alert("Cannot load PO Trace data.");
+            },
+            complete: function () {
+                $(tblReport).loading("stop");
+                $(btnSearch).html(oldHtml);
+            }
+        });
+    }
+
+    $("#tblReport").dataTable({
+        scrollX: true,
+        aaData: [],
+        paging: false,
+        searching: false,
+        fixedHeader: true,
+        destroy: true,
+        columns: [
+            { data: "cust_po", className: "text-left" },
+            { data: "co_num", className: "text-center" },
+            { data: "do_num", className: "text-center" },
+            { data: "inv_num", className: "text-center" }
+        ]
+    });
+</script>
