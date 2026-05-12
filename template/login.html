@@ -1,75 +1,99 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Sahathai steel pipe Web center - Log In</title>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> 
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.0/jquery-confirm.min.css">
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.0/jquery-confirm.min.js"></script>
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 
-    </head>
-    <body background="url('image/background.jpg')">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sahathai steel pipe Web center - Log In</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.0/jquery-confirm.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.0/jquery-confirm.min.js"></script>
+</head>
 
-        <div style="padding-top: 5%; padding-left: 3%; padding-right: 3%;">
-            <div class="login-wrap">
-                <div class="login-html">
-                    <input id="tab-1" type="radio" name="tab" class="sign-in" checked>
-                    <label for="tab-1" class="tab">Sahathai steel pipe Web center</label>
-                    <input id="tab-2" type="radio" name="tab" class="sign-up">
-                    <label for="tab-2" class="tab"></label>
-                    <div class="login-form">
-                        <div class="sign-in-htm">
-                            <div class="group">
-                                <label for="user" class="label">Username</label>
-                                <input id="txtLoginUser" type="text" class="input">
-                            </div>
-                            <div class="group">
-                                <label for="pass" class="label">Password</label>
-                                <input id="txtLoginPassword" type="password" class="input txtEnter" data-type="password">
-                            </div>
-                            <div class="group">
-                                <input id="check" type="checkbox" class="check" checked>
-                                <label for="check"><span class="icon"></span> Keep me Signed in</label>
-                            </div>
-                            <div class="group">
-                                <input type="submit" class="button txtEnter" id="btnLogin" value="เข้าสู่ระบบ">
-
-                            </div>
-                            <!-- <div class="group">
-                                <input type="submit" class="button" id="btnGuestLogin" value="สมัครเข้าใช้งาน">
-                            </div> -->
-                            <div class="group">
-                                <div class="form-group">
-                                    <select id='DATABASE' onchange="changeDatabase()" class="form-control">
-                                        <option value='Live_App'>Live_App</option>
-                                        <option value='Live_App_2003_ctm'>Live_App_2003_ctm</option>
-                                        <option value='Live_App_2002'>Live_App_2002</option>
-                                    </select>
-                                </div>
-
+<body>
+    <main class="login-shell">
+        <section class="login-wrap" aria-label="Login form">
+            <div class="login-html">
+                <div class="login-brand">
+                    <div class="brand-mark">STS</div>
+                    <div>
+                        <p class="eyebrow">Sahathai Steel Pipe</p>
+                        <h1>Web Center</h1>
+                    </div>
+                </div>
+                <input id="tab-1" type="radio" name="tab" class="sign-in" checked>
+                <label for="tab-1" class="tab">Sign in</label>
+                <input id="tab-2" type="radio" name="tab" class="sign-up">
+                <label for="tab-2" class="tab hidden-tab"></label>
+                <div class="login-form">
+                    <div class="sign-in-htm">
+                        <div class="form-heading">
+                            <h2>Welcome back</h2>
+                        </div>
+                        <div class="group">
+                            <label for="txtLoginUser" class="label">Username</label>
+                            <div class="field-control">
+                                <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                                <input id="txtLoginUser" type="text" class="input" autocomplete="username">
                             </div>
                         </div>
+                        <div class="group">
+                            <label for="txtLoginPassword" class="label">Password</label>
+                            <div class="field-control">
+                                <span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
+                                <input id="txtLoginPassword" type="password" class="input txtEnter" data-type="password"
+                                    autocomplete="current-password">
+                            </div>
+                        </div>
+                        <div class="group keep-session">
+                            <input id="check" type="checkbox" class="check" checked>
+                            <label for="check"><span class="icon"></span> Keep me signed in</label>
+                        </div>
+                        <div class="group">
+                            <input type="submit" class="button txtEnter" id="btnLogin" value="เข้าสู่ระบบ">
+                        </div>
+                        <!-- <div class="group">
+                                <input type="submit" class="button" id="btnGuestLogin" value="สมัครเข้าใช้งาน">
+                            </div> -->
                     </div>
                 </div>
             </div>
-        </div>
-    </body>
-</html>                                		                            
+        </section>
+    </main>
+</body>
+
+</html>
 
 
 
 
 <style>
-    body{
-        margin:0;
-        color:#6a6f8c;
-        background-image: url("template/image/background.jpg") ;
-        font:600 16px/18px 'Open Sans',sans-serif;
+    :root {
+        --ink: #16213b;
+        --steel: #24334f;
+        --steel-deep: #10182a;
+        --panel: rgba(255, 255, 255, .96);
+        --panel-border: rgba(255, 255, 255, .72);
+        --muted: #71809b;
+        --line: #d9e2ef;
+        --blue: #1e66f5;
+        --blue-deep: #1749b8;
+        --red: #d94436;
+        --green: #22b573;
+        --shadow: 0 38px 110px rgba(9, 21, 45, .52), 0 12px 30px rgba(9, 21, 45, .26);
+    }
+
+    body {
+        margin: 0;
+        min-height: 100vh;
+        color: var(--ink);
+        background:
+            radial-gradient(circle at 50% 24%, rgba(255, 255, 255, .2), transparent 31%),
+            linear-gradient(135deg, rgba(10, 19, 35, .96), rgba(22, 38, 64, .82) 48%, rgba(78, 33, 42, .72)),
+            url("template/image/background.jpg");
         background-repeat: no-repeat;
         background-position: center center;
         background-attachment: fixed;
@@ -77,157 +101,457 @@
         -moz-background-size: 100% 100%, auto;
         -webkit-background-size: 100% 100%, auto;
         background-size: 100% 100%, auto;
+        font: 500 15px/1.5 "Trebuchet MS", "Segoe UI", sans-serif;
+        overflow-x: hidden;
     }
-    *,:after,:before{box-sizing:border-box}
-    .clearfix:after,.clearfix:before{content:'';display:table}
-    .clearfix:after{clear:both;display:block}
-    a{color:inherit;text-decoration:none}
 
-    .login-wrap{
-        width:100%;
-        margin:auto;
-        max-width:525px;
-        min-height:580px;
-        border-radius: 10px;
-        position:relative;
-        /*background:url("template/image/background.jpg") no-repeat center;*/
-        box-shadow:0 12px 15px 0 rgba(0,0,0,.24),0 17px 50px 0 rgba(0,0,0,.19);
+    *,
+    :after,
+    :before {
+        box-sizing: border-box
     }
-    .login-html{
-        width:100%;
-        height:100%;
-        position:absolute;
-        border-radius: 10px;
-        padding: 90px 15px 50px 15px;
-        background:rgba(40,57,101,.9);
+
+    .clearfix:after,
+    .clearfix:before {
+        content: '';
+        display: table
     }
+
+    .clearfix:after {
+        clear: both;
+        display: block
+    }
+
+    a {
+        color: inherit;
+        text-decoration: none
+    }
+
+    .login-shell {
+        width: 100%;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 18px;
+        position: relative;
+        isolation: isolate;
+    }
+
+    .login-shell:before {
+        content: "";
+        width: min(86vw, 760px);
+        height: min(86vw, 760px);
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        z-index: -1;
+        transform: translate(-50%, -50%) rotate(10deg);
+        background:
+            linear-gradient(90deg, rgba(255, 255, 255, .12) 1px, transparent 1px),
+            linear-gradient(180deg, rgba(255, 255, 255, .12) 1px, transparent 1px);
+        background-size: 36px 36px;
+        mask-image: radial-gradient(circle, #000 0 44%, transparent 70%);
+        opacity: .5;
+    }
+
+    .login-shell:after {
+        content: "";
+        width: min(78vw, 620px);
+        height: min(78vw, 620px);
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        z-index: -2;
+        transform: translate(-50%, -50%);
+        border: 1px solid rgba(255, 255, 255, .22);
+        box-shadow: inset 0 0 0 28px rgba(255, 255, 255, .03);
+        clip-path: polygon(50% 0, 100% 26%, 100% 74%, 50% 100%, 0 74%, 0 26%);
+    }
+
+    .brand-mark {
+        width: 56px;
+        height: 56px;
+        flex: 0 0 56px;
+        display: grid;
+        place-items: center;
+        border-radius: 7px;
+        border: 1px solid rgba(30, 102, 245, .2);
+        background: linear-gradient(145deg, #f8fbff, #e9eff8);
+        color: var(--blue-deep);
+        box-shadow: inset 0 1px 0 #fff, 0 12px 28px rgba(21, 38, 68, .14);
+        letter-spacing: .08em;
+        font-size: 20px;
+        font-weight: 800;
+    }
+
+    .eyebrow {
+        margin: 0 0 10px;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: .16em;
+        text-transform: uppercase;
+    }
+
+    .login-brand {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 22px;
+        padding-bottom: 18px;
+        border-bottom: 1px solid var(--line);
+    }
+
+    .login-brand h1 {
+        margin: 0;
+        color: var(--ink);
+        font-size: 28px;
+        line-height: 1;
+        font-weight: 800;
+    }
+
+    .system-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        width: fit-content;
+        margin-top: 8px;
+        padding: 8px 12px;
+        border: 1px solid rgba(34, 181, 115, .18);
+        background: rgba(34, 181, 115, .08);
+        color: #237252;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .status-dot {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: var(--green);
+        box-shadow: 0 0 0 6px rgba(34, 181, 115, .18);
+    }
+
+    .login-wrap {
+        width: 100%;
+        max-width: 560px;
+        min-height: 585px;
+        border-radius: 10px;
+        position: relative;
+        box-shadow: var(--shadow);
+    }
+
+    .login-html {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        border-radius: 10px;
+        padding: 34px 48px 32px;
+        background: var(--panel);
+        border: 2px solid var(--panel-border);
+        backdrop-filter: blur(18px);
+        overflow: hidden;
+    }
+
+    .login-html:before {
+        content: "";
+        height: 6px;
+        position: absolute;
+        inset: 0 0 auto 0;
+        background: linear-gradient(90deg, var(--blue), var(--red));
+    }
+
+    .login-html:after {
+        content: "";
+        width: 140px;
+        height: 140px;
+        position: absolute;
+        right: -78px;
+        top: 96px;
+        border: 22px solid rgba(217, 68, 54, .07);
+        transform: rotate(16deg);
+    }
+
     .login-html .sign-in-htm,
-    .login-html .sign-up-htm{
-        top:0;
-        left:0;
-        right:0;
-        bottom:0;
-        position:absolute;
-        transform:rotateY(180deg);
-        backface-visibility:hidden;
-        transition:all .4s linear;
+    .login-html .sign-up-htm {
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        position: absolute;
+        transform: rotateY(180deg);
+        backface-visibility: hidden;
+        transition: all .4s linear;
+        z-index: 1;
     }
+
     .login-html .sign-in,
     .login-html .sign-up,
-    .login-form .group .check{
-        display:none;
+    .login-form .group .check {
+        display: none;
     }
+
     .login-html .tab,
     .login-form .group .label,
-    .login-form .group .button{
+    .login-form .group .button {
         /*text-transform:uppercase;*/
     }
-    .login-html .tab{
-        font-size:22px;
-        width: 100%;
-        text-align: center;
-        margin-right:15px;
-        padding-bottom:5px;
-        margin:0 15px 10px 0;
-        display:inline-block;
-        border-bottom:2px solid transparent;
+
+    .login-html .tab {
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: .18em;
+        text-transform: uppercase;
+        width: auto;
+        text-align: left;
+        margin: 0 0 22px 0;
+        padding-bottom: 9px;
+        display: inline-block;
+        border-bottom: 2px solid transparent;
     }
-    .login-html .sign-in:checked + .tab,
-    .login-html .sign-up:checked + .tab{
-        color:#fff;
-        border-color:#1161ee;
+
+    .login-html .hidden-tab {
+        display: none;
     }
-    .login-form{
-        min-height:345px;
-        position:relative;
-        perspective:1000px;
-        transform-style:preserve-3d;
+
+    .login-html .sign-in:checked+.tab,
+    .login-html .sign-up:checked+.tab {
+        color: var(--ink);
+        border-color: var(--red);
     }
-    .login-form .group{
-        margin-bottom:15px;
+
+    .login-form {
+        min-height: 345px;
+        position: relative;
+        perspective: 1000px;
+        transform-style: preserve-3d;
     }
+
+    .form-heading {
+        margin-bottom: 18px;
+    }
+
+    .form-heading .eyebrow {
+        color: var(--red);
+    }
+
+    .form-heading h2 {
+        margin: 0;
+        color: var(--ink);
+        font-size: 29px;
+        line-height: 1.1;
+        font-weight: 800;
+    }
+
+    .form-note {
+        margin: 8px 0 0;
+        color: var(--muted);
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 1.55;
+    }
+
+    .login-form .group {
+        margin-bottom: 14px;
+    }
+
     .login-form .group .label,
     .login-form .group .input,
-    .login-form .group .button{
-        width:100%;
-        color:#fff;
-        display:block;
-    }
-    .login-form .group .input,
-    .login-form .group .button{
-        border:none;
-        padding:15px 20px;
-        border-radius:15px;
-        background:rgba(255,255,255,.1);
+    .login-form .group .button {
+        width: 100%;
+        color: var(--ink);
+        display: block;
     }
 
-    .login-form .group input[data-type="password"]{
-        text-security:circle;
-        -webkit-text-security:circle;
+    .field-control {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-height: 48px;
+        border: none;
+        padding: 0 17px;
+        border-radius: 6px;
+        background: #fff;
+        border: 1px solid var(--line);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, .6);
+        transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
     }
-    .login-form .group .label{
-        color:#dfdddd;
-        font-size:14px;
-    }
-    .login-form .group .button{
-        background:#1161ee;
 
+    .field-control .glyphicon {
+        color: var(--muted);
+        font-size: 15px;
     }
 
-    .login-form .group label .icon{
-        width:15px;
-        height:15px;
-        border-radius:2px;
-        position:relative;
-        display:inline-block;
-        background:rgba(255,255,255,.1);
+    .field-control:focus-within {
+        border-color: rgba(30, 102, 245, .6);
+        box-shadow: 0 0 0 4px rgba(30, 102, 245, .12);
+        transform: translateY(-1px);
     }
+
+    .login-form .group .input {
+        border: none;
+        outline: none;
+        padding: 12px 0;
+        background: transparent;
+        color: var(--ink);
+        font-size: 15px;
+        font-weight: 700;
+    }
+
+    .login-form .group .button {
+        border: none;
+        min-height: 52px;
+        padding: 14px 20px;
+        border-radius: 6px;
+        background: linear-gradient(135deg, var(--blue), var(--blue-deep));
+        color: #fff;
+        font-size: 15px;
+        font-weight: 800;
+        letter-spacing: .04em;
+        box-shadow: 0 16px 30px rgba(30, 102, 245, .3);
+        transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;
+    }
+
+    .login-form .group .button:hover,
+    .login-form .group .button:focus {
+        filter: brightness(1.04);
+        transform: translateY(-2px);
+        box-shadow: 0 20px 38px rgba(30, 102, 245, .36);
+        outline: none;
+    }
+
+    .login-form .group input[data-type="password"] {
+        text-security: circle;
+        -webkit-text-security: circle;
+    }
+
+    .login-form .group .label {
+        color: var(--steel);
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+        text-align: left;
+    }
+
+    .login-form .group label .icon {
+        width: 18px;
+        height: 18px;
+        border-radius: 4px;
+        position: relative;
+        display: inline-block;
+        margin-right: 8px;
+        vertical-align: -4px;
+        background: #fff;
+        border: 1px solid var(--line);
+    }
+
     .login-form .group label .icon:before,
-    .login-form .group label .icon:after{
-        content:'';
-        width:10px;
-        height:2px;
-        background:#fff;
-        position:absolute;
-        transition:all .2s ease-in-out 0s;
-    }
-    .login-form .group label .icon:before{
-        left:3px;
-        width:5px;
-        bottom:6px;
-        transform:scale(0) rotate(0);
-    }
-    .login-form .group label .icon:after{
-        top:6px;
-        right:0;
-        transform:scale(0) rotate(0);
-    }
-    .login-form .group .check:checked + label{
-        color:#fff;
-    }
-    .login-form .group .check:checked + label .icon{
-        background:#1161ee;
-    }
-    .login-form .group .check:checked + label .icon:before{
-        transform:scale(1) rotate(45deg);
-    }
-    .login-form .group .check:checked + label .icon:after{
-        transform:scale(1) rotate(-45deg);
-    }
-    .login-html .sign-in:checked + .tab + .sign-up + .tab + .login-form .sign-in-htm{
-        transform:rotate(0);
-    }
-    .login-html .sign-up:checked + .tab + .login-form .sign-up-htm{
-        transform:rotate(0);
+    .login-form .group label .icon:after {
+        content: '';
+        width: 11px;
+        height: 2px;
+        background: #fff;
+        position: absolute;
+        transition: all .2s ease-in-out 0s;
     }
 
-    .hr{
-        height:2px;
-        margin:60px 0 50px 0;
-        background:rgba(255,255,255,.2);
+    .login-form .group label .icon:before {
+        left: 3px;
+        width: 5px;
+        bottom: 6px;
+        transform: scale(0) rotate(0);
     }
-    .foot-lnk{
-        text-align:center;
+
+    .login-form .group label .icon:after {
+        top: 6px;
+        right: 0;
+        transform: scale(0) rotate(0);
+    }
+
+    .login-form .group .check:checked+label {
+        color: var(--steel);
+    }
+
+    .login-form .group .check:checked+label .icon {
+        background: var(--blue);
+        border-color: var(--blue);
+    }
+
+    .login-form .group .check:checked+label .icon:before {
+        transform: scale(1) rotate(45deg);
+    }
+
+    .login-form .group .check:checked+label .icon:after {
+        transform: scale(1) rotate(-45deg);
+    }
+
+    .login-html .sign-in:checked+.tab+.sign-up+.tab+.login-form .sign-in-htm {
+        transform: rotate(0);
+    }
+
+    .login-html .sign-up:checked+.tab+.login-form .sign-up-htm {
+        transform: rotate(0);
+    }
+
+    .hr {
+        height: 2px;
+        margin: 60px 0 50px 0;
+        background: rgba(255, 255, 255, .2);
+    }
+
+    .foot-lnk {
+        text-align: center;
+    }
+
+    .keep-session {
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    @media (max-width: 920px) {
+        .login-shell {
+            padding: 24px;
+        }
+
+        .login-wrap {
+            max-width: 560px;
+            min-height: 585px;
+        }
+    }
+
+    @media (max-width: 520px) {
+        body {
+            background-size: cover;
+        }
+
+        .login-shell {
+            padding: 18px;
+        }
+
+        .login-html {
+            padding: 26px 22px 24px;
+        }
+
+        .login-wrap {
+            min-height: 565px;
+        }
+
+        .login-brand {
+            align-items: flex-start;
+        }
+
+        .login-brand h1 {
+            font-size: 25px;
+        }
+
+        .form-heading h2 {
+            font-size: 28px;
+        }
     }
 </style>
 
@@ -285,45 +609,45 @@
 
 
         // $.alert("ยกเลิกใช้งาน User Guest กรุณาติดต่อฝ่าย IT เพื่อขอรับรหัสเข้าสู่ระบบ");
-//
-//        $.confirm({
-//            title: "Guest login",
-//            content: "<div style='width:90%;padding-left:30px;' class='row text-center'><h2 style='color:orange;'><i class='fa fa-exclamation-triangle'></i></h2>คุณได้ Log in เข้าสู่ระบบด้วย User Guest ฟังก์ชั่นบางอย่างในระบบอาจไม่สามารถใช้งานได้ </div>",
-//            buttons: {
-//                confirm: function () {
-//                    $.ajax({
-//                        url: "./module/User.php",
-//                        type: 'post',
-//                        data: {
-//                            ajax: 'true',
-//                            action: "GetPropertiesLogin",
-//                            username: "guest",
-//                            password: ""
-//                        },
-//                        success: function (data) {
-////                            if (data.state == 0) {
-////                                $.alert({
-////                                    title: 'Login fail.',
-////                                    content: data.msg,
-////                                });
-////                            } else {
-////                                location.reload();
-////
-////                            }
-//
-//                        },
-//                        error: function (xhr, status, error) {
-//                            var err = eval("(" + xhr.responseText + ")");
-//                            console.log(err);
-//                        },
-//                        dataType: "json"
-//                    });
-//                },
-//                cancel: function () {
-//
-//                }
-//            }
-//        });
+        //
+        //        $.confirm({
+        //            title: "Guest login",
+        //            content: "<div style='width:90%;padding-left:30px;' class='row text-center'><h2 style='color:orange;'><i class='fa fa-exclamation-triangle'></i></h2>คุณได้ Log in เข้าสู่ระบบด้วย User Guest ฟังก์ชั่นบางอย่างในระบบอาจไม่สามารถใช้งานได้ </div>",
+        //            buttons: {
+        //                confirm: function () {
+        //                    $.ajax({
+        //                        url: "./module/User.php",
+        //                        type: 'post',
+        //                        data: {
+        //                            ajax: 'true',
+        //                            action: "GetPropertiesLogin",
+        //                            username: "guest",
+        //                            password: ""
+        //                        },
+        //                        success: function (data) {
+        ////                            if (data.state == 0) {
+        ////                                $.alert({
+        ////                                    title: 'Login fail.',
+        ////                                    content: data.msg,
+        ////                                });
+        ////                            } else {
+        ////                                location.reload();
+        ////
+        ////                            }
+        //
+        //                        },
+        //                        error: function (xhr, status, error) {
+        //                            var err = eval("(" + xhr.responseText + ")");
+        //                            console.log(err);
+        //                        },
+        //                        dataType: "json"
+        //                    });
+        //                },
+        //                cancel: function () {
+        //
+        //                }
+        //            }
+        //        });
 
     });
     function LogIn() {
@@ -338,10 +662,10 @@
             ErrCount++;
             ErrText = ErrText + " - Please Enter Your User name <br>";
         }
-//        if (password == "") {
-//            ErrCount++;
-//            ErrText = ErrText + " - Please Enter Your Password <br>";
-//        }
+        //        if (password == "") {
+        //            ErrCount++;
+        //            ErrText = ErrText + " - Please Enter Your Password <br>";
+        //        }
         if (ErrCount > 0) {
             $.alert({
                 title: 'Login fail.',
@@ -387,8 +711,7 @@
         LogIn();
     });
     $('.txtEnter').keyup(function (e) {
-        if (e.keyCode == 13)
-        {
+        if (e.keyCode == 13) {
             $(this).trigger("enterKey");
         }
     });
