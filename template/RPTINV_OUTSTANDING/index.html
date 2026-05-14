@@ -1,51 +1,51 @@
-
-<div class="row" >
-           <div style="margin-top: 10px; margin-bottom: 20px;">
-      <h1 class="my-header">รายงานค้างส่งในประเทศ</h1>
-</div>
-</div> 
 <div class="row">
-    <div class="col-sm-3" >   
+    <div style="margin-top: 10px; margin-bottom: 20px;">
+        <h1 class="my-header">รายงานค้างส่งในประเทศ</h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-3">
         <div class="input-group">
             <div class="input-group-addon">From date</div>
-            <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtFromDate_start">
+            <input type="text" autocomplete="off" class="form-control txt-filter" id="txtFromDate_start">
         </div>
     </div>
-    <div class="col-sm-3">   
+    <div class="col-sm-3">
         <div class="input-group">
             <div class="input-group-addon">To date</div>
-            <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtFromDate_end">
+            <input type="text" autocomplete="off" class="form-control txt-filter" id="txtFromDate_end">
         </div>
     </div>
-    <div class="col-sm-3">   
+    <div class="col-sm-3">
         <div class="input-group">
             <div class="input-group-addon">Item</div>
-            <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtFromItemOrDes">
+            <input type="text" autocomplete="off" class="form-control txt-filter" id="txtFromItemOrDes">
         </div>
     </div>
 </div>
 <div class="row">
-    <div class="col-sm-3">   
+    <div class="col-sm-3">
         <div class="input-group">
             <div class="input-group-addon">Co start</div>
-            <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtFromCoNum_start" >
+            <input type="text" autocomplete="off" class="form-control txt-filter" id="txtFromCoNum_start">
         </div>
     </div>
-    <div class="col-sm-3">   
+    <div class="col-sm-3">
         <div class="input-group">
             <div class="input-group-addon">Co end</div>
-            <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtFromCoNum_end">
+            <input type="text" autocomplete="off" class="form-control txt-filter" id="txtFromCoNum_end">
         </div>
     </div>
-    <div class="col-sm-3">   
+    <div class="col-sm-3">
         <div class="input-group">
             <div class="input-group-addon">Cus No/Name</div>
-            <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtFromCusnumOrName">
+            <input type="text" autocomplete="off" class="form-control txt-filter" id="txtFromCusnumOrName">
         </div>
     </div>
-    <div class="col-sm-3 ">   
-        <div class="input-group" >
-            <button style="align:right" id="btn_search" class="btn btn-info"><i class="fa fa-search"></i>&nbsp;ค้นหา</button>
+    <div class="col-sm-3 ">
+        <div class="input-group">
+            <button style="align:right" id="btn_search" class="btn btn-info"><i
+                    class="fa fa-search"></i>&nbsp;ค้นหา</button>
         </div>
     </div>
 </div>
@@ -58,7 +58,7 @@
 
 
 
-<table class="table table-condensed table-bordered table-striped" id="tblCustReport" >
+<table class="table table-condensed table-bordered table-striped" id="tblCustReport">
     <thead>
         <tr>
             <th>order date</th>
@@ -99,7 +99,7 @@
 
         var TableId = "#tblCustReport";
         $.ajax({
-            type: 'POST',
+            type: 'GET',
             url: "././module/RPTINV_OUTSTANDING/data.php",
             dataType: 'json',
             data: {
@@ -141,7 +141,7 @@
                         },
                         {
                             "data": "dateDUE",
-                              "className": "text-center"
+                            "className": "text-center"
                         },
                         {
                             "data": "co_num",
@@ -164,43 +164,43 @@
                         ,
                         {
                             "data": "qty_order",
-                              "className": "text-center",
+                            "className": "text-center",
                             "render": function (data, type, row, meta) {
                                 return addCommas(data);
                             }
                         },
                         {
                             "data": "qty_shipped",
-                              "className": "text-center",
-                              "render": function (data, type, row, meta) {
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
                                 if (data == null || data == "0.00" || data < 1) {
                                     return "0.00";
                                 }
                                 return addCommas(data);
-                             }
+                            }
                         },
                         {
                             "data": "qty_pending",
-                              "className": "text-center",
+                            "className": "text-center",
                             "render": function (data, type, row, meta) {
                                 return addCommas(data);
                             }
                         },
                     ],
                     'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
-                            "<'row'<'col-md-12'tr>>" +
-                            "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                        "<'row'<'col-md-12'tr>>" +
+                        "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
                     buttons: [{
-                            extend: 'print',
-                            text: "<i class='fa fa-print'></i>&nbsp;Print",
-                            title: ''
-                        },
-                        {
-                            extend: 'excel',
-                            footer: true,
-                            text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
-                            title: 'รายงาน inv item ' + GetCurrDateTime()
-                        },
+                        extend: 'print',
+                        text: "<i class='fa fa-print'></i>&nbsp;Print",
+                        title: ''
+                    },
+                    {
+                        extend: 'excel',
+                        footer: true,
+                        text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                        title: 'รายงาน inv item ' + GetCurrDateTime()
+                    },
                     ],
                 });
                 $(TableId).loading("stop");
@@ -217,5 +217,3 @@
 
     }
 </script>
-
-

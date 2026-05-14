@@ -65,7 +65,7 @@
         margin-bottom: 0;
     }
 
-    .op-report-tabs > li > a {
+    .op-report-tabs>li>a {
         border: 0;
         border-radius: 6px 6px 0 0;
         color: #526477;
@@ -74,15 +74,15 @@
         transition: background-color .15s ease, color .15s ease;
     }
 
-    .op-report-tabs > li > a:hover,
-    .op-report-tabs > li > a:focus {
+    .op-report-tabs>li>a:hover,
+    .op-report-tabs>li>a:focus {
         background-color: #eef4fb;
         color: #1f5f99;
     }
 
-    .op-report-tabs > li.active > a,
-    .op-report-tabs > li.active > a:hover,
-    .op-report-tabs > li.active > a:focus {
+    .op-report-tabs>li.active>a,
+    .op-report-tabs>li.active>a:hover,
+    .op-report-tabs>li.active>a:focus {
         background-color: #fff;
         border: 1px solid #d8dee8;
         border-bottom-color: transparent;
@@ -136,7 +136,8 @@
                 <a href="#tabSummary" aria-controls="tabSummary" role="tab" data-toggle="tab">By STS PO</a>
             </li>
             <li role="presentation">
-                <a href="#tabEndUserPort" aria-controls="tabEndUserPort" role="tab" data-toggle="tab">By End User/Port</a>
+                <a href="#tabEndUserPort" aria-controls="tabEndUserPort" role="tab" data-toggle="tab">By End
+                    User/Port</a>
             </li>
             <li role="presentation">
                 <a href="#tabPort" aria-controls="tabPort" role="tab" data-toggle="tab">By Port</a>
@@ -145,31 +146,33 @@
         <div class="tab-content op-tab-content">
             <div role="tabpanel" class="tab-pane" id="tabSummary">
                 <div class="row" id="divSummary">
-    <div class="col-lg-12">
-        <h4 class="op-tab-title">Summary by STS PO</h4>
-        <table class="table table-condensed table-bordered table-striped" id="tblSummary" style="width:100%;">
-            <thead>
-                <tr>
-                    <th>End User</th>
-                    <th>STS PO</th>
-                    <th>Cust PO</th>
-                    <th>Port</th>
-                    <th>Balance BDL</th>
-                    <th>Balance MT</th>
-                    <th>Ready Bundle</th>
-                    <th>Ready Bundle MT</th>
-                    <th>Shipment</th>
-                </tr>
-            </thead>
-        </table>
-    </div>
-</div>
+                    <div class="col-lg-12">
+                        <h4 class="op-tab-title">Summary by STS PO</h4>
+                        <table class="table table-condensed table-bordered table-striped" id="tblSummary"
+                            style="width:100%;">
+                            <thead>
+                                <tr>
+                                    <th>End User</th>
+                                    <th>STS PO</th>
+                                    <th>Cust PO</th>
+                                    <th>Port</th>
+                                    <th>Balance BDL</th>
+                                    <th>Balance MT</th>
+                                    <th>Ready Bundle</th>
+                                    <th>Ready Bundle MT</th>
+                                    <th>Shipment</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
             </div>
             <div role="tabpanel" class="tab-pane" id="tabEndUserPort">
                 <div class="row" id="divEndUserPortSummary">
                     <div class="col-lg-12">
                         <h4 class="op-tab-title">Summary by End User and Port</h4>
-                        <table class="table table-condensed table-bordered table-striped" id="tblEndUserPortSummary" style="width:100%;">
+                        <table class="table table-condensed table-bordered table-striped" id="tblEndUserPortSummary"
+                            style="width:100%;">
                             <thead>
                                 <tr>
                                     <th>End User</th>
@@ -188,7 +191,8 @@
                 <div class="row" id="divPortSummary">
                     <div class="col-lg-12">
                         <h4 class="op-tab-title">Summary by Port</h4>
-                        <table class="table table-condensed table-bordered table-striped" id="tblPortSummary" style="width:100%;">
+                        <table class="table table-condensed table-bordered table-striped" id="tblPortSummary"
+                            style="width:100%;">
                             <thead>
                                 <tr>
                                     <th>Port</th>
@@ -204,47 +208,48 @@
             </div>
             <div role="tabpanel" class="tab-pane active" id="tabDetail">
                 <div class="row" id="divReport">
-    <div class="col-lg-12">
-        <h4 class="op-tab-title">Detail</h4>
-    </div>
-    <table class="table table-condensed table-bordered table-striped" id="tblReport" style="width:100%;">
-        <thead>
-            <tr>
-                <th>Job</th>
-                <th>Item</th>
-                <th>Lot</th>
-                <th>End User</th>
-                <th>STS PO</th>
-                <th>Cust PO</th>
-                <th>Port</th>
-                <th>Size</th>
-                <th>Spec</th>
-                <th>Grade</th>
-                <th>Sch</th>
-                <th>Length</th>
-                <th>Type</th>
-                <th>Unit Weight</th>
-                <th>Pack</th>
-                <th>Bundle</th>
-                <th>Ord Num</th>
-                <th>Ord Line</th>
-                <th>Remark</th>
-                <th>Prod</th>
-                <th>Pcs Left</th>
-                <th>In Process</th>
-                <th>In Process Pcs</th>
-                <th>เศษ</th>
-                <th>Balance BDL</th>
-                <th>Balance MT</th>
-                <th>Ready Bundle</th>
-                <th>Ready Bundle MT</th>
-                <th>Shipment</th>
-                <th>Order Status</th>
-                <th>Ready To Ship</th>
-            </tr>
-        </thead>
-    </table>
-</div>
+                    <div class="col-lg-12">
+                        <h4 class="op-tab-title">Detail</h4>
+                    </div>
+                    <table class="table table-condensed table-bordered table-striped" id="tblReport"
+                        style="width:100%;">
+                        <thead>
+                            <tr>
+                                <th>Job</th>
+                                <th>Item</th>
+                                <th>Lot</th>
+                                <th>End User</th>
+                                <th>STS PO</th>
+                                <th>Cust PO</th>
+                                <th>Port</th>
+                                <th>Size</th>
+                                <th>Spec</th>
+                                <th>Grade</th>
+                                <th>Sch</th>
+                                <th>Length</th>
+                                <th>Type</th>
+                                <th>Unit Weight</th>
+                                <th>Pack</th>
+                                <th>Bundle</th>
+                                <th>Ord Num</th>
+                                <th>Ord Line</th>
+                                <th>Remark</th>
+                                <th>Prod</th>
+                                <th>Pcs Left</th>
+                                <th>In Process</th>
+                                <th>In Process Pcs</th>
+                                <th>เศษ</th>
+                                <th>Balance BDL</th>
+                                <th>Balance MT</th>
+                                <th>Ready Bundle</th>
+                                <th>Ready Bundle MT</th>
+                                <th>Shipment</th>
+                                <th>Order Status</th>
+                                <th>Ready To Ship</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -562,7 +567,7 @@
         $("#tblReport").loading();
         $("#tblReport tfoot").remove();
         $.ajax({
-            type: "POST",
+            type: "GET",
             url: "././module/RPT_OrderProcessing/data.php",
             dataType: "json",
             beforeSend: function () {

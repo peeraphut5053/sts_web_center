@@ -206,7 +206,7 @@
     $("#tblReportPO").loading();
     $("#tblReportPO tfoot").remove();
     $.ajax({
-      type: "POST",
+      type: "GET",
       url: "././module/RPT_LOAD_LIFT/data.php",
       dataType: "json",
       beforeSend: function () {
@@ -290,7 +290,7 @@
               targets: [12],
               width: 100,
             },
-    
+
           ],
           columns: [
             {
@@ -424,17 +424,17 @@
               action: function (e, dt, node, config) {
                 var selected = Array.from(dt.rows('.selected').data());
                 $.ajax({
-                type: "GET",
-                url: "././module/RPT_CONTAINER_CONFIRM/data.php",
-                dataType: "json",
-                data: {
+                  type: "GET",
+                  url: "././module/RPT_CONTAINER_CONFIRM/data.php",
+                  dataType: "json",
+                  data: {
                     load: "GetTotalWeight",
                     doc_num: selected[0].doc_num
-                },
-                success: function (weightData) {
-                     printReport(selected[0].doc_num, weightData.length,weightData);
-                }
-              });
+                  },
+                  success: function (weightData) {
+                    printReport(selected[0].doc_num, weightData.length, weightData);
+                  }
+                });
               },
             },
           ],
@@ -1046,7 +1046,7 @@
 
         const pcs = filterResponse.filter(item => item['cont_no(pcs)'] !== null && item['cont_no(pcs)'] !== undefined && item['cont_no(pcs)'] !== '');
         console.log(filterResponse);
-        
+
         // สร้าง data สำหรับหน้าที่ 1 (คอลัมน์ 1-15)
         const containerCount1 = Math.min(totalContainer, 15);
         const data = [];
@@ -1055,11 +1055,11 @@
           { text: "Size", fontSize: 12, bold: true, alignment: 'center', style: 'header' },
           { text: "Grade", fontSize: 12, bold: true, alignment: 'center', style: 'header' },
           { text: "Sch.", fontSize: 12, bold: true, alignment: 'center', style: 'header' },
-            { text: "Length", fontSize: 12, bold: true, alignment: 'center', style: 'header' },
-            { text: "Type", fontSize: 12, bold: true, alignment: 'center', style: 'header' },
+          { text: "Length", fontSize: 12, bold: true, alignment: 'center', style: 'header' },
+          { text: "Type", fontSize: 12, bold: true, alignment: 'center', style: 'header' },
           { text: "Pack", fontSize: 12, bold: true, alignment: 'center', style: 'header' },
-           { text: "เศษ", fontSize: 12, bold: true, alignment: 'center', style: 'header' },
-            ...weightData.slice(0, 15).map((weight, i) => ({
+          { text: "เศษ", fontSize: 12, bold: true, alignment: 'center', style: 'header' },
+          ...weightData.slice(0, 15).map((weight, i) => ({
             text: `${weight.cont_no} \n ${weight.total_weight} \n ${weight.total_bundle}`,
             fontSize: 11,
             bold: true,
@@ -1119,7 +1119,7 @@
               { text: filterResponse[i]['length'], fontSize: 12, alignment: 'center' },
               { text: filterResponse[i].type, fontSize: 12, alignment: 'center' },
               { text: filterResponse[i].pack, fontSize: 12, alignment: 'center' },
-                      { text: filterResponse[i].bundle_pcs ?? '', fontSize: 12, alignment: 'center' },
+              { text: filterResponse[i].bundle_pcs ?? '', fontSize: 12, alignment: 'center' },
               // ข้อมูลจากคอลัมน์ 16-30 (ใช้ index 16-30)
               ...Array.from({ length: containerCount2 }, (_, j) => ({
                 text: filterResponse[i][j + 16] || '',
@@ -1141,7 +1141,7 @@
                 widths: [400, 400],
                 body: [
                   [
-          
+
                     {
                       border: [false, false, false, false],
                       fontSize: 18,

@@ -166,7 +166,7 @@
             $.alert("กรุณาเลือกช่วง inv_num หรือป้อนรายละเอียดเพื่อกรองข้อมูล");
         } else {
             $.ajax({
-                type: 'POST',
+                type: 'GET',
                 url: "././module/Entry_Summary/data.php",
                 dataType: 'json',
                 beforeSend: function () {

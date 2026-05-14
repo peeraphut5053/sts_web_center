@@ -1,8 +1,9 @@
 <style>
-    .col-search{
-        padding-left:3px;
-        padding-right:3px;
+    .col-search {
+        padding-left: 3px;
+        padding-right: 3px;
     }
+
     /*    table.dataTable thead .sorting:after,
         table.dataTable thead .sorting:before,
         table.dataTable thead .sorting_asc:after,
@@ -15,29 +16,33 @@
         table.dataTable thead .sorting_desc_disabled:before {
             bottom: .5em;
         }*/
-    .table thead th{
+    .table thead th {
         text-align: center;
     }
 
-    .col-flt-page{
-        padding-top:10px;
+    .col-flt-page {
+        padding-top: 10px;
         font-weight: bold;
     }
 
     #tblReport tbody tr td a {
-        cursor: pointer ;
+        cursor: pointer;
     }
-    table.dataTable.fixedHeader-floating, table.dataTable.fixedHeader-locked {
+
+    table.dataTable.fixedHeader-floating,
+    table.dataTable.fixedHeader-locked {
         background-color: white;
         margin-top: 50px !important;
         margin-bottom: 0 !important;
     }
+
     @media print {
         table th:nth-child(0) {
             width: 200px;
             word-break: break-all;
             white-space: pre-line;
         }
+
         table td:nth-child(0) {
             width: 200px;
             word-break: break-all;
@@ -45,15 +50,21 @@
         }
 
     }
-    .text-wrap{
-        white-space:normal;
+
+    .text-wrap {
+        white-space: normal;
     }
-    .width-200{
-        width:200px;
+
+    .width-200 {
+        width: 200px;
     }
-    input[type=checkbox]{
-        margin-left:5px;margin-right:5px;
-    }/*
+
+    input[type=checkbox] {
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+
+    /*
     .cb_lb{
         margin-top:-5px;
     }*/
@@ -92,8 +103,8 @@
     </div>
 </div>
 
-<div class="row"  id="rowResultTable">
-    <table class="table table-condensed table-striped "  width="100%" id="tblReport">
+<div class="row" id="rowResultTable">
+    <table class="table table-condensed table-striped " width="100%" id="tblReport">
         <thead>
             <tr>
                 <!--<th >#</th>-->
@@ -117,14 +128,14 @@
 </div>
 <script type="text/javascript">
 
-//    var date = new Date();
-//    var firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
-//    var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-//    var getMon = pad(lastDay.getMonth() + 1, 2);
-//    var LastDayInThisMonth = (lastDay.getFullYear()) + '-' + getMon + '-' + lastDay.getDate();
-//    var FirstDayInThisMonth = (lastDay.getFullYear()) + '-' + getMon + '-01';
-//    $("#txtEndDate").val(LastDayInThisMonth);
-//    $("#txtStartDate").val(FirstDayInThisMonth);
+    //    var date = new Date();
+    //    var firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+    //    var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+    //    var getMon = pad(lastDay.getMonth() + 1, 2);
+    //    var LastDayInThisMonth = (lastDay.getFullYear()) + '-' + getMon + '-' + lastDay.getDate();
+    //    var FirstDayInThisMonth = (lastDay.getFullYear()) + '-' + getMon + '-01';
+    //    $("#txtEndDate").val(LastDayInThisMonth);
+    //    $("#txtStartDate").val(FirstDayInThisMonth);
     $("#btnSearch").click(function () {
         ReportItemSearch();
     });
@@ -136,7 +147,7 @@
         $.each($("input[name='cb_doc']:checked"), function () {
             docs.push($(this).val());
         });
-//           console.log(docs);
+        //           console.log(docs);
 
         var OldHtml = $("#btnSearch").html();
 
@@ -151,9 +162,9 @@
             $("#tblReport").loading();
             $("#tblReport tfoot").remove();
             $.ajax({
-                type: 'POST',
+                type: 'GET',
                 url: "././module/RPTARTRAN/data.php",
-//                contentType: "text/plain",
+                //                contentType: "text/plain",
                 dataType: 'json',
                 beforeSend: function () {
                     $("#btnSearch").html("<i class='fa fa-spinner fa-spin'>");
@@ -179,7 +190,8 @@
                         destroy: true,
                         'processing': true,
                         "columns": [
-                            {"data": "inv_date_conv", "className": "text-center"
+                            {
+                                "data": "inv_date_conv", "className": "text-center"
                                 , "render": function (data, type, row, meta) {
                                     var ret = data;
                                     if (row["inv_num"].substring(0, 2) == "CN") {
@@ -188,7 +200,8 @@
                                     return ret;
                                 }
                             },
-                            {"data": "inv_num", "className": "text-center", "render": function (data, type, row, meta) {
+                            {
+                                "data": "inv_num", "className": "text-center", "render": function (data, type, row, meta) {
                                     var ret = data;
                                     if (row["inv_num"].substring(0, 2) == "CN") {
                                         ret = "<span style='color:red;'>" + data + "</span>";
@@ -196,7 +209,8 @@
                                     return ret;
                                 }
                             },
-                            {"data": "cust_num", "className": "text-center", "render": function (data, type, row, meta) {
+                            {
+                                "data": "cust_num", "className": "text-center", "render": function (data, type, row, meta) {
                                     var ret = data;
                                     if (row["inv_num"].substring(0, 2) == "CN") {
                                         ret = "<span style='color:red;'>" + data + "</span>";
@@ -204,7 +218,8 @@
                                     return ret;
                                 }
                             },
-                            {"data": "cust_name", "className": "text-center", "render": function (data, type, row, meta) {
+                            {
+                                "data": "cust_name", "className": "text-center", "render": function (data, type, row, meta) {
                                     var ret = data;
                                     if (row["inv_num"].substring(0, 2) == "CN") {
                                         ret = "<span style='color:red;'>" + data + "</span>";
@@ -212,23 +227,8 @@
                                     return ret;
                                 }
                             },
-                            {"data": "amount", "className": "text-right", "render": function (data, type, row, meta) {
-                                    var ret = data;
-                                    if (row["inv_num"].substring(0, 2) == "CN") {
-                                        ret = "<span style='color:red;'>" + data+ "</span>";
-                                    }
-                                    return ret;
-                                }
-                            },
-                            {"data": "sales_tax", "className": "text-right", "render": function (data, type, row, meta) {
-                                    var ret = data;
-                                    if (row["inv_num"].substring(0, 2) == "CN") {
-                                        ret = "<span style='color:red;'>" + data+ "</span>";
-                                    }
-                                    return ret;
-                                }
-                            },
-                            {"data": "net_amt", "className": "text-right", "render": function (data, type, row, meta) {
+                            {
+                                "data": "amount", "className": "text-right", "render": function (data, type, row, meta) {
                                     var ret = data;
                                     if (row["inv_num"].substring(0, 2) == "CN") {
                                         ret = "<span style='color:red;'>" + data + "</span>";
@@ -236,38 +236,64 @@
                                     return ret;
                                 }
                             },
-                            {"data": "description", "className": "text-left", "render": function (data, type, row, meta) {
+                            {
+                                "data": "sales_tax", "className": "text-right", "render": function (data, type, row, meta) {
                                     var ret = data;
                                     if (row["inv_num"].substring(0, 2) == "CN") {
                                         ret = "<span style='color:red;'>" + data + "</span>";
                                     }
                                     return ret;
-                                }},
-                            {"data": "apply_to_inv_num", "className": "text-center", "render": function (data, type, row, meta) {
+                                }
+                            },
+                            {
+                                "data": "net_amt", "className": "text-right", "render": function (data, type, row, meta) {
                                     var ret = data;
                                     if (row["inv_num"].substring(0, 2) == "CN") {
                                         ret = "<span style='color:red;'>" + data + "</span>";
                                     }
                                     return ret;
-                                }},
-                            {"data": "post_from_co", "className": "text-center", "render": function (data, type, row, meta) {
+                                }
+                            },
+                            {
+                                "data": "description", "className": "text-left", "render": function (data, type, row, meta) {
                                     var ret = data;
                                     if (row["inv_num"].substring(0, 2) == "CN") {
                                         ret = "<span style='color:red;'>" + data + "</span>";
                                     }
                                     return ret;
-                                }},
-                            {"data": "co_num", "className": "text-center", "render": function (data, type, row, meta) {
+                                }
+                            },
+                            {
+                                "data": "apply_to_inv_num", "className": "text-center", "render": function (data, type, row, meta) {
                                     var ret = data;
                                     if (row["inv_num"].substring(0, 2) == "CN") {
                                         ret = "<span style='color:red;'>" + data + "</span>";
                                     }
                                     return ret;
-                                }},
+                                }
+                            },
+                            {
+                                "data": "post_from_co", "className": "text-center", "render": function (data, type, row, meta) {
+                                    var ret = data;
+                                    if (row["inv_num"].substring(0, 2) == "CN") {
+                                        ret = "<span style='color:red;'>" + data + "</span>";
+                                    }
+                                    return ret;
+                                }
+                            },
+                            {
+                                "data": "co_num", "className": "text-center", "render": function (data, type, row, meta) {
+                                    var ret = data;
+                                    if (row["inv_num"].substring(0, 2) == "CN") {
+                                        ret = "<span style='color:red;'>" + data + "</span>";
+                                    }
+                                    return ret;
+                                }
+                            },
                         ],
                         'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
-                                "<'row'<'col-md-12'tr>>" +
-                                "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                            "<'row'<'col-md-12'tr>>" +
+                            "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
                         buttons: [
                             {
                                 extend: 'print',
@@ -287,31 +313,31 @@
                             // converting to interger to find total
                             var intVal = function (i) {
                                 return typeof i === 'string' ?
-                                        i.replace(/[\$,]/g, '') * 1 :
-                                        typeof i === 'number' ?
+                                    i.replace(/[\$,]/g, '') * 1 :
+                                    typeof i === 'number' ?
                                         i : 0;
                             };
 
                             // computing column Total of the complete result
                             var amt_total = api
-                                    .column(4)
-                                    .data()
-                                    .reduce(function (a, b) {
-                                        return intVal(a) + intVal(b);
-                                    }, 0);
+                                .column(4)
+                                .data()
+                                .reduce(function (a, b) {
+                                    return intVal(a) + intVal(b);
+                                }, 0);
 
                             var tax_total = api
-                                    .column(5)
-                                    .data()
-                                    .reduce(function (a, b) {
-                                        return intVal(a) + intVal(b);
-                                    }, 0);
+                                .column(5)
+                                .data()
+                                .reduce(function (a, b) {
+                                    return intVal(a) + intVal(b);
+                                }, 0);
                             var net_total = api
-                                    .column(6)
-                                    .data()
-                                    .reduce(function (a, b) {
-                                        return intVal(a) + intVal(b);
-                                    }, 0);
+                                .column(6)
+                                .data()
+                                .reduce(function (a, b) {
+                                    return intVal(a) + intVal(b);
+                                }, 0);
 
 
 
@@ -323,19 +349,19 @@
                         },
                     });
 
-//                    $('#tblReport').DataTable({
-//                        drawCallback: function () {
-//                            var api = this.api();
-//                            $(api.table().footer()).html(
-//                                    api.column(4, {page: 'current'}).data().sum()
-//                                    );
-//                        }
-//                    });
+                    //                    $('#tblReport').DataTable({
+                    //                        drawCallback: function () {
+                    //                            var api = this.api();
+                    //                            $(api.table().footer()).html(
+                    //                                    api.column(4, {page: 'current'}).data().sum()
+                    //                                    );
+                    //                        }
+                    //                    });
 
 
                     $('#tblReport').loading("stop");
                     $("#btnSearch").html(OldHtml);
-                   ReCalGridAmount();
+                    ReCalGridAmount();
                 },
                 error: function (e) {
 
@@ -354,7 +380,7 @@
 
 
 
-//    $("#Loc").select2();
+    //    $("#Loc").select2();
 
 
     $("#StartDate,#EndDate").datepicker({
@@ -364,8 +390,8 @@
 
     var intVal2 = function (i) {
         return typeof i === 'string' ?
-                i.replace(/[\$,]/g, '') * 1 :
-                typeof i === 'number' ?
+            i.replace(/[\$,]/g, '') * 1 :
+            typeof i === 'number' ?
                 i : 0;
     };
 
@@ -379,7 +405,7 @@
             GrandAmount += parseFloat($(this).find("td:eq(4)").text().replace(",", "").replace(",", ""));
             GrandVat += parseFloat($(this).find("td:eq(5)").text().replace(",", "").replace(",", ""));
             GrandTotal += parseFloat($(this).find("td:eq(6)").text().replace(",", "").replace(",", ""));
-//            console.log($(this).find("td:eq(4)").text().replace(",", "").replace(",", ""));
+            //            console.log($(this).find("td:eq(4)").text().replace(",", "").replace(",", ""));
             i++;
         });
 

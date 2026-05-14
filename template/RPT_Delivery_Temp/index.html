@@ -93,11 +93,11 @@
     cursor: pointer;
   }
 </style>
-<div class="row" >
-           <div style="margin-top: 10px; margin-bottom: 20px;">
-      <h1 class="my-header">ใบส่งของ (ชั่วคราว)</h1>
+<div class="row">
+  <div style="margin-top: 10px; margin-bottom: 20px;">
+    <h1 class="my-header">ใบส่งของ (ชั่วคราว)</h1>
+  </div>
 </div>
-</div> 
 <div class="row item-center">
   <div class="col-lg-2 col-md-3 col-sm-6 col-xs-6">
     <div class="input-group">
@@ -105,7 +105,7 @@
       <input type="text" class="form-control" id="doc_num" autocomplete="off" />
     </div>
   </div>
-   <div class="col-lg-2 col-md-3 col-sm-6 col-xs-6">
+  <div class="col-lg-2 col-md-3 col-sm-6 col-xs-6">
     <div class="input-group">
       <div class="input-group-addon">name</div>
       <input type="text" class="form-control" id="name" autocomplete="off" />
@@ -305,62 +305,62 @@
 
 <!-- Modal -->
 <div class="modal fade bd-example-modal-lg" id="ModalAddDeliveryItem" role="dialog" aria-labelledby="myLargeModalLabel"
-    aria-hidden="true" style="cursor: move;">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title text-center" id="exampleModalLabel">เพิ่ม Item</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-            </div>
-            <div class="modal-body">
-                <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
-                    <div class="input-group basis-full">
-                        <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">เลขที่เอกสาร
-                            *</div>
-                        <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
-                            class="form-control" disabled id="doc_delivery">
-                    </div>
-                </div>
-                <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
-                    <div class="input-group basis-2/4">
-                         <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">item *</div>
+  aria-hidden="true" style="cursor: move;">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title text-center" id="exampleModalLabel">เพิ่ม Item</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+      </div>
+      <div class="modal-body">
+        <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+          <div class="input-group basis-full">
+            <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">เลขที่เอกสาร
+              *</div>
+            <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off" class="form-control"
+              disabled id="doc_delivery">
+          </div>
+        </div>
+        <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+          <div class="input-group basis-2/4">
+            <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">item *</div>
             <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off" class="form-control"
               list="list_item" id="item_delivery_add">
             <datalist id="list_item">
             </datalist>
-                    </div>
-                     <div class="input-group basis-2/4">
-                        <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">ActWeight *</div>
-                        <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
-                            class="form-control" id="delivery_weight_add">
-                    </div>
-                </div>
-                <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
-                    <div class="input-group basis-2/4">
-                        <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">qty *
-                        </div>
-                        <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
-                            class="form-control" id="qty_delivery_add">
-                    </div>
-                    <div class="input-group basis-2/4">
-                        <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">หน่วย *
-                        </div>
-                        <select style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off"
-                            class="form-control" id="u_m_delivery_add">
-                            <option value="PCS">PCS</option>
-                            <option value="KG">KG</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="AddItemQuote" onclick="SaveAddDeliveryItem()">บันทึก</button>
-            </div>
+          </div>
+          <div class="input-group basis-2/4">
+            <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">ActWeight *</div>
+            <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off" class="form-control"
+              id="delivery_weight_add">
+          </div>
         </div>
+        <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
+          <div class="input-group basis-2/4">
+            <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">qty *
+            </div>
+            <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off" class="form-control"
+              id="qty_delivery_add">
+          </div>
+          <div class="input-group basis-2/4">
+            <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">หน่วย *
+            </div>
+            <select style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off" class="form-control"
+              id="u_m_delivery_add">
+              <option value="PCS">PCS</option>
+              <option value="KG">KG</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="AddItemQuote" onclick="SaveAddDeliveryItem()">บันทึก</button>
+      </div>
     </div>
+  </div>
 </div>
 
 <div class="modal fade bd-example-modal-lg m-8" id="ModalDeliveryTempItemEdit" role="dialog"
@@ -377,8 +377,8 @@
         <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
           <div class="input-group basis-full">
             <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">เลขที่เอกสาร</div>
-            <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off" class="form-control" disabled
-              id="doc_num_edit">
+            <input style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off" class="form-control"
+              disabled id="doc_num_edit">
           </div>
         </div>
         <div class="flex flex-row justify-center items-center flex-grow gap-6 mb-5">
@@ -455,7 +455,7 @@
           </div>
           <div class="input-group basis-2/4">
             <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">หน่วย *</div>
-             <select style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off" class="form-control"
+            <select style="font-weight: bold; font-size: 16px;" type="text" autocomplete="off" class="form-control"
               id="u_m_edit">
               <option value="PCS">PCS</option>
               <option value="KG">KG</option>
@@ -478,7 +478,8 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" id="SaveCalibration" onclick="SaveDeliveryTempEdit()">บันทึก</button>
+        <button type="button" class="btn btn-primary" id="SaveCalibration"
+          onclick="SaveDeliveryTempEdit()">บันทึก</button>
       </div>
     </div>
   </div>
@@ -579,7 +580,7 @@
         // sorting by
         $("#item").val('');
         $("#qty").val('');
-  
+
         $("#act_weight").val('');
 
         $("#item_list").text(`View Item (${tableItem.rows().count()})`);
@@ -655,7 +656,7 @@
     $("#tblReportDeliveryTemp").loading();
     $("#tblReportDeliveryTemp tfoot").remove();
     $.ajax({
-      type: "POST",
+      type: "GET",
       url: "././module/RPT_Delivery_Temp/data.php",
       dataType: "json",
       beforeSend: function () {
@@ -753,7 +754,7 @@
               className: "text-center",
               render: function (data) {
                 console.log(Number(data));
-                
+
                 if (data == null || Number(data) == 0) {
                   return '-';
                 } else {
@@ -932,18 +933,18 @@
               }
             },
             {
-                            text: `<button type="button" class="btn btn-success">Add Item</button>`,
-                            action: function (e, dt, node, config) {
-                                // on selected
-                                let selected = Array.from(dt.rows('.selected').data());
-                                if (selected.length == 0) {
-                                    alert("กรุณารายการที่ต้องการเพิ่ม Item");
-                                    return false;
-                                }
+              text: `<button type="button" class="btn btn-success">Add Item</button>`,
+              action: function (e, dt, node, config) {
+                // on selected
+                let selected = Array.from(dt.rows('.selected').data());
+                if (selected.length == 0) {
+                  alert("กรุณารายการที่ต้องการเพิ่ม Item");
+                  return false;
+                }
 
-                                $("#doc_delivery").val(selected[0].doc_num);
-                                $("#ModalAddDeliveryItem").modal("show");
-                            }
+                $("#doc_delivery").val(selected[0].doc_num);
+                $("#ModalAddDeliveryItem").modal("show");
+              }
             },
             {
               text: `<button type="button" class="btn btn-danger">Delete</button>`,
@@ -956,7 +957,7 @@
                 }
 
                 if (confirm("ต้องการลบรายการนี้ ใช่หรือไม่ ?")) {
-                 $.ajax({
+                  $.ajax({
                     type: "GET",
                     url: "././module/RPT_Delivery_Temp/data.php",
                     dataType: "json",
@@ -1018,8 +1019,8 @@
     var qty = $("#qty_modify").val();
     var u_m = $("#u_m_edit").val();
     var item_old = $("#item_old").val();
-  console.log(item_old);
-  
+    console.log(item_old);
+
 
     if (item.length == 0) {
       alert("กรุณากรอกรายการสินค้าอย่างน้อย 1 รายการ");
@@ -1121,7 +1122,7 @@
         u_m: JSON.stringify(u_m),
       },
       success: function (data) {
-         alert(`บันทึกข้อมูลสําเร็จ เลขที่เอกสาร : ${data}`);
+        alert(`บันทึกข้อมูลสําเร็จ เลขที่เอกสาร : ${data}`);
         $("#customer").val("");
         $("#customer_seq").val("");
         $("#delivery_date").val("");
@@ -1144,68 +1145,68 @@
     });
   }
 
-   function SaveAddDeliveryItem() {
-        var doc_num = $("#doc_delivery").val();
-        var item = $("#item_delivery_add").val();
-        var qty = $("#qty_delivery_add").val();
-        var u_m = $("#u_m_delivery_add").val();
-        var weight_pcs = $("#delivery_weight_add").val();
-    
-        if (item.length == 0) {
-            alert("กรุณากรอก Item");
-            return false;
-        }
-         
-        if (qty.length == 0) {
-            alert("กรุณากรอก Qty");
-            return false;
-        }
-        if (u_m.length == 0) {
-            alert("กรุณาเลือกหน่วย");
-            return false;
-        }
-     
-        if (weight_pcs.length == 0) {
-            alert("กรุณากรอก Actual Weight");
-            return false;
-        }
+  function SaveAddDeliveryItem() {
+    var doc_num = $("#doc_delivery").val();
+    var item = $("#item_delivery_add").val();
+    var qty = $("#qty_delivery_add").val();
+    var u_m = $("#u_m_delivery_add").val();
+    var weight_pcs = $("#delivery_weight_add").val();
 
-        $.ajax({
-            type: "POST",
-            url: "././module/RPT_Delivery_Temp/data.php",
-            dataType: "json",
-            data: {
-                load: "AddItem",
-                doc_num: doc_num,
-                item: item,
-                qty: qty,
-                u_m: u_m,
-                act_weight: weight_pcs,
-            },
-            success: function (data) {
-                alert("บันทึกข้อมูลสําเร็จ");
-                $("#doc_delivery").val("");
-                $("#item_delivery_add").val("");
-                $("#qty_delivery_add").val("")
-                $("#delivery_price_add").val("")
-                $("#delivery_weight_add").val("");
-                $("#ModalAddDeliveryItem").modal("hide");
-                ReportDeliveryTemp();
-            },
-            error: function (e) {
-                alert("บันทึกข้อมูลไม่สําเร็จ กรุณาตรวจสอบข้อมูลแล้วลองใหม่อีกครั้ง");
-            },
-        });
+    if (item.length == 0) {
+      alert("กรุณากรอก Item");
+      return false;
     }
 
+    if (qty.length == 0) {
+      alert("กรุณากรอก Qty");
+      return false;
+    }
+    if (u_m.length == 0) {
+      alert("กรุณาเลือกหน่วย");
+      return false;
+    }
+
+    if (weight_pcs.length == 0) {
+      alert("กรุณากรอก Actual Weight");
+      return false;
+    }
+
+    $.ajax({
+      type: "POST",
+      url: "././module/RPT_Delivery_Temp/data.php",
+      dataType: "json",
+      data: {
+        load: "AddItem",
+        doc_num: doc_num,
+        item: item,
+        qty: qty,
+        u_m: u_m,
+        act_weight: weight_pcs,
+      },
+      success: function (data) {
+        alert("บันทึกข้อมูลสําเร็จ");
+        $("#doc_delivery").val("");
+        $("#item_delivery_add").val("");
+        $("#qty_delivery_add").val("")
+        $("#delivery_price_add").val("")
+        $("#delivery_weight_add").val("");
+        $("#ModalAddDeliveryItem").modal("hide");
+        ReportDeliveryTemp();
+      },
+      error: function (e) {
+        alert("บันทึกข้อมูลไม่สําเร็จ กรุณาตรวจสอบข้อมูลแล้วลองใหม่อีกครั้ง");
+      },
+    });
+  }
+
   var select_status = [
-        "บริษัท สหไทยสตีลไพพ์ จำกัด (มหาชน)",
-        "บริษัท บี เอ็น เค สตีล จำกัด",
-        "บริษัท โกลบอล อินไซท์ จำกัด",
-        "บริษัท บูลไพพ์ สตีลเซ็นเตอร์ จำกัด",
-        "บริษัท เกรทสตีลเมทัล จำกัด",
-        "บริษัท ไอคอนสตีลไพพ์ จำกัด",
-    ];
+    "บริษัท สหไทยสตีลไพพ์ จำกัด (มหาชน)",
+    "บริษัท บี เอ็น เค สตีล จำกัด",
+    "บริษัท โกลบอล อินไซท์ จำกัด",
+    "บริษัท บูลไพพ์ สตีลเซ็นเตอร์ จำกัด",
+    "บริษัท เกรทสตีลเมทัล จำกัด",
+    "บริษัท ไอคอนสตีลไพพ์ จำกัด",
+  ];
 
   function PrintSetting(selectedData) {
     var content = "";
@@ -1262,10 +1263,10 @@
       }
     };
 
-    const qty = selectedData.map((item) => 
-    Number(item.qty_amend) < 1 ? item.qty : item.qty_amend
+    const qty = selectedData.map((item) =>
+      Number(item.qty_amend) < 1 ? item.qty : item.qty_amend
     );
-    
+
     const data = []
 
     data.push([
@@ -1406,10 +1407,10 @@
                   border: [false, false, false, false], text: `หมายเลขทะเบียนรถ : ${selectedData[0].car}`, fontSize: 14, bold: true, colSpan: 2
                 },
                 {
-                  border: [false, false, false, false], text: `` 
+                  border: [false, false, false, false], text: ``
                 },
                 {
-                  border: [false, false, false, false], text: `สถานที่รับของ : ${selectedData[0].pickPlace ?? ''}`,fontSize: 14, bold: true, colSpan: 2
+                  border: [false, false, false, false], text: `สถานที่รับของ : ${selectedData[0].pickPlace ?? ''}`, fontSize: 14, bold: true, colSpan: 2
                 },
                 {
                   border: [false, false, false, false], text: ''
@@ -1423,31 +1424,31 @@
                   border: [false, false, false, false], text: ''
                 },
                 {
-                  border: [false, false, false, false], text: '' 
+                  border: [false, false, false, false], text: ''
                 },
                 {
                   border: [false, false, false, false], text: ''
                 },
               ],
-      
+
               [
                 {
                   stack: [
-    {
-      text: `${username_session}`,
-      margin: [0, 15, 0, 0], // margin เฉพาะ admin
-      fontSize: 12,
-      bold: true,
-      alignment: 'center'
-    },
-    {
-      text: '\n ____________________ \n พิมพ์โดย',
-       margin: [0, -30, 0, 0], 
-      fontSize: 12,
-      bold: true,
-      alignment: 'center'
-    }
-  ], margin: [0, 0, 0, 0], fontSize: 12, bold: true, alignment: 'center',
+                    {
+                      text: `${username_session}`,
+                      margin: [0, 15, 0, 0], // margin เฉพาะ admin
+                      fontSize: 12,
+                      bold: true,
+                      alignment: 'center'
+                    },
+                    {
+                      text: '\n ____________________ \n พิมพ์โดย',
+                      margin: [0, -30, 0, 0],
+                      fontSize: 12,
+                      bold: true,
+                      alignment: 'center'
+                    }
+                  ], margin: [0, 0, 0, 0], fontSize: 12, bold: true, alignment: 'center',
                 },
                 {
                   text: `\n ____________________ \n ผู้ส่งสินค้า`, fontSize: 12, bold: true, alignment: 'center',

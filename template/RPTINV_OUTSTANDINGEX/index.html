@@ -1,44 +1,44 @@
-
-<div class="row" >
-           <div style="margin-top: 10px; margin-bottom: 20px;">
-      <h1 class="my-header">รายงานค้างส่งต่างประเทศ</h1>
+<div class="row">
+    <div style="margin-top: 10px; margin-bottom: 20px;">
+        <h1 class="my-header">รายงานค้างส่งต่างประเทศ</h1>
+    </div>
 </div>
-</div> 
-<div >
+<div>
     <div class="row">
-        <div class="col-lg-2 col-md-2 col-sm-6 col-xs-6" >   
+        <div class="col-lg-2 col-md-2 col-sm-6 col-xs-6">
             <div class="input-group">
                 <div class="input-group-addon">From date</div>
-                <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtFromDate_start">
+                <input type="text" autocomplete="off" class="form-control txt-filter" id="txtFromDate_start">
             </div>
         </div>
-        <div class="col-lg-2 col-md-2 col-sm-6 col-xs-6">   
+        <div class="col-lg-2 col-md-2 col-sm-6 col-xs-6">
             <div class="input-group">
                 <div class="input-group-addon">To date</div>
-                <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtFromDate_end">
+                <input type="text" autocomplete="off" class="form-control txt-filter" id="txtFromDate_end">
             </div>
         </div>
-        <div class="col-lg-2 col-md-2 col-sm-6 col-xs-6">   
+        <div class="col-lg-2 col-md-2 col-sm-6 col-xs-6">
             <div class="input-group">
                 <div class="input-group-addon">cust po</div>
-                <input type="text" autocomplete="off"  class="form-control txt-filter" id="cust_po_ex" >
+                <input type="text" autocomplete="off" class="form-control txt-filter" id="cust_po_ex">
             </div>
         </div>
-        <div class="col-lg-2 col-md-2 col-sm-6 col-xs-6">   
+        <div class="col-lg-2 col-md-2 col-sm-6 col-xs-6">
             <div class="input-group">
                 <div class="input-group-addon">sts po</div>
-                <input type="text" autocomplete="off"  class="form-control txt-filter" id="sts_po_ex">
+                <input type="text" autocomplete="off" class="form-control txt-filter" id="sts_po_ex">
             </div>
         </div>
-          <div class="col-lg-2 col-md-2 col-sm-6 col-xs-6" >   
-                <div class="input-group">
-                    <button style="align:right" id="btn_search" class="btn btn-info"><i class="fa fa-search"></i>&nbsp;ค้นหา</button>
-                </div>
+        <div class="col-lg-2 col-md-2 col-sm-6 col-xs-6">
+            <div class="input-group">
+                <button style="align:right" id="btn_search" class="btn btn-info"><i
+                        class="fa fa-search"></i>&nbsp;ค้นหา</button>
             </div>
+        </div>
     </div>
 </div>
 
-<table class="table table-condensed table-bordered table-striped" id="tblCustReport" >
+<table class="table table-condensed table-bordered table-striped" id="tblCustReport">
     <thead>
         <tr>
             <th>end user</th>
@@ -81,7 +81,7 @@
 
         var TableId = "#tblCustReport";
         $.ajax({
-            type: 'POST',
+            type: 'GET',
             url: "././module/RPTINV_OUTSTANDINGEX/data.php",
             dataType: 'json',
             data: {
@@ -112,7 +112,7 @@
                     fixedHeader: true,
                     destroy: true,
                     scrollX: true,
-                 
+
                     scrollCollapse: true,
                     "columns": [
                         {
@@ -197,22 +197,22 @@
                                 return moment(data).format('DD/MM/YYYY');
                             }
                         },
-                    
+
                     ],
                     'dom': "<'row'<'col-md-5'B><'col-md-7 text-center col-flt-page'lf>>" +
-                            "<'row'<'col-md-12'tr>>" +
-                            "<'row'<'col-md-5 text-left'i><'col-sm-7 text-center'p>>",
+                        "<'row'<'col-md-12'tr>>" +
+                        "<'row'<'col-md-5 text-left'i><'col-sm-7 text-center'p>>",
                     buttons: [{
-                            extend: 'print',
-                            text: "<i class='fa fa-print'></i>&nbsp;Print",
-                            title: ''
-                        },
-                        {
-                            extend: 'excel',
-                            footer: true,
-                            text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
-                            title: 'รายงาน inv item ' + GetCurrDateTime()
-                        },
+                        extend: 'print',
+                        text: "<i class='fa fa-print'></i>&nbsp;Print",
+                        title: ''
+                    },
+                    {
+                        extend: 'excel',
+                        footer: true,
+                        text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                        title: 'รายงาน inv item ' + GetCurrDateTime()
+                    },
                     ],
                 });
                 $(TableId).loading("stop");
@@ -229,5 +229,3 @@
 
     }
 </script>
-
-

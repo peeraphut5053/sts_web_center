@@ -1,5 +1,5 @@
 <div class="row">
-    <div hidden class="col-lg-2 col-md-2 col-sm-4 col-xs-4 " >
+    <div hidden class="col-lg-2 col-md-2 col-sm-4 col-xs-4 ">
         <div class="input-group">
             <div class="input-group-addon">Year</div>
             <select class="form-control" id="RepByGroupYear">
@@ -7,7 +7,7 @@
             </select>
         </div>
     </div>
-    <div hidden class="col-lg-2 col-md-2 col-sm-4 col-xs-4 " >
+    <div hidden class="col-lg-2 col-md-2 col-sm-4 col-xs-4 ">
         <div class="input-group">
             <div class="input-group-addon">Month</div>
             <select class="form-control" id="RepByGroupMonth">
@@ -16,31 +16,31 @@
         </div>
     </div>
 
-    <div class="col-lg-2" >   
+    <div class="col-lg-2">
         <div class="input-group">
             <div class="input-group-addon">Date</div>
-            <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtFromDateGroup">
+            <input type="text" autocomplete="off" class="form-control txt-filter" id="txtFromDateGroup">
         </div>
     </div>
-    <div class="col-lg-2">   
+    <div class="col-lg-2">
         <div class="input-group">
             <div class="input-group-addon">To date</div>
-            <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtToDateGroup">
+            <input type="text" autocomplete="off" class="form-control txt-filter" id="txtToDateGroup">
         </div>
     </div>
 
-    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4 " >
+    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4 ">
         <button id="btnRepByGroup" class="btn btn-info"><i class="fa fa-chart-bar"></i>&nbsp;Process </button>
     </div>
 </div>
 <div class="row">
-    <table class="table table-condensed table-bordered table-striped" id="tblGroupReport" >
+    <table class="table table-condensed table-bordered table-striped" id="tblGroupReport">
         <thead>
             <tr>
                 <th>Group Code</th>
                 <th>Group Name</th>
                 <th>Summary KG</th>
-                <th>Summary Amount (bath)</th>                     
+                <th>Summary Amount (bath)</th>
             </tr>
         </thead>
     </table>
@@ -63,7 +63,7 @@
         var tblId = "#tblGroupReport";
         $(tblId + " tfoot ").remove();
         $.ajax({
-            type: 'POST',
+            type: 'GET',
             url: "././module/RPTINV_ITEM_IN2020/data.php",
             dataType: 'json',
             beforeSend: function () {
@@ -118,42 +118,42 @@
                         },
                     ],
                     'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
-                            "<'row'<'col-md-12'tr>>" +
-                            "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                        "<'row'<'col-md-12'tr>>" +
+                        "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
                     buttons: [{
-                            extend: 'print',
-                            text: "<i class='fa fa-print'></i>&nbsp;Print",
-                            title: ''
-                        },
-                        {
-                            extend: 'excel',
-                            footer: true,
-                            text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
-                            title: 'รายงาน SALES EXPORT BY Group ' + 'ตั้งแต่วันที่ ' + txtFromDateGroup + ' ถึง ' + txtToDateGroup + ' วันที่ Export : ' + GetCurrDateTime()
+                        extend: 'print',
+                        text: "<i class='fa fa-print'></i>&nbsp;Print",
+                        title: ''
+                    },
+                    {
+                        extend: 'excel',
+                        footer: true,
+                        text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+                        title: 'รายงาน SALES EXPORT BY Group ' + 'ตั้งแต่วันที่ ' + txtFromDateGroup + ' ถึง ' + txtToDateGroup + ' วันที่ Export : ' + GetCurrDateTime()
 
-                        },
+                    },
                     ],
                     "footerCallback": function (row, data, start, end, display) {
                         var api = this.api(),
-                                data;
+                            data;
                         var intVal = function (i) {
                             return typeof i === 'string' ?
-                                    i.replace(/[\$,]/g, '') * 1 :
-                                    typeof i === 'number' ?
+                                i.replace(/[\$,]/g, '') * 1 :
+                                typeof i === 'number' ?
                                     i : 0;
                         };
                         var totalKG = api
-                                .column(2)
-                                .data()
-                                .reduce(function (a, b) {
-                                    return intVal(a) + intVal(b);
-                                }, 0);
+                            .column(2)
+                            .data()
+                            .reduce(function (a, b) {
+                                return intVal(a) + intVal(b);
+                            }, 0);
                         var totalAmt = api
-                                .column(3)
-                                .data()
-                                .reduce(function (a, b) {
-                                    return intVal(a) + intVal(b);
-                                }, 0);
+                            .column(3)
+                            .data()
+                            .reduce(function (a, b) {
+                                return intVal(a) + intVal(b);
+                            }, 0);
 
                         $(api.column(1).footer()).html("<b>TOTAL</b>");
                         $(api.column(2).footer()).html(addCommas(totalKG.toFixed(2)));
