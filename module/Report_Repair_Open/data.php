@@ -51,6 +51,7 @@ if (isset($_FILES['file'])) {
                     $STS_Custom = new Factory();
                     $STS_Custom->setConn($ConnSL);
                     $rs = $STS_Custom->UploadImagesReportRepair($doc_no, $new_filename);
+                    echo json_encode($rs);
                 } else {
                     $response['success'][] = false;
                     $response['message'][] = 'ไม่สามารถบันทึกไฟล์ได้';
