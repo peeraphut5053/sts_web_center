@@ -548,7 +548,7 @@ WHERE 1=1";
   @Item = " . ($this->_item !== '' ? "'$this->_item'" : "null") . ",
   @cust_num = " . ($cust_num !== '' ? "'$cust_num'" : "null") . "
   ";
-echo $query;
+
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);
