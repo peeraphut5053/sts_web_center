@@ -1,9 +1,19 @@
 <?php
 header("Access-Control-Allow-Origin: *");
 while (list($key, $data) = each($_GET) OR list($key, $data) = each($_POST)) {
-    ${$key} = trim($data);
+    ${$key} = is_array($data) ? $data : trim($data);
 }
 include "../../initial.php";
+
+function NormalizeCustNum($Customers) {
+    if ($Customers === null) {
+        return "";
+    }
+    if (is_array($Customers)) {
+        return implode(',', array_values(array_filter(array_map('trim', $Customers), 'strlen')));
+    }
+    return trim($Customers);
+}
 
 $CallModel = new CallModel();
 $CallModel->SyteLine_Models();
@@ -25,9 +35,10 @@ if ($load == "form") {
     $CustomerS = $Customer->GetRowsAddr();
     echo json_encode($CustomerS);
 } else if ($load == "ajax") {
-    if (isset($_POST["Customers"])) {
-        $Customers = $_POST["Customers"];
-        $InvItem->_Customers = $Customers;
+    if (isset($cust_num)) {
+        $InvItem->_Customers = NormalizeCustNum($cust_num);
+    } else if (isset($Customers)) {
+        $InvItem->_Customers = NormalizeCustNum($Customers);
     }
     $InvItem->_start_invdate = $txtFromDate;
     $InvItem->_end_invdate = $txtToDate;
@@ -57,9 +68,10 @@ if ($load == "form") {
     $CallModel = null;
     echo json_encode($InvItems);
 } else if ($load == "SP_WebApp_InvItem") {
-    if (isset($_POST["Customers"])) {
-        $Customers = $_POST["Customers"];
-        $InvItem->_Customers = $Customers;
+    if (isset($cust_num)) {
+        $InvItem->_Customers = NormalizeCustNum($cust_num);
+    } else if (isset($Customers)) {
+        $InvItem->_Customers = NormalizeCustNum($Customers);
     }
     $InvItem->_start_invdate = $txtFromDate;
     $InvItem->_end_invdate = $txtToDate;

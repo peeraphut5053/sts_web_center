@@ -261,6 +261,7 @@
     function SearchItemNormal(typeSearch) {
         var Customers = [];
         Customers = $("#selCust").val();
+        var cust_num = $.isArray(Customers) ? Customers.join(",") : (Customers || "");
         $("#tblReport tbody").empty();
         $("#tblReport tfoot").remove();
         var OldHtml = $("#btnSearch").html();
@@ -308,6 +309,7 @@
                     data: {
                         "load": "ajax",
                         "txtItem": txtItem,
+                        "cust_num": cust_num,
                         "Customers": Customers,
                         "txtSize": txtSize,
                         "txtThick": txtThick,
@@ -331,7 +333,7 @@
                         $("#tblReport").append(RowFooterBuild.replace("!!ColBuild!!", ColBuild));
                         $('#tblReport').dataTable({
                             scrollX: true,
-                            scrollY: 400,
+                            scrollY: "60vh",
                             "scrollX": true,
                                     "aaData": data,
                             "paging": false,
