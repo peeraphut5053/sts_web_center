@@ -1031,7 +1031,7 @@ group by tag_status, mv.item, item.description, lt.loc, mv.lot, mv.qty1,  isnull
     }
 
     function workcenter() {
-        $query = " select wc ,description FROM wc_mst    where description not like  '%ลบ%' ";
+        $query = " select wc ,description FROM wc_mst    where description not like  '%ลบ%' and description not like  '%ยกเลิก%'";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);
@@ -1125,7 +1125,7 @@ group by tag_status, mv.item, item.description, lt.loc, mv.lot, mv.qty1,  isnull
         if ($w_c != "") {
             $searchw_c = "and w_c = '$w_c' ";
         }
-        $query = " select id,STS_forming_reason_description.reason_description as reason_id,times_count, STS_forming_reason_description_detail.description as reason_detail_id,convert(varchar, time_stopped, 20) as time_stopped,time_used, w_c,ref_num,convert(varchar, create_date, 20) as create_date,remark FROM STS_forming_reason LEFT JOIN STS_forming_reason_description ON STS_forming_reason.reason_id = STS_forming_reason_description.reason_id LEFT JOIN STS_forming_reason_description_detail ON STS_forming_reason.reason_detail_id = STS_forming_reason_description_detail.reason_detail_id  where 1=1  ";
+        $query = " select id,STS_forming_reason_description.reason_description as reason_id,times_count, STS_forming_reason_description_detail.description as reason_detail_id,convert(varchar, time_stopped, 20) as time_stopped,time_used, w_c,ref_num,convert(varchar, create_date, 20) as create_date,remark,ref_doc_no FROM STS_forming_reason LEFT JOIN STS_forming_reason_description ON STS_forming_reason.reason_id = STS_forming_reason_description.reason_id LEFT JOIN STS_forming_reason_description_detail ON STS_forming_reason.reason_detail_id = STS_forming_reason_description_detail.reason_detail_id  where 1=1  ";
         $query = $query . $searchDate;
         $query = $query . $searchItem;
         $query = $query . $searchRefnum;
@@ -1137,7 +1137,7 @@ group by tag_status, mv.item, item.description, lt.loc, mv.lot, mv.qty1,  isnull
         return $rs0;
     }
 
-    function CreateForming($reason_id, $reason_detail_id, $time_stopped, $w_c, $remark, $times_count) {
+    function CreateForming($reason_id, $reason_detail_id, $time_stopped, $w_c, $remark, $times_count, $ref_doc_no) {
 
         $date = date("Y-m-d");
 
@@ -1154,8 +1154,8 @@ $rs = $cSql->SqlQuery($this->StrConn, $select);
         return http_response_code(400); 
       }
 
-        $query = " insert into STS_forming_reason (reason_id,reason_detail_id,time_stopped,create_date,w_c,remark,times_count) "
-                . "VALUES ('$reason_id','$reason_detail_id',GETDATE(),GETDATE(),'$w_c','$remark','$times_count')";
+        $query = " insert into STS_forming_reason (reason_id,reason_detail_id,time_stopped,create_date,w_c,remark,times_count,ref_doc_no) "
+                . "VALUES ('$reason_id','$reason_detail_id',GETDATE(),GETDATE(),'$w_c','$remark','$times_count','$ref_doc_no')";
         $cSql = new SqlSrv();
         $cSql->SqlQuery($this->StrConn, $query);
         return $query;

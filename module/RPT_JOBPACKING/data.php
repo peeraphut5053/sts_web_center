@@ -372,7 +372,7 @@ if ($load == "CreateForming") {
     $CallModel->SyteLine_Models();
     $Trans = new JobOrder();
     $Trans->setConn($ConnSL);
-    $Trans = $Trans->CreateForming($reason_id, $reason_detail_id, $time_stopped, $w_c, $remark, $times_count);
+    $Trans = $Trans->CreateForming($reason_id, $reason_detail_id, $time_stopped, $w_c, $remark, $times_count, $ref_doc_no);
     echo json_encode($Trans);
 }
 

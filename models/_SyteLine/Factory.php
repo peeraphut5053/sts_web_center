@@ -116,10 +116,17 @@ class Factory {
         if ($StartDate != "" && $EndDate != "") {
             $query = $query . " AND FORMAT(DateIssue, 'yyyy-MM-dd') BETWEEN '$StartDate' AND '$EndDate'";
         }
-        $sql = "select re.* , iss.issue, department = wc.[description]
+        $sql = "select re.* , iss.issue, department = wc.[description], path = pic.path
 from STS_repair re inner join STS_repair_issue iss
     on iss.issuenum = re.detailissue
-    left join wc_mst wc on wc.wc = re.Dept where 1=1 $query";
+    left join wc_mst wc on wc.wc = re.Dept
+    outer apply (
+        select top 1 path
+        from STS_repair_pic
+        where DocNo = re.DocNo
+        order by path
+    ) pic
+where 1=1 $query";
         $rs0 = $cSql->SqlQuery($this->StrConn, $sql);
         array_splice($rs0, count($rs0) - 1, 1);
         return $rs0;
@@ -220,10 +227,17 @@ order by DocNo desc";
             $query = $query . " AND FORMAT(DateIssue, 'yyyy-MM-dd') BETWEEN '$StartDate' AND '$EndDate'";
         }
 
-        $sql = "select re.* , iss.issue, department = wc.[description]
+        $sql = "select re.* , iss.issue, department = wc.[description], path = pic.path
 from STS_repair re inner join STS_repair_issue iss
     on iss.issuenum = re.detailissue
-    left join wc_mst wc on wc.wc = re.Dept where 1=1 $query";
+    left join wc_mst wc on wc.wc = re.Dept
+    outer apply (
+        select top 1 path
+        from STS_repair_pic
+        where DocNo = re.DocNo
+        order by path
+    ) pic
+where 1=1 $query";
         $rs0 = $cSql->SqlQuery($this->StrConn, $sql);
         array_splice($rs0, count($rs0) - 1, 1);
         return $rs0;
