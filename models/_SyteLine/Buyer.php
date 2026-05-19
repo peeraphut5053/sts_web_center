@@ -199,14 +199,14 @@ from location_mst";
     }
 
     function GetDocList(){
-        $query = "SELECT * FROM STS_store_withdraw_hdr WHERE doc_no like 'W%' ORDER BY createdate DESC";
+        $query = "SELECT TOP 2000 * FROM STS_store_withdraw_hdr WHERE doc_no like 'W%' ORDER BY createdate DESC";
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
         return $rs;
     }
     function GetDocListByApprove(){
-        $query = "SELECT h.doc_no, h.userApprove, l.qty_rcvd, l.qty_stockOut FROM STS_store_withdraw_hdr h
+        $query = "SELECT TOP 2000 h.doc_no, h.userApprove, l.qty_rcvd, l.qty_stockOut FROM STS_store_withdraw_hdr h
         left join STS_store_withdraw_line l on h.doc_no = l.doc_no
          WHERE h.doc_no like 'W%' AND h.approver1 is not null and h.approver2 is not null ORDER BY h.doc_no DESC";
         $cSql = new SqlSrv();
