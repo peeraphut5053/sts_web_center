@@ -1,6 +1,7 @@
 <?php
 
-// 
+header("Access-Control-Allow-Origin: *");
+
 foreach ($_GET as $key => $value) {
     $$key = trim($value);
 }
