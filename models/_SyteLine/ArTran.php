@@ -13,14 +13,19 @@ class ArTran {
 
     Function GetRows() {
         $docs = $this->_docs;
+        if (!is_array($docs)) {
+            $docs = array($docs);
+        }
+        $docs = array_values(array_filter($docs, function($doc) {
+            return $doc !== null && $doc !== "";
+        }));
         $StartDate = $this->_StartDate." 00:00:00" ;
         $EndDate = $this->_EndDate." 23:59:59" ;
         $CriteriaDocs = "" ;
-        if(count($docs)==0){
-            $CriteriaDocs =" AND inv_num LIKE '".$docs[0]."%' " ;
-        }else{
+        if(count($docs)>0){
             $CriteriaDocs.=" AND (" ;
             foreach($docs as $ii=>$rr){
+                $rr = str_replace("'", "''", $rr);
                 $CriteriaDocs.=" inv_num LIKE '$rr%' OR ";
             }
             $CriteriaDocs=substr($CriteriaDocs, 0, -3);
