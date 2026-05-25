@@ -1063,16 +1063,48 @@ group by tag_status, mv.item, item.description, lt.loc, mv.lot, mv.qty1,  isnull
     }
 
     function LocationByDo($do,$startDate,$endDate) {
-        $query = "select distinct location_mst.loc ,location_mst.description  
-        from mv_bc_tag tag 
-          inner join job_mst on tag.job = job_mst.job 
-          inner join AIT_Preship_Do_Seq preship on job_mst.ord_num = preship.co_num and job_mst.ord_line = preship.co_line 
-          inner JOIN STS_qty_move_line on STS_qty_move_line.lot = tag.lot and STS_qty_move_line.toloc like 'CL%' 
-          inner JOIN STS_qty_move_hrd on STS_qty_move_hrd.doc_num = STS_qty_move_line.doc_num and STS_qty_move_hrd.loc like 'CL%' and STS_qty_move_hrd.doc_type ='Ship'
-          inner join STS_list_of_do_group gr on gr.do_group_list like '%'+preship.do_num+'%' and preship.do_num <> '1'
-          inner join location_mst on location_mst.loc like 'CL%' and location_mst.loc = STS_qty_move_hrd.loc
-    inner join co_ship_mst cosh on cosh.do_num = preship.do_num and cosh.co_num = preship.co_num and cosh.co_line = preship.co_line
-        where gr.do_group_name = '$do' and STS_qty_move_hrd.create_date between '$startDate 00:00:00' and '$endDate 23:59:59' ";
+        $query = "SELECT DISTINCT
+    loc.loc,
+    loc.[description]
+FROM
+(
+    SELECT DISTINCT
+        preship.do_num,
+        preship.co_num,
+        preship.co_line
+    FROM STS_list_of_do_group gr
+    INNER JOIN AIT_Preship_Do_Seq preship
+        ON gr.do_group_list LIKE '%' + preship.do_num + '%'
+       AND preship.do_num <> '1'
+    INNER JOIN co_ship_mst cosh
+        ON cosh.do_num = preship.do_num
+       AND cosh.co_num = preship.co_num
+       AND cosh.co_line = preship.co_line
+    WHERE gr.do_group_name = '$do'
+) d
+INNER JOIN job_mst job
+    ON job.ord_num = d.co_num
+   AND job.ord_line = d.co_line
+INNER JOIN mv_bc_tag tag
+    ON tag.job = job.job
+INNER JOIN
+(
+    SELECT DISTINCT
+        h.loc,
+        l.lot
+    FROM STS_qty_move_hrd h
+    INNER JOIN STS_qty_move_line l
+        ON l.doc_num = h.doc_num
+       AND l.toloc LIKE 'CL%'
+    WHERE h.doc_type = 'Ship'
+      AND h.loc LIKE 'CL%'
+      AND h.create_date >= '$startDate 00:00:00'
+      AND h.create_date <  '$endDate 23:59:59'
+) mv
+    ON mv.lot = tag.lot
+INNER JOIN location_mst loc
+    ON loc.loc = mv.loc
+WHERE loc.loc LIKE 'CL%';";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);
