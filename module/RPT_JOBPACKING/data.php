@@ -544,7 +544,7 @@ if ($load == "SelectFinishing") {
     echo json_encode($Trans);
 }
 
-if ($load == "SelectFinishingLatest ") {
+if ($load == "SelectFinishingLatest") {
     $CallModel = new CallModel();
     $CallModel->SyteLine_Models();
     $Trans = new JobOrder();
@@ -553,7 +553,7 @@ if ($load == "SelectFinishingLatest ") {
     echo json_encode($Trans);
 }
 
-if ($load == "SelectFormingLatest ") {
+if ($load == "SelectFormingLatest") {
     $CallModel = new CallModel();
     $CallModel->SyteLine_Models();
     $Trans = new JobOrder();
