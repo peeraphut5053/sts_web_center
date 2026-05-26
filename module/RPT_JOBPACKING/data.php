@@ -544,6 +544,24 @@ if ($load == "SelectFinishing") {
     echo json_encode($Trans);
 }
 
+if ($load == "SelectFinishingLatest ") {
+    $CallModel = new CallModel();
+    $CallModel->SyteLine_Models();
+    $Trans = new JobOrder();
+    $Trans->setConn($ConnSL);
+    $Trans = $Trans->SelectFinishingLatest($wc);
+    echo json_encode($Trans);
+}
+
+if ($load == "SelectFormingLatest ") {
+    $CallModel = new CallModel();
+    $CallModel->SyteLine_Models();
+    $Trans = new JobOrder();
+    $Trans->setConn($ConnSL);
+    $Trans = $Trans->SelectFormingLatest($wc);
+    echo json_encode($Trans);
+}
+
 if ($load == "ExcelReportPo") {
     $CallModel = new CallModel();
     $CallModel->SyteLine_Models();

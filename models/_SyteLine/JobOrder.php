@@ -1796,6 +1796,24 @@ order by job_mst.job";
         
     }
 
-    
+   function SelectFinishingLatest($wc) {
+        $query = "  select top 1 * from STS_finishing_reason
+  where w_c = '$wc'
+  order by create_date desc";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+
+    function SelectFormingLatest($wc) {
+        $query = "  select top 1 * from STS_forming_reason
+  where w_c = '$wc'
+  order by create_date desc";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
     
 }
