@@ -300,6 +300,13 @@
         return unique.join(', ');
     }
 
+    function getTextBeforeSlash(value) {
+        if (value === null || value === undefined) {
+            return '';
+        }
+        return value.toString().split('/')[0].trim();
+    }
+
     function formatReportDate(value) {
         if (value && value.date) {
             value = value.date;
@@ -332,7 +339,7 @@
             }
 
             groups[key].endUserList.push(row.endUser);
-            groups[key].custPOList.push(row.cust_po);
+            groups[key].custPOList.push(getTextBeforeSlash(row.cust_po));
             groups[key].portList.push(row.Port);
             groups[key].balanceBDL += parseReportNumber(row.balanceBDL);
             groups[key].balanceMT += parseReportNumber(row.balanceMT);
@@ -607,7 +614,11 @@
                         { "data": "Lot" },
                         { "data": "endUser" },
                         { "data": "sts_po" },
-                        { "data": "cust_po" },
+                        {
+                            "data": "cust_po", render: function (data, type, row) {
+                                return getTextBeforeSlash(data);
+                            }
+                        },
                         { "data": "Port" },
                         { "data": "size" },
                         { "data": "spec" },
