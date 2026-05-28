@@ -128,6 +128,35 @@
         border-radius: 2px;
     }
 
+    .userlog-path-bars .userlog-bar-row {
+        display: block;
+        margin-bottom: 11px;
+    }
+
+    .userlog-path-bars .userlog-bar-label {
+        display: block;
+        width: 100%;
+        margin-bottom: 4px;
+        color: #102a43;
+        line-height: 1.35;
+        overflow: visible;
+        text-overflow: clip;
+        white-space: normal;
+        word-break: break-all;
+    }
+
+    .userlog-path-bars .userlog-bar-track {
+        display: inline-block;
+        width: calc(100% - 58px);
+        vertical-align: middle;
+    }
+
+    .userlog-path-bars .userlog-bar-count {
+        display: inline-block;
+        width: 48px;
+        vertical-align: middle;
+    }
+
     .userlog-table-wrap {
         width: 100%;
         overflow-x: auto;
@@ -305,7 +334,7 @@
         <div class="col-xs-12 col-md-4">
             <div class="userlog-panel">
                 <h4>Top Paths</h4>
-                <div id="chartPath"></div>
+                <div id="chartPath" class="userlog-path-bars"></div>
             </div>
         </div>
     </div>
