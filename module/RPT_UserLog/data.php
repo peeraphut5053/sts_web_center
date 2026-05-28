@@ -141,7 +141,7 @@ echo json_encode(array(
     'summary' => $summary,
     'status' => counterToRows($statusMap, 'status', 20),
     'methods' => counterToRows($methodMap, 'method', 20),
-    'top_paths' => counterToRows($pathMap, 'path', 15),
+    'top_paths' => counterToRows($pathMap, 'path', 100),
     'hourly' => counterToRows($hourMap, 'hour', 24, true),
     'rows' => array_reverse($rows)
 ));

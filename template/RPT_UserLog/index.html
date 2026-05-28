@@ -133,6 +133,12 @@
         margin-bottom: 11px;
     }
 
+    .userlog-path-scroll {
+        max-height: 420px;
+        overflow-y: auto;
+        padding-right: 6px;
+    }
+
     .userlog-path-bars .userlog-bar-label {
         display: block;
         width: 100%;
@@ -333,8 +339,8 @@
         </div>
         <div class="col-xs-12 col-md-4">
             <div class="userlog-panel">
-                <h4>Top Paths</h4>
-                <div id="chartPath" class="userlog-path-bars"></div>
+                <h4>Top Paths <small>Top 100</small></h4>
+                <div id="chartPath" class="userlog-path-bars userlog-path-scroll"></div>
             </div>
         </div>
     </div>

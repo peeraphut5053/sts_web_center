@@ -1,10 +1,114 @@
 <style>
+    .cer-do-page{
+        background:#f4f7fb;
+        border:1px solid #d7e0ea;
+        border-radius:8px;
+        padding:14px 14px 16px;
+        margin-bottom:14px;
+        box-shadow:0 8px 22px rgba(31,58,88,.08);
+    }
+    .cer-do-toolbar{
+        display:flex;
+        flex-wrap:wrap;
+        align-items:flex-end;
+        gap:10px;
+        margin-bottom:12px;
+    }
+    .cer-do-title{
+        flex:1 0 180px;
+        min-width:180px;
+        padding:4px 6px 0 0;
+    }
+    .cer-do-title h3{
+        margin:0;
+        color:#1d344d;
+        font-size:20px;
+        font-weight:700;
+        line-height:1.25;
+    }
+    .cer-do-title b{
+        display:block;
+        color:#1d344d;
+        font-size:20px;
+        line-height:1.25;
+        margin-bottom:2px;
+    }
+    .cer-do-title small{
+        color:#66788a;
+        display:block;
+        margin-top:3px;
+        font-size:12px;
+    }
+    .cer-do-filter{
+        flex:1 1 205px;
+        min-width:190px;
+    }
+    .cer-do-filter .input-group-addon{
+        background:#eef4fa;
+        border-color:#cfdbe7;
+        color:#40556b;
+        font-weight:600;
+        min-width:92px;
+    }
+    .cer-do-filter .form-control{
+        border-color:#cfdbe7;
+        box-shadow:none;
+    }
+    .cer-do-filter .form-control:focus{
+        border-color:#4d9bd3;
+        box-shadow:0 0 0 2px rgba(77,155,211,.14);
+    }
+    .cer-do-actions{
+        flex:0 0 auto;
+    }
+    .cer-do-actions .btn{
+        min-width:108px;
+        font-weight:600;
+        border-radius:4px;
+        box-shadow:0 2px 5px rgba(49,126,170,.18);
+    }
     .col-search{
         padding-left:3px;
         padding-right:3px;
     }
+    .cer-do-table-wrap{
+        background:#fff;
+        border:1px solid #dbe4ee;
+        border-radius:8px;
+        padding:10px;
+        box-shadow:0 6px 18px rgba(31,58,88,.06);
+    }
+    #tblReport{
+        margin-bottom:0 !important;
+    }
     .table thead th{
         text-align: center;
+    }
+    #tblReport.dataTable thead th,
+    #tblReport.dataTable thead .sorting,
+    #tblReport.dataTable thead .sorting_asc,
+    #tblReport.dataTable thead .sorting_desc,
+    #tblReport.dataTable thead .sorting_disabled,
+    table.dataTable.fixedHeader-floating thead th,
+    table.dataTable.fixedHeader-floating thead .sorting,
+    table.dataTable.fixedHeader-floating thead .sorting_asc,
+    table.dataTable.fixedHeader-floating thead .sorting_desc,
+    table.dataTable.fixedHeader-floating thead .sorting_disabled,
+    #tblModal thead th{
+        background-color:#23384f !important;
+        border-color:#1d3044;
+        color:#fff;
+        font-size:12px;
+        font-weight:700;
+        vertical-align:middle;
+        white-space:nowrap;
+    }
+    #tblReport tbody td{
+        vertical-align:middle;
+        color:#24384d;
+    }
+    #tblReport tbody tr:hover td{
+        background:#eef7ff;
     }
 
     .col-flt-page{
@@ -14,6 +118,18 @@
 
     #tblReport tbody tr td a {
         cursor: pointer ;
+        color:#0b78bd;
+        font-weight:700;
+        text-decoration:underline;
+    }
+    .dataTables_wrapper .dt-buttons .btn,
+    .dataTables_wrapper .dt-buttons button{
+        border-radius:4px;
+        margin-right:5px;
+    }
+    .dataTables_wrapper .dataTables_info{
+        color:#617386;
+        padding-top:10px;
     }
     table.dataTable.fixedHeader-floating, table.dataTable.fixedHeader-locked {
         background-color: white;
@@ -27,43 +143,96 @@
     #tblModal {
         z-index:999999;
     }
+    #myModal{
+        display:none;
+    }
+    #myModal .modal-content{
+        border:0;
+        border-radius:8px;
+        overflow:hidden;
+        box-shadow:0 18px 45px rgba(24,42,60,.28);
+    }
+    #myModal .modal-header{
+        background:#23384f;
+        color:#fff;
+        font-weight:700;
+        border-bottom:0;
+    }
+    #myModal .close{
+        color:#fff;
+        opacity:.9;
+        text-shadow:none;
+    }
+    #modalDetailLine{
+        background:#f1f6fb;
+        border:1px solid #d9e5ef;
+        border-radius:6px;
+        color:#27425f;
+        margin-bottom:10px;
+        padding:10px 12px !important;
+    }
+    #tblModal tbody td{
+        vertical-align:middle;
+    }
     .loading-overlay{
         z-index:99999999 ;
     }
+    @media (max-width: 767px){
+        .cer-do-page{
+            padding:10px;
+        }
+        .cer-do-toolbar{
+            display:block;
+        }
+        .cer-do-title,
+        .cer-do-filter,
+        .cer-do-actions{
+            width:100%;
+            margin-bottom:8px;
+        }
+        .cer-do-actions .btn{
+            width:100%;
+        }
+        .cer-do-filter .input-group-addon{
+            min-width:88px;
+            font-size:12px;
+        }
+    }
 </style>
 
-<div class='row' >
+<div class="cer-do-page">
+<div class="cer-do-toolbar">
 
-    <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12" style="font-size:18px;">
+    <div class="cer-do-title">
         <b>ทำใบ Cer DO</b> 
     </div>
-    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12  col-search">
+    <div class="cer-do-filter">
         <div class="input-group">
             <div class="input-group-addon">Pickup_date</div>
             <input type="text" class="form-control txt-filter" id="txtCerDate">
         </div>
     </div>
 
-    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12  col-search">
+    <div class="cer-do-filter">
         <div class="input-group">
             <div class="input-group-addon">Ship_date</div>
             <input type="text" class="form-control txt-filter" id="txtShipDate">
         </div>
     </div>
 
-    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12  col-search">
+    <div class="cer-do-filter">
         <div class="input-group">
             <div class="input-group-addon">Do_num</div>
             <input type="text" class="form-control txt-filter" id="txtDoNum">
         </div>
     </div>
 
-    <div class="col-lg-1 col-md-2 col-sm-1 col-xs-6  col-search">
+    <div class="cer-do-actions">
         <button id="btnSearch" class="btn btn-info"><i class="fa fa-search"></i>&nbsp;ค้นหา</button>
     </div>
 </div>
 
-<div class="row" id="divReport">
+<div class="cer-do-table-wrap" id="divReport">
     <table class="table table-condensed table-bordered table-striped" id="tblReport">
         <thead>
             <tr>
@@ -83,6 +252,7 @@
         <!--        <tbody id="tblReportList">
                 </tbody>-->
     </table>
+</div>
 </div>
 
 
@@ -128,7 +298,7 @@
 
             <!-- Modal footer -->
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
 
         </div>
@@ -136,17 +306,19 @@
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
-        $('#selCust').selectize({
-            plugins: ['remove_button'],
-            delimiter: ',',
-            persist: false,
-            create: function (input) {
-                return {
-                    value: input,
-                    text: input
+        if ($('#selCust').length && $.fn.selectize) {
+            $('#selCust').selectize({
+                plugins: ['remove_button'],
+                delimiter: ',',
+                persist: false,
+                create: function (input) {
+                    return {
+                        value: input,
+                        text: input
+                    }
                 }
-            }
-        });
+            });
+        }
     });
 
     // $("#txtCerDate, #txtShipDate").val(GetToday());
@@ -160,7 +332,7 @@
 
     $(".txt-filter").on("keypress", function (e) {
         if (e.keyCode == 13) {
-            ReportItemSearch();
+            loadData();
             return false; // prevent the button click from happening
         }
     });
@@ -176,7 +348,7 @@
             contentType: "text/plain",
             dataType: 'json',
             beforeSend: function () {
-                $("#btnSearch").html("<i class='fa fa-spinner fa-spin'>");
+                $("#btnSearch").prop("disabled", true).html("<i class='fa fa-spinner fa-spin'></i>&nbsp;Loading");
             },
             data: {
                 load: 'ajax2',
@@ -185,7 +357,9 @@
                 txtDoNum: txtDoNum,
             },
             success: function (data) {
-                $("#tblReportList").DataTable().clear();
+                if ($.fn.DataTable && $.fn.DataTable.isDataTable('#tblReport')) {
+                    $('#tblReport').DataTable().clear();
+                }
                 $('#tblReport').dataTable({
                     fixedHeader: true,
                     "aaData": data,
@@ -253,11 +427,12 @@
                 });
 
                 $('#tblReport').loading("stop");
-                $("#btnSearch").html(OldHtml);
+                $("#btnSearch").prop("disabled", false).html(OldHtml);
             },
             error: function (e) {
                 console.log("There was an error with your request...");
                 console.log("error: " + JSON.stringify(e));
+                $("#btnSearch").prop("disabled", false).html(OldHtml);
             }
         });
     }
