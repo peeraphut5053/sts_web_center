@@ -137,8 +137,7 @@
 <div id="page_ReportQc">
 </div>
 
-<div id="page_ReportZinc" class="not-show-content"></div>
-</div>
+<div id="page_ReportZinc"></div>
 
 <div id="page_ReportMain" class="not-show-content">
 </div>
@@ -181,7 +180,7 @@
     $(document).ready(function () {
         pageHtml = "page_ReportZinc";
         Url = "././module/APP_Qc_TestLab/render.php"
-        $("#page_ReportQc").load(Url, { "pageHtml": pageHtml }, function (response, status, xhr) {
+        $("#page_ReportZinc").load(Url, { "pageHtml": pageHtml }, function (response, status, xhr) {
             if (status == "error") {
                 var msg = "Sorry, error: ";
                 $.alert(msg + xhr.status + " " + xhr.statusText);

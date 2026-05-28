@@ -1,292 +1,624 @@
-<div class="row">  
-      <div style="margin-top: 10px; margin-bottom: 20px;">
-      <h1 class="my-header">Report Zinc</h1>
-      </div>
-</div>
+<style>
+  .zinc-page {
+    color: #1f2933;
+  }
 
-<div class="row flex">
-    <div class="row col-xs-2">
-        <div class="input-group">
-          <div class="input-group-addon">Year</div>
-          <select class="form-control" id="selYear"></select>
-        </div>
+  .zinc-page .hidden {
+    display: none !important;
+  }
+
+  .zinc-header {
+    margin: 10px 0 18px;
+    padding: 18px 20px;
+    border-left: 5px solid #0ea5e9;
+    background: #f6fbff;
+  }
+
+  .zinc-header h1 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: 0;
+  }
+
+  .zinc-header p {
+    margin: 6px 0 0;
+    color: #60707d;
+  }
+
+  .zinc-toolbar,
+  .zinc-card,
+  .zinc-table-panel {
+    border: 1px solid #d9e2ec;
+    background: #fff;
+    border-radius: 6px;
+    box-shadow: 0 8px 22px rgba(15, 23, 42, 0.06);
+  }
+
+  .zinc-toolbar {
+    padding: 14px;
+    margin-bottom: 16px;
+  }
+
+  .zinc-filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 12px;
+  }
+
+  .zinc-filter-field {
+    flex: 0 1 170px;
+  }
+
+  .zinc-filter-action {
+    flex: 0 0 110px;
+  }
+
+  .zinc-toolbar label {
+    display: block;
+    margin-bottom: 6px;
+    color: #52606d;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .zinc-toolbar .form-control {
+    width: 100%;
+    height: 36px;
+    border-color: #cbd5e1;
+    box-shadow: none;
+  }
+
+  .zinc-toolbar .btn {
+    height: 36px;
+    font-weight: 700;
+  }
+
+  .zinc-summary {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(150px, 1fr));
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .zinc-metric {
+    padding: 12px 14px;
+    border: 1px solid #d9e2ec;
+    border-radius: 6px;
+    background: #fff;
+  }
+
+  .zinc-metric > span {
+    display: block;
+    color: #60707d;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .zinc-metric strong {
+    display: block;
+    margin-top: 4px;
+    font-size: 22px;
+    line-height: 1.2;
+  }
+
+  .zinc-metric .zinc-pass {
+    color: #168a4a;
+  }
+
+  .zinc-metric .zinc-fail {
+    color: #d64545;
+  }
+
+  .zinc-chart-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    margin-bottom: 18px;
+  }
+
+  .zinc-card {
+    padding: 16px;
+  }
+
+  .zinc-card-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .zinc-card h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  .zinc-card small {
+    color: #60707d;
+    font-weight: 700;
+  }
+
+  .zinc-chart-wrap {
+    position: relative;
+    height: 300px;
+  }
+
+  .zinc-table-panel {
+    padding: 14px;
+  }
+
+  .zinc-table-panel .dataTables_wrapper {
+    width: 100%;
+  }
+
+  .zinc-table-panel table.dataTable thead th {
+    background: #eef4f8 !important;
+    color: #243b53;
+    border-bottom-color: #bcccdc;
+    white-space: nowrap;
+  }
+
+  .zinc-table-panel table.dataTable tbody td {
+    vertical-align: middle;
+  }
+
+  .zinc-badge {
+    display: inline-block;
+    min-width: 54px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-weight: 700;
+  }
+
+  .zinc-badge-pass {
+    background: #e3fcef;
+    color: #168a4a;
+  }
+
+  .zinc-badge-fail,
+  .zinc-value-alert {
+    background: #ffe3e3;
+    color: #c92a2a;
+  }
+
+  .zinc-value-ok {
+    color: #243b53;
+    font-weight: 700;
+  }
+
+  @media (max-width: 991px) {
+    .zinc-summary,
+    .zinc-chart-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 767px) {
+    .zinc-filter-field,
+    .zinc-filter-action,
+    .zinc-summary,
+    .zinc-chart-grid {
+      display: block;
+      width: 100%;
+    }
+
+    .zinc-filter-field,
+    .zinc-filter-action,
+    .zinc-metric,
+    .zinc-card {
+      margin-bottom: 12px;
+    }
+
+    .zinc-toolbar .btn {
+      width: 100%;
+    }
+
+    .zinc-chart-wrap {
+      height: 260px;
+    }
+  }
+</style>
+
+<div class="zinc-page">
+  <div class="zinc-header">
+    <h1>Report Zinc</h1>
+    <p>ติดตามผลทดสอบ Zinc coating, สัดส่วน Pass/Fail และ Lead Time ตามช่วงเดือน</p>
+  </div>
+
+  <div class="zinc-toolbar">
+    <div class="zinc-filter-row">
+      <div class="zinc-filter-field">
+        <label for="selYear">Year</label>
+        <select class="form-control" id="selYear"></select>
       </div>
-      <div class="row col-xs-2">
-        <div class="input-group">
-          <div class="input-group-addon">StartMonth</div>
-          <select class="form-control" id="selMonth"></select>
-        </div>
+      <div class="zinc-filter-field">
+        <label for="selMonth">Start Month</label>
+        <select class="form-control" id="selMonth"></select>
       </div>
-      <div class="row col-xs-2">
-        <div class="input-group">
-          <div class="input-group-addon">EndMonth</div>
-          <select class="form-control" id="selMonth2"></select>
-        </div>
+      <div class="zinc-filter-field">
+        <label for="selMonth2">End Month</label>
+        <select class="form-control" id="selMonth2"></select>
       </div>
-    <div class="col-lg-1 col-md-2 col-sm-1 col-xs-6  col-search">
-        <button id="BtnSearchZ" class="btn btn-info"><i class="fa fa-search"></i>Search</button>
+      <div class="zinc-filter-action">
+        <button id="BtnSearchZ" class="btn btn-info btn-block" type="button">
+          <i class="fa fa-search"></i>&nbsp;Search
+        </button>
+      </div>
     </div>
-</div>
+  </div>
 
-    <br>
-
-    <div class="row" id="divReportM">
-        <table class="table table-condensed table-bordered table-striped"
-        width="100%" id="tblReportZ">
-            <thead>
-                <tr>
-                    <th class="bg-gray">Pb</th>
-                    <th class="bg-gray">AI</th>
-                    <th class="bg-gray">Cd</th>
-                    <th class="bg-gray">Fe</th>
-                    <th class="bg-gray">Cu</th>
-                    <th class="bg-gray">Zn</th>
-                    <th class="bg-gray">Test_results</th>
-                    <th class="bg-gray">Date Received</th>
-                    <th class="bg-gray">Test Date</th>
-                    <th class="bg-gray">Lead Time/Day</th>
-                    <th class="bg-gray">remark</th>
-                </tr>
-        </table>
+  <div class="zinc-summary">
+    <div class="zinc-metric">
+      <span>Date Range</span>
+      <strong><span id="start"></span> - <span id="end"></span></strong>
     </div>
- <div id="divCountZ" class="text-center font-bold text-md hidden">จำนวนรายการทั้งหมด : <span id="countZ"></span> รายการ</div>
- <hr />
-<div class="flex justify-center">
-    <div class="flex flex-col items-center" style="width:100%;max-width:700px"> 
-        <h3 class="text-center m-5 font-bold"><span id="start"></span> - <span id="end"></span></h1>
+    <div class="zinc-metric" id="divCountZ">
+      <span>Total Records</span>
+      <strong><span id="countZ">0</span></strong>
+    </div>
+    <div class="zinc-metric">
+      <span>Pass Rate</span>
+      <strong class="zinc-pass" id="pass">0.00%</strong>
+    </div>
+    <div class="zinc-metric">
+      <span>Fail Rate</span>
+      <strong class="zinc-fail" id="fail">0.00%</strong>
+    </div>
+  </div>
+
+  <div class="zinc-chart-grid">
+    <div class="zinc-card">
+      <div class="zinc-card-head">
         <div>
-            <div class="font-bold m-4">TOTAL TEST RESULT : <span id="records"></span> RECORDS <span class="text-green-500" id="pass"></span><span class="text-red-500" id="fail"></span></div>
+          <h3>Lead Time</h3>
+          <small>TOTAL TEST RESULT : <span id="records">0</span> RECORDS</small>
         </div>
-        <canvas class="m-auto" id="myChart2" style="width:100%;max-width:500px"></canvas>
+      </div>
+      <div class="zinc-chart-wrap">
+        <canvas id="myChart2"></canvas>
+      </div>
     </div>
-       <div class="flex flex-col justify-center items-center mt-12" style="width:100%;max-width:700px">
-        <h3 class="text-center font-bold">TEST RESULTS</h3>
-        <canvas class="mt-12" id="myChart" style="max-width:500px"></canvas>
-       </div>
+    <div class="zinc-card">
+      <div class="zinc-card-head">
+        <div>
+          <h3>Test Results</h3>
+          <small>Pass vs Fail</small>
+        </div>
+      </div>
+      <div class="zinc-chart-wrap">
+        <canvas id="myChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="zinc-table-panel" id="divReportM">
+    <table class="table table-condensed table-bordered table-striped" width="100%" id="tblReportZ">
+      <thead>
+        <tr>
+          <th>Pb</th>
+          <th>AI</th>
+          <th>Cd</th>
+          <th>Fe</th>
+          <th>Cu</th>
+          <th>Zn</th>
+          <th>Test_results</th>
+          <th>Date Received</th>
+          <th>Test Date</th>
+          <th>Lead Time/Day</th>
+          <th>remark</th>
+        </tr>
+      </thead>
+    </table>
+  </div>
 </div>
 
 <script type="text/javascript">
+  var zincResultChart = null;
+  var zincLeadChart = null;
 
-    ReportAllSearch();
-  
-    $("#BtnSearchZ").click(function () {
-        var month =  $("#selMonth").val();
-        var month2 =  $("#selMonth2").val();
-        var year =  $("#selYear").val();
-        $("#start").html(moment(year + "/" + month + "/01").format("YYYY/MM/DD"));
-        $("#end").html(moment(year + "/" + month2 + "/01").endOf("month").format("YYYY/MM/DD"));
-            ReportAllSearch(1);
-    });
+  initZincFilters();
+  ReportAllSearch();
 
-    GetYearMonth("selYear", "selMonth");
+  $("#BtnSearchZ").click(function () {
+    ReportAllSearch(1);
+  });
 
-    GetYearMonth("selYear", "selMonth2");
-        
-    function ReportAllSearch(type) {
-    var month =  $("#selMonth").val();
-    var month2 =  $("#selMonth2").val();
-    var year =  $("#selYear").val();
+  function toZincNumber(value) {
+    var number = parseFloat(value);
+    return isNaN(number) ? 0 : number;
+  }
 
+  function formatZincDate(value) {
+    return value ? value.substring(0, 10) : "";
+  }
+
+  function initZincFilters() {
+    var currentDate = new Date();
+    var currentYear = currentDate.getFullYear();
+    var currentMonth = currentDate.getMonth() + 1;
+    var monthNames = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December"
+    ];
+
+    var yearSelect = document.getElementById("selYear");
+    var startMonthSelect = document.getElementById("selMonth");
+    var endMonthSelect = document.getElementById("selMonth2");
+
+    yearSelect.options.length = 0;
+    for (var yearIndex = 0; yearIndex < 10; yearIndex++) {
+      var year = currentYear - yearIndex;
+      var yearOption = document.createElement("option");
+      yearOption.value = year;
+      yearOption.text = year;
+      yearSelect.add(yearOption);
+    }
+    yearSelect.value = currentYear;
+
+    startMonthSelect.options.length = 0;
+    endMonthSelect.options.length = 0;
+    for (var monthIndex = 1; monthIndex <= 12; monthIndex++) {
+      var startMonthOption = document.createElement("option");
+      var endMonthOption = document.createElement("option");
+
+      startMonthOption.value = monthIndex;
+      startMonthOption.text = monthNames[monthIndex - 1];
+      endMonthOption.value = monthIndex;
+      endMonthOption.text = monthNames[monthIndex - 1];
+
+      startMonthSelect.add(startMonthOption);
+      endMonthSelect.add(endMonthOption);
+    }
+    startMonthSelect.value = currentMonth;
+    endMonthSelect.value = currentMonth;
+  }
+
+  function setDateRange(type, year, month, month2) {
     var currentMonth = new Date().getMonth() + 1;
     var currentYear = new Date().getFullYear();
-    
+    var rangeYear = year || currentYear;
+    var startMonth = month || currentMonth;
+    var endMonth = month2 || currentMonth;
+
     if (type !== 1) {
-        // get first day of month and last day of month use moment.js
-    $("#start").html(moment(currentYear + "/" + currentMonth + "/01").format("YYYY/MM/DD"));
-    // get last day of month
-    $("#end").html(moment(currentYear + "/" + currentMonth + "/01").endOf("month").format("YYYY/MM/DD"));
+      rangeYear = currentYear;
+      startMonth = currentMonth;
+      endMonth = currentMonth;
     }
 
-    if (month == null || month == null) {
-        var d = new Date();
-        month = d.getMonth() + 1;
-        month2 = d.getMonth() + 1;
-        year = d.getFullYear();
-    }
-   
+    $("#start").html(moment(rangeYear + "/" + startMonth + "/01").format("YYYY/MM/DD"));
+    $("#end").html(moment(rangeYear + "/" + endMonth + "/01").endOf("month").format("YYYY/MM/DD"));
+  }
 
-    var OldHtml = $("#BtnSearchM").html();
-        $.ajax({
-            type: 'POST',
-            url: "././module/APP_Qc_TestLab/data.php",
-            dataType: 'json',
-            beforeSend: function () {
-                $("#BtnSearchM").html("<i class='fa fa-spinner fa-spin'>");
-            },
-            data: {
-                "load": "ReportZinc",
-                "y": year,
-                "month": month,
-                "month2": month2
-          
-            },
-            success: function (data) {
-                const pass = data.filter(item => item.Test_result == "Pass");
-                const fail = data.filter(item => item.Test_result == "Fail");
-                $("#pass").html("Pass : " + (pass.length * 100 / (pass.length + fail.length)).toFixed(2) + "%");
-                $("#fail").html(" Fail : " + (fail.length * 100 / (pass.length + fail.length)).toFixed(2) + "%");
-                const LeadOne = data.filter(item => item.LeadTime == 1);
-                const LeadTwo = data.filter(item => item.LeadTime == 2);
-                const LeadThree = data.filter(item => item.LeadTime == 3);
-                const data2 = {
-  labels: ['Pass', 'Fail'],
-  datasets: [{
-    label: 'Test Result',
-    data: [pass.length, fail.length],
-    borderWidth: 1,
-    backgroundColor: ['#7FFF00', '#F08080'],
-  }]
-};
-const dataLeadTime = {
-  labels: ['1 วัน', '2 วัน', '3 วัน'],
-  datasets: [{
-    label: 'Test Result',
-    data: [LeadOne.length, LeadTwo.length, LeadThree.length],
-    borderWidth: 1,
-    backgroundColor: ['#85e0e0', '#df80ff', '#ffb3ff'],
-  }]
-};
-var options = {
-    tooltips: {
-            },
-            plugins: {
-              datalabels: {
-                formatter: (value, ctx) => {
-                  let sum = 0;
-                  let dataArr = ctx.chart.data.datasets[0].data;
-                  dataArr.map(data => {
-                      sum += data;
-                  });
-                  let percentage = (value*100 / sum).toFixed(2)+"%";
-                  return percentage;
-                },
-                color: ['dark', '#fff'],
-              }
-            },
-    
-};
-    const myChart = new Chart("myChart", {
-     type: "doughnut",
-     data: data2,
-     options: options,
-     plugins: [ChartDataLabels],
+  function getPercentage(part, total) {
+    return total ? (part * 100 / total).toFixed(2) + "%" : "0.00%";
+  }
+
+  function buildDoughnutOptions() {
+    return {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutoutPercentage: 62,
+      legend: {
+        position: "bottom",
+        labels: {
+          boxWidth: 12,
+          fontColor: "#52606d"
+        }
+      },
+      tooltips: {
+        callbacks: {
+          label: function (tooltipItem, data) {
+            var dataset = data.datasets[tooltipItem.datasetIndex];
+            var value = dataset.data[tooltipItem.index] || 0;
+            return data.labels[tooltipItem.index] + ": " + value.toLocaleString();
+          }
+        }
+      },
+      plugins: {
+        datalabels: {
+          formatter: function (value, ctx) {
+            var sum = 0;
+            var dataArr = ctx.chart.data.datasets[0].data;
+            dataArr.map(function (data) {
+              sum += data;
+            });
+
+            return sum ? (value * 100 / sum).toFixed(2) + "%" : "";
+          },
+          color: "#243b53",
+          font: {
+            weight: "bold"
+          }
+        }
+      }
+    };
+  }
+
+  function renderZincCharts(passCount, failCount, leadOneCount, leadTwoCount, leadThreeCount) {
+    var resultData = {
+      labels: ["Pass", "Fail"],
+      datasets: [{
+        label: "Test Result",
+        data: [passCount, failCount],
+        borderWidth: 1,
+        borderColor: "#fff",
+        backgroundColor: ["#22c55e", "#ef4444"]
+      }]
+    };
+
+    var leadTimeData = {
+      labels: ["1 วัน", "2 วัน", "3 วัน"],
+      datasets: [{
+        label: "Lead Time",
+        data: [leadOneCount, leadTwoCount, leadThreeCount],
+        borderWidth: 1,
+        borderColor: "#fff",
+        backgroundColor: ["#06b6d4", "#f59e0b", "#64748b"]
+      }]
+    };
+
+    if (zincResultChart) {
+      zincResultChart.destroy();
+    }
+
+    if (zincLeadChart) {
+      zincLeadChart.destroy();
+    }
+
+    zincResultChart = new Chart(document.getElementById("myChart"), {
+      type: "doughnut",
+      data: resultData,
+      options: buildDoughnutOptions(),
+      plugins: [ChartDataLabels]
     });
-    const myChart2 = new Chart("myChart2", {
-     type: "doughnut",
-     data: dataLeadTime,
-     options: options,
-     plugins: [ChartDataLabels],
+
+    zincLeadChart = new Chart(document.getElementById("myChart2"), {
+      type: "doughnut",
+      data: leadTimeData,
+      options: buildDoughnutOptions(),
+      plugins: [ChartDataLabels]
     });
-                $("#divCountZ").removeClass("hidden");
-                $("#countZ").html(data.length);
-                $("#records").html(data.length);
-                $("#tblReportZ").dataTable().fnDestroy();
-                var table = $('#tblReportZ').DataTable({
-                  
-                    scrollCollapse: true,
-                    scrollX: true,
-                    "aaData": data,
-                    "paging": false,
-//                        fixedColumns: {
-//                            leftColumns: 1,
-//                        },
-                    "searching": false,
-                    "bInfo": false,
+  }
 
-                    "columns": [
-                         {"data": "sts_Pb",
-                            "className": "text-center",
-                            "render": function (data, type, row, meta) {
-                            var ret = parseFloat(data);
-                            if (ret > 0.030){
-                                var ret = `<div style="color: #F08080; font-weight: bold;">${(data)}</div>`
-                            }
-                            else{
-                                var ret = `<div style="color: black; font-weight: bold;">${(data)}</div>`
-                            }
-                            return ret;
-                            }
-                        },
-                        {"data": "sts_Al",
-                            "className": "text-center",
-                        },
-                        {"data": "sts_Cd",
-                            "className": "text-center",
-                        },
-                        {"data": "sts_Fe",
-                            "className": "text-center",
-                        },
-                        {"data": "sts_Cu",
-                            "className": "text-center",
-                        },
-                        {"data": "sts_Zn",
-                            "className": "text-center",
-                        },
-                        {"data": "Test_result",
-                            "className": "text-center",
-                            "render": function (data, type, row, meta) {
-                            var ret = data;
-                            if (ret == "Fail"){
-                                var ret = `<div style="color: #F08080; font-weight: bold;">${(data)}</div>`
-                            }
-                            else{
-                                var ret = `<div style="color: #00cc00; font-weight: bold;">${(data)}</div>`
-                            }
-                            return ret;
-                            }
-                        },
-                        {"data": "Date_rec.date",
-                         "className": "text-center",
-                         "render": function (data, type, row, meta) {
-                            var ret = `${data.substring(0, 10)}`
-                            return ret;
-
-                         }
-                        },
-                        {"data": "Date_test.date",
-                            "className": "text-center",
-                            "render": function (data, type, row, meta) {
-                            var ret = `${data.substring(0, 10)}`
-                            return ret;
-
-                         }
-                        },
-                        {"data": "LeadTime",
-                            "className": "text-center",
-                            
-                        },
-                        {"data": "remark",
-                            "className": "text-center",
-                        },
-                    ],
-                    'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
-                            "<'row'<'col-md-12'tr>>" +
-                            "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
-                    buttons: [
-                        {
-                            extend: 'print',
-                            text: "<i class='fa fa-print'></i>&nbsp;Print",
-                            title: ''
-                        },
-                        {
-                            extend: 'excel',
-                            text: "<i class='fa fa-file-excel'></i>&nbsp;Excel&nbsp;",
-                            title: `${year}-${month}-ReportZinc`,
-                            customize: function (xlsx) {
-                                var sheet = xlsx.xl.worksheets['sheet1.xml'];
-                                var numrows = 2;
-                            }
-                        },
-                    ],
-                });
-
-                $('#tblReportZ').loading("stop");
-                $("#BtnSearchZ").html("<i class='fa fa-search'></i>Search");
-            },
-            error: function (e) {
-                console.log("There was an error with your request...");
-                console.log("error: " + JSON.stringify(e));
-            }
-        });
+  function renderZincTable(data, year, month) {
+    if ($.fn.DataTable.isDataTable("#tblReportZ")) {
+      $("#tblReportZ").DataTable().clear().rows.add(data).draw();
+      return;
     }
+
+    $('#tblReportZ').DataTable({
+      scrollCollapse: true,
+      scrollX: true,
+      aaData: data,
+      paging: false,
+      searching: false,
+      bInfo: false,
+      columns: [
+        {
+          data: "sts_Pb",
+          className: "text-center",
+          render: function (data) {
+            var value = toZincNumber(data);
+            var cssClass = value > 0.030 ? "zinc-badge zinc-value-alert" : "zinc-value-ok";
+            return '<span class="' + cssClass + '">' + data + '</span>';
+          }
+        },
+        { data: "sts_Al", className: "text-center" },
+        { data: "sts_Cd", className: "text-center" },
+        { data: "sts_Fe", className: "text-center" },
+        { data: "sts_Cu", className: "text-center" },
+        { data: "sts_Zn", className: "text-center" },
+        {
+          data: "Test_result",
+          className: "text-center",
+          render: function (data) {
+            var cssClass = data === "Fail" ? "zinc-badge zinc-badge-fail" : "zinc-badge zinc-badge-pass";
+            return '<span class="' + cssClass + '">' + data + '</span>';
+          }
+        },
+        {
+          data: "Date_rec.date",
+          className: "text-center",
+          render: function (data) {
+            return formatZincDate(data);
+          }
+        },
+        {
+          data: "Date_test.date",
+          className: "text-center",
+          render: function (data) {
+            return formatZincDate(data);
+          }
+        },
+        { data: "LeadTime", className: "text-center" },
+        { data: "remark", className: "text-center" }
+      ],
+      dom: "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+        "<'row'<'col-md-12'tr>>" +
+        "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+      buttons: [
+        {
+          extend: 'print',
+          text: "<i class='fa fa-print'></i>&nbsp;Print",
+          title: ''
+        },
+        {
+          extend: 'excel',
+          text: "<i class='fa fa-file-excel'></i>&nbsp;Excel&nbsp;",
+          title: year + "-" + month + "-ReportZinc"
+        }
+      ]
+    });
+  }
+
+  function ReportAllSearch(type) {
+    var month = $("#selMonth").val();
+    var month2 = $("#selMonth2").val();
+    var year = $("#selYear").val();
+
+    if (month == null || month2 == null || year == null) {
+      var d = new Date();
+      month = d.getMonth() + 1;
+      month2 = d.getMonth() + 1;
+      year = d.getFullYear();
+    }
+
+    setDateRange(type, year, month, month2);
+
+    $.ajax({
+      type: 'POST',
+      url: "././module/APP_Qc_TestLab/data.php",
+      dataType: 'json',
+      beforeSend: function () {
+        $("#BtnSearchZ").prop("disabled", true).html("<i class='fa fa-spinner fa-spin'></i>&nbsp;Loading");
+      },
+      data: {
+        load: "ReportZinc",
+        y: year,
+        month: month,
+        month2: month2
+      },
+      success: function (data) {
+        data = data || [];
+
+        var pass = data.filter(function (item) { return item.Test_result == "Pass"; });
+        var fail = data.filter(function (item) { return item.Test_result == "Fail"; });
+        var leadOne = data.filter(function (item) { return item.LeadTime == 1; });
+        var leadTwo = data.filter(function (item) { return item.LeadTime == 2; });
+        var leadThree = data.filter(function (item) { return item.LeadTime == 3; });
+        var resultTotal = pass.length + fail.length;
+
+        $("#pass").html(getPercentage(pass.length, resultTotal));
+        $("#fail").html(getPercentage(fail.length, resultTotal));
+        $("#countZ").html(data.length);
+        $("#records").html(data.length);
+
+        renderZincCharts(pass.length, fail.length, leadOne.length, leadTwo.length, leadThree.length);
+        renderZincTable(data, year, month);
+
+        $("#BtnSearchZ").prop("disabled", false).html("<i class='fa fa-search'></i>&nbsp;Search");
+      },
+      error: function (e) {
+        console.log("There was an error with your request...");
+        console.log("error: " + JSON.stringify(e));
+        $("#BtnSearchZ").prop("disabled", false).html("<i class='fa fa-search'></i>&nbsp;Search");
+      }
+    });
+  }
 </script>

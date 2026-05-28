@@ -1,50 +1,139 @@
 <style>
-#Pass::placeholder {
-    color: red;
-    opacity: 1;
-  }
+    .tag-status-gate {
+        min-height: 220px;
+    }
+
+    .tag-status-password-modal .tag-password-field {
+        margin-top: 4px;
+    }
+
+    .tag-status-password-modal .tag-password-field label {
+        color: #60717d;
+        display: block;
+        font-size: 12px;
+        font-weight: 700;
+        margin-bottom: 6px;
+    }
+
+    .tag-status-password-modal .form-control {
+        border-color: #cfd9df;
+        border-radius: 4px;
+        box-shadow: none;
+        height: 38px;
+    }
+
+    .tag-status-password-modal .form-control:focus {
+        border-color: #19767b;
+        box-shadow: 0 0 0 2px rgba(25, 118, 123, 0.14);
+    }
+
+    .tag-status-password-modal .tag-password-error {
+        color: #d33724;
+        display: none;
+        font-size: 12px;
+        font-weight: 700;
+        margin-top: 8px;
+    }
+
+    .tag-status-open-btn {
+        background: #19767b;
+        border-color: #145f63;
+        font-weight: 700;
+    }
+
+    .tag-status-open-btn:hover,
+    .tag-status-open-btn:focus {
+        background: #145f63;
+        border-color: #104f52;
+    }
 </style>
 
-</div>
-    <div id="page_TagStatus">
-</div>
+<div id="page_TagStatus" class="tag-status-gate"></div>
+
 <script type="text/javascript">
-    
     $(document).ready(function () {
-        pageHtml = "page_TagStatus";
-        if (pageHtml == "page_TagStatus"){
-            $.confirm({
-                title: 'กรุณาใส่ Password',
-                theme: 'modern',
-                content: '<input placeholder="" type="password" id="Pass" class="form-control" name="Pass" autofocus>',
-                buttons: {
-                    confirm: function checked() {
-                        var Pass = $("#Pass").val();
-                        // console.log('P ',Pass);
-                        if (Pass == 1107){
-                            Url = "././module/REPORT_TagStatus/render.php"
-                            $("#page_TagStatus").load(Url, {"pageHtml": pageHtml}, function (response, status, xhr) {
-                                if (status == "error") {
-                                    var msg = "Sorry, error: ";
-                                    $.alert(msg + xhr.status + " " + xhr.statusText);
-                                } else {
-                                    $("#page_TagStatus").loading("stop");
-                                }
-                            });
-                        }else{
-                            $('#Pass').attr('placeholder','Password ไม่ถูกต้อง');
-                            $("#Pass").val('');
-                            return false;
-                        }
-                    }, 
-                    cancel: function close() {
-                        window.close()
-                    }
+        var pageHtml = "page_TagStatus";
+        var reportUrl = "././module/REPORT_TagStatus/render.php";
+        var validPassword = "1107";
+        var $reportPage = $("#page_TagStatus");
+
+        function setLoading(isLoading) {
+            if ($.isFunction($reportPage.loading)) {
+                if (isLoading) {
+                    $reportPage.loading();
+                } else {
+                    $reportPage.loading("stop");
                 }
+            }
+        }
+
+        function loadTagStatusPage(dialog) {
+            setLoading(true);
+
+            $reportPage.load(reportUrl, {"pageHtml": pageHtml}, function (response, status, xhr) {
+                setLoading(false);
+
+                if (status == "error") {
+                    $.alert("Sorry, error: " + xhr.status + " " + xhr.statusText);
+                    return;
+                }
+
+                dialog.close();
             });
         }
+
+        $.confirm({
+            title: "กรุณาใส่ Password",
+            theme: "modern",
+            boxWidth: "360px",
+            useBootstrap: false,
+            content: '' +
+                '<div class="tag-status-password-modal">' +
+                '<div class="tag-password-field">' +
+                    '<label for="Pass">Password</label>' +
+                    '<input placeholder="กรุณาใส่ Password" type="password" id="Pass" class="form-control" name="Pass" autocomplete="current-password">' +
+                    '<div class="tag-password-error">Password ไม่ถูกต้อง</div>' +
+                '</div>' +
+                '</div>',
+            buttons: {
+                confirm: {
+                    text: "เปิดรายงาน",
+                    btnClass: "btn-primary tag-status-open-btn",
+                    action: function () {
+                        var pass = $.trim(this.$content.find("#Pass").val());
+                        var $input = this.$content.find("#Pass");
+                        var $error = this.$content.find(".tag-password-error");
+
+                        if (pass === validPassword) {
+                            $error.hide();
+                            this.$$confirm.prop("disabled", true).text("กำลังเปิด...");
+                            loadTagStatusPage(this);
+                        } else {
+                            $error.show();
+                            $input.val("").focus();
+                        }
+
+                        return false;
+                    }
+                },
+                cancel: {
+                    text: "ยกเลิก",
+                    action: function () {
+                        window.close();
+                    }
+                }
+            },
+            onContentReady: function () {
+                var dialog = this;
+                var $input = this.$content.find("#Pass");
+
+                $input.focus();
+                $input.on("keydown", function (event) {
+                    if (event.which === 13) {
+                        dialog.$$confirm.trigger("click");
+                    }
+                });
+            }
+        });
     });
-
-    </script>
-
-    
+</script>
