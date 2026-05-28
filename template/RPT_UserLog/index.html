@@ -1,105 +1,518 @@
-<div class='row' >
-    <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12" style="font-size:18px;">
-        <b>Log User</b> 
+<style>
+    .userlog-page {
+        color: #1f2933;
+    }
+
+    .userlog-titlebar {
+        background: #12212f;
+        color: #fff;
+        padding: 16px 18px;
+        border-left: 6px solid #f2b84b;
+        margin-bottom: 12px;
+    }
+
+    .userlog-titlebar h3 {
+        margin: 0;
+        font-weight: 700;
+        letter-spacing: 0;
+    }
+
+    .userlog-titlebar small {
+        color: #d7e0ea;
+    }
+
+    .userlog-filter,
+    .userlog-panel,
+    .userlog-kpi {
+        background: #fff;
+        border: 1px solid #d9e2ec;
+        border-radius: 6px;
+        box-shadow: 0 1px 2px rgba(15, 23, 42, .07);
+    }
+
+    .userlog-filter {
+        padding: 14px;
+        margin-bottom: 12px;
+    }
+
+    .userlog-filter .form-group {
+        margin-bottom: 8px;
+    }
+
+    .userlog-kpi {
+        min-height: 98px;
+        padding: 14px;
+        margin-bottom: 12px;
+        border-top: 4px solid #3a6ea5;
+    }
+
+    .userlog-kpi.kpi-warn {
+        border-top-color: #d97706;
+    }
+
+    .userlog-kpi.kpi-danger {
+        border-top-color: #b91c1c;
+    }
+
+    .userlog-kpi.kpi-good {
+        border-top-color: #047857;
+    }
+
+    .userlog-kpi-label {
+        color: #627386;
+        font-size: 12px;
+        text-transform: uppercase;
+        font-weight: 700;
+    }
+
+    .userlog-kpi-value {
+        font-size: 28px;
+        font-weight: 800;
+        line-height: 1.25;
+        color: #102a43;
+        word-break: break-word;
+    }
+
+    .userlog-panel {
+        padding: 12px;
+        margin-bottom: 12px;
+    }
+
+    .userlog-panel h4 {
+        margin: 0 0 10px;
+        font-weight: 700;
+        color: #243b53;
+    }
+
+    .userlog-bar-row {
+        display: table;
+        table-layout: fixed;
+        width: 100%;
+        margin-bottom: 7px;
+        font-size: 12px;
+    }
+
+    .userlog-bar-label,
+    .userlog-bar-track,
+    .userlog-bar-count {
+        display: table-cell;
+        vertical-align: middle;
+    }
+
+    .userlog-bar-label {
+        width: 38%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        color: #334e68;
+    }
+
+    .userlog-bar-count {
+        width: 48px;
+        text-align: right;
+        font-weight: 700;
+        color: #102a43;
+    }
+
+    .userlog-bar-track {
+        height: 12px;
+        background: #e6edf3;
+        border-radius: 2px;
+    }
+
+    .userlog-bar-fill {
+        display: block;
+        height: 12px;
+        min-width: 2px;
+        background: #3a6ea5;
+        border-radius: 2px;
+    }
+
+    .userlog-table-wrap {
+        width: 100%;
+        overflow-x: auto;
+        border: 1px solid #d9e2ec;
+        border-radius: 6px;
+    }
+
+    #tblUserLog {
+        margin-bottom: 0;
+        min-width: 980px;
+    }
+
+    #tblUserLog th {
+        background: #eef4f8;
+        color: #102a43;
+        white-space: nowrap;
+    }
+
+    #tblUserLog td {
+        vertical-align: middle;
+    }
+
+    .userlog-path {
+        max-width: 520px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .status-pill {
+        display: inline-block;
+        min-width: 48px;
+        padding: 3px 8px;
+        border-radius: 4px;
+        color: #fff;
+        text-align: center;
+        font-weight: 700;
+    }
+
+    .status-2 {
+        background: #047857;
+    }
+
+    .status-3 {
+        background: #3a6ea5;
+    }
+
+    .status-4 {
+        background: #d97706;
+    }
+
+    .status-5 {
+        background: #b91c1c;
+    }
+
+    .status-x {
+        background: #627386;
+    }
+
+    .userlog-empty {
+        padding: 18px;
+        color: #627386;
+        text-align: center;
+    }
+
+    .userlog-meta {
+        color: #627386;
+        font-size: 12px;
+        margin-top: 6px;
+    }
+</style>
+
+<div class="userlog-page">
+    <div class="userlog-titlebar">
+        <h3><i class="fa fa-file-text-o"></i> User Access Log Report</h3>
+        <small id="lblSource">Source: file:///C:/Apache/Apache24/logs/access.log</small>
+    </div>
+
+    <div class="userlog-filter">
+        <div class="row">
+            <div class="col-xs-12 col-sm-6 col-md-2">
+                <div class="form-group">
+                    <label>From Date</label>
+                    <input type="text" class="form-control input-sm" id="txtFromDate" autocomplete="off" placeholder="yyyy-mm-dd">
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-2">
+                <div class="form-group">
+                    <label>To Date</label>
+                    <input type="text" class="form-control input-sm" id="txtToDate" autocomplete="off" placeholder="yyyy-mm-dd">
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-2">
+                <div class="form-group">
+                    <label>Method</label>
+                    <select class="form-control input-sm" id="selMethod">
+                        <option value="">All</option>
+                        <option value="GET">GET</option>
+                        <option value="POST">POST</option>
+                        <option value="PUT">PUT</option>
+                        <option value="DELETE">DELETE</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-2">
+                <div class="form-group">
+                    <label>Status</label>
+                    <input type="text" class="form-control input-sm" id="txtStatus" placeholder="200, 404">
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-3">
+                <div class="form-group">
+                    <label>IP / Path</label>
+                    <input type="text" class="form-control input-sm" id="txtKeyword" placeholder="/module/..., ::1">
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-1">
+                <div class="form-group">
+                    <label>Rows</label>
+                    <input type="number" class="form-control input-sm" id="txtLimit" value="500" min="50" max="3000">
+                </div>
+            </div>
+        </div>
+        <div class="text-right">
+            <button type="button" class="btn btn-default btn-sm" id="btnClear"><i class="fa fa-eraser"></i> Clear</button>
+            <button type="button" class="btn btn-primary btn-sm" id="btnSearch"><i class="fa fa-search"></i> Search</button>
+        </div>
+        <div class="userlog-meta" id="lblMeta"></div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-3">
+            <div class="userlog-kpi kpi-good">
+                <div class="userlog-kpi-label">Total Requests</div>
+                <div class="userlog-kpi-value" id="kpiTotal">0</div>
+                <div class="userlog-meta" id="kpiMatched">matched rows</div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-3">
+            <div class="userlog-kpi">
+                <div class="userlog-kpi-label">Unique IP</div>
+                <div class="userlog-kpi-value" id="kpiIp">0</div>
+                <div class="userlog-meta">client address count</div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-3">
+            <div class="userlog-kpi kpi-warn">
+                <div class="userlog-kpi-label">404 Not Found</div>
+                <div class="userlog-kpi-value" id="kpi404">0</div>
+                <div class="userlog-meta">missing files/routes</div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-3">
+            <div class="userlog-kpi kpi-danger">
+                <div class="userlog-kpi-label">Server Error</div>
+                <div class="userlog-kpi-value" id="kpi500">0</div>
+                <div class="userlog-meta" id="kpiLatest">latest request</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12 col-md-4">
+            <div class="userlog-panel">
+                <h4>Status Code</h4>
+                <div id="chartStatus"></div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-md-4">
+            <div class="userlog-panel">
+                <h4>HTTP Method</h4>
+                <div id="chartMethod"></div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-md-4">
+            <div class="userlog-panel">
+                <h4>Top Paths</h4>
+                <div id="chartPath"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="userlog-panel">
+        <h4>Request Timeline</h4>
+        <div id="chartHourly"></div>
+    </div>
+
+    <div class="userlog-panel">
+        <h4>Latest Log Entries</h4>
+        <div class="userlog-table-wrap">
+            <table class="table table-condensed table-bordered table-hover" id="tblUserLog">
+                <thead>
+                    <tr>
+                        <th>Date Time</th>
+                        <th>IP</th>
+                        <th>Method</th>
+                        <th>Path</th>
+                        <th>Protocol</th>
+                        <th>Status</th>
+                        <th>Bytes</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
     </div>
 </div>
-<div class="row" id="divReport">
-    <table class="table table-condensed table-bordered table-striped" id="tblReport">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>date</th>
-                <th>time</th>
-                <th>project</th>
-                <th>User id</th>
-                <th>username</th>
-                <th>Full name</th>
-                <th>action</th>
-            </tr>
-        </thead>
-    </table>
-</div>
-
 
 <script type="text/javascript">
-    var InitLoading = "<div class='row text-center'><h1><i class='fa fa-spinner fa-spin'></i><h1><h3>loading</h3></div>";
-    var modalBodyId = "#modalBody";
-    var modalId = "#UserModal";
-    var modalHeadId = "#lblModalHead";
-    loadData();
-    function loadData() {
+    $(document).ready(function () {
+        if ($.fn.datepicker) {
+            $("#txtFromDate,#txtToDate").datepicker({
+                dateFormat: "yy-mm-dd"
+            });
+        }
+
+        $("#btnSearch").on("click", function () {
+            loadUserLogReport();
+        });
+
+        $("#btnClear").on("click", function () {
+            $("#txtFromDate,#txtToDate,#txtStatus,#txtKeyword").val("");
+            $("#selMethod").val("");
+            $("#txtLimit").val("500");
+            loadUserLogReport();
+        });
+
+        $(".userlog-filter input").on("keypress", function (e) {
+            if (e.which === 13) {
+                loadUserLogReport();
+                return false;
+            }
+        });
+
+        loadUserLogReport();
+    });
+
+    function loadUserLogReport() {
+        $("#btnSearch").prop("disabled", true).html('<i class="fa fa-spinner fa-spin"></i> Loading');
+        $("#lblMeta").text("Reading access.log...");
 
         $.ajax({
-            type: 'GET',
-            url: "././module/RPT_LogUser/data.php",
-            contentType: "text/plain",
-            dataType: 'json',
-            beforeSend: function () {
-                $("#btnSearch").html("<i class='fa fa-spinner fa-spin'>");
-            },
+            url: "././module/RPT_UserLog/data.php",
+            type: "GET",
+            dataType: "json",
             data: {
-                load: 'GetUserAll',
-//                txtCerDate: txtCerDate,
+                load: "report",
+                from_date: $("#txtFromDate").val(),
+                to_date: $("#txtToDate").val(),
+                method: $("#selMethod").val(),
+                status: $("#txtStatus").val(),
+                keyword: $("#txtKeyword").val(),
+                limit: $("#txtLimit").val()
             },
-            success: function (data) {
-                console.log(data)
-                $("#tblReportList").DataTable().clear();
-                $('#tblReport').dataTable({
-                    "order": [[ 0, "desc" ]],
-                    fixedHeader: true,
-                    "aaData": data,
-//                    "pageLength": 25,
-                    "columns": [
-                        {"data": "id"},
-                        {
-                            "data": function (data, type, dataToSet) {
-                                var date_format = data.date_time.date.toString().substring(0, 10);
-                                return date_format;
-                            }
-                        },
-                        {
-                            "data": function (data, type, dataToSet) {
-                                var date_format = data.date_time.date.toString().substring(11, 19);
-                                return date_format;
-                            }
-                        },
-                        {
-                            "data": function (data, type, dataToSet) {
+            success: function (res) {
+                if (!res || !res.success) {
+                    showUserLogError(res && res.message ? res.message : "Cannot load report");
+                    return;
+                }
 
-                                return data.prj_name + "[" + data.prj_description + "]";
-                            }
-                        },
-                        {"data": "user_id"},
-                        {"data": "username"},
-                        {"data": "fullname"},
-                        {"data": "log_action"},
-                    ],
-                    'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
-                            "<'row'<'col-md-12'tr>>" +
-                            "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
-                    buttons: [
-                        {
-                            extend: 'print',
-                            text: "<i class='fa fa-print'></i>&nbsp;Print",
-                            title: ''
-                        },
-                        {
-                            extend: 'excel',
-                            text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
-                            title: ''
-                        },
-                    ]
-                });
-
-                $('#tblReport').loading("stop");
-
+                renderUserLogReport(res);
             },
-            error: function (e) {
-                console.log("There was an error with your request...");
-                console.log("error: " + JSON.stringify(e));
+            error: function (xhr) {
+                showUserLogError("Request failed: " + xhr.status + " " + xhr.statusText);
+            },
+            complete: function () {
+                $("#btnSearch").prop("disabled", false).html('<i class="fa fa-search"></i> Search');
             }
         });
     }
 
+    function renderUserLogReport(res) {
+        var summary = res.summary || {};
 
+        $("#lblSource").text("Source: file:///" + (res.source || "").replace(/\\/g, "/"));
+        $("#lblMeta").text("Scanned " + formatNumber(res.scanned || 0) + " lines, matched " + formatNumber(res.matched || 0) + " requests, showing latest " + formatNumber((res.rows || []).length) + " rows.");
+        $("#kpiTotal").text(formatNumber(summary.total || 0));
+        $("#kpiMatched").text(formatBytes(summary.bytes || 0) + " transferred");
+        $("#kpiIp").text(formatNumber(summary.unique_ip || 0));
+        $("#kpi404").text(formatNumber(summary.not_found || 0));
+        $("#kpi500").text(formatNumber(summary.server_error || 0));
+        $("#kpiLatest").text(summary.latest_time ? "latest: " + summary.latest_time : "latest request");
+
+        renderBars("#chartStatus", res.status || [], "status");
+        renderBars("#chartMethod", res.methods || [], "method");
+        renderBars("#chartPath", res.top_paths || [], "path");
+        renderBars("#chartHourly", res.hourly || [], "hour");
+        renderTable(res.rows || []);
+    }
+
+    function renderBars(target, rows, labelKey) {
+        var $target = $(target);
+        var maxCount = 0;
+        var html = "";
+
+        $.each(rows, function (_, row) {
+            if (row.count > maxCount) {
+                maxCount = row.count;
+            }
+        });
+
+        if (!rows.length) {
+            $target.html('<div class="userlog-empty">No data</div>');
+            return;
+        }
+
+        $.each(rows, function (_, row) {
+            var percent = maxCount > 0 ? Math.max(2, Math.round((row.count / maxCount) * 100)) : 0;
+            html += '<div class="userlog-bar-row">';
+            html += '<div class="userlog-bar-label" title="' + escapeHtml(row[labelKey]) + '">' + escapeHtml(row[labelKey]) + '</div>';
+            html += '<div class="userlog-bar-track"><span class="userlog-bar-fill" style="width:' + percent + '%"></span></div>';
+            html += '<div class="userlog-bar-count">' + formatNumber(row.count) + '</div>';
+            html += '</div>';
+        });
+
+        $target.html(html);
+    }
+
+    function renderTable(rows) {
+        var html = "";
+
+        if (!rows.length) {
+            $("#tblUserLog tbody").html('<tr><td colspan="7" class="userlog-empty">No log entries found</td></tr>');
+            return;
+        }
+
+        $.each(rows, function (_, row) {
+            html += "<tr>";
+            html += "<td>" + escapeHtml(row.datetime) + "</td>";
+            html += "<td>" + escapeHtml(row.ip) + "</td>";
+            html += "<td><strong>" + escapeHtml(row.method) + "</strong></td>";
+            html += '<td><div class="userlog-path" title="' + escapeHtml(row.path) + '">' + escapeHtml(row.path) + "</div></td>";
+            html += "<td>" + escapeHtml(row.protocol) + "</td>";
+            html += '<td><span class="status-pill ' + getStatusClass(row.status) + '">' + escapeHtml(row.status) + "</span></td>";
+            html += '<td class="text-right">' + formatNumber(row.bytes || 0) + "</td>";
+            html += "</tr>";
+        });
+
+        $("#tblUserLog tbody").html(html);
+    }
+
+    function showUserLogError(message) {
+        $("#lblMeta").html('<span class="text-danger">' + escapeHtml(message) + "</span>");
+        $("#kpiTotal,#kpiIp,#kpi404,#kpi500").text("0");
+        $("#chartStatus,#chartMethod,#chartPath,#chartHourly").html('<div class="userlog-empty">' + escapeHtml(message) + "</div>");
+        $("#tblUserLog tbody").html('<tr><td colspan="7" class="userlog-empty">' + escapeHtml(message) + "</td></tr>");
+    }
+
+    function getStatusClass(status) {
+        var code = parseInt(status, 10);
+        if (code >= 200 && code < 300) {
+            return "status-2";
+        }
+        if (code >= 300 && code < 400) {
+            return "status-3";
+        }
+        if (code >= 400 && code < 500) {
+            return "status-4";
+        }
+        if (code >= 500) {
+            return "status-5";
+        }
+        return "status-x";
+    }
+
+    function formatNumber(value) {
+        value = parseInt(value || 0, 10);
+        return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+
+    function formatBytes(bytes) {
+        bytes = parseInt(bytes || 0, 10);
+        if (bytes >= 1073741824) {
+            return (bytes / 1073741824).toFixed(2) + " GB";
+        }
+        if (bytes >= 1048576) {
+            return (bytes / 1048576).toFixed(2) + " MB";
+        }
+        if (bytes >= 1024) {
+            return (bytes / 1024).toFixed(2) + " KB";
+        }
+        return bytes + " B";
+    }
+
+    function escapeHtml(value) {
+        return $("<div/>").text(value === null || value === undefined ? "" : value).html();
+    }
 </script>
