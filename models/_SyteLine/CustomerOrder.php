@@ -159,4 +159,30 @@ WHERE LEFT(cust_num,2) = 'TT' AND item ='$item'";
         return ['status' => 'success'];
     }
 
+    function GetExBookCont() {
+        $query = "SELECT endUser, port, no_cont40, no_cont45 FROM dbo.STS_EX_book_cont";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+
+    function SaveExBookCont($endUser, $port, $no_cont40, $no_cont45) {
+        $no_cont40 = ($no_cont40 === '') ? null : intval($no_cont40);
+        $no_cont45 = ($no_cont45 === '') ? null : intval($no_cont45);
+
+        $query = "MERGE dbo.STS_EX_book_cont AS target
+USING (SELECT ? AS endUser, ? AS port) AS source
+ON target.endUser = source.endUser AND target.port = source.port
+WHEN MATCHED THEN
+    UPDATE SET no_cont40 = ?, no_cont45 = ?, updatedate = GETDATE()
+WHEN NOT MATCHED THEN
+    INSERT (endUser, port, no_cont40, no_cont45, updatedate)
+    VALUES (?, ?, ?, ?, GETDATE());";
+        $params = array($endUser, $port, $no_cont40, $no_cont45, $endUser, $port, $no_cont40, $no_cont45);
+        $cSql = new SqlSrv();
+        $cSql->SqlQuery2($this->StrConn, $query, $params);
+        return array('status' => 'success');
+    }
+
 }

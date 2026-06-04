@@ -153,6 +153,7 @@
                             <thead>
                                 <tr>
                                     <th>End User</th>
+                                    <th>Transport</th>
                                     <th>STS PO</th>
                                     <th>Cust PO</th>
                                     <th>Port</th>
@@ -176,6 +177,7 @@
                             <thead>
                                 <tr>
                                     <th>End User</th>
+                                    <th>Transport</th>
                                     <th>Port</th>
                                     <th>Balance BDL</th>
                                     <th>Balance MT</th>
@@ -327,6 +329,7 @@
             if (!groups[key]) {
                 groups[key] = {
                     endUserList: [],
+                    Uf_transport_type: [],
                     sts_po: stsPO,
                     custPOList: [],
                     portList: [],
@@ -339,6 +342,7 @@
             }
 
             groups[key].endUserList.push(row.endUser);
+            groups[key].Uf_transport_type.push(row.Uf_transport_type);
             groups[key].custPOList.push(getTextBeforeSlash(row.cust_po));
             groups[key].portList.push(row.Port);
             groups[key].balanceBDL += parseReportNumber(row.balanceBDL);
@@ -352,6 +356,7 @@
         $.each(groups, function (key, group) {
             summary.push({
                 endUser: getUniqueText(group.endUserList),
+                Uf_transport_type: getUniqueText(group.Uf_transport_type),
                 sts_po: group.sts_po,
                 cust_po: getUniqueText(group.custPOList),
                 Port: getUniqueText(group.portList),
@@ -370,12 +375,14 @@
         var groups = {};
         $.each(data || [], function (i, row) {
             var endUser = row.endUser || '';
+            var Uf_transport_type = row.Uf_transport_type || '';
             var port = row.Port || '';
             var key = endUser + '|' + port;
 
             if (!groups[key]) {
                 groups[key] = {
                     endUser: endUser,
+                    Uf_transport_type: Uf_transport_type,
                     Port: port,
                     balanceBDL: 0,
                     balanceMT: 0,
@@ -480,6 +487,7 @@
             select: false,
             columns: [
                 { "data": "endUser" },
+                { "data": "Uf_transport_type" },
                 { "data": "sts_po" },
                 { "data": "cust_po" },
                 { "data": "Port" },
@@ -518,6 +526,7 @@
             buildSummaryByEndUserPort(data),
             [
                 { "data": "endUser" },
+                { "data": "Uf_transport_type" },
                 { "data": "Port" },
                 { "data": "balanceBDL" },
                 {

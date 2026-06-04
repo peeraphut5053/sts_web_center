@@ -1,0 +1,380 @@
+<style>
+  .enduser-report .col-search {
+    padding-left: 3px;
+    padding-right: 3px;
+  }
+
+  .enduser-report .table thead th {
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .enduser-report .col-flt-page {
+    padding-top: 10px;
+    font-weight: bold;
+  }
+
+  .enduser-report table.dataTable.fixedHeader-floating,
+  .enduser-report table.dataTable.fixedHeader-locked {
+    background-color: white;
+    margin-top: 50px !important;
+    margin-bottom: 0 !important;
+  }
+
+  .enduser-report .report-title {
+    font-weight: bold;
+    font-size: 20px;
+    margin: 10px 0 15px;
+  }
+
+  .enduser-report .summary-box {
+    margin-top: 12px;
+  }
+
+  .enduser-report .item-center {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .enduser-report .txt-book-cont {
+    min-width: 70px;
+    text-align: center;
+  }
+</style>
+
+<div class="enduser-report">
+  <div class="row">
+    <h4 class="report-title text-center">Summary by End User and Port</h4>
+  </div>
+
+  <div class="row item-center">
+    <div class="col-lg-2 col-md-3 col-sm-6 col-xs-6 col-search">
+      <div class="input-group">
+        <div class="input-group-addon">Job</div>
+        <input type="text" class="form-control txt-filter" id="job_enduser" autocomplete="off">
+      </div>
+    </div>
+    <div class="col-lg-2 col-md-3 col-sm-6 col-xs-6 col-search">
+      <div class="input-group">
+        <div class="input-group-addon">CO</div>
+        <input type="text" class="form-control txt-filter" id="co_enduser" autocomplete="off">
+      </div>
+    </div>
+    <div class="col-lg-2 col-md-3 col-sm-6 col-xs-6 col-search">
+      <div class="input-group">
+        <div class="input-group-addon">STS PO</div>
+        <input type="text" class="form-control txt-filter" id="stsPO_enduser" autocomplete="off">
+      </div>
+    </div>
+    <div class="col-lg-2 col-md-3 col-sm-6 col-xs-6 col-search">
+      <div class="input-group">
+        <div class="input-group-addon">Cust PO</div>
+        <input type="text" class="form-control txt-filter" id="custpo_enduser" autocomplete="off">
+      </div>
+    </div>
+    <div class="col-lg-2 col-md-3 col-sm-6 col-xs-6 col-search">
+      <div class="input-group">
+        <div class="input-group-addon">Order Date</div>
+        <input type="text" class="form-control txt-filter" id="orderdate_enduser" autocomplete="off">
+      </div>
+    </div>
+    <div class="col-lg-1 col-md-2 col-sm-6 col-xs-6 col-search">
+      <button id="btnSearchEndUserPort" class="btn btn-info">
+        <i class="fa fa-search"></i>&nbsp; Search
+      </button>
+    </div>
+  </div>
+
+  <div class="row summary-box">
+    <div class="col-lg-2 col-md-3 col-sm-6 col-xs-6 col-search">
+      <div class="input-group">
+        <div class="input-group-addon">Item</div>
+        <input type="text" class="form-control txt-filter" id="item_enduser" autocomplete="off">
+      </div>
+    </div>
+  </div>
+
+  <div class="row summary-box">
+    <table class="table table-condensed table-bordered table-striped" id="tblEndUserPortReport" style="width:100%;">
+      <thead>
+        <tr>
+          <th class="bg-gray">End User</th>
+          <th class="bg-gray">Transport</th>
+          <th class="bg-gray">Port</th>
+          <th class="bg-gray">Balance BDL</th>
+          <th class="bg-gray">Balance MT</th>
+          <th class="bg-gray">Ready Bundle</th>
+          <th class="bg-gray">Ready Bundle MT</th>
+          <th class="bg-gray">No Cont 40</th>
+          <th class="bg-gray">No Cont 45</th>
+        </tr>
+      </thead>
+    </table>
+  </div>
+</div>
+
+<script type="text/javascript">
+  $("#orderdate_enduser").datepicker({
+    dateFormat: "yy-mm-dd",
+  });
+
+  $("#btnSearchEndUserPort").click(function () {
+    ReportEndUserPortSearch();
+  });
+
+  function parseEndUserReportNumber(value) {
+    var num = parseFloat((value || 0).toString().replace(/,/g, ""));
+    return isNaN(num) ? 0 : num;
+  }
+
+  function getEndUserPortKey(endUser, port) {
+    return (endUser || "") + "|" + (port || "");
+  }
+
+  function escapeEndUserAttr(value) {
+    return (value || "").toString()
+      .replace(/&/g, "&amp;")
+      .replace(/"/g, "&quot;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
+  }
+
+  function buildBookContMap(data) {
+    var map = {};
+    $.each(data || [], function (i, row) {
+      if (!row || row.endUser === undefined) {
+        return;
+      }
+      map[getEndUserPortKey(row.endUser, row.port)] = {
+        no_cont40: row.no_cont40,
+        no_cont45: row.no_cont45
+      };
+    });
+    return map;
+  }
+
+  function buildEndUserPortSummary(data, bookContMap) {
+    var groups = {};
+    $.each(data || [], function (i, row) {
+      var endUser = row.endUser || "";
+      var transport = row.Uf_transport_type || "";
+      var port = row.Port || "";
+      var key = getEndUserPortKey(endUser, port);
+
+      if (!groups[key]) {
+        var bookCont = bookContMap[key] || {};
+        groups[key] = {
+          endUser: endUser,
+          Uf_transport_type: transport,
+          Port: port,
+          balanceBDL: 0,
+          balanceMT: 0,
+          ReadyBundle: 0,
+          ReadyBundleMT: 0,
+          no_cont40: bookCont.no_cont40,
+          no_cont45: bookCont.no_cont45
+        };
+      }
+
+      groups[key].balanceBDL += parseEndUserReportNumber(row.balanceBDL);
+      groups[key].balanceMT += parseEndUserReportNumber(row.balanceMT);
+      groups[key].ReadyBundle += parseEndUserReportNumber(row.ReadyBundle);
+      groups[key].ReadyBundleMT += parseEndUserReportNumber(row.ReadyBundleMT);
+    });
+
+    var summary = [];
+    $.each(groups, function (key, group) {
+      summary.push(group);
+    });
+
+    return summary;
+  }
+
+  function renderBookContInput(data, type, row, meta, fieldName) {
+    var value = data === null || data === undefined ? "" : data;
+
+    if (type !== "display") {
+      return value;
+    }
+
+    return '<input type="number" min="0" max="255" class="form-control input-sm txt-book-cont" ' +
+      'data-field="' + fieldName + '" ' +
+      'data-end-user="' + escapeEndUserAttr(row.endUser) + '" ' +
+      'data-port="' + escapeEndUserAttr(row.Port) + '" ' +
+      'value="' + escapeEndUserAttr(value) + '">';
+  }
+
+  function renderEndUserPortReport(data, bookContMap) {
+    if ($.fn.DataTable.isDataTable("#tblEndUserPortReport")) {
+      $("#tblEndUserPortReport").DataTable().clear().destroy();
+    }
+
+    $("#tblEndUserPortReport").dataTable({
+      aaData: buildEndUserPortSummary(data, bookContMap || {}),
+      paging: false,
+      fixedHeader: true,
+      destroy: true,
+      processing: true,
+      autoWidth: false,
+      scrollY: "65vh",
+      scrollCollapse: true,
+      scrollX: true,
+      searching: false,
+      info: false,
+      select: false,
+      columns: [
+        { data: "endUser" },
+        { data: "Uf_transport_type" },
+        { data: "Port" },
+        { data: "balanceBDL", className: "text-center" },
+        {
+          data: "balanceMT",
+          className: "text-right",
+          render: function (data, type, row) {
+            return parseEndUserReportNumber(data).toFixed(2);
+          }
+        },
+        { data: "ReadyBundle", className: "text-center" },
+        {
+          data: "ReadyBundleMT",
+          className: "text-right",
+          render: function (data, type, row) {
+            return parseEndUserReportNumber(data).toFixed(2);
+          }
+        },
+        {
+          data: "no_cont40",
+          className: "text-center",
+          render: function (data, type, row, meta) {
+            return renderBookContInput(data, type, row, meta, "no_cont40");
+          }
+        },
+        {
+          data: "no_cont45",
+          className: "text-center",
+          render: function (data, type, row, meta) {
+            return renderBookContInput(data, type, row, meta, "no_cont45");
+          }
+        }
+      ],
+      dom:
+        "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+        "<'row'<'col-md-12'tr>>" +
+        "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+      buttons: [
+        {
+          extend: "print",
+          text: "<i class='fa fa-print'></i>&nbsp;Print",
+          title: "",
+        },
+        {
+          extend: "excel",
+          footer: true,
+          text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+          title: "Report Order Processing End User Port Summary " + moment().format("DD-MM-YYYY HH:mm:ss")
+        },
+      ]
+    });
+  }
+
+  function getBookContList(callback) {
+    $.ajax({
+      type: "GET",
+      url: "././module/RPT_OrderProcessing/data.php",
+      dataType: "json",
+      data: {
+        load: "GetExBookCont"
+      },
+      success: function (data) {
+        callback(buildBookContMap(data));
+      },
+      error: function () {
+        callback({});
+      }
+    });
+  }
+
+  function ReportEndUserPortSearch() {
+    var oldHtml = $("#btnSearchEndUserPort").html();
+    var job = $("#job_enduser").val();
+    var co = $("#co_enduser").val();
+    var stsPO = $("#stsPO_enduser").val();
+    var custpo = $("#custpo_enduser").val();
+    var orderdate = $("#orderdate_enduser").val();
+    var item = $("#item_enduser").val();
+
+    $("#btnSearchEndUserPort").html("<i class='fa fa-spinner fa-spin'></i>");
+    $("#tblEndUserPortReport").loading();
+
+    $.ajax({
+      type: "GET",
+      url: "././module/RPT_OrderProcessing/data.php",
+      dataType: "json",
+      data: {
+        load: "STS_EX_order",
+        job: job,
+        co: co,
+        stsPO: stsPO,
+        custpo: custpo,
+        orderdate: orderdate,
+        item: item
+      },
+      success: function (data) {
+        getBookContList(function (bookContMap) {
+          renderEndUserPortReport(data, bookContMap);
+          $("#tblEndUserPortReport").loading("stop");
+          $("#btnSearchEndUserPort").html(oldHtml);
+        });
+      },
+      error: function (e) {
+        $("#tblEndUserPortReport").loading("stop");
+        $("#btnSearchEndUserPort").html(oldHtml);
+        console.log("There was an error with your request...");
+        console.log("error: " + JSON.stringify(e));
+      },
+    });
+  }
+
+  $(document).on("change", "#tblEndUserPortReport .txt-book-cont", function () {
+    var input = $(this);
+    var tr = input.closest("tr");
+    var noCont40 = tr.find('.txt-book-cont[data-field="no_cont40"]').val();
+    var noCont45 = tr.find('.txt-book-cont[data-field="no_cont45"]').val();
+
+    if ((noCont40 !== "" && (parseInt(noCont40, 10) < 0 || parseInt(noCont40, 10) > 255)) ||
+      (noCont45 !== "" && (parseInt(noCont45, 10) < 0 || parseInt(noCont45, 10) > 255))) {
+      input.css("background-color", "#f8d7da");
+      alert("No Cont ต้องอยู่ระหว่าง 0-255");
+      return false;
+    }
+
+    input.css("background-color", "#fff3cd");
+
+    $.ajax({
+      type: "POST",
+      url: "././module/RPT_OrderProcessing/data.php",
+      dataType: "json",
+      data: {
+        load: "SaveExBookCont",
+        endUser: input.data("end-user"),
+        port: input.data("port"),
+        no_cont40: noCont40,
+        no_cont45: noCont45
+      },
+      success: function (res) {
+        if (res && res.status == "success") {
+          input.css("background-color", "#d4edda");
+          setTimeout(function () {
+            input.css("background-color", "");
+          }, 2000);
+        } else {
+          input.css("background-color", "#f8d7da");
+        }
+      },
+      error: function () {
+        input.css("background-color", "#f8d7da");
+      }
+    });
+  });
+</script>
