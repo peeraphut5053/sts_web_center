@@ -37,6 +37,28 @@
     flex-wrap: wrap;
   }
 
+  .enduser-report .filter-row {
+    align-items: center;
+    gap: 14px;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .enduser-report .filter-field {
+    float: none;
+    width: 280px;
+    max-width: 100%;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .enduser-report .filter-action {
+    float: none;
+    width: auto;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
   .enduser-report .txt-book-cont {
     min-width: 70px;
     text-align: center;
@@ -48,50 +70,47 @@
     <h4 class="report-title text-center">Summary by End User and Port</h4>
   </div>
 
-  <div class="row item-center">
-    <div class="col-lg-2 col-md-3 col-sm-6 col-xs-6 col-search">
+  <div class="row item-center filter-row">
+    <div class="filter-field col-search">
       <div class="input-group">
         <div class="input-group-addon">Job</div>
         <input type="text" class="form-control txt-filter" id="job_enduser" autocomplete="off">
       </div>
     </div>
-    <div class="col-lg-2 col-md-3 col-sm-6 col-xs-6 col-search">
+    <div class="filter-field col-search">
       <div class="input-group">
         <div class="input-group-addon">CO</div>
         <input type="text" class="form-control txt-filter" id="co_enduser" autocomplete="off">
       </div>
     </div>
-    <div class="col-lg-2 col-md-3 col-sm-6 col-xs-6 col-search">
+    <div class="filter-field col-search">
       <div class="input-group">
         <div class="input-group-addon">STS PO</div>
         <input type="text" class="form-control txt-filter" id="stsPO_enduser" autocomplete="off">
       </div>
     </div>
-    <div class="col-lg-2 col-md-3 col-sm-6 col-xs-6 col-search">
+    <div class="filter-field col-search">
       <div class="input-group">
         <div class="input-group-addon">Cust PO</div>
         <input type="text" class="form-control txt-filter" id="custpo_enduser" autocomplete="off">
       </div>
     </div>
-    <div class="col-lg-2 col-md-3 col-sm-6 col-xs-6 col-search">
+    <div class="filter-field col-search">
       <div class="input-group">
         <div class="input-group-addon">Order Date</div>
         <input type="text" class="form-control txt-filter" id="orderdate_enduser" autocomplete="off">
       </div>
     </div>
-    <div class="col-lg-1 col-md-2 col-sm-6 col-xs-6 col-search">
-      <button id="btnSearchEndUserPort" class="btn btn-info">
-        <i class="fa fa-search"></i>&nbsp; Search
-      </button>
-    </div>
-  </div>
-
-  <div class="row summary-box">
-    <div class="col-lg-2 col-md-3 col-sm-6 col-xs-6 col-search">
+    <div class="filter-field col-search">
       <div class="input-group">
         <div class="input-group-addon">Item</div>
         <input type="text" class="form-control txt-filter" id="item_enduser" autocomplete="off">
       </div>
+    </div>
+    <div class="filter-action col-search">
+      <button id="btnSearchEndUserPort" class="btn btn-info">
+        <i class="fa fa-search"></i>&nbsp; Search
+      </button>
     </div>
   </div>
 
