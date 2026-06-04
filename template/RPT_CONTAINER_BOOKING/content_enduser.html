@@ -224,6 +224,14 @@
       'value="' + escapeEndUserAttr(value) + '">';
   }
 
+  function exportEndUserCell(data, row, column, node) {
+    var input = $(node).find("input");
+    if (input.length > 0) {
+      return input.val();
+    }
+    return typeof data === "string" ? data.replace(/<[^>]*>?/gm, "") : data;
+  }
+
   function renderEndUserPortReport(data, bookContMap) {
     if ($.fn.DataTable.isDataTable("#tblEndUserPortReport")) {
       $("#tblEndUserPortReport").DataTable().clear().destroy();
@@ -291,7 +299,12 @@
           extend: "excel",
           footer: true,
           text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
-          title: "Report Order Processing End User Port Summary " + moment().format("DD-MM-YYYY HH:mm:ss")
+          title: "Report Order Processing End User Port Summary " + moment().format("DD-MM-YYYY HH:mm:ss"),
+          exportOptions: {
+            format: {
+              body: exportEndUserCell
+            }
+          }
         },
       ]
     });
@@ -360,12 +373,19 @@
     var tr = input.closest("tr");
     var noCont40 = tr.find('.txt-book-cont[data-field="no_cont40"]').val();
     var noCont45 = tr.find('.txt-book-cont[data-field="no_cont45"]').val();
+    var table = $("#tblEndUserPortReport").DataTable();
+    var rowData = table.row(tr).data();
 
     if ((noCont40 !== "" && (parseInt(noCont40, 10) < 0 || parseInt(noCont40, 10) > 255)) ||
       (noCont45 !== "" && (parseInt(noCont45, 10) < 0 || parseInt(noCont45, 10) > 255))) {
       input.css("background-color", "#f8d7da");
       alert("No Cont ต้องอยู่ระหว่าง 0-255");
       return false;
+    }
+
+    if (rowData) {
+      rowData.no_cont40 = noCont40;
+      rowData.no_cont45 = noCont45;
     }
 
     input.css("background-color", "#fff3cd");
