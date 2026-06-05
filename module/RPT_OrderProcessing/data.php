@@ -34,6 +34,9 @@ if ($load == "ajax") {
 } else if ($load == "STS_EX_order") {
      $STS_EX_order = $OrderProcessing->STS_EX_order($job,$co,$stsPO,$custpo,$orderdate,$item);
     echo json_encode($STS_EX_order);
+} else if ($load == "STS_EX_order_EndUserPort") {
+     $STS_EX_order_EndUserPort = $OrderProcessing->STS_EX_order_EndUserPort($endUser,$transport,$port,$custpo,$orderdate,$item);
+    echo json_encode($STS_EX_order_EndUserPort);
 } else if ($load == "SaveExJob") {
      $rs = $OrderProcessing->SaveExJob($job, $status, $date);
      echo json_encode($rs);

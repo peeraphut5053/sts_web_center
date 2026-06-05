@@ -136,6 +136,20 @@ WHERE LEFT(cust_num,2) = 'TT' AND item ='$item'";
         return $rs0;
     }
 
+    function STS_EX_order_EndUserPort($endUser,$transport,$port,$custpo,$orderdate,$item) {
+        $query = "EXEC [dbo].[STS_EX_order_EndUserPort] 
+	 @endUser  = '$endUser' ,
+	 @transport  = '$transport',
+	 @port = '$port',
+	 @custpo = '$custpo',
+     @item = '$item',
+	 @orderdate = '$orderdate'";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+
     function Customer_report_order($txtStartDate,$txtToDate) {
         $query = "EXEC	STS_CO_report @TransactionDateStarting = N'$txtStartDate',@TransactionDateEnding = N'$txtToDate',@CUSTnumStarting = N'',@CUSTnumEnding = N'' ";
         $cSql = new SqlSrv();
