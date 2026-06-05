@@ -73,20 +73,20 @@
   <div class="row item-center filter-row">
     <div class="filter-field col-search">
       <div class="input-group">
-        <div class="input-group-addon">Job</div>
-        <input type="text" class="form-control txt-filter" id="job_enduser" autocomplete="off">
+        <div class="input-group-addon">End User</div>
+        <input type="text" class="form-control txt-filter" id="endUser_enduser" autocomplete="off">
       </div>
     </div>
     <div class="filter-field col-search">
       <div class="input-group">
-        <div class="input-group-addon">CO</div>
-        <input type="text" class="form-control txt-filter" id="co_enduser" autocomplete="off">
+        <div class="input-group-addon">Transport</div>
+        <input type="text" class="form-control txt-filter" id="transport_enduser" autocomplete="off">
       </div>
     </div>
     <div class="filter-field col-search">
       <div class="input-group">
-        <div class="input-group-addon">STS PO</div>
-        <input type="text" class="form-control txt-filter" id="stsPO_enduser" autocomplete="off">
+        <div class="input-group-addon">Port</div>
+        <input type="text" class="form-control txt-filter" id="port_enduser" autocomplete="off">
       </div>
     </div>
     <div class="filter-field col-search">
@@ -147,67 +147,12 @@
     return isNaN(num) ? 0 : num;
   }
 
-  function getEndUserPortKey(endUser, port) {
-    return (endUser || "") + "|" + (port || "");
-  }
-
   function escapeEndUserAttr(value) {
     return (value || "").toString()
       .replace(/&/g, "&amp;")
       .replace(/"/g, "&quot;")
       .replace(/</g, "&lt;")
       .replace(/>/g, "&gt;");
-  }
-
-  function buildBookContMap(data) {
-    var map = {};
-    $.each(data || [], function (i, row) {
-      if (!row || row.endUser === undefined) {
-        return;
-      }
-      map[getEndUserPortKey(row.endUser, row.port)] = {
-        no_cont40: row.no_cont40,
-        no_cont45: row.no_cont45
-      };
-    });
-    return map;
-  }
-
-  function buildEndUserPortSummary(data, bookContMap) {
-    var groups = {};
-    $.each(data || [], function (i, row) {
-      var endUser = row.endUser || "";
-      var transport = row.Uf_transport_type || "";
-      var port = row.Port || "";
-      var key = getEndUserPortKey(endUser, port);
-
-      if (!groups[key]) {
-        var bookCont = bookContMap[key] || {};
-        groups[key] = {
-          endUser: endUser,
-          Uf_transport_type: transport,
-          Port: port,
-          balanceBDL: 0,
-          balanceMT: 0,
-          ReadyBundle: 0,
-          ReadyBundleMT: 0,
-          no_cont40: bookCont.no_cont40,
-          no_cont45: bookCont.no_cont45
-        };
-      }
-
-      groups[key].balanceBDL += parseEndUserReportNumber(row.balanceBDL);
-      groups[key].balanceMT += parseEndUserReportNumber(row.balanceMT);
-      groups[key].ReadyBundle += parseEndUserReportNumber(row.ReadyBundle);
-      groups[key].ReadyBundleMT += parseEndUserReportNumber(row.ReadyBundleMT);
-    });
-
-    var summary = [];
-    $.each(groups, function (key, group) {
-      summary.push(group);
-    });
-
-    return summary;
   }
 
   function renderBookContInput(data, type, row, meta, fieldName) {
@@ -232,13 +177,13 @@
     return typeof data === "string" ? data.replace(/<[^>]*>?/gm, "") : data;
   }
 
-  function renderEndUserPortReport(data, bookContMap) {
+  function renderEndUserPortReport(data) {
     if ($.fn.DataTable.isDataTable("#tblEndUserPortReport")) {
       $("#tblEndUserPortReport").DataTable().clear().destroy();
     }
 
     $("#tblEndUserPortReport").dataTable({
-      aaData: buildEndUserPortSummary(data, bookContMap || {}),
+      aaData: data,
       paging: false,
       fixedHeader: true,
       destroy: true,
@@ -310,28 +255,11 @@
     });
   }
 
-  function getBookContList(callback) {
-    $.ajax({
-      type: "GET",
-      url: "././module/RPT_OrderProcessing/data.php",
-      dataType: "json",
-      data: {
-        load: "GetExBookCont"
-      },
-      success: function (data) {
-        callback(buildBookContMap(data));
-      },
-      error: function () {
-        callback({});
-      }
-    });
-  }
-
   function ReportEndUserPortSearch() {
     var oldHtml = $("#btnSearchEndUserPort").html();
-    var job = $("#job_enduser").val();
-    var co = $("#co_enduser").val();
-    var stsPO = $("#stsPO_enduser").val();
+    var endUser = $("#endUser_enduser").val();
+    var transport = $("#transport_enduser").val();
+    var port = $("#port_enduser").val();
     var custpo = $("#custpo_enduser").val();
     var orderdate = $("#orderdate_enduser").val();
     var item = $("#item_enduser").val();
@@ -344,20 +272,18 @@
       url: "././module/RPT_OrderProcessing/data.php",
       dataType: "json",
       data: {
-        load: "STS_EX_order",
-        job: job,
-        co: co,
-        stsPO: stsPO,
+        load: "STS_EX_order_EndUserPort",
+        endUser: endUser,
+        transport: transport,
+        port: port,
         custpo: custpo,
         orderdate: orderdate,
         item: item
       },
       success: function (data) {
-        getBookContList(function (bookContMap) {
-          renderEndUserPortReport(data, bookContMap);
-          $("#tblEndUserPortReport").loading("stop");
-          $("#btnSearchEndUserPort").html(oldHtml);
-        });
+        renderEndUserPortReport(data);
+        $("#tblEndUserPortReport").loading("stop");
+        $("#btnSearchEndUserPort").html(oldHtml);
       },
       error: function (e) {
         $("#tblEndUserPortReport").loading("stop");
