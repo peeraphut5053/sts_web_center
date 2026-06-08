@@ -231,6 +231,10 @@
     });
   }
 
+  function formatPOExport(value) {
+    return parsePOList(value).join(", ");
+  }
+
   function getEndUserPortKey(endUser, port) {
     return (endUser || "") + "|" + (port || "");
   }
@@ -239,7 +243,7 @@
     var value = data === null || data === undefined ? "" : data;
 
     if (type !== "display") {
-      return value;
+      return formatPOExport(value);
     }
 
     return '<select multiple class="form-control input-sm txt-po-select" ' +
@@ -254,11 +258,21 @@
     if (input.length > 0) {
       return input.val();
     }
-    var select = $(node).find("select");
-    if (select.length > 0) {
-      return (select.val() || []).join(",");
-    }
     return typeof data === "string" ? data.replace(/<[^>]*>?/gm, "") : data;
+  }
+
+  function syncPOSelectsToRows() {
+    var table = $("#tblEndUserPortReport").DataTable();
+    $("#tblEndUserPortReport tbody tr").each(function () {
+      var tr = $(this);
+      var rowData = table.row(tr).data();
+      if (!rowData) {
+        return;
+      }
+      rowData.po_40 = getPOSelectValue(tr, "po_40");
+      rowData.po_45 = getPOSelectValue(tr, "po_45");
+      rowData.po_bulk = getPOSelectValue(tr, "po_bulk");
+    });
   }
 
   function initPOSelects() {
@@ -461,9 +475,21 @@
           text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
           title: "Report Order Processing End User Port Summary " + moment().format("DD-MM-YYYY HH:mm:ss"),
           exportOptions: {
+            orthogonal: "export",
             format: {
               body: exportEndUserCell
             }
+          },
+          customizeData: function (data) {
+            syncPOSelectsToRows();
+            var table = $("#tblEndUserPortReport").DataTable();
+            var exportRows = table.rows({ search: "applied", order: "applied" }).data().toArray();
+            $.each(data.body || [], function (i, row) {
+              var rowData = exportRows[i] || {};
+              row[8] = formatPOExport(rowData.po_40);
+              row[10] = formatPOExport(rowData.po_45);
+              row[12] = formatPOExport(rowData.po_bulk);
+            });
           }
         },
       ]

@@ -237,6 +237,7 @@ WHEN NOT MATCHED THEN
 FROM (VALUES " . implode(",", $values) . ") AS K(endUser, port)
 INNER JOIN custaddr_mst addr ON addr.city = K.port AND ISNULL(addr.addr##2, addr.name) LIKE K.endUser
 INNER JOIN co_mst co ON co.cust_num = addr.cust_num AND co.cust_seq = addr.cust_seq
+INNER JOIN job_mst job ON job.ord_num = co.co_num AND job.stat <> 'C'
 WHERE co.stat = 'O'
   AND co.co_num LIKE 'EX%'
 ORDER BY K.endUser, K.port, co.co_num";
