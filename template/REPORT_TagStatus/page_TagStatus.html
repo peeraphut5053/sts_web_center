@@ -1,49 +1,154 @@
-<div class="row" style="border-bottom:solid 1px #e8e8e8;">
-    <div style="margin-top: 10px; margin-bottom: 20px;">
+<style>
+    .tag-status-page {
+        color: #263238;
+    }
+
+    .tag-status-header {
+        align-items: center;
+        border-bottom: 1px solid #dfe7ea;
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 14px;
+        padding: 12px 0 16px;
+    }
+
+    .tag-status-header h1 {
+        color: #123c46;
+        font-size: 28px;
+        font-weight: 700;
+        letter-spacing: 0;
+        margin: 0;
+    }
+
+    .tag-status-meta {
+        color: #607d8b;
+        font-size: 12px;
+        font-weight: 700;
+        text-align: right;
+    }
+
+    .tag-status-filter {
+        background: #f7fafb;
+        border: 1px solid #dce7eb;
+        border-radius: 6px;
+        margin-bottom: 14px;
+        padding: 12px 12px 4px;
+    }
+
+    .tag-status-filter .input-group-addon {
+        background: #eef5f6;
+        border-color: #cddde2;
+        color: #2f5963;
+        font-size: 12px;
+        font-weight: 700;
+        min-width: 86px;
+    }
+
+    .tag-status-filter .form-control {
+        border-color: #cddde2;
+        box-shadow: none;
+    }
+
+    .tag-status-filter .form-control:focus {
+        border-color: #16828a;
+        box-shadow: 0 0 0 2px rgba(22, 130, 138, 0.14);
+    }
+
+    .tag-status-search-btn {
+        background: #16757d;
+        border-color: #12636a;
+        border-radius: 4px;
+        font-weight: 700;
+        min-width: 104px;
+    }
+
+    .tag-status-search-btn:hover,
+    .tag-status-search-btn:focus {
+        background: #12636a;
+        border-color: #0d5056;
+    }
+
+    .tag-status-search-btn[disabled] {
+        opacity: 0.72;
+    }
+
+    .tag-status-table-wrap {
+        border: 1px solid #dce7eb;
+        border-radius: 6px;
+        overflow: hidden;
+    }
+
+    .tag-status-page table.dataTable thead th {
+        background: #e8f0f2 !important;
+        color: #27434b;
+        font-size: 14px;
+        font-weight: 800;
+        padding-bottom: 9px;
+        padding-top: 9px;
+        white-space: nowrap;
+    }
+
+    .tag-status-page table.dataTable tbody td {
+        vertical-align: middle;
+        white-space: nowrap;
+    }
+
+    .tag-status-page .input-text-value {
+        border: 1px solid #cddde2;
+        border-radius: 4px;
+        min-height: 28px;
+        padding: 3px 6px;
+    }
+</style>
+
+<div class="tag-status-page">
+<div class="row tag-status-header">
+    <div class="col-sm-8">
         <h1 class="my-header">Tag Status</h1>
     </div>
+    <div class="col-sm-4 tag-status-meta" id="tagStatusResultMeta">Ready</div>
 </div>
 
+<div class="tag-status-filter">
 <div class="row">
-    <div class="col-lg-3 col-md-2 col-sm-2 col-xs-2  col-search">
+    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 col-search">
         <div class="input-group">
             <div class="input-group-addon">Tag id</div>
             <input type="text" class="form-control txt-filter" id="tag_id">
         </div>
     </div>
 
-    <div class="col-lg-3 col-md-2 col-sm-2 col-xs-2  col-search">
+    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 col-search">
         <div class="input-group">
             <div class="input-group-addon">sts no</div>
             <input type="text" class="form-control txt-filter" id="sts_no">
         </div>
     </div>
 
-    <div class="col-lg-3 col-md-2 col-sm-2 col-xs-2  col-search">
+    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 col-search">
         <div class="input-group">
             <div class="input-group-addon">Job</div>
             <input type="text" value="" class="form-control txt-filter" id="job">
         </div>
     </div>
 
-    <div class="col-lg-3 col-md-2 col-sm-2 col-xs-2  col-search">
+    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 col-search">
         <div class="input-group">
             <div class="input-group-addon">item</div>
             <input type="text" class="form-control txt-filter" id="item">
         </div>
     </div>
-
 </div>
 
 <div class="row">
-    <div class="col-lg-3 col-md-2 col-sm-2 col-xs-2  col-search">
+    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 col-search">
         <div class="input-group">
             <div class="input-group-addon">Lot</div>
             <input type="text" class="form-control txt-filter" id="lot">
         </div>
     </div>
 
-    <div class="col-lg-3 col-md-2 col-sm-2 col-xs-2  col-search">
+    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 col-search">
         <div class="input-group">
             <div class="input-group-addon">Status</div>
             <select id="tag_status" class="form-control">
@@ -59,19 +164,22 @@
         </div>
     </div>
 
-    <div class="col-lg-3 col-md-2 col-sm-2 col-xs-2  col-search">
+    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 col-search">
         <div class="input-group">
             <div class="input-group-addon">Date</div>
             <input type="text" class="form-control txt-filter" id="mfg_date">
         </div>
     </div>
 
-    <div class="col-lg-1 col-md-2 col-sm-1 col-xs-6  col-search">
-        <button id="BtnSearchM" class="btn btn-info"><i class="fa fa-search"></i>&nbsp; Search</button>
+    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 col-search">
+        <div class="input-group">
+            <button id="BtnSearchM" class="btn btn-info tag-status-search-btn"><i class="fa fa-search"></i>&nbsp; Search</button>
+        </div>
     </div>
 </div>
+</div>
 
-<div class="row" id="divReportM">
+<div class="row tag-status-table-wrap" id="divReportM">
     <table class="table table-condensed table-bordered table-striped" id="tblReportHidden" hidden>
         <thead>
 
@@ -131,6 +239,7 @@
     </table>
 
 </div>
+</div>
 
 <script type="text/javascript">
 
@@ -141,8 +250,7 @@
     // $("#mfg_date").val(GetToday());
 
     $("#BtnSearchM").click(function () {
-        ReportAllSearchHidden();
-        ReportAllSearchShow();
+        ReportAllSearch();
     });
 
     var select_status = [
@@ -164,6 +272,84 @@
         { id: "Wa", name: "Warehouse" },
         { id: "Ot", name: "Other" }
     ]
+
+    function getSearchFilters() {
+        return {
+            "load": "SearchTagStatus",
+            "tag_id": $("#tag_id").val(),
+            "sts_no": $("#sts_no").val(),
+            "job": $("#job").val(),
+            "item": $("#item").val(),
+            "lot": $("#lot").val(),
+            "tag_status": $("#tag_status").val(),
+            "mfg_date": $("#mfg_date").val()
+        };
+    }
+
+    function hasSearchFilter(filters) {
+        return filters.tag_id != "" || filters.sts_no != "" || filters.job != "" || filters.item != "" || filters.lot != "" || filters.tag_status != "" || filters.mfg_date != "";
+    }
+
+    function setSearchLoading(isLoading) {
+        if (isLoading) {
+            $("#BtnSearchM").prop("disabled", true).html("<i class='fa fa-spinner fa-spin'></i>&nbsp; Searching");
+            $("#tagStatusResultMeta").text("Searching...");
+        } else {
+            $("#BtnSearchM").prop("disabled", false).html("<i class='fa fa-search'></i>&nbsp; Search");
+        }
+    }
+
+    function destroyDataTable(tableId) {
+        if ($.fn.DataTable.isDataTable(tableId)) {
+            if ($.isFunction($.fn.select2)) {
+                $(tableId).find(".select2-hidden-accessible").select2("destroy");
+            }
+            $(tableId).DataTable().clear().destroy();
+            $(tableId).find("tbody").empty();
+        }
+    }
+
+    function initDateInputs() {
+        $(".input_date_in").not(".hasDatepicker").datepicker({
+            dateFormat: 'yy-mm-dd',
+        });
+    }
+
+    function ReportAllSearch() {
+        var filters = getSearchFilters();
+
+        if (!hasSearchFilter(filters)) {
+            $.alert("เธเธฃเธธเธ“เธฒเธเนเธญเธเธฃเธฒเธขเธฅเธฐเน€เธญเธตเธขเธ”เน€เธเธทเนเธญเธเธฃเธญเธเธเนเธญเธกเธนเธฅ");
+            return;
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: "././module/REPORT_TagStatus/data.php",
+            dataType: 'json',
+            beforeSend: function () {
+                setSearchLoading(true);
+            },
+            data: filters,
+            success: function (data) {
+                var rows = data[0] || [];
+                var issue = data[1] || [];
+                var minor = data[2] || [];
+
+                ReportAllSearchHidden(rows, issue, minor);
+                ReportAllSearchShow(rows, issue, minor);
+                $("#tagStatusResultMeta").text(rows.length + " rows loaded");
+            },
+            error: function (e) {
+                $("#tagStatusResultMeta").text("Search failed");
+                console.log("There was an error with your request...");
+                console.log("error: " + JSON.stringify(e));
+            },
+            complete: function () {
+                setSearchLoading(false);
+            }
+        });
+    }
 
     function changeStatus(id) {
         var content = "";
@@ -193,8 +379,8 @@
                         },
                         success: function (data) {
                             $.alert("เปลี่ยนสถานะเรียบร้อยแล้ว");
-                            $("#tag_status").val(selectedStatus); 4
-                            ReportAllSearchShow();
+                            $("#tag_status").val(selectedStatus);
+                            ReportAllSearch();
 
 
                         },
@@ -209,44 +395,14 @@
         });
     }
 
-    function ReportAllSearchHidden() {
-        var OldHtml = $("#BtnSearchM").html();
-        var tag_id = $("#tag_id").val();
-        var sts_no = $("#sts_no").val();
-        var job = $("#job").val();
-        var item = $("#item").val();
-        var lot = $("#lot").val();
-        var tag_status = $("#tag_status").val();
-        var mfg_date = $("#mfg_date").val();
-        if ((tag_id == "") && (sts_no == "") && (job == "") && (item == "") && (lot == "") && (tag_status == "") && (mfg_date == "")) {
-            $.alert("กรุณาป้อนรายละเอียดเพื่อกรองข้อมูล");
-        } else {
-            $.ajax({
-                type: 'POST',
-                url: "././module/REPORT_TagStatus/data.php",
-                dataType: 'json',
-                beforeSend: function () {
-                    $("#BtnSearchM").html("<i class='fa fa-spinner fa-spin'>");
-                },
-                data: {
-                    "load": "SearchTagStatus",
-                    "tag_id": tag_id,
-                    "sts_no": sts_no,
-                    "job": job,
-                    "item": item,
-                    "lot": lot,
-                    "tag_status": tag_status,
-                    "mfg_date": mfg_date
-                },
-                success: function (data) {
-                    var issue = data[1];
-                    var minor = data[2];
-                    $("#tblReportHidden").dataTable().fnDestroy();
+    function ReportAllSearchHidden(rows, issue, minor) {
+                    destroyDataTable("#tblReportHidden");
                     var table = $('#tblReportHidden').DataTable({
                         scrollY: "60vh",
                         "scrollX": true,
                         scrollCollapse: true,
-                        "aaData": data[0],
+                        deferRender: true,
+                        "aaData": rows,
                         "paging": false,
                         //                        fixedColumns: {
                         //                            leftColumns: 1,
@@ -413,55 +569,16 @@
                     });
 
                     $('#tblReportHidden').loading("stop");
-                    $("#BtnSearchM").html("<i class='fa fa-search'></i>&nbsp; Search");
-                },
-                error: function (e) {
-                    console.log("There was an error with your request...");
-                    console.log("error: " + JSON.stringify(e));
-                }
-            });
-        }
     }
 
-    async function ReportAllSearchShow() {
-        var OldHtml = $("#BtnSearchM").html();
-        var tag_id = $("#tag_id").val();
-        var sts_no = $("#sts_no").val();
-        var job = $("#job").val();
-        var item = $("#item").val();
-        var lot = $("#lot").val();
-        var tag_status = $("#tag_status").val();
-        var mfg_date = $("#mfg_date").val();
-
-        if ((tag_id == "") && (sts_no == "") && (job == "") && (item == "") && (lot == "") && (tag_status == "") && (mfg_date == "")) {
-            // $.alert("กรุณาป้อนรายละเอียดเพื่อกรองข้อมูล");
-        } else {
-            $.ajax({
-                type: 'POST',
-                url: "././module/REPORT_TagStatus/data.php",
-                dataType: 'json',
-                beforeSend: function () {
-                    $("#BtnSearchM").html("<i class='fa fa-spinner fa-spin'>");
-                },
-                data: {
-                    "load": "SearchTagStatus",
-                    "tag_id": tag_id,
-                    "sts_no": sts_no,
-                    "job": job,
-                    "item": item,
-                    "lot": lot,
-                    "tag_status": tag_status,
-                    "mfg_date": mfg_date
-                },
-                success: function (data) {
-                    var issue = data[1];
-                    var minor = data[2];
-                    $("#tblReportShow").dataTable().fnDestroy();
+    function ReportAllSearchShow(rows, issue, minor) {
+                    destroyDataTable("#tblReportShow");
                     var table = $('#tblReportShow').DataTable({
                         scrollY: "60vh",
                         "scrollX": true,
                         scrollCollapse: true,
-                        "aaData": data[0],
+                        deferRender: true,
+                        "aaData": rows,
                         "paging": false,
                         //                        fixedColumns: {
                         //                            leftColumns: 1,
@@ -475,9 +592,6 @@
                                 "className": "text-left",
                                 "render": function (data, type, row, meta) {
                                     let valdata = data ? moment(data).format("YYYY-MM-DD") : "";
-                                    $(`.input_date_in`).datepicker({
-                                        dateFormat: 'yy-mm-dd',
-                                    });
                                     let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value input_date_in' size='20' id=${row.id} onchange="SaveRecordDate('${row.id}',value,'date_in');" value='${(valdata)}' />`;
                                     return ret;
                                 }
@@ -712,17 +826,12 @@
                                 "className": "text-center",
                             }
                         ],
+                        drawCallback: function () {
+                            initDateInputs();
+                        }
                     });
 
                     $('#tblReportShow').loading("stop");
-                    $("#BtnSearchM").html("<i class='fa fa-search'></i>&nbsp; Search");
-                },
-                error: function (e) {
-                    console.log("There was an error with your request...");
-                    console.log("error: " + JSON.stringify(e));
-                }
-            });
-        }
     }
 
     function UpdateStatus(id, status_value) {

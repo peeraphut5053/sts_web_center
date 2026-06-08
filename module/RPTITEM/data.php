@@ -58,7 +58,7 @@ if ($load == "form") {
     $BetweenSale = $CO->CheckQty($item);
     $totalQty = 0;
     $lines = "";
-    $tableHead = '<thead><tr><th>#</th><th>Loc</th><th>Loc Description</th><th>Lot</th><th>qty on hand</th><th>Act Weight</th><th>Tag</th></tr></thead>';
+    $tableHead = '<thead><tr><th>#</th><th>Loc</th><th>Loc Description</th><th>Lot</th><th>qty on hand</th><th>Act Weight</th><th>Tag</th><th>Detail</th></tr></thead>';
 
     if (count($BetweenSale) >= 1) {
         $i = 0;
@@ -74,6 +74,7 @@ if ($load == "form") {
                     . "<td align='right'>$qty</td>"
                     . "<td align='center'>" . $rr["uf_act_weight"] . "</td>"
                     . "<td align='center'>" . $rr["tag"] . "</td>"
+                    . "<td align='center'>" . $rr["detail"] . "</td>"
                     . "</tr>";
         }
         $lines = $lines . "<tr>"
