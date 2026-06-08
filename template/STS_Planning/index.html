@@ -66,6 +66,7 @@
                         <th style="background-color: #f0ad4e; color: black;">ปี</th>
                         <th style="background-color: #f0ad4e; color: black;">เดือน</th>
                         <th style="background-color: #f0ad4e; color: black;">wc</th>
+                        <th style="background-color: #f0ad4e; color: black;">Order</th>
                         <th style="background-color: #f0ad4e; color: black; width: 300px;">item</th>
                         <th style="background-color: #f0ad4e; color: black;">Job</th>
                         <th>TYPE</th>
@@ -247,6 +248,7 @@
             var item = tr.find('.input-item').val();
             var job = tr.find('.input-job').val();
             var qty = tr.find('.input-qty').val();
+            var order = tr.find('.input-order').val();
             var btnSelect = $(this);
 
             var old_year = tr.data('old-year');
@@ -267,6 +269,7 @@
                 item: item,
                 job: job,
                 qty: qty || 0,
+                order: order,
                 old_year: old_year,
                 old_month: old_month,
                 old_wc: old_wc,
@@ -516,6 +519,7 @@
                 <td><select class="form-control input-sm input-year" style="width: 80px;">${yearOptions}</select></td>
                 <td><select class="form-control input-sm input-month" style="width: 70px;">${monthOptions}</select></td>
                 <td><select class="form-control input-sm input-wc" style="width: 100px;">${wcOptions}</select></td>
+                <td><input type="number" class="form-control input-sm input-order" min="0" max="255" style="width: 70px;"></td>
                 <td><input type="text" class="form-control input-sm input-item" list="item-list" placeholder="Enter Item..." style="width: 100%; min-width: 230px;"></td>
                 <td><input type="text" class="form-control input-sm input-job" placeholder="Enter Job..." style="width: 120px;"></td>
                 <td class="val-type align-middle">-</td>
@@ -547,6 +551,7 @@
             tr.find('.input-item').val(data.item);
             tr.find('.input-job').val(data.job || '');
             tr.find('.input-qty').val(data.qty || 0);
+            tr.find('.input-order').val(data.order != null ? data.order : '');
             tr.find('.val-qty-complete').text((data.qty_complete != null && data.qty_complete !== '') ? Number(data.qty_complete).toLocaleString() : '-');
             tr.find('.val-speed').text((data.multiplier > 0 && data.pcs_hr > 0) ? Number(data.multiplier * data.pcs_hr / 60).toFixed(0) : '-');
 

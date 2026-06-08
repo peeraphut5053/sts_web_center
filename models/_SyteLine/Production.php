@@ -260,6 +260,8 @@ order by hdr.docNo, line.seq";
             $item = isset($row['item']) ? str_replace("'", "''", $row['item']) : '';
             $job = isset($row['job']) ? str_replace("'", "''", $row['job']) : '';
             $qty = isset($row['qty']) ? str_replace("'", "''", $row['qty']) : '';
+            $planOrder = isset($row['order']) && $row['order'] !== '' ? (int)$row['order'] : null;
+            $planOrderSql = $planOrder === null ? "NULL" : (string)$planOrder;
 
             $old_year = isset($row['old_year']) ? str_replace("'", "''", $row['old_year']) : '';
             $old_month = isset($row['old_month']) ? str_replace("'", "''", $row['old_month']) : '';
@@ -269,17 +271,17 @@ order by hdr.docNo, line.seq";
 
             if ($old_item != '' && $old_wc != '') {
                 // If there's an old value, we update the existing row directly (handles PK change)
-                $query = "UPDATE STS_Prod_policy SET [year] = '$year', [month] = '$month', wc = '$wc', Item = '$item', job = '$job', qty = '$qty', createdate = GETDATE() WHERE [year] = '$old_year' AND [month] = '$old_month' AND wc = '$old_wc' AND Item = '$old_item' AND job = '$old_job'";
+                $query = "UPDATE STS_Prod_policy SET [year] = '$year', [month] = '$month', wc = '$wc', Item = '$item', job = '$job', qty = '$qty', [order] = $planOrderSql, createdate = GETDATE() WHERE [year] = '$old_year' AND [month] = '$old_month' AND wc = '$old_wc' AND Item = '$old_item' AND ISNULL(job, '') = '$old_job'";
                 $cSql->SqlQuery($this->StrConn, $query);
             } else {
                 // Check if existing record
                 $checkQuery = "SELECT * FROM STS_Prod_policy WHERE [year] = '$year' AND [month] = '$month' AND wc = '$wc' AND Item = '$item'";
                 $check = $cSql->SqlQuery($this->StrConn, $checkQuery);
                 if (is_array($check) && count($check) > 1) {
-                    $query = "UPDATE STS_Prod_policy SET job = '$job', qty = '$qty', createdate = GETDATE() WHERE [year] = '$year' AND [month] = '$month' AND wc = '$wc' AND Item = '$item'";
+                    $query = "UPDATE STS_Prod_policy SET job = '$job', qty = '$qty', [order] = $planOrderSql, createdate = GETDATE() WHERE [year] = '$year' AND [month] = '$month' AND wc = '$wc' AND Item = '$item'";
                     $cSql->SqlQuery($this->StrConn, $query);
                 } else {
-                    $query = "INSERT INTO STS_Prod_policy ([year], [month], wc, Item, job, qty, createdate) VALUES ('$year', '$month', '$wc', '$item', '$job', '$qty', GETDATE())";
+                    $query = "INSERT INTO STS_Prod_policy ([year], [month], wc, Item, job, qty, [order], createdate) VALUES ('$year', '$month', '$wc', '$item', '$job', '$qty', $planOrderSql, GETDATE())";
                     $cSql->SqlQuery($this->StrConn, $query);
                 }
             }
@@ -298,7 +300,7 @@ order by hdr.docNo, line.seq";
         }
 
         $query = "
-            select p.[year], p.[month], p.wc, p.Item as item, p.job
+            select p.[year], p.[month], p.wc, p.[order], p.Item as item, p.job
 , p.qty, i.uf_TypeEnd as [type], i.uf_NPS as size, i.uf_class as spec
 , i.Uf_Grade as grade, i.Uf_Schedule as sch, i.Uf_thickness as thick
 , i.Uf_length as [length], i.Uf_pack as [pack], i.Uf_length_FT as length_m, i.unit_weight as weight_pcs
@@ -308,7 +310,7 @@ order by hdr.docNo, line.seq";
 , job.qty_complete
 , multiplier = case when substring(i.item,22,1) = 'M' then 1 when substring(i.item,22,1) = 'F' then 0.3048 end * convert(decimal(10,4),isnull(i.uf_length_FT,0))
 from STS_Prod_policy p left join item_mst i on p.Item = i.item left join jobitem_mst job on job.job = p.job and job.item = p.item
-where p.[year] = '$year' and p.[month] = '$month' $wcFilter order by p.wc, p.Item
+where p.[year] = '$year' and p.[month] = '$month' $wcFilter order by p.wc, isnull(p.[order], 255), p.createdate
         ";
       
         $response = $cSql->SqlQuery($this->StrConn, $query);

@@ -127,6 +127,7 @@
           <th class="bg-gray">Ready Bundle MT</th>
           <th class="bg-gray">No Cont 40</th>
           <th class="bg-gray">No Cont 45</th>
+          <th class="bg-gray">BULK</th>
         </tr>
       </thead>
     </table>
@@ -228,6 +229,13 @@
           render: function (data, type, row, meta) {
             return renderBookContInput(data, type, row, meta, "no_cont45");
           }
+        },
+        {
+          data: "BULK",
+          className: "text-center",
+          render: function (data, type, row, meta) {
+            return renderBookContInput(data, type, row, meta, "BULK");
+          }
         }
       ],
       dom:
@@ -299,19 +307,22 @@
     var tr = input.closest("tr");
     var noCont40 = tr.find('.txt-book-cont[data-field="no_cont40"]').val();
     var noCont45 = tr.find('.txt-book-cont[data-field="no_cont45"]').val();
+    var bulk = tr.find('.txt-book-cont[data-field="BULK"]').val();
     var table = $("#tblEndUserPortReport").DataTable();
     var rowData = table.row(tr).data();
 
     if ((noCont40 !== "" && (parseInt(noCont40, 10) < 0 || parseInt(noCont40, 10) > 255)) ||
-      (noCont45 !== "" && (parseInt(noCont45, 10) < 0 || parseInt(noCont45, 10) > 255))) {
+      (noCont45 !== "" && (parseInt(noCont45, 10) < 0 || parseInt(noCont45, 10) > 255)) ||
+      (bulk !== "" && (parseInt(bulk, 10) < 0 || parseInt(bulk, 10) > 255))) {
       input.css("background-color", "#f8d7da");
-      alert("No Cont ต้องอยู่ระหว่าง 0-255");
+      alert("No Cont / BULK ต้องอยู่ระหว่าง 0-255");
       return false;
     }
 
     if (rowData) {
       rowData.no_cont40 = noCont40;
       rowData.no_cont45 = noCont45;
+      rowData.BULK = bulk;
     }
 
     input.css("background-color", "#fff3cd");
@@ -325,7 +336,8 @@
         endUser: input.data("end-user"),
         port: input.data("port"),
         no_cont40: noCont40,
-        no_cont45: noCont45
+        no_cont45: noCont45,
+        bulk: bulk
       },
       success: function (res) {
         if (res && res.status == "success") {

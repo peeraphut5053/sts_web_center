@@ -44,7 +44,7 @@ if ($load == "ajax") {
      $rs = $OrderProcessing->GetExBookCont();
      echo json_encode($rs);
 } else if ($load == "SaveExBookCont") {
-     $rs = $OrderProcessing->SaveExBookCont($endUser, $port, $no_cont40, $no_cont45);
+     $rs = $OrderProcessing->SaveExBookCont($endUser, $port, $no_cont40, $no_cont45, $bulk);
      echo json_encode($rs);
 }
 
