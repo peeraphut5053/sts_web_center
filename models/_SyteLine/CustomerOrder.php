@@ -174,30 +174,76 @@ WHERE LEFT(cust_num,2) = 'TT' AND item ='$item'";
     }
 
     function GetExBookCont() {
-        $query = "SELECT endUser, port, no_cont40, no_cont45, [BULK] FROM dbo.STS_EX_book_cont";
+        $query = "SELECT endUser, port, no_cont40, no_cont45, [BULK], po_bulk, po_40, po_45 FROM dbo.STS_EX_book_cont";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs0, count($rs0) - 1, 1);
         return $rs0;
     }
 
-    function SaveExBookCont($endUser, $port, $no_cont40, $no_cont45, $bulk) {
+    function SaveExBookCont($endUser, $port, $no_cont40, $no_cont45, $bulk, $po_bulk, $po_40, $po_45) {
         $no_cont40 = ($no_cont40 === '') ? null : intval($no_cont40);
         $no_cont45 = ($no_cont45 === '') ? null : intval($no_cont45);
         $bulk = ($bulk === '') ? null : intval($bulk);
+        $po_bulk = ($po_bulk === '') ? null : $po_bulk;
+        $po_40 = ($po_40 === '') ? null : $po_40;
+        $po_45 = ($po_45 === '') ? null : $po_45;
 
         $query = "MERGE dbo.STS_EX_book_cont AS target
 USING (SELECT ? AS endUser, ? AS port) AS source
 ON target.endUser = source.endUser AND target.port = source.port
 WHEN MATCHED THEN
-    UPDATE SET no_cont40 = ?, no_cont45 = ?, [BULK] = ?, updatedate = GETDATE()
+    UPDATE SET no_cont40 = ?, no_cont45 = ?, [BULK] = ?, po_bulk = ?, po_40 = ?, po_45 = ?, updatedate = GETDATE()
 WHEN NOT MATCHED THEN
-    INSERT (endUser, port, no_cont40, no_cont45, [BULK], updatedate)
-    VALUES (?, ?, ?, ?, ?, GETDATE());";
-        $params = array($endUser, $port, $no_cont40, $no_cont45, $bulk, $endUser, $port, $no_cont40, $no_cont45, $bulk);
+    INSERT (endUser, port, no_cont40, no_cont45, [BULK], po_bulk, po_40, po_45, updatedate)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, GETDATE());";
+        $params = array($endUser, $port, $no_cont40, $no_cont45, $bulk, $po_bulk, $po_40, $po_45, $endUser, $port, $no_cont40, $no_cont45, $bulk, $po_bulk, $po_40, $po_45);
         $cSql = new SqlSrv();
         $cSql->SqlQuery2($this->StrConn, $query, $params);
         return array('status' => 'success');
+    }
+
+    function GetEndUserPortCustPOBatch($keys) {
+        $rows = json_decode($keys, true);
+        if (!is_array($rows) || count($rows) == 0) {
+            return array();
+        }
+
+        $values = array();
+        $params = array();
+        foreach ($rows as $row) {
+            if (!is_array($row)) {
+                continue;
+            }
+            $endUser = isset($row['endUser']) ? trim($row['endUser']) : '';
+            $port = isset($row['port']) ? trim($row['port']) : '';
+            if ($endUser == '' || $port == '') {
+                continue;
+            }
+            $values[] = "(?, ?)";
+            $params[] = $endUser;
+            $params[] = $port;
+        }
+
+        if (count($values) == 0) {
+            return array();
+        }
+
+        $query = "SELECT DISTINCT
+    K.endUser,
+    K.port,
+    co.co_num,
+    cust_po = LTRIM(RTRIM(LEFT(co.cust_po, CHARINDEX('/', co.cust_po + '/') - 1)))
+FROM (VALUES " . implode(",", $values) . ") AS K(endUser, port)
+INNER JOIN custaddr_mst addr ON addr.city = K.port AND ISNULL(addr.addr##2, addr.name) LIKE K.endUser
+INNER JOIN co_mst co ON co.cust_num = addr.cust_num AND co.cust_seq = addr.cust_seq
+WHERE co.stat = 'O'
+  AND co.co_num LIKE 'EX%'
+ORDER BY K.endUser, K.port, co.co_num";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery2($this->StrConn, $query, $params);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
     }
 
 }

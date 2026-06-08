@@ -1,3 +1,6 @@
+<link rel="stylesheet" type="text/css" href="datatable/Scroller-1.5.0/css/scroller.bootstrap.min.css">
+<script src="datatable/Scroller-1.5.0/js/dataTables.scroller.min.js" type="text/javascript"></script>
+
 <style>
     .ready-stock-page {
         background: #f4f6f8;
@@ -43,16 +46,9 @@
         font-weight: 600;
         min-width: 82px;
     }
-    .ready-stock-toolbar .form-control,
-    .ready-stock-toolbar .select2-container .select2-selection--single {
+    .ready-stock-toolbar .form-control {
         border-color: #d6dfdc;
         height: 34px;
-    }
-    .ready-stock-toolbar .select2-container--default .select2-selection--single .select2-selection__rendered {
-        line-height: 32px;
-    }
-    .ready-stock-toolbar .select2-container--default .select2-selection--single .select2-selection__arrow {
-        height: 32px;
     }
     .ready-stock-title-icon {
         background: linear-gradient(135deg, #2f7d68 0%, #256f86 100%);
@@ -187,6 +183,34 @@
         margin-right: 5px;
         padding: 7px 12px;
     }
+    #divReport .dt-buttons {
+        margin-bottom: 8px;
+    }
+    #divReport .dt-buttons .btn-ready-print,
+    #divReport .dt-buttons .btn-ready-excel {
+        border: 0;
+        border-radius: 4px;
+        color: #fff !important;
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 1.4;
+        margin-right: 6px;
+        padding: 8px 12px;
+    }
+    #divReport .dt-buttons .btn-ready-print {
+        background-color: #5bc0de;
+    }
+    #divReport .dt-buttons .btn-ready-print:hover,
+    #divReport .dt-buttons .btn-ready-print:focus {
+        background-color: #31b0d5;
+    }
+    #divReport .dt-buttons .btn-ready-excel {
+        background-color: #5cb85c;
+    }
+    #divReport .dt-buttons .btn-ready-excel:hover,
+    #divReport .dt-buttons .btn-ready-excel:focus {
+        background-color: #449d44;
+    }
     #divReport .dataTables_filter label,
     #divReport .dataTables_info,
     #divReport .dataTables_length label {
@@ -203,6 +227,13 @@
     }
     #divReport .dataTables_scrollBody {
         border-bottom: 1px solid #d7dee6;
+    }
+    #divReport .dts_label {
+        background: rgba(47, 125, 104, .92);
+        border-radius: 4px;
+        color: #fff;
+        font-size: 13px;
+        padding: 4px 8px;
     }
     @media (max-width: 767px) {
         .ready-stock-page {
@@ -252,7 +283,7 @@
             <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
                 <div class="input-group">
                     <div class="input-group-addon">Location</div>
-                    <select class="form-control" id="loc"></select>
+                    <input type="text" class="form-control" id="loc" autocomplete="off" placeholder="All location">
                 </div>
             </div>
             <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
@@ -294,12 +325,7 @@
     var readyStockTable = null;
     var readyStockUrl = "././module/RPT_READY_STOCK/data.php";
 
-    $("#loc").select2({
-        width: "100%",
-        placeholder: "All Location"
-    });
-
-    loadLocationList();
+    renderReadyStockTable([]);
 
     $("#btnSearch").click(function () {
         loadReadyStock();
@@ -307,8 +333,9 @@
 
     $("#btnClear").click(function () {
         $("#item").val("");
-        $("#loc").val("").trigger("change");
-        loadReadyStock();
+        $("#loc").val("");
+        renderReadyStockTable([]);
+        $("#readyStockSummary").text("0 rows");
     });
 
     $(window).resize(function () {
@@ -317,39 +344,14 @@
         }
     });
 
-    $("#item").keypress(function (e) {
+    $("#item,#loc").keypress(function (e) {
         if (e.which == 13) {
             loadReadyStock();
         }
     });
 
-    function loadLocationList() {
-        $.ajax({
-            type: "GET",
-            url: readyStockUrl,
-            dataType: "json",
-            data: {
-                load: "GetLocationAll"
-            },
-            success: function (data) {
-                var $loc = $("#loc");
-                $loc.empty();
-                $loc.append($("<option></option>").val("").text(""));
-                $.each(data, function (index, row) {
-                    $loc.append($("<option></option>").val(row.loc).text(row.loc_description));
-                });
-                $("#loc").val("").trigger("change");
-                renderReadyStockTable([]);
-            }
-        });
-    }
-
     function loadReadyStock() {
-        if ($.trim($("#item").val()) == "" && $.trim($("#loc").val()) == "") {
-            alert("กรุณาระบุเงื่อนไขการค้นหาอย่างน้อย 1 รายการ");
-            $("#item").focus();
-            return;
-        }
+     
 
         var oldButton = $("#btnSearch").html();
         $("#btnSearch").html("<i class='fa fa-spinner fa-spin'></i>&nbsp;Loading");
@@ -358,6 +360,7 @@
         $.ajax({
             type: "GET",
             url: readyStockUrl,
+            timeout: 120000,
             dataType: "json",
             data: {
                 load: "ajax",
@@ -393,11 +396,14 @@
         readyStockTable = $("#tblReadyStock").DataTable({
             aaData: data,
             autoWidth: false,
-            paging: false,
+            paging: true,
+            pageLength: 100,
+            deferRender: true,
             searching: true,
             scrollY: "calc(100vh - 275px)",
             scrollX: true,
             scrollCollapse: true,
+            scroller: true,
             fixedHeader: false,
             destroy: true,
             ordering: true,
@@ -444,18 +450,20 @@
             ],
             dom: "<'row'<'col-md-5'B><'col-md-7 text-right'f>>" +
                 "<'row'<'col-md-12'tr>>" +
-                "<'row'<'col-md-5 text-left'i><'col-md-7 text-right'p>>",
+                "<'row'<'col-md-12 text-left'i>>",
             buttons: [
                 {
                     extend: "print",
+                    className: "btn btn-ready-print",
                     text: "<i class='fa fa-print'></i>&nbsp;Print",
                     title: "Ready Stock Report"
                 },
                 {
-                    extend: "excel",
-                    footer: true,
+                    className: "btn btn-ready-excel",
                     text: "<i class='fa fa-file-excel-o'></i>&nbsp;Excel",
-                    title: "Ready Stock Report"
+                    action: function () {
+                        exportReadyStockCsv();
+                    }
                 }
             ]
         });
@@ -468,6 +476,14 @@
         if (readyStockTable) {
             readyStockTable.columns.adjust().draw(false);
         }
+    }
+
+    function exportReadyStockCsv() {
+        var url = readyStockUrl +
+            "?load=exportCsv" +
+            "&item=" + encodeURIComponent($("#item").val()) +
+            "&loc=" + encodeURIComponent($("#loc").val());
+        window.open(url, "_blank");
     }
 
     function formatNumber(value, digit) {

@@ -63,6 +63,48 @@
     min-width: 70px;
     text-align: center;
   }
+
+  .enduser-report .txt-po-select {
+    min-width: 180px;
+  }
+
+  .enduser-report .select2-container {
+    min-width: 180px;
+  }
+
+  .enduser-report .select2-container--default .select2-selection--multiple,
+  .enduser-report .select2-container .select2-choice,
+  .enduser-report .select2-container-multi .select2-choices {
+    background-color: #fff;
+    border: 1px solid #9aa9ba;
+    border-radius: 4px;
+    min-height: 32px;
+  }
+
+  .enduser-report .select2-container--default .select2-selection--multiple .select2-selection__choice,
+  .enduser-report .select2-container-multi .select2-choices .select2-search-choice {
+    background: #e8f0fe;
+    border: 1px solid #4f7dc8;
+    color: #20334d;
+    font-weight: 600;
+  }
+
+  .enduser-report .select2-container--default .select2-selection--multiple .select2-selection__choice__remove,
+  .enduser-report .select2-container-multi .select2-choices .select2-search-choice-close {
+    color: #2f5f9f;
+  }
+
+  .enduser-report .select2-container--default .select2-selection--multiple .select2-search__field,
+  .enduser-report .select2-container-multi .select2-choices .select2-search-field input {
+    color: #2c3e50;
+    font-weight: 500;
+  }
+
+  .enduser-report .select2-container--default .select2-selection--multiple .select2-search__field::placeholder,
+  .enduser-report .select2-container-multi .select2-choices .select2-search-field input::placeholder {
+    color: #6e7f90;
+    opacity: 1;
+  }
 </style>
 
 <div class="enduser-report">
@@ -126,8 +168,11 @@
           <th class="bg-gray">Ready Bundle</th>
           <th class="bg-gray">Ready Bundle MT</th>
           <th class="bg-gray">No Cont 40</th>
+          <th class="bg-gray">PO 40</th>
           <th class="bg-gray">No Cont 45</th>
+          <th class="bg-gray">PO 45</th>
           <th class="bg-gray">BULK</th>
+          <th class="bg-gray">PO BULK</th>
         </tr>
       </thead>
     </table>
@@ -135,6 +180,8 @@
 </div>
 
 <script type="text/javascript">
+  var poOptionMap = {};
+
   $("#orderdate_enduser").datepicker({
     dateFormat: "yy-mm-dd",
   });
@@ -170,12 +217,148 @@
       'value="' + escapeEndUserAttr(value) + '">';
   }
 
+  function parsePOList(value) {
+    if ($.isArray(value)) {
+      return value;
+    }
+    if (value === null || value === undefined || value === "") {
+      return [];
+    }
+    return value.toString().split(",").map(function (item) {
+      return $.trim(item);
+    }).filter(function (item) {
+      return item !== "";
+    });
+  }
+
+  function getEndUserPortKey(endUser, port) {
+    return (endUser || "") + "|" + (port || "");
+  }
+
+  function renderPOSelect(data, type, row, meta, fieldName) {
+    var value = data === null || data === undefined ? "" : data;
+
+    if (type !== "display") {
+      return value;
+    }
+
+    return '<select multiple class="form-control input-sm txt-po-select" ' +
+      'data-field="' + fieldName + '" ' +
+      'data-end-user="' + escapeEndUserAttr(row.endUser) + '" ' +
+      'data-port="' + escapeEndUserAttr(row.Port) + '" ' +
+      'data-value="' + escapeEndUserAttr(value) + '"></select>';
+  }
+
   function exportEndUserCell(data, row, column, node) {
     var input = $(node).find("input");
     if (input.length > 0) {
       return input.val();
     }
+    var select = $(node).find("select");
+    if (select.length > 0) {
+      return (select.val() || []).join(",");
+    }
     return typeof data === "string" ? data.replace(/<[^>]*>?/gm, "") : data;
+  }
+
+  function initPOSelects() {
+    $("#tblEndUserPortReport .txt-po-select").each(function () {
+      var select = $(this);
+      if (select.data("po-loaded")) {
+        return;
+      }
+
+      var savedValues = parsePOList(select.data("value"));
+      select.data("po-loaded", true);
+      select.data("initializing", true);
+      var options = {};
+      var mapKey = getEndUserPortKey(select.data("end-user"), select.data("port"));
+      var poList = poOptionMap[mapKey] || [];
+
+      $.each(poList, function (i, row) {
+        if (row && row.cust_po) {
+          options[row.cust_po] = row.cust_po;
+        }
+      });
+      $.each(savedValues, function (i, value) {
+        options[value] = value;
+      });
+      $.each(options, function (value, text) {
+        select.append($("<option>", {
+          value: value,
+          text: text
+        }));
+      });
+      select.select2({
+        width: "180px",
+        placeholder: "Select PO"
+      });
+      select.val(savedValues).trigger("change.select2");
+      select.data("initializing", false);
+    });
+  }
+
+  function buildPOBatchKeys(rows) {
+    var exists = {};
+    var keys = [];
+    $.each(rows || [], function (i, row) {
+      if (!row || !row.endUser || !row.Port) {
+        return;
+      }
+      var key = getEndUserPortKey(row.endUser, row.Port);
+      if (exists[key]) {
+        return;
+      }
+      exists[key] = true;
+      keys.push({
+        endUser: row.endUser,
+        port: row.Port
+      });
+    });
+    return keys;
+  }
+
+  function buildPOOptionMap(data) {
+    var map = {};
+    $.each(data || [], function (i, row) {
+      if (!row || !row.endUser || !row.port) {
+        return;
+      }
+      var key = getEndUserPortKey(row.endUser, row.port);
+      if (!map[key]) {
+        map[key] = [];
+      }
+      map[key].push(row);
+    });
+    return map;
+  }
+
+  function getPOOptionsBatch(rows, callback) {
+    var keys = buildPOBatchKeys(rows);
+    poOptionMap = {};
+
+    if (keys.length == 0) {
+      callback();
+      return;
+    }
+
+    $.ajax({
+      type: "POST",
+      url: "././module/RPT_OrderProcessing/data.php",
+      dataType: "json",
+      data: {
+        load: "GetEndUserPortCustPOBatch",
+        keys: JSON.stringify(keys)
+      },
+      success: function (data) {
+        poOptionMap = buildPOOptionMap(data);
+        callback();
+      },
+      error: function () {
+        poOptionMap = {};
+        callback();
+      }
+    });
   }
 
   function renderEndUserPortReport(data) {
@@ -224,10 +407,24 @@
           }
         },
         {
+          data: "po_40",
+          className: "text-center",
+          render: function (data, type, row, meta) {
+            return renderPOSelect(data, type, row, meta, "po_40");
+          }
+        },
+        {
           data: "no_cont45",
           className: "text-center",
           render: function (data, type, row, meta) {
             return renderBookContInput(data, type, row, meta, "no_cont45");
+          }
+        },
+        {
+          data: "po_45",
+          className: "text-center",
+          render: function (data, type, row, meta) {
+            return renderPOSelect(data, type, row, meta, "po_45");
           }
         },
         {
@@ -236,8 +433,18 @@
           render: function (data, type, row, meta) {
             return renderBookContInput(data, type, row, meta, "BULK");
           }
+        },
+        {
+          data: "po_bulk",
+          className: "text-center",
+          render: function (data, type, row, meta) {
+            return renderPOSelect(data, type, row, meta, "po_bulk");
+          }
         }
       ],
+      drawCallback: function () {
+        initPOSelects();
+      },
       dom:
         "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
         "<'row'<'col-md-12'tr>>" +
@@ -261,6 +468,8 @@
         },
       ]
     });
+
+    initPOSelects();
   }
 
   function ReportEndUserPortSearch() {
@@ -289,9 +498,11 @@
         item: item
       },
       success: function (data) {
-        renderEndUserPortReport(data);
-        $("#tblEndUserPortReport").loading("stop");
-        $("#btnSearchEndUserPort").html(oldHtml);
+        getPOOptionsBatch(data, function () {
+          renderEndUserPortReport(data);
+          $("#tblEndUserPortReport").loading("stop");
+          $("#btnSearchEndUserPort").html(oldHtml);
+        });
       },
       error: function (e) {
         $("#tblEndUserPortReport").loading("stop");
@@ -302,12 +513,23 @@
     });
   }
 
-  $(document).on("change", "#tblEndUserPortReport .txt-book-cont", function () {
+  function getPOSelectValue(tr, fieldName) {
+    return (tr.find('.txt-po-select[data-field="' + fieldName + '"]').val() || []).join(",");
+  }
+
+  $(document).on("change", "#tblEndUserPortReport .txt-book-cont, #tblEndUserPortReport .txt-po-select", function () {
     var input = $(this);
+    if (input.data("initializing")) {
+      return;
+    }
+
     var tr = input.closest("tr");
     var noCont40 = tr.find('.txt-book-cont[data-field="no_cont40"]').val();
     var noCont45 = tr.find('.txt-book-cont[data-field="no_cont45"]').val();
     var bulk = tr.find('.txt-book-cont[data-field="BULK"]').val();
+    var poBulk = getPOSelectValue(tr, "po_bulk");
+    var po40 = getPOSelectValue(tr, "po_40");
+    var po45 = getPOSelectValue(tr, "po_45");
     var table = $("#tblEndUserPortReport").DataTable();
     var rowData = table.row(tr).data();
 
@@ -323,6 +545,9 @@
       rowData.no_cont40 = noCont40;
       rowData.no_cont45 = noCont45;
       rowData.BULK = bulk;
+      rowData.po_bulk = poBulk;
+      rowData.po_40 = po40;
+      rowData.po_45 = po45;
     }
 
     input.css("background-color", "#fff3cd");
@@ -337,7 +562,10 @@
         port: input.data("port"),
         no_cont40: noCont40,
         no_cont45: noCont45,
-        bulk: bulk
+        bulk: bulk,
+        po_bulk: poBulk,
+        po_40: po40,
+        po_45: po45
       },
       success: function (res) {
         if (res && res.status == "success") {

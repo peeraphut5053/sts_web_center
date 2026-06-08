@@ -44,7 +44,10 @@ if ($load == "ajax") {
      $rs = $OrderProcessing->GetExBookCont();
      echo json_encode($rs);
 } else if ($load == "SaveExBookCont") {
-     $rs = $OrderProcessing->SaveExBookCont($endUser, $port, $no_cont40, $no_cont45, $bulk);
+     $rs = $OrderProcessing->SaveExBookCont($endUser, $port, $no_cont40, $no_cont45, $bulk, $po_bulk, $po_40, $po_45);
+     echo json_encode($rs);
+} else if ($load == "GetEndUserPortCustPOBatch") {
+     $rs = $OrderProcessing->GetEndUserPortCustPOBatch($keys);
      echo json_encode($rs);
 }
 
