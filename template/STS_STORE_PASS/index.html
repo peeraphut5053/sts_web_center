@@ -1,6 +1,215 @@
-<div class="row">
+<style>
+  .store-pass-toolbar {
+    margin: 8px 0 18px;
+    overflow: hidden;
+    padding: 0 22px 18px;
+    border: 1px solid #dbe3ea;
+    border-radius: 4px;
+    background: #ffffff;
+    box-shadow: 0 2px 10px rgba(15, 23, 42, 0.06);
+  }
 
-    <div style="margin-top: 10px; margin-bottom: 20px;">
+  .store-pass-toolbar .my-header {
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    margin: 0;
+    padding: 0 !important;
+    color: #1f2937;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+
+  .store-pass-toolbar .my-header:after {
+    display: none;
+  }
+
+  .store-pass-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0 -22px 22px;
+    padding: 18px 24px;
+    border-left: 5px solid #3c8dbc;
+    border-bottom: 1px solid #dbe3ea;
+    background-color: #f7fbfe;
+  }
+
+  .store-pass-title:before {
+    content: "\f15c";
+    display: inline-block;
+    width: 38px;
+    height: 38px;
+    border: 1px solid #cfe4f3;
+    border-radius: 4px;
+    background-color: #ffffff;
+    color: #3c8dbc;
+    font: normal normal normal 17px/38px FontAwesome;
+    text-align: center;
+  }
+
+  .store-pass-toolbar .input-group,
+  .store-pass-modal .input-group {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .store-pass-toolbar .input-group-addon,
+  .store-pass-modal .input-group-addon {
+    min-width: 86px;
+    border-color: #cbd5e1;
+    background-color: #f8fafc;
+    color: #334155;
+    font-weight: 600;
+  }
+
+  .store-pass-toolbar .form-control,
+  .store-pass-modal .form-control {
+    border-color: #cbd5e1;
+    box-shadow: none;
+  }
+
+  .store-pass-toolbar .form-control:focus,
+  .store-pass-modal .form-control:focus {
+    border-color: #3c8dbc;
+    box-shadow: 0 0 0 2px rgba(60, 141, 188, 0.14);
+  }
+
+  .store-pass-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  .store-pass-actions .btn,
+  .store-pass-toolbar .btn,
+  .store-pass-modal .modal-footer .btn {
+    border-radius: 4px;
+    font-weight: 600;
+  }
+
+  .store-pass-actions .btn,
+  .store-pass-toolbar .btn {
+    margin: 0 6px 10px 0;
+    min-height: 34px;
+  }
+
+  .store-pass-toolbar .fa-searh:before {
+    content: "\f002";
+  }
+
+  #btnAdd .fa-searh:before,
+  #btnAddIN .fa-searh:before {
+    content: "\f067";
+  }
+
+  .store-pass-toolbar .fa-searh:before {
+    display: inline-block;
+    width: 14px;
+    margin-right: 5px;
+    font: normal normal normal 14px/1 FontAwesome;
+    text-align: center;
+    vertical-align: -1px;
+  }
+
+  .store-pass-modal .modal-content {
+    border: 0;
+    border-radius: 6px;
+    box-shadow: 0 16px 44px rgba(15, 23, 42, 0.25);
+  }
+
+  .store-pass-modal .modal-header {
+    border-bottom: 1px solid #dbe3ea;
+    background-color: #f8fafc;
+  }
+
+  .store-pass-modal .modal-title {
+    color: #1f2937;
+    font-weight: 700;
+    line-height: 1.45;
+  }
+
+  .store-pass-modal .modal-body {
+    padding: 18px 20px 8px;
+  }
+
+  .store-pass-modal .modal-footer {
+    border-top: 1px solid #dbe3ea;
+    background-color: #f8fafc;
+  }
+
+  .store-pass-modal .flex {
+    gap: 12px;
+  }
+
+  .store-pass-section-title,
+  .store-pass-modal h5.m-4.underline {
+    margin: 4px 0 12px;
+    padding-left: 10px;
+    border-left: 4px solid #3c8dbc;
+    color: #334155;
+    font-size: 15px;
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .store-pass-modal .select2-container--default .select2-selection--single {
+    min-height: 34px;
+    border-color: #cbd5e1;
+    border-radius: 4px;
+  }
+
+  .store-pass-modal .select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: 32px;
+  }
+
+  .store-pass-modal .select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 32px;
+  }
+
+  .store-pass-required {
+    color: #d33724 !important;
+  }
+
+  @media (max-width: 767px) {
+    .store-pass-toolbar {
+      padding: 0 12px 8px;
+    }
+
+    .store-pass-title {
+      margin: 0 -12px 16px;
+      padding: 14px 16px;
+    }
+
+    .store-pass-actions .btn,
+    .store-pass-toolbar .btn {
+      width: 100%;
+    }
+
+    .store-pass-modal .flex-row {
+      flex-direction: column;
+    }
+  }
+
+  #tblReport .input-text-value {
+    border: 1px solid #9ca3af;
+    border-radius: 4px;
+    padding: 4px 8px;
+    background-color: #ffffff;
+  }
+
+  #tblReport .input-text-value:focus {
+    border-color: #3c8dbc;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(60, 141, 188, 0.15);
+  }
+</style>
+
+<div class="row store-pass-toolbar">
+
+    <div class="store-pass-title">
      <h1 class="my-header">รายงานใบผ่าน</h1>
     </div>
   <!--    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4 " >
@@ -75,7 +284,7 @@
   </div>
 </div>
 
-<div class="row hidden" id="divReport">
+<div class="row" id="divReport">
   <table class="table table-condensed table-bordered table-striped" id="tblReport" style="width:100%;">
     <thead>
       <tr>
@@ -101,7 +310,7 @@
   </table>
 </div>
 <!-- Modal -->
-<div class="modal fade bd-example-modal-lg" id="exampleModal" tabindex="-1" role="dialog"
+<div class="modal fade bd-example-modal-lg store-pass-modal" id="exampleModal" tabindex="-1" role="dialog"
   aria-labelledby="myLargeModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
@@ -168,7 +377,7 @@
   </div>
 </div>
 <!-- Modal -->
-<div class="modal fade bd-example-modal-lg" id="exampleModal2" role="dialog" aria-labelledby="myLargeModalLabel"
+<div class="modal fade bd-example-modal-lg store-pass-modal" id="exampleModal2" role="dialog" aria-labelledby="myLargeModalLabel"
   aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
