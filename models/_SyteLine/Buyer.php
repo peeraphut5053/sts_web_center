@@ -76,16 +76,18 @@ class Buyer
         }
         // สร้างเลขเอกสารใหม่
         $docNumber = sprintf("A%s%05d", $year, $newNumber);
-        $query = "INSERT INTO STS_store_pass_hdr (doc_no,item_out,date_out,po,dept,company,car,detail,purpose,[user]) OUTPUT inserted.* VALUES ('$docNumber','$item_out','$date_out','$po','$dept','$company','$car','$detail', '$purpose','$user')";
-        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        $query = "INSERT INTO STS_store_pass_hdr (doc_no,item_out,date_out,po,dept,company,car,detail,purpose,[user]) OUTPUT inserted.* VALUES (?,?,?,?,?,?,?,?,?,?)";
+        $params = array($docNumber, $item_out, $date_out, $po, $dept, $company, $car, $detail, $purpose, $user);
+        $rs0 = $cSql->SqlQuery2($this->StrConn, $query, $params);
         array_splice($rs0, count($rs0) - 1, 1);
         return $rs0;
     }
     function Save_store_pass_line($doc_no, $item_in, $date_in, $remark, $user)
     {
-        $query = "INSERT INTO STS_store_pass_line (doc_no,item_in,date_in,remark,[user]) VALUES ('$doc_no','$item_in','$date_in','$remark','$user')";
+        $query = "INSERT INTO STS_store_pass_line (doc_no,item_in,date_in,remark,[user]) OUTPUT inserted.* VALUES (?,?,?,?,?)";
         $cSql = new SqlSrv();
-        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        $params = array($doc_no, $item_in, $date_in, $remark, $user);
+        $rs0 = $cSql->SqlQuery2($this->StrConn, $query, $params);
         array_splice($rs0, count($rs0) - 1, 1);
         return $rs0;
     }
@@ -138,17 +140,27 @@ WHERE t2.date_in IS NULL $where";
 
     function SaveExtra_store_pass_line($doc_no, $data, $type)
     {
-        $query = "UPDATE STS_store_pass_line SET $type = '$data' WHERE doc_no = '$doc_no'";
+        $allowTypes = array('item_in', 'date_in', 'remark');
+        if (!in_array($type, $allowTypes)) {
+            return array();
+        }
+        $query = "UPDATE STS_store_pass_line SET $type = ? OUTPUT inserted.* WHERE doc_no = ?";
         $cSql = new SqlSrv();
-        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        $params = array($data, $doc_no);
+        $rs0 = $cSql->SqlQuery2($this->StrConn, $query, $params);
         array_splice($rs0, count($rs0) - 1, 1);
         return $rs0;
     }
     function SaveExtra_store_pass_hdr($doc_no, $data, $type)
     {
-        $query = "UPDATE STS_store_pass_hdr SET $type = '$data' WHERE doc_no = '$doc_no'";
+        $allowTypes = array('item_out', 'date_out', 'po', 'dept', 'company', 'car', 'detail', 'purpose', 'approve');
+        if (!in_array($type, $allowTypes)) {
+            return array();
+        }
+        $query = "UPDATE STS_store_pass_hdr SET $type = ? OUTPUT inserted.* WHERE doc_no = ?";
         $cSql = new SqlSrv();
-        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        $params = array($data, $doc_no);
+        $rs0 = $cSql->SqlQuery2($this->StrConn, $query, $params);
         array_splice($rs0, count($rs0) - 1, 1);
         return $rs0;
     }
