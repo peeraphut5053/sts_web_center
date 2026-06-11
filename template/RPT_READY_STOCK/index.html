@@ -121,13 +121,13 @@
     #divReport table.dataTable thead .sorting_desc {
         background-position: right 8px center !important;
     }
-    #tblReadyStock thead th:nth-child(3),
-    #tblReadyStock thead th:nth-child(7),
-    #tblReadyStock thead th:nth-child(12),
-    #tblReadyStock thead th:nth-child(14) {
+    #tblReadyStock thead th:nth-child(4),
+    #tblReadyStock thead th:nth-child(8),
+    #tblReadyStock thead th:nth-child(13),
+    #tblReadyStock thead th:nth-child(15) {
         min-width: 70px;
     }
-    #tblReadyStock thead th:nth-child(6) {
+    #tblReadyStock thead th:nth-child(7) {
         min-width: 82px;
     }
     #divReport table.dataTable th,
@@ -302,6 +302,7 @@
             <thead>
                 <tr>
                     <th>item</th>
+                    <th>unit_weight</th>
                     <th>qty_on_hand</th>
                     <th>loc</th>
                     <th>description</th>
@@ -414,6 +415,13 @@
             ],
             columns: [
                 { data: "item", className: "text-left" },
+                {
+                    data: "unit_weight",
+                    className: "text-right",
+                    render: function (data) {
+                        return formatNumber(data, 4);
+                    }
+                },
                 {
                     data: "qty_on_hand",
                     className: "text-right",

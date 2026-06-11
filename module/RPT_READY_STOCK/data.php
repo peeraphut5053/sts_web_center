@@ -79,6 +79,7 @@ if ($load == "ajax") {
 
     $columns = array(
         "item",
+        "unit_weight",
         "qty_on_hand",
         "loc",
         "description",
