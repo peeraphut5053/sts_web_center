@@ -1,17 +1,18 @@
 <?php
 
-while (list($key, $data) = each($_GET) OR list($key, $data) = each($_POST)) {
+foreach (array_merge($_GET, $_POST) as $key => $data) {
     ${$key} = trim($data);
 }
 require_once "../initial.php";
 
-if ($load == "ajax") {
+if (isset($load) && $load == "ajax") {
     $CallModel = new CallModel();
     $CallModel->SyteLine_Models();
     $InvItem = new Invoice();
     $InvItem->setConn($ConnSL);
-    $InvItem->_StartDate = $txtFromDate;
-    $InvItem->_EndDate = $txtToDate;
+    $InvItem->_StartDate = isset($txtFromDate) ? $txtFromDate : "";
+    $InvItem->_EndDate = isset($txtToDate) ? $txtToDate : "";
+    $InvItem->_item = isset($txtItem) ? $txtItem : "";
     $InvItems = $InvItem->GetReportSalesTotal();
     $InvItem = null;
     $CallModel = null;

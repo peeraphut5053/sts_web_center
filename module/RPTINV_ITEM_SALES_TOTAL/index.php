@@ -1,7 +1,7 @@
 
 
 <?php
-while (list($key, $data) = each($_GET) OR list($key, $data) = each($_POST)) {
+foreach (array_merge($_GET, $_POST) as $key => $data) {
     ${$key} = trim($data);
 }
 include "../initial.php";

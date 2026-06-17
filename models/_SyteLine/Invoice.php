@@ -1221,17 +1221,28 @@ FROM V_WebApp_InvItem_IN_noVAT where 1=1 ";
     function GetReportSalesTotal() {
         $from_date = $this->_StartDate;
         $end_date = $this->_EndDate;
-        $query = " select inv_date , inv_num , cust_num , name , item , description , item_size , item_thick , item_width , item_length , unit_weight , group_code , group_final , um , sum(cast(replace(isnull(qtyPCS,0),',','') as decimal(18,2) ) ) as SUMqtyPCS , priceperpcs , sum(cast(replace(isnull(qtykg,0),',','') as decimal(18,2) ) ) as SUMqtyKG , isnull(priceperkg,0) , priceperton , sum(cast(replace(isnull(discount,0),',','') as decimal(18,2) ) ) as SUMdiscount , sum(cast(replace(isnull(amt_usd,0),',','') as decimal(18,2) ) ) as SUMamt_sd , exch_rate , sum(cast(replace(isnull(amt_thb,0),',','') as decimal(18,2) ) ) as SUMamt_thb , sum(cast(replace(isnull(VAT,0),',','') as decimal(18,2) ) ) as SUMvat , country from ( select inv_date , inv_num , cust_num , name , item , description , item_size , item_thick , item_width , item_length , isnull( unit_weight ,0) as unit_weight , group_code , group_final , um , (cast(replace(isnull(qtyPCS,0),',','') as decimal(18,2) ) ) as qtyPCS , (cast(replace(isnull(priceperpcs,0),',','') as decimal(18,2) ) ) priceperpcs , (cast(replace(isnull(qtykg,0),',','') as decimal(18,2) ) ) as qtykg , (cast(replace(isnull(priceperkg,0),',','') as decimal(18,2) ) ) as priceperkg , (cast(replace(isnull(priceperton,0),',','') as decimal(18,2) ) ) as priceperton , (cast(replace(isnull(discount,0),',','') as decimal(18,2) ) ) as discount , (cast(replace(isnull(amt_usd,0),',','') as decimal(18,2) ) ) as amt_usd , exch_rate , (cast(replace(isnull(amt_thb,0),',','') as decimal(18,2) ) ) as amt_thb , 0 as VAT , country FROM V_WebApp_InvItem_EX ";
+        $item = str_replace("'", "''", trim($this->_item));
+        $criteriaEx = "";
+        $criteriaIn = "";
+
         if ($from_date && $end_date) {
-            $query = $query . " where inv_date between '$from_date 00:00:00.000' and '$end_date 23:59:59.000'  ";
+            $criteriaEx .= " AND inv_date between '$from_date 00:00:00.000' and '$end_date 23:59:59.000' ";
+            $criteriaIn .= " AND inv_date between '$from_date 00:00:00.000' and '$end_date 23:59:59.000' ";
         }
-        $query = $query . " UNION select inv_date , inv_num , cust_num , name , item , description , '' as item_size , '' as item_thick , '' as item_width , '' as item_length , 0 as unit_weight , '' as group_code , '' as group_final , um , (cast(replace(isnull(qtyPCS,0),',','') as decimal(18,2) ) ) as qtyPCS ,(cast(replace(isnull(priceperpcs,0),',','') as decimal(18,2) ) ) as priceperpcs , (cast(replace(isnull(qtykg,0),',','') as decimal(18,2) ) ) as qtykg , (cast(replace(isnull(priceperkg,0),',','') as decimal(18,2) ) ) priceperkg , 0 as priceperton , (cast(replace(isnull(discount,0),',','') as decimal(18,2) ) ) as discount , 0 as amt_usd , 0 as exch_rate , (cast(replace(isnull(AMT,0),',','') as decimal(18,2) ) ) as amt_thb , (cast(replace(isnull(VAT,0),',','') as decimal(18,2) ) ) as VAT , country = 'TH' FROM V_WebApp_InvItem_IN ";
-        if ($from_date && $end_date) {
-            $query = $query . " where inv_date between '$from_date 00:00:00.000' and '$end_date 23:59:59.000' ) as sumTMP ";
+
+        if ($item != "") {
+            $criteriaEx .= " AND (item LIKE '%$item%' OR description LIKE '%$item%') ";
+            $criteriaIn .= " AND (item LIKE '%$item%' OR description LIKE '%$item%') ";
         }
+
+        $query = " select inv_date , inv_num , cust_num , name , item , description , item_size , item_thick , item_width , item_length , unit_weight , group_code , group_final , um , sum(cast(replace(isnull(qtyPCS,0),',','') as decimal(18,2) ) ) as SUMqtyPCS , priceperpcs , sum(cast(replace(isnull(qtykg,0),',','') as decimal(18,2) ) ) as SUMqtyKG , isnull(priceperkg,0) as priceperkg , priceperton , sum(cast(replace(isnull(discount,0),',','') as decimal(18,2) ) ) as SUMdiscount , sum(cast(replace(isnull(amt_usd,0),',','') as decimal(18,2) ) ) as SUMamt_sd , exch_rate , sum(cast(replace(isnull(amt_thb,0),',','') as decimal(18,2) ) ) as SUMamt_thb , sum(cast(replace(isnull(VAT,0),',','') as decimal(18,2) ) ) as SUMvat , country from ( select inv_date , inv_num , cust_num , name , item , description , item_size , item_thick , item_width , item_length , isnull( unit_weight ,0) as unit_weight , group_code , group_final , um , (cast(replace(isnull(qtyPCS,0),',','') as decimal(18,2) ) ) as qtyPCS , (cast(replace(isnull(priceperpcs,0),',','') as decimal(18,2) ) ) priceperpcs , (cast(replace(isnull(qtykg,0),',','') as decimal(18,2) ) ) as qtykg , (cast(replace(isnull(priceperkg,0),',','') as decimal(18,2) ) ) as priceperkg , (cast(replace(isnull(priceperton,0),',','') as decimal(18,2) ) ) as priceperton , (cast(replace(isnull(discount,0),',','') as decimal(18,2) ) ) as discount , (cast(replace(isnull(amt_usd,0),',','') as decimal(18,2) ) ) as amt_usd , exch_rate , (cast(replace(isnull(amt_thb,0),',','') as decimal(18,2) ) ) as amt_thb , 0 as VAT , country FROM V_WebApp_InvItem_EX WHERE 1=1 $criteriaEx ";
+        $query = $query . " UNION select inv_date , inv_num , cust_num , cust_name as name , item , description , item_size , item_thick , item_width , item_length , isnull(unit_weight,0) as unit_weight , group_code , group_final , um , (cast(replace(isnull(qtyPCS,0),',','') as decimal(18,2) ) ) as qtyPCS ,(cast(replace(isnull(priceperpcs,0),',','') as decimal(18,2) ) ) as priceperpcs , (cast(replace(isnull(qtykg,0),',','') as decimal(18,2) ) ) as qtykg , (cast(replace(isnull(priceperkg,0),',','') as decimal(18,2) ) ) priceperkg , 0 as priceperton , (cast(replace(isnull(discount,0),',','') as decimal(18,2) ) ) as discount , 0 as amt_usd , 0 as exch_rate , (cast(replace(isnull(AMT,0),',','') as decimal(18,2) ) ) as amt_thb , (cast(replace(isnull(VAT,0),',','') as decimal(18,2) ) ) as VAT , country = 'TH' FROM V_WebApp_InvItem_IN WHERE 1=1 $criteriaIn ) as sumTMP ";
         $query = $query . " group by inv_date , inv_num , cust_num , name , item , description , item_size , exch_rate , item_thick , item_width , item_length , unit_weight , group_code , group_final , um , priceperpcs , priceperkg , priceperton , country";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        if (!is_array($rs0)) {
+            return array();
+        }
         array_splice($rs0, count($rs0) - 1, 1);
         return $rs0;
     }
