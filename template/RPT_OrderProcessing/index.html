@@ -233,8 +233,8 @@
                                 <th>Unit Weight</th>
                                 <th>Pack</th>
                                 <th>Bundle</th>
-                                <th>Ord Num</th>
-                                <th>Ord Line</th>
+                                <th>Order Status</th>
+                                <th>Ready To Ship</th>
                                 <th>Remark</th>
                                 <th>Prod</th>
                                 <th>Pcs Left</th>
@@ -246,8 +246,8 @@
                                 <th>Ready Bundle</th>
                                 <th>Ready Bundle MT</th>
                                 <th>Shipment</th>
-                                <th>Order Status</th>
-                                <th>Ready To Ship</th>
+                                <th>Ord Num</th>
+                                <th>Ord Line</th>
                             </tr>
                         </thead>
                     </table>
@@ -638,8 +638,32 @@
                         { "data": "unit_weight" },
                         { "data": "pack" },
                         { "data": "bundle" },
-                        { "data": "ord_num" },
-                        { "data": "ord_line" },
+                                    {
+                            "data": "job", render: function (data, type, row) {
+                                var val = row.ex_status || row.status || '';
+                                var opts = ['', 'Forming', 'Finishing', 'Cargo Ready'];
+                                var html = '<select class="form-control input-sm txt-ex-status" data-job="' + data + '" style="padding:0;">';
+                                $.each(opts, function (i, opt) {
+                                    var sel = (val === opt) ? ' selected' : '';
+                                    var label = opt === '' ? '- Select -' : opt;
+                                    html += '<option value="' + opt + '"' + sel + '>' + label + '</option>';
+                                });
+                                html += '</select>';
+                                return html;
+                            }
+                        },
+                        {
+                            "data": "job", render: function (data, type, row) {
+                                var val = row.ex_date || row.Date || '';
+                                if (val && val.date) {
+                                    val = moment(val.date).format("YYYY-MM-DD");
+                                } else if (val) {
+                                    val = moment(val).format("YYYY-MM-DD");
+                                    if (val === 'Invalid date') val = '';
+                                }
+                                return '<input type="date" class="form-control input-sm txt-ex-date" data-job="' + data + '" value="' + val + '"/>';
+                            }
+                        },
                         { "data": "uf_remark" },
                         { "data": "prod" },
                         { "data": "pcsLeft" },
@@ -663,32 +687,8 @@
                                 return moment(data).format("DD/MM/YYYY");
                             }
                         },
-                        {
-                            "data": "job", render: function (data, type, row) {
-                                var val = row.ex_status || row.status || '';
-                                var opts = ['', 'Forming', 'Hydro Test', 'Painting', 'Packing', 'Cargo Ready'];
-                                var html = '<select class="form-control input-sm txt-ex-status" data-job="' + data + '" style="padding:0;">';
-                                $.each(opts, function (i, opt) {
-                                    var sel = (val === opt) ? ' selected' : '';
-                                    var label = opt === '' ? '- Select -' : opt;
-                                    html += '<option value="' + opt + '"' + sel + '>' + label + '</option>';
-                                });
-                                html += '</select>';
-                                return html;
-                            }
-                        },
-                        {
-                            "data": "job", render: function (data, type, row) {
-                                var val = row.ex_date || row.Date || '';
-                                if (val && val.date) {
-                                    val = moment(val.date).format("YYYY-MM-DD");
-                                } else if (val) {
-                                    val = moment(val).format("YYYY-MM-DD");
-                                    if (val === 'Invalid date') val = '';
-                                }
-                                return '<input type="date" class="form-control input-sm txt-ex-date" data-job="' + data + '" value="' + val + '"/>';
-                            }
-                        }
+                        { "data": "ord_num" },
+                        { "data": "ord_line" },
                     ],
                     dom:
                         "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
