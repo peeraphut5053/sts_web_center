@@ -28,6 +28,15 @@ $statusFilter = isset($_REQUEST['status']) ? trim($_REQUEST['status']) : '';
 $keyword = isset($_REQUEST['keyword']) ? trim($_REQUEST['keyword']) : '';
 $limit = isset($_REQUEST['limit']) ? intval($_REQUEST['limit']) : 500;
 $limit = $limit > 0 ? min($limit, 3000) : 500;
+$defaultLatest = isset($_REQUEST['default_latest']) && $_REQUEST['default_latest'] === '1';
+
+if ($defaultLatest && $fromDate === '' && $toDate === '') {
+    $latestDate = findLatestLogDate($logFile);
+    if ($latestDate !== '') {
+        $fromDate = $latestDate;
+        $toDate = $latestDate;
+    }
+}
 
 $summary = array(
     'total' => 0,
@@ -138,6 +147,11 @@ echo json_encode(array(
     'scanned' => $scanned,
     'matched' => $matched,
     'limit' => $limit,
+    'filters' => array(
+        'from_date' => $fromDate,
+        'to_date' => $toDate,
+        'default_latest' => $defaultLatest
+    ),
     'summary' => $summary,
     'status' => counterToRows($statusMap, 'status', 20),
     'methods' => counterToRows($methodMap, 'method', 20),
@@ -145,6 +159,26 @@ echo json_encode(array(
     'hourly' => counterToRows($hourMap, 'hour', 24, true),
     'rows' => array_reverse($rows)
 ));
+
+function findLatestLogDate($logFile) {
+    $handle = fopen($logFile, 'r');
+    if ($handle === false) {
+        return '';
+    }
+
+    $latestDate = '';
+    $latestTimestamp = 0;
+    while (($line = fgets($handle)) !== false) {
+        $entry = parseAccessLogLine(trim($line));
+        if ($entry !== null && $entry['timestamp'] >= $latestTimestamp) {
+            $latestTimestamp = $entry['timestamp'];
+            $latestDate = $entry['date'];
+        }
+    }
+
+    fclose($handle);
+    return $latestDate;
+}
 
 function parseAccessLogLine($line) {
     if ($line === '') {
