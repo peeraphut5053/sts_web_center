@@ -60,6 +60,7 @@
                     <th>Cust Name</th>
                     <th>End Customer</th>
                     <th>Summary KG</th>
+                    <th>Summary Amount (THB)</th>
                     <th>Summary Amount (USD)</th>      
                 </tr>
             </thead>
@@ -147,7 +148,7 @@
                 $(tblId).DataTable().clear();
                 var RowFooterBuild = "";
                 var ColBuild = "";
-                var ColCount = 5;
+                var ColCount = 6;
                 var i = 0;
                 RowFooterBuild = "<tfoot><tr>!!ColBuild!!</tr></tfoot>";
                 for (i = 1; i <= ColCount; i++) {
@@ -180,6 +181,10 @@
                         },
                         {
                             "data": "QtyKG",
+                            "className": "text-right",
+                        },
+                        {
+                            "data": "AMT_THB",
                             "className": "text-right",
                         },
                         {
