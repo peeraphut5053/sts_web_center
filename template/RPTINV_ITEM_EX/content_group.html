@@ -23,6 +23,7 @@
                 <th>Group Name</th>
                 <th>Summary KG</th>
                 <th>Summary Amount (bath)</th>
+                <th>Summary Amount (USD)</th>
             </tr>
         </thead>
     </table>
@@ -41,6 +42,7 @@
         $(api.column(1).footer()).html("<b>TOTAL</b>");
         ColumnSumVal(2, api)
         ColumnSumVal(3, api)
+        ColumnSumVal(4, api)
     }
     tablecolumsArr = [
         {
@@ -66,5 +68,9 @@
             "data": "summary_amount",
             "className": "text-right",
         },
+        {
+            "data": "summary_USD",
+            "className": "text-right",
+        }
     ];
 </script>

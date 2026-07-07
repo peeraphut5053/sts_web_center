@@ -22,6 +22,7 @@
                 <th>Country Name</th>
                 <th>Summary KG</th>
                 <th>Summary Amount (THB)</th>
+                <th>Summary Amount (USD)</th>
             </tr>               
         </thead>
     </table>
@@ -40,6 +41,7 @@
         $(api.column(0).footer()).html("<b>TOTAL</b>");
         ColumnSumVal(1, api)
         ColumnSumVal(2, api)
+        ColumnSumVal(3, api)
     }
     tablecolumsArr = [
         {
@@ -62,5 +64,13 @@
                 return ret;
             }
         },
+        {
+            "data": "AmountUSD",
+            "className": "text-right",
+            "render": function (data, type, row, meta) {
+                var ret = addCommas(parseFloat(data).toFixed(2));
+                return ret;
+            }
+        }
     ];
 </script>

@@ -22,6 +22,7 @@
                 <th>Cust Num</th>
                 <th>Cust Name</th>
                 <th>Summary Amount (bath)</th>
+                <th>Summary Amount (USD)</th>
             </tr>
         </thead>
     </table>
@@ -37,6 +38,7 @@
     function footerCallback(api) {
         $(api.column(1).footer()).html("<b>TOTAL</b>");
         ColumnSumVal(2, api)
+        ColumnSumVal(3, api)
     }
     tablecolumsArr = [
         {
@@ -55,6 +57,14 @@
                 return ret;
             }
         },
+        {
+            "data": "AmountUSD",
+            "className": "text-right",
+            "render": function (data, type, row) {
+                var ret = formatMoney(data) ;
+                return ret;
+            }
+        }
         
         
     ]

@@ -636,7 +636,7 @@ WHERE 1=1";
             $query = $query . $date_search;
             $query = $query . " group by at.cust_num ,ct.name   ";
 
-            $query = "  select cust_num,name, SUM( isnull(cast(replace(QtyKG, ',', '') as decimal(23, 2)), 0) ) as AmountUSD, SUM( isnull(cast(replace(AMT_THB, ',', '') as decimal(23, 2)), 0) ) as AmountTHB  FROM v_webapp_invitem_EX where 1=1 "
+            $query = "  select cust_num,name, SUM( isnull(cast(replace(QtyKG, ',', '') as decimal(23, 2)), 0) ) as AmountKG, SUM( isnull(cast(replace(AMT_THB, ',', '') as decimal(23, 2)), 0) ) as AmountTHB, SUM( isnull(cast(replace(AMT_USD, ',', '') as decimal(23, 2)), 0) ) as AmountUSD FROM v_webapp_invitem_EX where 1=1 "
                     . " and (inv_date between '$from_date 00:00:00' and '$end_date 23:59:59')  group by cust_num,name order by cust_num";
         } else {
             $query = "select cust_num,cust_name,sum(qtyKG) as summary_kg,sum(AMT) as  summary_amount  
@@ -715,7 +715,8 @@ where left(customer_mst.cust_num,2) = 'EX' group by custaddr_mst.cust_num,custad
         $end_date = $this->_EndDate;
         $query = "select country,"
                 . " SUM( isnull(cast(replace(QtyKG, ',', '') as decimal(23, 2)), 0) ) as QtyKG,"
-                . " SUM( isnull(cast(replace(AMT_THB, ',', '') as decimal(23, 2)), 0) ) as AmountTHB"
+                . " SUM( isnull(cast(replace(AMT_THB, ',', '') as decimal(23, 2)), 0) ) as AmountTHB,"
+                . " SUM( isnull(cast(replace(AMT_USD, ',', '') as decimal(23, 2)), 0) ) as AmountUSD "
                 . " FROM v_webapp_invitem_EX "
                 . " where 1=1 ";
         if ($from_date && $end_date) {
@@ -803,8 +804,9 @@ where left(customer_mst.cust_num,2) = 'EX' group by custaddr_mst.cust_num,custad
         $from_date = $this->_StartDate;
         $end_date = $this->_EndDate;
         $query = "select inv_num,name,"
-                . " SUM( isnull(cast(replace(QtyKG, ',', '') as decimal(23, 2)), 0) ) as AmountUSD,"
-                . " SUM( isnull(cast(replace(AMT_THB, ',', '') as decimal(23, 2)), 0) ) as AmountTHB"
+                . " SUM( isnull(cast(replace(QtyKG, ',', '') as decimal(23, 2)), 0) ) as AmountKG,"
+                . " SUM( isnull(cast(replace(AMT_THB, ',', '') as decimal(23, 2)), 0) ) as AmountTHB,"
+                . " SUM( isnull(cast(replace(AMT_USD, ',', '') as decimal(23, 2)), 0) ) as AmountUSD"
                 . " FROM v_webapp_invitem_EX "
                 . " where 1=1 ";
         if ($from_date && $end_date) {
@@ -842,7 +844,7 @@ where left(customer_mst.cust_num,2) = 'EX' group by custaddr_mst.cust_num,custad
         $end_date2 = $this->_txtToDateGroup;
         if ($type_sale == "EX") {
 
-            $query = " select isnull(group_code,'Z_ORDER') as group_code , isnull(group_final,'') as group_final , SUM( isnull(cast(replace(QtyKG, ',', '') as decimal(23, 2)), 0) ) as summary_kg , SUM( isnull(cast(replace(AMT_THB, ',', '') as decimal(23, 2)), 0) ) as summary_amount  FROM v_webapp_invitem_EX where 1=1  ";
+            $query = " select isnull(group_code,'Z_ORDER') as group_code , isnull(group_final,'') as group_final , SUM( isnull(cast(replace(QtyKG, ',', '') as decimal(23, 2)), 0) ) as summary_kg , SUM( isnull(cast(replace(AMT_THB, ',', '') as decimal(23, 2)), 0) ) as summary_amount,  sum(isnull(AMT_USD,0)) as summary_USD  FROM v_webapp_invitem_EX where 1=1  ";
         } else {
             $query = " select isnull(group_final,'Z_ORDER') as group_code , isnull(group_final,'') as group_final
 , SUM( isnull(cast(replace(QtyKG, ',', '') as decimal(23, 2)), 0) ) as summary_kg
