@@ -397,10 +397,10 @@
             }
         });
 
-        loadUserLogReport();
+        loadUserLogReport(true);
     });
 
-    function loadUserLogReport() {
+    function loadUserLogReport(defaultLatest) {
         $("#btnSearch").prop("disabled", true).html('<i class="fa fa-spinner fa-spin"></i> Loading');
         $("#lblMeta").text("Reading access.log...");
 
@@ -415,7 +415,8 @@
                 method: $("#selMethod").val(),
                 status: $("#txtStatus").val(),
                 keyword: $("#txtKeyword").val(),
-                limit: $("#txtLimit").val()
+                limit: $("#txtLimit").val(),
+                default_latest: defaultLatest ? "1" : ""
             },
             success: function (res) {
                 if (!res || !res.success) {
@@ -436,8 +437,13 @@
 
     function renderUserLogReport(res) {
         var summary = res.summary || {};
+        var filters = res.filters || {};
 
         $("#lblSource").text("Source: file:///" + (res.source || "").replace(/\\/g, "/"));
+        if (filters.default_latest && filters.from_date && filters.to_date && !$("#txtFromDate").val() && !$("#txtToDate").val()) {
+            $("#txtFromDate").val(filters.from_date);
+            $("#txtToDate").val(filters.to_date);
+        }
         $("#lblMeta").text("Scanned " + formatNumber(res.scanned || 0) + " lines, matched " + formatNumber(res.matched || 0) + " requests, showing latest " + formatNumber((res.rows || []).length) + " rows.");
         $("#kpiTotal").text(formatNumber(summary.total || 0));
         $("#kpiMatched").text(formatBytes(summary.bytes || 0) + " transferred");
