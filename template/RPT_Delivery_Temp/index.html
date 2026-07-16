@@ -550,6 +550,7 @@
   $('#btnAddDelivery').click(function () {
     var $select = $("#customer");
     $select.select2({
+      dropdownParent: $('#ModalDeliveryTemp'),
       placeholder: 'กรุณาเลือก Customer',
       allowClear: true,
       width: '100%',
@@ -612,6 +613,7 @@
         })));
         var $select = $("#customer_seq");
         $select.select2({
+          dropdownParent: $('#ModalDeliveryTemp'),
           placeholder: 'กรุณาเลือก Cust_seq',
           allowClear: true,
           width: '100%',
@@ -823,6 +825,7 @@
 
                 var $select = $("#customer_edit");
                 $select.select2({
+                  dropdownParent: $('#ModalDeliveryTempItemEdit'),
                   placeholder: 'กรุณาเลือก Customer',
                   allowClear: true,
                   width: '100%',
@@ -840,6 +843,7 @@
                 var $select_seq = $("#customer_seq_edit");
 
                 $select_seq.select2({
+                  dropdownParent: $('#ModalDeliveryTempItemEdit'),
                   placeholder: 'กรุณาเลือก Customer',
                   allowClear: true,
                   width: '100%',
@@ -865,6 +869,7 @@
                     })));
                     var $select_seq = $("#customer_seq_edit");
                     $select_seq.select2({
+                      dropdownParent: $('#ModalDeliveryTempItemEdit'),
                       placeholder: 'กรุณาเลือก Cust_seq',
                       allowClear: true,
                       width: '100%',
@@ -896,6 +901,7 @@
                       })));
                       var $select_seq = $("#customer_seq_edit");
                       $select_seq.select2({
+                        dropdownParent: $('#ModalDeliveryTempItemEdit'),
                         placeholder: 'กรุณาเลือก Cust_seq',
                         allowClear: true,
                         width: '100%',
