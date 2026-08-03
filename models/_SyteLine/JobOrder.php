@@ -1713,37 +1713,44 @@ where [description] not like '%กลุ่ม%' and [description] <> 'ลบ'
         $wh = '';
 
         if ($Item != '') {
-            $wh .= " and item = '" . $Item . "'";
+            $wh .= " and job_mst.item = '" . $Item . "'";
         }
 
         if ($sts_job !== '') {
-            $wh .= " and Uf_sts_job = '" . $sts_job . "'";
+            $wh .= " and job_mst.Uf_sts_job = '" . $sts_job . "'";
         }
 
 
         if ($wc != '') {
-            $wh .= " and wc = '" . $wc . "'";
+            $wh .= " and jr.wc = '" . $wc . "'";
         }
 
         if ($whereClause != '') {
             $wh .=  "". $whereClause;
         }
 
-        $query = "select distinct job_mst.job, job_mst.stat, job_mst.item,job_mst.qty_released, job_mst.Uf_sts_job, job_mst.qty_complete,job_mst.Uf_refno, jr.wc,jo.no,jo.Createdate
+        $query = "select distinct job_mst.job, job_mst.stat, job_mst.item,job_mst.qty_released, job_mst.Uf_sts_job
+ --, job_mst.qty_complete
+ , qty_complete = sum(isnull(mv.qty1,0))
+ , job_mst.Uf_refno, jr.wc,jo.no,jo.Createdate
     , isnull(custaddr_mst.addr##2,name) as custname2, job_mst.Uf_remark
     ,  CASE WHEN custaddr_mst.cust_num IS NOT NULL AND 
                          custaddr_mst.cust_num <> '' THEN 
        custaddr_mst.city 
        ELSE CASE WHEN co_mst.prospect_id IS NOT NULL AND 
                          co_mst.prospect_id <> '' THEN prospect_mst.company ELSE '' END END AS PORT
-FROM            job_mst 
+FROM  job_mst 
     inner JOIN jobroute_mst jr ON job_mst.job = jr.job 
     left JOIN STS_curr_job_order jo ON job_mst.job = jo.job
- left join co_mst on job_mst.ord_num = co_mst.co_num 
-  left join custaddr_mst on custaddr_mst.cust_num = co_mst.cust_num and custaddr_mst.cust_seq = co_mst.cust_seq
-  left join prospect_mst ON co_mst.prospect_id = prospect_mst.prospect_id 
+    left join co_mst on job_mst.ord_num = co_mst.co_num 
+    left join custaddr_mst on custaddr_mst.cust_num = co_mst.cust_num and custaddr_mst.cust_seq = co_mst.cust_seq
+    left join prospect_mst ON co_mst.prospect_id = prospect_mst.prospect_id 
+ left join mv_bc_tag mv on mv.job = job_mst.job and mv.item = job_mst.item
 where len(rtrim(ltrim(job_mst.job))) = 10
   and job_mst.stat <> 'H' $wh 
+group by job_mst.job, job_mst.stat, job_mst.item,job_mst.qty_released, job_mst.Uf_sts_job, job_mst.Uf_refno, jr.wc,jo.no,jo.Createdate
+    , isnull(custaddr_mst.addr##2,name) , job_mst.Uf_remark ,  CASE WHEN custaddr_mst.cust_num IS NOT NULL AND  custaddr_mst.cust_num <> '' 
+ THEN custaddr_mst.city ELSE CASE WHEN co_mst.prospect_id IS NOT NULL AND co_mst.prospect_id <> '' THEN prospect_mst.company ELSE '' END END
 order by job_mst.job";
 
         $cSql = new SqlSrv();
