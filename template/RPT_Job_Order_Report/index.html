@@ -71,29 +71,31 @@
   }
 
   .selected {
-    background-color: rgb(229, 244, 251) !important; /* Add !important to make sure override datables base styles */
+    background-color: rgb(229, 244, 251) !important;
+    /* Add !important to make sure override datables base styles */
     color: black !important;
- }
+  }
 
   .bolded {
     font-weight: bold;
   }
 
-  .select2-results__options{
-        font-size:18px !important;
-        }
+  .select2-results__options {
+    font-size: 18px !important;
+  }
 
-   .select2-results__options .select2-results__option--highlighted{
-        background-color: #6bc6dd !important;
-   }
-   .select2-selection__rendered {
-        font-size:18px !important;
-   }
+  .select2-results__options .select2-results__option--highlighted {
+    background-color: #6bc6dd !important;
+  }
+
+  .select2-selection__rendered {
+    font-size: 18px !important;
+  }
 </style>
 <div class="row">
-    <div style="margin-top: 10px; margin-bottom: 20px;">
-      <h1 class="my-header">Job Order Report</h1>
-     </div>
+  <div style="margin-top: 10px; margin-bottom: 20px;">
+    <h1 class="my-header">Job Order Report</h1>
+  </div>
   <div class="col-lg-2">
     <div class="input-group">
       <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">Item</div>
@@ -178,7 +180,7 @@
       <div class="modal-body">
         <div id="jobContainer">
           <!-- ข้อมูลจาก AJAX จะแสดงที่นี่ -->
-      </div>
+        </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
@@ -238,7 +240,7 @@
   }
 
   function updateOrder(job, order) {
-    
+
     // can't change order if not selected
     if (!selectedJob.some(item => item.job === job)) {
       // เลือก checkbox อัตโนมัติเมื่อมีการเปลี่ยนค่า order
@@ -250,7 +252,7 @@
       });
       return true;
     }
-    
+
     if (selectedJob.some(item => item.job === job)) {
       selectedJob = selectedJob.map(item => {
         if (item.job === job) {
@@ -258,9 +260,9 @@
         }
         return item;
       });
-    } 
+    }
     console.log(selectedJob);
-    
+
   }
 
   function ReportItemSearch() {
@@ -274,7 +276,7 @@
     var Stopped = $("#job_stopped").is(":checked") ? 'S' : '';
     var Released = $("#job_released").is(":checked") ? 'R' : '';
 
-    if (Item == "" && wc == "" && Firm == false && Complete == false && Stopped == false && Released == false) {
+    if (Item == "" && sts_job == "" && wc == "" && Firm == false && Complete == false && Stopped == false && Released == false) {
       alert("กรุณากรอกข้อมูล");
       return false;
     }
@@ -327,18 +329,18 @@
           scrollX: true,
           select: true,
           order: [
-            [4, "asc"], 
-            [2, "asc"], 
+            [4, "asc"],
+            [2, "asc"],
           ],
           // fontWeight: "bold",
           style: "font-weight: bold;",
           select: {
-              style: "multi",
-              selector: 'td:nth-child(1)' // กำหนดให้คลิกได้เฉพาะคอลัมน์ที่ 2
+            style: "multi",
+            selector: 'td:nth-child(1)' // กำหนดให้คลิกได้เฉพาะคอลัมน์ที่ 2
 
-            },
+          },
           columnDefs: [
-           {
+            {
               targets: [1],
               width: 10,
             },
@@ -350,7 +352,7 @@
               targets: [3],
               width: 50,
             },
-           {
+            {
               targets: [4],
               width: 60,
             },
@@ -385,36 +387,36 @@
             {
               "data": "Uf_refno",
               "className": "text-center bolded",
-              render: function(data, type, row) {
-                                if (type === 'sort') {
-                                    return data === null || data === '' ? 999999 : data;
-                                }
-                                return data;
-                            }
+              render: function (data, type, row) {
+                if (type === 'sort') {
+                  return data === null || data === '' ? 999999 : data;
+                }
+                return data;
+              }
             },
             {
               "data": "job",
               "className": "text-center bolded",
               "render": function (data, type, row) {
-                    let wc = row.wc.slice(0, 2);
-                    
-                    if (wc == "P7") {
-                      return '<a style="padding: 5px; font-size: 14px;" class="btn btn-info btn-xs" href="http://172.18.1.194/sts_tag/?tag_history_finishing&jobno='+data+'%2B0%2B10&act=start" target="_blank">'+row.job+'</a>';
-                    } else {
-                      return '<a style="padding: 5px; font-size: 14px;" class="btn btn-info btn-xs" href="http://172.18.1.194/sts_tag/?tag_history_forming&jobno='+data+'%2B0%2B10&act=start" target="_blank">'+row.job+'</a>';
-                    }
+                let wc = row.wc.slice(0, 2);
+
+                if (wc == "P7") {
+                  return '<a style="padding: 5px; font-size: 14px;" class="btn btn-info btn-xs" href="http://172.18.1.194/sts_tag/?tag_history_finishing&jobno=' + data + '%2B0%2B10&act=start" target="_blank">' + row.job + '</a>';
+                } else {
+                  return '<a style="padding: 5px; font-size: 14px;" class="btn btn-info btn-xs" href="http://172.18.1.194/sts_tag/?tag_history_forming&jobno=' + data + '%2B0%2B10&act=start" target="_blank">' + row.job + '</a>';
+                }
 
               }
             },
             {
               "data": "Uf_sts_job",
               "className": "text-center bolded",
-              render: function(data, type, row) {
-                                if (type === 'sort') {
-                                    return data === null || data === '' ? 'Z999999' : data;
-                                }
-                                return data;
-                            }
+              render: function (data, type, row) {
+                if (type === 'sort') {
+                  return data === null || data === '' ? 'Z999999' : data;
+                }
+                return data;
+              }
             },
             {
               "data": "custname2",
@@ -439,20 +441,20 @@
             {
               "data": "qty_released",
               "className": "text-center bolded",
-              "render" : function (data, type, row) {
+              "render": function (data, type, row) {
                 return Number(data).toLocaleString();
               }
             },
             {
               "data": "qty_complete",
               "className": "text-center bolded",
-              "render" : function (data, type, row) {
+              "render": function (data, type, row) {
                 return Number(data).toLocaleString();
               }
             },
             {
               "data": "Createdate.date",
-              "className": "text-center bolded" ,
+              "className": "text-center bolded",
               "render": function (data) {
                 if (data) {
                   return moment(data).format('DD/MM/YYYY');
@@ -532,7 +534,7 @@
                     $("button.btn-success").prop("disabled", false);
                   },
                 });
-              } 
+              }
             },
             {
               text: `<button type="button" class="btn btn-warning">แก้ไข Job Order</button>`,
@@ -595,7 +597,7 @@
                     $("button.btn-warning").prop("disabled", false);
                   },
                 });
-              } 
+              }
             },
             {
               text: `<button type="button" class="btn btn-danger">ปิด Job Order</button>`,
@@ -662,14 +664,14 @@
 
     // วนลูปเก็บค่าที่ผู้ใช้แก้ไข
     $('#jobContainer .job-row').each(function () {
-        let job = $(this).find('.job').val(); // ค่าจาก input
-        let job_order = $(this).find('.job-no').val(); // ค่าจาก input
+      let job = $(this).find('.job').val(); // ค่าจาก input
+      let job_order = $(this).find('.job-no').val(); // ค่าจาก input
 
-        jobData.push(job);
-        order.push(job_order);
+      jobData.push(job);
+      order.push(job_order);
     });
 
-  
+
   });
 
 </script>
