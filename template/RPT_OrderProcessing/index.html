@@ -638,7 +638,7 @@
                         { "data": "unit_weight" },
                         { "data": "pack" },
                         { "data": "bundle" },
-                                    {
+                        {
                             "data": "job", render: function (data, type, row) {
                                 var val = row.ex_status || row.status || '';
                                 var opts = ['', 'Forming', 'Finishing', 'Cargo Ready'];
@@ -673,18 +673,18 @@
                         { "data": "balanceBDL" },
                         {
                             "data": "balanceMT", render: function (data, type, row) {
-                                return data.toFixed(2);
+                                return parseReportNumber(data).toFixed(2);
                             }
                         },
                         { "data": "ReadyBundle" },
                         {
                             "data": "ReadyBundleMT", render: function (data, type, row) {
-                                return data.toFixed(2);
+                                return parseReportNumber(data).toFixed(2);
                             }
                         },
                         {
                             "data": "shipment.date", render: function (data, type, row) {
-                                return moment(data).format("DD/MM/YYYY");
+                                return data ? (moment(data).isValid() ? moment(data).format("DD/MM/YYYY") : data) : '';
                             }
                         },
                         { "data": "ord_num" },

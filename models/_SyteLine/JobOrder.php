@@ -1745,14 +1745,14 @@ FROM  job_mst
     left join co_mst on job_mst.ord_num = co_mst.co_num 
     left join custaddr_mst on custaddr_mst.cust_num = co_mst.cust_num and custaddr_mst.cust_seq = co_mst.cust_seq
     left join prospect_mst ON co_mst.prospect_id = prospect_mst.prospect_id 
- left join mv_bc_tag mv on mv.job = job_mst.job and mv.item = job_mst.item
+ left join mv_bc_tag mv on mv.job = job_mst.job and mv.item = job_mst.item and mv.active = 1
 where len(rtrim(ltrim(job_mst.job))) = 10
-  and job_mst.stat <> 'H' and mv.active = 1  $wh 
+  and job_mst.stat <> 'H' $wh 
 group by job_mst.job, job_mst.stat, job_mst.item,job_mst.qty_released, job_mst.Uf_sts_job, job_mst.Uf_refno, jr.wc,jo.no,jo.Createdate
     , isnull(custaddr_mst.addr##2,name) , job_mst.Uf_remark ,  CASE WHEN custaddr_mst.cust_num IS NOT NULL AND  custaddr_mst.cust_num <> '' 
  THEN custaddr_mst.city ELSE CASE WHEN co_mst.prospect_id IS NOT NULL AND co_mst.prospect_id <> '' THEN prospect_mst.company ELSE '' END END
 order by job_mst.job";
-
+        
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
