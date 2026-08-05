@@ -384,7 +384,7 @@ where STS_qty_move_line.doc_num = '$doc_num' and mv_bc_tag.active=1 and mv_bc_ta
         $query = "select top 2000 mv_bc_tag.*, item.[description]
    , wc.[description] as wc
    , item.unit_weight, TotalWeight = case when mv_bc_tag.item like 'WS%' or mv_bc_tag.item like 'RS%' 
-          then mv_bc_tag.qty1 
+         then mv_bc_tag.qty1 / 1000
           else (isnull(mv_bc_tag.NC_QTY,0) * item.unit_weight) / 1000
           end
 from mv_bc_tag 
@@ -752,6 +752,31 @@ order by [date]";
         return array($rs);
     }
 
+    function SaveQCLoc($id, $qc_loc_value) {
+        $query = "update mv_bc_tag set QC_loc = '".$qc_loc_value."' where id = '".$id."' ";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return array($rs);
+    }
+
+    function SaveQCSource($id, $qc_source_value) {
+        $query = "update mv_bc_tag set QC_source = '".$qc_source_value."' where id = '".$id."' ";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return array($rs);
+    }
+
+    function SaveQCMistake($id, $qc_mistake_value) {
+        $qc_mistake_value = intval($qc_mistake_value);
+        $query = "update mv_bc_tag set QC_mistake = ".$qc_mistake_value." where id = '".$id."' ";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return array($rs);
+    }
+
     function GetQcDataAnalysisSummary($StartDate, $EndDate) {
         $query = "select Main_cause
    , Total=sum(total), REJECT=sum(REJECT), SCRAP=sum(SCRAP), FIX=sum(FIX)
@@ -773,6 +798,41 @@ from V_STS_QA_TAG_MAIN_minor
 where QA_RecordDate between '$StartDate'and '$EndDate'
    and main_cause = '$load'
 group by Main_cause, Minor_cause";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+    function GetQcTop5Stations($StartDate, $EndDate) {
+        $sDate = date('Y-m-d', strtotime($StartDate));
+        $eDate = date('Y-m-d', strtotime($EndDate));
+
+        $query = "select Main_cause = case when tag.main_cause = 'FO' then 'Forming'
+                                           when tag.main_cause = 'FI' then 'Finishing'
+                                           when tag.main_cause = 'Ot' then 'Other'
+                                      end
+                     , Minor_cause = minor.cause
+                     , Station_Name = wc.description
+                     , Total = SUM((isnull(tag.NC_QTY,0) * item.unit_weight) / 1000)
+        from mv_bc_tag tag
+         inner join item_mst item on item.item = tag.item
+         inner join jobroute_mst job on job.job = tag.job and job.oper_num = 10
+         inner join wc_mst wc on job.wc = wc.wc
+         left join STS_QA_TAG_Minor minor on minor.id = tag.minor_cause
+        where tag.item not like 'WS%' and tag.item not like 'RS%' 
+          and tag.main_cause not in ('SL', 'Ma')
+          and tag.tag_status <> 'Good' and tag.tag_status is not null
+          and tag.QA_RecordDate is not null
+          and (TRY_CONVERT(date, tag.QA_RecordDate) between CONVERT(date, '$sDate') and CONVERT(date, '$eDate'))
+        group by case when tag.main_cause = 'FO' then 'Forming'
+                      when tag.main_cause = 'FI' then 'Finishing'
+                      when tag.main_cause = 'Ot' then 'Other'
+                 end	
+             , minor.cause
+             , wc.description
+        having SUM((isnull(tag.NC_QTY,0) * item.unit_weight) / 1000) > 0
+        order by minor.cause, Total desc";
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
