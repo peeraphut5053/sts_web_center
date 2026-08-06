@@ -787,6 +787,24 @@ order by [date]";
         return array($rs);
     }
 
+    function GetReportFrequency($year = 2026) {
+        $yearVal = is_numeric($year) ? intval($year) : 2026;
+        $query = "select qtyCount = count(distinct(tag.QC_source)), wc.[description], wc.wc
+   , [year] = year(QA_RecordDate), [month] = month(QA_RecordDate)
+from mv_bc_tag tag
+ inner join jobroute_mst job on job.job = tag.job and job.oper_num = 10
+ inner join wc_mst wc on job.wc = wc.wc
+where year(QA_RecordDate) = $yearVal 
+      and month(QA_RecordDate) between 1 and 12
+group by wc.[description], wc.wc, year(QA_RecordDate), month(QA_RecordDate)
+having count(distinct(tag.QC_source)) <> 0
+order by year(QA_RecordDate), month(QA_RecordDate), wc.wc";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return array($rs);
+    }
+
     function GetQcDataAnalysisSummary($StartDate, $EndDate) {
         $query = "select Main_cause
    , Total=sum(total), REJECT=sum(REJECT), SCRAP=sum(SCRAP), FIX=sum(FIX)
