@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 class BcTag {
 
@@ -852,6 +852,34 @@ ORDER BY
         array_splice($rs, count($rs) - 1, 1);
         return $rs;
     }
+
+    function GetQcAllNcData($StartDate, $EndDate) {
+        $query = "SELECT
+    Main_cause,
+    Minor_cause,
+    QC_loc,
+    month_num = MONTH(QA_RecordDate),
+    Total = SUM(total),
+    REJECT = SUM(REJECT),
+    SCRAP = SUM(SCRAP),
+    FIX = SUM(FIX),
+    [NC ACCEPT] = SUM([NC ACCEPT]),
+    [in PROCESS] = SUM([in PROCESS])
+FROM V_STS_QA_TAG_MAIN_minor
+WHERE QA_RecordDate BETWEEN '$StartDate' AND '$EndDate'
+GROUP BY
+    Main_cause,
+    Minor_cause,
+    QC_loc,
+    MONTH(QA_RecordDate)
+ORDER BY
+    Main_cause, Minor_cause, QC_loc, month_num";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
     function GetQcTop5Stations($StartDate, $EndDate) {
         $sDate = date('Y-m-d', strtotime($StartDate));
         $eDate = date('Y-m-d', strtotime($EndDate));

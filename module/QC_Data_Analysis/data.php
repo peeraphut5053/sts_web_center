@@ -50,6 +50,16 @@ else if ($load == "monthly_nc_by_loc") {
     echo json_encode($rs);
 }
 
+else if ($load == "all_nc_data") {
+    $CallModel = new CallModel();
+    $CallModel->SyteLine_Models();
+
+    $BcTag = new BcTag();
+    $BcTag->setConn($ConnSL);
+    $rs = $BcTag->GetQcAllNcData($StartDate, $EndDate);
+    echo json_encode($rs);
+}
+
 else {
     $CallModel = new CallModel();
     $CallModel->SyteLine_Models();
