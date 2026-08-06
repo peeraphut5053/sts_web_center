@@ -17,6 +17,15 @@ $CallModel->SyteLine_Models();
 $STS_Custom = new DeliveryOrder();
 $STS_Custom->setConn($ConnSL);
 
+$load = isset($load) ? $load : '';
+$doc_no = isset($doc_no) ? $doc_no : '';
+$StartDate = isset($StartDate) ? $StartDate : '';
+$EndDate = isset($EndDate) ? $EndDate : '';
+$do_num = isset($do_num) ? $do_num : '';
+$co_num = isset($co_num) ? $co_num : '';
+$item = isset($item) ? $item : '';
+$search = isset($search) ? $search : '';
+
 if ($load == "GetDo") {
     $rs = $STS_Custom->GetDoNumReturn();
     echo json_encode($rs);
@@ -72,86 +81,72 @@ if ($load == "CreateItemReturn") {
 if ($load == "AddItemReturn") {
     $rs = $STS_Custom->AddItemReturn($doc_no, $do_num, $co_num, $item, $qty, $issue, $remark, $user);
     echo json_encode($rs);
-    # code...
 }
 
 if ($load == "UpdateItemReturn") {
     $rs = $STS_Custom->UpdateItemReturn($doc_no, $do_num, $do_num_old, $co_num, $co_num_old, $item, $item_old, $qty, $remark, $issue, $user);
     echo json_encode($rs);
-    # code...
 }
 
 if ($load == "DeleteItemReturn") {
     $rs = $STS_Custom->DeleteItemReturn($doc_no, $do_num, $co_num, $item);
     echo json_encode($rs);
-    # code...
 }
 
 if ($load == "UpdateReturnHeader") {
     $rs = $STS_Custom->UpdateReturnHeader($doc_no, $remark, $stat, $return_type, $user);
     echo json_encode($rs);
-    # code...
 }
 
 if ($load == "ReceiveItem") {
-    $rs = $STS_Custom->ReceiveItemReturn($doc_no,$returned);
+    $rs = $STS_Custom->ReceiveItemReturn($doc_no, $returned);
     echo json_encode($rs);
-    # code...
 }
 
 if ($load == "ApproveShip") {
-    $rs = $STS_Custom->ApproveShipItemReturn($doc_no,$user);
+    $rs = $STS_Custom->ApproveShipItemReturn($doc_no, $user);
     echo json_encode($rs);
-    # code...
 }
 
 if ($load == "ApproveQc") {
-    $rs = $STS_Custom->ApproveReturnByQc($doc_no , $qc);
+    $rs = $STS_Custom->ApproveReturnByQc($doc_no, $qc);
     echo json_encode($rs);
-    # code...
 }
 
 if ($load == "GetReturnPicByDocNo") {
     $rs = $STS_Custom->GetReturnPicByDocNo($doc_no);
     echo json_encode($rs);
-    # code...
 }
 
 if ($load == "UpdateCause") {
     $rs = $STS_Custom->UpdateCauseReturn($doc_no, $do_num, $co_num, $item, $cause, $user);
     echo json_encode($rs);
-    # code...
 }
 
 if ($load == "UpdateStatus") {
     $rs = $STS_Custom->UpdateStatusReturn($doc_no, $do_num, $co_num, $item, $status, $user);
     echo json_encode($rs);
-    # code...
 }
 
 if ($load == "UpdateRemarkQc") {
     $rs = $STS_Custom->UpdateRemarkQcReturn($doc_no, $do_num, $co_num, $item, $remark, $user);
     echo json_encode($rs);
-    # code...
 }
 
 if ($load == "GetReportReturn") {
     $rs = $STS_Custom->GetReportReturn($StartDate, $EndDate, $doc_no);
     echo json_encode($rs);
-    # code...
 }
 
 if ($load == "SalesApprove") {
     $rs = $STS_Custom->SalesApproveReturn($doc_no, $sale);
     echo json_encode($rs);
-    # code...
 }
 
 if ($load == "CountReturnPicByDocNo") {
     $dept = isset($dept) ? $dept : '';
     $rs = $STS_Custom->CountReturnPicByDocNo($doc_no, $dept);
     echo json_encode(array(
-        'count' => $rs[0]['pic_count']
+        'count' => isset($rs[0]['pic_count']) ? $rs[0]['pic_count'] : 0
     ));
-    # code...
 }

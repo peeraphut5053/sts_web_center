@@ -71,3 +71,18 @@ if ($load == "save_record_date") {
     $mv_bc_tag = $CallModelObj->UpdateRecordDate($id, $record_date);
     echo json_encode($mv_bc_tag);
 }
+
+if ($load == "save_qc_loc") {
+    $mv_bc_tag = $CallModelObj->SaveQCLoc($id, $qc_loc_value);
+    echo json_encode($mv_bc_tag);
+}
+
+if ($load == "save_qc_source") {
+    $mv_bc_tag = $CallModelObj->SaveQCSource($id, $qc_source_value);
+    echo json_encode($mv_bc_tag);
+}
+
+if ($load == "save_qc_mistake") {
+    $mv_bc_tag = $CallModelObj->SaveQCMistake($id, $qc_mistake_value);
+    echo json_encode($mv_bc_tag);
+}

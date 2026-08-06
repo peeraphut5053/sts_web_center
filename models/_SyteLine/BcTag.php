@@ -851,6 +851,7 @@ GROUP BY
     [in PROCESS] = SUM([in PROCESS])
 FROM V_STS_QA_TAG_MAIN_minor
 WHERE QA_RecordDate BETWEEN '$StartDate' AND '$EndDate'
+  AND Minor_cause NOT LIKE '%Raw mat%'
 GROUP BY
     Main_cause,
     QC_loc,
@@ -877,6 +878,7 @@ ORDER BY
     [in PROCESS] = SUM([in PROCESS])
 FROM V_STS_QA_TAG_MAIN_minor
 WHERE QA_RecordDate BETWEEN '$StartDate' AND '$EndDate'
+  AND Minor_cause NOT LIKE '%Raw mat%'
 GROUP BY
     Main_cause,
     Minor_cause,

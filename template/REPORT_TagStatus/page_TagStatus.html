@@ -184,6 +184,9 @@
         <thead>
 
             <tr>
+                <th class="bg-gray" width="100px">QC Loc</th>
+                <th class="bg-gray" width="120px">QC Source</th>
+                <th class="bg-gray" width="80px">QC Mistake</th>
                 <th class="bg-gray" width="65px">Record Date</th>
                 <th class="bg-gray" width="65px">Date</th>
                 <th class="bg-gray" width="65px">Work Center</th>
@@ -213,6 +216,9 @@
         <thead>
 
             <tr>
+                <th class="bg-gray" width="100px">QC Loc</th>
+                <th class="bg-gray" width="120px">QC Source</th>
+                <th class="bg-gray" width="80px">QC Mistake</th>
                 <th class="bg-gray" width="65px">Record Date</th>
                 <th class="bg-gray" width="65px">Date</th>
                 <th class="bg-gray" width="65px">Work Center</th>
@@ -412,6 +418,28 @@
 
                         "columns": [
                             {
+                                "data": "QC_loc",
+                                "className": "text-left",
+                                "defaultContent": "",
+                                "render": function (data, type, row, meta) {
+                                    var map = { "P": "ปู่เจ้า", "W": "วังน้อย" };
+                                    return map[data] || data || "";
+                                }
+                            },
+                            {
+                                "data": "QC_source",
+                                "className": "text-left",
+                                "defaultContent": ""
+                            },
+                            {
+                                "data": "QC_mistake",
+                                "className": "text-center",
+                                "defaultContent": "",
+                                "render": function (data, type, row, meta) {
+                                    return data == 1 ? "&#10003;" : "";
+                                }
+                            },
+                            {
                                 "data": "QA_RecordDate.date",
                                 "className": "text-left",
                                 "render": function (data, type, row, meta) {
@@ -587,6 +615,39 @@
                         "bInfo": false,
 
                         "columns": [
+                            {
+                                "data": "QC_loc",
+                                "className": "text-center",
+                                "defaultContent": "",
+                                "render": function (data, type, row, meta) {
+                                    var opts = [{ v: "", l: "-- เลือก --" }, { v: "P", l: "ปู่เจ้า" }, { v: "W", l: "วังน้อย" }];
+                                    var selectHtml = '<select class="form-control" style="min-width:90px" onchange="SaveQCLoc(' + row.id + ', this.value)">';
+                                    opts.forEach(function(opt) {
+                                        var sel = (data === opt.v) ? ' selected' : '';
+                                        selectHtml += '<option value="' + opt.v + '"' + sel + '>' + opt.l + '</option>';
+                                    });
+                                    selectHtml += '</select>';
+                                    return selectHtml;
+                                }
+                            },
+                            {
+                                "data": "QC_source",
+                                "className": "text-center",
+                                "defaultContent": "",
+                                "render": function (data, type, row, meta) {
+                                    let valdata = data ? data : "";
+                                    return `<input type='text' class='input-text-value' size='15' onchange="SaveQCSource(${row.id}, this.value);" value='${valdata}' />`;
+                                }
+                            },
+                            {
+                                "data": "QC_mistake",
+                                "className": "text-center",
+                                "defaultContent": "",
+                                "render": function (data, type, row, meta) {
+                                    var checked = (data == 1) ? ' checked' : '';
+                                    return `<input type='checkbox'${checked} onchange="SaveQCMistake(${row.id}, this.checked ? 1 : 0);" style="width:18px;height:18px;cursor:pointer;" />`;
+                                }
+                            },
                             {
                                 "data": "QA_RecordDate.date",
                                 "className": "text-left",
@@ -904,6 +965,45 @@
 
     }
 
+
+    function SaveQCLoc(id, qc_loc_value) {
+        $.ajax({
+            url: "././module/REPORT_TagStatus/data.php",
+            type: 'get',
+            data: {
+                "load": "save_qc_loc",
+                "id": id,
+                "qc_loc_value": qc_loc_value
+            },
+            success: function () {}
+        });
+    }
+
+    function SaveQCSource(id, qc_source_value) {
+        $.ajax({
+            url: "././module/REPORT_TagStatus/data.php",
+            type: 'get',
+            data: {
+                "load": "save_qc_source",
+                "id": id,
+                "qc_source_value": qc_source_value
+            },
+            success: function () {}
+        });
+    }
+
+    function SaveQCMistake(id, qc_mistake_value) {
+        $.ajax({
+            url: "././module/REPORT_TagStatus/data.php",
+            type: 'get',
+            data: {
+                "load": "save_qc_mistake",
+                "id": id,
+                "qc_mistake_value": qc_mistake_value
+            },
+            success: function () {}
+        });
+    }
 
     function SaveDetail(detail_id, detail_value) {
         // console.log(detail_id)
