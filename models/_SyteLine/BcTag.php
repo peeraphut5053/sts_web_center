@@ -574,6 +574,16 @@ order by id desc";
         return array($rs);
     }
 
+    function getDataChartQC($StartDate, $EndDate) {
+        $query = "EXEC [dbo].[STS_PROD_TIME_REPORT_ALL_QC]
+  @DateStarting = '$StartDate',
+  @DateEnding = '$EndDate'";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return array($rs);
+    }
+
     function getGroupChart($StartDate, $EndDate, $GroupBy) {
         $query = "select *
 from V_STS_PROD_TIME_REPORT
