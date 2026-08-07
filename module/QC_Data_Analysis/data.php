@@ -60,6 +60,16 @@ else if ($load == "all_nc_data") {
     echo json_encode($rs);
 }
 
+else if ($load == "raw_mat_report") {
+    $CallModel = new CallModel();
+    $CallModel->SyteLine_Models();
+
+    $BcTag = new BcTag();
+    $BcTag->setConn($ConnSL);
+    $rs = $BcTag->GetQcRawMatReport($StartDate, $EndDate);
+    echo json_encode($rs);
+}
+
 else {
     $CallModel = new CallModel();
     $CallModel->SyteLine_Models();

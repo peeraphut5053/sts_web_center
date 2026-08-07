@@ -945,6 +945,61 @@ ORDER BY
         return $rs;
     }
 
+    function GetQcRawMatReport($StartDate, $EndDate) {
+        $sDate = date('Y-01-01', strtotime($StartDate));
+        $year = date('Y', strtotime($StartDate));
+        $nextYearDate = ($year + 1) . "-01-01";
+
+        $query = "SELECT
+    po.manufacturer,
+    CASE
+        WHEN tag.issue IN (8,9)  THEN 'กดแบน'
+        WHEN tag.issue = 10      THEN 'ขยายบาน'
+        WHEN tag.issue = 11      THEN 'ดัดโค้ง'
+        WHEN tag.issue IN (6,33) THEN 'ความหนา'
+        WHEN tag.issue IN (4,25) THEN 'ทางกล/เคมี'
+        WHEN tag.issue = 35      THEN 'ท่อ NPE เป็นสนิม'
+        WHEN tag.issue = 3       THEN 'เหล็กสองชั้น'
+        WHEN tag.issue = 30      THEN 'ปล้อง'
+        WHEN tag.issue = 7       THEN 'เหล็กแถบ ผิวเหล็กบกพร่อง ไม่เรียบ/พริ้ว/เป็นรอย/สนิม'
+        WHEN tag.issue = 2       THEN 'เหล็กม้วน ผิวเหล็กบกพร่อง ไม่เรียบ/พริ้ว/เป็นรอย/สนิม'
+        WHEN tag.issue = 23      THEN 'ท่อ NPE ผิวเป็นรอยมาจากเหล็กสลิต/เหล็กม้วน'
+        WHEN tag.issue = 65      THEN 'Oxide Scale หลุดล่อน'
+    END AS field,
+    ROUND(SUM((ISNULL(tag.NC_QTY, 0) * item.unit_weight) / 1000), 0) AS [sumTON]
+FROM mv_bc_tag tag
+INNER JOIN item_mst item ON item.item = tag.item
+INNER JOIN sts_po_qc po
+    ON po.manufacturer > '0'
+    AND LTRIM(RTRIM(po.sno)) = tag.sts_no
+WHERE
+    tag.issue IN (8,9,10,11,6,33,4,25,35,3,30,7,2,23,65)
+    AND tag.QA_RecordDate >= '$sDate'
+    AND tag.QA_RecordDate  < '$nextYearDate'
+GROUP BY
+    po.manufacturer,
+    CASE
+        WHEN tag.issue IN (8,9)  THEN 'กดแบน'
+        WHEN tag.issue = 10      THEN 'ขยายบาน'
+        WHEN tag.issue = 11      THEN 'ดัดโค้ง'
+        WHEN tag.issue IN (6,33) THEN 'ความหนา'
+        WHEN tag.issue IN (4,25) THEN 'ทางกล/เคมี'
+        WHEN tag.issue = 35      THEN 'ท่อ NPE เป็นสนิม'
+        WHEN tag.issue = 3       THEN 'เหล็กสองชั้น'
+        WHEN tag.issue = 30      THEN 'ปล้อง'
+        WHEN tag.issue = 7       THEN 'เหล็กแถบ ผิวเหล็กบกพร่อง ไม่เรียบ/พริ้ว/เป็นรอย/สนิม'
+        WHEN tag.issue = 2       THEN 'เหล็กม้วน ผิวเหล็กบกพร่อง ไม่เรียบ/พริ้ว/เป็นรอย/สนิม'
+        WHEN tag.issue = 23      THEN 'ท่อ NPE ผิวเป็นรอยมาจากเหล็กสลิต/เหล็กม้วน'
+        WHEN tag.issue = 65      THEN 'Oxide Scale หลุดล่อน'
+    END
+ORDER BY po.manufacturer, field";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+
     function getWorkCentersStatus($date, $wc) {
         $query = "SELECT * FROM STS_machine_record 
 WHERE CAST(start_date AS DATE) = '$date' 
