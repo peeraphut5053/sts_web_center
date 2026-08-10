@@ -915,6 +915,37 @@ ORDER BY
         return $rs;
     }
 
+    function GetQcProcessDetail($StartDate, $EndDate, $Process, $QcLoc = '') {
+        $sYear = date('Y', strtotime($StartDate));
+        $sMonth = date('n', strtotime($StartDate));
+        $eMonth = date('n', strtotime($EndDate));
+
+        $locWhere = "";
+        if (!empty($QcLoc) && $QcLoc != 'all') {
+            $locWhere = " AND qc_loc = '$QcLoc' ";
+        }
+
+        $query = "SELECT
+    process,
+    issue,
+    Total = round(SUM(total), 0),
+    REJECT = round(SUM(REJECT), 0),
+    SCRAP = round(SUM(SCRAP), 0),
+    FIX = round(SUM(FIX), 0),
+    [NC ACCEPT] = round(SUM([NC ACCEPT]), 0),
+    [in PROCESS] = round(SUM([in PROCESS]), 0)
+FROM V_STS_QA_allSUMdetail
+WHERE [year] = '$sYear' AND [month] BETWEEN '$sMonth' AND '$eMonth'
+  $locWhere
+  AND process = '$Process'
+GROUP BY process, issue
+ORDER BY Total DESC";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
     function GetQcTop5Stations($StartDate, $EndDate) {
         $sDate = date('Y-m-d', strtotime($StartDate));
         $eDate = date('Y-m-d', strtotime($EndDate));

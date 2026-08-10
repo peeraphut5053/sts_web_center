@@ -70,6 +70,18 @@ else if ($load == "raw_mat_report") {
     echo json_encode($rs);
 }
 
+else if ($load == "process_detail") {
+    $CallModel = new CallModel();
+    $CallModel->SyteLine_Models();
+
+    $BcTag = new BcTag();
+    $BcTag->setConn($ConnSL);
+    $Process = isset($Process) ? $Process : (isset($process) ? $process : '');
+    $QC_loc = isset($QC_loc) ? $QC_loc : (isset($qc_loc) ? $qc_loc : '');
+    $rs = $BcTag->GetQcProcessDetail($StartDate, $EndDate, $Process, $QC_loc);
+    echo json_encode($rs);
+}
+
 else {
     $CallModel = new CallModel();
     $CallModel->SyteLine_Models();
