@@ -915,18 +915,24 @@ ORDER BY
         return $rs;
     }
 
-    function GetQcProcessDetail($StartDate, $EndDate, $Process, $QcLoc = '') {
+    function GetQcProcessDetail($StartDate, $EndDate, $Process = '', $QcLoc = '') {
         $sYear = date('Y', strtotime($StartDate));
         $sMonth = date('n', strtotime($StartDate));
         $eMonth = date('n', strtotime($EndDate));
 
-        $locWhere = "";
+        $whereClause = "WHERE [year] = '$sYear' AND [month] BETWEEN '$sMonth' AND '$eMonth'
+  AND process NOT LIKE '%Raw mat%'
+  AND QC_loc IS NOT NULL AND QC_loc <> ''";
+
+        if (!empty($Process)) {
+            $whereClause .= " AND LTRIM(RTRIM(LOWER(process))) = LTRIM(RTRIM(LOWER('$Process')))";
+        }
         if (!empty($QcLoc) && $QcLoc != 'all') {
-            $locWhere = " AND qc_loc = '$QcLoc' ";
+            $whereClause .= " AND QC_loc = '$QcLoc'";
         }
 
         $query = "SELECT
-    process,
+    process = LTRIM(RTRIM(process)),
     issue,
     Total = round(SUM(total), 0),
     REJECT = round(SUM(REJECT), 0),
@@ -935,11 +941,12 @@ ORDER BY
     [NC ACCEPT] = round(SUM([NC ACCEPT]), 0),
     [in PROCESS] = round(SUM([in PROCESS]), 0)
 FROM V_STS_QA_allSUMdetail
-WHERE [year] = '$sYear' AND [month] BETWEEN '$sMonth' AND '$eMonth'
-  $locWhere
-  AND process = '$Process'
-GROUP BY process, issue
-ORDER BY Total DESC";
+$whereClause
+GROUP BY
+    LTRIM(RTRIM(process)),
+    issue
+ORDER BY
+    Total DESC";
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
