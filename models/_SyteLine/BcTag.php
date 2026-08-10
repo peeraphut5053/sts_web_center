@@ -883,27 +883,32 @@ ORDER BY
     }
 
     function GetQcAllNcData($StartDate, $EndDate) {
+        $sYear = date('Y', strtotime($StartDate));
+        $sMonth = date('n', strtotime($StartDate));
+        $eMonth = date('n', strtotime($EndDate));
         $query = "SELECT
-    Main_cause,
-    Minor_cause,
-    QC_loc,
-    month_num = MONTH(QA_RecordDate),
-    Total = SUM(total),
-    REJECT = SUM(REJECT),
-    SCRAP = SUM(SCRAP),
-    FIX = SUM(FIX),
-    [NC ACCEPT] = SUM([NC ACCEPT]),
-    [in PROCESS] = SUM([in PROCESS])
-FROM V_STS_QA_TAG_MAIN_minor
-WHERE QA_RecordDate BETWEEN '$StartDate' AND '$EndDate'
-  AND Minor_cause NOT LIKE '%Raw mat%'
+    field,
+    process,
+    qc_loc = QC_loc,
+    [month],
+    Total = round(SUM(total), 0),
+    REJECT = round(SUM(REJECT), 0),
+    SCRAP = round(SUM(SCRAP), 0),
+    FIX = round(SUM(FIX), 0),
+    [NC ACCEPT] = round(SUM([NC ACCEPT]), 0),
+    [in PROCESS] = round(SUM([in PROCESS]), 0)
+FROM V_STS_QA_allSUMchart
+WHERE [year] = '$sYear' AND [month] BETWEEN '$sMonth' AND '$eMonth'
+  AND process NOT LIKE '%Raw mat%'
+  AND QC_loc IS NOT NULL AND QC_loc <> ''
 GROUP BY
-    Main_cause,
-    Minor_cause,
+    [year],
+    [month],
     QC_loc,
-    MONTH(QA_RecordDate)
+    process,
+    field
 ORDER BY
-    Main_cause, Minor_cause, QC_loc, month_num";
+    [month], QC_loc, process";
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
