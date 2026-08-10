@@ -934,12 +934,12 @@ ORDER BY
         $query = "SELECT
     process = LTRIM(RTRIM(process)),
     issue,
-    Total = round(SUM(total), 0),
-    REJECT = round(SUM(REJECT), 0),
-    SCRAP = round(SUM(SCRAP), 0),
-    FIX = round(SUM(FIX), 0),
-    [NC ACCEPT] = round(SUM([NC ACCEPT]), 0),
-    [in PROCESS] = round(SUM([in PROCESS]), 0)
+    Total = SUM(total),
+    REJECT = SUM(REJECT),
+    SCRAP = SUM(SCRAP),
+    FIX = SUM(FIX),
+    [NC ACCEPT] = SUM([NC ACCEPT]),
+    [in PROCESS] = SUM([in PROCESS])
 FROM V_STS_QA_allSUMdetail
 $whereClause
 GROUP BY
