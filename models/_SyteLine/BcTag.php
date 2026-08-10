@@ -940,7 +940,7 @@ ORDER BY
     FIX = SUM(FIX),
     [NC ACCEPT] = SUM([NC ACCEPT]),
     [in PROCESS] = SUM([in PROCESS])
-FROM V_STS_QA_allSUMdetail
+FROM V_STS_QA_allSUMchart
 $whereClause
 GROUP BY
     LTRIM(RTRIM(process)),
