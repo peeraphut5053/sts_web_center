@@ -891,12 +891,12 @@ ORDER BY
     process,
     qc_loc = QC_loc,
     [month],
-    Total = round(SUM(total), 0),
-    REJECT = round(SUM(REJECT), 0),
-    SCRAP = round(SUM(SCRAP), 0),
-    FIX = round(SUM(FIX), 0),
-    [NC ACCEPT] = round(SUM([NC ACCEPT]), 0),
-    [in PROCESS] = round(SUM([in PROCESS]), 0)
+    Total = ceiling(SUM(total)),
+    REJECT = ceiling(SUM(REJECT)),
+    SCRAP = ceiling(SUM(SCRAP)),
+    FIX = ceiling(SUM(FIX)),
+    [NC ACCEPT] = ceiling(SUM([NC ACCEPT])),
+    [in PROCESS] = ceiling(SUM([in PROCESS]))
 FROM V_STS_QA_allSUMchart
 WHERE [year] = '$sYear' AND [month] BETWEEN '$sMonth' AND '$eMonth'
   AND process NOT LIKE '%Raw mat%'
@@ -961,10 +961,10 @@ ORDER BY
         $locFilter      = !empty($QcLoc) && $QcLoc !== 'all' ? "and qc_loc = '$QcLoc'" : '';
         $locFilterSub   = !empty($QcLoc) && $QcLoc !== 'all' ? "and qc_loc = '$QcLoc'" : '';
 
-        $query = "SELECT v.process, v.wc, Total = round(SUM(v.total), 0)
+        $query = "SELECT v.process, v.wc, Total = ceiling(SUM(v.total))
 FROM V_STS_QA_topISSUE v
   INNER JOIN (
-    SELECT TOP 5 process, Total = round(SUM(total), 0)
+    SELECT TOP 5 process, Total = ceiling(SUM(total))
          , ROW_NUMBER() OVER (ORDER BY SUM(total) DESC) AS row_num
     FROM V_STS_QA_topISSUE
     WHERE [year] = '$sYear' AND [month] BETWEEN '$sMonth' AND '$eMonth'
@@ -975,7 +975,7 @@ FROM V_STS_QA_topISSUE v
 WHERE v.[year] = '$sYear' AND v.[month] BETWEEN '$sMonth' AND '$eMonth'
   $locFilter
 GROUP BY v.process, v.wc, sumgroup.row_num
-Having round(sum(v.total),0) > 0
+Having ceiling(sum(v.total)) > 0
 ORDER BY sumgroup.row_num, SUM(v.total) DESC";
 
         $cSql = new SqlSrv();
@@ -1027,7 +1027,7 @@ ORDER BY SUM(qcmistake) DESC";
         WHEN tag.issue = 23      THEN 'ท่อ NPE ผิวเป็นรอยมาจากเหล็กสลิต/เหล็กม้วน'
         WHEN tag.issue = 65      THEN 'Oxide Scale หลุดล่อน'
     END AS field,
-    ROUND(SUM((ISNULL(tag.NC_QTY, 0) * item.unit_weight) / 1000), 0) AS [sumTON]
+    CEILING(SUM((ISNULL(tag.NC_QTY, 0) * item.unit_weight) / 1000)) AS [sumTON]
 FROM mv_bc_tag tag
 INNER JOIN item_mst item ON item.item = tag.item
 INNER JOIN sts_po_qc po
