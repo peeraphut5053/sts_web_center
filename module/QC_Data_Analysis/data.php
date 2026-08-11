@@ -26,7 +26,7 @@ else if ($load == "top5_stations") {
 
     $BcTag = new BcTag();
     $BcTag->setConn($ConnSL);
-    $rs = $BcTag->GetQcTop5Stations($StartDate, $EndDate);
+    $rs = $BcTag->GetQcTop5Stations($StartDate, $EndDate, isset($QcLoc) ? $QcLoc : 'P');
     echo json_encode($rs);
 }
 
@@ -79,6 +79,16 @@ else if ($load == "process_detail") {
     $Process = isset($Process) ? $Process : (isset($process) ? $process : '');
     $QC_loc = isset($QC_loc) ? $QC_loc : (isset($qc_loc) ? $qc_loc : '');
     $rs = $BcTag->GetQcProcessDetail($StartDate, $EndDate, $Process, $QC_loc);
+    echo json_encode($rs);
+}
+
+else if ($load == "qc_inspection_mistake") {
+    $CallModel = new CallModel();
+    $CallModel->SyteLine_Models();
+
+    $BcTag = new BcTag();
+    $BcTag->setConn($ConnSL);
+    $rs = $BcTag->GetQcInspectionMistake($StartDate, $EndDate, isset($QcLoc) ? $QcLoc : 'P');
     echo json_encode($rs);
 }
 

@@ -953,35 +953,52 @@ ORDER BY
         return $rs;
     }
 
-    function GetQcTop5Stations($StartDate, $EndDate) {
-        $sDate = date('Y-m-d', strtotime($StartDate));
-        $eDate = date('Y-m-d', strtotime($EndDate));
+    function GetQcTop5Stations($StartDate, $EndDate, $QcLoc = 'P') {
+        $sYear  = date('Y', strtotime($StartDate));
+        $sMonth = date('n', strtotime($StartDate));
+        $eMonth = date('n', strtotime($EndDate));
 
-        $query = "select Main_cause = case when tag.main_cause = 'FO' then 'Forming'
-                                           when tag.main_cause = 'FI' then 'Finishing'
-                                           when tag.main_cause = 'Ot' then 'Other'
-                                      end
-                     , Minor_cause = minor.cause
-                     , Station_Name = wc.description
-                     , Total = SUM((isnull(tag.NC_QTY,0) * item.unit_weight) / 1000)
-        from mv_bc_tag tag
-         inner join item_mst item on item.item = tag.item
-         inner join jobroute_mst job on job.job = tag.job and job.oper_num = 10
-         inner join wc_mst wc on job.wc = wc.wc
-         left join STS_QA_TAG_Minor minor on minor.id = tag.minor_cause
-        where tag.item not like 'WS%' and tag.item not like 'RS%' 
-          and tag.main_cause not in ('SL', 'Ma')
-          and tag.tag_status <> 'Good' and tag.tag_status is not null
-          and tag.QA_RecordDate is not null
-          and (TRY_CONVERT(date, tag.QA_RecordDate) between CONVERT(date, '$sDate') and CONVERT(date, '$eDate'))
-        group by case when tag.main_cause = 'FO' then 'Forming'
-                      when tag.main_cause = 'FI' then 'Finishing'
-                      when tag.main_cause = 'Ot' then 'Other'
-                 end	
-             , minor.cause
-             , wc.description
-        having SUM((isnull(tag.NC_QTY,0) * item.unit_weight) / 1000) > 0
-        order by minor.cause, Total desc";
+        $locFilter      = !empty($QcLoc) && $QcLoc !== 'all' ? "and qc_loc = '$QcLoc'" : '';
+        $locFilterSub   = !empty($QcLoc) && $QcLoc !== 'all' ? "and qc_loc = '$QcLoc'" : '';
+
+        $query = "SELECT v.process, v.wc, Total = round(SUM(v.total), 0)
+FROM V_STS_QA_topISSUE v
+  INNER JOIN (
+    SELECT TOP 5 process, Total = round(SUM(total), 0)
+         , ROW_NUMBER() OVER (ORDER BY SUM(total) DESC) AS row_num
+    FROM V_STS_QA_topISSUE
+    WHERE [year] = '$sYear' AND [month] BETWEEN '$sMonth' AND '$eMonth'
+      $locFilterSub
+    GROUP BY process
+    ORDER BY Total DESC
+  ) sumgroup ON v.process = sumgroup.process
+WHERE v.[year] = '$sYear' AND v.[month] BETWEEN '$sMonth' AND '$eMonth'
+  $locFilter
+GROUP BY v.process, v.wc, sumgroup.row_num
+ORDER BY sumgroup.row_num, SUM(v.total) DESC";
+
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
+
+    function GetQcInspectionMistake($StartDate, $EndDate, $QcLoc = 'P') {
+        $sYear  = date('Y', strtotime($StartDate));
+        $sMonth = date('n', strtotime($StartDate));
+        $eMonth = date('n', strtotime($EndDate));
+
+        $locFilter = !empty($QcLoc) && $QcLoc !== 'all' ? "AND qc_loc = '$QcLoc'" : '';
+
+        $query = "SELECT process, qcMistake = SUM(qcmistake)
+FROM V_STS_QA_topISSUE
+WHERE [year] = '$sYear' AND [month] BETWEEN '$sMonth' AND '$eMonth'
+  $locFilter
+  AND qcmistake > 0
+GROUP BY process
+ORDER BY SUM(qcmistake) DESC";
+
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
