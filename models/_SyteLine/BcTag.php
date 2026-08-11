@@ -893,7 +893,6 @@ ORDER BY
     [month],
     Total = ceiling(SUM(total)),
     REJECT = ceiling(SUM(REJECT)),
-    SCRAP = ceiling(SUM(SCRAP)),
     FIX = ceiling(SUM(FIX)),
     [NC ACCEPT] = ceiling(SUM([NC ACCEPT])),
     [in PROCESS] = ceiling(SUM([in PROCESS]))
@@ -934,12 +933,11 @@ ORDER BY
         $query = "SELECT
     process = LTRIM(RTRIM(process)),
     issue,
-    Total = SUM(total),
-    REJECT = SUM(REJECT),
-    SCRAP = SUM(SCRAP),
-    FIX = SUM(FIX),
-    [NC ACCEPT] = SUM([NC ACCEPT]),
-    [in PROCESS] = SUM([in PROCESS])
+    Total = CEILING(SUM(total)),
+    REJECT = CEILING(SUM(REJECT)),
+    FIX = CEILING(SUM(FIX)),
+    [NC ACCEPT] = CEILING(SUM([NC ACCEPT])),
+    [in PROCESS] = CEILING(SUM([in PROCESS]))
 FROM V_STS_QA_allSUMdetail
 $whereClause
 GROUP BY
