@@ -1032,7 +1032,7 @@ INNER JOIN sts_po_qc po
     ON po.manufacturer > '0'
     AND LTRIM(RTRIM(po.sno)) = tag.sts_no
 WHERE
-    tag.issue IN (8,9,10,11,6,33,4,25,35,3,30,7,2,23,65)
+    tag.issue IN (8,9,10,11,6,33,4,25,35,3,30,7,2,23,65) and tag.minor_cause = 14
     AND tag.print_date >= '$sDate'
     AND tag.print_date  < '$nextYearDate'
 GROUP BY
