@@ -975,6 +975,7 @@ FROM V_STS_QA_topISSUE v
 WHERE v.[year] = '$sYear' AND v.[month] BETWEEN '$sMonth' AND '$eMonth'
   $locFilter
 GROUP BY v.process, v.wc, sumgroup.row_num
+Having round(sum(v.total),0) > 0
 ORDER BY sumgroup.row_num, SUM(v.total) DESC";
 
         $cSql = new SqlSrv();
