@@ -455,6 +455,7 @@
 
                 var status = [
                     { id: '', text: '' },
+                    { id: 'Good', text: 'Good' },
                     { id: 'Reject', text: 'Reject' },
                     { id: 'NC Accept', text: 'NC Accept' },
                     { id: 'Fix', text: 'Fix' }
@@ -555,7 +556,7 @@
         $("#remark_qc").val('');
         // reset btn disabled and text
 
-         document.getElementById('file-input').value = '';
+        document.getElementById('file-input').value = '';
         $("#return_qc").text("ลงชื่อ QC");
         $("#return_qc").attr("disabled", false);
     })
@@ -590,7 +591,7 @@
                     $("#return_qc").text("ลงชื่อ QC");
                     $("#return_qc").attr("disabled", false);
                 }
-                 document.getElementById('file-input').value = '';
+                document.getElementById('file-input').value = '';
                 data_withdraw = data;
 
 
