@@ -381,7 +381,7 @@ where STS_qty_move_line.doc_num = '$doc_num' and mv_bc_tag.active=1 and mv_bc_ta
     
 	Function SearchTagStatus($wh) {
         $cSql = new SqlSrv();
-        $query = "select top 2000 mv_bc_tag.*, item.[description]
+        $query = "select top 500 mv_bc_tag.*, item.[description]
    , wc.[description] as wc
    , item.unit_weight, TotalWeight = case when mv_bc_tag.item like 'WS%' or mv_bc_tag.item like 'RS%' 
          then mv_bc_tag.qty1 / 1000
@@ -391,7 +391,7 @@ from mv_bc_tag
  inner join item_mst item on item.item = mv_bc_tag.item
  inner join jobroute_mst job on job.job = mv_bc_tag.job and job.oper_num = 10
  inner join wc_mst wc on job.wc = wc.wc
-where id <> ''".$wh."
+where id <> ''".$wh." and active = 1
 order by id desc";
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         $query2 = "select * from STS_QA_TAG_ISSUE";
