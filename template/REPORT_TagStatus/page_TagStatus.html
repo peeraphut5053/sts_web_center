@@ -184,10 +184,6 @@
             <thead>
 
                 <tr>
-                    <th class="bg-gray" width="100px">QC Loc</th>
-                    <th class="bg-gray" width="120px">QC Source</th>
-                    <th class="bg-gray" width="80px">QC Mistake</th>
-                    <th class="bg-gray" width="65px">Record Date</th>
                     <th class="bg-gray" width="65px">Date</th>
                     <th class="bg-gray" width="65px">Work Center</th>
                     <th class="bg-gray" width="65px">Tag id</th>
@@ -201,6 +197,12 @@
                     <th class="bg-gray">NC Quantity</th>
                     <th class="bg-gray">Unit weight</th>
                     <th class="bg-gray">total weight (ton)</th>
+                    <th class="bg-gray" width="100px">DO</th>
+                    <th class="bg-gray" width="100px">QC Loc</th>
+                    <th class="bg-gray" width="120px">QC Source</th>
+                    <th class="bg-gray" width="80px">QC Mistake</th>
+                    <th class="bg-gray" width="65px">Record Date</th>
+                    <th class="bg-gray" width="80px">Sale Appr</th>
                     <th class="bg-gray">TagStatus</th>
                     <th class="bg-gray">Issue</th>
                     <th class="bg-gray">Minor_cause</th>
@@ -216,10 +218,6 @@
             <thead>
 
                 <tr>
-                    <th class="bg-gray" width="100px">QC Loc</th>
-                    <th class="bg-gray" width="120px">QC Source</th>
-                    <th class="bg-gray" width="80px">QC Mistake</th>
-                    <th class="bg-gray" width="65px">Record Date</th>
                     <th class="bg-gray" width="65px">Date</th>
                     <th class="bg-gray" width="65px">Work Center</th>
                     <th class="bg-gray" width="65px">Tag id</th>
@@ -233,6 +231,12 @@
                     <th class="bg-gray">NC Quantity</th>
                     <th class="bg-gray">Unit weight</th>
                     <th class="bg-gray">total weight (ton)</th>
+                    <th class="bg-gray" width="100px">DO</th>
+                    <th class="bg-gray" width="100px">QC Loc</th>
+                    <th class="bg-gray" width="120px">QC Source</th>
+                    <th class="bg-gray" width="80px">QC Mistake</th>
+                    <th class="bg-gray" width="65px">Record Date</th>
+                    <th class="bg-gray" width="80px">Sale Appr</th>
                     <th class="bg-gray">TagStatus</th>
                     <th class="bg-gray">Issue</th>
                     <th class="bg-gray">Minor_cause</th>
@@ -417,38 +421,6 @@
 
             "columns": [
                 {
-                    "data": "QC_loc",
-                    "className": "text-left",
-                    "defaultContent": "",
-                    "render": function (data, type, row, meta) {
-                        var map = { "P": "ปู่เจ้า", "W": "วังน้อย" };
-                        return map[data] || data || "";
-                    }
-                },
-                {
-                    "data": "QC_source",
-                    "className": "text-left",
-                    "defaultContent": ""
-                },
-                {
-                    "data": "QC_mistake",
-                    "className": "text-center",
-                    "defaultContent": "",
-                    "render": function (data, type, row, meta) {
-                        return data == 1 ? "&#10003;" : "";
-                    }
-                },
-                {
-                    "data": "QA_RecordDate.date",
-                    "className": "text-left",
-                    "render": function (data, type, row, meta) {
-                        if (!data) {
-                            return "";
-                        }
-                        return moment(data).format("YYYY-MM-DD");
-                    }
-                },
-                {
                     "data": "print_date.date",
                     "className": "text-left",
                     "render": function (data, type, row, meta) {
@@ -502,6 +474,51 @@
                 {
                     "data": "TotalWeight",
                     "className": "text-left",
+                },
+                {
+                    "data": "DO",
+                    "className": "text-left",
+                    "defaultContent": "",
+                },
+                {
+                    "data": "QC_loc",
+                    "className": "text-left",
+                    "defaultContent": "",
+                    "render": function (data, type, row, meta) {
+                        var map = { "P": "ปู่เจ้า", "W": "วังน้อย" };
+                        return map[data] || data || "";
+                    }
+                },
+                {
+                    "data": "QC_source",
+                    "className": "text-left",
+                    "defaultContent": ""
+                },
+                {
+                    "data": "QC_mistake",
+                    "className": "text-center",
+                    "defaultContent": "",
+                    "render": function (data, type, row, meta) {
+                        return data == 1 ? "&#10003;" : "";
+                    }
+                },
+                {
+                    "data": "QA_RecordDate.date",
+                    "className": "text-left",
+                    "render": function (data, type, row, meta) {
+                        if (!data) {
+                            return "";
+                        }
+                        return moment(data).format("YYYY-MM-DD");
+                    }
+                },
+                {
+                    "data": "sale_appr",
+                    "className": "text-center",
+                    "defaultContent": "",
+                    "render": function (data, type, row, meta) {
+                        return data == 1 ? "&#10003;" : "";
+                    }
                 },
                 {
                     "data": "tag_status",
@@ -615,48 +632,6 @@
 
             "columns": [
                 {
-                    "data": "QC_loc",
-                    "className": "text-center",
-                    "defaultContent": "",
-                    "render": function (data, type, row, meta) {
-                        var opts = [{ v: "", l: "-- เลือก --" }, { v: "P", l: "ปู่เจ้า" }, { v: "W", l: "วังน้อย" }];
-                        var selectHtml = '<select class="form-control" style="min-width:90px" onchange="SaveQCLoc(' + row.id + ', this.value)">';
-                        opts.forEach(function (opt) {
-                            var sel = (data === opt.v) ? ' selected' : '';
-                            selectHtml += '<option value="' + opt.v + '"' + sel + '>' + opt.l + '</option>';
-                        });
-                        selectHtml += '</select>';
-                        return selectHtml;
-                    }
-                },
-                {
-                    "data": "QC_source",
-                    "className": "text-center",
-                    "defaultContent": "",
-                    "render": function (data, type, row, meta) {
-                        let valdata = data ? data : "";
-                        return `<input type='text' class='input-text-value' size='15' onchange="SaveQCSource(${row.id}, this.value);" value='${valdata}' />`;
-                    }
-                },
-                {
-                    "data": "QC_mistake",
-                    "className": "text-center",
-                    "defaultContent": "",
-                    "render": function (data, type, row, meta) {
-                        var checked = (data == 1) ? ' checked' : '';
-                        return `<input type='checkbox'${checked} onchange="SaveQCMistake(${row.id}, this.checked ? 1 : 0);" style="width:18px;height:18px;cursor:pointer;" />`;
-                    }
-                },
-                {
-                    "data": "QA_RecordDate.date",
-                    "className": "text-left",
-                    "render": function (data, type, row, meta) {
-                        let valdata = data ? moment(data).format("YYYY-MM-DD") : "";
-                        let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value input_date_in' size='20' id=${row.id} onchange="SaveRecordDate('${row.id}',value,'date_in');" value='${(valdata)}' />`;
-                        return ret;
-                    }
-                },
-                {
                     "data": "print_date.date",
                     "className": "text-left",
                     "render": function (data, type, row, meta) {
@@ -718,6 +693,62 @@
                     "render": function (data, type, row, meta) {
                         let valdata = data;
                         return Number(valdata).toFixed(5);
+                    }
+                },
+                {
+                    "data": "DO",
+                    "className": "text-left",
+                    "defaultContent": "",
+                },
+                {
+                    "data": "QC_loc",
+                    "className": "text-center",
+                    "defaultContent": "",
+                    "render": function (data, type, row, meta) {
+                        var opts = [{ v: "", l: "-- เลือก --" }, { v: "P", l: "ปู่เจ้า" }, { v: "W", l: "วังน้อย" }];
+                        var selectHtml = '<select class="form-control" style="min-width:90px" onchange="SaveQCLoc(' + row.id + ', this.value)">';
+                        opts.forEach(function (opt) {
+                            var sel = (data === opt.v) ? ' selected' : '';
+                            selectHtml += '<option value="' + opt.v + '"' + sel + '>' + opt.l + '</option>';
+                        });
+                        selectHtml += '</select>';
+                        return selectHtml;
+                    }
+                },
+                {
+                    "data": "QC_source",
+                    "className": "text-center",
+                    "defaultContent": "",
+                    "render": function (data, type, row, meta) {
+                        let valdata = data ? data : "";
+                        return `<input type='text' class='input-text-value' size='15' onchange="SaveQCSource(${row.id}, this.value);" value='${valdata}' />`;
+                    }
+                },
+                {
+                    "data": "QC_mistake",
+                    "className": "text-center",
+                    "defaultContent": "",
+                    "render": function (data, type, row, meta) {
+                        var checked = (data == 1) ? ' checked' : '';
+                        return `<input type='checkbox'${checked} onchange="SaveQCMistake(${row.id}, this.checked ? 1 : 0);" style="width:18px;height:18px;cursor:pointer;" />`;
+                    }
+                },
+                {
+                    "data": "QA_RecordDate.date",
+                    "className": "text-left",
+                    "render": function (data, type, row, meta) {
+                        let valdata = data ? moment(data).format("YYYY-MM-DD") : "";
+                        let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value input_date_in' size='20' id=${row.id} onchange="SaveRecordDate('${row.id}',value,'date_in');" value='${(valdata)}' />`;
+                        return ret;
+                    }
+                },
+                {
+                    "data": "sale_appr",
+                    "className": "text-center",
+                    "defaultContent": "",
+                    "render": function (data, type, row, meta) {
+                        var checked = (data == 1) ? ' checked' : '';
+                        return `<input type='checkbox'${checked} onchange="SaveSaleAppr(${row.id}, this.checked ? 1 : 0);" style="width:18px;height:18px;cursor:pointer;" />`;
                     }
                 },
                 {
@@ -999,6 +1030,19 @@
                 "load": "save_qc_mistake",
                 "id": id,
                 "qc_mistake_value": qc_mistake_value
+            },
+            success: function () { }
+        });
+    }
+
+    function SaveSaleAppr(id, sale_appr_value) {
+        $.ajax({
+            url: "././module/REPORT_TagStatus/data.php",
+            type: 'get',
+            data: {
+                "load": "save_sale_appr",
+                "id": id,
+                "sale_appr_value": sale_appr_value
             },
             success: function () { }
         });

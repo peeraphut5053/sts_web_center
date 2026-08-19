@@ -87,6 +87,11 @@ if ($load == "save_qc_mistake") {
     echo json_encode($mv_bc_tag);
 }
 
+if ($load == "save_sale_appr") {
+    $mv_bc_tag = $CallModelObj->SaveSaleAppr($id, $sale_appr_value);
+    echo json_encode($mv_bc_tag);
+}
+
 if ($load == "GetReportFrequency") {
     $year = isset($_GET['year']) ? $_GET['year'] : (isset($_POST['year']) ? $_POST['year'] : 2026);
     $mv_bc_tag = $CallModelObj->GetReportFrequency($year);

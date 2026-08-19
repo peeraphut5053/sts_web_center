@@ -387,6 +387,9 @@ where STS_qty_move_line.doc_num = '$doc_num' and mv_bc_tag.active=1 and mv_bc_ta
          then mv_bc_tag.qty1 / 1000
           else (isnull(mv_bc_tag.NC_QTY,0) * item.unit_weight) / 1000
           end
+     ,DO = STUFF(
+                 (SELECT ',' + do_num FROM ast_ship where ast_ship.tag_id = mv_bc_tag.id and ast_ship.item = mv_bc_tag.item FOR XML PATH ('')), 1, 1, ''
+    )
 from mv_bc_tag 
  inner join item_mst item on item.item = mv_bc_tag.item
  inner join jobroute_mst job on job.job = mv_bc_tag.job and job.oper_num = 10
@@ -781,6 +784,15 @@ order by [date]";
     function SaveQCMistake($id, $qc_mistake_value) {
         $qc_mistake_value = intval($qc_mistake_value);
         $query = "update mv_bc_tag set QC_mistake = ".$qc_mistake_value." where id = '".$id."' ";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return array($rs);
+    }
+
+    function SaveSaleAppr($id, $sale_appr_value) {
+        $sale_appr_value = intval($sale_appr_value);
+        $query = "update mv_bc_tag set sale_appr = ".$sale_appr_value." where id = '".$id."' ";
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
