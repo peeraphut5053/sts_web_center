@@ -795,7 +795,7 @@ from mv_bc_tag tag
  inner join jobroute_mst job on job.job = tag.job and job.oper_num = 10
  inner join wc_mst wc on job.wc = wc.wc
 where year(tag.print_date) = $yearVal
-      and month(tag.print_date) between 1 and 12
+      and month(tag.print_date) between 1 and 12 and tag.minor_cause <> 14
 group by wc.[description], wc.wc, year(tag.print_date), month(tag.print_date)
 having count(distinct(tag.QC_source)) > 0
 order by year(tag.print_date), month(tag.print_date), wc.wc";
