@@ -739,7 +739,7 @@ where mv.id = '$tag' and mv.active = 1 and isnull(mv.ship_stat,0) = 0
    and jm.job = left('$job',10)
    and jm.oper_num = convert(int,right('$job',2))
    and jm.suffix = convert(smallint,substring('$job',12,1))
-group by tag_status, mv.item, item.description, lt.loc, mv.lot, mv.qty1,  isnull(mv.um1,item.u_m)
+group by tag_status, mv.sale_appr, mv.item, item.description, lt.loc, mv.lot, mv.qty1, isnull(mv.um1,item.u_m)
   ,isnull(mv.qty2,0), isnull(mv.um2,''), isnull(mv.uf_sts_job,'')";
 
         $cSql = new SqlSrv();
