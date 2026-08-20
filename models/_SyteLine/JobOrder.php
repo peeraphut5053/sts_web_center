@@ -724,7 +724,7 @@ group by job.item, job.description, job.qty_released, isnull(job.qty_complete,0)
     }
 
     function GetTag($job, $tag) {
-        $query = "select tag_status, sale_appr, mv.item, itemName = item.description, lt.loc, mv.lot, mv.qty1, UM = isnull(mv.um1,item.u_m)
+        $query = "select tag_status, mv.sale_appr, mv.item, itemName = item.description, lt.loc, mv.lot, mv.qty1, UM = isnull(mv.um1,item.u_m)
   , qty2 = isnull(mv.qty2,0), UM2 = isnull(mv.um2,''), DocRef=isnull(mv.uf_sts_job,'')
   , QtyRem=sum(isnull(case when units='U' then (job.qty_released * jm.matl_qty) else jm.matl_qty end,0))
   , QtyIss=sum(isnull(qty_issued,0))
