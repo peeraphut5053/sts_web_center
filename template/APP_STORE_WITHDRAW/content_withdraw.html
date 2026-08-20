@@ -15,9 +15,11 @@
         box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
         padding: 6rem;
         margin-top: 2.5rem;
+
         @media (max-width: 768px) {
             padding: 1rem;
-            flex-direction: column;;
+            flex-direction: column;
+            ;
         }
     }
 
@@ -28,6 +30,7 @@
         flex-grow: 1;
         gap: 1.5rem;
         margin-bottom: 1.25rem;
+
         @media (max-width: 768px) {
             padding: 1rem;
             flex-direction: column;
@@ -36,12 +39,13 @@
 
     .item {
         width: 50%;
+
         @media (max-width: 768px) {
             width: 100%;
         }
     }
 
-  
+
 
     .mybox2 {
         display: flex;
@@ -49,6 +53,7 @@
         align-items: center;
         flex-grow: 1;
         margin-bottom: 1.25rem;
+
         @media (max-width: 768px) {
             padding: 1rem;
             flex-direction: column;
@@ -65,14 +70,12 @@
 
     .btn-2 {
         gap: 3rem;
+
         @media (max-width: 768px) {
             gap: 0.5rem;
             flex-wrap: wrap;
         }
     }
-    
-    
-
 </style>
 <div style="margin-top: 10px; margin-bottom: 20px;">
     <h1 class="my-header">เปิดใบเบิกของ</h1>
@@ -138,7 +141,7 @@
             </div>
             <div class="input-group basis-2/6">
                 <div style="color: red; font-weight: bold; font-size: 16px;" class="input-group-addon">จำนวน *</div>
-                <input type="number" style="font-weight: bold; font-size: 16px;" class="form-control txt-filter" 
+                <input type="number" style="font-weight: bold; font-size: 16px;" class="form-control txt-filter"
                     id="qty_w">
             </div>
             <div class="input-group basis-1/6 pl-4">
@@ -348,7 +351,8 @@
         "tanapol.tec",
         "oranuch",
         "charin",
-        "thanapon"
+        "thanapon",
+        "akkarapong"
     ];
 
     var userApproveTwo = [
@@ -377,7 +381,8 @@
         "yajai",
         "Theerawut",
         "Amorn",
-        "Nittaya"
+        "Nittaya",
+        "akkarapong"
     ];
 
     var arr_lang = [
@@ -442,16 +447,16 @@
         };
     })
 
-     $("#dept_w").select2({
-                placeholder: 'กรุณาเลือกแผนก',
-                allowClear: true,
-                width: '100%',
-                data: deptOption,
-                language: {
-                    noResults: function () {
-                        return "ไม่พบข้อมูล";
-                    }
-                }
+    $("#dept_w").select2({
+        placeholder: 'กรุณาเลือกแผนก',
+        allowClear: true,
+        width: '100%',
+        data: deptOption,
+        language: {
+            noResults: function () {
+                return "ไม่พบข้อมูล";
+            }
+        }
     });
 
     function generateBarcode(text) {
@@ -489,16 +494,16 @@
 
                 var username_session_trim = username_session.trim().toLowerCase();
                 if (!userApproveOne.map(x => x.trim().toLowerCase()).includes(username_session_trim) && !userApproveTwo.map(x => x.trim().toLowerCase()).includes(username_session_trim)) {
-                 var newData = data.filter(x => x.user.trim().toLowerCase() == username_session_trim);
-                 doc = [{ id: '', text: '' }].concat(newData.map((item) => ({
+                    var newData = data.filter(x => x.user.trim().toLowerCase() == username_session_trim);
+                    doc = [{ id: '', text: '' }].concat(newData.map((item) => ({
                         id: item.doc_no,
                         text: item.doc_no,
                         userApprove: item.userApprove,
                         approver1: item.approver1,
                         approver2: item.approver2,
                         dept: item.dept
-                 })));
-             
+                    })));
+
                 } else {
                     doc = [{ id: '', text: '' }].concat(data.map((item) => ({
                         id: item.doc_no,
@@ -510,7 +515,7 @@
                     })));
                 }
 
-          
+
                 $("#doc_no_w").empty();
                 $("#doc_no_w").select2({
                     placeholder: 'Doc No',
@@ -566,7 +571,7 @@
                         return markup; // สำคัญ! ต้องมีเพื่อให้ HTML render ได้
                     }
                 });
-              
+
 
             }
         });
@@ -670,26 +675,28 @@
             { "data": "qty_wd" },
             { "data": "qty_rcvd" },
             { "data": "u_m" },
-            { "data": "wc_dest"
-            ,"render": function (data, type, row) {
+            {
+                "data": "wc_dest"
+                , "render": function (data, type, row) {
                     var w = wc.filter((item) => item.id == data)
                     return w[0]?.text || '';
                 }
-             },
-            { "data": "remark",
-               "render": function (data, type, row) {
+            },
+            {
+                "data": "remark",
+                "render": function (data, type, row) {
                     if (row.doc_no !== null) {
-                         return `<input type="text" class="form-control" value="${data ?? ''}" onchange="UpdateDataTableRemark(this.value, '${row.doc_no}', '${row.item}', '${row.line_id}')">`;
+                        return `<input type="text" class="form-control" value="${data ?? ''}" onchange="UpdateDataTableRemark(this.value, '${row.doc_no}', '${row.item}', '${row.line_id}')">`;
                     } else {
                         return data;
                     }
-             },
+                },
             }
         ],
         paging: false,
         searching: false,
         select: true,
-  
+
         scrollX: true,
         scrollCollapse: true,
         dom:
@@ -731,7 +738,7 @@
 
                 }
             },
-             {
+            {
                 text: `<button type="button" class="btn btn-danger">Delete</button>`,
                 action: function (e, dt, node, config) {
                     var all = dt.rows().data().toArray();
@@ -745,7 +752,7 @@
                         return false;
                     }
 
-        
+
                     if (select.length == 0) {
                         swal("กรุณาเลือกรายการที่ต้องการแก้ไข", "", "warning");
                         return false;
@@ -763,19 +770,19 @@
                         buttons: {
                             confirm: function () {
                                 $.ajax({
-                        type: "POST",
-                        url: "././module/APP_STORE_WITHDRAW/data.php",
-                        dataType: "json",
-                        data: { load: "DeleteItemWithdraw", doc_no: select[0].doc_no, line_id: select[0].line_id },
-                        success: function (data) {
-                                alert('ลบรายการสําเร็จ');
-                                dt.row(rowIndex).remove().draw();
-                        },
-                        error: function (xhr, status, error) {
-                            alert('Error');
-                        }
-                        
-                    });
+                                    type: "POST",
+                                    url: "././module/APP_STORE_WITHDRAW/data.php",
+                                    dataType: "json",
+                                    data: { load: "DeleteItemWithdraw", doc_no: select[0].doc_no, line_id: select[0].line_id },
+                                    success: function (data) {
+                                        alert('ลบรายการสําเร็จ');
+                                        dt.row(rowIndex).remove().draw();
+                                    },
+                                    error: function (xhr, status, error) {
+                                        alert('Error');
+                                    }
+
+                                });
                             },
                             cancel: function () {
                             }
@@ -853,7 +860,7 @@
                 "remark": remark
             }]
             console.log(newData);
-            
+
 
             table.rows.add(newData).draw();
         }
@@ -951,10 +958,10 @@
                     $("#btnAddItemWithdraw").attr("disabled", false);
                 }
 
-                 var username_session_trim = username_session.trim().toLowerCase();
-                 if (userApproveTwo.map(x => x.trim().toLowerCase()).includes(username_session_trim) && data[0].userApprove == null && data[0].qty_rcvd == null) {
-                   $("#approve_two").attr("disabled", false);
-                 }
+                var username_session_trim = username_session.trim().toLowerCase();
+                if (userApproveTwo.map(x => x.trim().toLowerCase()).includes(username_session_trim) && data[0].userApprove == null && data[0].qty_rcvd == null) {
+                    $("#approve_two").attr("disabled", false);
+                }
 
                 $("#item_w").val('').trigger('change');
                 $("#wc_dest").val('').trigger('change');
@@ -1001,7 +1008,7 @@
             swal("กรุณากรอกรายการ Item ที่ต้องการเบิก อย่างน้อย 1 รายการ", "", "warning");
             return false;
         }
-   
+
         $("#btnAddWithdraw").attr("disabled", true);
 
         $.ajax({
@@ -1114,7 +1121,7 @@
             swal("กรุณาระบุแผนก", "", "warning");
             return false;
         }
-        
+
         $.ajax({
             type: "POST",
             url: "././module/APP_STORE_WITHDRAW/data.php",
@@ -1312,15 +1319,15 @@
                         success: function (data) {
                             if (load == 'ApproveTwoWithdraw') {
                                 swal("อนุมัติ 2 สําเร็จ", "", "success");
-                            // edit text btn approve_two
-                            $("#approve_two").text("อนุมัติ 2 แล้ว");
-                            $("#approve_two").attr("disabled", true);
-                            $("#btnAddItemWithdraw").attr("disabled", true);
+                                // edit text btn approve_two
+                                $("#approve_two").text("อนุมัติ 2 แล้ว");
+                                $("#approve_two").attr("disabled", true);
+                                $("#btnAddItemWithdraw").attr("disabled", true);
                             } else {
                                 alert('ยกเลิกอนุมัติ 2 สําเร็จ');
-                                  $("#approve_two").text("อนุมัติ 2");
-                                  $("#approve_two").attr("disabled", false);
-                                  $("#btnAddItemWithdraw").attr("disabled", false);
+                                $("#approve_two").text("อนุมัติ 2");
+                                $("#approve_two").attr("disabled", false);
+                                $("#btnAddItemWithdraw").attr("disabled", false);
                             }
                         },
                         error: function (xhr, status, error) {
