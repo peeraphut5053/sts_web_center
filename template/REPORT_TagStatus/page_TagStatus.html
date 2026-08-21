@@ -180,43 +180,8 @@
     </div>
 
     <div class="row tag-status-table-wrap" id="divReportM">
-        <table class="table table-condensed table-bordered table-striped" id="tblReportHidden" hidden>
-            <thead>
-
-                <tr>
-                    <th class="bg-gray" width="65px">Date</th>
-                    <th class="bg-gray" width="65px">Work Center</th>
-                    <th class="bg-gray" width="65px">Tag id</th>
-                    <th class="bg-gray">sts no</th>
-                    <th class="bg-gray" width="45px">Job</th>
-                    <th class="bg-gray" width="200px">item</th>
-                    <th class="bg-gray" width="230px">Description</th>
-                    <th class="bg-gray" width="90px">Lot</th>
-                    <th class="bg-gray" width="90px">Old Lot</th>
-                    <th class="bg-gray">Quantity</th>
-                    <th class="bg-gray">NC Quantity</th>
-                    <th class="bg-gray">Unit weight</th>
-                    <th class="bg-gray">total weight (ton)</th>
-                    <th class="bg-gray" width="100px">DO</th>
-                    <th class="bg-gray" width="100px">QC Loc</th>
-                    <th class="bg-gray" width="120px">QC Source</th>
-                    <th class="bg-gray" width="80px">QC Mistake</th>
-                    <th class="bg-gray" width="65px">Record Date</th>
-                    <th class="bg-gray" width="80px">อนุมัติขาย</th>
-                    <th class="bg-gray">TagStatus</th>
-                    <th class="bg-gray">Issue</th>
-                    <th class="bg-gray">Minor_cause</th>
-                    <th class="bg-gray">Main_cause</th>
-                    <th class="bg-gray" width="300px">Detail</th>
-                    <th class="bg-gray" width="300px">Inspector</th>
-                    <th class="bg-gray" width="300px">Inspec_date</th>
-                    <th class="bg-gray" width="300px">Comp_name</th>
-                </tr>
-        </table>
-
         <table class="table table-condensed table-bordered table-striped" id="tblReportShow">
             <thead>
-
                 <tr>
                     <th class="bg-gray" width="65px">Date</th>
                     <th class="bg-gray" width="65px">Work Center</th>
@@ -238,26 +203,24 @@
                     <th class="bg-gray" width="65px">Record Date</th>
                     <th class="bg-gray" width="80px">อนุมัติขาย</th>
                     <th class="bg-gray">TagStatus</th>
-                    <th class="bg-gray">Issue</th>
-                    <th class="bg-gray">Minor_cause</th>
-                    <th class="bg-gray">Main_cause</th>
+                    <th class="bg-gray" width="220px">Issue</th>
+                    <th class="bg-gray" width="220px">Minor_cause</th>
+                    <th class="bg-gray" width="160px">Main_cause</th>
                     <th class="bg-gray" width="300px">Detail</th>
-                    <th class="bg-gray" width="300px">Inspector</th>
-                    <th class="bg-gray" width="300px">Inspec_date</th>
-                    <th class="bg-gray" width="300px">Comp_name</th>
+                    <th class="bg-gray" width="200px">Inspector</th>
+                    <th class="bg-gray" width="160px">Inspec_date</th>
+                    <th class="bg-gray" width="200px">Comp_name</th>
                 </tr>
+            </thead>
+            <tbody></tbody>
         </table>
-
     </div>
 </div>
 
 <script type="text/javascript">
-
     $("#mfg_date").datepicker({
         dateFormat: 'yy-mm-dd'
     });
-
-    // $("#mfg_date").val(GetToday());
 
     $("#BtnSearchM").click(function () {
         ReportAllSearch();
@@ -280,23 +243,39 @@
         { id: "Ma", name: "Maintenance" },
         { id: "Wa", name: "Warehouse" },
         { id: "Ot", name: "Other" }
-    ]
+    ];
+
+    var issueMap = {};
+    var minorMap = {};
+    var mainMap = {};
+    main.forEach(function (m) { mainMap[m.id] = m; });
+
+    function escapeHtml(str) {
+        if (str === null || str === undefined) return '';
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
 
     function getSearchFilters() {
         return {
             "load": "SearchTagStatus",
-            "tag_id": $("#tag_id").val(),
-            "sts_no": $("#sts_no").val(),
-            "job": $("#job").val(),
-            "item": $("#item").val(),
-            "lot": $("#lot").val(),
+            "tag_id": $.trim($("#tag_id").val()),
+            "sts_no": $.trim($("#sts_no").val()),
+            "job": $.trim($("#job").val()),
+            "item": $.trim($("#item").val()),
+            "lot": $.trim($("#lot").val()),
             "tag_status": $("#tag_status").val(),
-            "mfg_date": $("#mfg_date").val()
+            "mfg_date": $.trim($("#mfg_date").val())
         };
     }
 
     function hasSearchFilter(filters) {
-        return filters.tag_id != "" || filters.sts_no != "" || filters.job != "" || filters.item != "" || filters.lot != "" || filters.tag_status != "" || filters.mfg_date != "";
+        return filters.tag_id !== "" || filters.sts_no !== "" || filters.job !== "" ||
+            filters.item !== "" || filters.lot !== "" || filters.tag_status !== "" || filters.mfg_date !== "";
     }
 
     function setSearchLoading(isLoading) {
@@ -358,14 +337,19 @@
                 var issue = data[1] || [];
                 var minor = data[2] || [];
 
-                ReportAllSearchHidden(rows, issue, minor);
+                issueMap = {};
+                issue.forEach(function (it) { issueMap[it.id] = it; });
+
+                minorMap = {};
+                minor.forEach(function (mn) { minorMap[mn.id] = mn; });
+
                 ReportAllSearchShow(rows, issue, minor);
                 $("#tagStatusResultMeta").text(rows.length + " rows loaded");
             },
             error: function (e) {
                 $("#tagStatusResultMeta").text("Search failed");
-                console.log("There was an error with your request...");
-                console.log("error: " + JSON.stringify(e));
+                console.error("Search request error:", e);
+                $.alert("เกิดข้อผิดพลาดในการดึงข้อมูล");
             },
             complete: function () {
                 setSearchLoading(false);
@@ -373,7 +357,7 @@
         });
     }
 
-    function changeStatus(id) {
+    function changeStatus(ids) {
         var content = "";
         for (var i = 0; i < select_status.length; i++) {
             content += '<option value="' + select_status[i] + '">' + select_status[i] + '</option>';
@@ -381,398 +365,134 @@
         $.confirm({
             title: "Please select status",
             theme: "modern",
-            content: '<select class="form-control" id="select_status">' + content + '</select>',
+            content: '<select class="form-control" id="select_status_modal">' + content + '</select>',
             buttons: {
                 confirm: function () {
-                    var selectedStatus = $("#select_status").val();
-                    if (selectedStatus == "-- select --") {
+                    var selectedStatus = $("#select_status_modal").val();
+                    if (selectedStatus === "-- select --") {
                         $.alert("กรุณาเลือกสถานะ");
                         return false;
                     }
-                    // Validate status here if needed
                     $.ajax({
                         type: "POST",
                         dataType: "json",
                         url: "././module/APP_Qc_TestLab/data.php",
                         data: {
                             load: "ChangeStatus",
-                            data: JSON.stringify(id),
+                            data: JSON.stringify(ids),
                             status: selectedStatus
                         },
-                        success: function (data) {
+                        success: function () {
                             $.alert("เปลี่ยนสถานะเรียบร้อยแล้ว");
                             $("#tag_status").val(selectedStatus);
                             ReportAllSearch();
-
-
                         },
-                        error: function (xhr, ajaxOptions, thrownError) {
-                            $.alert("เปลี่ยนสถานะไม่สําเร็จ");
-                        },
+                        error: function () {
+                            $.alert("เปลี่ยนสถานะไม่สำเร็จ");
+                        }
                     });
                 },
-                cancel: function () {
-                },
-            },
+                cancel: function () {}
+            }
         });
-    }
-
-    function ReportAllSearchHidden(rows, issue, minor) {
-        destroyDataTable("#tblReportHidden");
-        var table = $('#tblReportHidden').DataTable({
-            scrollY: "60vh",
-            "scrollX": true,
-            scrollCollapse: true,
-            deferRender: true,
-            "aaData": rows,
-            "paging": false,
-            //                        fixedColumns: {
-            //                            leftColumns: 1,
-            //                        },
-            "searching": false,
-            "bInfo": false,
-
-            "columns": [
-                {
-                    "data": "print_date",
-                    "className": "text-left",
-                    "defaultContent": "",
-                    "render": function (data, type, row, meta) {
-                        var rawDate = (data && data.date) ? data.date : (data || "");
-                        if (!rawDate) return "";
-                        var formatted = moment(rawDate).format("YYYY-MM-DD");
-                        return formatted === "Invalid date" ? "" : formatted;
-                    }
-                },
-                {
-                    "data": "wc",
-                    "className": "text-left",
-                },
-                {
-                    "data": "id",
-                    "className": "text-left",
-                },
-                {
-                    "data": "sts_no",
-                    "className": "text-left",
-                },
-                {
-                    "data": "job",
-                    "className": "text-left",
-                },
-                {
-                    "data": "item",
-                    "className": "text-left",
-                },
-                {
-                    "data": "description",
-                    "className": "text-left",
-                },
-                {
-                    "data": "lot",
-                    "className": "text-left",
-                },
-                {
-                    "data": "old_lot",
-                    "className": "text-left",
-                },
-                {
-                    "data": "qty1",
-                    "className": "text-left",
-                },
-                {
-                    "data": "NC_QTY",
-                    "className": "text-left",
-                },
-                {
-                    "data": "unit_weight",
-                    "className": "text-left",
-                },
-                {
-                    "data": "TotalWeight",
-                    "className": "text-left",
-                },
-                {
-                    "data": "DO",
-                    "className": "text-left",
-                    "defaultContent": "",
-                },
-                {
-                    "data": "QC_loc",
-                    "className": "text-left",
-                    "defaultContent": "",
-                    "render": function (data, type, row, meta) {
-                        var map = { "P": "ปู่เจ้า", "W": "วังน้อย" };
-                        return map[data] || data || "";
-                    }
-                },
-                {
-                    "data": "QC_source",
-                    "className": "text-left",
-                    "defaultContent": ""
-                },
-                {
-                    "data": "QC_mistake",
-                    "className": "text-center",
-                    "defaultContent": "",
-                    "render": function (data, type, row, meta) {
-                        return data == 1 ? "&#10003;" : "";
-                    }
-                },
-                {
-                    "data": "QA_RecordDate",
-                    "className": "text-left",
-                    "defaultContent": "",
-                    "render": function (data, type, row, meta) {
-                        var rawDate = (data && data.date) ? data.date : (data || "");
-                        if (!rawDate) {
-                            return "";
-                        }
-                        var formatted = moment(rawDate).format("YYYY-MM-DD");
-                        return formatted === "Invalid date" ? "" : formatted;
-                    }
-                },
-                {
-                    "data": "sale_appr",
-                    "className": "text-center",
-                    "defaultContent": "",
-                    "render": function (data, type, row, meta) {
-                        return data == 1 ? "&#10003;" : "";
-                    }
-                },
-                {
-                    "data": "tag_status",
-                    "className": "text-left",
-                },
-                {
-                    "data": "issue",
-                    "className": "text-left",
-                    "render": function (data, type, row, meta) {
-                        if (!data) {
-                            return "";
-                        }
-                        let ret = issue[data - 1]?.issue ? issue[data - 1].issue : "";
-                        return ret;
-                    }
-                },
-                {
-                    "data": "Minor_cause",
-                    "className": "text-left",
-                    "render": function (data, type, row, meta) {
-                        if (!data) {
-                            return "";
-                        }
-                        let ret = minor[data - 1].cause ? minor[data - 1].cause : "";
-                        return ret;
-                    }
-                },
-                {
-                    "data": "Main_cause",
-                    "className": "text-left",
-                    "render": function (data, type, row, meta) {
-                        if (!data) {
-                            return "";
-                        }
-                        let ret = main.filter(item => item.id == data)[0].name;
-                        return ret;
-                    }
-                },
-                {
-                    "data": "detail",
-                    "className": "text-left",
-                },
-                {
-                    "data": "inspector",
-                    "className": "text-center",
-                    "render": function (data, type, row, meta) {
-                        let ret = data ? covertName(data) : "ยังไม่ตวรจ";
-                        return ret;
-                    }
-                },
-                {
-                    "data": "inspec_date",
-                    "className": "text-center",
-                    "defaultContent": "",
-                    "render": function (data, type, row, meta) {
-                        var rawDate = (data && data.date) ? data.date : (data || "");
-                        if (!rawDate) return "-";
-                        var formatted = moment(rawDate).format("DD/MM/YYYY HH:mm:ss");
-                        return formatted === "Invalid date" ? "-" : formatted;
-                    }
-                },
-                {
-                    "data": "comp_name",
-                    "className": "text-center",
-                }
-            ],
-            'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
-                "<'row'<'col-md-12'tr>>" +
-                "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
-            buttons: [
-                // {
-                //     extend: 'print',
-                //     text: "<i class='fa fa-print'></i>&nbsp;Print",
-                //     title: ''
-                // },
-                {
-                    extend: 'excel',
-                    text: "<i class='fa fa-file-excel'></i>&nbsp;Excel&nbsp;",
-                    title: "Report TagStatus",
-                    // `ReportMain sts_no ${from_stsno}-${to_stsno}`,
-                    customize: function (xlsx) {
-                        var sheet = xlsx.xl.worksheets['sheet1.xml'];
-                        var numrows = 2;
-                    }
-                },
-                {
-                    text: `<button type="button" class="btn btn-danger">Change Status</button>`,
-                    action: function (e, dt, node, config) {
-                        let data = Array.from(dt.rows().data());
-                        let id = data.map(item => item.id);
-                        changeStatus(id);
-                    },
-                },
-            ],
-        });
-
-        $('#tblReportHidden').loading("stop");
     }
 
     function ReportAllSearchShow(rows, issue, minor) {
         destroyDataTable("#tblReportShow");
-        var table = $('#tblReportShow').DataTable({
+        $('#tblReportShow').DataTable({
             scrollY: "60vh",
-            "scrollX": true,
+            scrollX: true,
             scrollCollapse: true,
             deferRender: true,
-            "aaData": rows,
-            "paging": false,
-            //                        fixedColumns: {
-            //                            leftColumns: 1,
-            //                        },
-            "searching": false,
-            "bInfo": false,
-
-            "columns": [
+            aaData: rows,
+            paging: false,
+            searching: false,
+            bInfo: false,
+            columns: [
                 {
-                    "data": "print_date",
-                    "className": "text-left",
-                    "defaultContent": "",
-                    "render": function (data, type, row, meta) {
+                    data: "print_date",
+                    className: "text-left",
+                    defaultContent: "",
+                    render: function (data) {
                         var rawDate = (data && data.date) ? data.date : (data || "");
                         if (!rawDate) return "";
                         var formatted = moment(rawDate).format("YYYY-MM-DD");
                         return formatted === "Invalid date" ? "" : formatted;
                     }
                 },
+                { data: "wc", className: "text-left", defaultContent: "" },
+                { data: "id", className: "text-left", defaultContent: "" },
+                { data: "sts_no", className: "text-left", defaultContent: "" },
+                { data: "job", className: "text-left", defaultContent: "" },
+                { data: "item", className: "text-left", defaultContent: "" },
+                { data: "description", className: "text-left", defaultContent: "" },
+                { data: "lot", className: "text-left", defaultContent: "" },
+                { data: "old_lot", className: "text-left", defaultContent: "" },
+                { data: "qty1", className: "text-left", defaultContent: "" },
                 {
-                    "data": "wc",
-                    "className": "text-left",
-                },
-                {
-                    "data": "id",
-                    "className": "text-left",
-                },
-                {
-                    "data": "sts_no",
-                    "className": "text-left",
-                },
-                {
-                    "data": "job",
-                    "className": "text-left",
-                },
-                {
-                    "data": "item",
-                    "className": "text-left",
-                },
-                {
-                    "data": "description",
-                    "className": "text-left",
-                },
-                {
-                    "data": "lot",
-                    "className": "text-left",
-                },
-                {
-                    "data": "old_lot",
-                    "className": "text-left",
-                },
-                {
-                    "data": "qty1",
-                    "className": "text-left",
-                },
-                {
-                    "data": "NC_QTY",
-                    "className": "text-center",
-                    "render": function (data, type, row, meta) {
-                        let valdata = data ? data : "";
-                        let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='15' id='nc_${row.id}' onchange="SaveNC('${row.id}', this.value);" value='${(valdata)}' />`;
-                        return ret;
+                    data: "NC_QTY",
+                    className: "text-center",
+                    defaultContent: "",
+                    render: function (data, type, row) {
+                        var valdata = data ? escapeHtml(data) : "";
+                        return `<span hidden>${valdata}</span><input type='text' class='input-text-value' size='15' id='nc_${row.id}' onchange="SaveNC('${row.id}', this.value);" value='${valdata}' />`;
                     }
                 },
+                { data: "unit_weight", className: "text-center", defaultContent: "" },
                 {
-                    "data": "unit_weight",
-                    "className": "text-center",
-                },
-                {
-                    "data": "TotalWeight",
-                    "className": "text-center",
-                    "render": function (data, type, row, meta) {
-                        let valdata = data;
-                        return Number(valdata).toFixed(5);
+                    data: "TotalWeight",
+                    className: "text-center",
+                    defaultContent: "",
+                    render: function (data) {
+                        return data ? Number(data).toFixed(5) : "";
                     }
                 },
+                { data: "DO", className: "text-left", defaultContent: "" },
                 {
-                    "data": "DO",
-                    "className": "text-left",
-                    "defaultContent": "",
-                },
-                {
-                    "data": "QC_loc",
-                    "className": "text-center",
-                    "defaultContent": "",
-                    "render": function (data, type, row, meta) {
+                    data: "QC_loc",
+                    className: "text-center",
+                    defaultContent: "",
+                    render: function (data, type, row) {
                         var opts = [{ v: "", l: "-- เลือก --" }, { v: "P", l: "ปู่เจ้า" }, { v: "W", l: "วังน้อย" }];
-                        var selectHtml = '<select class="form-control" style="min-width:90px" onchange="SaveQCLoc(' + row.id + ', this.value)">';
+                        var selectHtml = `<select class="form-control" style="min-width:90px" onchange="SaveQCLoc('${row.id}', this.value)">`;
                         opts.forEach(function (opt) {
                             var sel = (data === opt.v) ? ' selected' : '';
-                            selectHtml += '<option value="' + opt.v + '"' + sel + '>' + opt.l + '</option>';
+                            selectHtml += `<option value="${opt.v}"${sel}>${opt.l}</option>`;
                         });
                         selectHtml += '</select>';
                         return selectHtml;
                     }
                 },
                 {
-                    "data": "QC_source",
-                    "className": "text-center",
-                    "defaultContent": "",
-                    "render": function (data, type, row, meta) {
-                        let valdata = data ? data : "";
-                        return `<input type='text' class='input-text-value' size='15' onchange="SaveQCSource(${row.id}, this.value);" value='${valdata}' />`;
+                    data: "QC_source",
+                    className: "text-center",
+                    defaultContent: "",
+                    render: function (data, type, row) {
+                        var valdata = data ? escapeHtml(data) : "";
+                        return `<input type='text' class='input-text-value' size='15' onchange="SaveQCSource('${row.id}', this.value);" value='${valdata}' />`;
                     }
                 },
                 {
-                    "data": "QC_mistake",
-                    "className": "text-center",
-                    "defaultContent": "",
-                    "render": function (data, type, row, meta) {
+                    data: "QC_mistake",
+                    className: "text-center",
+                    defaultContent: "",
+                    render: function (data, type, row) {
                         var checked = (data == 1) ? ' checked' : '';
-                        return `<input type='checkbox'${checked} onchange="SaveQCMistake(${row.id}, this.checked ? 1 : 0);" style="width:18px;height:18px;cursor:pointer;" />`;
+                        return `<input type='checkbox'${checked} onchange="SaveQCMistake('${row.id}', this.checked ? 1 : 0);" style="width:18px;height:18px;cursor:pointer;" />`;
                     }
                 },
                 {
-                    "data": "QA_RecordDate",
-                    "className": "text-left",
-                    "defaultContent": "",
-                    "render": function (data, type, row, meta) {
+                    data: "QA_RecordDate",
+                    className: "text-left",
+                    defaultContent: "",
+                    render: function (data, type, row) {
                         var rawDate = (data && data.date) ? data.date : (data || "");
                         var valdata = rawDate ? moment(rawDate).format("YYYY-MM-DD") : "";
                         if (valdata === "Invalid date") valdata = "";
-                        let ret = `<span hidden>${valdata}</span><input type='text' class='input-text-value input_date_in' size='20' id='record_date_${row.id}' data-id='${row.id}' onchange="SaveRecordDate('${row.id}', this.value);" value='${valdata}' />`;
-                        return ret;
+                        return `<span hidden>${valdata}</span><input type='text' class='input-text-value input_date_in' size='20' id='record_date_${row.id}' data-id='${row.id}' onchange="SaveRecordDate('${row.id}', this.value);" value='${valdata}' />`;
                     },
-                    createdCell: function (td, cellData, rowData, row, col) {
-                        const $input = $(td).find('.input_date_in');
+                    createdCell: function (td, cellData, rowData) {
+                        var $input = $(td).find('.input_date_in');
                         if (!$input.hasClass('hasDatepicker')) {
                             $input.datepicker({
                                 dateFormat: 'yy-mm-dd',
@@ -785,180 +505,212 @@
                     }
                 },
                 {
-                    "data": "sale_appr",
-                    "className": "text-center",
-                    "defaultContent": "",
-                    "render": function (data, type, row, meta) {
+                    data: "sale_appr",
+                    className: "text-center",
+                    defaultContent: "",
+                    render: function (data, type, row) {
                         var checked = (data == 1) ? ' checked' : '';
-                        return `<input type='checkbox'${checked} onchange="SaveSaleAppr(${row.id}, this.checked ? 1 : 0);" style="width:18px;height:18px;cursor:pointer;" />`;
+                        return `<input type='checkbox'${checked} onchange="SaveSaleAppr('${row.id}', this.checked ? 1 : 0);" style="width:18px;height:18px;cursor:pointer;" />`;
                     }
                 },
                 {
-                    "data": "tag_status",
-                    "className": "text-center",
-                    "render": function (data, type, row, meta) {
-                        var $select = $("<select id='status_" + row.id + "' value='" + data + "' onchange=\"UpdateStatus('" + row.id + "', this.value)\"></select>");
-                        $.each(select_status, function (k, v) {
-                            var $option = $("<option></option>", {
-                                "text": v,
-                                "value": v
-                            });
-                            if (data === v) {
-                                $option.attr("selected", "selected")
-                            }
-                            $select.append($option);
-                        });
-                        return $select.prop("outerHTML");
+                    data: "tag_status",
+                    className: "text-center",
+                    defaultContent: "",
+                    render: function (data, type, row) {
+                        var html = `<select id="status_${row.id}" class="form-control" style="min-width:110px" onchange="UpdateStatus('${row.id}', this.value)">`;
+                        for (var i = 0; i < select_status.length; i++) {
+                            var s = select_status[i];
+                            var sel = (data === s) ? ' selected' : '';
+                            html += `<option value="${escapeHtml(s)}"${sel}>${escapeHtml(s)}</option>`;
+                        }
+                        html += '</select>';
+                        return html;
                     }
                 },
                 {
                     data: "issue",
-                    width: "300px",
+                    width: "280px",
                     className: "text-center",
+                    defaultContent: "",
                     render: function (data, type, row) {
                         if (type !== 'display') {
-                            return data;
+                            var item = issueMap[data];
+                            return item ? item.issue : (data || "");
                         }
-
-                        // สร้าง select พื้นฐาน
-                        return `<select class="form-control select2-dropdown" style="width: 100%">
-                                             <option value=""></option>
-                                             ${issue.map(item =>
-                            `<option value="${item.id}" ${data === Number(item.id) ? 'selected' : ''}>${item.issue}</option>`).join('')}
-                                             </select>`;
+                        var html = `<select class="form-control select2-dropdown" style="width: 100%">`;
+                        html += '<option value=""></option>';
+                        for (var i = 0; i < issue.length; i++) {
+                            var it = issue[i];
+                            var sel = (data == it.id) ? ' selected' : '';
+                            html += `<option value="${escapeHtml(it.id)}"${sel}>${escapeHtml(it.issue)}</option>`;
+                        }
+                        html += '</select>';
+                        return html;
                     },
-                    createdCell: function (td, cellData, rowData, row, col) {
-                        // รอให้ DOM สร้างเสร็จก่อนค่อย init select2
-
-                        const $select = $(td).find('select');
-                        if (!$select.hasClass('select2-hidden-accessible')) {
+                    createdCell: function (td, cellData, rowData) {
+                        var $select = $(td).find('select');
+                        if (!$select.hasClass('select2-hidden-accessible') && $.isFunction($.fn.select2)) {
                             $select.select2({
                                 placeholder: 'เลือกรายการ issue',
                                 allowClear: true,
                                 width: '100%',
                                 language: {
-
                                     noResults: function () {
                                         return "ไม่พบข้อมูล";
                                     }
                                 }
                             }).on('select2:select', function (e) {
                                 UpdateIssue(rowData.id, e.target.value);
-                            }).on('select2:unselecting', function (e) {
+                            }).on('select2:unselecting', function () {
                                 UpdateIssue(rowData.id, null);
                             });
                         }
                     }
                 },
                 {
-                    "data": "Minor_cause",
-                    "width": "300px",
-                    "className": "text-center",
+                    data: "Minor_cause",
+                    width: "280px",
+                    className: "text-center",
+                    defaultContent: "",
                     render: function (data, type, row) {
                         if (type !== 'display') {
-                            return data;
+                            var item = minorMap[data];
+                            return item ? item.cause : (data || "");
                         }
-
-                        // สร้าง select พื้นฐาน
-                        return `<select class="form-control select2-dropdown" style="width: 100%">
-                                             <option value=""></option>
-                                             ${minor.map(item =>
-                            `<option value="${item.id}" ${data === Number(item.id) ? 'selected' : ''}>${item.cause}</option>`).join('')}
-                                             </select>`;
+                        var html = `<select class="form-control select2-dropdown" style="width: 100%">`;
+                        html += '<option value=""></option>';
+                        for (var i = 0; i < minor.length; i++) {
+                            var mn = minor[i];
+                            var sel = (data == mn.id) ? ' selected' : '';
+                            html += `<option value="${escapeHtml(mn.id)}"${sel}>${escapeHtml(mn.cause)}</option>`;
+                        }
+                        html += '</select>';
+                        return html;
                     },
-                    createdCell: function (td, cellData, rowData, row, col) {
-                        // รอให้ DOM สร้างเสร็จก่อนค่อย init select2
-
-                        const $select = $(td).find('select');
-                        if (!$select.hasClass('select2-hidden-accessible')) {
+                    createdCell: function (td, cellData, rowData) {
+                        var $select = $(td).find('select');
+                        if (!$select.hasClass('select2-hidden-accessible') && $.isFunction($.fn.select2)) {
                             $select.select2({
                                 placeholder: 'เลือกรายการ minor cause',
                                 allowClear: true,
                                 width: '100%',
                                 language: {
-
                                     noResults: function () {
                                         return "ไม่พบข้อมูล";
                                     }
                                 }
                             }).on('select2:select', function (e) {
                                 UpdateMinor(rowData.id, e.target.value);
-                            }).on('select2:unselecting', function (e) {
+                            }).on('select2:unselecting', function () {
                                 UpdateMinor(rowData.id, null);
                             });
                         }
                     }
                 },
                 {
-                    "data": "Main_cause",
-                    "width": "300px",
-                    "className": "text-center",
+                    data: "Main_cause",
+                    width: "200px",
+                    className: "text-center",
+                    defaultContent: "",
                     render: function (data, type, row) {
                         if (type !== 'display') {
-                            return data;
+                            var item = mainMap[data];
+                            return item ? item.name : (data || "");
                         }
-
-                        // สร้าง select พื้นฐาน
-                        return `<select class="form-control select2-dropdown" style="width: 100%">
-                                             <option value=""></option>
-                                             ${main.map(item =>
-                            `<option value="${item.id}" ${data === item.id ? 'selected' : ''}>${item.name}</option>`).join('')}
-                                             </select>`;
+                        var html = `<select class="form-control select2-dropdown" style="width: 100%">`;
+                        html += '<option value=""></option>';
+                        for (var i = 0; i < main.length; i++) {
+                            var m = main[i];
+                            var sel = (data === m.id) ? ' selected' : '';
+                            html += `<option value="${escapeHtml(m.id)}"${sel}>${escapeHtml(m.name)}</option>`;
+                        }
+                        html += '</select>';
+                        return html;
                     },
-                    createdCell: function (td, cellData, rowData, row, col) {
-                        // รอให้ DOM สร้างเสร็จก่อนค่อย init select2
-
-                        const $select = $(td).find('select');
-                        if (!$select.hasClass('select2-hidden-accessible')) {
+                    createdCell: function (td, cellData, rowData) {
+                        var $select = $(td).find('select');
+                        if (!$select.hasClass('select2-hidden-accessible') && $.isFunction($.fn.select2)) {
                             $select.select2({
                                 placeholder: 'เลือกรายการ main cause',
                                 allowClear: true,
                                 width: '100%',
                                 language: {
-
                                     noResults: function () {
                                         return "ไม่พบข้อมูล";
                                     }
                                 }
                             }).on('select2:select', function (e) {
                                 UpdateMain(rowData.id, e.target.value);
-                            }).on('select2:unselecting', function (e) {
+                            }).on('select2:unselecting', function () {
                                 UpdateMain(rowData.id, null);
                             });
                         }
                     }
                 },
                 {
-                    "data": "detail",
-                    "className": "text-center",
-                    "render": function (data, type, row, meta) {
-                        let valdata = data;
-                        let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='45' id='detail_${row.id}' onchange="SaveDetail('${row.id}', this.value);" value='${(valdata)}' />`;
-                        return ret;
+                    data: "detail",
+                    className: "text-center",
+                    defaultContent: "",
+                    render: function (data, type, row) {
+                        var valdata = data ? escapeHtml(data) : "";
+                        return `<span hidden>${valdata}</span><input type='text' class='input-text-value' size='45' id='detail_${row.id}' onchange="SaveDetail('${row.id}', this.value);" value='${valdata}' />`;
                     }
                 },
                 {
-                    "data": "inspector",
-                    "className": "text-center",
-                    "render": function (data, type, row, meta) {
-                        let ret = data ? covertName(data) : "ยังไม่ตวรจ";
-                        return ret;
+                    data: "inspector",
+                    className: "text-center",
+                    defaultContent: "",
+                    render: function (data) {
+                        return data ? convertName(data) : "ยังไม่ตรวจ";
                     }
                 },
                 {
-                    "data": "inspec_date",
-                    "className": "text-center",
-                    "defaultContent": "",
-                    "render": function (data, type, row, meta) {
+                    data: "inspec_date",
+                    className: "text-center",
+                    defaultContent: "",
+                    render: function (data) {
                         var rawDate = (data && data.date) ? data.date : (data || "");
                         if (!rawDate) return "-";
                         var formatted = moment(rawDate).format("DD/MM/YYYY HH:mm:ss");
                         return formatted === "Invalid date" ? "-" : formatted;
                     }
                 },
+                { data: "comp_name", className: "text-center", defaultContent: "" }
+            ],
+            dom: "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                "<'row'<'col-md-12'tr>>" +
+                "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+            buttons: [
                 {
-                    "data": "comp_name",
-                    "className": "text-center",
+                    extend: 'excel',
+                    text: "<i class='fa fa-file-excel'></i>&nbsp;Excel&nbsp;",
+                    title: "Report TagStatus",
+                    exportOptions: {
+                        format: {
+                            body: function (data, row, column, node) {
+                                var $node = $(node);
+                                var $input = $node.find('input[type="text"]');
+                                if ($input.length) return $input.val();
+                                var $select = $node.find('select');
+                                if ($select.length) {
+                                    var selText = $select.find('option:selected').text();
+                                    return (selText && selText !== "-- select --" && selText !== "-- เลือก --") ? selText : "";
+                                }
+                                var $checkbox = $node.find('input[type="checkbox"]');
+                                if ($checkbox.length) return $checkbox.is(':checked') ? 1 : 0;
+                                return data;
+                            }
+                        }
+                    }
+                },
+                {
+                    text: `<button type="button" class="btn btn-danger">Change Status</button>`,
+                    action: function (e, dt) {
+                        var data = Array.from(dt.rows().data());
+                        var ids = data.map(function (item) { return item.id; });
+                        changeStatus(ids);
+                    }
                 }
             ],
             drawCallback: function () {
@@ -969,224 +721,90 @@
         $('#tblReportShow').loading("stop");
     }
 
-    function UpdateStatus(id, status_value) {
-        // console.log(id)
-        console.log(status_value, 'status_value')
+    function sendTagStatusUpdate(loadAction, payload) {
+        payload.load = loadAction;
         $.ajax({
             url: "././module/REPORT_TagStatus/data.php",
-            type: 'get',
-            // processData: false,
-            data: {
-                "load": "update_status",
-                "id": id,
-                "status_value": status_value
-            },
-            success: function () {
-                // alert("true");
+            type: 'POST',
+            dataType: 'json',
+            data: payload,
+            error: function (xhr, status, error) {
+                console.error("Update failed for " + loadAction + ":", error);
             }
         });
     }
+
+    function UpdateStatus(id, status_value) {
+        sendTagStatusUpdate("update_status", { id: id, status_value: status_value });
+    }
+
     function UpdateIssue(id, issue_value) {
-        // console.log(id)
-        $.ajax({
-            url: "././module/REPORT_TagStatus/data.php",
-            type: 'get',
-            // processData: false,
-            data: {
-                "load": "update_issue",
-                "id": id,
-                "issue_value": issue_value
-            },
-            success: function () {
-                // alert("true");
-            }
-        });
+        sendTagStatusUpdate("update_issue", { id: id, issue_value: issue_value });
     }
 
     function UpdateMinor(id, minor_value) {
-        // console.log(id)
-        $.ajax({
-            url: "././module/REPORT_TagStatus/data.php",
-            type: 'get',
-            // processData: false,
-            data: {
-                "load": "update_minor",
-                "id": id,
-                "minor_value": minor_value
-            },
-            success: function () {
-                // alert("true");
-            }
-        });
-
+        sendTagStatusUpdate("update_minor", { id: id, minor_value: minor_value });
     }
 
     function UpdateMain(id, main_value) {
-        // console.log(id)
-        $.ajax({
-            url: "././module/REPORT_TagStatus/data.php",
-            type: 'get',
-            // processData: false,
-            data: {
-                "load": "update_main",
-                "id": id,
-                "main_value": main_value
-            },
-            success: function () {
-                // alert("true");
-            }
-        });
-
+        sendTagStatusUpdate("update_main", { id: id, main_value: main_value });
     }
 
-
     function SaveQCLoc(id, qc_loc_value) {
-        $.ajax({
-            url: "././module/REPORT_TagStatus/data.php",
-            type: 'get',
-            data: {
-                "load": "save_qc_loc",
-                "id": id,
-                "qc_loc_value": qc_loc_value
-            },
-            success: function () { }
-        });
+        sendTagStatusUpdate("save_qc_loc", { id: id, qc_loc_value: qc_loc_value });
     }
 
     function SaveQCSource(id, qc_source_value) {
-        $.ajax({
-            url: "././module/REPORT_TagStatus/data.php",
-            type: 'get',
-            data: {
-                "load": "save_qc_source",
-                "id": id,
-                "qc_source_value": qc_source_value
-            },
-            success: function () { }
-        });
+        sendTagStatusUpdate("save_qc_source", { id: id, qc_source_value: qc_source_value });
     }
 
     function SaveQCMistake(id, qc_mistake_value) {
-        $.ajax({
-            url: "././module/REPORT_TagStatus/data.php",
-            type: 'get',
-            data: {
-                "load": "save_qc_mistake",
-                "id": id,
-                "qc_mistake_value": qc_mistake_value
-            },
-            success: function () { }
-        });
+        sendTagStatusUpdate("save_qc_mistake", { id: id, qc_mistake_value: qc_mistake_value });
     }
 
     function SaveSaleAppr(id, sale_appr_value) {
-        $.ajax({
-            url: "././module/REPORT_TagStatus/data.php",
-            type: 'get',
-            data: {
-                "load": "save_sale_appr",
-                "id": id,
-                "sale_appr_value": sale_appr_value
-            },
-            success: function () { }
-        });
+        sendTagStatusUpdate("save_sale_appr", { id: id, sale_appr_value: sale_appr_value });
     }
 
     function SaveDetail(detail_id, detail_value) {
-        // console.log(detail_id)
-        // console.log(detail_value)
-        $.ajax({
-            url: "././module/REPORT_TagStatus/data.php",
-            type: 'get',
-            // processData: false,
-            data: {
-                "load": "save_detail",
-                "detail_id": detail_id,
-                "detail_value": detail_value
-            },
-            success: function () {
-                // alert("true");
-            }
-        });
+        sendTagStatusUpdate("save_detail", { detail_id: detail_id, detail_value: detail_value });
     }
 
     function SaveNC(id, nc_value) {
-        // console.log(detail_id)
-        // console.log(detail_value)
-        $.ajax({
-            url: "././module/REPORT_TagStatus/data.php",
-            type: 'get',
-            // processData: false,
-            data: {
-                "load": "save_nc",
-                "id": id,
-                "nc_value": nc_value
-            },
-            success: function () {
-                // alert("true");
-            }
-        });
+        sendTagStatusUpdate("save_nc", { id: id, nc_value: nc_value });
     }
 
     function SaveRecordDate(id, record_date) {
-        // console.log(detail_id)
-        // console.log(detail_value)
-        $.ajax({
-            url: "././module/REPORT_TagStatus/data.php",
-            type: 'get',
-            // processData: false,
-            data: {
-                "load": "save_record_date",
-                "id": id,
-                "record_date": record_date
-            },
-            success: function () {
-                // alert("true");
-            }
-        });
+        sendTagStatusUpdate("save_record_date", { id: id, record_date: record_date });
     }
 
-    function covertName(Pass) {
-        if (Pass == 5404) {
-            return "นายณฐพงศ์ ถนอมพันธ์"
-        } else if (Pass == 8105) {
-            return "นายศุภชัย ทนสุวรรณ"
-        } else if (Pass == 8113) {
-            return "นายกิตติ แดงสกุล"
-        } else if (Pass == 8139) {
-            return "นายพันธ์พจน์ บุญอยู่"
-        } else if (Pass == 8192) {
-            return "นายวุฒิชัย เพี้ยนสำอางค์"
-        } else if (Pass == 8202) {
-            return "นายภีมพันธ์ วุฒิประภา"
-        } else if (Pass == 8222) {
-            return "นายเอกรัตน์ วงษ์จอม"
-        } else if (Pass == 8236) {
-            return "นายสุรยุทธ บุญหว่าน"
-        } else if (Pass == 8237) {
-            return "นายอนุสรณ์ แสนคำฟู"
-        } else if (Pass == 8238) {
-            return "นายพีรพัฒน์ วิเศษชิต"
-        } else if (Pass == 2048) {
-            return "นายสุริยะกานต์ สิงค์คำพุด"
-        } else if (Pass == 8117) {
-            return "นายสงกรานต์ พิศนอก"
-        } else if (Pass == 8155) {
-            return "น.ส. กัญธิกา วุ่นอภัย"
-        } else if (Pass == 8157) {
-            return "นายศักดา วุ่นอภัย"
-        } else if (Pass == 9743) {
-            return "น.ส. อนัญญา คงฮวด"
-        } else if (Pass == 10218) {
-            return "นายฐาปนา แสงสิทธิ์"
-        } else if (Pass == 10227) {
-            return "ณัฐชา สาระจันทร์"
-        } else if (Pass == '010234') {
-            return "นายนนน์นนันน์ รอดทุกข์"
-        } else if (Pass == '010235') {
-            return "นายณัฐพล คัมภิรานนท์"
-        } else if (Pass == '8245') {
-            return "นายโยธิน เรืองแก้ว"
-        }
+    var inspectorNames = {
+        '5404': 'นายณฐพงศ์ ถนอมพันธ์',
+        '8105': 'นายศุภชัย ทนสุวรรณ',
+        '8113': 'นายกิตติ แดงสกุล',
+        '8139': 'นายพันธ์พจน์ บุญอยู่',
+        '8192': 'นายวุฒิชัย เพี้ยนสำอางค์',
+        '8202': 'นายภีมพันธ์ วุฒิประภา',
+        '8222': 'นายเอกรัตน์ วงษ์จอม',
+        '8236': 'นายสุรยุทธ บุญหว่าน',
+        '8237': 'นายอนุสรณ์ แสนคำฟู',
+        '8238': 'นายพีรพัฒน์ วิเศษชิต',
+        '2048': 'นายสุริยะกานต์ สิงค์คำพุด',
+        '8117': 'นายสงกรานต์ พิศนอก',
+        '8155': 'น.ส. กัญธิกา วุ่นอภัย',
+        '8157': 'นายศักดา วุ่นอภัย',
+        '9743': 'น.ส. อนัญญา คงฮวด',
+        '10218': 'นายฐาปนา แสงสิทธิ์',
+        '10227': 'ณัฐชา สาระจันทร์',
+        '010234': 'นายนนน์นนันน์ รอดทุกข์',
+        '010235': 'นายณัฐพล คัมภิรานนท์',
+        '8245': 'นายโยธิน เรืองแก้ว'
+    };
+
+    function convertName(Pass) {
+        if (!Pass) return "ยังไม่ตรวจ";
+        var key = String(Pass);
+        return inspectorNames[key] || "ยังไม่ตรวจ";
     }
+    var covertName = convertName;
 </script>
