@@ -313,14 +313,27 @@
             if ($.isFunction($.fn.select2)) {
                 $(tableId).find(".select2-hidden-accessible").select2("destroy");
             }
+            if ($.isFunction($.fn.datepicker)) {
+                $(tableId).find(".hasDatepicker").datepicker("destroy");
+            }
             $(tableId).DataTable().clear().destroy();
             $(tableId).find("tbody").empty();
         }
     }
 
     function initDateInputs() {
-        $(".input_date_in").not(".hasDatepicker").datepicker({
-            dateFormat: 'yy-mm-dd',
+        $(".input_date_in").each(function () {
+            var $this = $(this);
+            var tagId = $this.attr("data-id") || ($this.attr("id") ? $this.attr("id").replace("record_date_", "") : "");
+            if (!$this.hasClass("hasDatepicker")) {
+                $this.datepicker({
+                    dateFormat: 'yy-mm-dd',
+                    onSelect: function (dateText) {
+                        SaveRecordDate(tagId, dateText);
+                        $this.val(dateText).trigger('change');
+                    }
+                });
+            }
         });
     }
 
@@ -328,7 +341,7 @@
         var filters = getSearchFilters();
 
         if (!hasSearchFilter(filters)) {
-            $.alert("เธเธฃเธธเธ“เธฒเธเนเธญเธเธฃเธฒเธขเธฅเธฐเน€เธญเธตเธขเธ”เน€เธเธทเนเธญเธเธฃเธญเธเธเนเธญเธกเธนเธฅ");
+            $.alert("กรุณาป้อนรายละเอียดเพื่อกรองข้อมูล");
             return;
         }
 
@@ -421,10 +434,14 @@
 
             "columns": [
                 {
-                    "data": "print_date.date",
+                    "data": "print_date",
                     "className": "text-left",
+                    "defaultContent": "",
                     "render": function (data, type, row, meta) {
-                        return moment(data).format("YYYY-MM-DD");
+                        var rawDate = (data && data.date) ? data.date : (data || "");
+                        if (!rawDate) return "";
+                        var formatted = moment(rawDate).format("YYYY-MM-DD");
+                        return formatted === "Invalid date" ? "" : formatted;
                     }
                 },
                 {
@@ -503,13 +520,16 @@
                     }
                 },
                 {
-                    "data": "QA_RecordDate.date",
+                    "data": "QA_RecordDate",
                     "className": "text-left",
+                    "defaultContent": "",
                     "render": function (data, type, row, meta) {
-                        if (!data) {
+                        var rawDate = (data && data.date) ? data.date : (data || "");
+                        if (!rawDate) {
                             return "";
                         }
-                        return moment(data).format("YYYY-MM-DD");
+                        var formatted = moment(rawDate).format("YYYY-MM-DD");
+                        return formatted === "Invalid date" ? "" : formatted;
                     }
                 },
                 {
@@ -570,11 +590,14 @@
                     }
                 },
                 {
-                    "data": "inspec_date.date",
+                    "data": "inspec_date",
                     "className": "text-center",
+                    "defaultContent": "",
                     "render": function (data, type, row, meta) {
-                        let ret = data ? moment(data).format("DD/MM/YYYY HH:mm:ss") : "-";
-                        return ret;
+                        var rawDate = (data && data.date) ? data.date : (data || "");
+                        if (!rawDate) return "-";
+                        var formatted = moment(rawDate).format("DD/MM/YYYY HH:mm:ss");
+                        return formatted === "Invalid date" ? "-" : formatted;
                     }
                 },
                 {
@@ -632,10 +655,14 @@
 
             "columns": [
                 {
-                    "data": "print_date.date",
+                    "data": "print_date",
                     "className": "text-left",
+                    "defaultContent": "",
                     "render": function (data, type, row, meta) {
-                        return moment(data).format("YYYY-MM-DD");
+                        var rawDate = (data && data.date) ? data.date : (data || "");
+                        if (!rawDate) return "";
+                        var formatted = moment(rawDate).format("YYYY-MM-DD");
+                        return formatted === "Invalid date" ? "" : formatted;
                     }
                 },
                 {
@@ -679,7 +706,7 @@
                     "className": "text-center",
                     "render": function (data, type, row, meta) {
                         let valdata = data ? data : "";
-                        let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='15' id=${row.id} onchange="SaveNC(this.id,value);" value='${(valdata)}' />`;
+                        let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='15' id='nc_${row.id}' onchange="SaveNC('${row.id}', this.value);" value='${(valdata)}' />`;
                         return ret;
                     }
                 },
@@ -734,12 +761,27 @@
                     }
                 },
                 {
-                    "data": "QA_RecordDate.date",
+                    "data": "QA_RecordDate",
                     "className": "text-left",
+                    "defaultContent": "",
                     "render": function (data, type, row, meta) {
-                        let valdata = data ? moment(data).format("YYYY-MM-DD") : "";
-                        let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value input_date_in' size='20' id=${row.id} onchange="SaveRecordDate('${row.id}',value,'date_in');" value='${(valdata)}' />`;
+                        var rawDate = (data && data.date) ? data.date : (data || "");
+                        var valdata = rawDate ? moment(rawDate).format("YYYY-MM-DD") : "";
+                        if (valdata === "Invalid date") valdata = "";
+                        let ret = `<span hidden>${valdata}</span><input type='text' class='input-text-value input_date_in' size='20' id='record_date_${row.id}' data-id='${row.id}' onchange="SaveRecordDate('${row.id}', this.value);" value='${valdata}' />`;
                         return ret;
+                    },
+                    createdCell: function (td, cellData, rowData, row, col) {
+                        const $input = $(td).find('.input_date_in');
+                        if (!$input.hasClass('hasDatepicker')) {
+                            $input.datepicker({
+                                dateFormat: 'yy-mm-dd',
+                                onSelect: function (dateText) {
+                                    SaveRecordDate(rowData.id, dateText);
+                                    $input.val(dateText).trigger('change');
+                                }
+                            });
+                        }
                     }
                 },
                 {
@@ -755,8 +797,7 @@
                     "data": "tag_status",
                     "className": "text-center",
                     "render": function (data, type, row, meta) {
-                        var $select = $("<select id='" + row.id + "' value='" + data + "'  onchange='UpdateStatus(this.id,value)'></select>", {
-                        });
+                        var $select = $("<select id='status_" + row.id + "' value='" + data + "' onchange=\"UpdateStatus('" + row.id + "', this.value)\"></select>");
                         $.each(select_status, function (k, v) {
                             var $option = $("<option></option>", {
                                 "text": v,
@@ -892,7 +933,7 @@
                     "className": "text-center",
                     "render": function (data, type, row, meta) {
                         let valdata = data;
-                        let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='45' id=${row.id} onchange="SaveDetail(this.id,value);" value='${(valdata)}' />`;
+                        let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value' size='45' id='detail_${row.id}' onchange="SaveDetail('${row.id}', this.value);" value='${(valdata)}' />`;
                         return ret;
                     }
                 },
@@ -905,11 +946,14 @@
                     }
                 },
                 {
-                    "data": "inspec_date.date",
+                    "data": "inspec_date",
                     "className": "text-center",
+                    "defaultContent": "",
                     "render": function (data, type, row, meta) {
-                        let ret = data ? moment(data).format("DD/MM/YYYY HH:mm:ss") : "-";
-                        return ret;
+                        var rawDate = (data && data.date) ? data.date : (data || "");
+                        if (!rawDate) return "-";
+                        var formatted = moment(rawDate).format("DD/MM/YYYY HH:mm:ss");
+                        return formatted === "Invalid date" ? "-" : formatted;
                     }
                 },
                 {
