@@ -39,12 +39,6 @@ class ArTran {
         return $rs;
     }
 
-    Function GetDocType() {
-        $cSql = new SqlSrv();
-        $q = "select substring(inv_num,1,2) as doc FROM V_WebApp_ArTran GROUP BY substring(inv_num,1,2)";
-        $rs = $cSql->SqlQuery($this->StrConn, $q);
-        array_splice($rs, count($rs) - 1, 1);
-        return $rs;
-    }
+    
 
 }

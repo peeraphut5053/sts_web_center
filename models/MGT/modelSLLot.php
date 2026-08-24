@@ -60,13 +60,7 @@ class Lot {
         return $rs;
     }
 
-    Function UpdateActWeight($lot, $act_weight) {
-        $cSql = new SqlSrv();
-        $GlobConn = $GLOBALS["ConnSL"];
-        $sql = "UPDATE lot_mst SET Uf_act_weight ='$act_weight'  WHERE lot = '$lot' ";
-        $rs = $cSql->IsUpDel($GlobConn, $sql);
-        return $rs;
-    }
+    
 
     function CheckLotDuplicate($lot) {
         $SqlConnectionInfo = $GLOBALS["var"]["mysql"];
@@ -87,14 +81,7 @@ class Lot {
         return $result;
     }
 
-    function FindBlankActWeight($start_date, $end_date) {
-        $sql = "SELECT lot,rcvd_qty , sts_no ,Uf_act_weight FROM  lot_mst   WHERE ( create_date BETWEEN cast(CONVERT(varchar, '$start_date', 120) as datetime)  AND  cast(CONVERT(varchar, '$end_date', 120) as datetime)  ) AND ( sts_no <> ''  or sts_no <> Null ) ";
-        $rs = $this->GetDataArray_SL($sql);
-        $result = "";
-        $row_template = "";
-
-        return $rs;
-    }
+    
 
     function GenNewLotNum() {
 

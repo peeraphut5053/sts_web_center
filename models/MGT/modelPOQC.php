@@ -272,25 +272,7 @@ class PO_QC {
         }
     }
 
-    function SearchRealWeight($sno) {
-        $mysqli = new mysqli($this->MySql_Host, $this->MySql_User, $this->MySql_Pass, $this->MySql_Db);
-        $tmpResult = "";
-
-        if ($result = $mysqli->query($this->QuerySelect . " WHERE sno = '$sno' ")) {
-            $row = mysqli_fetch_assoc($result);
-            $tmpResult = $row["realweight"];
-//            $i = 0;
-//            while ($row = $result->fetch_assoc()) {
-//                $i++;
-//                $TmpArray[$i] = $row;
-//            }
-            $result->free();
-            $mysqli->close();
-            return $tmpResult;
-        } else {
-            return $this->GetError('in ' . __FILE__ . ' / ' . __FUNCTION__ . "()  " . $mysqli->error);
-        }
-    }
+    
 
     function UpdateCheckHeatNoStatus($sts_no, $h_no, $thick, $width, $CurrAction) {
         $mysqli = new mysqli($this->MySql_Host, $this->MySql_User, $this->MySql_Pass, $this->MySql_Db);
