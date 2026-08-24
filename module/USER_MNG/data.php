@@ -74,9 +74,6 @@ if ($load == "form") {
     $UserModel = new User();
     $UserModel->setConn($ConnWebApp);
     $UserList = $UserModel->GetAllProject();
-    $UserModel = null;
-    $CallModel = null;
-    echo json_encode($UserList);
 } else if ($load == "DeleteUser") {
     $CallModel = new CallModel();
     $CallModel->WebApp_Models();
@@ -84,6 +81,15 @@ if ($load == "form") {
     $UserModel->setConn($ConnWebApp);
     $UserDelete = $UserModel->DeleteUserById($user_id);
     echo json_encode($UserDelete);
+} else if ($load == "GetCustomerToDropdown") {
+    $CallModel = new CallModel();
+    $CallModel->WebApp_Models();
+    $Cust = new CustomerSaleOrder();
+    $Cust->setConn($ConnWebApp);
+    $CustList = $Cust->GetItemToDropdown("");
+    $Cust = null;
+    $CallModel = null;
+    echo json_encode($CustList);
 }
 
 

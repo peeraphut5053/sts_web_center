@@ -68,29 +68,7 @@ class CustomerSaleOrder {
         return $returnArray;
     }
 
-    function GetPropertyByVendnum() {
-        $cust_num = $this->_cust_num;
-        $query = $this->MainQuery . "  WHERE cust_num = '$cust_num'  ";
-        $cSql = new SqlSrv();
-        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
-        $this->id = $rs0[1]["id"];
-        $this->cust_num = $rs0[1]["cust_num"];
-        $this->name = $rs0[1]["name"];
-        $this->cust_num_sl = $rs0[1]["cust_num_sl"];
-        $this->addr1 = $rs0[1]["addr1"];
-        $this->addr2 = $rs0[1]["addr2"];
-        $this->addr3 = $rs0[1]["addr3"];
-        $this->tel1 = $rs0[1]["tel1"];
-        $this->tel2 = $rs0[1]["tel2"];
-        $this->fax1 = $rs0[1]["fax1"];
-        $this->fax2 = $rs0[1]["fax2"];
-        $this->measure = $rs0[1]["measure_desc_en"];
-        $this->measure2 = $rs0[1]["measure"];
-        $this->country = $rs0[1]["country"];
-        $this->import_form = $rs0[1]["import_form"];
-        $this->measure_desc_en = $rs0[1]["measure_desc_en"];
-        $this->measure_desc_th = $rs0[1]["measure_desc_th"];
-    }
+    
 
     function GetProperty($sWhere) {
         $query = "SELECT * FROM v_customer_info   $sWhere ";
@@ -118,16 +96,7 @@ class CustomerSaleOrder {
 
     
 
-    function GetFormXlsListAll() {
-
-        $query = "SELECT  *  FROM Xls_Form_Import ORDER BY id ASC";
-        $cSql = new SqlSrv();
-        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
-        array_splice($rs0, count($rs0) - 1, 1);
-
-
-        return $rs0;
-    }
+    
 
     
 

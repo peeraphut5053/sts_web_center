@@ -77,13 +77,7 @@ class BoatPlanList {
         array_splice($rs0, count($rs0) - 1, 1);
         return $rs0;
     }
-    function GetRowsCO_WithCond($sWhere ) {
-        $cSql = new SqlSrv();
-        $sql0 = $this->Query3 . "  WHERE $sWhere ";
-        $rs0 = $cSql->SqlQuery($this->StrConn, $sql0);
-        array_splice($rs0, count($rs0) - 1, 1);
-        return $rs0;
-    }
+    
 function GetRowsWithCond($sWhere ) {
         $cSql = new SqlSrv();
         $sql0 = $this->Query1 . "  WHERE $sWhere ";

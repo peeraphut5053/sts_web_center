@@ -312,25 +312,7 @@ class JOBORDER {
         return $rs0;
     }
 
-    function GetJobMatltrans($txtFromDate, $txtToDate, $txtItem, $txtlot, $txttrans_type, $txtref_type, $txtw_c, $txtloc, $txtsts_no) {
-
-
-        $query = " EXEC STS_JOB_productionMatltrans "
-                . " @start_date  = N'$txtFromDate',"
-                . " @end_date = N'$txtToDate',"
-                . " @item = '$txtItem' ,"
-                . " @lot = '$txtlot' ,"
-                . " @trans_type = '$txttrans_type' ,"
-                . " @ref_type = '$txtref_type' ,"
-                . " @wc   ='$txtw_c',"
-                . " @loc   ='$txtloc',"
-                . " @sts_no   ='$txtsts_no'";
-        $cSql = new SqlSrv();
-        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
-//        echo $query;
-        array_splice($rs0, count($rs0) - 1, 1);
-        return $rs0;
-    }
+    
 
     function StampingReport($txtItem, $txtref_num, $txtw_c, $wc_group_query) {
         $start_date = $this->_start_date;

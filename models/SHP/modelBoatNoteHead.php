@@ -82,24 +82,7 @@ class BoatNoteHead {
         return $rs0;
     }
 
-    function GetRowsWithCondAndLimit($sWhere) {
-        $cSql = new SqlSrv();
-        $sql = "WITH QR_HEAD AS ( SELECT  ROW_NUMBER() OVER (ORDER BY HeadCode) AS [Row_No], * FROM  " . $this->_UseTable . "  WHERE  ( Cancel=" . $this->_Cancel . " ) ) "
-                . " SELECT HeadId , HeadCode, Boat_Id,Berthed_Id ,
-                    NULLIF(Ship_MV,'N/A') AS Ship_MV,
-                    NULLIF(Ship_LighterNo,'N/A') AS Ship_LighterNo,
-                    NULLIF(HB_Name,'N/A') AS  HB_Name,
-                    CONVERT(nvarchar, CommenceDate) as CmDate,
-                    CONVERT(nvarchar,CompleteDate) AS CpDate
-                FROM QR_HEAD
-                LEFT JOIN STS_MT_Ship ON QR_HEAD.Boat_Id = STS_MT_Ship.IdRun
-                LEFT JOIN STS_MT_Harbor ON QR_HEAD.Berthed_Id = STS_MT_Harbor.IdRun"
-                . " WHERE $sWhere  ";
-        $rs0 = $cSql->SqlQuery($this->StrConn, $sql);
-        array_splice($rs0, count($rs0) - 1, 1);
-
-        return $rs0;
-    }
+    
 
     function GenNewHeadCode() {
         //================Gen Head Code ===============//

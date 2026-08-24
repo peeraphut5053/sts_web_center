@@ -250,35 +250,7 @@ class OrderHead {
         return $rs0;
     }
 
-    function GenNewDocNo($custnum) {
-        //================Gen Head Code ===============//
-        $cSql = new SqlSrv();
-        $sql = "SELECT TOP 1 doc_no FROM  SO_Order_head where doc_no like '$custnum%' ORDER BY doc_no DESC  ";
-        $rs = $cSql->SqlQuery($this->StrConn, $sql);
-        $tmpDocNo = "";
-        $tmpDocNoDate = "";
-        $tmpDocNoCutDate = "";
-        $CurrDate = date("Ymd");
-        $val = "";
-
-        if (count($rs) <= 1) {
-            return $custnum . $CurrDate . "0001";
-        } else {
-            $tmpDocNo = $rs[1]["doc_no"];
-            $len = strlen($custnum);
-            $dlen = strlen($tmpDocNo);
-            $tmpDocNoCutPrefix = substr($tmpDocNo, $len, $dlen);
-            $tmpDocNoDate = substr($tmpDocNoCutPrefix, 0, 8);
-            $tmpDocNoCutDate = substr($tmpDocNoCutPrefix, 8, 13);
-            if ($CurrDate == $tmpDocNoDate) {
-                $val = str_pad(strval($tmpDocNoCutDate) + 1, 4, '0', STR_PAD_LEFT);
-                return $custnum . "" . $CurrDate . "" . $val;
-            } else {
-                return $custnum . "" . $CurrDate . "0001";
-            }
-        }
-//================Gen Head Code ===============//
-    }
+    
 
     function Insert() {
 

@@ -58,19 +58,7 @@ class PO_QC {
 
     
 
-    function UpdateTag() {
-        $mysqli = new mysqli($this->MySql_Host, $this->MySql_User, $this->MySql_Pass, $this->MySql_Db);
-        $TmpArray = array();
-        $q = "UPDATE po_qc SET sl_tag_id = '" . $this->_sl_tag_id . "'  "
-                . "WHERE sts_no = '" . $this->_sts_no . "' ";
-        if ($result = $mysqli->query($q)) {
-            // $result->free();
-            $mysqli->close();
-            return count($result);
-        } else {
-            return $this->GetError('in ' . __FILE__ . ' / ' . __FUNCTION__ . "()  " . $mysqli->error);
-        }
-    }
+    
 
     function Uploaded() {
         $mysqli = new mysqli($this->MySql_Host, $this->MySql_User, $this->MySql_Pass, $this->MySql_Db);
@@ -144,14 +132,7 @@ class PO_QC {
         }
     }
 
-    function GetConnectionStatus() {
-        $mysqli = new mysqli($this->MySql_Host, $this->MySql_User, $this->MySql_Pass, $this->MySql_Db);
-        if (!$mysqli) {
-            return "<font color='red'>DISCONNECT &nbsp;<i class='fa fa-circle'></i></font>";
-        } else {
-            return "<font color='lightgreen'>CONNECTED &nbsp;<i class='fa fa-circle-o-notch fa-spin'></i></font>";
-        }
-    }
+    
 
     function Ajax_GetRowsAll_Limit($limit) {
         $mysqli = new mysqli($this->MySql_Host, $this->MySql_User, $this->MySql_Pass, $this->MySql_Db);

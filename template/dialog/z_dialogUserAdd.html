@@ -513,12 +513,9 @@
             $("#selCustomerLink").removeAttr("disabled");
             $("#selCustomerLink").empty();
             $.ajax({
-                url: "./module/SOD/CustomerSaleOrder.php",
+                url: "./module/USER_MNG/data.php?load=GetCustomerToDropdown",
                 type: 'post',
-                data: {
-                    ajax: 'true',
-                    action: "GetItemToDropdown",
-                },
+                dataType: 'json',
                 success: function (data) {
 //                    $("#selCustomerLink").empty();
 //                    $("#selCustomerLink").append("<option value='0'>..Select..</option>");

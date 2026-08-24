@@ -401,7 +401,7 @@
             height: 600,
             title: ":: Edit User " + user_name
         })
-                .load("././module/SOD/z_dialogUserEdit.php", {
+                .load("././module/USER_MNG/z_dialogUserEdit.php", {
                     "user_id": user_id,
                     "edit_type": "N"
                 });
@@ -551,7 +551,7 @@
             height: 600,
             title: ":: Add New User "
         })
-                .load("./module/z_dialogUserAdd.php");
+                .load("./module/USER_MNG/z_dialogUserAdd.php");
     });
 
     $("#btnAddNewDep").click(function () {
@@ -563,7 +563,7 @@
             height: 550,
             title: ":: Add New Department "
         })
-                .load("././module/SOD/z_dialogDepartmentAdd.php");
+                .load("././module/USER_MNG/z_dialogDepartmentAdd.php");
     });
     function DepPosAddClick(getId) {
         var ArrId = getId.split("_");
@@ -577,7 +577,7 @@
             height: 300,
             title: ":: Add New Department Position "
         })
-                .load("././module/SOD/z_dialogDepartmentPosAdd.php", {"dep_id": dep_id});
+                .load("././module/USER_MNG/z_dialogDepartmentPosAdd.php", {"dep_id": dep_id});
     }
 
 

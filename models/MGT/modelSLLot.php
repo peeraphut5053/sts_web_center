@@ -52,13 +52,7 @@ class Lot {
 
     
 
-    Function UpdateSts_CoilNo($lot, $sts_no, $coil_no, $item) {
-        $cSql = new SqlSrv();
-        $GlobConn = $GLOBALS["conn_sl"];
-        $sql = "UPDATE lot_mst SET Uf_coil_no ='$coil_no' ,sts_no = '$sts_no'  WHERE lot = '$lot'  AND item = '$item'  ";
-        $rs = $cSql->IsUpDel($GlobConn, $sql);
-        return $rs;
-    }
+    
 
     
 

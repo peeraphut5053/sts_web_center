@@ -8,10 +8,10 @@ if (empty($_SESSION["login_username"])) {
     header("location: ?login");
 }
 //============== Render Page Normal ================//
-include "./initial.php";
+include "../initial.php";
 
 $u_name = $_SESSION["login_username"];
-$temp = new ReplaceHtml("../template/dialog/SOD/z_dialogDepartmentAdd.html");
+$temp = new ReplaceHtml("../../template/dialog/z_dialogDepartmentAdd.html");
 $Sec = new Section();
 $Sec->setConn($ConnWebApp);
 $Secs = $Sec->GetItemToDropdown("");
@@ -30,7 +30,5 @@ foreach ($Users as $iU => $rU) {
 $temp->setReplace("{Section_Options}", $Section_Options);
 $temp->setReplace("{User_Options}", $User_Options);
 echo $temp->getReplace();
-
-
 
 sqlsrv_close($ConnWebApp);
