@@ -1,4 +1,5 @@
 <?php
+// [Used by sahathai_react_project - Pipe Counter App]
 
 header("Access-Control-Allow-Origin: *");
 

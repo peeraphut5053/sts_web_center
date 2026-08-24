@@ -51,28 +51,9 @@ class Invoice {
         return trim($this->_Customers);
     }
 
-    function GetCNByHdr() {
-        $inv_num = $this->_inv_num;
-        $query = "SELECT  * FROM V_WebApp_InvItem_IN   WHERE  inv_num LIKE 'CN%' AND orig_inv_num = '$inv_num'  ";
-        $query .= " ORDER BY co_line  asc";
-        $cSql = new SqlSrv();
-        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
-        array_splice($rs0, count($rs0) - 1, 1);
-        return $rs0;
-    }
+    
 
-    function GetInvTest() {
-        $keyword = $this->_keyword;
-        $txtFromDate_start = $this->_txtFromDate_start;
-        $txtFromDate_end = $this->_txtFromDate_end;
-
-        $query = "SELECT CONVERT(varchar,inv_date,103) as inv_date_conv ,* FROM V_WebApp_InvItem_EX where (inv_date BETWEEN '$txtFromDate_start 00:00:00' AND '$txtFromDate_end 23:59:59')   "
-                . " or (co_num BETWEEN '$txtFromCoNum_start' AND '$txtFromCoNum_end') ";
-        $cSql = new SqlSrv();
-        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
-        array_splice($rs0, count($rs0) - 1, 1);
-        return $rs0;
-    }
+    
 
     function GetRPTINV_Outstanding() {
         $cus_type = $this->_cus_type;
@@ -149,56 +130,11 @@ WHERE 1=1";
         return $rs0;
     }
 
-    function GetInvHdr() {
-        $start_invdate = $this->_start_invdate;
-        $end_invdate = $this->_end_invdate;
-        $query = "SELECT  * FROM inv_hdr_mst "
-                . "WHERE (inv_num LIKE 'IN%') AND ( inv_date BETWEEN '$start_invdate' AND '$end_invdate' ) ";
-        $Customers = $this->_Customers;
-        $Criteria = "";
+    
 
+    
 
-        if (isset($Customers[0])) {
-            $Criteria .= " AND ( ";
-            foreach ($Customers as $ii => $rr) {
-                $Criteria .= " cust_num = '$rr' OR ";
-            }
-            $query .= substr($Criteria, 0, -3) . " ) ";
-        }
-//        return $query;
-        $query = $query . " ORDER BY inv_date asc";
-        $cSql = new SqlSrv();
-        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
-        array_splice($rs0, count($rs0) - 1, 1);
-        return $rs0;
-    }
-
-    function GetInvItem2() {
-        $start_invdate = $this->_start_invdate;
-        $end_invdate = $this->_end_invdate;
-        $item_group = $this->_item_group;
-
-        $query = "SELECT  distinct  * "
-                . "FROM V_WebApp_InvItem_IN "
-                . "WHERE 1=1 "
-                . "AND(item_code <> '' ) AND ( inv_date BETWEEN '$start_invdate' AND '$end_invdate' ) "
-                . "AND (item_group LIKE '$item_group%')  "
-                . "ORDER BY inv_date asc ";
-
-        $cSql = new SqlSrv();
-        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
-        array_splice($rs0, count($rs0) - 1, 1);
-        return $rs0;
-    }
-
-    function CheckInv() {
-        $inv_num = $this->_inv_num;
-        $query = "SELECT * FROM inv_item_mst WHERE inv_num ='$inv_num' ";
-        $cSql = new SqlSrv();
-        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
-        array_splice($rs0, count($rs0) - 1, 1);
-        return $rs0;
-    }
+    
 
     function GetInvItem_deposit() {
         $start_invdate = $this->_start_invdate;
@@ -897,290 +833,15 @@ FROM V_WebApp_InvItem_IN_noVAT where 1=1 ";
         return $rs0;
     }
 
-    function GetInvItem_Edit($SwitchSale) {
-        $start_inv = $this->_start_inv;
-        $end_inv = $this->_end_inv;
-        $SaleCriteria = "";
-        if ($SwitchSale == "IN") {
-            $SaleCriteria = " AND (inv_num like 'IN%' OR inv_num like 'CN%' OR inv_num like 'DN%'  )  ";
-        } else if ($SwitchSale == "EX") {
-            $SaleCriteria = " AND (inv_num like 'EX%' OR inv_num like 'EB%'  OR inv_num like 'CN%' OR inv_num like 'DN%'  )  ";
-        }
-        $query = "SELECT  * FROM V_WebApp_InvItem_All "
-                . "WHERE 1=1 "
-                . "  $SaleCriteria  "
-                . "AND ( inv_num  BETWEEN '$start_inv' AND '$end_inv' ) ";
+    
 
-        $query .= " ORDER BY inv_date , inv_num  asc";
-        $cSql = new SqlSrv();
-        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
-        array_splice($rs0, count($rs0) - 1, 1);
-        return $rs0;
-    }
+    
 
-    function SaveInvItem() {
-        $inv_num = $this->_inv_num;
-        $co_line = $this->_co_line;
-        $item = $this->_item;
-        $edit_um = $this->_edit_um;
-        $edit_qty = $this->_edit_qty;
-        $edit_price = $this->_edit_price;
-        $edit_disc = $this->_edit_disc;
-        $saveQtyPcs = 0;
-        $saveQtyKG = 0;
-        $savePricePcs = 0;
-        $savePriceKG = 0;
+    
 
+    
 
-        $query1 = "";
-        $query2 = "";
-        $query3 = "";
-        $inv_line_count = 0;
-        //========check backup has default data======//
-        $query1 = " SELECT * FROM WebApp_BackDoorChange_InvItem WHERE inv_num ='$inv_num' AND co_line=$co_line AND item ='$item'  ";
-        $cSql = new SqlSrv();
-        $rs0 = $cSql->SqlQuery($this->StrConn, $query1);
-        array_splice($rs0, count($rs0) - 1, 1);
-        $cSql = null;
-        $CountRow = count($rs0);
-        //===Get old value from inv_item_mst
-        $query2 = "SELECT  
-                         a.inv_num, inv_date, inv_line, a.inv_seq, 
-                         a.co_num, co_line, item, 
-                         Uf_Inv_Um,  
-                         ISNULL(Uf_ActWeight,0) as Uf_ActWeight, 
-                         ISNULL(Uf_NetWeight,0) as Uf_NetWeight,
-                         ISNULL(Uf_PricePerKG,0) as Uf_PricePerKG ,
-                         ISNULL(Uf_WeightPerPcs,0) as Uf_WeightPerPcs, 
-                         ISNULL(Uf_ActQtyPcs,0) as Uf_ActQtyPcs, 
-                         ISNULL(Uf_ActQtyOrder2,0)  as Uf_ActQtyOrder2 ,
-                         ISNULL(qty_invoiced,0) as qty_invoiced,
-                         ISNULL(a.price,0) as price
-                    FROM 
-                        inv_item_mst a 
-                    left join inv_hdr_mst b on a.inv_num = b.inv_num 
-                    WHERE a.inv_num ='$inv_num' AND co_line=$co_line AND item ='$item' ";
-        $cSql = new SqlSrv();
-        $oldVal = $cSql->SqlQuery($this->StrConn, $query2);
-        array_splice($oldVal, count($oldVal) - 1, 1);
-        $cSql = null;
-        //=============================
-        $UpdPrice = "";
-        $UpdQty = "";
-        $Result = 0;
-        $inv_line_count = count($oldVal);
-        $AbsVal = 0;
-
-        if ($edit_um == "PCS") {
-//            if ($inv_line_count >= 2) {
-//                $AbsVal = round(($edit_qty / $inv_line_count), 4);
-//            } else {
-//                $AbsVal = $edit_qty;
-//            }
-            $saveQtyPcs = $edit_qty;
-            $saveQtyKG = 0;
-            $savePricePcs = $edit_price;
-            $savePriceKG = 0;
-        } else {
-            $saveQtyPcs = 0;
-            $saveQtyKG = $edit_qty;
-            $savePricePcs = 0;
-            $savePriceKG = $edit_price;
-        }
-
-
-        if ($edit_um == "PCS") {
-            $UpdPrice = "";
-        }
-
-        if ($CountRow >= 1) {
-            $query3 = "UPDATE WebApp_BackDoorChange_InvItem SET "
-                    . " new_Inv_Um = '$edit_um' , "
-                    . " new_PricePerKG = $savePriceKG , "
-                    . " new_ActQtyOrder2 = $saveQtyKG , "
-                    . " new_qty_invoiced = $saveQtyPcs , "
-                    . " new_price = $savePricePcs "
-                    . " WHERE inv_num = '$inv_num' and co_line = $co_line and item = '$item' ";
-            $cSql = new SqlSrv();
-            $Result = $cSql->IsUpDel($this->StrConn, $query3);
-            $cSql = null;
-        } else {
-            //Insert new to backup
-
-            $query3 = "Insert INTO WebApp_BackDoorChange_InvItem (
-                         inv_num, inv_date, inv_line, inv_seq, 
-                         co_num, co_line, item, 
-                         old_Inv_Um, new_Inv_Um, 
-                         old_ActWeight, new_ActWeight, 
-                         old_NetWeight, new_NetWeight, 
-                         old_PricePerKG,new_PricePerKG, 
-                         old_WeightPerPcs, new_WeightPerPcs, 
-                         old_ActQtyPcs, new_ActQtyPcs, 
-                         old_ActQtyOrder2,new_ActQtyOrder2 , 
-                         old_qty_invoiced , new_qty_invoiced   ,
-                         old_price , new_price                      
-                         ) VALUES (
-                         '" . $oldVal[0]["inv_num"] . "','" . $oldVal[0]["inv_date"]->format('Y-m-d H:i:s') . "'," . $oldVal[0]["inv_line"] . "," . $oldVal[0]["inv_seq"] . ","
-                    . "'" . $oldVal[0]["co_num"] . "'," . $oldVal[0]["co_line"] . ",'" . $oldVal[0]["item"] . "',"
-                    . "'" . $oldVal[0]["Uf_Inv_Um"] . "','$edit_um',"
-                    . "" . $oldVal[0]["Uf_ActWeight"] . ",0,"
-                    . "" . $oldVal[0]["Uf_NetWeight"] . ",0,"
-                    . "" . $oldVal[0]["Uf_PricePerKG"] . ",$savePriceKG,"
-                    . "" . $oldVal[0]["Uf_WeightPerPcs"] . ",0,"
-                    . "" . $oldVal[0]["Uf_ActQtyPcs"] . ",0,"
-                    . "" . $oldVal[0]["Uf_ActQtyOrder2"] . ",$saveQtyKG,"
-                    . "" . $oldVal[0]["qty_invoiced"] . ",$saveQtyPcs  ,"
-                    . "" . $oldVal[0]["price"] . ",$savePricePcs                   
-                    ) ";
-            $cSql = new SqlSrv();
-            $Result = $cSql->IsUpDel($this->StrConn, $query3);
-            $cSql = null;
-        }
-        // ===== change inv item====== //
-        $UpdateResult = 0;
-        if ($Result == 1) {
-            $TmpGet = null;
-            $cSql = new SqlSrv();
-            $sql = " SELECT * FROM  inv_item_mst WHERE  inv_num = '$inv_num' AND co_line = $co_line AND item ='$item' ";
-            $TmpGet = $cSql->SqlQuery($this->StrConn, $sql);
-            $cSql = null;
-
-            $cSql = new SqlSrv();
-            $addToFirstRow = $oldVal[0]["qty_invoiced"] - $saveQtyPcs;
-
-            if ($inv_line_count >= 2) {
-
-                $sqlUp = "UPDATE inv_item_mst  "
-                        . "SET Uf_Inv_Um = '$edit_um' , "
-                        . "Uf_PricePerKG  = $savePriceKG ,  "
-                        . "Uf_ActQtyOrder2 = $saveQtyKG , "
-                        . "qty_invoiced = qty_invoiced +  $saveQtyPcs  "
-                        . "WHERE "
-                        . "  inv_num = '$inv_num' AND co_line = $co_line and item= '$item' "
-                        . "  AND inv_line in( "
-                        . "     select min(inv_line) "
-                        . "     FROM inv_item_mst ii "
-                        . "     where ii.inv_num = '$inv_num' "
-                        . "     and ii.co_line = '$co_line' "
-                        . "     and ii.item = '$item'   "
-                        . "         )";
-                $UpdateResult = $cSql->IsUpDel($this->StrConn, $sqlUp);
-            } else {
-                $sqlUp = "UPDATE inv_item_mst "
-                        . "SET Uf_Inv_Um = '$edit_um' , "
-                        . "Uf_PricePerKG  = $savePriceKG ,  "
-                        . "Uf_ActQtyOrder2 = $saveQtyKG , "
-                        . "qty_invoiced = $saveQtyPcs  "
-                        . "WHERE "
-                        . "  inv_num = '$inv_num' AND co_line = $co_line and item= '$item' ";
-                $UpdateResult = $cSql->IsUpDel($this->StrConn, $sqlUp);
-            }
-            $cSql = null;
-        }
-        return $UpdateResult;
-    }
-
-    function GetInvItem() {
-        $start_invdate = $this->_start_invdate;
-        $end_invdate = $this->_end_invdate;
-        $product_code = $this->_product_code;
-        $prodCriteria = "";
-//        if(!$product_code){
-//            $prodCriteria =" AND ( product_code = '$product_code' ) " ; 
-//        }
-        $query = "SELECT  * FROM V_WebApp_InvItem_IN2 "
-                . "WHERE LEFT(inv_num,2)='IN' AND  (item_code <> '' ) AND ( inv_date BETWEEN '$start_invdate' AND '$end_invdate' ) $prodCriteria";
-        if ($this->_item != "") {
-            $query = $query . "AND ( CONCAT(item_code , ' ' , item_desc)  LIKE '%" . trim($this->_item) . "%' ) ";
-        }
-        if ($this->_size != "") {
-            $query = $query . "AND ( item_size LIKE '%" . trim($this->_size) . "%' ) ";
-        }
-        if ($this->_thick != "") {
-            if (strpos($this->_thick, '-') !== false) {
-                $thickExplode = explode("-", $this->_thick);
-                $query = $query . "AND ( CAST(item_thick_conv as decimal(15,5))  BETWEEN   " . $thickExplode[0] . " AND  " . $thickExplode[1] . " ) ";
-            } else {
-                $query = $query . "AND ( CAST(item_thick_conv as decimal(15,5))  =   " . $this->_thick . "  ) ";
-            }
-        }
-        if ($this->_width != "") {
-            if (strpos($this->_width, '-') !== false) {
-                $widthExplode = explode("-", $this->_width);
-                $query = $query . "AND ( CAST(item_width_conv as decimal(15,5)) BETWEEN   " . $widthExplode[0] . " AND  " . $widthExplode[1] . " ) ";
-            } else {
-
-                $query = $query . "AND ( CAST(item_width_conv as decimal(15,5))  BETWEEN 0 AND  " . trim($this->_width) . "  ) ";
-            }
-        }
-        $Customers = $this->_Customers;
-        $Criteria = "";
-        if (isset($Customers[0])) {
-            $Criteria .= " AND ( ";
-            foreach ($Customers as $ii => $rr) {
-                $Criteria .= " cust_num = '$rr' OR ";
-            }
-            $query .= substr($Criteria, 0, -3) . " ) ";
-        }
-//        return $query;
-        $query = $query . " ORDER BY inv_date asc";
-        $cSql = new SqlSrv();
-        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
-        array_splice($rs0, count($rs0) - 1, 1);
-        return $rs0;
-    }
-
-    function GetInvItemByHdr() {
-        $inv_num = $this->_inv_num;
-        $query = "SELECT  * FROM V_WebApp_InvItem_IN "
-                . " WHERE (item_code <> '' ) AND ( inv_num = '$inv_num' ) ";
-        if ($this->_item != "") {
-            $query = $query . "AND ( CONCAT(item_code , ' ' , item_desc)  LIKE '%" . trim($this->_item) . "%' ) ";
-        }
-        if ($this->_size != "") {
-            $query = $query . "AND ( item_size LIKE '%" . trim($this->_size) . "%' ) ";
-        }
-        if ($this->_thick != "") {
-            if (strpos($this->_thick, '-') !== false) {
-                $thickExplode = explode("-", $this->_thick);
-                $query = $query . "AND ( CAST(item_thick_conv as decimal(15,5))  BETWEEN   " . $thickExplode[0] . " AND  " . $thickExplode[1] . " ) ";
-            } else {
-                $query = $query . "AND ( CAST(item_thick_conv as decimal(15,5))  =   " . $this->_thick . "  ) ";
-            }
-        }
-        if ($this->_width != "") {
-            if (strpos($this->_width, '-') !== false) {
-                $widthExplode = explode("-", $this->_width);
-                $query = $query . "AND ( CAST(item_width_conv as decimal(15,5)) BETWEEN   " . $widthExplode[0] . " AND  " . $widthExplode[1] . " ) ";
-            } else {
-
-                $query = $query . "AND ( CAST(item_width_conv as decimal(15,5))  BETWEEN 0 AND  " . trim($this->_width) . "  ) ";
-            }
-        }
-        $query = $query . " ORDER BY inv_date asc";
-        $cSql = new SqlSrv();
-        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
-        array_splice($rs0, count($rs0) - 1, 1);
-        return $rs0;
-    }
-
-    Function Consolidate_Commit_Inv() {
-        $result = "";
-        $inv_num = $this->_inv_num;
-
-        $callSP = "Exec SP_FixedRecalNotworkingByInv @inv_num='$inv_num' ";
-
-        $stmt = sqlsrv_query($this->StrConn, $callSP);
-        if (!$stmt) {
-            $result = "ERROR !! บันทึกค่า Inv ไม่ได้ ";
-            //die(print_r(sqlsrv_errors(), true));
-        } else {
-            $result = "บันทึกค่า Inv สำเร็จ";
-        }
-
-        // sqlsrv_free_stmt($stmt);
-        return $result;
-    }
+    
 
     Function GetRows_SP_DepositHeader() {
         $selYear = $this->_Year;
@@ -1212,13 +873,7 @@ FROM V_WebApp_InvItem_IN_noVAT where 1=1 ";
         return $ArrTmp;
     }
 
-    Function GetRows_SP_DepositHeaderSummary() {
-        $query = "select CONVERT(varchar,inv_date,11) as inv_date_con ,* from V_WebApp_DepositHeader_Result";
-        $cSql = new SqlSrv();
-        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
-        array_splice($rs0, count($rs0) - 1, 1);
-        return $rs0;
-    }
+    
 
     function GetReportSalesTotal() {
         $from_date = $this->_StartDate;
@@ -1249,39 +904,9 @@ FROM V_WebApp_InvItem_IN_noVAT where 1=1 ";
         return $rs0;
     }
 
-    function GetInvItem_ALL_NEW($FromDate, $ToDate) {
-//                    $query = "  select 'ขายในประเทศ' as type_sale ,inv_date, inv_num , cust_num , name , item ,description,unit_weight, group_final   ,um ,qtypcs ,priceperpcs ,  qtykg, PricePerKG , amt , vat , amt_total from v_webapp_invitem_in "
-//                . " where inv_date between '$FromDate' and '$ToDate' "
-//                . " union "
-//                . " select 'ขายต่างประเทศ'  as type_sale  ,inv_date, inv_num , cust_num , name , item ,description,unit_weight, group_final   ,um ,qtypcs ,priceperpcs ,  qtykg, PricePerKG , AMT_THB as amt, 0 as vat , AMT_THB  as amt_total "
-//                . " from v_webapp_invitem_ex "
-//                . " where inv_date between '$FromDate' and '$ToDate' ";
-        //$query = "select inv_date , inv_num , cust_num , name , item , description , item_size , item_thick , item_width , item_length , unit_weight , group_code , group_final , um , (cast(replace(isnull(qtyPCS,0),',','') as decimal(18,2) ) ) as qtyPCS , priceperpcs , (cast(replace(isnull(qtykg,0),',','') as decimal(18,2) ) ) as qtyKG , priceperkg , priceperton , (cast(replace(isnull(discount,0),',','') as decimal(18,2) ) ) as discount , (cast(replace(isnull(amt_usd,0),',','') as decimal(18,2) ) ) as amt_sd , exch_rate , (cast(replace(isnull(amt_thb,0),',','') as decimal(18,2) ) ) as amt_thb , (cast(replace(isnull(VAT,0),',','') as decimal(18,2) ) ) as vat , country , custPO, uf_NPS, uf_theoryweightperitem, uf_schedule from ( select inv_date , inv_num , cust_num , name , item , description , item_size , item_thick , item_width , item_length , isnull( unit_weight ,0) as unit_weight , group_code , group_final , um , (cast(replace(isnull(qtyPCS,0),',','') as decimal(18,2) ) ) as qtyPCS , (cast(replace(isnull(priceperpcs,0),',','') as decimal(18,2) ) ) priceperpcs , (cast(replace(isnull(qtykg,0),',','') as decimal(18,2) ) ) as qtykg , (cast(replace(isnull(priceperkg,0),',','') as decimal(18,2) ) ) as priceperkg , (cast(replace(isnull(priceperton,0),',','') as decimal(18,2) ) ) as priceperton , (cast(replace(isnull(discount,0),',','') as decimal(18,2) ) ) as discount , (cast(replace(isnull(amt_usd,0),',','') as decimal(18,2) ) ) as amt_usd , exch_rate , (cast(replace(isnull(amt_thb,0),',','') as decimal(18,2) ) ) as amt_thb , 0 as VAT , country , custPO, uf_NPS, uf_theoryweightperitem, uf_schedule FROM V_WebApp_InvItem_EX where inv_date between '2019-01-01 00:00:00.000' and '2019-09-30 23:59:59.000' UNION select inv_date , inv_num , cust_num , name , item , description , item_size , item_thick , item_width , item_length , unit_weight , group_code , group_final , um , (cast(replace(isnull(qtyPCS,0),',','') as decimal(18,2) ) ) as qtyPCS ,(cast(replace(isnull(priceperpcs,0),',','') as decimal(18,2) ) ) as priceperpcs , (cast(replace(isnull(qtykg,0),',','') as decimal(18,2) ) ) as qtykg , (cast(replace(isnull(priceperkg,0),',','') as decimal(18,2) ) ) priceperkg , 0 as priceperton , (cast(replace(isnull(discount,0),',','') as decimal(18,2) ) ) as discount , 0 as amt_usd , 0 as exch_rate , (cast(replace(isnull(AMT,0),',','') as decimal(18,2) ) ) as amt_thb , (cast(replace(isnull(VAT,0),',','') as decimal(18,2) ) ) as VAT , country = 'TH' , custPO, uf_NPS, uf_theoryweightperitem, uf_schedule FROM V_WebApp_InvItem_IN where inv_date between '2019-01-01 00:00:00.000' and '2019-09-30 23:59:59.000' ) as sumTMPselect ";
+    
 
-        $query = "  select 'ขายในประเทศ' as type_sale ,inv_date, inv_num , cust_num , name , item ,description,unit_weight, group_final   ,um ,qtypcs ,priceperpcs ,  qtykg, PricePerKG , amt , vat , amt_total "
-                . " from v_webapp_invitem_in "
-                . " where inv_date between '$FromDate' and '$ToDate' ";
-        $cSql = new SqlSrv();
-        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
-        array_splice($rs0, count($rs0) - 1, 1);
-
-        $query2 = " select 'ขายต่างประเทศ'  as type_sale  ,inv_date, inv_num , cust_num , name , item ,description,unit_weight, group_final   ,um ,qtypcs ,priceperpcs ,  qtykg, PricePerKG , AMT_THB as amt, 0 as vat , AMT_THB  as amt_total "
-                . " from v_webapp_invitem_ex "
-                . " where inv_date between '$FromDate' and '$ToDate' ";
-        $cSql = new SqlSrv();
-        $rs1 = $cSql->SqlQuery($this->StrConn, $query2);
-        array_splice($rs1, count($rs1) - 1, 1);
-        $result = array_merge($rs0, $rs1);
-        return $result;
-    }
-
-    function RPTInvoiceCheck() {
-        $query = " select * FROM xxx ";
-        $cSql = new SqlSrv();
-        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
-        array_splice($rs0, count($rs0) - 1, 1);
-        return $rs0;
-    }
+    
 
     function RPT_payment_invoice_checking($InvFromDate, $InvToDate, $inv_num, $cust_num, $date_dif, $credit_term, $type) {
         $query = " select distinct art.inv_num , art.cust_num , cadd.name , "

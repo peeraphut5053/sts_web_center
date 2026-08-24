@@ -1,4 +1,5 @@
 <?php
+// [Used by sahathai_react_project - QC Lab Tag Detail, Daily WorkCenter, Status & Forming Reports]
 header("Access-Control-Allow-Origin: *");
 
 foreach ($_GET as $key => $value) {

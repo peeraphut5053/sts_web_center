@@ -355,14 +355,7 @@ class DeliveryOrder {
 //        return $rs0;
     }
 
-    function GetDoSeq($do_num) {
-        $query = "SELECT * FROM V_WebApp_Report_DeliveryOrder "
-                . "WHERE do_num ='$do_num'  ";
-        $cSql = new SqlSrv();
-        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
-        array_splice($rs0, count($rs0) - 1, 1);
-        return $rs0;
-    }
+    
 
     function GetDoPending() {
         $txtDoDateFrom = $this->_txtDoDateFrom;
@@ -414,130 +407,9 @@ class DeliveryOrder {
         return "Insert";
     }
 
-    function GetDataWith_SP_DO_Line() {
+    
 
-        $txtDoNum = $this->_txtDoNum;
-        $sql = "{call MV_DELIVERY_ORDER_REPORT_DETAIL (?)}";
-        $params = array(
-            array($txtDoNum, SQLSRV_PARAM_IN)
-        );
-        $query = sqlsrv_query($this->StrConn, $sql, $params);
-        $result = sqlsrv_fetch_array($query, SQLSRV_FETCH_ASSOC);
-//        print_r($result);
-        return $result;
-
-
-//        $str = "select DISTINCT  ";
-//        $str = $str . "  do_hdr_mst.do_hdr_date ";
-//        $str = $str . "   , do_hdr_mst.pickup_date ";
-//        $str = $str . "   , do_hdr_mst.do_num ";
-//        $str = $str . "   , do_hdr_mst.cust_num  ";
-//        $str = $str . "   , custaddr_mst.name ";
-//        $str = $str . "   , AIT_Preship_Do_Seq.do_line ";
-//        $str = $str . "   , AIT_Preship_Do_Seq.do_seq  ";
-//        $str = $str . "   , AIT_Preship_Do_Seq.Co_num AS DoCoNum ";
-//        $str = $str . "   , AIT_Preship_Do_Seq.Co_line ";
-//        $str = $str . "   , AIT_Preship_Do_Seq.Co_Release ";
-//        $str = $str . "   , AIT_Preship_Do_Seq.loc ";
-//        $str = $str . "   , coitem_mst.item ";
-//        $str = $str . "   , isnull(item_mst.description,coitem_mst.description) as description  ";
-//        $str = $str . "   , co_mst.Co_num ";
-//        $str = $str . "   , co_mst.cust_po ";
-//        $str = $str . "   , item_mst.Uf_Thickness ";
-//        $str = $str . "   , item_mst.Uf_length ";
-//        $str = $str . "  , isnull(item_mst.Uf_Pack,0) as Uf_Pack ";
-//        $str = $str . "   , coitem_mst.qty_ordered ";
-//        $str = $str . "   , AIT_Preship_Do_Seq.Qty ";
-//        $str = $str . "   , case when item_mst.Uf_Pack <> 0 then FLOOR((AIT_Preship_Do_Seq.Qty / item_mst.Uf_Pack))";
-//        $str = $str . "      else FLOOR((AIT_Preship_Do_Seq.Qty / 999999)) END AS QtyBundle ";
-//        $str = $str . " , case when item_mst.Uf_Pack <> 0 then CEILING(AIT_Preship_Do_Seq.Qty % item_mst.Uf_Pack) ";
-//        $str = $str . "		  else CEILING(AIT_Preship_Do_Seq.Qty % 999999) END AS QtyRemainder ";
-//        $str = $str . "  , isnull(coitem_mst.uf_um2,coitem_mst.u_m) as u_m ";
-//        $str = $str . "  , item_mst.u_m as S_u_m";
-//        $str = $str . "  , item_mst.unit_weight";
-//        $str = $str . "  , item_mst.unit_weight*AIT_Preship_Do_Seq.Qty AS SumWeight";
-//        $str = $str . "  , CAST(SpecificNotes.NoteContent AS VARCHAR ) as NoteContent  ";
-//        $str = $str . " from  do_hdr_mst";
-//        $str = $str . " LEFT OUTER JOIN ObjectNotes ON do_hdr_mst.RowPointer = ObjectNotes.RefRowPointer";
-//        $str = $str . " LEFT OUTER JOIN SpecificNotes ON ObjectNotes.SpecificNoteToken = SpecificNotes.SpecificNoteToken";
-//        $str = $str . " LEFT OUTER JOIN custaddr_mst ON do_hdr_mst.site_ref = custaddr_mst.site_ref ";
-//        $str = $str . "                              and do_hdr_mst.cust_num = custaddr_mst.cust_num ";
-//        $str = $str . "							  and do_hdr_mst.cust_seq = custaddr_mst.cust_seq";
-//        $str = $str . "  LEFT OUTER JOIN do_line_mst ON do_hdr_mst.site_ref = do_line_mst.site_ref";
-//        $str = $str . "                             and do_hdr_mst.do_num = do_line_mst.do_num";
-//        $str = $str . "  LEFT OUTER JOIN AIT_Preship_Do_Seq ON do_line_mst.site_ref = AIT_Preship_Do_Seq.Site ";
-//        $str = $str . "                                    and do_line_mst.do_num = AIT_Preship_Do_Seq.do_num ";
-//        $str = $str . "									and do_line_mst.do_line = AIT_Preship_Do_Seq.do_line";
-//        $str = $str . "  LEFT OUTER JOIN coitem_mst ON AIT_Preship_Do_Seq.Site = coitem_mst.site_ref ";
-//        $str = $str . "                           and AIT_Preship_Do_Seq.Co_num = coitem_mst.co_num";
-//        $str = $str . "							and AIT_Preship_Do_Seq.Co_line = coitem_mst.co_line";
-//        $str = $str . "							and AIT_Preship_Do_Seq.Co_Release = coitem_mst.co_release";
-//        $str = $str . "  LEFT OUTER JOIN co_mst ON coitem_mst.site_ref = co_mst.site_ref and coitem_mst.Co_num = co_mst.Co_num";
-//        $str = $str . "  LEFT OUTER JOIN item_mst ON coitem_mst.site_ref = item_mst.site_ref and coitem_mst.item = item_mst.item";
-//        $str = $str . " WHERE do_hdr_mst.do_num  ='$do_num'  ORDER BY do_seq ASC";
-//
-//
-//        $cSql = new SqlSrv();
-//        $rs0 = $cSql->SqlQuery($this->StrConn, $str);
-//        array_splice($rs0, count($rs0) - 1, 1);
-//        return $rs0;
-    }
-
-    function GetDataWith_SP_DO_Hdr() {
-        $txtDoNum = "";
-
-
-        $this->_txtDoNumFrom == "" ? $txtDoNumFrom = "" : $txtDoNumFrom = $this->_txtDoNumFrom;
-        $this->_txtDoNumTo == "" ? $txtDoNumTo = "zzzzzzzzzzz" : $txtDoNumTo = $this->_txtDoNumTo;
-
-        $this->_txtCustFrom == "" ? $txtCustFrom = "" : $txtCustFrom = $this->_txtCustFrom;
-        $this->_txtCustTo == "" ? $txtCustTo = "zzzzzzzzzzz" : $txtCustTo = $this->_txtCustTo;
-
-
-        $this->_txtCoFrom == "" ? $txtCoFrom = "" : $txtCoFrom = $this->_txtCoFrom;
-        $this->_txtCoTo == "" ? $txtCoTo = "zzzzzzzzzzz" : $txtCoTo = $this->_txtCoTo;
-
-        $this->_txtItemFrom == "" ? $txtItemFrom = "" : $txtItemFrom = $this->_txtItemFrom;
-        $this->_txtItemTo == "" ? $txtItemTo = "zzzzzzzzzzz" : $txtItemTo = $this->_txtItemTo;
-
-
-        $this->_txtPickFrom == "" ? $txtPickFrom = "2001-01-01" : $txtPickFrom = $this->_txtPickFrom;
-        $this->_txtPickTo == "" ? $txtPickTo = "2999-12-31" : $txtPickTo = $this->_txtPickTo;
-
-        $this->_txtDoDateFrom == "" ? $txtDoDateFrom = "2001-01-01" : $txtDoDateFrom = $this->_txtDoDateFrom;
-        $this->_txtDoDateTo == "" ? $txtDoDateTo = "2999-12-31" : $txtDoDateTo = $this->_txtDoDateTo;
-        $partHdr = "";
-        $str = "select   do_hdr_mst.do_num,   do_hdr_mst.do_hdr_date    , do_hdr_mst.pickup_date  ,do_hdr_mst.cust_num ,custaddr_mst.name       from  do_hdr_mst";
-        $str = $str . " LEFT OUTER JOIN ObjectNotes ON do_hdr_mst.RowPointer = ObjectNotes.RefRowPointer";
-        $str = $str . " LEFT OUTER JOIN SpecificNotes ON ObjectNotes.SpecificNoteToken = SpecificNotes.SpecificNoteToken";
-        $str = $str . " LEFT OUTER JOIN custaddr_mst ON do_hdr_mst.site_ref = custaddr_mst.site_ref ";
-        $str = $str . "                              and do_hdr_mst.cust_num = custaddr_mst.cust_num ";
-        $str = $str . "							  and do_hdr_mst.cust_seq = custaddr_mst.cust_seq";
-        $str = $str . "  LEFT OUTER JOIN do_line_mst ON do_hdr_mst.site_ref = do_line_mst.site_ref";
-        $str = $str . "                             and do_hdr_mst.do_num = do_line_mst.do_num";
-        $str = $str . "  LEFT OUTER JOIN AIT_Preship_Do_Seq ON do_line_mst.site_ref = AIT_Preship_Do_Seq.Site ";
-        $str = $str . "                                    and do_line_mst.do_num = AIT_Preship_Do_Seq.do_num ";
-        $str = $str . "									and do_line_mst.do_line = AIT_Preship_Do_Seq.do_line";
-        $str = $str . "  LEFT OUTER JOIN coitem_mst ON AIT_Preship_Do_Seq.Site = coitem_mst.site_ref ";
-        $str = $str . "                           and AIT_Preship_Do_Seq.Co_num = coitem_mst.co_num";
-        $str = $str . "							and AIT_Preship_Do_Seq.Co_line = coitem_mst.co_line";
-        $str = $str . "							and AIT_Preship_Do_Seq.Co_Release = coitem_mst.co_release";
-        $str = $str . "  LEFT OUTER JOIN co_mst ON coitem_mst.site_ref = co_mst.site_ref and coitem_mst.Co_num = co_mst.Co_num";
-        $str = $str . "  LEFT OUTER JOIN item_mst ON coitem_mst.site_ref = item_mst.site_ref and coitem_mst.item = item_mst.item";
-        $str = $str . "  WHERE  (do_hdr_mst.do_num >= '$txtDoNumFrom' and do_hdr_mst.do_num  <= '$txtDoNumTo') ";
-        $str = $str . "  and (do_hdr_mst.cust_num between '$txtCustFrom' and '$txtCustTo') ";
-        $str = $str . "  and (do_hdr_mst.do_hdr_date between '$txtDoDateFrom' and '$txtDoDateTo') ";
-        $str = $str . "  and (co_mst.co_num between '$txtCoFrom' and '$txtCoTo') ";
-        $str = $str . "  and (coitem_mst.item between '$txtItemFrom' and '$txtItemTo') ";
-        $str = $str . "  and (do_hdr_mst.pickup_date between '$txtPickFrom' and '$txtPickTo')  "
-                . "GROUP BY   do_hdr_mst.do_num, do_hdr_mst.do_hdr_date    , do_hdr_mst.pickup_date  ,do_hdr_mst.cust_num ,custaddr_mst.name ";
-
-
-        $cSql = new SqlSrv();
-        $rs0 = $cSql->SqlQuery($this->StrConn, $str);
-        array_splice($rs0, count($rs0) - 1, 1);
-        return $rs0;
-    }
+    
 
     function updateRemark($lot, $remark) {
 

@@ -1,4 +1,5 @@
 <?php
+// [Used by sahathai_react_project - Job Order Processing, TranstypeList, UMList]
 
 header("Access-Control-Allow-Origin: *");
 while (list($key, $data) = each($_GET) OR list($key, $data) = each($_POST)) {

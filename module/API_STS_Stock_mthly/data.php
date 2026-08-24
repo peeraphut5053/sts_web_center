@@ -1,4 +1,5 @@
 <?php
+// [Used by sahathai_react_project - Monthly Stock Report]
 
 header("Access-Control-Allow-Origin: *");
 

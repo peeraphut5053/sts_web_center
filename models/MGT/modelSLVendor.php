@@ -63,15 +63,7 @@ class SLVendor {
         array_splice($rs0, count($rs0) - 1, 1);
         return $rs0;
     }
-  function GetVendorByVenNum($vrn_num) {
-    $q = "SELECT ".$this->AllField . " FROM vendor_mst WHERE ven_num = '$ven_num'  " ;
-    $cSql = new SqlSrv();
-    $rs0 = $cSql->SqlQuery($this->StrConn, $q);
-    $this->site_ref = $rs0[1]["site_ref"];
-    $this->vend_num = $rs0[1]["vend_num"];
-    $this->contact = $rs0[1]["contact"];
-    $this->phone = $rs0[1]["phone"];
-  }
+  
 
 
 

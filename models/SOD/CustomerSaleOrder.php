@@ -116,16 +116,7 @@ class CustomerSaleOrder {
         $this->measure_desc_th = $rs0[1]["measure_desc_th"];
     }
 
-    function GetFormXlsListCust($id) {
-
-        $query = "SELECT  *  FROM SO_Customer  WHERE import_form = $id ";
-        $cSql = new SqlSrv();
-        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
-        array_splice($rs0, count($rs0) - 1, 1);
-
-
-        return $rs0;
-    }
+    
 
     function GetFormXlsListAll() {
 
@@ -138,12 +129,6 @@ class CustomerSaleOrder {
         return $rs0;
     }
 
-    function GetFormXlsListOne($id) {
-        $query = "SELECT  *  FROM Xls_Form_Import WHERE id = $id";
-        $cSql = new SqlSrv();
-        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
-        array_splice($rs0, count($rs0) - 1, 1);
-        return $rs0;
-    }
+    
 
 }

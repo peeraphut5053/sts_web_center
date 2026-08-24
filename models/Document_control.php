@@ -11,15 +11,7 @@ class Document_control {
         $this->StrConn = $c;
     }
 
-    Function InsertDocNo() {
-        $cSql = new SqlSrv();
-        $user_id = $_SESSION["login_user_id"];
-        $sql = "INSERT INTO Document_control (prj_code,doc_no,date_time,user_id) "
-                . "VALUES "
-                . "('" . $this->_prj_code . "','" . $this->_doc_no . "',GETDATE(),$user_id) ";
-        $rs = $cSql->IsUpDel($this->StrConn, $sql);
-        return $rs;
-    }
+    
 
     Function GenDocNo() {
         $cSql = new SqlSrv();

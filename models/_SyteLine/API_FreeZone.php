@@ -52,26 +52,7 @@ class API_FreeZone {
         return $rs0;
     }
 
-    function get_string_between($string, $start, $end) {
-        $string = ' ' . $string;
-        $ini = strpos($string, $start);
-        if ($ini == 0) {
-            return '';
-        }
-
-
-        $ini += strlen($start);
-        $len = strpos($string, $end, $ini) - $ini;
-
-        if (strpos($string, "group") == true) {
-            return substr($string, $ini, $len);
-        } else {
-            return substr($string, $ini);
-        }
-
-        //return $end;
-//return substr($string, $ini, $len);
-    }
+    
 
     function SQLQueryReport($report_name, $PostValues) {
         if ($report_name != "undefined") {

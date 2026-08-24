@@ -56,18 +56,7 @@ class PO_QC {
         }
     }
 
-    function UpdateTransfer_Clear($Start, $End) {
-        $mysqli = new mysqli($this->MySql_Host, $this->MySql_User, $this->MySql_Pass, $this->MySql_Db);
-        $TmpArray = array();
-        $q = "UPDATE po_qc SET transfer = NULL WHERE po_date BETWEEN '$Start' AND  '$End' ";
-        if ($result = $mysqli->query($q)) {
-            // $result->free();
-            $mysqli->close();
-            return count($result);
-        } else {
-            return $this->GetError('in ' . __FILE__ . ' / ' . __FUNCTION__ . "()  " . $mysqli->error);
-        }
-    }
+    
 
     function UpdateTag() {
         $mysqli = new mysqli($this->MySql_Host, $this->MySql_User, $this->MySql_Pass, $this->MySql_Db);
@@ -264,22 +253,7 @@ class PO_QC {
         }
     }
 
-    function GetRowsOnce() {
-        $mysqli = new mysqli($this->MySql_Host, $this->MySql_User, $this->MySql_Pass, $this->MySql_Db);
-        $TmpArray = array();
-        if ($result = $mysqli->query($this->QuerySelect . " ORDER BY po_date DESC LIMIT 1 ")) {
-            $i = 0;
-            while ($row = $result->fetch_assoc()) {
-                $i++;
-                $TmpArray[$i] = $row;
-            }
-            $result->free();
-            $mysqli->close();
-            return $TmpArray;
-        } else {
-            return $this->GetError('in ' . __FILE__ . ' / ' . __FUNCTION__ . "()  " . $mysqli->error);
-        }
-    }
+    
 
     function SearchLine($sno) {
         $mysqli = new mysqli($this->MySql_Host, $this->MySql_User, $this->MySql_Pass, $this->MySql_Db);
@@ -383,23 +357,7 @@ class PO_QC {
         $mysqli->query($q);
     }
 
-    function GetRowsWithCond23($sno) {
-        $mysqli = new mysqli($this->MySql_Host, $this->MySql_User, $this->MySql_Pass, $this->MySql_Db);
-        $TmpArray = array();
-
-        if ($result = $mysqli->query("select * FROM po_qc where sno = $sno")) {
-            $i = 0;
-            while ($row = $result->fetch_assoc()) {
-                $TmpArray[$i] = $row;
-                $i++;
-            }
-            //$result->free();
-            $mysqli->close();
-            return $TmpArray;
-        } else {
-            return $this->GetError('in ' . __FILE__ . ' / ' . __FUNCTION__ . "()  " . $mysqli->error);
-        }
-    }
+    
     
 //Check HOT ROLL Do formimng    
 //    SELECT distinct STS_Check_heat_no.sts_no

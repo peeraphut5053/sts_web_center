@@ -277,26 +277,7 @@ class SLPO {
         return $ret;
     }
 
-    function AjaxGetAvailablePO() {
-        $q = "SELECT  " . $this->AllField . " "
-                . " FROM po_mst vd "
-                . " WHERE $sWhere";
-        $cSql = new SqlSrv();
-
-        $rs0 = $cSql->SqlQuery($this->StrConn, $q);
-        array_splice($rs0, count($rs0) - 1, 1);
-        $arr = array();
-        $ret = "";
-        foreach ($rs0 as $index => $rows) {
-            $ret = $ret . "<div class='row row-data-ajax'>"
-                    . "<div class='col-1 col-data-ajax'>"
-                    . "<a id='sel_" . $rows["po_num"] . "' data-vend-num='" . $rows["vend_num"] . "'  href='#'><i class='fa fa-chevron-left'></i></a>"
-                    . "</div>"
-                    . "<div class='col-11 col-data-ajax'>" . $rows["vend_num"] . " - " . $rows["name"] . " </div>"
-                    . "</div>";
-        }
-        return $ret;
-    }
+    
 
     function AjaxGetItemsDropdownWithCond($sWhere) {
         $q = "SELECT  " . $this->AllField . " "

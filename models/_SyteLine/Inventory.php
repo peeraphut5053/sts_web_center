@@ -131,109 +131,23 @@ order by main.item";
         return $rs0;
     }
 	
-	 Function RPT_NEW_INVENTORY_BALANCE_InvoiceAD_IN($txtStartDate, $txtEndDate) {
-        $query = " EXEC Rpt_STS_InvoiceAD_IN "
-        . " @TransactionDateStarting  = N'$txtStartDate',"
-        . " @TransactionDateEnding = N'$txtEndDate'";
-        $cSql = new SqlSrv();
-        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
-        array_splice($rs0, count($rs0) - 1, 1);
-        return $rs0;
-    }
+	 
 
-    Function Select_itemGradeSch ($itemGradeSch) {
-       
-        if ($itemGradeSch == ""){
-            $query = "select * from STS_AD_itemGradeSch order by item";
-        } else {
-            $query = "select * from STS_AD_itemGradeSch where item = '$itemGradeSch'";
-        }
-        $cSql = new SqlSrv();
-        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
-        array_splice($rs0, count($rs0) - 1, 1);
-        return $rs0;
-    }
+    
 
-    Function Select_itemSIZEH ($itemSIZEH) {
-       
-        if ($itemSIZEH == ""){
-            $query = "select * from STS_AD_itemSIZEH order by item";
-        } else {
-            $query = "select * from STS_AD_itemSIZEH where item = '$itemSIZEH'";
-        }
-        $cSql = new SqlSrv();
-        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
-        array_splice($rs0, count($rs0) - 1, 1);
-        return $rs0;
-    }
+    
 
-    Function GetItemGradeData ($itemGrade) {
-        $query = "select * from STS_AD_itemGradeSch where item = '$itemGrade'";
-        $cSql = new SqlSrv();
-        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
-        array_splice($rs0, count($rs0) - 1, 1);
-        return $rs0;
-    }
+    
 
-    Function GetItemSizehData ($itemSizeh) {
-        $query = "select * from STS_AD_itemSIZEH where item = '$itemSizeh'";
-        $cSql = new SqlSrv();
-        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
-        array_splice($rs0, count($rs0) - 1, 1);
-        return $rs0;
-    }
+    
 
-    Function InsertItemGrade ($itemGrade,$spec,$GRADEH,$SCHH,$saveStat) {
-        if ($saveStat == 'Insert'){
-            $query = "INSERT INTO STS_AD_itemGradeSch(item,spec,GRADEH,SCHH) VALUES('$itemGrade','$spec','$GRADEH','$SCHH')";
-        }
-        elseif ($saveStat == 'Update'){
-            $query = "UPDATE STS_AD_itemGradeSch SET "
-            . "item ='$itemGrade', "
-            . "spec ='$spec', "
-            . "GRADEH ='$GRADEH', "
-            . "SCHH ='$SCHH'"
-            . "WHERE item ='$itemGrade'";
-        }
-        $cSql = new SqlSrv();
-        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
-        array_splice($rs0, count($rs0) - 1, 1);
-        return $rs0;
-    }
+    
 
-    Function InsertItemSizeh ($itemSizeh,$inch,$MM,$SIZEH,$saveStat) {
-        if ($saveStat == 'Insert'){
-            $query = "INSERT INTO STS_AD_itemSIZEH(item,inch,MM,SIZEH) VALUES('$itemSizeh','$inch','$MM','$SIZEH')";
-        }
-        elseif ($saveStat == 'Update'){
-            $query = "UPDATE STS_AD_itemSIZEH  SET "
-            . "item ='$itemSizeh', "
-            . "inch ='$inch', "
-            . "MM ='$MM', "
-            . "SIZEH ='$SIZEH'"
-            . "WHERE item ='$itemSizeh'";
-        }
-        $cSql = new SqlSrv();
-        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
-        array_splice($rs0, count($rs0) - 1, 1);
-        return $rs0;
-    }
+    
 
-    Function DeleteItemGrade ($itemGrade) {
-        $query = "delete from STS_AD_itemGradeSch where item = '$itemGrade'";
-        $cSql = new SqlSrv();
-        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
-        array_splice($rs0, count($rs0) - 1, 1);
-        return $rs0;
-    }
+    
 
-    Function DeleteItemSizeh ($itemSizeh) {
-        $query = "delete from STS_AD_itemSIZEH where item = '$itemSizeh'";
-        $cSql = new SqlSrv();
-        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
-        array_splice($rs0, count($rs0) - 1, 1);
-        return $rs0;
-    }
+    
 
     Function RPT_NEW_INVENTORY_BALANCE_Stock_Card_by_Invoice_No($item, $txtStartDate, $txtEndDate, $ThVendInvNum) {
 
@@ -291,15 +205,7 @@ order by main.item";
 
     }
 
-    function Insert_Stock_Move_by_Item($date, $item_number, $item_name, $ref_type, $tran_type, $doc_no, $qty, $bal_qty) {
-        $query = " INSERT INTO STS_stock_card_by_items ([date],item_number,item_name,ref_type,tran_type,doc_no,qty,bal_qty,createdate) "
-                . " VALUES ('$date','$item_number','$item_name','$ref_type','$tran_type','$doc_no','$qty','$bal_qty',getdate()) ";
-        $cSql = new SqlSrv();
-        $rs = $cSql->SqlQuery($this->StrConn, $query);
-        array_splice($rs, count($rs) - 1, 1);
-        return $rs;
-
-    }
+    
 
     Function GetReportStockMove($item, $txtStartDate, $txtEndDate, $ThVendInvNum) {
 
@@ -341,45 +247,7 @@ order by main.item";
         return $rs0;
     }
 
-    Function GetReportStockCardByItems($item, $txtStartDate, $txtEndDate, $ThVendInvNum) {
-
-        $searchItem = "";
-
-        if ($item) {
-            if (substr($item, -1) == "*") {
-                $item = str_replace('*', '', $item);
-                $searchItem = " AND ( item_number like '$item%' ) ";
-            } else {
-                $searchItem = " AND ( item_number like '%$item%' ) ";
-            }
-        }
-
-//        $txtStartDate= '2018-12-31';
-//        $txtEndDate='2020-08-21';
-//        $ThVendInvNum = 'IN19060762';
-        //     $search_date = "AND  convert(date,a.transdate, 103)  BETWEEN '$txtStartDate' AND '$txtEndDate'";
-        $search_date = "AND  convert(date,createdate)  BETWEEN '$txtStartDate' AND '$txtEndDate'";
-
-        $search_ThVendInvNum = "and doc_no like '%$ThVendInvNum%'";
-        //      $search_ThVendInvNum = "and a.ThVendInvNum like '%$ThVendInvNum%'";
-        /*
-          $query = " select convert(date,a.transdate, 103) as TransdateCon ,a.* , b.lot , b.loc from matltran2_detail_mst a left join matltran_mst b on cast(a.transnum as int) = cast(b.trans_num as int)  where 1=1  ";
-          $query = $query . $searchItem;
-          $query = $query . $search_date;
-          $query = $query . $search_ThVendInvNum;
-          $query = $query . "ORDER BY CONVERT (date , TransDate ,103) ASC , CASE WHEN left(TransDescription ,1) ='R' OR left(TransDescription ,1) ='F' THEN 0 ELSE 1 END , CAST(TransNum as int) ASC ";
-         */
-        $query = " select * FROM STS_stock_card_by_items where 1=1  ";
-//        $query = " select convert(date,trans_date) as date , matltran_mst.item , item_mst.description , item_mst.unit_weight , concat(matltran_mst.ref_type, ' ',ref_type_mst.ref_description) , concat(matltran_mst.trans_type, ' ',trans_type_mst.trans_description) , TH_vend_inv_num , matltran_mst.qty from matltran_mst inner join item_mst on matltran_mst.item = item_mst.item inner join ref_type_mst on matltran_mst.ref_type = ref_type_mst.ref_type inner join trans_type_mst on matltran_mst.trans_type = trans_type_mst.trans_type where matltran_mst.ref_type = 'O' and convert(date, trans_date) > '2018-12-31' and TH_vend_inv_num is not null ";
-
-        $query = $query . $searchItem;
-        $query = $query . $search_date;
-        $query = $query . $search_ThVendInvNum;
-        $cSql = new SqlSrv();
-        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
-        array_splice($rs0, count($rs0) - 1, 1);
-        return $rs0;
-    }
+    
 
     Function GetRows_NewInventoryBalanceReport_Detail_edit($FirstSearch, $item, $txtStartDate, $txtEndDate, $TrandesctionSelect) {
 
@@ -484,27 +352,7 @@ order by main.item";
         return $rs0;
     }
 
-    function Manu_Item_Cost_Update($txtFromDate, $txtToDate) {
-
-        $queryInsert = " INSERT INTO MV_Manu_Item_Cost_Update_history"
-                . " (click_start,click_type)"
-                . " VALUES (getdate(),'update item cost')";
-        $cSql = new SqlSrv();
-        $cSql->SqlQuery($this->StrConn, $queryInsert);
-
-        $txtFromDate = $txtFromDate . " 00:00:00.000";
-        $txtToDate = $txtToDate . " 23:59:59.000";
-        $query = " DECLARE @return_value int,"
-                . " @ReturnVal nvarchar(100) "
-                . " EXEC @return_value = [dbo].[MV_Manu_Item_Cost_Update] "
-                . " @start_date = N'$txtFromDate',@end_date = N'$txtToDate',"
-                . " @ReturnVal = @ReturnVal OUTPUT "
-                . " SELECT @ReturnVal as N'@ReturnVal' ";
-        $cSql = new SqlSrv();
-        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
-        array_splice($rs0, count($rs0) - 1, 1);
-        return $rs0;
-    }
+    
 
     function STS_Recal_Matltran() {
         $queryInsert = " INSERT INTO MV_Manu_Item_Cost_Update_history"
@@ -518,13 +366,7 @@ order by main.item";
         $cSql->SqlQuery($this->StrConn, $query);
     }
 
-    function checkStat() {
-        $query = "select * FROM MV_Manu_Item_Cost_Update_history order by id desc";
-        $cSql = new SqlSrv();
-        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
-        array_splice($rs0, count($rs0) - 1, 1);
-        return $rs0;
-    }
+    
 
     Function RPT_NEW_INVENTORY_GROUP_BY_TRANS_TYPE($txtFromDate, $txtToDate, $txtref_num, $txtItem, $txtw_c, $FinishQty, $IssueQty, $flagAllItem) {
         $txtw_c_query = "";

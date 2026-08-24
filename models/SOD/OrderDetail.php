@@ -274,14 +274,7 @@ class OrderDetail {
 //        return $result;
 //    }
 
-    function GetLotByDocNo() {
-        $doc_no = $this->_doc_no;
-        $query = "SELECT lot  FROM SO_Order_detail WHERE doc_no =  '$doc_no' group by lot ";
-        $cSql = new SqlSrv();
-        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
-        array_splice($rs0, count($rs0) - 1, 1);
-        return $rs0;
-    }
+    
 
     function GetRowsByDocNo() {
         $doc_no = $this->_doc_no;

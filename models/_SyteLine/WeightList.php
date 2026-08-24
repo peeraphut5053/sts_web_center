@@ -79,13 +79,7 @@ class WeightList {
         return $rs;
     }
 
-    Function CheckDuplicate($sno) {
-        $cSql = new SqlSrv();
-        $rs = $cSql->SqlQuery($this->StrConn, "SELECT sno FROM STS_WeightList WHERE sno='$sno' ");
-        array_splice($rs, count($rs) - 1, 1);
-
-        return count($rs);
-    }
+    
 
     Function ClearData($StartDate, $EndDate) {
         $cSql = new SqlSrv();

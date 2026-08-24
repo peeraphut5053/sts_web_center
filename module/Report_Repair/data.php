@@ -1,4 +1,5 @@
 <?php
+// [Used by sahathai_react_project - Repair & Stop Machine Reasons]
 header("Access-Control-Allow-Origin: *");
 foreach ($_GET as $key => $value) {
     $$key = trim($value);

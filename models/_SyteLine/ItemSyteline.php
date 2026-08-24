@@ -443,43 +443,9 @@ class ItemSyteLine {
         return $rs0;
     }
 
-    function GetYearData() {
+    
 
-        $q = "SELECT year(CreateDate) as yr  FROM V_WebApp_ItemLoc_selling    Group by Year(CreateDate)";
-        $cSql = new SqlSrv();
-        $rs0 = $cSql->SqlQuery($this->StrConn, $q);
-        array_splice($rs0, count($rs0) - 1, 1);
-
-
-        return $rs0;
-    }
-
-    function GetAllProductCode() {
-        $start_date = $this->_StartDate;
-        $end_date = $this->_ToDate;
-
-        $callSP = 'Exec SP_WebApp_ReportItemSaleResult_IN @start_date=?,@end_date=?';
-        $params = array($start_date, $end_date);
-        // $result = sqlsrv_query($cnct,$stmt,$params) ;
-
-        $stmt = sqlsrv_query($this->StrConn, $callSP, $params);
-        if ($stmt === false) {
-            echo "Error in executing statement 3.\n";
-            die(print_r(sqlsrv_errors(), true));
-        }
-        $ArrProd = array();
-        $ArrProd2 = array();
-        while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
-            $ArrProd2["item_group"] = $row['item_group'];
-            $ArrProd2["item_group_description"] = $row['item_group_description'];
-            $ArrProd2["qty_ton"] = $row['qty_ton'];
-            $ArrProd2["total_price"] = $row['total_price'];
-
-            array_push($ArrProd, $ArrProd2);
-        }
-        sqlsrv_free_stmt($stmt);
-        return $ArrProd;
-    }
+    
 
     function GetItemLocation() {
         $Locs = array();
@@ -499,106 +465,9 @@ class ItemSyteLine {
         return $rs0;
     }
 
-    function GetItemBigLocation() {
-        $Locs = array();
-        $Locs = $this->_locations;
-        $query = "select distinct item_code , item_desc , item_nps ,item_width,item_length  ,item_thick ,item_pack ,item_weight ,
-            (SELECT       ISNULL( SUM(qty_on_hand),0)  AS sum_qty_soh
-                          FROM    dbo.itemloc_mst
-                          WHERE  (item = V_WebApp_ItemLoc_Sale.item_code)) AS sum_qty_oh,
-            (SELECT       ISNULL(SUM(qty_ordered - qty_shipped),0) AS sum_qty_saling
-                          FROM    dbo.V_WebApp_ItemLoc_selling
-                          WHERE   1=1 AND (item = V_WebApp_ItemLoc_Sale.item_code) AND (stat = 'O')) AS sum_qty_saling,
-            (SELECT       ISNULL( SUM(qty_shipped),0) AS sum_qty_shiping
-                          FROM    dbo.V_WebApp_Item_ship_route
-                          WHERE  1=1  AND   (item_code =V_WebApp_ItemLoc_Sale.item_code) and (do_seq is null or do_seq ='' ) and (do_line <> '' ) ) AS sum_qty_shipping
-            from V_WebApp_ItemLoc WHERE 1=1 "
-                . " ";
-        if ($this->_rpt_item != "") {
-            $query = $query . "AND ( CONCAT(item_code , ' ' , item_desc)  LIKE '%" . trim($this->_rpt_item) . "%' ) ";
-        }
-        if ($this->_rpt_size != "") {
-            $query = $query . "AND ( item_size LIKE '%" . trim($this->_rpt_size) . "%' ) ";
-        }
-        if ($this->_rpt_thick != "") {
-            if (strpos($this->_rpt_thick, '-') !== false) {
-                $thickExplode = explode("-", $this->_rpt_thick);
-                $query = $query . "AND ( ISNULL(CAST(item_thick_conv as decimal(15,5)),0)  BETWEEN   " . $thickExplode[0] . " AND  " . $thickExplode[1] . " ) ";
-            } else {
-                $query = $query . "AND ( ISNULL(CAST(item_thick_conv as decimal(15,5)),0)  =   " . $this->_rpt_thick . "  ) ";
-            }
-        }
-        if ($this->_rpt_width != "") {
-            if (strpos($this->_rpt_width, '-') !== false) {
-                $widthExplode = explode("-", $this->_rpt_width);
-                $query = $query . "AND ( ISNULL(CAST(item_width as decimal(15,5)),0)  BETWEEN   " . $widthExplode[0] . " AND  " . $widthExplode[1] . " ) ";
-            } else {
+    
 
-                $query = $query . "AND ( ISNULL(CAST(item_width as decimal(15,5)),0)  BETWEEN 0 AND  " . trim($this->_rpt_width) . "  ) ";
-            }
-        }
-
-        if ($this->_rpt_stock == "1") {
-            $query = $query . " AND qty_oh > 0  ";
-        } else if ($this->_rpt_stock == "2") {
-            $query = $query . " AND qty_oh = 0 ";
-        }
-
-//        if (!in_array("ALL", $Locs)) {
-        if (count($Locs) >= 1) {
-            $AllLocs = "";
-            foreach ($Locs as $ii => $rr) {
-                $AllLocs = $AllLocs . "remark_wh = '$rr' OR ";
-            }
-            $AllLocs = substr($AllLocs, 0, -3);
-            $query = $query . "AND ($AllLocs) ";
-        }
-//        }
-//        if ($this->_location != "0") {
-//            $query = $query . "AND ( loc = '" . trim($this->_location) . "' ) ";
-//        }
-
-        $cSql = new SqlSrv();
-        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
-        array_splice($rs0, count($rs0) - 1, 1);
-        return $rs0;
-    }
-
-    function GetItemDO() {
-
-        $start_shipdate = $this->_start_shipdate;
-        $end_shipdate = $this->_end_shipdate;
-        $query = "SELECT  * FROM V_WebApp_ItemReportDO WHERE (item_code <> '' ) AND ( ship_date BETWEEN '$start_shipdate' AND '$end_shipdate' ) ";
-        if ($this->_rpt_item != "") {
-            $query = $query . "AND ( CONCAT(item_code , ' ' , item_desc)  LIKE '%" . trim($this->_rpt_item) . "%' ) ";
-        }
-
-        if ($this->_rpt_size != "") {
-            $query = $query . "AND ( item_size LIKE '%" . trim($this->_rpt_size) . "%' ) ";
-        }
-        if ($this->_rpt_thick != "") {
-            if (strpos($this->_rpt_thick, '-') !== false) {
-                $thickExplode = explode("-", $this->_rpt_thick);
-                $query = $query . "AND ( ISNULL(CAST(item_thick as decimal(15,5)),0)  BETWEEN   " . $thickExplode[0] . " AND  " . $thickExplode[1] . " ) ";
-            } else {
-                $query = $query . "AND ( ISNULL(CAST(item_thick as decimal(15,5)),0)  =   " . $this->_rpt_thick . "  ) ";
-            }
-        }
-        if ($this->_rpt_width != "") {
-            if (strpos($this->_rpt_width, '-') !== false) {
-                $widthExplode = explode("-", $this->_rpt_width);
-                $query = $query . "AND ( ISNULL(CAST(item_width as decimal(15,5)),0)  BETWEEN   " . $widthExplode[0] . " AND  " . $widthExplode[1] . " ) ";
-            } else {
-
-                $query = $query . "AND ( ISNULL(CAST(item_width as decimal(15,5)),0)  BETWEEN 0 AND  " . trim($this->_rpt_width) . "  ) ";
-            }
-        }
-        $query = $query . " ORDER BY ship_date asc";
-        $cSql = new SqlSrv();
-        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
-        array_splice($rs0, count($rs0) - 1, 1);
-        return $rs0;
-    }
+    
 
     function GetNewInventoryMovement($QtyEnter,$Dst_Item,$Dst_Date,$TransTypeRun) {
         $callSP = 'EXEC [dbo].[MV_NewInventoryMovement] @QtyEnter=?,@Dst_Item=?,@Dst_Date=?,@TransTypeRun=?';

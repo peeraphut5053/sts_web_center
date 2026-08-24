@@ -1,4 +1,5 @@
 <?php
+// [Used by sahathai_react_project - QC Non-Conformance Analysis, NC Raw Material & Detail]
 header("Access-Control-Allow-Origin: *");
 foreach ($_GET as $key => $value) {
     $$key = trim($value);

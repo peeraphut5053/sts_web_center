@@ -1,4 +1,5 @@
 <?php
+// [Used by sahathai_react_project - Truck Note, Boat Note, Tag Detail & Move Qty]
 
 header("Access-Control-Allow-Origin: *");
 while (list($key, $data) = each($_GET) OR list($key, $data) = each($_POST)) {

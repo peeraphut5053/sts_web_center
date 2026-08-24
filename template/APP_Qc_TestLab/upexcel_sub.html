@@ -10,48 +10,367 @@
     <link rel='stylesheet' href='../../css/bootstrap.min.css'>
 </head>
 
-<body>
+<body class="sub-import-page">
 
     <style>
-        .headingTable {
-            background-color: #cccccc;
-            text-align: center;
+        body.sub-import-page {
+            min-height: 100vh;
+            margin: 0;
+            background: #eef2f5;
+            color: #23313f;
+            font-family: "Tahoma", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        }
+
+        .sub-import-shell {
+            padding: 24px;
+        }
+
+        .sub-import-panel {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            border: 1px solid #d8e0e7;
+            border-top: 4px solid #2f7f75;
+            border-radius: 6px;
+            background: #ffffff;
+            box-shadow: 0 14px 30px rgba(35, 49, 63, .12);
+        }
+
+        .sub-import-header {
+            display: table;
+            width: 100%;
+            padding: 16px 18px 12px;
+            border-bottom: 1px solid #e3e8ed;
+        }
+
+        .sub-import-title,
+        .sub-import-meta {
+            display: table-cell;
             vertical-align: middle;
         }
 
-        .col-step1 {
-            background-color: #94e8c8;
-            color: #FFFFFF;
+        .sub-import-title h1 {
+            margin: 0;
+            color: #1f3f4a;
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 0;
         }
 
-        .col-step2 {
-            background-color: #43e8ab;
-            color: #FFFFFF;
+        .sub-import-title span {
+            display: block;
+            margin-top: 3px;
+            color: #73808c;
+            font-size: 12px;
         }
 
-        .col-step3 {
-            background-color: #13af75;
-            color: #FFFFFF;
+        .sub-import-meta {
+            text-align: right;
         }
 
-        .col-color {
-            position: fixed;
+        .status-pill {
+            display: inline-block;
+            min-width: 74px;
+            padding: 7px 12px;
+            border: 1px solid #cad7df;
+            border-radius: 4px;
+            background: #f7fafb;
+            color: #425160;
+            font-size: 12px;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .sub-step-grid {
+            display: table;
+            width: 100%;
+            table-layout: fixed;
+            padding: 14px 18px 18px;
+        }
+
+        .sub-step {
+            display: table-cell;
+            position: relative;
+            padding-right: 16px;
+            vertical-align: top;
+        }
+
+        .sub-step:last-child {
+            padding-right: 0;
+        }
+
+        .sub-step-card {
+            min-height: 116px;
+            padding: 14px;
+            border: 1px solid #dce5eb;
+            border-radius: 6px;
+            background: #fbfcfd;
+        }
+
+        .sub-step-card.active {
+            border-color: #47a79b;
+            background: #f4fbfa;
+        }
+
+        .step-kicker {
+            margin-bottom: 10px;
+            color: #2f7f75;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+        }
+
+        .step-title {
+            margin: 0 0 12px;
+            color: #263847;
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .step-control-row {
+            display: table;
             width: 100%;
         }
 
-        #ReaderExcelSub {
-            margin-top: 180px;
+        .step-control,
+        .step-result {
+            display: table-cell;
+            vertical-align: middle;
         }
 
-        #ReaderExcel table,
-        thead {
-            /* position:fixed; */
+        .step-result {
+            width: 38px;
+            padding-left: 8px;
+            color: #2f7f75;
+            text-align: center;
+        }
+
+        .step-result .glyphicon-refresh {
+            animation: sub-import-spin .8s linear infinite;
+        }
+
+        .file-control {
+            position: relative;
+        }
+
+        .file-control input[type="file"] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 1px;
+            height: 1px;
+            opacity: 0;
+        }
+
+        .file-trigger {
+            display: block;
+            width: 100%;
+            margin: 0;
+            padding: 9px 12px;
+            border: 1px solid #b8c7d1;
+            border-radius: 4px;
+            background: #ffffff;
+            color: #314555;
+            font-weight: 400;
+            cursor: pointer;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .file-trigger:hover,
+        .file-trigger:focus {
+            border-color: #2f7f75;
+            color: #1f665d;
+        }
+
+        .file-trigger .glyphicon,
+        #btnImport .glyphicon {
+            margin-right: 6px;
+        }
+
+        .form-control {
+            height: 40px;
+            border-color: #b8c7d1;
+            box-shadow: none;
+        }
+
+        .form-control:focus {
+            border-color: #2f7f75;
+            box-shadow: 0 0 0 2px rgba(47, 127, 117, .14);
+        }
+
+        #btnImport {
+            width: 100%;
+            height: 40px;
+            border-color: #2f7f75;
+            background: #2f7f75;
+            font-weight: 700;
+        }
+
+        #btnImport:hover,
+        #btnImport:focus {
+            border-color: #266c64;
+            background: #266c64;
+        }
+
+        #btnImport[disabled] {
+            border-color: #b7c1c9;
+            background: #b7c1c9;
+            opacity: 1;
+        }
+
+        .preview-wrap {
+            margin-top: 22px;
+            border: 1px solid #d8e0e7;
+            border-radius: 6px;
+            background: #ffffff;
+            box-shadow: 0 10px 24px rgba(35, 49, 63, .08);
+            overflow: hidden;
+        }
+
+        .preview-toolbar {
+            display: table;
+            width: 100%;
+            padding: 13px 16px;
+            border-bottom: 1px solid #e3e8ed;
+            background: #f8fafb;
+        }
+
+        .preview-title,
+        .preview-hint {
+            display: table-cell;
+            vertical-align: middle;
+        }
+
+        .preview-title {
+            color: #253847;
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .preview-hint {
+            color: #73808c;
+            font-size: 12px;
+            text-align: right;
+        }
+
+        #ReaderExcelSub {
+            min-height: 280px;
+            max-height: calc(100vh - 260px);
+            overflow: auto;
+            background: #ffffff;
+        }
+
+        .empty-preview {
+            padding: 70px 20px;
+            color: #7a8792;
+            text-align: center;
+        }
+
+        .empty-preview .glyphicon {
+            display: block;
+            margin-bottom: 12px;
+            color: #9aa9b4;
+            font-size: 34px;
+        }
+
+        #ReaderExcelSub table {
+            margin-bottom: 0;
+            white-space: nowrap;
+        }
+
+        #ReaderExcelSub table thead th {
+            position: sticky;
+            top: 0;
+            z-index: 5;
+            border-bottom: 1px solid #cad6de;
+            background: #263847;
+            color: #ffffff;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        #ReaderExcelSub table tbody td {
+            vertical-align: middle;
+            font-size: 12px;
+        }
+
+        #ReaderExcelSub table tbody tr:hover td {
+            background: #f2f8f7;
+        }
+
+        #ReaderExcelSub td[style*="red"] {
+            color: #b42318 !important;
+            font-weight: 700;
+        }
+
+        #ReaderExcelSub td[style*="background-color: red"] {
+            background: #ffe7e3 !important;
+            color: #b42318 !important;
+        }
+
+        #DivResult {
+            margin: 12px 0 0;
+        }
+
+        .import-result {
+            display: inline-block;
+            padding: 8px 12px;
+            border-radius: 4px;
+            background: #f1f6f8;
+            color: #405160;
+            font-weight: 700;
+        }
+
+        @media (max-width: 991px) {
+            .sub-import-shell {
+                padding: 14px;
+            }
+
+            .sub-import-panel {
+                position: static;
+            }
+
+            .sub-import-title,
+            .sub-import-meta,
+            .sub-step,
+            .preview-title,
+            .preview-hint {
+                display: block;
+                width: 100%;
+                text-align: left;
+            }
+
+            .sub-import-meta,
+            .preview-hint {
+                margin-top: 10px;
+            }
+
+            .sub-step-grid {
+                display: block;
+            }
+
+            .sub-step {
+                padding: 0 0 12px;
+            }
+
+            #ReaderExcelSub {
+                max-height: none;
+            }
+        }
+
+        @keyframes sub-import-spin {
+            to {
+                transform: rotate(360deg);
+            }
         }
     </style>
 
     <input type='hidden' id='hdfStsIdPrefix' value="">
 
-    <div class='alert alert-primary col-color'>
+    <div class='legacy-sub-import-controls' style='display:none;'>
 
         <div class="col-md-6 text-left col-Hotroll" style='font-size: 18px;'>
             <b>&nbsp;&nbsp;SUB import</b>
@@ -64,10 +383,10 @@
             </div>
             <div class="col-md-3 text-right">
                 <div class='col-md-10 col-lg-10 col-sm-10 col-xs-10'>
-                    <input type="file" id="files"
+                    <input type="file" id="files_old"
                         accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
                 </div>
-                <div class='col-md-2 col-lg-2 col-sm-2 col-xs-2 colResultBrowse'>
+                <div class='col-md-2 col-lg-2 col-sm-2 col-xs-2 colResultBrowse_old'>
                 </div>
             </div>
 
@@ -77,11 +396,11 @@
             </div>
             <div class="col-md-3">
                 <div class='col-md-10 col-lg-10 col-sm-10 col-xs-10'>
-                    <select class='form-control' id='sheet_name' disabled>
+                    <select class='form-control' id='sheet_name_old' disabled>
                         <option value="">... Please select ...</option>
                     </select>
                 </div>
-                <div class='col-md-2 col-lg-2 col-sm-2 col-xs-2 colResultSheet'></div>
+                <div class='col-md-2 col-lg-2 col-sm-2 col-xs-2 colResultSheet_old'></div>
             </div>
 
             <div class="col-md-1 text-right col-step3">
@@ -89,15 +408,92 @@
                 import
             </div>
             <div class="col-md-1">
-                <button class="btn btn-success" id="btnImport" disabled><i class='fa fa-download'></i>Import</button>
-                <label id='colResultButtonSub'></label>
+                <button class="btn btn-success" id="btnImport_old" disabled><i class='fa fa-download'></i>Import</button>
+                <label id='colResultButtonSub_old'></label>
             </div>
         </div>
     </div>
 
-    <div id='DivResult' class='row text-center'></div>
+    <div id='DivResult_old' class='row text-center'></div>
 
-    <div id="ReaderExcelSub"></div>
+    <div id="ReaderExcelSub_old"></div>
+
+    <div class="sub-import-shell">
+        <div class="sub-import-panel">
+            <div class="sub-import-header">
+                <div class="sub-import-title">
+                    <h1>SUB Import</h1>
+                    <span>Upload an Excel workbook, choose a sheet, review flagged values, then import.</span>
+                </div>
+                <div class="sub-import-meta">
+                    <span class="status-pill" id="colResultButtonSub">No rows</span>
+                </div>
+            </div>
+
+            <div class="sub-step-grid">
+                <div class="sub-step">
+                    <div class="sub-step-card active">
+                        <div class="step-kicker">Step 1</div>
+                        <h2 class="step-title">Choose Excel file</h2>
+                        <div class="step-control-row">
+                            <div class="step-control">
+                                <div class="file-control">
+                                    <input type="file" id="files"
+                                        accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+                                    <label class="file-trigger" for="files" id="fileLabel">
+                                        <span class="glyphicon glyphicon-folder-open"></span>
+                                         เลือกไฟล์ Excel 
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="step-result colResultBrowse"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sub-step">
+                    <div class="sub-step-card">
+                        <div class="step-kicker">Step 2</div>
+                        <h2 class="step-title">Select sheet</h2>
+                        <div class="step-control-row">
+                            <div class="step-control">
+                                <select class='form-control' id='sheet_name' disabled>
+                                    <option value="">... Please select ...</option>
+                                </select>
+                            </div>
+                            <div class="step-result colResultSheet"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sub-step">
+                    <div class="sub-step-card">
+                        <div class="step-kicker">Step 3</div>
+                        <h2 class="step-title">Import reviewed data</h2>
+                        <button class="btn btn-success" id="btnImport" disabled>
+                            <span class="glyphicon glyphicon-download-alt"></span>
+                            Import
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id='DivResult' class='text-center'></div>
+
+        <div class="preview-wrap">
+            <div class="preview-toolbar">
+                <div class="preview-title">Excel Preview</div>
+                <div class="preview-hint">Cells outside QC limits are highlighted in red.</div>
+            </div>
+            <div id="ReaderExcelSub">
+                <div class="empty-preview">
+                    <span class="glyphicon glyphicon-list-alt"></span>
+                    Select a workbook and sheet to preview data.
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="row text-center">
         <script type='text/javascript' src='../../js/jquery.js'></script>
@@ -105,10 +501,21 @@
         <script type='text/javascript' src='../../js/xlsx.full.min.js'></script>
         <script type="text/javascript">
 
-            var loadingDiv = "<i class='fa fa-spinner fa-spin'></i>";
+            var loadingDiv = "<span class='glyphicon glyphicon-refresh'></span>";
+            function setFileLabel(fileName) {
+                $("#fileLabel")
+                    .empty()
+                    .append($("<span>").addClass("glyphicon glyphicon-folder-open"))
+                    .append(document.createTextNode(" " + (fileName || "Browse workbook")));
+            }
+
             $('#files').change(function (e) {
                 $('#ReaderExcelSub').empty();
                 $(".colResultBrowse").html(loadingDiv);
+                setFileLabel(e.target.files[0] ? e.target.files[0].name : "");
+                $("#colResultButtonSub").html("No rows");
+                $("#btnImport").attr("disabled", true);
+                $("#sheet_name").attr("disabled", true);
                 var sheet_name = $("#sheet_name").val();
                 $('#ReaderExcelSub').empty();
                 //            alert(this.files[0].mozFullPath);
@@ -125,7 +532,7 @@
                     for (i = 0; i < sheetcount; i++) {
                         $("#sheet_name").append('<option value="' + wb.SheetNames[i] + '">' + wb.SheetNames[i] + '</option>');
                     }
-                    $(".colResultBrowse").html("");
+                    $(".colResultBrowse").html("<span class='glyphicon glyphicon-ok'></span>");
                     $("#sheet_name").removeAttr("disabled");
                 }
             });
@@ -482,7 +889,7 @@
                         }
                         //============render datatable========//                  
                         //=================================//
-                        $(".colResultSheet").html("");
+                        $(".colResultSheet").html("<span class='glyphicon glyphicon-ok'></span>");
 
                         $("#colResultButtonSub").html(CountTr + ' Rows');
                         $("#btnImport").removeAttr("disabled");
@@ -654,7 +1061,7 @@
             }
 
         </script>
+    </div>
 </body>
-<script type='text/javascript' src='../../js/jquery.js'></script>
 
 </html>

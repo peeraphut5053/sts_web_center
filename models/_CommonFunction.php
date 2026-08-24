@@ -35,15 +35,7 @@ class CommonFunction {
         return $prj_code;
     }
 
-    function GetProjectInfo() {
-        $CM = new CallModel();
-        $CM->SyteLine_Models();
-        $ProModel = new Project();
-        $ProModel->setConn($this->StrConn);
-        $prj_code = $this->GetProjectCode();
-        $ProModel->GetProperties(" prj_code = '$prj_code' ") ;        
-        return $ProModel->prj_description ;
-    }
+    
 
 //}
     function ConvertPiecesToBundle($sched, $size) {

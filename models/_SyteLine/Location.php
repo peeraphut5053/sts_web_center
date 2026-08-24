@@ -89,13 +89,7 @@ class SlLocation {
         return $rs0;
     }
 
-    function GetWhAll() {
-        $query = "SELECT remark_wh FROM location_mst WHERE remark_wh <> null OR remark_wh <> ''  group by remark_wh ";
-        $cSql = new SqlSrv();
-        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
-        array_splice($rs0, count($rs0) - 1, 1);
-        return $rs0;
-    }
+    
 
 }
 

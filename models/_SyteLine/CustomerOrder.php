@@ -70,13 +70,7 @@ WHERE LEFT(cust_num,2) = 'TT' AND item ='$item'";
         return $rs0;
     }
 
-    function GetShipRoute($do_num, $co_num, $co_line) {
-        $query = "SELECT   * FROM V_WebApp_Item_ship_route  WHERE do_num = '$do_num' AND co_num  ='$co_num' AND co_line = $co_line ";
-        $cSql = new SqlSrv();
-        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
-        array_splice($rs0, count($rs0) - 1, 1);
-        return $rs0;
-    }
+    
 
     function SP_WebApp_OrderProcessing_Overall($StartDate, $EndDate, $StartOrdNum, $EndOrdNum) {
         if ($StartDate == "") {

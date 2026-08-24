@@ -29,12 +29,7 @@ class BoatNoteList {
         $this->_HeadCode = $v;
     }
 
-//    function getRowsOne() {
-//        $cSql = new SqlSrv();
-//        $sql0 = "SELECT count(HeadCode) as " . $this->_UseTable . " FROM " . $this->_UseTable . "  ";
-//        $rs0 = $cSql->SqlQuery($this->StrConn, $sql0);
-//        return $rs0[1]["CountRecs"];
-//    }
+
 
     function CountRowsAll() {
         $cSql = new SqlSrv();
