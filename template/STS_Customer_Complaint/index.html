@@ -448,12 +448,16 @@
                                 <div class="col-md-5">
                                     <div class="form-group" style="margin-bottom: 0;">
                                         <label>สถานะการตรวจสอบฝ่าย QC:</label>
-                                        <div style="background: #fff; border: 1px solid #cbd5e1; border-radius: 6px; padding: 7px 12px; min-height: 40px; display: flex; align-items: center; justify-content: space-between;">
-                                            <label style="margin: 0; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; color: #166534; font-size: 13.5px;">
-                                                <input type="checkbox" id="review_qc_check" style="width: 18px; height: 18px; cursor: pointer; accent-color: #16a34a;">
+                                        <div
+                                            style="background: #fff; border: 1px solid #cbd5e1; border-radius: 6px; padding: 7px 12px; min-height: 40px; display: flex; align-items: center; justify-content: space-between;">
+                                            <label
+                                                style="margin: 0; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; color: #166534; font-size: 13.5px;">
+                                                <input type="checkbox" id="review_qc_check"
+                                                    style="width: 18px; height: 18px; cursor: pointer; accent-color: #16a34a;">
                                                 <span>ผ่านการตรวจสอบ</span>
                                             </label>
-                                            <span id="review_qc_user_badge" class="badge-status badge-success-custom" style="display: none; font-size: 12px;"></span>
+                                            <span id="review_qc_user_badge" class="badge-status badge-success-custom"
+                                                style="display: none; font-size: 12px;"></span>
                                         </div>
                                         <input type="hidden" id="review_qc" name="qc">
                                     </div>
@@ -481,12 +485,16 @@
                                 <div class="col-md-5">
                                     <div class="form-group" style="margin-bottom: 0;">
                                         <label>สถานะฝ่ายผลิต:</label>
-                                        <div style="background: #fff; border: 1px solid #cbd5e1; border-radius: 6px; padding: 7px 12px; min-height: 40px; display: flex; align-items: center; justify-content: space-between;">
-                                            <label style="margin: 0; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; color: #854d0e; font-size: 13.5px;">
-                                                <input type="checkbox" id="review_prod_check" style="width: 18px; height: 18px; cursor: pointer; accent-color: #ca8a04;">
+                                        <div
+                                            style="background: #fff; border: 1px solid #cbd5e1; border-radius: 6px; padding: 7px 12px; min-height: 40px; display: flex; align-items: center; justify-content: space-between;">
+                                            <label
+                                                style="margin: 0; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; color: #854d0e; font-size: 13.5px;">
+                                                <input type="checkbox" id="review_prod_check"
+                                                    style="width: 18px; height: 18px; cursor: pointer; accent-color: #ca8a04;">
                                                 <span>ตรวจสอบ/รับทราบ</span>
                                             </label>
-                                            <span id="review_prod_user_badge" class="badge-status badge-info-custom" style="display: none; font-size: 12px;"></span>
+                                            <span id="review_prod_user_badge" class="badge-status badge-info-custom"
+                                                style="display: none; font-size: 12px;"></span>
                                         </div>
                                         <input type="hidden" id="review_prod" name="prod">
                                     </div>
@@ -514,12 +522,16 @@
                                 <div class="col-md-5">
                                     <div class="form-group" style="margin-bottom: 0;">
                                         <label>สถานะฝ่ายขายต่าง:</label>
-                                        <div style="background: #fff; border: 1px solid #cbd5e1; border-radius: 6px; padding: 7px 12px; min-height: 40px; display: flex; align-items: center; justify-content: space-between;">
-                                            <label style="margin: 0; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; color: #1e40af; font-size: 13.5px;">
-                                                <input type="checkbox" id="review_EX_check" style="width: 18px; height: 18px; cursor: pointer; accent-color: #2563eb;">
-                                                <span>รับทราบเรื่อง</span>
+                                        <div
+                                            style="background: #fff; border: 1px solid #cbd5e1; border-radius: 6px; padding: 7px 12px; min-height: 40px; display: flex; align-items: center; justify-content: space-between;">
+                                            <label
+                                                style="margin: 0; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; color: #1e40af; font-size: 13.5px;">
+                                                <input type="checkbox" id="review_EX_check"
+                                                    style="width: 18px; height: 18px; cursor: pointer; accent-color: #2563eb;">
+                                                <span>อนุมัติปิดเคส</span>
                                             </label>
-                                            <span id="review_EX_user_badge" class="badge-status badge-success-custom" style="display: none; font-size: 12px;"></span>
+                                            <span id="review_EX_user_badge" class="badge-status badge-success-custom"
+                                                style="display: none; font-size: 12px;"></span>
                                         </div>
                                         <input type="hidden" id="review_EX" name="EX">
                                     </div>
@@ -545,23 +557,35 @@
 <!-- Modal: Alert Document Created Success -->
 <div class="modal fade" id="modalDocCreatedSuccess" tabindex="-1" role="dialog">
     <div class="modal-dialog" style="max-width: 440px; margin-top: 100px;" role="document">
-        <div class="modal-content" style="border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: none;">
-            <div class="modal-header text-center" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #fff; padding: 22px 20px 16px;">
-                <button type="button" class="close" data-dismiss="modal" style="color: #fff; opacity: 0.9;">&times;</button>
-                <div style="width: 60px; height: 60px; background: rgba(255,255,255,0.25); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px;">
+        <div class="modal-content"
+            style="border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: none;">
+            <div class="modal-header text-center"
+                style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #fff; padding: 22px 20px 16px;">
+                <button type="button" class="close" data-dismiss="modal"
+                    style="color: #fff; opacity: 0.9;">&times;</button>
+                <div
+                    style="width: 60px; height: 60px; background: rgba(255,255,255,0.25); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px;">
                     <i class="fa fa-check" style="font-size: 32px; color: #fff;"></i>
                 </div>
-                <h4 class="modal-title" style="font-weight: 700; font-size: 19px; letter-spacing: 0.5px;">สร้างข้อร้องเรียนลูกค้าสำเร็จ</h4>
+                <h4 class="modal-title" style="font-weight: 700; font-size: 19px; letter-spacing: 0.5px;">
+                    สร้างข้อร้องเรียนลูกค้าสำเร็จ</h4>
             </div>
             <div class="modal-body text-center" style="padding: 24px 20px;">
-                <p style="font-size: 14px; color: #64748b; margin-bottom: 12px;">ระบบได้บันทึกและสร้างเลขที่เอกสารข้อร้องเรียนเรียบร้อยแล้ว</p>
-                <div style="background-color: #f8fafc; border: 1.5px dashed #94a3b8; border-radius: 8px; padding: 14px; margin: 10px 0;">
-                    <span style="font-size: 12px; color: #64748b; display: block; font-weight: 600; margin-bottom: 4px;">เลขที่เอกสาร (Doc No):</span>
-                    <span id="createdSuccessDocNo" style="font-size: 24px; font-weight: 800; font-family: monospace; color: #0284c7; letter-spacing: 1.5px;"></span>
+                <p style="font-size: 14px; color: #64748b; margin-bottom: 12px;">
+                    ระบบได้บันทึกและสร้างเลขที่เอกสารข้อร้องเรียนเรียบร้อยแล้ว</p>
+                <div
+                    style="background-color: #f8fafc; border: 1.5px dashed #94a3b8; border-radius: 8px; padding: 14px; margin: 10px 0;">
+                    <span
+                        style="font-size: 12px; color: #64748b; display: block; font-weight: 600; margin-bottom: 4px;">เลขที่เอกสาร
+                        (Doc No):</span>
+                    <span id="createdSuccessDocNo"
+                        style="font-size: 24px; font-weight: 800; font-family: monospace; color: #0284c7; letter-spacing: 1.5px;"></span>
                 </div>
             </div>
-            <div class="modal-footer" style="background-color: #f8fafc; border-top: 1px solid #e2e8f0; padding: 14px 20px; text-align: center;">
-                <button type="button" class="btn btn-success btn-block" data-dismiss="modal" style="font-size: 14.5px; font-weight: 600; padding: 9px 0; border-radius: 6px; box-shadow: 0 2px 4px rgba(16,185,129,0.3);">
+            <div class="modal-footer"
+                style="background-color: #f8fafc; border-top: 1px solid #e2e8f0; padding: 14px 20px; text-align: center;">
+                <button type="button" class="btn btn-success btn-block" data-dismiss="modal"
+                    style="font-size: 14.5px; font-weight: 600; padding: 9px 0; border-radius: 6px; box-shadow: 0 2px 4px rgba(16,185,129,0.3);">
                     <i class="fa fa-check"></i> ตกลง
                 </button>
             </div>
