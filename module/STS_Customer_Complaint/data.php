@@ -209,6 +209,22 @@ switch ($load) {
             echo json_encode(array("success" => false, "message" => "DocNo is required"));
             break;
         }
+
+        // Delete all physical picture files of this docNo
+        $detail = $model->GetComplaintDetail($docNo);
+        if ($detail && !empty($detail['pictures'])) {
+            $rootDir = dirname(__DIR__, 2);
+            foreach ($detail['pictures'] as $pic) {
+                if (!empty($pic['path'])) {
+                    $cleanPath = ltrim($pic['path'], '/\\');
+                    $fullPath = $rootDir . "/" . $cleanPath;
+                    if (file_exists($fullPath) && is_file($fullPath)) {
+                        @unlink($fullPath);
+                    }
+                }
+            }
+        }
+
         $res = $model->DeleteComplaint($docNo);
         echo json_encode($res);
         break;
