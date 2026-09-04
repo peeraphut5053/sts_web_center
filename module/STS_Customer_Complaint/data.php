@@ -210,10 +210,12 @@ switch ($load) {
             break;
         }
 
-        // Delete all physical picture files of this docNo
+        $rootDir = dirname(__DIR__, 2);
+        $uploadDir = $rootDir . "/uploads/complaints/";
+
+        // 1. Delete all physical picture files from DB records
         $detail = $model->GetComplaintDetail($docNo);
         if ($detail && !empty($detail['pictures'])) {
-            $rootDir = dirname(__DIR__, 2);
             foreach ($detail['pictures'] as $pic) {
                 if (!empty($pic['path'])) {
                     $cleanPath = ltrim($pic['path'], '/\\');
@@ -225,6 +227,19 @@ switch ($load) {
             }
         }
 
+        // 2. Fallback: Clean up any files on disk matching $docNo
+        if (!empty($docNo) && is_dir($uploadDir)) {
+            $matchingFiles = glob($uploadDir . $docNo . "_*");
+            if ($matchingFiles) {
+                foreach ($matchingFiles as $f) {
+                    if (file_exists($f) && is_file($f)) {
+                        @unlink($f);
+                    }
+                }
+            }
+        }
+
+        // 3. Delete database records
         $res = $model->DeleteComplaint($docNo);
         echo json_encode($res);
         break;
