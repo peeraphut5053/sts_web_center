@@ -1,7 +1,155 @@
 <style>
+    .hotroll-header {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-left: 4px solid #3c8dbc;
+        border-radius: 6px;
+        padding: 12px 18px;
+        margin-top: 8px;
+        margin-bottom: 14px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .hotroll-header .hotroll-title-group {
+        display: flex;
+        align-items: baseline;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .hotroll-header h1 {
+        margin: 0;
+        font-size: 20px;
+        font-weight: 700;
+        color: #1e293b;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .hotroll-header .hotroll-subtitle {
+        font-size: 13px;
+        color: #64748b;
+        font-weight: 500;
+    }
+
+    .hotroll-header .badge-tag {
+        background: #f0fdf4;
+        color: #166534;
+        border: 1px solid #bbf7d0;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 11.5px;
+        font-weight: 600;
+        letter-spacing: 0.3px;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .hotroll-filter-box {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        padding: 14px 14px 6px 14px;
+        margin-bottom: 16px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    }
+
+    .hotroll-filter-box .filter-box-title {
+        font-size: 12.5px;
+        font-weight: 700;
+        color: #475569;
+        margin-bottom: 10px;
+        padding-bottom: 6px;
+        border-bottom: 1px dashed #e2e8f0;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
     .col-search {
-        padding-left: 3px;
-        padding-right: 3px;
+        padding-left: 6px;
+        padding-right: 6px;
+        margin-bottom: 10px;
+    }
+
+    .hotroll-filter-box .input-group-addon {
+        background-color: #f8fafc;
+        border-color: #cbd5e1;
+        color: #334155;
+        font-size: 12px;
+        font-weight: 600;
+        padding: 6px 10px;
+        min-width: 115px;
+        text-align: left;
+        border-top-left-radius: 4px;
+        border-bottom-left-radius: 4px;
+    }
+
+    .hotroll-filter-box .form-control {
+        border-color: #cbd5e1;
+        font-size: 12.5px;
+        height: 34px;
+        color: #1e293b;
+        box-shadow: none;
+        border-top-right-radius: 4px;
+        border-bottom-right-radius: 4px;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .hotroll-filter-box .form-control:focus {
+        border-color: #3c8dbc;
+        box-shadow: 0 0 0 2px rgba(60, 141, 188, 0.2);
+    }
+
+    .btn-search-panel {
+        background: #3c8dbc;
+        border: 1px solid #367fa9;
+        color: #ffffff;
+        font-weight: 600;
+        font-size: 13px;
+        height: 34px;
+        padding: 6px 18px;
+        border-radius: 4px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+    }
+
+    .btn-search-panel:hover, .btn-search-panel:focus {
+        background: #367fa9;
+        color: #ffffff;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-reset-panel {
+        background: #f8fafc;
+        border: 1px solid #cbd5e1;
+        color: #475569;
+        font-weight: 600;
+        font-size: 12.5px;
+        height: 34px;
+        padding: 6px 14px;
+        border-radius: 4px;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+    }
+
+    .btn-reset-panel:hover, .btn-reset-panel:focus {
+        background: #e2e8f0;
+        color: #1e293b;
     }
 
     .table thead th {
@@ -12,7 +160,6 @@
         padding-top: 10px;
         font-weight: bold;
     }
-
 
     table.dataTable.fixedHeader-floating,
     table.dataTable.fixedHeader-locked {
@@ -26,7 +173,6 @@
     }
     .modal-dialog {
         max-width: 95% !important;
-        /* margin: 30px auto; */
     }
     .modal-body {
         position: relative;
@@ -34,56 +180,82 @@
     }
 </style>
 
-<div style="margin-top: 10px; margin-bottom: 20px;">
-      <h1 class="my-header">ตรวจสอบเหล็กม้วน</h1>
-</div>
-<div class='row'>
-
-    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2  col-search">
-        <div class="input-group">
-            <div class="input-group-addon">ค้นหาจาก S_NO</div>
-            <input type="text" class="form-control txt-filter" id="sno">
-        </div>
+<div class="hotroll-header">
+    <div class="hotroll-title-group">
+        <h1><i class="fa fa-cubes text-primary"></i> ตรวจสอบเหล็กม้วน</h1>
+        <span class="hotroll-subtitle">Hot Rolled Coil Inspection & Quality Tracking</span>
     </div>
-    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2  col-search">
-        <div class="input-group">
-            <div class="input-group-addon">ค้นหาจาก Coil No</div>
-            <input type="text" class="form-control txt-filter" id="c_no">
-        </div>
-    </div>
-    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2  col-search">
-        <div class="input-group">
-            <div class="input-group-addon">ค้นหาจาก Heat No</div>
-            <input type="text" class="form-control txt-filter" id="h_no">
-        </div>
-    </div>
-    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2  col-search">
-        <div class="input-group">
-            <div class="input-group-addon">From date</div>
-            <input type="text" class="form-control txt-filter" id="txtFromDate">
-        </div>
-    </div>
-    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2  col-search">
-        <div class="input-group">
-            <div class="input-group-addon">To date</div>
-            <input type="text" class="form-control txt-filter" id="txtToDate">
-        </div>
-    </div>
-    <div class="col-lg-1 col-md-2 col-sm-1 col-xs-6  col-search">
-        <button id="btnSearch" class="btn btn-info"><i class="fa fa-search"></i>&nbsp;ค้นหา</button>
-    </div>
+    <span class="badge-tag"><i class="fa fa-check-circle"></i> Sahathai QA System</span>
 </div>
 
+<div class="hotroll-filter-box">
+    <div class="filter-box-title">
+        <i class="fa fa-filter text-primary"></i> เงื่อนไขการค้นหา (Search Filters)
+    </div>
+    <div class="row">
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 col-search">
+            <div class="input-group">
+                <div class="input-group-addon"><i class="fa fa-tag text-primary"></i> From STS_NO</div>
+                <input type="text" class="form-control txt-filter" id="from_stsno" placeholder="เริ่มต้น เช่น STS...">
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 col-search">
+            <div class="input-group">
+                <div class="input-group-addon"><i class="fa fa-tag text-primary"></i> To STS_NO</div>
+                <input type="text" class="form-control txt-filter" id="to_stsno" placeholder="สิ้นสุด เช่น STS...">
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 col-search">
+            <div class="input-group">
+                <div class="input-group-addon"><i class="fa fa-barcode text-info"></i> S_NO</div>
+                <input type="text" class="form-control txt-filter" id="sno" placeholder="ค้นหาจาก S_NO">
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 col-search">
+            <div class="input-group">
+                <div class="input-group-addon"><i class="fa fa-circle-o-notch text-info"></i> Coil No</div>
+                <input type="text" class="form-control txt-filter" id="c_no" placeholder="ค้นหาจาก Coil No">
+            </div>
+        </div>
+    </div>
 
+    <div class="row" style="margin-top: 2px;">
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 col-search">
+            <div class="input-group">
+                <div class="input-group-addon"><i class="fa fa-fire text-danger"></i> Heat No</div>
+                <input type="text" class="form-control txt-filter" id="h_no" placeholder="ค้นหาจาก Heat No">
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 col-search">
+            <div class="input-group">
+                <div class="input-group-addon"><i class="fa fa-calendar text-muted"></i> From date</div>
+                <input type="text" class="form-control txt-filter" id="txtFromDate" placeholder="YYYY-MM-DD">
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 col-search">
+            <div class="input-group">
+                <div class="input-group-addon"><i class="fa fa-calendar text-muted"></i> To date</div>
+                <input type="text" class="form-control txt-filter" id="txtToDate" placeholder="YYYY-MM-DD">
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 col-search" style="display: flex; gap: 8px;">
+            <button id="btnSearch" type="button" class="btn btn-search-panel" style="flex: 1;">
+                <i class="fa fa-search"></i>&nbsp;ค้นหา
+            </button>
+            <button id="btnClear" type="button" class="btn btn-reset-panel" onclick="ResetFilter()" title="ล้างค่าการค้นหา">
+                <i class="fa fa-refresh"></i>&nbsp;ล้างค่า
+            </button>
+        </div>
+    </div>
+</div>
 
 <div class="row" id="divReport">
     <table class="table table-condensed table-bordered table-striped" id="tblReport">
         <thead>
             <tr>
-                <th colspan="16" class="bg-gray">Hot Roll Detail</th>
+                <th colspan="18" class="bg-gray">Hot Roll Detail</th>
             </tr>
             <tr>
-            
                 <th>sno</th>
                 <th>PO Date</th>
                 <th>STS.No.</th>
@@ -100,14 +272,14 @@
                 <th>reference</th>
                 <th>vendor</th>
                 <th>city</th>
+                <th>Mill</th>
+                <th>Country</th>
             </tr>
         </thead>
-        <tbody  id="tbodytblReport">
+        <tbody id="tbodytblReport">
         </tbody>
     </table>
 </div>
-
-
 
 <div class="modal" id="ProductModal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document" style="width:95%;">
@@ -127,7 +299,6 @@
         </div>
     </div>
 </div>
-
 
 <script src="template/HOTROLL_CHECKING/xlsx.full.min.js"></script>
 
@@ -149,13 +320,25 @@
         }
     });
 
+    function ResetFilter() {
+        $("#from_stsno").val("");
+        $("#to_stsno").val("");
+        $("#sno").val("");
+        $("#c_no").val("");
+        $("#h_no").val("");
+        $("#txtFromDate").val(GetToday());
+        $("#txtToDate").val(GetToday());
+    }
+
     function ReportItemSearch() {
         var txtFromDate = $("#txtFromDate").val();
         var txtToDate = $("#txtToDate").val();
+        var from_stsno = $("#from_stsno").val();
+        var to_stsno = $("#to_stsno").val();
         var sno = $("#sno").val();
         var c_no = $("#c_no").val();
         var h_no = $("#h_no").val();
-        if ((txtFromDate == "") && (txtToDate == "") && ((sno == "") && ((h_no == "") && (c_no == "")))) {
+        if ((txtFromDate == "") && (txtToDate == "") && (from_stsno == "") && (to_stsno == "") && ((sno == "") && ((h_no == "") && (c_no == "")))) {
             $.alert("กรุณาเลือกช่วงวันที่หรือป้อนรายละเอียดเพื่อกรองข้อมูล");
         } else {
             $.ajax({
@@ -167,6 +350,8 @@
                 },
                 data: {
                     "load": "ajax",
+                    "from_stsno": from_stsno,
+                    "to_stsno": to_stsno,
                     "sno": sno,
                     "c_no": c_no,
                     "h_no": h_no,
@@ -174,8 +359,7 @@
                     "txtFromDate": txtFromDate,
                 },
                 success: function (data) {
-                    console.log(data)
-                    //$("#tblReport").DataTable().clear();
+                    console.log(data);
                     $("#tblReport").dataTable().fnDestroy();
                     $('#tblReport').DataTable({
                         scrollY: "400px",
@@ -184,12 +368,12 @@
                         "paging": false,
                         "searching": false,
                         "bInfo": false,
-                              columnDefs: [
-            {
-              targets: [14],
-              width: 300,
-            },
-          ],
+                        columnDefs: [
+                            {
+                                targets: [14],
+                                width: 300,
+                            },
+                        ],
                         "columns": [
                             {
                                 "orderable": false,
@@ -197,49 +381,77 @@
                                 "defaultContent": '',
                                 "className": `details-control sno text-center`,
                                 "render": function (data, type, row, meta) {
-                                    
                                     return data;
                                 }
                             },
-                            {"data": "po_date.date",
+                            {
+                                "data": "po_date.date",
                                 "className": "text-center",
                                 "render": function (data, type, row, meta) {
                                     var ret = moment(data).format('DD/MM/YYYY');
                                     return ret;
                                 }
                             },
-                            {"data": "sts_no",
+                            {
+                                "data": "sts_no",
                                 "className": "text-center ",
                             },
-                            {"data": "c_no"},
-                            {"data": "h_no",
+                            {
+                                "data": "c_no"
+                            },
+                            {
+                                "data": "h_no",
                                 "className": "text-center",
                             },
-                            {"data": "weight",
+                            {
+                                "data": "weight",
                                 "className": "text-right",
                             },
-                            {"data": "realweight",
+                            {
+                                "data": "realweight",
                                 "className": "text-right",
                             },
-                            {"data": "grade",
+                            {
+                                "data": "grade",
                                 "className": "text-center",
                             },
-                            {"data": "thick",
-                                "className": "text-right"},
-                            {"data": "thicks",
-                                "className": "text-right"},
-                            {"data": "width",
-                                "className": "text-right"},
-                            {"data": "widths",
-                                "className": "text-right"},
-                            {"data": "upload_po_line",
-                                "className": "text-center",},
-                            {"data": "reference"},
-                            {"data": "vendor_name"},
-                            {"data": "city"},
-    
-                            
-                            
+                            {
+                                "data": "thick",
+                                "className": "text-right"
+                            },
+                            {
+                                "data": "thicks",
+                                "className": "text-right"
+                            },
+                            {
+                                "data": "width",
+                                "className": "text-right"
+                            },
+                            {
+                                "data": "widths",
+                                "className": "text-right"
+                            },
+                            {
+                                "data": "upload_po_line",
+                                "className": "text-center",
+                            },
+                            {
+                                "data": "reference"
+                            },
+                            {
+                                "data": "vendor_name"
+                            },
+                            {
+                                "data": "city"
+                            },
+                            {
+                                "data": "manufacturer",
+                                "defaultContent": ""
+                            },
+                            {
+                                "data": "importer",
+                                "defaultContent": ""
+                            },
                         ],
                         'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
                                 "<'row'<'col-md-12'tr>>" +
@@ -256,8 +468,7 @@
                                 title: ''
                             },
                         ]
-                    }
-                    );
+                    });
                     $('#tblReport').loading("stop");
                     $("#btnSearch").html("<i class='fa fa-search'></i>ค้นหา");
                 },

@@ -16,6 +16,13 @@ if ($load == 'ajax') {
     if (($txtFromDate != "") && ($txtToDate != "")) {
         $where = $where . " AND ( qc.po_date BETWEEN '$txtFromDate' AND '$txtToDate' )  ";
     }
+    if (($from_stsno != "") && ($to_stsno != "")) {
+        $where = $where . " AND ( qc.sts_no BETWEEN '$from_stsno' AND '$to_stsno' ) ";
+    } else if ($from_stsno != "") {
+        $where = $where . " AND qc.sts_no >= '$from_stsno' ";
+    } else if ($to_stsno != "") {
+        $where = $where . " AND qc.sts_no <= '$to_stsno' ";
+    }
     if ($sno != "") {
         $where = $where . " AND qc.sno like '%" . $sno . "%' ";
     }
