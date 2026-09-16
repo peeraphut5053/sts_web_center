@@ -125,7 +125,8 @@
         gap: 6px;
     }
 
-    .btn-search-panel:hover, .btn-search-panel:focus {
+    .btn-search-panel:hover,
+    .btn-search-panel:focus {
         background: #367fa9;
         color: #ffffff;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
@@ -147,7 +148,8 @@
         gap: 4px;
     }
 
-    .btn-reset-panel:hover, .btn-reset-panel:focus {
+    .btn-reset-panel:hover,
+    .btn-reset-panel:focus {
         background: #e2e8f0;
         color: #1e293b;
     }
@@ -177,9 +179,11 @@
     .tr-row-cn td {
         color: red;
     }
+
     .modal-dialog {
         max-width: 95% !important;
     }
+
     .modal-body {
         position: relative;
         padding: 0px;
@@ -248,7 +252,8 @@
             <button id="btnSearch" type="button" class="btn btn-search-panel" style="flex: 1;">
                 <i class="fa fa-search"></i>&nbsp;ค้นหา
             </button>
-            <button id="btnClear" type="button" class="btn btn-reset-panel" onclick="ResetFilter()" title="ล้างค่าการค้นหา">
+            <button id="btnClear" type="button" class="btn btn-reset-panel" onclick="ResetFilter()"
+                title="ล้างค่าการค้นหา">
                 <i class="fa fa-refresh"></i>&nbsp;ล้างค่า
             </button>
         </div>
@@ -278,8 +283,8 @@
                 <th>reference</th>
                 <th>vendor</th>
                 <th>city</th>
-                <th>Mill</th>
-                <th>Country</th>
+                <th>ผู้ผลิต</th>
+                <th>ประเทศผู้ผลิต</th>
             </tr>
         </thead>
         <tbody id="tbodytblReport">
@@ -463,13 +468,13 @@
                                 "defaultContent": ""
                             },
                             {
-                                "data": "importer",
+                                "data": "country",
                                 "defaultContent": ""
                             },
                         ],
                         'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
-                                "<'row'<'col-md-12'tr>>" +
-                                "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                            "<'row'<'col-md-12'tr>>" +
+                            "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
                         buttons: [
                             {
                                 extend: 'print',
@@ -602,230 +607,250 @@
                     "bInfo": false,
 
                     "columns": [
-                        {"data": {sup_c: "sup_c", sno: "sno"},
+                        {
+                            "data": { sup_c: "sup_c", sno: "sno" },
                             "className": "text-left",
                             "render": function (data, type, row, meta) {
                                 let col_name = 'sup_c';
                                 let valdata = data.sup_c;
                                 let iddata = `${col_name}_${data.sno}`;
                                 ((valdata == null) ? valdata = "" : valdata = valdata)
-                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                let ret = `<span hidden>${formatQcTest(valdata)}</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
                                 return ret;
                             }
                         },
-                        {"data": {sup_si: "sup_si", sno: "sno"},
+                        {
+                            "data": { sup_si: "sup_si", sno: "sno" },
                             "className": "text-left",
                             "render": function (data, type, row, meta) {
                                 let col_name = 'sup_si';
                                 let valdata = data.sup_si;
                                 let iddata = `${col_name}_${data.sno}`;
                                 ((valdata == null) ? valdata = "" : valdata = valdata)
-                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                let ret = `<span hidden>${formatQcTest(valdata)}</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
                                 return ret;
                             }
                         },
-                        {"data": {sup_mn: "sup_mn", sno: "sno"},
+                        {
+                            "data": { sup_mn: "sup_mn", sno: "sno" },
                             "className": "text-left",
                             "render": function (data, type, row, meta) {
                                 let col_name = 'sup_mn';
                                 let valdata = data.sup_mn;
                                 let iddata = `${col_name}_${data.sno}`;
                                 ((valdata == null) ? valdata = "" : valdata = valdata)
-                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                let ret = `<span hidden>${formatQcTest(valdata)}</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
                                 return ret;
                             }
                         },
-                        {"data": {sup_p: "sup_p", sno: "sno"},
+                        {
+                            "data": { sup_p: "sup_p", sno: "sno" },
                             "className": "text-left",
                             "render": function (data, type, row, meta) {
                                 let col_name = 'sup_p';
                                 let valdata = data.sup_p;
                                 let iddata = `${col_name}_${data.sno}`;
                                 ((valdata == null) ? valdata = "" : valdata = valdata)
-                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                let ret = `<span hidden>${formatQcTest(valdata)}</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
                                 return ret;
                             }
                         },
-                        {"data": {sup_s: "sup_s", sno: "sno"},
+                        {
+                            "data": { sup_s: "sup_s", sno: "sno" },
                             "className": "text-left",
                             "render": function (data, type, row, meta) {
                                 let col_name = 'sup_s';
                                 let valdata = data.sup_s;
                                 let iddata = `${col_name}_${data.sno}`;
                                 ((valdata == null) ? valdata = "" : valdata = valdata)
-                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                let ret = `<span hidden>${formatQcTest(valdata)}</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
                                 return ret;
                             }
                         },
-                        {"data": {sup_cu: "sup_cu", sno: "sno"},
+                        {
+                            "data": { sup_cu: "sup_cu", sno: "sno" },
                             "className": "text-left",
                             "render": function (data, type, row, meta) {
                                 let col_name = 'sup_cu';
                                 let valdata = data.sup_cu;
                                 let iddata = `${col_name}_${data.sno}`;
                                 ((valdata == null) ? valdata = "" : valdata = valdata)
-                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                let ret = `<span hidden>${formatQcTest(valdata)}</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
                                 return ret;
                             }
                         },
-                        {"data": {sup_v: "sup_v", sno: "sno"},
+                        {
+                            "data": { sup_v: "sup_v", sno: "sno" },
                             "className": "text-left",
                             "render": function (data, type, row, meta) {
                                 let col_name = 'sup_v';
                                 let valdata = data.sup_v;
                                 let iddata = `${col_name}_${data.sno}`;
                                 ((valdata == null) ? valdata = "" : valdata = valdata)
-                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                let ret = `<span hidden>${formatQcTest(valdata)}</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
                                 return ret;
                             }
                         },
-                        {"data": {sup_ni: "sup_ni", sno: "sno"},
+                        {
+                            "data": { sup_ni: "sup_ni", sno: "sno" },
                             "className": "text-left",
                             "render": function (data, type, row, meta) {
                                 let col_name = 'sup_ni';
                                 let valdata = data.sup_ni;
                                 let iddata = `${col_name}_${data.sno}`;
                                 ((valdata == null) ? valdata = "" : valdata = valdata)
-                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                let ret = `<span hidden>${formatQcTest(valdata)}</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
                                 return ret;
                             }
                         },
-                        {"data": {sup_cr: "sup_cr", sno: "sno"},
+                        {
+                            "data": { sup_cr: "sup_cr", sno: "sno" },
                             "className": "text-left",
                             "render": function (data, type, row, meta) {
                                 let col_name = 'sup_cr';
                                 let valdata = data.sup_cr;
                                 let iddata = `${col_name}_${data.sno}`;
                                 ((valdata == null) ? valdata = "" : valdata = valdata)
-                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                let ret = `<span hidden>${formatQcTest(valdata)}</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
                                 return ret;
                             }
                         },
-                        {"data": {sup_cr: "sup_mo", sno: "sno"},
+                        {
+                            "data": { sup_cr: "sup_mo", sno: "sno" },
                             "className": "text-left",
                             "render": function (data, type, row, meta) {
                                 let col_name = 'sup_mo';
                                 let valdata = data.sup_mo;
                                 let iddata = `${col_name}_${data.sno}`;
                                 ((valdata == null) ? valdata = "" : valdata = valdata)
-                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                let ret = `<span hidden>${formatQcTest(valdata)}</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
                                 return ret;
                             }
                         },
-                        {"data": {sup_ti: "sup_ti", sno: "sno"},
+                        {
+                            "data": { sup_ti: "sup_ti", sno: "sno" },
                             "className": "text-left",
                             "render": function (data, type, row, meta) {
                                 let col_name = 'sup_ti';
                                 let valdata = data.sup_ti;
                                 let iddata = `${col_name}_${data.sno}`;
                                 ((valdata == null) ? valdata = "" : valdata = valdata)
-                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                let ret = `<span hidden>${formatQcTest(valdata)}</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
                                 return ret;
                             }
                         },
-                        {"data": {sup_nb: "sup_nb", sno: "sno"},
+                        {
+                            "data": { sup_nb: "sup_nb", sno: "sno" },
                             "className": "text-left",
                             "render": function (data, type, row, meta) {
                                 let col_name = 'sup_nb';
                                 let valdata = data.sup_nb;
                                 let iddata = `${col_name}_${data.sno}`;
                                 ((valdata == null) ? valdata = "" : valdata = valdata)
-                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                let ret = `<span hidden>${formatQcTest(valdata)}</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
                                 return ret;
                             }
                         },
-                        {"data": {sup_al: "sup_al", sno: "sno"},
+                        {
+                            "data": { sup_al: "sup_al", sno: "sno" },
                             "className": "text-left",
                             "render": function (data, type, row, meta) {
                                 let col_name = 'sup_al';
                                 let valdata = data.sup_al;
                                 let iddata = `${col_name}_${data.sno}`;
                                 ((valdata == null) ? valdata = "" : valdata = valdata)
-                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                let ret = `<span hidden>${formatQcTest(valdata)}</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
                                 return ret;
                             }
                         },
-                        {"data": {sup_b: "sup_b", sno: "sno"},
+                        {
+                            "data": { sup_b: "sup_b", sno: "sno" },
                             "className": "text-left",
                             "render": function (data, type, row, meta) {
                                 let col_name = 'sup_b';
                                 let valdata = data.sup_b;
                                 let iddata = `${col_name}_${data.sno}`;
                                 ((valdata == null) ? valdata = "" : valdata = valdata)
-                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                let ret = `<span hidden>${formatQcTest(valdata)}</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
                                 return ret;
                             }
                         },
-                        {"data": {sup_co: "sup_co", sno: "sno"},
+                        {
+                            "data": { sup_co: "sup_co", sno: "sno" },
                             "className": "text-left",
                             "render": function (data, type, row, meta) {
                                 let col_name = 'sup_co';
                                 let valdata = data.sup_co;
                                 let iddata = `${col_name}_${data.sno}`;
                                 ((valdata == null) ? valdata = "" : valdata = valdata)
-                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                let ret = `<span hidden>${formatQcTest(valdata)}</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
                                 return ret;
                             }
                         },
-                        {"data": {sup_pb: "sup_pb", sno: "sno"},
+                        {
+                            "data": { sup_pb: "sup_pb", sno: "sno" },
                             "className": "text-left",
                             "render": function (data, type, row, meta) {
                                 let col_name = 'sup_pb';
                                 let valdata = data.sup_pb;
                                 let iddata = `${col_name}_${data.sno}`;
                                 ((valdata == null) ? valdata = "" : valdata = valdata)
-                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                let ret = `<span hidden>${formatQcTest(valdata)}</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
                                 return ret;
                             }
                         },
-                        {"data": {sup_fe: "sup_fe", sno: "sno"},
+                        {
+                            "data": { sup_fe: "sup_fe", sno: "sno" },
                             "className": "text-left",
                             "render": function (data, type, row, meta) {
                                 let col_name = 'sup_fe';
                                 let valdata = data.sup_fe;
                                 let iddata = `${col_name}_${data.sno}`;
                                 ((valdata == null) ? valdata = "" : valdata = valdata)
-                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                let ret = `<span hidden>${formatQcTest(valdata)}</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
                                 return ret;
                             }
                         },
-                        {"data": {sup_ts: "sup_ts", sno: "sno"},
+                        {
+                            "data": { sup_ts: "sup_ts", sno: "sno" },
                             "className": "text-left",
                             "render": function (data, type, row, meta) {
                                 let col_name = 'sup_ts';
                                 let valdata = data.sup_ts;
                                 let iddata = `${col_name}_${data.sno}`;
                                 ((valdata == null) ? valdata = "" : valdata = valdata)
-                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                let ret = `<span hidden>${formatQcTest(valdata)}</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
                                 return ret;
                             }
                         },
-                        {"data": {sup_ts: "sup_ys", sno: "sno"},
+                        {
+                            "data": { sup_ts: "sup_ys", sno: "sno" },
                             "className": "text-left",
                             "render": function (data, type, row, meta) {
                                 let col_name = 'sup_ys';
                                 let valdata = data.sup_ys;
                                 let iddata = `${col_name}_${data.sno}`;
                                 ((valdata == null) ? valdata = "" : valdata = valdata)
-                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                let ret = `<span hidden>${formatQcTest(valdata)}</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
                                 return ret;
                             }
                         },
-                        {"data": {sup_el: "sup_el", sno: "sno"},
+                        {
+                            "data": { sup_el: "sup_el", sno: "sno" },
                             "className": "text-left",
                             "render": function (data, type, row, meta) {
                                 let col_name = 'sup_el';
                                 let valdata = data.sup_el;
                                 let iddata = `${col_name}_${data.sno}`;
                                 ((valdata == null) ? valdata = "" : valdata = valdata)
-                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                let ret = `<span hidden>${formatQcTest(valdata)}</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
                                 return ret;
                             }
                         },
                     ],
                     'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
-                            "<'row'<'col-md-12'tr>>" +
-                            "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                        "<'row'<'col-md-12'tr>>" +
+                        "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
                     buttons: [
 
                     ],
@@ -842,230 +867,250 @@
                     "bInfo": false,
                     bSort: false,
                     "columns": [
-                        {"data": {sts_c: "sts_c", sno: "sno"},
+                        {
+                            "data": { sts_c: "sts_c", sno: "sno" },
                             "className": "text-left",
                             "render": function (data, type, row, meta) {
                                 let col_name = 'sts_c';
                                 let valdata = data.sts_c;
                                 let iddata = `${col_name}_${data.sno}`;
                                 ((valdata == null) ? valdata = "" : valdata = valdata)
-                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                let ret = `<span hidden>${formatQcTest(valdata)}</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
                                 return ret;
                             }
                         },
-                        {"data": {sts_si: "sts_si", sno: "sno"},
+                        {
+                            "data": { sts_si: "sts_si", sno: "sno" },
                             "className": "text-left",
                             "render": function (data, type, row, meta) {
                                 let col_name = 'sts_si';
                                 let valdata = data.sts_si;
                                 let iddata = `${col_name}_${data.sno}`;
                                 ((valdata == null) ? valdata = "" : valdata = valdata)
-                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                let ret = `<span hidden>${formatQcTest(valdata)}</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
                                 return ret;
                             }
                         },
-                        {"data": {sts_mn: "sts_mn", sno: "sno"},
+                        {
+                            "data": { sts_mn: "sts_mn", sno: "sno" },
                             "className": "text-left",
                             "render": function (data, type, row, meta) {
                                 let col_name = 'sts_mn';
                                 let valdata = data.sts_mn;
                                 let iddata = `${col_name}_${data.sno}`;
                                 ((valdata == null) ? valdata = "" : valdata = valdata)
-                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                let ret = `<span hidden>${formatQcTest(valdata)}</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
                                 return ret;
                             }
                         },
-                        {"data": {sts_p: "sts_p", sno: "sno"},
+                        {
+                            "data": { sts_p: "sts_p", sno: "sno" },
                             "className": "text-left",
                             "render": function (data, type, row, meta) {
                                 let col_name = 'sts_p';
                                 let valdata = data.sts_p;
                                 let iddata = `${col_name}_${data.sno}`;
                                 ((valdata == null) ? valdata = "" : valdata = valdata)
-                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                let ret = `<span hidden>${formatQcTest(valdata)}</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
                                 return ret;
                             }
                         },
-                        {"data": {sts_s: "sts_s", sno: "sno"},
+                        {
+                            "data": { sts_s: "sts_s", sno: "sno" },
                             "className": "text-left",
                             "render": function (data, type, row, meta) {
                                 let col_name = 'sts_s';
                                 let valdata = data.sts_s;
                                 let iddata = `${col_name}_${data.sno}`;
                                 ((valdata == null) ? valdata = "" : valdata = valdata)
-                                let ret = `<span hidden>${valdata }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${valdata}' />`;
+                                let ret = `<span hidden>${valdata}</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${valdata}' />`;
                                 return ret;
                             }
                         },
-                        {"data": {sts_cu: "sts_cu", sno: "sno"},
+                        {
+                            "data": { sts_cu: "sts_cu", sno: "sno" },
                             "className": "text-left",
                             "render": function (data, type, row, meta) {
                                 let col_name = 'sts_cu';
                                 let valdata = data.sts_cu;
                                 let iddata = `${col_name}_${data.sno}`;
                                 ((valdata == null) ? valdata = "" : valdata = valdata)
-                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                let ret = `<span hidden>${formatQcTest(valdata)}</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
                                 return ret;
                             }
                         },
-                        {"data": {sts_v: "sts_v", sno: "sno"},
+                        {
+                            "data": { sts_v: "sts_v", sno: "sno" },
                             "className": "text-left",
                             "render": function (data, type, row, meta) {
                                 let col_name = 'sts_v';
                                 let valdata = data.sts_v;
                                 let iddata = `${col_name}_${data.sno}`;
                                 ((valdata == null) ? valdata = "" : valdata = valdata)
-                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                let ret = `<span hidden>${formatQcTest(valdata)}</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
                                 return ret;
                             }
                         },
-                        {"data": {sts_ni: "sts_ni", sno: "sno"},
+                        {
+                            "data": { sts_ni: "sts_ni", sno: "sno" },
                             "className": "text-left",
                             "render": function (data, type, row, meta) {
                                 let col_name = 'sts_ni';
                                 let valdata = data.sts_ni;
                                 let iddata = `${col_name}_${data.sno}`;
                                 ((valdata == null) ? valdata = "" : valdata = valdata)
-                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                let ret = `<span hidden>${formatQcTest(valdata)}</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
                                 return ret;
                             }
                         },
-                        {"data": {sts_cr: "sts_cr", sno: "sno"},
+                        {
+                            "data": { sts_cr: "sts_cr", sno: "sno" },
                             "className": "text-left",
                             "render": function (data, type, row, meta) {
                                 let col_name = 'sts_cr';
                                 let valdata = data.sts_cr;
                                 let iddata = `${col_name}_${data.sno}`;
                                 ((valdata == null) ? valdata = "" : valdata = valdata)
-                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                let ret = `<span hidden>${formatQcTest(valdata)}</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
                                 return ret;
                             }
                         },
-                        {"data": {sts_cr: "sts_mo", sno: "sno"},
+                        {
+                            "data": { sts_cr: "sts_mo", sno: "sno" },
                             "className": "text-left",
                             "render": function (data, type, row, meta) {
                                 let col_name = 'sts_mo';
                                 let valdata = data.sts_mo;
                                 let iddata = `${col_name}_${data.sno}`;
                                 ((valdata == null) ? valdata = "" : valdata = valdata)
-                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                let ret = `<span hidden>${formatQcTest(valdata)}</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
                                 return ret;
                             }
                         },
-                        {"data": {sts_ti: "sts_ti", sno: "sno"},
+                        {
+                            "data": { sts_ti: "sts_ti", sno: "sno" },
                             "className": "text-left",
                             "render": function (data, type, row, meta) {
                                 let col_name = 'sts_ti';
                                 let valdata = data.sts_ti;
                                 let iddata = `${col_name}_${data.sno}`;
                                 ((valdata == null) ? valdata = "" : valdata = valdata)
-                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                let ret = `<span hidden>${formatQcTest(valdata)}</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
                                 return ret;
                             }
                         },
-                        {"data": {sts_nb: "sts_nb", sno: "sno"},
+                        {
+                            "data": { sts_nb: "sts_nb", sno: "sno" },
                             "className": "text-left",
                             "render": function (data, type, row, meta) {
                                 let col_name = 'sts_nb';
                                 let valdata = data.sts_nb;
                                 let iddata = `${col_name}_${data.sno}`;
                                 ((valdata == null) ? valdata = "" : valdata = valdata)
-                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                let ret = `<span hidden>${formatQcTest(valdata)}</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
                                 return ret;
                             }
                         },
-                        {"data": {sts_al: "sts_al", sno: "sno"},
+                        {
+                            "data": { sts_al: "sts_al", sno: "sno" },
                             "className": "text-left",
                             "render": function (data, type, row, meta) {
                                 let col_name = 'sts_al';
                                 let valdata = data.sts_al;
                                 let iddata = `${col_name}_${data.sno}`;
                                 ((valdata == null) ? valdata = "" : valdata = valdata)
-                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                let ret = `<span hidden>${formatQcTest(valdata)}</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
                                 return ret;
                             }
                         },
-                        {"data": {sts_b: "sts_b", sno: "sno"},
+                        {
+                            "data": { sts_b: "sts_b", sno: "sno" },
                             "className": "text-left",
                             "render": function (data, type, row, meta) {
                                 let col_name = 'sts_b';
                                 let valdata = data.sts_b;
                                 let iddata = `${col_name}_${data.sno}`;
                                 ((valdata == null) ? valdata = "" : valdata = valdata)
-                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                let ret = `<span hidden>${formatQcTest(valdata)}</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
                                 return ret;
                             }
                         },
-                        {"data": {sts_co: "sts_co", sno: "sno"},
+                        {
+                            "data": { sts_co: "sts_co", sno: "sno" },
                             "className": "text-left",
                             "render": function (data, type, row, meta) {
                                 let col_name = 'sts_co';
                                 let valdata = data.sts_co;
                                 let iddata = `${col_name}_${data.sno}`;
                                 ((valdata == null) ? valdata = "" : valdata = valdata)
-                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                let ret = `<span hidden>${formatQcTest(valdata)}</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
                                 return ret;
                             }
                         },
-                        {"data": {sts_pb: "sts_pb", sno: "sno"},
+                        {
+                            "data": { sts_pb: "sts_pb", sno: "sno" },
                             "className": "text-left",
                             "render": function (data, type, row, meta) {
                                 let col_name = 'sts_pb';
                                 let valdata = data.sts_pb;
                                 let iddata = `${col_name}_${data.sno}`;
                                 ((valdata == null) ? valdata = "" : valdata = valdata)
-                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                let ret = `<span hidden>${formatQcTest(valdata)}</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
                                 return ret;
                             }
                         },
-                        {"data": {sts_fe: "sts_fe", sno: "sno"},
+                        {
+                            "data": { sts_fe: "sts_fe", sno: "sno" },
                             "className": "text-left",
                             "render": function (data, type, row, meta) {
                                 let col_name = 'sts_fe';
                                 let valdata = data.sts_fe;
                                 let iddata = `${col_name}_${data.sno}`;
                                 ((valdata == null) ? valdata = "" : valdata = valdata)
-                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                let ret = `<span hidden>${formatQcTest(valdata)}</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
                                 return ret;
                             }
                         },
-                        {"data": {sts_ts: "sts_ts", sno: "sno"},
+                        {
+                            "data": { sts_ts: "sts_ts", sno: "sno" },
                             "className": "text-left",
                             "render": function (data, type, row, meta) {
                                 let col_name = 'sts_ts';
                                 let valdata = data.sts_ts;
                                 let iddata = `${col_name}_${data.sno}`;
                                 ((valdata == null) ? valdata = "" : valdata = valdata)
-                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                let ret = `<span hidden>${formatQcTest(valdata)}</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
                                 return ret;
                             }
                         },
-                        {"data": {sts_ts: "sts_ys", sno: "sno"},
+                        {
+                            "data": { sts_ts: "sts_ys", sno: "sno" },
                             "className": "text-left",
                             "render": function (data, type, row, meta) {
                                 let col_name = 'sts_ys';
                                 let valdata = data.sts_ys;
                                 let iddata = `${col_name}_${data.sno}`;
                                 ((valdata == null) ? valdata = "" : valdata = valdata)
-                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                let ret = `<span hidden>${formatQcTest(valdata)}</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
                                 return ret;
                             }
                         },
-                        {"data": {sts_el: "sts_el", sno: "sno"},
+                        {
+                            "data": { sts_el: "sts_el", sno: "sno" },
                             "className": "text-left",
                             "render": function (data, type, row, meta) {
                                 let col_name = 'sts_el';
                                 let valdata = data.sts_el;
                                 let iddata = `${col_name}_${data.sno}`;
                                 ((valdata == null) ? valdata = "" : valdata = valdata)
-                                let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
+                                let ret = `<span hidden>${formatQcTest(valdata)}</span><input type='text' class='input-text-value' id='${iddata}' onchange="UpdateQcTestLab('${iddata}','${col_name}');" value='${formatQcTest(valdata)}' />`;
                                 return ret;
                             }
                         },
                     ],
                     'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
-                            "<'row'<'col-md-12'tr>>" +
-                            "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                        "<'row'<'col-md-12'tr>>" +
+                        "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
                     buttons: [
 
                     ],
@@ -1104,195 +1149,213 @@
                         "bInfo": false,
                         bSort: false,
                         "columns": [
-                            {"data": {size: "size", id: "id"},
+                            {
+                                "data": { size: "size", id: "id" },
                                 "className": "text-left",
                                 "render": function (data, type, row, meta) {
                                     let col_name = 'size';
                                     let valdata = data.size;
                                     let iddata = `${col_name}_${data.id}`;
                                     ((valdata == null) ? valdata = "" : valdata = valdata)
-                                    let ret = `<span hidden>${formatQcTest(valdata) }</span><input type='text' class='input-text-value' id='${iddata}' onchange="update_product_test('${iddata}','${col_name}');" value='${valdata}' />`;
+                                    let ret = `<span hidden>${formatQcTest(valdata)}</span><input type='text' class='input-text-value' id='${iddata}' onchange="update_product_test('${iddata}','${col_name}');" value='${valdata}' />`;
                                     return ret;
                                 }
                             },
-                            {"data": {stardard: "stardard", id: "id"},
+                            {
+                                "data": { stardard: "stardard", id: "id" },
                                 "className": "text-left",
                                 "render": function (data, type, row, meta) {
                                     let col_name = 'stardard';
                                     let valdata = data.stardard;
                                     let iddata = `${col_name}_${data.id}`;
                                     ((valdata == null) ? valdata = "" : valdata = valdata)
-                                    let ret = `<span hidden>${valdata }</span><input type='text' class='input-text-value' id='${iddata}' onchange="update_product_test('${iddata}','${col_name}');" value='${valdata}' />`;
+                                    let ret = `<span hidden>${valdata}</span><input type='text' class='input-text-value' id='${iddata}' onchange="update_product_test('${iddata}','${col_name}');" value='${valdata}' />`;
                                     return ret;
                                 }
                             },
 
-                            {"data": {thick: "thick", id: "id"},
+                            {
+                                "data": { thick: "thick", id: "id" },
                                 "className": "text-left",
                                 "render": function (data, type, row, meta) {
                                     let col_name = 'thick';
                                     let valdata = data.thick;
                                     let iddata = `${col_name}_${data.id}`;
                                     ((valdata == null) ? valdata = "" : valdata = valdata)
-                                    let ret = `<span hidden>${valdata }</span><input type='text' class='input-text-value' id='${iddata}' onchange="update_product_test('${iddata}','${col_name}');" value='${valdata}' />`;
+                                    let ret = `<span hidden>${valdata}</span><input type='text' class='input-text-value' id='${iddata}' onchange="update_product_test('${iddata}','${col_name}');" value='${valdata}' />`;
                                     return ret;
                                 }
                             },
-                            {"data": {length: "length", id: "id"},
+                            {
+                                "data": { length: "length", id: "id" },
                                 "className": "text-left",
                                 "render": function (data, type, row, meta) {
                                     let col_name = 'length';
                                     let valdata = data.length;
                                     let iddata = `${col_name}_${data.id}`;
                                     ((valdata == null) ? valdata = "" : valdata = valdata)
-                                    let ret = `<span hidden>${valdata }</span><input type='text' class='input-text-value' id='${iddata}' onchange="update_product_test('${iddata}','${col_name}');" value='${valdata}' />`;
+                                    let ret = `<span hidden>${valdata}</span><input type='text' class='input-text-value' id='${iddata}' onchange="update_product_test('${iddata}','${col_name}');" value='${valdata}' />`;
                                     return ret;
                                 }
                             },
-                            {"data": {production_FM_no: "production_FM_no", id: "id"},
+                            {
+                                "data": { production_FM_no: "production_FM_no", id: "id" },
                                 "className": "text-left",
                                 "render": function (data, type, row, meta) {
                                     let col_name = 'production_FM_no';
                                     let valdata = data.production_FM_no;
                                     let iddata = `${col_name}_${data.id}`;
                                     ((valdata == null) ? valdata = "" : valdata = valdata)
-                                    let ret = `<span hidden>${valdata }</span><input type='text' class='input-text-value' id='${iddata}' onchange="update_product_test('${iddata}','${col_name}');" value='${valdata}' />`;
+                                    let ret = `<span hidden>${valdata}</span><input type='text' class='input-text-value' id='${iddata}' onchange="update_product_test('${iddata}','${col_name}');" value='${valdata}' />`;
                                     return ret;
                                 }
                             },
-                            {"data": {production_date: "production_date", id: "id"},
+                            {
+                                "data": { production_date: "production_date", id: "id" },
                                 "className": "text-left",
                                 "render": function (data, type, row, meta) {
                                     let col_name = 'production_date';
                                     let valdata = data.production_date;
                                     let iddata = `${col_name}_${data.id}`;
                                     ((valdata == null) ? valdata = "" : valdata = valdata)
-                                    let ret = `<span hidden>${valdata }</span><input type='text' class='input-text-value' id='${iddata}' onchange="update_product_test('${iddata}','${col_name}');" value='${valdata}' />`;
+                                    let ret = `<span hidden>${valdata}</span><input type='text' class='input-text-value' id='${iddata}' onchange="update_product_test('${iddata}','${col_name}');" value='${valdata}' />`;
                                     return ret;
                                 }
                             },
-                            {"data": {Mec_test_TS: "Mec_test_TS", id: "id"},
+                            {
+                                "data": { Mec_test_TS: "Mec_test_TS", id: "id" },
                                 "className": "text-left",
                                 "render": function (data, type, row, meta) {
                                     let col_name = 'Mec_test_TS';
                                     let valdata = data.Mec_test_TS;
                                     let iddata = `${col_name}_${data.id}`;
                                     ((valdata == null) ? valdata = "" : valdata = valdata)
-                                    let ret = `<span hidden>${valdata }</span><input type='text' class='input-text-value' id='${iddata}' onchange="update_product_test('${iddata}','${col_name}');" value='${valdata}' />`;
+                                    let ret = `<span hidden>${valdata}</span><input type='text' class='input-text-value' id='${iddata}' onchange="update_product_test('${iddata}','${col_name}');" value='${valdata}' />`;
                                     return ret;
                                 }
                             },
-                            {"data": {Mec_test_YS: "Mec_test_YS", id: "id"},
+                            {
+                                "data": { Mec_test_YS: "Mec_test_YS", id: "id" },
                                 "className": "text-left",
                                 "render": function (data, type, row, meta) {
                                     let col_name = 'Mec_test_YS';
                                     let valdata = data.Mec_test_YS;
                                     let iddata = `${col_name}_${data.id}`;
                                     ((valdata == null) ? valdata = "" : valdata = valdata)
-                                    let ret = `<span hidden>${valdata }</span><input type='text' class='input-text-value' id='${iddata}' onchange="update_product_test('${iddata}','${col_name}');" value='${valdata}' />`;
+                                    let ret = `<span hidden>${valdata}</span><input type='text' class='input-text-value' id='${iddata}' onchange="update_product_test('${iddata}','${col_name}');" value='${valdata}' />`;
                                     return ret;
                                 }
                             },
-                            {"data": {Mec_test_EI: "Mec_test_EI", id: "id"},
+                            {
+                                "data": { Mec_test_EI: "Mec_test_EI", id: "id" },
                                 "className": "text-left",
                                 "render": function (data, type, row, meta) {
                                     let col_name = 'Mec_test_EI';
                                     let valdata = data.Mec_test_EI;
                                     let iddata = `${col_name}_${data.id}`;
                                     ((valdata == null) ? valdata = "" : valdata = valdata)
-                                    let ret = `<span hidden>${valdata }</span><input type='text' class='input-text-value' id='${iddata}' onchange="update_product_test('${iddata}','${col_name}');" value='${valdata}' />`;
+                                    let ret = `<span hidden>${valdata}</span><input type='text' class='input-text-value' id='${iddata}' onchange="update_product_test('${iddata}','${col_name}');" value='${valdata}' />`;
                                     return ret;
                                 }
                             },
-                            {"data": {Mec_test_EL_1: "Mec_test_EL_1", id: "id"},
+                            {
+                                "data": { Mec_test_EL_1: "Mec_test_EL_1", id: "id" },
                                 "className": "text-left",
                                 "render": function (data, type, row, meta) {
                                     let col_name = 'Mec_test_EL_1';
                                     let valdata = data.Mec_test_EL_1;
                                     let iddata = `${col_name}_${data.id}`;
                                     ((valdata == null) ? valdata = "" : valdata = valdata)
-                                    let ret = `<span hidden>${valdata }</span><input type='text' class='input-text-value' id='${iddata}' onchange="update_product_test('${iddata}','${col_name}');" value='${valdata}' />`;
+                                    let ret = `<span hidden>${valdata}</span><input type='text' class='input-text-value' id='${iddata}' onchange="update_product_test('${iddata}','${col_name}');" value='${valdata}' />`;
                                     return ret;
                                 }
                             },
-                            {"data": {Mec_test_EL_2: "Mec_test_EL_2", id: "id"},
+                            {
+                                "data": { Mec_test_EL_2: "Mec_test_EL_2", id: "id" },
                                 "className": "text-left",
                                 "render": function (data, type, row, meta) {
                                     let col_name = 'Mec_test_EL_2';
                                     let valdata = data.Mec_test_EL_2;
                                     let iddata = `${col_name}_${data.id}`;
                                     ((valdata == null) ? valdata = "" : valdata = valdata)
-                                    let ret = `<span hidden>${valdata }</span><input type='text' class='input-text-value' id='${iddata}' onchange="update_product_test('${iddata}','${col_name}');" value='${valdata}' />`;
+                                    let ret = `<span hidden>${valdata}</span><input type='text' class='input-text-value' id='${iddata}' onchange="update_product_test('${iddata}','${col_name}');" value='${valdata}' />`;
                                     return ret;
                                 }
                             },
-                            {"data": {Mec_test_EL_3: "Mec_test_EL_3", id: "id"},
+                            {
+                                "data": { Mec_test_EL_3: "Mec_test_EL_3", id: "id" },
                                 "className": "text-left",
                                 "render": function (data, type, row, meta) {
                                     let col_name = 'Mec_test_EL_3';
                                     let valdata = data.Mec_test_EL_3;
                                     let iddata = `${col_name}_${data.id}`;
                                     ((valdata == null) ? valdata = "" : valdata = valdata)
-                                    let ret = `<span hidden>${valdata }</span><input type='text' class='input-text-value' id='${iddata}' onchange="update_product_test('${iddata}','${col_name}');" value='${valdata}' />`;
+                                    let ret = `<span hidden>${valdata}</span><input type='text' class='input-text-value' id='${iddata}' onchange="update_product_test('${iddata}','${col_name}');" value='${valdata}' />`;
                                     return ret;
                                 }
                             },
-                            {"data": {charpy_mean: "charpy_mean", id: "id"},
+                            {
+                                "data": { charpy_mean: "charpy_mean", id: "id" },
                                 "className": "text-left",
                                 "render": function (data, type, row, meta) {
                                     let col_name = 'charpy_mean';
                                     let valdata = data.charpy_mean;
                                     let iddata = `${col_name}_${data.id}`;
                                     ((valdata == null) ? valdata = "" : valdata = valdata)
-                                    let ret = `<span hidden>${valdata }</span><input type='text' class='input-text-value' id='${iddata}' onchange="update_product_test('${iddata}','${col_name}');" value='${valdata}' />`;
+                                    let ret = `<span hidden>${valdata}</span><input type='text' class='input-text-value' id='${iddata}' onchange="update_product_test('${iddata}','${col_name}');" value='${valdata}' />`;
                                     return ret;
                                 }
                             },
-                            {"data": {charpy_1: "charpy_1", id: "id"},
+                            {
+                                "data": { charpy_1: "charpy_1", id: "id" },
                                 "className": "text-left",
                                 "render": function (data, type, row, meta) {
                                     let col_name = 'charpy_1';
                                     let valdata = data.charpy_1;
                                     let iddata = `${col_name}_${data.id}`;
                                     ((valdata == null) ? valdata = "" : valdata = valdata)
-                                    let ret = `<span hidden>${valdata }</span><input type='text' class='input-text-value' id='${iddata}' onchange="update_product_test('${iddata}','${col_name}');" value='${valdata}' />`;
+                                    let ret = `<span hidden>${valdata}</span><input type='text' class='input-text-value' id='${iddata}' onchange="update_product_test('${iddata}','${col_name}');" value='${valdata}' />`;
                                     return ret;
                                 }
                             },
-                            {"data": {charpy_2: "charpy_2", id: "id"},
+                            {
+                                "data": { charpy_2: "charpy_2", id: "id" },
                                 "className": "text-left",
                                 "render": function (data, type, row, meta) {
                                     let col_name = 'charpy_2';
                                     let valdata = data.charpy_2;
                                     let iddata = `${col_name}_${data.id}`;
                                     ((valdata == null) ? valdata = "" : valdata = valdata)
-                                    let ret = `<span hidden>${valdata }</span><input type='text' class='input-text-value' id='${iddata}' onchange="update_product_test('${iddata}','${col_name}');" value='${valdata}' />`;
+                                    let ret = `<span hidden>${valdata}</span><input type='text' class='input-text-value' id='${iddata}' onchange="update_product_test('${iddata}','${col_name}');" value='${valdata}' />`;
                                     return ret;
                                 }
                             },
-                            {"data": {charpy_3: "charpy_3", id: "id"},
+                            {
+                                "data": { charpy_3: "charpy_3", id: "id" },
                                 "className": "text-left",
                                 "render": function (data, type, row, meta) {
                                     let col_name = 'charpy_3';
                                     let valdata = data.charpy_3;
                                     let iddata = `${col_name}_${data.id}`;
                                     ((valdata == null) ? valdata = "" : valdata = valdata)
-                                    let ret = `<span hidden>${valdata }</span><input type='text' class='input-text-value' id='${iddata}' onchange="update_product_test('${iddata}','${col_name}');" value='${valdata}' />`;
+                                    let ret = `<span hidden>${valdata}</span><input type='text' class='input-text-value' id='${iddata}' onchange="update_product_test('${iddata}','${col_name}');" value='${valdata}' />`;
                                     return ret;
                                 }
                             },
-                            {"data": {testing_date: "testing_date", id: "id"},
+                            {
+                                "data": { testing_date: "testing_date", id: "id" },
                                 "className": "text-left",
                                 "render": function (data, type, row, meta) {
                                     let col_name = 'testing_date';
                                     let valdata = data.testing_date;
                                     let iddata = `${col_name}_${data.id}`;
                                     ((valdata == null) ? valdata = "" : valdata = valdata)
-                                    let ret = `<span hidden>${valdata }</span><input type='text' class='input-text-value' id='${iddata}' onchange="update_product_test('${iddata}','${col_name}');" value='${valdata}' />`;
+                                    let ret = `<span hidden>${valdata}</span><input type='text' class='input-text-value' id='${iddata}' onchange="update_product_test('${iddata}','${col_name}');" value='${valdata}' />`;
                                     return ret;
                                 }
                             },
-                            {"data": {check_result: "check_result", id: "id"},
+                            {
+                                "data": { check_result: "check_result", id: "id" },
                                 "className": "text-left",
                                 "render": function (data, type, row, meta) {
                                     let col_name = 'check_result';
@@ -1306,11 +1369,12 @@
                                         valdata = 1;
                                         check = "";
                                     }
-                                    let ret = `<span hidden>${valdata }</span><input type='checkbox' ${check} class='input-text-value' id='${iddata}' onchange="update_product_test('${iddata}','${col_name}');" value='${valdata }' />`;
+                                    let ret = `<span hidden>${valdata}</span><input type='checkbox' ${check} class='input-text-value' id='${iddata}' onchange="update_product_test('${iddata}','${col_name}');" value='${valdata}' />`;
                                     return ret;
                                 }
                             },
-                            {"data": {sno: "sno", id: "id"},
+                            {
+                                "data": { sno: "sno", id: "id" },
                                 "className": "text-left",
                                 "render": function (data, type, row, meta) {
                                     let col_name = 'sno';
@@ -1321,8 +1385,8 @@
                             },
                         ],
                         'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
-                                "<'row'<'col-md-12'tr>>" +
-                                "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+                            "<'row'<'col-md-12'tr>>" +
+                            "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
                         buttons: [
                             {
 
@@ -1344,4 +1408,3 @@
 
 
 </script>
-
