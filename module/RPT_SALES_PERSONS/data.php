@@ -29,3 +29,8 @@ if ($load == "GetSalesByYear") {
     $Data = $Data->GetSalesByYear($type, $year);
     echo json_encode($Data);
 }
+
+if ($load == "GetSalesByCustomer") {
+    $Data = $Data->GetSalesByCustomer($year);
+    echo json_encode($Data);
+}

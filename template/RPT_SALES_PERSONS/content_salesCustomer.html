@@ -1,0 +1,231 @@
+<style>
+  .col-search {
+    padding-left: 3px;
+    padding-right: 3px;
+  }
+
+  .table thead th {
+    text-align: center;
+  }
+
+  .col-flt-page {
+    padding-top: 10px;
+    font-weight: bold;
+  }
+
+  table.dataTable.fixedHeader-floating,
+  table.dataTable.fixedHeader-locked {
+    background-color: white;
+    margin-top: 50px !important;
+    margin-bottom: 0 !important;
+  }
+
+  .text-header {
+    font-weight: bold;
+    font-size: 20px;
+  }
+
+  .item-center {
+    display: flex;
+    justify-content: center;
+  }
+
+  .font-mono {
+    font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+  }
+</style>
+
+<div class="row">
+  <h4 class="text-header text-center"></h4>
+</div>
+
+<div class="row item-center" style="margin-bottom: 15px;">
+  <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+    <div class="input-group w-full">
+      <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">Year</div>
+      <select style="font-weight: bold; font-size: 16px;" class="form-control txt-filter" id="sale_year_customer">
+      </select>
+    </div>
+  </div>
+  <div class="col-lg-1 col-md-1 col-sm-6 col-xs-6 text-left">
+    <button class="btn btn-info" id="btnSearchCustomer">
+      <i class="fa fa-search"></i>&nbsp; Search
+    </button>
+  </div>
+</div>
+
+<div class="row" id="rowResultTableCustomer" style="padding: 0 15px;">
+  <table class="table table-condensed table-bordered table-striped" width="100%" id="tblReportByCustomer">
+    <thead>
+      <tr>
+        <th class="bg-gray" style="width: 50px;">#</th>
+        <th class="bg-gray" style="width: 70px;">Year</th>
+        <th class="bg-gray" style="width: 200px;">Sales Name</th>
+        <th class="bg-gray">Customer Name</th>
+        <th class="bg-gray text-right" style="width: 150px;">Amount (THB)</th>
+        <th class="bg-gray text-right" style="width: 150px;">Weight (KG)</th>
+      </tr>
+    </thead>
+    <tfoot>
+      <tr style="background-color: #f1f5f9;">
+        <th colspan="4" class="text-right" style="font-weight: bold; color: #1e293b;">TOTAL:</th>
+        <th class="text-right font-mono" style="font-weight: bold; color: #0284c7;">0.00</th>
+        <th class="text-right font-mono" style="font-weight: bold; color: #059669;">0.00</th>
+      </tr>
+    </tfoot>
+  </table>
+</div>
+
+<script type="text/javascript">
+  var startYearCust = 2020;
+  var currentYearVal = typeof moment !== "undefined" ? moment().year() : new Date().getFullYear();
+  var endYearCust = Math.max(currentYearVal, 2026);
+
+  var yearOptions = [];
+  for (var y = endYearCust; y >= startYearCust; y--) {
+    yearOptions.push('<option value="' + y + '">' + y + '</option>');
+  }
+
+  $("#sale_year_customer").append(yearOptions.join(""));
+  $("#sale_year_customer").val(currentYearVal);
+
+  $("#btnSearchCustomer").click(function () {
+    ReportCustomerSearch();
+  });
+
+  function ReportCustomerSearch() {
+    var OldHtml = $("#btnSearchCustomer").html();
+    var year = $("#sale_year_customer").val();
+
+    $("#btnSearchCustomer").html("<i class='fa fa-spinner fa-spin'></i>");
+    $("#tblReportByCustomer").loading();
+
+    $.ajax({
+      type: "GET",
+      url: "././module/RPT_SALES_PERSONS/data.php",
+      dataType: "json",
+      data: {
+        load: "GetSalesByCustomer",
+        year: year
+      },
+      success: function (data) {
+        if ($.fn.DataTable.isDataTable("#tblReportByCustomer")) {
+          $("#tblReportByCustomer").DataTable().destroy();
+        }
+
+        $("#tblReportByCustomer").dataTable({
+          aaData: data,
+          paging: false,
+          fixedHeader: true,
+          destroy: true,
+          processing: true,
+          scrollY: "60vh",
+          scrollCollapse: true,
+          scrollX: true,
+          columns: [
+            {
+              data: null,
+              className: "text-center",
+              render: function (data, type, row, meta) {
+                return meta.row + 1;
+              }
+            },
+            {
+              data: "year",
+              className: "text-center",
+              render: function (data) {
+                return data == null ? "-" : data;
+              }
+            },
+            {
+              data: "name",
+              className: "text-left",
+              render: function (data) {
+                return data == null ? "-" : "<b>" + data + "</b>";
+              }
+            },
+            {
+              data: "cust_name",
+              className: "text-left",
+              render: function (data) {
+                return data == null ? "-" : data;
+              }
+            },
+            {
+              data: "amount",
+              className: "text-right font-mono",
+              render: function (data) {
+                if (data == null || isNaN(parseFloat(data))) return "0.00";
+                return typeof addCommas === "function" ? addCommas(parseFloat(data).toFixed(2)) : parseFloat(data).toLocaleString("en-US", { minimumFractionDigits: 2 });
+              }
+            },
+            {
+              data: "KG",
+              className: "text-right font-mono",
+              render: function (data) {
+                if (data == null || isNaN(parseFloat(data))) return "0.00";
+                return typeof addCommas === "function" ? addCommas(parseFloat(data).toFixed(2)) : parseFloat(data).toLocaleString("en-US", { minimumFractionDigits: 2 });
+              }
+            }
+          ],
+          dom:
+            "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+            "<'row'<'col-md-12'tr>>" +
+            "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+          buttons: [
+            {
+              extend: "print",
+              text: "<i class='fa fa-print'></i>&nbsp;Print",
+              title: "",
+            },
+            {
+              extend: "excel",
+              footer: true,
+              text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+              title: "รายงานยอดขาย By Sales Person By Customer " + (typeof GetCurrDateTime === "function" ? GetCurrDateTime() : ""),
+            },
+          ],
+          footerCallback: function (row, data, start, end, display) {
+            var api = this.api();
+            var intVal = function (i) {
+              return typeof i === 'string'
+                ? i.replace(/[\$,]/g, '') * 1
+                : typeof i === 'number'
+                  ? i
+                  : 0;
+            };
+
+            var totalAmt = api
+              .column(4, { search: "applied" })
+              .data()
+              .reduce(function (a, b) {
+                return intVal(a) + intVal(b);
+              }, 0);
+
+            var totalKG = api
+              .column(5, { search: "applied" })
+              .data()
+              .reduce(function (a, b) {
+                return intVal(a) + intVal(b);
+              }, 0);
+
+            var formatNum = function (val) {
+              return typeof addCommas === "function" ? addCommas(val.toFixed(2)) : val.toLocaleString("en-US", { minimumFractionDigits: 2 });
+            };
+
+            $(api.column(4).footer()).html(formatNum(totalAmt));
+            $(api.column(5).footer()).html(formatNum(totalKG));
+          }
+        });
+
+        $("#tblReportByCustomer").loading("stop");
+        $("#btnSearchCustomer").html(OldHtml);
+      },
+      error: function (e) {
+        $("#tblReportByCustomer").loading("stop");
+        $("#btnSearchCustomer").html(OldHtml);
+        console.log("Error loading customer sales data:", e);
+      }
+    });
+  }
+</script>
