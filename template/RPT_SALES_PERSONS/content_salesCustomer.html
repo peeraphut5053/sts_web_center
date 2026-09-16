@@ -12,27 +12,6 @@
     padding-top: 10px;
     font-weight: bold;
   }
-
-  table.dataTable.fixedHeader-floating,
-  table.dataTable.fixedHeader-locked {
-    background-color: white;
-    margin-top: 50px !important;
-    margin-bottom: 0 !important;
-  }
-
-  .text-header {
-    font-weight: bold;
-    font-size: 20px;
-  }
-
-  .item-center {
-    display: flex;
-    justify-content: center;
-  }
-
-  .font-mono {
-    font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
-  }
 </style>
 
 <div class="row">
@@ -40,6 +19,15 @@
 </div>
 
 <div class="row item-center" style="margin-bottom: 15px;">
+  <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+    <div class="input-group w-full">
+      <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">Type *</div>
+      <select style="font-weight: bold; font-size: 16px;" class="form-control txt-filter" id="type_customer">
+        <option value="amount">Amount (บาท)</option>
+        <option value="kg">Kg (กิโลกรัม)</option>
+      </select>
+    </div>
+  </div>
   <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
     <div class="input-group w-full">
       <div style="font-weight: bold; font-size: 16px;" class="input-group-addon">Year</div>
@@ -58,19 +46,42 @@
   <table class="table table-condensed table-bordered table-striped" width="100%" id="tblReportByCustomer">
     <thead>
       <tr>
-        <th class="bg-gray" style="width: 50px;">#</th>
-        <th class="bg-gray" style="width: 70px;">Year</th>
-        <th class="bg-gray" style="width: 200px;">Sales Name</th>
-        <th class="bg-gray">Customer Name</th>
-        <th class="bg-gray text-right" style="width: 150px;">Amount (THB)</th>
-        <th class="bg-gray text-right" style="width: 150px;">Weight (KG)</th>
+        <th class="bg-gray text-center" style="width: 50px; min-width: 50px;">#</th>
+        <th class="bg-gray text-left" style="width: 100px; min-width: 100px;">Sales Name</th>
+        <th class="bg-gray text-left" style="width: 180px; min-width: 180px;">Customer Name</th>
+        <th class="bg-gray text-right" style="width: 60px; min-width: 60px;">JAN</th>
+        <th class="bg-gray text-right" style="width: 60px; min-width: 60px;">FEB</th>
+        <th class="bg-gray text-right" style="width: 60px; min-width: 60px;">MAR</th>
+        <th class="bg-gray text-right" style="width: 60px; min-width: 60px;">APR</th>
+        <th class="bg-gray text-right" style="width: 60px; min-width: 60px;">MAY</th>
+        <th class="bg-gray text-right" style="width: 60px; min-width: 60px;">JUN</th>
+        <th class="bg-gray text-right" style="width: 60px; min-width: 60px;">JUL</th>
+        <th class="bg-gray text-right" style="width: 60px; min-width: 60px;">AUG</th>
+        <th class="bg-gray text-right" style="width: 60px; min-width: 60px;">SEP</th>
+        <th class="bg-gray text-right" style="width: 60px; min-width: 60px;">OCT</th>
+        <th class="bg-gray text-right" style="width: 60px; min-width: 60px;">NOV</th>
+        <th class="bg-gray text-right" style="width: 60px; min-width: 60px;">DEC</th>
+        <th class="bg-gray text-right" style="width: 80px; min-width: 80px;">TOTAL</th>
       </tr>
     </thead>
     <tfoot>
-      <tr style="background-color: #f1f5f9;">
-        <th colspan="4" class="text-right" style="font-weight: bold; color: #1e293b;">TOTAL:</th>
-        <th class="text-right font-mono" style="font-weight: bold; color: #0284c7;">0.00</th>
-        <th class="text-right font-mono" style="font-weight: bold; color: #059669;">0.00</th>
+      <tr style="background-color: #f1f5f9; font-weight: bold;">
+        <th></th>
+        <th></th>
+        <th class="text-right" style="color: #1e293b;">TOTAL:</th>
+        <th class="text-right">-</th>
+        <th class="text-right">-</th>
+        <th class="text-right">-</th>
+        <th class="text-right">-</th>
+        <th class="text-right">-</th>
+        <th class="text-right">-</th>
+        <th class="text-right">-</th>
+        <th class="text-right">-</th>
+        <th class="text-right">-</th>
+        <th class="text-right">-</th>
+        <th class="text-right">-</th>
+        <th class="text-right">-</th>
+        <th class="text-right" style="color: #0284c7;">-</th>
       </tr>
     </tfoot>
   </table>
@@ -93,8 +104,11 @@
     ReportCustomerSearch();
   });
 
+  var monthsList = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+
   function ReportCustomerSearch() {
     var OldHtml = $("#btnSearchCustomer").html();
+    var type = $("#type_customer").val();
     var year = $("#sale_year_customer").val();
 
     $("#btnSearchCustomer").html("<i class='fa fa-spinner fa-spin'></i>");
@@ -106,6 +120,7 @@
       dataType: "json",
       data: {
         load: "GetSalesByCustomer",
+        type: type,
         year: year
       },
       success: function (data) {
@@ -113,61 +128,95 @@
           $("#tblReportByCustomer").DataTable().destroy();
         }
 
+        $("#tblReportByCustomer tfoot").remove();
+        $("#tblReportByCustomer").append(
+          "<tfoot><tr style='background-color: #f1f5f9; font-weight: bold;'>" +
+          "<th></th>" +
+          "<th></th>" +
+          "<th class='text-right' style='color: #1e293b;'>TOTAL:</th>" +
+          "<th class='text-right'>-</th>" +
+          "<th class='text-right'>-</th>" +
+          "<th class='text-right'>-</th>" +
+          "<th class='text-right'>-</th>" +
+          "<th class='text-right'>-</th>" +
+          "<th class='text-right'>-</th>" +
+          "<th class='text-right'>-</th>" +
+          "<th class='text-right'>-</th>" +
+          "<th class='text-right'>-</th>" +
+          "<th class='text-right'>-</th>" +
+          "<th class='text-right'>-</th>" +
+          "<th class='text-right'>-</th>" +
+          "<th class='text-right' style='color: #0284c7;'>-</th>" +
+          "</tr></tfoot>"
+        );
+
+        var tableCols = [
+          {
+            data: null,
+            className: "text-center text-nowrap",
+            width: "50px",
+            render: function (data, type, row, meta) {
+              return meta.row + 1;
+            }
+          },
+          {
+            data: "name",
+            className: "text-left text-nowrap",
+            width: "200px",
+            render: function (data) {
+              return data == null ? "-" : "<b>" + data + "</b>";
+            }
+          },
+          {
+            data: "cust_name",
+            className: "text-left text-nowrap",
+            width: "280px",
+            render: function (data) {
+              return data == null ? "-" : data;
+            }
+          }
+        ];
+
+        // 12 Months columns
+        monthsList.forEach(function (m) {
+          tableCols.push({
+            data: m,
+            className: "text-right text-nowrap",
+            width: "110px",
+            render: function (val) {
+              if (val == null || isNaN(parseFloat(val)) || parseFloat(val) === 0) return "-";
+              return typeof addCommas === "function" ? addCommas(parseFloat(val).toFixed(2)) : parseFloat(val).toLocaleString("en-US", { minimumFractionDigits: 2 });
+            }
+          });
+        });
+
+        // Row Total (Sum of 12 months)
+        tableCols.push({
+          data: null,
+          className: "text-right text-nowrap",
+          width: "120px",
+          render: function (data, type, row) {
+            var rowSum = 0;
+            monthsList.forEach(function (m) {
+              var val = parseFloat(row[m]);
+              if (!isNaN(val)) rowSum += val;
+            });
+            if (rowSum === 0) return "-";
+            return "<b>" + (typeof addCommas === "function" ? addCommas(rowSum.toFixed(2)) : rowSum.toLocaleString("en-US", { minimumFractionDigits: 2 })) + "</b>";
+          }
+        });
+
         $("#tblReportByCustomer").dataTable({
           aaData: data,
           paging: false,
           fixedHeader: true,
           destroy: true,
           processing: true,
-          scrollY: "60vh",
+          autoWidth: false,
+          scrollY: "65vh",
           scrollCollapse: true,
           scrollX: true,
-          columns: [
-            {
-              data: null,
-              className: "text-center",
-              render: function (data, type, row, meta) {
-                return meta.row + 1;
-              }
-            },
-            {
-              data: "year",
-              className: "text-center",
-              render: function (data) {
-                return data == null ? "-" : data;
-              }
-            },
-            {
-              data: "name",
-              className: "text-left",
-              render: function (data) {
-                return data == null ? "-" : "<b>" + data + "</b>";
-              }
-            },
-            {
-              data: "cust_name",
-              className: "text-left",
-              render: function (data) {
-                return data == null ? "-" : data;
-              }
-            },
-            {
-              data: "amount",
-              className: "text-right font-mono",
-              render: function (data) {
-                if (data == null || isNaN(parseFloat(data))) return "0.00";
-                return typeof addCommas === "function" ? addCommas(parseFloat(data).toFixed(2)) : parseFloat(data).toLocaleString("en-US", { minimumFractionDigits: 2 });
-              }
-            },
-            {
-              data: "KG",
-              className: "text-right font-mono",
-              render: function (data) {
-                if (data == null || isNaN(parseFloat(data))) return "0.00";
-                return typeof addCommas === "function" ? addCommas(parseFloat(data).toFixed(2)) : parseFloat(data).toLocaleString("en-US", { minimumFractionDigits: 2 });
-              }
-            }
-          ],
+          columns: tableCols,
           dom:
             "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
             "<'row'<'col-md-12'tr>>" +
@@ -182,7 +231,7 @@
               extend: "excel",
               footer: true,
               text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
-              title: "รายงานยอดขาย By Sales Person By Customer " + (typeof GetCurrDateTime === "function" ? GetCurrDateTime() : ""),
+              title: "รายงานยอดขาย By Sales Person By Customer (" + type.toUpperCase() + ") " + (typeof GetCurrDateTime === "function" ? GetCurrDateTime() : ""),
             },
           ],
           footerCallback: function (row, data, start, end, display) {
@@ -195,26 +244,30 @@
                   : 0;
             };
 
-            var totalAmt = api
-              .column(4, { search: "applied" })
-              .data()
-              .reduce(function (a, b) {
-                return intVal(a) + intVal(b);
-              }, 0);
-
-            var totalKG = api
-              .column(5, { search: "applied" })
-              .data()
-              .reduce(function (a, b) {
-                return intVal(a) + intVal(b);
-              }, 0);
-
             var formatNum = function (val) {
+              if (val === 0) return "-";
               return typeof addCommas === "function" ? addCommas(val.toFixed(2)) : val.toLocaleString("en-US", { minimumFractionDigits: 2 });
             };
 
-            $(api.column(4).footer()).html(formatNum(totalAmt));
-            $(api.column(5).footer()).html(formatNum(totalKG));
+            var grandTotal = 0;
+            $(api.column(2).footer()).html("<b>TOTAL:</b>");
+
+            // Columns 3 to 14 correspond to JAN..DEC
+            monthsList.forEach(function (m, idx) {
+              var colIdx = 3 + idx;
+              var totalMonth = api
+                .column(colIdx, { search: "applied" })
+                .data()
+                .reduce(function (a, b) {
+                  return intVal(a) + intVal(b);
+                }, 0);
+
+              grandTotal += totalMonth;
+              $(api.column(colIdx).footer()).html(formatNum(totalMonth));
+            });
+
+            // Grand Total column (index 15)
+            $(api.column(15).footer()).html("<b>" + formatNum(grandTotal) + "</b>");
           }
         });
 

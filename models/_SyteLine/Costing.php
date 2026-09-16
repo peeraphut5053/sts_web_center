@@ -480,18 +480,27 @@ PIVOT ( SUM([QtyKG]) FOR [MONTH] IN ( [1], [2], [3], [4], [5], [6], [7], [8], [9
         return $rs;
     }
 
-    function GetSalesByCustomer($year) {
+    function GetSalesByCustomer($type, $year) {
         $year = intval($year);
         if ($year == 0) {
             $year = date("Y");
         }
-        $query = "select [year], name, cust_name
-       , sum(total_INVamount) as amount
-       , sum(qtykg) as KG
-from V_WebApp_InvItem_IN_slsman
-where [year] = $year 
-group by [year], name, cust_name
-order by name, cust_name";
+
+        $col = ($type == "kg") ? "[QtyKG]" : "[total_INVamount]";
+
+        $query = "SELECT name, cust_name
+             , [1] AS JAN, [2] AS FEB, [3] AS MAR, [4] AS APR, [5] AS MAY, [6] AS JUN
+             , [7] AS JUL, [8] AS AUG, [9] AS SEP, [10] AS OCT, [11] AS NOV, [12] AS DEC
+        FROM (
+            SELECT name, cust_name, [month], $col AS val
+            FROM V_WebApp_InvItem_IN_slsman  
+            WHERE [year] = '$year'
+        ) AS src
+        PIVOT (
+            SUM(val) 
+            FOR [month] IN ([1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12])
+        ) AS pvt
+        ORDER BY name, cust_name";
 
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
