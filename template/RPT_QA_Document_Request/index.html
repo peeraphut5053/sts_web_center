@@ -68,9 +68,9 @@
     }
 </style>
 <div class="row">
-      <div style="margin-top: 10px; margin-bottom: 20px;">
-      <h1 class="my-header">QA Document Request </h1>
-</div>
+    <div style="margin-top: 10px; margin-bottom: 20px;">
+        <h1 class="my-header">QA Document Request </h1>
+    </div>
 </div>
 <div class="row item-center">
     <div class="col-lg-2 col-md-3 col-sm-6 col-xs-6">
@@ -94,14 +94,14 @@
     <div class="col-lg-2 col-md-3 col-sm-6 col-xs-6">
         <div class="input-group">
             <div class="input-group-addon">Type</div>
-                        <select class="form-control" id="type_req_search">
-                            <option value="">ทั้งหมด</option>
-                            <option value="Procedure">Procedure</option>
-                            <option value="Standard">Standard</option>
-                            <option value="Drawing">Drawing</option>
-                            <option value="WI">Work Instruction</option>
-                            <option value="Form">Form</option>
-                        </select>
+            <select class="form-control" id="type_req_search">
+                <option value="">ทั้งหมด</option>
+                <option value="Procedure">Procedure</option>
+                <option value="Standard">Standard</option>
+                <option value="Drawing">Drawing</option>
+                <option value="WI">Work Instruction</option>
+                <option value="Form">Form</option>
+            </select>
         </div>
     </div>
     <div class="col-lg-2 col-md-3 col-sm-6 col-xs-6">
@@ -182,7 +182,7 @@
                         <input type="text" autocomplete="off" class="form-control" id="user_req" disabled>
                     </div>
                     <div class="input-group basis-2/4">
-                      
+
                         <div class="input-group-addon">แผนก</div>
                         <input type="text" autocomplete="off" class="form-control" id="dept_req">
                     </div>
@@ -266,7 +266,7 @@
                         <input type="text" autocomplete="off" class="form-control" id="user_req_edit" disabled>
                     </div>
                     <div class="input-group basis-2/4">
-                       <div class="input-group-addon">Documents</div>
+                        <div class="input-group-addon">Documents</div>
                         <input type="text" autocomplete="off" class="form-control" id="dept_req_edit">
                     </div>
                 </div>
@@ -377,7 +377,7 @@
         };
     })
 
-    
+
 
     $("#BtnSearchQaReq").click(function () {
         ReportItemSearch();
@@ -397,7 +397,7 @@
             $("#ModalQaAddReq").modal("show");
         } else {
             $("#type_req").val('');
-           
+
             $("#prev_revision").attr('disabled', false);
             $("#new_revision").attr('disabled', false);
             $("#description_req").attr('disabled', false);
@@ -411,13 +411,13 @@
             $("#prev_revision").val('');
             $("#new_revision").val('');
             $("#description_req").val('');
-          
+
             $("#prev_revision").attr('disabled', true);
             $("#new_revision").attr('disabled', true);
             $("#description_req").attr('disabled', true);
         } else {
             $("#type_req").val('');
-         
+
             $("#prev_revision").attr('disabled', false);
             $("#new_revision").attr('disabled', false);
             $("#description_req").attr('disabled', false);
@@ -474,6 +474,7 @@
                     scrollCollapse: true,
                     scrollX: true,
                     select: true,
+                    order: [[0, "desc"]],
                     columns: [
                         {
                             data: "ID",
@@ -624,7 +625,7 @@
                                 $("#ID_req").val(selected[0].ID);
 
                                 console.log(selected);
-                                
+
 
 
                                 if (req == 0) {
@@ -633,7 +634,7 @@
                                     $("#description_req_edit").val('');
                                     $("#documents_req_edit").val(selected[0].Doc);
                                     $("#dept_req_edit").val(selected[0].Dept)
-                             
+
                                     $("#type_req_edit").val(selected[0].Type);
                                     $("#code_req_edit").val(selected[0].Code);
                                     $("#remark_req_edit").val(selected[0].remark);
@@ -643,7 +644,7 @@
                                     $("#ModalQaAddReqEdit").modal("show");
                                 } else {
                                     $("#type_req_edit").val('');
-                                     $("#type_req_edit").val(selected[0].Type);
+                                    $("#type_req_edit").val(selected[0].Type);
                                     $("#documents_req_edit").val(selected[0].Doc);
                                     $("#dept_req_edit").val(selected[0].Dept)
                                     $("#code_req_edit").val(selected[0].Code);
@@ -651,7 +652,7 @@
                                     $("#new_revision_edit").val(selected[0].New_rev);
                                     $("#description_req_edit").val(selected[0].Detail);
                                     $("#remark_req_edit").val(selected[0].remark);
-                                
+
                                     $("#prev_revision_edit").attr('disabled', false);
                                     $("#new_revision_edit").attr('disabled', false);
                                     $("#description_req_edit").attr('disabled', false);
@@ -677,12 +678,12 @@
                                 }
 
                                 if (selected[0].QA_appr != null) {
-                                       swal("ไม่สามารถลบได้ เนื่องจากอนุมัติแล้ว", "", "warning");
+                                    swal("ไม่สามารถลบได้ เนื่องจากอนุมัติแล้ว", "", "warning");
                                     return false;
                                 }
 
                                 if (selected[0].QA_upload != null) {
-                                       swal("ไม่สามารถลบได้ เนื่องจากอนุมัติแล้ว", "", "warning");;
+                                    swal("ไม่สามารถลบได้ เนื่องจากอนุมัติแล้ว", "", "warning");;
                                     return false;
                                 }
 
@@ -1030,7 +1031,7 @@
                             swal("อนุมัติสําเร็จ", "", "success");
                             var table = $('#tblReportQaDocumentReq').DataTable();
                             table.cell(row, 12).data(username_session).draw();
-                
+
                         },
                         error: function (e) {
                             swal("อนุมัติไม่สําเร็จ", "", "error");
@@ -1097,7 +1098,7 @@
                             swal("อนุมัติสําเร็จ", "", "success");
                             var table = $('#tblReportQaDocumentReq').DataTable();
                             table.cell(row, 14).data(1).draw();
-                            
+
                         },
                         error: function (e) {
                             swal("อนุมัติไม่สําเร็จ", "", "error");
@@ -1109,7 +1110,7 @@
                 },
             }
         });
-        
+
     }
 
 
