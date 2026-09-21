@@ -1153,6 +1153,45 @@ where mv.id = '$tag_id'";
         return $rs;
     }
 
+    Function TagTraceLot($job = "", $item = "") {
+        $cSql = new SqlSrv();
+        $where = "WHERE 1=1 ";
+        if (!empty($job)) {
+            $cleanJob = str_replace("'", "''", trim($job));
+            $where .= " AND tag1.job = '$cleanJob' ";
+        }
+        if (!empty($item)) {
+            $cleanItem = str_replace("'", "''", trim($item));
+            $where .= " AND tag1.item LIKE '%$cleanItem%' ";
+        }
+        $query = "SELECT 
+            tag1.id AS tag1_id, tag1.item AS tag1_item, tag1.job AS tag1_job, tag1.lot AS tag1_lot, 
+            tag1.qty1 AS tag1_qty1, tag1.qty2 AS tag1_qty2, CONVERT(varchar(19), tag1.print_date, 120) AS tag1_print_date, 
+            tag1.ship_stat AS tag1_ship_stat, tag1.active AS tag1_active,
+            tag1.uf_sts_job AS tag1_uf_sts_job, tag1.sts_no AS tag1_sts_no, tag1.sts_no2 AS tag1_sts_no2, tag1.sts_no3 AS tag1_sts_no3,
+            tag1.old_lot AS tag1_old_lot,
+
+            tag2.id AS tag2_id, tag2.item AS tag2_item, tag2.job AS tag2_job, tag2.lot AS tag2_lot, 
+            tag2.qty1 AS tag2_qty1, tag2.qty2 AS tag2_qty2, CONVERT(varchar(19), tag2.print_date, 120) AS tag2_print_date, 
+            tag2.ship_stat AS tag2_ship_stat, tag2.active AS tag2_active,
+            tag2.uf_sts_job AS tag2_uf_sts_job, tag2.sts_no AS tag2_sts_no, tag2.sts_no2 AS tag2_sts_no2, tag2.sts_no3 AS tag2_sts_no3,
+            tag2.old_lot AS tag2_old_lot,
+
+            tag3.id AS tag3_id, tag3.item AS tag3_item, tag3.job AS tag3_job, tag3.lot AS tag3_lot, 
+            tag3.qty1 AS tag3_qty1, tag3.qty2 AS tag3_qty2, CONVERT(varchar(19), tag3.print_date, 120) AS tag3_print_date, 
+            tag3.ship_stat AS tag3_ship_stat, tag3.active AS tag3_active,
+            tag3.uf_sts_job AS tag3_uf_sts_job, tag3.sts_no AS tag3_sts_no, tag3.sts_no2 AS tag3_sts_no2, tag3.sts_no3 AS tag3_sts_no3,
+            tag3.old_lot AS tag3_old_lot
+        FROM mv_bc_tag tag1
+        LEFT JOIN mv_bc_tag tag2 ON tag1.old_lot = tag2.lot
+        LEFT JOIN mv_bc_tag tag3 ON tag2.old_lot = tag3.lot
+        $where
+        ORDER BY tag1.lot, tag1.id";
+
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
 
 }
 

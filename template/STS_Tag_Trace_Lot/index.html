@@ -1,0 +1,337 @@
+<head>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+    <style>
+        .tag-group-1 {
+            background-color: #e0f2fe !important;
+            border-bottom: 2px solid #38bdf8 !important;
+            color: #0369a1 !important;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .tag-group-2 {
+            background-color: #dcfce7 !important;
+            border-bottom: 2px solid #4ade80 !important;
+            color: #15803d !important;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .tag-group-3 {
+            background-color: #fef3c7 !important;
+            border-bottom: 2px solid #fbbf24 !important;
+            color: #b45309 !important;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .col-tag1 {
+            background-color: #f8fafc;
+        }
+
+        .col-tag2 {
+            background-color: #fcfdfc;
+            border-left: 2px solid #cbd5e1 !important;
+        }
+
+        .col-tag3 {
+            background-color: #fffefb;
+            border-left: 2px solid #cbd5e1 !important;
+        }
+
+        #tblTagTraceLot th,
+        #tblTagTraceLot td {
+            white-space: nowrap !important;
+        }
+    </style>
+</head>
+
+<div class="tag-trace-wrapper">
+    <!-- Header Title -->
+    <div class="tag-trace-header">
+        <h1 class="my-header"><i class="fa fa-tags text-primary"></i> Tag Trace Lot </h1>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="row tag-trace-filter">
+        <div class="col-md-3 col-sm-4 col-xs-12">
+            <div class="input-group">
+                <span class="input-group-addon"><b>Job Order</b></span>
+                <input type="text" class="form-control font-bold" id="txtJob" placeholder="เช่น US18090006" value="">
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-4 col-xs-12">
+            <div class="input-group">
+                <span class="input-group-addon"><b>Item</b></span>
+                <input type="text" class="form-control" id="txtItem" placeholder="เช่น FC025...">
+            </div>
+        </div>
+        <div class="col-md-4 col-sm-4 col-xs-12">
+            <button type="button" class="btn btn-info" id="btnSearch" onclick="searchTagTrace()"
+                style="height: 34px; padding: 6px 16px;">
+                <i class="fa fa-search"></i> Search
+            </button>
+            <button type="button" class="btn btn-default" id="btnReset" onclick="resetFilter()"
+                style="height: 34px; padding: 6px 12px; margin-left: 5px;">
+                <i class="fa fa-refresh"></i> Clear
+            </button>
+            <span id="loadingSpinner" style="display: none; margin-left: 10px; color: #3c8dbc; font-weight: bold;">
+                <i class="fa fa-spinner fa-spin"></i> กำลังค้นหาข้อมูล...
+            </span>
+        </div>
+    </div>
+
+    <!-- Table 100% flush to left with vertical & horizontal scroll -->
+    <div class="table-flush-container">
+        <table class="table table-condensed table-bordered table-striped table-hover" id="tblTagTraceLot"
+            style="width: 100%;">
+            <thead>
+                <tr>
+                    <!-- tag1 Header -->
+                    <th colspan="14" class="tag-group-1 text-center">tag1</th>
+                    <!-- tag2 Header -->
+                    <th colspan="14" class="tag-group-2 text-center">tag2</th>
+                    <!-- tag3 Header -->
+                    <th colspan="14" class="tag-group-3 text-center">tag3</th>
+                </tr>
+                <tr style="background-color: #f1f5f9; color: #334155;">
+                    <!-- tag1 Columns (14 fields) -->
+                    <th class="col-tag1 text-center">id</th>
+                    <th class="col-tag1">item</th>
+                    <th class="col-tag1 text-center">job</th>
+                    <th class="col-tag1">lot</th>
+                    <th class="col-tag1 text-right">qty1</th>
+                    <th class="col-tag1 text-right">qty2</th>
+                    <th class="col-tag1 text-center">print_date</th>
+                    <th class="col-tag1 text-center">ship_stat</th>
+                    <th class="col-tag1 text-center">active</th>
+                    <th class="col-tag1 text-center">uf_sts_job</th>
+                    <th class="col-tag1 text-center">sts_no</th>
+                    <th class="col-tag1 text-center">sts_no2</th>
+                    <th class="col-tag1 text-center">sts_no3</th>
+                    <th class="col-tag1">old_lot</th>
+
+                    <!-- tag2 Columns (14 fields) -->
+                    <th class="col-tag2 text-center">id</th>
+                    <th class="col-tag2">item</th>
+                    <th class="col-tag2 text-center">job</th>
+                    <th class="col-tag2">lot</th>
+                    <th class="col-tag2 text-right">qty1</th>
+                    <th class="col-tag2 text-right">qty2</th>
+                    <th class="col-tag2 text-center">print_date</th>
+                    <th class="col-tag2 text-center">ship_stat</th>
+                    <th class="col-tag2 text-center">active</th>
+                    <th class="col-tag2 text-center">uf_sts_job</th>
+                    <th class="col-tag2 text-center">sts_no</th>
+                    <th class="col-tag2 text-center">sts_no2</th>
+                    <th class="col-tag2 text-center">sts_no3</th>
+                    <th class="col-tag2">old_lot</th>
+
+                    <!-- tag3 Columns (14 fields) -->
+                    <th class="col-tag3 text-center">id</th>
+                    <th class="col-tag3">item</th>
+                    <th class="col-tag3 text-center">job</th>
+                    <th class="col-tag3">lot</th>
+                    <th class="col-tag3 text-right">qty1</th>
+                    <th class="col-tag3 text-right">qty2</th>
+                    <th class="col-tag3 text-center">print_date</th>
+                    <th class="col-tag3 text-center">ship_stat</th>
+                    <th class="col-tag3 text-center">active</th>
+                    <th class="col-tag3 text-center">uf_sts_job</th>
+                    <th class="col-tag3 text-center">sts_no</th>
+                    <th class="col-tag3 text-center">sts_no2</th>
+                    <th class="col-tag3 text-center">sts_no3</th>
+                    <th class="col-tag3">old_lot</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    var apiUrl = '././module/STS_Tag_Trace_Lot/data.php';
+
+    function searchTagTrace() {
+        var job = $('#txtJob').val().trim();
+        var item = $('#txtItem').val().trim();
+
+        if (!job && !item) {
+            alert('กรุณาระบุอย่างน้อย Job Order หรือ Item เพื่อค้นหาข้อมูล');
+            return;
+        }
+
+        $('#loadingSpinner').show();
+        $('#btnSearch').prop('disabled', true);
+
+        $.ajax({
+            type: 'POST',
+            url: apiUrl,
+            dataType: 'json',
+            data: {
+                load: 'SearchTagTraceLot',
+                job: job,
+                item: item
+            },
+            success: function (data) {
+                $('#loadingSpinner').hide();
+                $('#btnSearch').prop('disabled', false);
+
+                renderTable(data || []);
+            },
+            error: function (err) {
+                $('#loadingSpinner').hide();
+                $('#btnSearch').prop('disabled', false);
+                console.error("Error fetching tag trace lot:", err);
+                alert("เกิดข้อผิดพลาดในการดึงข้อมูล กรุณาลองใหม่อีกครั้ง");
+            }
+        });
+    }
+
+    function resetFilter() {
+        $('#txtJob').val('');
+        $('#txtItem').val('');
+        renderTable([]);
+    }
+
+    function renderTable(data) {
+        if ($.fn.DataTable.isDataTable('#tblTagTraceLot')) {
+            $('#tblTagTraceLot').DataTable().destroy();
+        }
+
+        var table = $('#tblTagTraceLot').DataTable({
+            data: data,
+            paging: true,
+            pageLength: 5000,
+            lengthMenu: [[5000, 10000, -1], [5000, 10000, "ทั้งหมด"]],
+            searching: true,
+            scrollY: "65vh",
+            scrollX: true,
+            scrollCollapse: true,
+            autoWidth: false,
+            destroy: true,
+            initComplete: function () {
+                var api = this.api();
+                api.columns.adjust();
+            },
+            drawCallback: function () {
+                var api = this.api();
+                setTimeout(function () {
+                    api.columns.adjust();
+                }, 50);
+            },
+            language: {
+                emptyTable: "ไม่พบข้อมูลแท็กตามเงื่อนไขที่ค้นหา",
+                info: "แสดง _START_ ถึง _END_ จากทั้งหมด _TOTAL_ รายการ",
+                infoEmpty: "แสดง 0 ถึง 0 จากทั้งหมด 0 รายการ",
+                lengthMenu: "แสดง _MENU_ รายการ",
+                search: "ค้นหาในผลลัพธ์:",
+                paginate: {
+                    first: "หน้าแรก",
+                    last: "หน้าสุดท้าย",
+                    next: "ถัดไป",
+                    previous: "ก่อนหน้า"
+                }
+            },
+            columns: [
+                // tag1 (14 fields)
+                { data: "tag1_id", width: "115px", className: "col-tag1 text-center font-bold" },
+                { data: "tag1_item", width: "250px", className: "col-tag1" },
+                { data: "tag1_job", width: "110px", className: "col-tag1 text-center" },
+                { data: "tag1_lot", width: "150px", className: "col-tag1 font-bold" },
+                {
+                    data: "tag1_qty1",
+                    width: "75px",
+                    className: "col-tag1 text-right",
+                    render: function (val) { return val != null ? Number(val).toLocaleString() : ""; }
+                },
+                {
+                    data: "tag1_qty2",
+                    width: "85px",
+                    className: "col-tag1 text-right",
+                    render: function (val) { return val != null ? Number(val).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : ""; }
+                },
+                { data: "tag1_print_date", width: "135px", className: "col-tag1 text-center" },
+                { data: "tag1_ship_stat", width: "80px", className: "col-tag1 text-center" },
+                { data: "tag1_active", width: "75px", className: "col-tag1 text-center" },
+                { data: "tag1_uf_sts_job", width: "100px", className: "col-tag1 text-center" },
+                { data: "tag1_sts_no", width: "85px", className: "col-tag1 text-center" },
+                { data: "tag1_sts_no2", width: "85px", className: "col-tag1 text-center" },
+                { data: "tag1_sts_no3", width: "85px", className: "col-tag1 text-center" },
+                { data: "tag1_old_lot", width: "150px", className: "col-tag1 font-bold text-primary" },
+
+                // tag2 (14 fields)
+                { data: "tag2_id", width: "115px", className: "col-tag2 text-center" },
+                { data: "tag2_item", width: "250px", className: "col-tag2" },
+                { data: "tag2_job", width: "110px", className: "col-tag2 text-center" },
+                { data: "tag2_lot", width: "150px", className: "col-tag2 font-bold" },
+                {
+                    data: "tag2_qty1",
+                    width: "75px",
+                    className: "col-tag2 text-right",
+                    render: function (val) { return val != null ? Number(val).toLocaleString() : ""; }
+                },
+                {
+                    data: "tag2_qty2",
+                    width: "85px",
+                    className: "col-tag2 text-right",
+                    render: function (val) { return val != null ? Number(val).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : ""; }
+                },
+                { data: "tag2_print_date", width: "135px", className: "col-tag2 text-center" },
+                { data: "tag2_ship_stat", width: "80px", className: "col-tag2 text-center" },
+                { data: "tag2_active", width: "75px", className: "col-tag2 text-center" },
+                { data: "tag2_uf_sts_job", width: "100px", className: "col-tag2 text-center" },
+                { data: "tag2_sts_no", width: "85px", className: "col-tag2 text-center" },
+                { data: "tag2_sts_no2", width: "85px", className: "col-tag2 text-center" },
+                { data: "tag2_sts_no3", width: "85px", className: "col-tag2 text-center" },
+                { data: "tag2_old_lot", width: "150px", className: "col-tag2 font-bold text-success" },
+
+                // tag3 (14 fields)
+                { data: "tag3_id", width: "115px", className: "col-tag3 text-center" },
+                { data: "tag3_item", width: "250px", className: "col-tag3" },
+                { data: "tag3_job", width: "110px", className: "col-tag3 text-center" },
+                { data: "tag3_lot", width: "150px", className: "col-tag3 font-bold" },
+                {
+                    data: "tag3_qty1",
+                    width: "75px",
+                    className: "col-tag3 text-right",
+                    render: function (val) { return val != null ? Number(val).toLocaleString() : ""; }
+                },
+                {
+                    data: "tag3_qty2",
+                    width: "85px",
+                    className: "col-tag3 text-right",
+                    render: function (val) { return val != null ? Number(val).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : ""; }
+                },
+                { data: "tag3_print_date", width: "135px", className: "col-tag3 text-center" },
+                { data: "tag3_ship_stat", width: "80px", className: "col-tag3 text-center" },
+                { data: "tag3_active", width: "75px", className: "col-tag3 text-center" },
+                { data: "tag3_uf_sts_job", width: "100px", className: "col-tag3 text-center" },
+                { data: "tag3_sts_no", width: "85px", className: "col-tag3 text-center" },
+                { data: "tag3_sts_no2", width: "85px", className: "col-tag3 text-center" },
+                { data: "tag3_sts_no3", width: "85px", className: "col-tag3 text-center" },
+                { data: "tag3_old_lot", width: "150px", className: "col-tag3 font-bold text-warning" }
+            ]
+        });
+
+        setTimeout(function () {
+            table.columns.adjust().draw(false);
+        }, 100);
+    }
+
+    $(document).ready(function () {
+        renderTable([]);
+        // Trigger default search if job has value
+        if ($('#txtJob').val()) {
+            searchTagTrace();
+        }
+
+        $(window).on('resize', function () {
+            if ($.fn.DataTable.isDataTable('#tblTagTraceLot')) {
+                $('#tblTagTraceLot').DataTable().columns.adjust();
+            }
+        });
+    });
+</script>
