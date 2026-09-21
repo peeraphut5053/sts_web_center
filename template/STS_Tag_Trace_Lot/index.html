@@ -44,6 +44,87 @@
         #tblTagTraceLot td {
             white-space: nowrap !important;
         }
+
+        .tag-trace-table-toolbar {
+            margin-top: 4px;
+            margin-bottom: 8px;
+            padding: 0 4px;
+        }
+
+        .flex-toolbar-left {
+            display: flex !important;
+            align-items: center !important;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .flex-toolbar-left .dt-buttons {
+            margin: 0 !important;
+            padding: 0 !important;
+            display: inline-flex !important;
+            gap: 5px;
+        }
+
+        .flex-toolbar-left .dataTables_length {
+            margin: 0 !important;
+            padding: 0 !important;
+            float: none !important;
+            display: inline-flex !important;
+            align-items: center !important;
+        }
+
+        .flex-toolbar-left .dataTables_length label {
+            margin: 0 !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            font-weight: normal !important;
+            font-size: 13px !important;
+            white-space: nowrap !important;
+            gap: 6px;
+        }
+
+        .flex-toolbar-left .dataTables_length select {
+            width: auto !important;
+            height: 32px !important;
+            padding: 2px 8px !important;
+            margin: 0 4px !important;
+            display: inline-block !important;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+            background-color: #fff;
+        }
+
+        .tag-trace-table-toolbar .dataTables_filter {
+            margin: 0 !important;
+            padding: 0 !important;
+            float: right !important;
+        }
+
+        .tag-trace-table-toolbar .dataTables_filter label {
+            margin: 0 !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            font-weight: normal !important;
+            font-size: 13px !important;
+            white-space: nowrap !important;
+            gap: 6px;
+        }
+
+        .tag-trace-table-toolbar .dataTables_filter input {
+            width: 220px !important;
+            height: 32px !important;
+            padding: 3px 8px !important;
+            margin-left: 6px !important;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+            background-color: #fff;
+            display: inline-block !important;
+        }
+
+        .tag-trace-table-footer {
+            margin-top: 8px;
+            padding: 0 4px;
+        }
     </style>
 </head>
 
@@ -212,6 +293,125 @@
             scrollCollapse: true,
             autoWidth: false,
             destroy: true,
+            dom:
+                "<'row tag-trace-table-toolbar'<'col-sm-6 col-xs-12 flex-toolbar-left'Bl><'col-sm-6 col-xs-12 text-right'f>>" +
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row tag-trace-table-footer'<'col-sm-5 text-left'i><'col-sm-7 text-right'p>>",
+            buttons: [
+                {
+                    extend: "print",
+                    text: "<i class='fa fa-print'></i>&nbsp;Print",
+                    title: "Tag Trace Lot",
+                },
+                {
+                    extend: "excel",
+                    text: "<i class='fa fa-file-excel-o'></i>&nbsp;Excel",
+                    title: null,
+                    filename: function () {
+                        var job = $('#txtJob').val().trim();
+                        var item = $('#txtItem').val().trim();
+                        var suffix = (job ? "_" + job : "") + (item ? "_" + item : "");
+                        var dateStr = (typeof moment !== 'undefined') ? moment().format("YYYYMMDD_HHmmss") : new Date().getTime();
+                        return "Tag_Trace_Lot" + suffix + "_" + dateStr;
+                    },
+                    exportOptions: {
+                        columns: ':visible'
+                    },
+                    customize: function (xlsx) {
+                        var sheet = xlsx.xl.worksheets['sheet1.xml'];
+
+                        function getColLetter(idx) {
+                            var letters = '';
+                            while (idx >= 0) {
+                                letters = String.fromCharCode((idx % 26) + 65) + letters;
+                                idx = Math.floor(idx / 26) - 1;
+                            }
+                            return letters;
+                        }
+
+                        // 1. Shift row index in all cells (e.g. A1 -> A2, AP1 -> AP2)
+                        $('row c', sheet).each(function () {
+                            var attr = $(this).attr('r');
+                            if (attr) {
+                                var col = attr.replace(/[0-9]/g, '');
+                                var row = parseInt(attr.replace(/[^0-9]/g, ''), 10);
+                                $(this).attr('r', col + (row + 1));
+                            }
+                        });
+
+                        // Shift row elements down by 1
+                        $('row', sheet).each(function () {
+                            var row = parseInt($(this).attr('r'), 10);
+                            $(this).attr('r', row + 1);
+                        });
+
+                        // 2. Build Row 1 for Tier 1 Header (Tag 1, Tag 2, Tag 3)
+                        var row1 = sheet.createElement('row');
+                        row1.setAttribute('r', '1');
+
+                        function createCell(col, row, text, style) {
+                            var c = sheet.createElement('c');
+                            c.setAttribute('r', col + row);
+                            c.setAttribute('s', style || '2');
+                            if (text) {
+                                c.setAttribute('t', 'inlineStr');
+                                var is = sheet.createElement('is');
+                                var t = sheet.createElement('t');
+                                t.appendChild(sheet.createTextNode(text));
+                                is.appendChild(t);
+                                c.appendChild(is);
+                            }
+                            return c;
+                        }
+
+                        // Tag 1 (Cols 0..13 -> A1..N1)
+                        row1.appendChild(createCell('A', '1', 'Tag 1', '2'));
+                        for (var i = 1; i < 14; i++) {
+                            row1.appendChild(createCell(getColLetter(i), '1', '', '2'));
+                        }
+
+                        // Tag 2 (Cols 14..27 -> O1..AB1)
+                        row1.appendChild(createCell('O', '1', 'Tag 2', '2'));
+                        for (var i = 15; i < 28; i++) {
+                            row1.appendChild(createCell(getColLetter(i), '1', '', '2'));
+                        }
+
+                        // Tag 3 (Cols 28..41 -> AC1..AP1)
+                        row1.appendChild(createCell('AC', '1', 'Tag 3', '2'));
+                        for (var i = 29; i < 42; i++) {
+                            row1.appendChild(createCell(getColLetter(i), '1', '', '2'));
+                        }
+
+                        var sheetData = sheet.getElementsByTagName('sheetData')[0];
+                        sheetData.insertBefore(row1, sheetData.firstChild);
+
+                        // 3. Add mergeCells for Tag 1 (A1:N1), Tag 2 (O1:AB1), Tag 3 (AC1:AP1)
+                        var mergeCells = sheet.getElementsByTagName('mergeCells')[0];
+                        if (!mergeCells) {
+                            mergeCells = sheet.createElement('mergeCells');
+                            var pageMargins = sheet.getElementsByTagName('pageMargins')[0];
+                            if (pageMargins) {
+                                pageMargins.parentNode.insertBefore(mergeCells, pageMargins);
+                            } else {
+                                var ws = sheet.getElementsByTagName('worksheet')[0] || sheet.documentElement;
+                                ws.appendChild(mergeCells);
+                            }
+                        }
+
+                        function addMerge(ref) {
+                            var m = sheet.createElement('mergeCell');
+                            m.setAttribute('ref', ref);
+                            mergeCells.appendChild(m);
+                        }
+
+                        addMerge('A1:N1');
+                        addMerge('O1:AB1');
+                        addMerge('AC1:AP1');
+
+                        mergeCells.setAttribute('count', mergeCells.getElementsByTagName('mergeCell').length);
+                    }
+                },
+            ],
             initComplete: function () {
                 var api = this.api();
                 api.columns.adjust();
