@@ -232,8 +232,10 @@
     </div>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
     var apiUrl = '././module/STS_Tag_Trace_Lot/data.php';
+    var currentTagTraceData = [];
 
     function searchTagTrace() {
         var job = $('#txtJob').val().trim();
@@ -260,7 +262,8 @@
                 $('#loadingSpinner').hide();
                 $('#btnSearch').prop('disabled', false);
 
-                renderTable(data || []);
+                currentTagTraceData = data || [];
+                renderTable(currentTagTraceData);
             },
             error: function (err) {
                 $('#loadingSpinner').hide();
@@ -274,7 +277,120 @@
     function resetFilter() {
         $('#txtJob').val('');
         $('#txtItem').val('');
+        currentTagTraceData = [];
         renderTable([]);
+    }
+
+    function parseNum(val) {
+        if (val === null || val === undefined || val === '') return '';
+        var n = Number(val);
+        return isNaN(n) ? val : n;
+    }
+
+    function exportTagTraceExcel() {
+        if (typeof XLSX === 'undefined') {
+            alert('กำลังโหลดไลบรารี Excel กรุณารอสักครู่แล้วลองกดใหม่อีกครั้ง');
+            return;
+        }
+
+        var table = ($.fn.DataTable.isDataTable('#tblTagTraceLot')) ? $('#tblTagTraceLot').DataTable() : null;
+        var rowsData = (table) ? table.rows({ search: 'applied' }).data() : currentTagTraceData;
+
+        if (!rowsData || rowsData.length === 0) {
+            alert('ไม่พบข้อมูลที่จะส่งออก Excel');
+            return;
+        }
+
+        var $btn = $('.buttons-excel');
+        var oldHtml = $btn.html();
+        $btn.prop('disabled', true).html("<i class='fa fa-spinner fa-spin'></i> กำลังส่งออก...");
+
+        setTimeout(function () {
+            try {
+                // Tier 1 Header
+                var headerRow1 = [
+                    "Tag 1", "", "", "", "", "", "", "", "", "", "", "", "", "",
+                    "Tag 2", "", "", "", "", "", "", "", "", "", "", "", "", "",
+                    "Tag 3", "", "", "", "", "", "", "", "", "", "", "", "", ""
+                ];
+
+                // Tier 2 Header (14 fields each)
+                var headerRow2 = [
+                    // Tag 1
+                    "id", "item", "job", "lot", "qty1", "qty2", "print_date", "ship_stat", "active", "uf_sts_job", "sts_no", "sts_no2", "sts_no3", "old_lot",
+                    // Tag 2
+                    "id", "item", "job", "lot", "qty1", "qty2", "print_date", "ship_stat", "active", "uf_sts_job", "sts_no", "sts_no2", "sts_no3", "old_lot",
+                    // Tag 3
+                    "id", "item", "job", "lot", "qty1", "qty2", "print_date", "ship_stat", "active", "uf_sts_job", "sts_no", "sts_no2", "sts_no3", "old_lot"
+                ];
+
+                var aoa = [headerRow1, headerRow2];
+
+                for (var i = 0; i < rowsData.length; i++) {
+                    var r = rowsData[i];
+                    aoa.push([
+                        // Tag 1
+                        r.tag1_id || "", r.tag1_item || "", r.tag1_job || "", r.tag1_lot || "",
+                        parseNum(r.tag1_qty1), parseNum(r.tag1_qty2),
+                        r.tag1_print_date || "", r.tag1_ship_stat || "", r.tag1_active || "",
+                        r.tag1_uf_sts_job || "", r.tag1_sts_no || "", r.tag1_sts_no2 || "",
+                        r.tag1_sts_no3 || "", r.tag1_old_lot || "",
+
+                        // Tag 2
+                        r.tag2_id || "", r.tag2_item || "", r.tag2_job || "", r.tag2_lot || "",
+                        parseNum(r.tag2_qty1), parseNum(r.tag2_qty2),
+                        r.tag2_print_date || "", r.tag2_ship_stat || "", r.tag2_active || "",
+                        r.tag2_uf_sts_job || "", r.tag2_sts_no || "", r.tag2_sts_no2 || "",
+                        r.tag2_sts_no3 || "", r.tag2_old_lot || "",
+
+                        // Tag 3
+                        r.tag3_id || "", r.tag3_item || "", r.tag3_job || "", r.tag3_lot || "",
+                        parseNum(r.tag3_qty1), parseNum(r.tag3_qty2),
+                        r.tag3_print_date || "", r.tag3_ship_stat || "", r.tag3_active || "",
+                        r.tag3_uf_sts_job || "", r.tag3_sts_no || "", r.tag3_sts_no2 || "",
+                        r.tag3_sts_no3 || "", r.tag3_old_lot || ""
+                    ]);
+                }
+
+                var ws = XLSX.utils.aoa_to_sheet(aoa);
+
+                // 2-tier merged cells: Tag 1 (A1:N1), Tag 2 (O1:AB1), Tag 3 (AC1:AP1)
+                ws['!merges'] = [
+                    { s: { r: 0, c: 0 }, e: { r: 0, c: 13 } },  // A1:N1
+                    { s: { r: 0, c: 14 }, e: { r: 0, c: 27 } }, // O1:AB1
+                    { s: { r: 0, c: 28 }, e: { r: 0, c: 41 } }  // AC1:AP1
+                ];
+
+                // Set column widths
+                ws['!cols'] = [
+                    // Tag 1
+                    { wch: 15 }, { wch: 28 }, { wch: 14 }, { wch: 18 }, { wch: 10 }, { wch: 10 },
+                    { wch: 20 }, { wch: 10 }, { wch: 10 }, { wch: 12 }, { wch: 12 }, { wch: 12 }, { wch: 12 }, { wch: 18 },
+                    // Tag 2
+                    { wch: 15 }, { wch: 28 }, { wch: 14 }, { wch: 18 }, { wch: 10 }, { wch: 10 },
+                    { wch: 20 }, { wch: 10 }, { wch: 10 }, { wch: 12 }, { wch: 12 }, { wch: 12 }, { wch: 12 }, { wch: 18 },
+                    // Tag 3
+                    { wch: 15 }, { wch: 28 }, { wch: 14 }, { wch: 18 }, { wch: 10 }, { wch: 10 },
+                    { wch: 20 }, { wch: 10 }, { wch: 10 }, { wch: 12 }, { wch: 12 }, { wch: 12 }, { wch: 12 }, { wch: 18 }
+                ];
+
+                var wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, "Tag_Trace_Lot");
+
+                var job = $('#txtJob').val().trim();
+                var item = $('#txtItem').val().trim();
+                var suffix = (job ? "_" + job : "") + (item ? "_" + item : "");
+                var dateStr = (typeof moment !== 'undefined') ? moment().format("YYYYMMDD_HHmmss") : new Date().getTime();
+                var filename = "Tag_Trace_Lot" + suffix + "_" + dateStr + ".xlsx";
+
+                XLSX.writeFile(wb, filename);
+            } catch (err) {
+                console.error("Export Excel error:", err);
+                alert("เกิดข้อผิดพลาดในการส่งออก Excel: " + err.message);
+            } finally {
+                $btn.prop('disabled', false).html(oldHtml);
+            }
+        }, 30);
     }
 
     function renderTable(data) {
@@ -304,111 +420,10 @@
                     title: "Tag Trace Lot",
                 },
                 {
-                    extend: "excel",
                     text: "<i class='fa fa-file-excel-o'></i>&nbsp;Excel",
-                    title: null,
-                    filename: function () {
-                        var job = $('#txtJob').val().trim();
-                        var item = $('#txtItem').val().trim();
-                        var suffix = (job ? "_" + job : "") + (item ? "_" + item : "");
-                        var dateStr = (typeof moment !== 'undefined') ? moment().format("YYYYMMDD_HHmmss") : new Date().getTime();
-                        return "Tag_Trace_Lot" + suffix + "_" + dateStr;
-                    },
-                    exportOptions: {
-                        columns: ':visible'
-                    },
-                    customize: function (xlsx) {
-                        var sheet = xlsx.xl.worksheets['sheet1.xml'];
-
-                        function getColLetter(idx) {
-                            var letters = '';
-                            while (idx >= 0) {
-                                letters = String.fromCharCode((idx % 26) + 65) + letters;
-                                idx = Math.floor(idx / 26) - 1;
-                            }
-                            return letters;
-                        }
-
-                        // 1. Shift row index in all cells (e.g. A1 -> A2, AP1 -> AP2)
-                        $('row c', sheet).each(function () {
-                            var attr = $(this).attr('r');
-                            if (attr) {
-                                var col = attr.replace(/[0-9]/g, '');
-                                var row = parseInt(attr.replace(/[^0-9]/g, ''), 10);
-                                $(this).attr('r', col + (row + 1));
-                            }
-                        });
-
-                        // Shift row elements down by 1
-                        $('row', sheet).each(function () {
-                            var row = parseInt($(this).attr('r'), 10);
-                            $(this).attr('r', row + 1);
-                        });
-
-                        // 2. Build Row 1 for Tier 1 Header (Tag 1, Tag 2, Tag 3)
-                        var row1 = sheet.createElement('row');
-                        row1.setAttribute('r', '1');
-
-                        function createCell(col, row, text, style) {
-                            var c = sheet.createElement('c');
-                            c.setAttribute('r', col + row);
-                            c.setAttribute('s', style || '2');
-                            if (text) {
-                                c.setAttribute('t', 'inlineStr');
-                                var is = sheet.createElement('is');
-                                var t = sheet.createElement('t');
-                                t.appendChild(sheet.createTextNode(text));
-                                is.appendChild(t);
-                                c.appendChild(is);
-                            }
-                            return c;
-                        }
-
-                        // Tag 1 (Cols 0..13 -> A1..N1)
-                        row1.appendChild(createCell('A', '1', 'Tag 1', '2'));
-                        for (var i = 1; i < 14; i++) {
-                            row1.appendChild(createCell(getColLetter(i), '1', '', '2'));
-                        }
-
-                        // Tag 2 (Cols 14..27 -> O1..AB1)
-                        row1.appendChild(createCell('O', '1', 'Tag 2', '2'));
-                        for (var i = 15; i < 28; i++) {
-                            row1.appendChild(createCell(getColLetter(i), '1', '', '2'));
-                        }
-
-                        // Tag 3 (Cols 28..41 -> AC1..AP1)
-                        row1.appendChild(createCell('AC', '1', 'Tag 3', '2'));
-                        for (var i = 29; i < 42; i++) {
-                            row1.appendChild(createCell(getColLetter(i), '1', '', '2'));
-                        }
-
-                        var sheetData = sheet.getElementsByTagName('sheetData')[0];
-                        sheetData.insertBefore(row1, sheetData.firstChild);
-
-                        // 3. Add mergeCells for Tag 1 (A1:N1), Tag 2 (O1:AB1), Tag 3 (AC1:AP1)
-                        var mergeCells = sheet.getElementsByTagName('mergeCells')[0];
-                        if (!mergeCells) {
-                            mergeCells = sheet.createElement('mergeCells');
-                            var pageMargins = sheet.getElementsByTagName('pageMargins')[0];
-                            if (pageMargins) {
-                                pageMargins.parentNode.insertBefore(mergeCells, pageMargins);
-                            } else {
-                                var ws = sheet.getElementsByTagName('worksheet')[0] || sheet.documentElement;
-                                ws.appendChild(mergeCells);
-                            }
-                        }
-
-                        function addMerge(ref) {
-                            var m = sheet.createElement('mergeCell');
-                            m.setAttribute('ref', ref);
-                            mergeCells.appendChild(m);
-                        }
-
-                        addMerge('A1:N1');
-                        addMerge('O1:AB1');
-                        addMerge('AC1:AP1');
-
-                        mergeCells.setAttribute('count', mergeCells.getElementsByTagName('mergeCell').length);
+                    className: "btn btn-success buttons-excel",
+                    action: function (e, dt, node, config) {
+                        exportTagTraceExcel();
                     }
                 },
             ],
