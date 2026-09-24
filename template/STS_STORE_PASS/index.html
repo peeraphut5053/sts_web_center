@@ -13,12 +13,14 @@
     border: 0 !important;
     background: transparent !important;
     box-shadow: none !important;
-    margin: 0;
+    margin: 0 !important;
     padding: 0 !important;
     color: #1f2937;
-    font-size: 24px;
+    font-size: 21px !important;
     font-weight: 700;
-    line-height: 1.3;
+    line-height: 32px !important;
+    display: inline-block;
+    vertical-align: middle;
   }
 
   .store-pass-toolbar .my-header:after {
@@ -29,9 +31,9 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    margin: 0 -22px 22px;
-    padding: 18px 24px;
-    border-left: 5px solid #3c8dbc;
+    margin: 0 -22px 14px;
+    padding: 8px 24px;
+    border-left: 4px solid #3c8dbc;
     border-bottom: 1px solid #dbe3ea;
     background-color: #f7fbfe;
   }
@@ -39,14 +41,54 @@
   .store-pass-title:before {
     content: "\f15c";
     display: inline-block;
-    width: 38px;
-    height: 38px;
+    width: 32px;
+    height: 32px;
+    margin-left: 4px;
     border: 1px solid #cfe4f3;
     border-radius: 4px;
     background-color: #ffffff;
     color: #3c8dbc;
-    font: normal normal normal 17px/38px FontAwesome;
+    font: normal normal normal 16px/32px FontAwesome;
     text-align: center;
+    flex-shrink: 0;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  }
+
+  .store-pass-toolbar .btn.btn-manual-guide,
+  .btn-manual-guide {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    height: 28px !important;
+    min-height: 28px !important;
+    padding: 0 14px !important;
+    border-radius: 14px !important;
+    font-weight: 600 !important;
+    font-size: 16px !important;
+    line-height: 26px !important;
+    border: 1px solid #3c8dbc !important;
+    color: #3c8dbc !important;
+    background: #ffffff !important;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04) !important;
+    transition: all 0.2s ease-in-out !important;
+    cursor: pointer !important;
+    vertical-align: middle !important;
+    margin: 0 0 0 10px !important;
+  }
+
+  .btn-manual-guide:hover {
+    background: #3c8dbc !important;
+    color: #ffffff !important;
+    box-shadow: 0 2px 4px rgba(60, 141, 188, 0.25) !important;
+  }
+
+  .btn-manual-guide:hover i {
+    color: #ffffff !important;
+  }
+
+  .btn-manual-guide i {
+    color: #3c8dbc;
+    font-size: 13px;
   }
 
   .store-pass-toolbar .input-group,
@@ -307,9 +349,12 @@
 
 <div class="row store-pass-toolbar">
 
-    <div class="store-pass-title">
-     <h1 class="my-header">รายงานใบผ่าน</h1>
-    </div>
+  <div class="store-pass-title">
+    <h1 class="my-header">รายงานใบผ่าน</h1>
+    <a href="./template/STS_STORE_PASS/manual.html" target="_blank" class="btn btn-default btn-manual-guide">
+      <i class="fa fa-book"></i> คู่มือการใช้งาน
+    </a>
+  </div>
   <!--    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4 " >
             <div class="input-group">
                 <div class="input-group-addon">Year</div>
@@ -475,8 +520,8 @@
   </div>
 </div>
 <!-- Modal -->
-<div class="modal fade bd-example-modal-lg store-pass-modal" id="exampleModal2" role="dialog" aria-labelledby="myLargeModalLabel"
-  aria-hidden="true">
+<div class="modal fade bd-example-modal-lg store-pass-modal" id="exampleModal2" role="dialog"
+  aria-labelledby="myLargeModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
@@ -623,6 +668,7 @@
   </div>
 </div>
 
+
 <script type="text/javascript">
 
   var myData = [];
@@ -648,7 +694,7 @@
           return item !== "";
         }).slice(0, MAX_ITEM_LIST);
       }
-    } catch (e) {}
+    } catch (e) { }
 
     return String(value).split(",").map(function (item) {
       return item.trim();
@@ -1066,7 +1112,7 @@
                 }
 
                 var item_in = row.item_in == null ? true : false;
-        
+
                 // วิธีที่ 1: ใช้เงื่อนไขในการเพิ่ม/ไม่เพิ่ม checked attribute
                 let ret = `<span class=${valdata ? 'text-green-500' : 'text-red-500'}>${valdata ? "ตรวจสอบแล้ว" : "รอตรวจสอบ"}</span><button class='btn btn-primary' size='60' id='${row.approve}' onclick="SaveApprove('${row.doc_no}','${row.approve}','approve','${item_in}');">เปลี่ยน</button>`;
 
@@ -1357,7 +1403,7 @@
 
               }
             },
-            
+
           ],
           columnDefs: [
             {
@@ -1691,7 +1737,7 @@
 
   function SaveDetailOut(doc_no, value, type, callback) {
     console.log(value);
-    
+
     $.ajax({
       type: "POST",
       url: "././module/STS_STORE_PASS/data.php",

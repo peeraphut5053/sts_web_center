@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>คู่มือการใช้งาน: ระบบรายงานใบผ่าน</title>
+
+  <!-- Bootstrap 3.3.7 -->
+  <link rel="stylesheet" href="../../bower_components/bootstrap/dist/css/bootstrap.min.css">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="../../bower_components/font-awesome/css/font-awesome.min.css">
+
+  <style>
+    /* Global & Typography */
+    body {
+      background-color: #f8fafc;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      color: #1e293b;
+      margin: 0;
+      padding: 0;
+      line-height: 1.6;
+    }
+
+    /* Sticky Top Navigation Bar */
+    .top-action-bar {
+      background: #ffffff;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 12px 24px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 1px 4px rgba(15, 23, 42, 0.06);
+    }
+
+    .top-action-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .btn-top {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: 6px;
+      border: 1px solid #cbd5e1;
+      background: #ffffff;
+      color: #334155;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .btn-top:hover {
+      background: #f1f5f9;
+      color: #0f172a;
+    }
+
+    .btn-top-primary {
+      background: #0284c7;
+      border-color: #0284c7;
+      color: #ffffff;
+    }
+
+    .btn-top-primary:hover {
+      background: #0369a1;
+      border-color: #0369a1;
+      color: #ffffff;
+    }
+
+    /* Container */
+    .manual-doc-container {
+      max-width: 1100px;
+      margin: 24px auto 60px;
+      padding: 0 20px;
+    }
+
+    /* Document Title Banner */
+    .doc-banner {
+      background: linear-gradient(135deg, #1e3a8a 0%, #0369a1 100%);
+      color: #ffffff;
+      padding: 28px 32px;
+      border-radius: 10px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 14px rgba(3, 105, 161, 0.15);
+    }
+
+    .doc-banner h1 {
+      margin: 0 0 10px;
+      font-size: 24px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .doc-banner p {
+      margin: 0;
+      font-size: 14px;
+      color: #e0f2fe;
+      line-height: 1.6;
+    }
+
+    /* Quick Jump Table of Contents (TOC) */
+    .toc-box {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin-bottom: 28px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    }
+
+    .toc-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .toc-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .toc-list a {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 20px;
+      color: #334155;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .toc-list a:hover {
+      background: #0284c7;
+      border-color: #0284c7;
+      color: #ffffff;
+      text-decoration: none;
+    }
+
+    /* Continuous Section Card */
+    .doc-section {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 26px 30px;
+      margin-bottom: 24px;
+      box-shadow: 0 1px 4px rgba(15, 23, 42, 0.04);
+      page-break-inside: avoid;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-bottom: 14px;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #f1f5f9;
+    }
+
+    .section-badge-num {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      background: #0284c7;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .section-title {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .section-subtitle {
+      font-size: 13px;
+      color: #64748b;
+      margin-top: 2px;
+    }
+
+    /* Flow Stepper Bar */
+    .stepper-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin: 16px 0 20px;
+    }
+
+    .stepper-card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .stepper-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #0284c7;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .stepper-info h5 {
+      margin: 0 0 2px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .stepper-info p {
+      margin: 0;
+      font-size: 12px;
+      color: #64748b;
+    }
+
+    /* Comparison Box */
+    .compare-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 14px;
+    }
+
+    @media (max-width: 768px) {
+      .compare-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .compare-card {
+      padding: 16px 18px;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+      background: #f8fafc;
+    }
+
+    .compare-card-blue {
+      border-top: 4px solid #0284c7;
+    }
+
+    .compare-card-amber {
+      border-top: 4px solid #f59e0b;
+    }
+
+    .compare-card h4 {
+      margin: 0 0 10px;
+      font-size: 15px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .compare-card ol {
+      margin: 0;
+      padding-left: 18px;
+      font-size: 13px;
+      color: #334155;
+      line-height: 1.7;
+    }
+
+    /* Step Details & Tables */
+    .step-list {
+      margin: 0;
+      padding-left: 20px;
+      line-height: 1.8;
+      font-size: 14px;
+      color: #334155;
+    }
+
+    .step-list li {
+      margin-bottom: 12px;
+    }
+
+    .data-table-guide {
+      width: 100%;
+      margin: 12px 0;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      overflow: hidden;
+      font-size: 13px;
+    }
+
+    .data-table-guide th {
+      background: #e2e8f0;
+      padding: 8px 12px;
+      color: #1e293b;
+      font-weight: 700;
+      border-bottom: 1px solid #cbd5e1;
+    }
+
+    .data-table-guide td {
+      padding: 8px 12px;
+      border-bottom: 1px solid #e2e8f0;
+      background: #ffffff;
+      color: #334155;
+    }
+
+    .data-table-guide tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* Badges & Callouts */
+    .tag-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      font-size: 12px;
+      font-weight: 600;
+      border-radius: 4px;
+      vertical-align: middle;
+    }
+
+    .tag-badge-green {
+      background: #dcfce7;
+      color: #15803d;
+    }
+
+    .tag-badge-blue {
+      background: #e0f2fe;
+      color: #0369a1;
+    }
+
+    .tag-badge-orange {
+      background: #ffedd5;
+      color: #c2410c;
+    }
+
+    .info-callout {
+      padding: 14px 18px;
+      border-radius: 6px;
+      margin: 16px 0;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .info-callout-blue {
+      background: #f0f9ff;
+      border-left: 4px solid #0284c7;
+      color: #0369a1;
+    }
+
+    .info-callout-amber {
+      background: #fffbeb;
+      border-left: 4px solid #f59e0b;
+      color: #92400e;
+    }
+
+    /* Q&A Cards */
+    .faq-item {
+      padding: 14px 16px;
+      background: #f8fafc;
+      border-radius: 6px;
+      border: 1px solid #e2e8f0;
+      margin-bottom: 12px;
+    }
+
+    .faq-q {
+      font-weight: 700;
+      color: #1e3a8a;
+      font-size: 14px;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .faq-a {
+      font-size: 13px;
+      color: #475569;
+      line-height: 1.6;
+      padding-left: 24px;
+    }
+
+    /* Footer */
+    .doc-footer {
+      text-align: center;
+      padding: 24px 0 40px;
+      color: #94a3b8;
+      font-size: 12px;
+      border-top: 1px solid #e2e8f0;
+    }
+
+    /* Image Preview Container & Zoom Hover Effect */
+    .img-preview-box {
+      margin: 14px 0 18px;
+      max-width: 920px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+      background: #ffffff;
+      position: relative;
+      transition: all 0.2s ease;
+    }
+
+    .img-preview-box:hover {
+      box-shadow: 0 4px 14px rgba(2, 132, 199, 0.18);
+      border-color: #38bdf8;
+    }
+
+    .img-preview-box img {
+      width: 100%;
+      height: auto;
+      display: block;
+      cursor: zoom-in;
+      transition: opacity 0.2s ease;
+    }
+
+    .img-preview-box:hover img {
+      opacity: 0.94;
+    }
+
+    .img-preview-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(15, 23, 42, 0.75);
+      color: #ffffff;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      backdrop-filter: blur(4px);
+      pointer-events: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      opacity: 0.85;
+      transition: all 0.2s ease;
+    }
+
+    .img-preview-box:hover .img-preview-badge {
+      opacity: 1;
+      background: #0284c7;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    .img-caption-bar {
+      background: #f8fafc;
+      padding: 9px 14px;
+      font-size: 12.5px;
+      color: #475569;
+      border-top: 1px solid #e2e8f0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .img-caption-bar:hover {
+      background: #f1f5f9;
+      color: #0284c7;
+    }
+
+    /* Fullscreen Lightbox Modal */
+    .image-lightbox-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(15, 23, 42, 0.92);
+      backdrop-filter: blur(6px);
+      z-index: 99999;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      padding: 24px;
+      box-sizing: border-box;
+      cursor: zoom-out;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+
+    .image-lightbox-overlay.active {
+      display: flex;
+      opacity: 1;
+    }
+
+    .image-lightbox-content {
+      position: relative;
+      max-width: 95vw;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: default;
+    }
+
+    .image-lightbox-content img {
+      max-width: 100%;
+      max-height: 82vh;
+      object-fit: contain;
+      border-radius: 8px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: #ffffff;
+    }
+
+    .image-lightbox-caption {
+      margin-top: 12px;
+      color: #f8fafc;
+      font-size: 14px;
+      font-weight: 500;
+      text-align: center;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 8px 20px;
+      border-radius: 20px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .image-lightbox-close {
+      position: absolute;
+      top: -42px;
+      right: 0;
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: #ffffff;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .image-lightbox-close:hover {
+      background: #ef4444;
+      border-color: #ef4444;
+    }
+
+    /* Print Optimization Rules (No cutoffs, all visible) */
+    @media print {
+      body {
+        background: #ffffff !important;
+        color: #000000 !important;
+        font-size: 12pt;
+      }
+
+      .no-print,
+      .top-action-bar,
+      .toc-box,
+      .image-lightbox-overlay,
+      .img-preview-badge {
+        display: none !important;
+      }
+
+      .manual-doc-container {
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+
+      .doc-banner {
+        background: #f8fafc !important;
+        color: #000000 !important;
+        border: 1px solid #cbd5e1 !important;
+        padding: 16px !important;
+        margin-bottom: 16px !important;
+      }
+
+      .doc-banner h1,
+      .doc-banner p {
+        color: #000000 !important;
+      }
+
+      .doc-section {
+        border: 1px solid #cbd5e1 !important;
+        box-shadow: none !important;
+        padding: 16px 20px !important;
+        margin-bottom: 16px !important;
+        page-break-inside: avoid !important;
+      }
+
+      .section-badge-num {
+        background: #334155 !important;
+        color: #ffffff !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      .stepper-card,
+      .compare-card,
+      .faq-item {
+        background: #ffffff !important;
+        border: 1px solid #cbd5e1 !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Sticky Top Action Bar (Hidden on Print) -->
+  <div class="top-action-bar no-print">
+    <div class="top-action-inner">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <span
+          style="display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; background: #e0f2fe; color: #0284c7; border-radius: 6px; font-size: 15px;">
+          <i class="fa fa-book"></i>
+        </span>
+        <div>
+          <strong style="color: #0f172a; font-size: 14px;">คู่มือการใช้งาน: ระบบรายงานใบผ่าน</strong>
+          <span style="color: #64748b; font-size: 12px; margin-left: 6px;"></span>
+        </div>
+      </div>
+      <div style="display: flex; gap: 8px;">
+        <button type="button" class="btn-top btn-top-primary" onclick="window.print();">
+          <i class="fa fa-print"></i> พิมพ์คู่มือ (Print A4)
+        </button>
+        <button type="button" class="btn-top" onclick="window.close(); history.back();">
+          <i class="fa fa-arrow-left"></i> กลับไปหน้ารายงาน
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="manual-doc-container">
+
+    <!-- Document Title Banner -->
+    <div class="doc-banner">
+      <h1>
+        <i class="fa fa-book"
+          style="background: rgba(255,255,255,0.2); padding: 8px 12px; border-radius: 8px; font-size: 20px;"></i>
+        คู่มือการใช้งาน: ระบบรายงานใบผ่าน
+      </h1>
+      <p>
+        คู่มือขั้นตอนการขออนุญาตนำสิ่งของ ออก-เข้า นอกบริเวณโรงงาน, การบันทึกข้อมูล, การอนุมัติ และการพิมพ์ใบผ่าน
+        บ.สหไทยสตีลไพพ์ จำกัด (มหาชน)
+      </p>
+    </div>
+
+    <!-- Quick Jump Table of Contents (TOC) -->
+    <div class="toc-box no-print">
+      <div class="toc-title"><i class="fa fa-list"></i> สารบัญหัวข้อด่วน (คลิกเพื่อกระโดดไปยังหัวข้อ):</div>
+      <ul class="toc-list">
+        <li><a href="#sec-flow"><i class="fa fa-sitemap text-primary"></i> 1. ภาพรวม Flow & วัตถุประสงค์</a></li>
+        <li><a href="#sec-out"><i class="fa fa-arrow-circle-up text-success"></i> 2. บันทึกรายการนำออก</a></li>
+        <li><a href="#sec-print"><i class="fa fa-print text-primary"></i> 3. วิธีพิมพ์ใบผ่าน</a></li>
+        <li><a href="#sec-in"><i class="fa fa-arrow-circle-down text-info"></i> 4. บันทึกรายการนำเข้า
+            (และกรณีไม่มีของกลับ)</a></li>
+        <li><a href="#sec-edit"><i class="fa fa-pencil text-warning"></i> 5. การแก้ไขข้อมูลในตาราง</a></li>
+        <li><a href="#sec-approve"><i class="fa fa-check-circle text-primary"></i> 6. การตรวจสอบและอนุมัติ</a></li>
+        <li><a href="#sec-faq"><i class="fa fa-question-circle text-primary"></i> 7. คำถามที่พบบ่อย (FAQ)</a></li>
+      </ul>
+    </div>
+
+    <!-- SECTION 1: ภาพรวม Flow & วัตถุประสงค์ -->
+    <div class="doc-section" id="sec-flow">
+      <div class="section-header">
+        <span class="section-badge-num">1</span>
+        <div>
+          <h2 class="section-title">วัตถุประสงค์ของระบบ & ภาพรวม Flow การทำงาน</h2>
+          <div class="section-subtitle">ทำความเข้าใจขั้นตอนการดำเนินงานตั้งแต่เปิดใบผ่านจนถึงปิดงาน</div>
+        </div>
+      </div>
+
+      <p style="color: #334155; font-size: 14px; margin-bottom: 14px;">
+        ระบบรายงานใบผ่าน ใช้สำหรับบันทึกและควบคุมการนำทรัพย์สิน วัสดุ อุปกรณ์ ชิ้นงาน หรือเศษเหล็ก
+        ออกนอกบริเวณโรงงาน บ.สหไทยสตีลไพพ์ จำกัด (มหาชน) เพื่อให้สามารถติดตามสถานะการนำของกลับเข้าโรงงาน
+        และมีหลักฐานการตรวจสอบและอนุมัติอย่างถูกต้องตามมาตรฐานความปลอดภัย
+      </p>
+
+      <!-- 4 Stepper Summary -->
+      <div class="stepper-grid">
+        <div class="stepper-card">
+          <span class="stepper-num">1</span>
+          <div class="stepper-info">
+            <h5>1. บันทึกนำออก</h5>
+            <p>สร้างเอกสาร + ใส่รายการออก (1-6)</p>
+          </div>
+        </div>
+        <div class="stepper-card">
+          <span class="stepper-num" style="background: #0284c7;">2</span>
+          <div class="stepper-info">
+            <h5>2. พิมพ์ใบผ่าน</h5>
+            <p>ผจก. เซ็น & รปภ./สโตร์ ตรวจ</p>
+          </div>
+        </div>
+        <div class="stepper-card">
+          <span class="stepper-num" style="background: #10b981;">3</span>
+          <div class="stepper-info">
+            <h5>3. บันทึกนำเข้า</h5>
+            <p>ของกลับเข้า / ระบุ "ไม่มี"</p>
+          </div>
+        </div>
+        <div class="stepper-card">
+          <span class="stepper-num" style="background: #8b5cf6;">4</span>
+          <div class="stepper-info">
+            <h5>4. ตรวจสอบ/อนุมัติ</h5>
+            <p>ยืนยันรหัสผ่านเพื่อล็อคเอกสาร</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Compare 2 cases -->
+      <div class="compare-grid">
+        <div class="compare-card compare-card-blue">
+          <h4 style="color: #0369a1;"><i class="fa fa-exchange"></i> กรณีที่ 1: สิ่งของมีกำหนดส่งกลับโรงงาน</h4>
+          <p style="font-size: 13px; color: #64748b; margin-bottom: 8px;"><strong>ตัวอย่าง:</strong> นำไปซ่อม,
+            นำเหล็กออกแปรรูป, นำสินค้าไปเปลี่ยน, ส่งงานตัวอย่าง</p>
+          <ol>
+            <li>เปิดใบผ่านออก โดยกดปุ่ม <code>+ เพิ่มข้อมูลรายการออก</code></li>
+            <li>พิมพ์ใบผ่าน ให้ผู้จัดการฝ่ายเซ็นอนุมัติ และ รปภ. ตรวจสอบตอนนำออก</li>
+            <li>เมื่อผู้รับเหมาหรือร้านค้าส่งของกลับมา ให้เลือกเอกสารแล้วกดปุ่ม <code>+ เพิ่มข้อมูลรายการเข้า</code>
+              ระบุวันที่และรายการที่ได้รับคืน</li>
+            <li>ผู้มีอำนาจตรวจสอบกดปุ่ม <code>เปลี่ยน</code> เพื่อใส่รหัสผ่านอนุมัติปิดเอกสาร</li>
+          </ol>
+        </div>
+
+        <div class="compare-card compare-card-amber">
+          <h4 style="color: #b45309;"><i class="fa fa-truck"></i> กรณีที่ 2: สิ่งของไม่มีการส่งกลับโรงงาน</h4>
+          <p style="font-size: 13px; color: #64748b; margin-bottom: 8px;"><strong>ตัวอย่าง:</strong> ขายของเก่า
+            (เศษเหล็ก), กำจัดทิ้ง, นำออกวัสดุสิ้นเปลือง, ท่อตัวอย่าง</p>
+          <ol>
+            <li>เปิดใบผ่านออกตามปกติ โดยเลือกวัตถุประสงค์ เช่น <code>ขายของเก่า</code> หรือ <code>กำจัดทิ้ง</code></li>
+            <li>พิมพ์ใบผ่านและนำสิ่งของออกนอกโรงงาน</li>
+            <li><strong>ขั้นตอนสำคัญ:</strong> ให้เลือกเอกสารแล้วกดปุ่ม <code>+ เพิ่มข้อมูลรายการเข้า</code>
+              โดยในช่องรายการที่ 1 ให้ระบุว่า <code>"ไม่มี"</code></li>
+            <li>กดปุ่ม <code>เปลี่ยน</code> เพื่ออนุมัติเอกสารเป็นสถานะ "ตรวจสอบแล้ว"</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 2: บันทึกรายการนำออก -->
+    <div class="doc-section" id="sec-out">
+      <div class="section-header">
+        <span class="section-badge-num" style="background: #16a34a;">2</span>
+        <div>
+          <h2 class="section-title">ขั้นตอนที่ 1: การสร้างเอกสารนำออก (ใบผ่านใหม่)</h2>
+          <div class="section-subtitle">การเปิดเอกสารขออนุญาตนำสิ่งของออกนอกโรงงาน</div>
+        </div>
+      </div>
+
+      <ol class="step-list">
+        <li>
+          กดปุ่ม <strong><span class="tag-badge tag-badge-green"><i class="fa fa-plus"></i>
+              เพิ่มข้อมูลรายการออก</span></strong> ในแถบเครื่องมือด้านบนของหน้ารายงาน
+          <div class="img-preview-box">
+            <span class="img-preview-badge"><i class="fa fa-search-plus"></i> คลิกเพื่อดูภาพขนาดใหญ่</span>
+            <img src="images/1-1.png" alt="ภาพที่ 1.1: ตำแหน่งปุ่ม + เพิ่มข้อมูลรายการออก บนแถบเครื่องมือด้านบน">
+            <div class="img-caption-bar">
+              <span class="img-caption-text"><i class="fa fa-image text-primary"></i> <strong>ภาพที่ 1.1:</strong>
+                ตำแหน่งปุ่ม <code>+ เพิ่มข้อมูลรายการออก</code> บนแถบเครื่องมือด้านบน</span>
+              <span style="font-size: 11px; color: #0284c7; font-weight: 600;"><i class="fa fa-expand"></i>
+                ดูภาพใหญ่</span>
+            </div>
+          </div>
+        </li>
+        <li>
+          หน้าต่าง Popup จะแสดงขึ้นมา ให้กรอกรายละเอียดให้ครบถ้วน:
+
+          <div class="img-preview-box">
+            <span class="img-preview-badge"><i class="fa fa-search-plus"></i> คลิกเพื่อดูภาพขนาดใหญ่</span>
+            <img src="images/1-2.png" alt="ภาพที่ 1.2: หน้าต่างแบบฟอร์มเพิ่มข้อมูลรายการนำออก">
+            <div class="img-caption-bar">
+              <span class="img-caption-text"><i class="fa fa-image text-primary"></i> <strong>ภาพที่ 1.2:</strong>
+                หน้าต่างแบบฟอร์ม <code>เพิ่มข้อมูลรายการนำออก</code> กรอกข้อมูลวันที่, แผนก, วัตถุประสงค์
+                และรายการสิ่งของ 1 - 6</span>
+              <span style="font-size: 11px; color: #0284c7; font-weight: 600;"><i class="fa fa-expand"></i>
+                ดูภาพใหญ่</span>
+            </div>
+          </div>
+
+          <table class="data-table-guide">
+            <thead>
+              <tr>
+                <th style="width: 25%;">ช่องข้อมูล</th>
+                <th style="width: 20%;">ความจำเป็น</th>
+                <th>คำอธิบาย & ข้อกำหนด</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>date out (วันที่ออก)</strong></td>
+                <td><span class="text-danger font-bold">จำเป็น *</span></td>
+                <td>คลิกเลือกวันที่ที่นำของออกจากปฏิทิน (ห้ามเว้นว่างเด็ดขาด)</td>
+              </tr>
+              <tr>
+                <td><strong>แผนก</strong></td>
+                <td><span class="text-danger font-bold">จำเป็น *</span></td>
+                <td>เลือกแผนกเจ้าของสิ่งของที่ขอนำออก</td>
+              </tr>
+              <tr>
+                <td><strong>วัตถุประสงค์ (Purpose)</strong></td>
+                <td><span class="text-danger font-bold">จำเป็น *</span></td>
+                <td>เลือกให้ตรงกับลักษณะงาน เช่น นำไปซ่อม, ขายของเก่า, กำจัดทิ้ง, ส่งทดสอบ</td>
+              </tr>
+              <tr>
+                <td><strong>PO / Company / ทะเบียนรถ</strong></td>
+                <td>ควรระบุ</td>
+                <td>เลขที่ PO (ถ้ามี), ชื่อบริษัทผู้รับเหมาหรือร้านค้า, เลขทะเบียนรถที่ใช้ขนส่ง</td>
+              </tr>
+              <tr>
+                <td><strong>Detail</strong></td>
+                <td>เพิ่มเติม</td>
+                <td>รายละเอียดงาน สถานที่จัดส่ง หรือข้อความกำกับอื่นๆ</td>
+              </tr>
+              <tr>
+                <td><strong>รายการที่ 1 - 6</strong></td>
+                <td><span class="text-danger font-bold">อย่างน้อย 1 รายการ *</span></td>
+                <td>ระบุชื่อสิ่งของ จำนวน และหน่วยนับให้ชัดเจน (สามารถระบุได้สูงสุด 6 รายการ)</td>
+              </tr>
+            </tbody>
+          </table>
+        </li>
+        <li>
+          กดปุ่ม <strong>"บันทึก"</strong> ระบบจะแจ้งเตือนเลขที่เอกสารใหม่ เช่น <code>บันทึกสำเร็จ : A2600123</code>
+          และรายการจะแสดงในตารางทันที
+        </li>
+      </ol>
+
+      <div class="info-callout info-callout-amber">
+        <i class="fa fa-info-circle"></i> <strong>รูปแบบเลขที่เอกสาร:</strong> เอกสารใบผ่านจะขึ้นต้นด้วยตัวอักษร
+        <code>A</code> ตามด้วยเลขปี ค.ศ. 2 หลัก และลำดับ 5 หลัก เช่น <code>A2600001</code>
+      </div>
+    </div>
+
+    <!-- SECTION 3: วิธีพิมพ์ใบผ่าน -->
+    <div class="doc-section" id="sec-print">
+      <div class="section-header">
+        <span class="section-badge-num" style="background: #0284c7;">3</span>
+        <div>
+          <h2 class="section-title">ขั้นตอนที่ 2: วิธีพิมพ์เอกสารใบผ่าน (Print Store Pass)</h2>
+          <div class="section-subtitle">การพิมพ์แบบฟอร์มใบผ่านทางการ เพื่อนำไปลงนามและใช้ยื่นตรวจกับเจ้าหน้าที่ รปภ. /
+            สโตร์</div>
+        </div>
+      </div>
+
+      <p style="color: #334155; font-size: 14px;">
+        เมื่อสร้างเอกสารนำออกเรียบร้อยแล้ว ก่อนที่จะนำสิ่งของออกนอกโรงงาน ผู้ขออนุญาตจะต้องสั่งพิมพ์เอกสารใบผ่าน
+        เพื่อนำไปให้ผู้จัดการฝ่ายเซ็นอนุมัติ และนำเอกสารฉบับจริงไปแสดงต่อเจ้าหน้าที่ รปภ. ที่ป้อมยามหน้าประตูโรงงาน:
+      </p>
+
+      <ol class="step-list">
+        <li>
+          <strong>คลิกเลือกแถวเอกสารในตาราง:</strong> ให้คลิกที่แถวของเลขที่เอกสารที่ต้องการพิมพ์
+          (สังเกตแถวที่เลือกจะไฮไลต์เป็นแถบสีฟ้าเข้ม)
+        </li>
+        <li>
+          <strong>กดปุ่มสั่งพิมพ์ที่ต้องการ:</strong> ในแถบเครื่องมือเหนือตารางด้านซ้าย จะมีปุ่มพิมพ์ 2 แบบ:
+          <ul style="margin-top: 8px; padding-left: 18px; line-height: 1.8;">
+            <li>
+              <strong><span class="tag-badge tag-badge-blue"><i class="fa fa-print"></i> พิมพ์ใบผ่าน</span>
+                (ปุ่มสีฟ้า):</strong>
+              แบบฟอร์มมาตรฐานสำหรับนำของออกนอกโรงงานทั่วไป มีช่องลงนาม 4 ส่วน ได้แก่:
+              <em>ผู้ขออนุญาต &bull; ผู้จัดการฝ่าย &bull; ฝ่ายบุคคล / รปภ. ตรวจสอบ &bull; แผนกสโตร์</em>
+            </li>
+            <li>
+              <strong><span class="tag-badge tag-badge-orange"><i class="fa fa-print"></i> พิมพ์ใบผ่าน 2</span>
+                (ปุ่มสีส้ม):</strong>
+              แบบฟอร์มสำหรับกรณีส่งของให้ลูกค้าหรือบริษัทภายนอก ซึ่งจะเพิ่มช่องลงนาม <em>"ผู้รับคืนสินค้า (ลูกค้า)"</em>
+              สำหรับให้ปลายทางเซ็นรับของ
+            </li>
+          </ul>
+        </li>
+      </ol>
+
+      <!-- รูปภาพการพิมพ์ใบผ่าน -->
+      <div class="img-preview-box">
+        <span class="img-preview-badge"><i class="fa fa-search-plus"></i> คลิกเพื่อดูภาพขนาดใหญ่</span>
+        <img src="images/2-1.png" alt="ภาพที่ 2.1: วิธีคลิกเลือกแถวและกดปุ่มพิมพ์ใบผ่าน">
+        <div class="img-caption-bar">
+          <span class="img-caption-text"><i class="fa fa-image text-primary"></i> <strong>ภาพที่ 2.1:</strong>
+            คลิกเลือกแถวเอกสารในตาราง (ไฮไลต์สีฟ้า) แล้วคลิกปุ่ม <code>พิมพ์ใบผ่าน</code> หรือ
+            <code>พิมพ์ใบผ่าน 2</code> บนแถบเครื่องมือ</span>
+          <span style="font-size: 11px; color: #0284c7; font-weight: 600;"><i class="fa fa-expand"></i> ดูภาพใหญ่</span>
+        </div>
+      </div>
+
+      <div class="info-callout info-callout-blue">
+        <i class="fa fa-info-circle"></i> <strong>การเปิดไฟล์และพิมพ์:</strong> เมื่อกดปุ่ม
+        ระบบจะเปิดหน้าต่างเอกสารแบบฟอร์มขนาด A4 ในแท็บใหม่ทันที สามารถตรวจสอบความถูกต้องและกดปุ่มพิมพ์ (Print)
+        ออกทางเครื่องพิมพ์ได้เลย
+      </div>
+    </div>
+
+    <!-- SECTION 4: บันทึกรายการนำเข้า -->
+    <div class="doc-section" id="sec-in">
+      <div class="section-header">
+        <span class="section-badge-num" style="background: #0284c7;">4</span>
+        <div>
+          <h2 class="section-title">ขั้นตอนที่ 3: การบันทึกรายการนำของเข้า</h2>
+          <div class="section-subtitle">การบันทึกตรวจรับสิ่งของที่ส่งกลับโรงงาน หรือการระบุ "ไม่มี"</div>
+        </div>
+      </div>
+
+      <ol class="step-list">
+        <li>
+          ในตารางรายงาน ให้<strong>คลิกที่แถวของเลขที่เอกสาร</strong>ที่ต้องการทำรายการ (แถวที่เลือกจะไฮไลต์เป็นสีฟ้า)
+          <div style="font-size: 12px; color: #64748b; margin-top: 3px;">
+            * สามารถระบุเลขที่เอกสารในช่อง <strong>doc no</strong> หรือเลือก Type เป็น <strong>"รายการเข้า
+              ที่ยังไม่ได้นำเข้า"</strong> แล้วกดค้นหา
+          </div>
+        </li>
+        <li>
+          กดปุ่ม <strong><span class="tag-badge tag-badge-green"><i class="fa fa-plus"></i>
+              เพิ่มข้อมูลรายการเข้า</span></strong> ด้านบน
+          <div class="img-preview-box">
+            <span class="img-preview-badge"><i class="fa fa-search-plus"></i> คลิกเพื่อดูภาพขนาดใหญ่</span>
+            <img src="images/3-1.png" alt="ภาพที่ 3.1: คลิกเลือกแถวแล้วกดปุ่มเพิ่มข้อมูลรายการเข้า">
+            <div class="img-caption-bar">
+              <span class="img-caption-text"><i class="fa fa-image text-primary"></i> <strong>ภาพที่ 3.1:</strong>
+                คลิกเลือกแถวเอกสารในตาราง แล้วกดปุ่ม <code>+ เพิ่มข้อมูลรายการเข้า</code> ด้านบน</span>
+              <span style="font-size: 11px; color: #0284c7; font-weight: 600;"><i class="fa fa-expand"></i>
+                ดูภาพใหญ่</span>
+            </div>
+          </div>
+        </li>
+        <li>
+          หน้าต่าง Popup จะแสดงเลขที่เอกสาร (doc no) ให้อัตโนมัติ:
+          <div class="img-preview-box">
+            <span class="img-preview-badge"><i class="fa fa-search-plus"></i> คลิกเพื่อดูภาพขนาดใหญ่</span>
+            <img src="images/3-2.png" alt="ภาพที่ 3.2: หน้าต่างกรอกข้อมูลรายการนำเข้า">
+            <div class="img-caption-bar">
+              <span class="img-caption-text"><i class="fa fa-image text-primary"></i> <strong>ภาพที่ 3.2:</strong>
+                หน้าต่างแบบฟอร์ม <code>เพิ่มข้อมูลรายการนำเข้า</code> (ระบุวันที่, หมายเหตุ และรายการสิ่งของที่นำเข้า
+                1-6)</span>
+              <span style="font-size: 11px; color: #0284c7; font-weight: 600;"><i class="fa fa-expand"></i>
+                ดูภาพใหญ่</span>
+            </div>
+          </div>
+          <ul style="margin-top: 6px; padding-left: 18px;">
+            <li><strong>date in (วันที่เข้า):</strong> คลิกเลือกวันที่ที่สิ่งของถูกส่งกลับมาถึงโรงงาน</li>
+            <li><strong>remark:</strong> ระบุหมายเหตุเพิ่มเติม (ถ้ามี)</li>
+            <li><strong>รายการที่นำของเข้า (1 - 6):</strong> ระบุรายการสิ่งของที่ตรวจรับคืนจริง</li>
+          </ul>
+        </li>
+        <li>
+          กดปุ่ม <strong>"บันทึก"</strong> เพื่อยืนยันการนำเข้า
+        </li>
+      </ol>
+
+      <div class="info-callout info-callout-blue">
+        <strong><i class="fa fa-check-circle"></i> คำแนะนำกรณี "ไม่มีของนำกลับเข้า" (เช่น ขายของเก่า, กำจัดทิ้ง,
+          ท่อตัวอย่าง):</strong><br>
+        สามารถบันทึกรายการนำเข้าเพื่อปลดล็อคขั้นตอนการตรวจสอบ (Approve) ได้ดังนี้:
+        <ul style="margin-top: 5px; margin-bottom: 0; padding-left: 20px;">
+          <li>ในช่อง <strong>date in:</strong> ระบุวันที่ทำรายการ</li>
+          <li>ในช่อง <strong>รายการที่ 1:</strong> ให้ระบุคำว่า <code>ไม่มี</code> หรือ <code>ไม่มีครับ</code></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- SECTION 5: การแก้ไขข้อมูล -->
+    <div class="doc-section" id="sec-edit">
+      <div class="section-header">
+        <span class="section-badge-num" style="background: #eab308;">5</span>
+        <div>
+          <h2 class="section-title">ขั้นตอนที่ 4: การแก้ไขข้อมูลในตาราง (Inline Editing)</h2>
+          <div class="section-subtitle">การแก้ไขข้อมูลรายละเอียดสิ่งของ วัตถุประสงค์ และข้อความโดยตรง</div>
+        </div>
+      </div>
+
+      <p style="color: #475569; font-size: 14px;">
+        สำหรับเอกสารที่<strong>ยังไม่ได้รับการอนุมัติ (ยังไม่ได้ Approve)</strong>
+        ผู้ใช้สามารถแก้ไขข้อมูลบางฟิลด์ได้ทันทีจากในตาราง โดยไม่ต้องเปิดหน้าต่างใหม่:
+      </p>
+
+      <!-- รูปภาพ 4-1: ภาพรวมฟิลด์ที่แก้ไขได้ในตาราง -->
+      <div class="img-preview-box">
+        <span class="img-preview-badge"><i class="fa fa-search-plus"></i> คลิกเพื่อดูภาพขนาดใหญ่</span>
+        <img src="images/4-1.png" alt="ภาพที่ 4.1: ตำแหน่งฟิลด์ที่สามารถคลิกแก้ไขได้ในตาราง">
+        <div class="img-caption-bar">
+          <span class="img-caption-text"><i class="fa fa-image text-primary"></i> <strong>ภาพที่ 4.1:</strong>
+            ฟิลด์ที่แก้ไขได้ในตาราง ได้แก่ วันที่ออก/เข้า, ปุ่มแก้ไขรายการออก/เข้า และช่องข้อความ PO, Company,
+            ทะเบียนรถ, Detail, Remark</span>
+          <span style="font-size: 11px; color: #0284c7; font-weight: 600;"><i class="fa fa-expand"></i> ดูภาพใหญ่</span>
+        </div>
+      </div>
+
+      <ul class="step-list">
+        <li>
+          <strong>ช่องข้อความ (PO, Company, ทะเบียนรถ, Detail, Remark):</strong> คลิกที่ช่องข้อความในตาราง แก้ไขค่า
+          แล้วคลิกออกนอกช่อง (Blur) ระบบจะบันทึกทันที
+        </li>
+        <li>
+          <strong>ช่องวัตถุประสงค์ (Purpose):</strong> สามารถคลิกเลือกเปลี่ยน Dropdown ได้ทันทีจากในตาราง
+        </li>
+        <li>
+          <strong>ช่องรายการออก / รายการเข้า:</strong> คลิกปุ่ม <strong><span class="tag-badge tag-badge-blue"><i
+                class="fa fa-pencil"></i> แก้ไข</span></strong> ในตาราง เพื่อเปิดหน้าต่างเพิ่มรายการ (Add item)
+          หรือลบรายการ (ปุ่มถังขยะ)
+
+          <!-- รูปภาพ 4-2: Popup แก้ไขรายการนำออก/เข้า -->
+          <div class="img-preview-box">
+            <span class="img-preview-badge"><i class="fa fa-search-plus"></i> คลิกเพื่อดูภาพขนาดใหญ่</span>
+            <img src="images/4-2.png" alt="ภาพที่ 4.2: หน้าต่างแก้ไขรายการนำของออก/เข้า">
+            <div class="img-caption-bar">
+              <span class="img-caption-text"><i class="fa fa-image text-primary"></i> <strong>ภาพที่ 4.2:</strong>
+                หน้าต่างแบบฟอร์ม <code>แก้ไขรายการนำของออก</code> สามารถเพิ่มรายการใหม่ (+ Add item)
+                หรือกดไอคอนถังขยะสีแดงเพื่อลบรายการ</span>
+              <span style="font-size: 11px; color: #0284c7; font-weight: 600;"><i class="fa fa-expand"></i>
+                ดูภาพใหญ่</span>
+            </div>
+          </div>
+        </li>
+      </ul>
+
+      <div class="info-callout info-callout-amber">
+        <strong><i class="fa fa-lock"></i> หมายเหตุการล็อคข้อมูล:</strong> เมื่อเอกสารเปลี่ยนสถานะเป็น
+        <strong>"ตรวจสอบแล้ว"</strong> (Approve = 1) ฟิลด์และปุ่มแก้ไขทั้งหมดในแถวนั้นจะถูกล็อคให้อ่านอย่างเดียว
+        ไม่สามารถแก้ไขได้อีก เพื่อป้องกันการเปลี่ยนแปลงข้อมูลย้อนหลัง
+      </div>
+    </div>
+
+    <!-- SECTION 6: อนุมัติ -->
+    <div class="doc-section" id="sec-approve">
+      <div class="section-header">
+        <span class="section-badge-num" style="background: #8b5cf6;">6</span>
+        <div>
+          <h2 class="section-title">ขั้นตอนที่ 5: การตรวจสอบและอนุมัติ (Approval & Lock Document)</h2>
+          <div class="section-subtitle">การใส่รหัสผ่านอนุมัติปิดเอกสาร และการล็อคข้อมูลเพื่อความถูกต้องของระบบ</div>
+        </div>
+      </div>
+
+      <p style="font-size: 14px; color: #334155; line-height: 1.6;">
+        ยืนยันความถูกต้องและปิดรายการเอกสาร:
+      </p>
+
+      <ol class="step-list">
+        <li>
+          มองหาแถวเอกสารที่ต้องการ แล้วกดปุ่ม <strong>"เปลี่ยน"</strong> ในคอลัมน์ Approve (สถานะตั้งต้นคือ
+          <code>รอตรวจสอบ</code>)
+
+          <!-- รูปภาพ 5-1: ปุ่มเปลี่ยนสถานะ Approve -->
+          <div class="img-preview-box">
+            <span class="img-preview-badge"><i class="fa fa-search-plus"></i> คลิกเพื่อดูภาพขนาดใหญ่</span>
+            <img src="images/5-1.png" alt="ภาพที่ 5.1: ปุ่มเปลี่ยนสถานะในคอลัมน์ Approve">
+            <div class="img-caption-bar">
+              <span class="img-caption-text"><i class="fa fa-image text-primary"></i> <strong>ภาพที่ 5.1:</strong>
+                ตำแหน่งปุ่ม <code>เปลี่ยน</code> ในคอลัมน์ Approve สำหรับเริ่มขั้นตอนอนุมัติเอกสาร</span>
+              <span style="font-size: 11px; color: #0284c7; font-weight: 600;"><i class="fa fa-expand"></i>
+                ดูภาพใหญ่</span>
+            </div>
+          </div>
+        </li>
+        <li>
+          หน้าต่างยืนยันจะเปิดขึ้นมา ให้กรอกข้อมูลการอนุมัติ:
+          <ul style="margin-top: 6px; padding-left: 20px; line-height: 1.8;">
+            <li><strong>Password:</strong> รหัสผ่านยืนยันการอนุมัติของผู้มีอำนาจ</li>
+            <li><strong>Reason:</strong> ระบุเหตุผลการตรวจสอบ เช่น <em>"ตรวจสอบแล้ว"</em> หรือ <em>"ของกลับครบถ้วน"</em>
+              (อย่างน้อย 3 ตัวอักษร)</li>
+          </ul>
+
+          <!-- รูปภาพ 5-2: Popup กรุณาใส่ Password และเหตุผล -->
+          <div class="img-preview-box">
+            <span class="img-preview-badge"><i class="fa fa-search-plus"></i> คลิกเพื่อดูภาพขนาดใหญ่</span>
+            <img src="images/5-2.png" alt="ภาพที่ 5.2: หน้าต่างกรุณาใส่ Password และเหตุผล">
+            <div class="img-caption-bar">
+              <span class="img-caption-text"><i class="fa fa-image text-primary"></i> <strong>ภาพที่ 5.2:</strong>
+                หน้าต่าง Popup <code>กรุณาใส่ Password และเหตุผล</code> ใส่รหัสผ่านและเหตุผลแล้วกดปุ่ม
+                <code>CONFIRM</code></span>
+              <span style="font-size: 11px; color: #0284c7; font-weight: 600;"><i class="fa fa-expand"></i>
+                ดูภาพใหญ่</span>
+            </div>
+          </div>
+        </li>
+        <li>กด <strong>Confirm</strong> ระบบจะบันทึกและเปลี่ยนสถานะเป็น <span class="tag-badge tag-badge-green"><i
+              class="fa fa-check"></i> ตรวจสอบแล้ว</span> พร้อมทั้งล็อคเอกสารไม่ให้แก้ไข</li>
+      </ol>
+
+      <div class="info-callout info-callout-blue">
+        <i class="fa fa-shield"></i> <strong>เงื่อนไขก่อนการอนุมัติ:</strong> เอกสารจะต้องมีการบันทึกรายการนำเข้าแล้ว
+        (หรือระบุ <code>"ไม่มี"</code> ในกรณีไม่มีของกลับ) จึงจะสามารถกดอนุมัติได้
+      </div>
+    </div>
+
+    <!-- SECTION 6: คำถามที่พบบ่อย (FAQ) -->
+    <div class="doc-section" id="sec-faq">
+      <div class="section-header">
+        <span class="section-badge-num" style="background: #64748b;"><i class="fa fa-question"></i></span>
+        <div>
+          <h2 class="section-title">คำถามที่พบบ่อย (FAQ)</h2>
+          <div class="section-subtitle">ข้อสงสัยและปัญหาที่พบบ่อยในการใช้งานจริง</div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">
+          <i class="fa fa-question-circle text-primary"></i>
+          <span>ขายของเก่า หรือ ของกำจัดทิ้ง ไม่มีของส่งกลับ ทำไมกดปุ่มเปลี่ยนสถานะ Approve ไม่ได้?</span>
+        </div>
+        <div class="faq-a">
+          <strong>คำตอบ:</strong> ระบบกำหนดว่าเอกสารต้องมีข้อมูลรายการนำเข้าก่อน จึงจะอนุมัติได้
+          เพื่อยืนยันว่าไม่มีของค้างคา ให้คลิกเลือกเอกสาร แล้วกดปุ่ม <code>+ เพิ่มข้อมูลรายการเข้า</code>
+          จากนั้นในช่องรายการที่ 1 ให้พิมพ์คำว่า <strong>"ไม่มี"</strong> แล้วกดบันทึก จากนั้นจะสามารถกดเปลี่ยนสถานะ
+          Approve ได้ทันที
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">
+          <i class="fa fa-question-circle text-primary"></i>
+          <span>จะดูเฉพาะเอกสารที่ของยังไม่นำกลับเข้าโรงงานได้อย่างไร?</span>
+        </div>
+        <div class="faq-a">
+          <strong>คำตอบ:</strong> ในแถบค้นหาด้านบน ช่อง <strong>Type</strong> ให้เลือกเป็น <strong>"รายการเข้า
+            ที่ยังไม่ได้นำเข้า"</strong> แล้วกดปุ่ม "ค้นหา" ระบบจะดึงเฉพาะรายการที่ยังค้างอยู่มาให้
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Document Footer -->
+    <div class="doc-footer">
+      <i class="fa fa-building-o"></i> บริษัท สหไทยสตีลไพพ์ จำกัด (มหาชน) &bull; Sahathai Steel Pipe Public Co.,
+      Ltd.<br>
+      ระบบรายงานใบผ่าน &bull; อัปเดตล่าสุดปี 2026
+    </div>
+
+  </div>
+
+  <!-- Fullscreen Lightbox Modal for Image Zoom -->
+  <div id="imageLightboxModal" class="image-lightbox-overlay no-print" onclick="closeImageModal();">
+    <div class="image-lightbox-content" onclick="event.stopPropagation();">
+      <button type="button" class="image-lightbox-close" onclick="closeImageModal();" title="ปิด (ESC)">&times;</button>
+      <img id="imageLightboxImg" src="" alt="ภาพขยายขนาดใหญ่">
+      <div id="imageLightboxCap" class="image-lightbox-caption"></div>
+    </div>
+  </div>
+
+  <script>
+    function openImageModal(src, caption) {
+      var modal = document.getElementById('imageLightboxModal');
+      var modalImg = document.getElementById('imageLightboxImg');
+      var modalCap = document.getElementById('imageLightboxCap');
+      if (!modal || !modalImg) return;
+      modalImg.src = src;
+      modalCap.innerHTML = caption || '';
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeImageModal() {
+      var modal = document.getElementById('imageLightboxModal');
+      if (!modal) return;
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      // Connect all preview images and caption bars to the lightbox
+      var boxes = document.querySelectorAll('.img-preview-box');
+      boxes.forEach(function (box) {
+        var img = box.querySelector('img');
+        var cap = box.querySelector('.img-caption-text');
+        var capBar = box.querySelector('.img-caption-bar');
+
+        var handleZoom = function (e) {
+          e.stopPropagation();
+          var captionText = cap ? cap.innerHTML : (img ? img.getAttribute('alt') : '');
+          if (img) openImageModal(img.src, captionText);
+        };
+
+        if (img) img.addEventListener('click', handleZoom);
+        if (capBar) capBar.addEventListener('click', handleZoom);
+      });
+
+      // Press ESC to close lightbox
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' || e.keyCode === 27) {
+          closeImageModal();
+        }
+      });
+    });
+  </script>
+
+</body>
+
+</html>
