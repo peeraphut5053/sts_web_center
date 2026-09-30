@@ -61,6 +61,9 @@ if ($load == "form") {
     $tableHead = '<thead><tr><th>#</th><th>Loc</th><th>Loc Description</th><th>Lot</th><th>qty on hand</th><th>Act Weight</th><th>Tag</th><th>Detail</th></tr></thead>';
 
     if (count($BetweenSale) >= 1) {
+        usort($BetweenSale, function ($a, $b) {
+            return strcmp($a["loc"] ?? "", $b["loc"] ?? "");
+        });
         $i = 0;
         foreach ($BetweenSale as $ii => $rr) {
             $i++;
@@ -77,16 +80,17 @@ if ($load == "form") {
                     . "<td align='center'>" . $rr["detail"] . "</td>"
                     . "</tr>";
         }
-        $lines = $lines . "<tr>"
-                . "<td align='center'></td><td align='center'>Total</td>"
-                . "<td></td>"
-                . "<td></td>"
-                . "<td align='right'>" . number_format($totalQty, 2) . "</td>"
-                . "</tr>";
+        $tableBody = "<tbody>" . $lines . "</tbody>";
+        $tableFoot = "<tfoot><tr>"
+                . "<th colspan='4' style='text-align:center;'>Total</th>"
+                . "<th style='text-align:right;'>" . number_format($totalQty, 2) . "</th>"
+                . "<th colspan='3'></th>"
+                . "</tr></tfoot>";
     } else {
-        $lines = $lines . "<tr><td  align='center' colspan='5'>..No data..</td></tr>";
+        $tableBody = "<tbody><tr><td align='center' colspan='8'>..No data..</td></tr></tbody>";
+        $tableFoot = "";
     }
-    $tlines = $tableHead . $lines;
+    $tlines = $tableHead . $tableBody . $tableFoot;
     echo $tlines;
 } else if ($load == "BetweenSale") {
     $CM = new CallModel();

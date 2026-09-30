@@ -316,15 +316,20 @@
                 //                loc: loc
             },
             success: function (data) {
+                if ($.fn.DataTable.isDataTable('#tblModal')) {
+                    $('#tblModal').DataTable().destroy();
+                }
                 $("#tblModal").empty();
                 $("#modalDetailHead").text("ข้อมูล [" + item + "] สต็อค ");
                 $("#tblModal").html(data);
 
                 $('#tblModal').DataTable({
                     searching: true,
+                    ordering: true,
+                    order: [[1, 'asc']],
                     "scrollX": true,
                     fixedHeader: true,
-                    retrieve: true,
+                    destroy: true,
                     "pageLength": 999999999,
                     'dom': "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'f>>" +
                         "<'row'<'col-md-12'tr>>" +
