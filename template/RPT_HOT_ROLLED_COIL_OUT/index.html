@@ -297,8 +297,8 @@
             </div>
             <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 col-search">
                 <div class="input-group">
-                    <div class="input-group-addon"><i class="fa fa-barcode text-info"></i> S_NO</div>
-                    <input type="text" class="form-control txt-filter" id="sno" placeholder="เช่น 102563">
+                    <div class="input-group-addon"><i class="fa fa-file-text-o text-info"></i> Doc Num</div>
+                    <input type="text" class="form-control txt-filter" id="txtDocNum" placeholder="เช่น MQD...">
                 </div>
             </div>
             <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 col-search" style="display: flex; gap: 6px;">
@@ -318,15 +318,19 @@
             <thead>
                 <tr>
                     <th>ลำดับ</th>
-                    <th>วันที่นำออกจากสาขาปู่เจ้า</th>
+                    <th>วันที่เบิก</th>
+                    <th>ขนาด</th>
+                    <th>มาตรฐาน</th>
+                    <th>ความหนา</th>
+                    <th>ความยาว</th>
+                    <th>ชนิด</th>
+                    <th>เส้น/มัด</th>
+                    <th>STS No.</th>
+                    <th>จำนวนมัด</th>
+                    <th>จำนวนเส้น</th>
+                    <th>น้ำหนัก (Kg.)</th>
                     <th>Coil No.</th>
                     <th>H/N No.</th>
-                    <th>น้ำหนัก Coil (Kg.)</th>
-                    <th>STS No.</th>
-                    <th>เลขที่คำร้องขอซื้อดวงตราตะกั่ว</th>
-                    <th>ใบขนสินค้าขาเข้าเลขที่</th>
-                    <th>รายการที่</th>
-                    <th>ชนิดของ</th>
                 </tr>
             </thead>
             <tbody id="tbodytblReport">
@@ -367,10 +371,20 @@
         RenderTable([]);
     });
 
+    function GetToday() {
+        var d = new Date();
+        var month = '' + (d.getMonth() + 1);
+        var day = '' + d.getDate();
+        var year = d.getFullYear();
+        if (month.length < 2) month = '0' + month;
+        if (day.length < 2) day = '0' + day;
+        return [year, month, day].join('-');
+    }
+
     function ResetFilter() {
-        $("#txtFromDate").val("2026-01-01");
-        $("#txtToDate").val("2026-03-30");
-        $("#sno").val("");
+        $("#txtFromDate").val("2025-07-01");
+        $("#txtToDate").val(GetToday());
+        $("#txtDocNum").val("");
     }
 
     function FormatThaiShortDate(dateStr) {
@@ -410,7 +424,7 @@
     function ReportSearch() {
         var txtFromDate = $("#txtFromDate").val().trim();
         var txtToDate = $("#txtToDate").val().trim();
-        var sno = $("#sno").val().trim();
+        var doc_num = $("#txtDocNum").val().trim();
 
         $.ajax({
             type: 'POST',
@@ -423,7 +437,7 @@
                 load: "coil_out",
                 txtFromDate: txtFromDate,
                 txtToDate: txtToDate,
-                sno: sno
+                doc_num: doc_num
             },
             success: function (data) {
                 g_reportData = data || [];
@@ -476,15 +490,73 @@
                     }
                 },
                 {
-                    data: "createdate",
+                    data: "create_date",
                     className: "text-center",
                     render: function (data, type, row) {
-                        var rawDate = row && row.createdate_formatted ? row.createdate_formatted : (data && data.date ? data.date : data);
+                        var rawDate = row && row.create_date_formatted ? row.create_date_formatted : (data && data.date ? data.date : data);
                         if (!rawDate) return "-";
                         if (type === "sort" || type === "type") {
                             return moment(rawDate).isValid() ? moment(rawDate).format('YYYYMMDD') : rawDate;
                         }
                         return FormatThaiShortDate(rawDate);
+                    }
+                },
+                {
+                    data: "Uf_NPS",
+                    className: "text-center",
+                    render: function (data) { return data ? data : "-"; }
+                },
+                {
+                    data: "Uf_spec",
+                    className: "text-left",
+                    render: function (data) { return data ? data : "-"; }
+                },
+                {
+                    data: "Uf_Schedule",
+                    className: "text-center",
+                    render: function (data) { return data ? data : "-"; }
+                },
+                {
+                    data: "Uf_length",
+                    className: "text-center",
+                    render: function (data) { return data ? data : "-"; }
+                },
+                {
+                    data: "Uf_TypeEnd",
+                    className: "text-center",
+                    render: function (data) { return data ? data : "-"; }
+                },
+                {
+                    data: "uf_pack",
+                    className: "text-right font-mono",
+                    render: function (data) { return data !== null && data !== undefined ? data : "-"; }
+                },
+                {
+                    data: "sts_no",
+                    className: "text-center font-bold text-red-600",
+                    render: function (data) { return data ? data : "-"; }
+                },
+                {
+                    data: "countlot",
+                    className: "text-right font-mono",
+                    render: function (data) { return data !== null && data !== undefined ? data : "-"; }
+                },
+                {
+                    data: "PCS",
+                    className: "text-right font-mono",
+                    render: function (data) {
+                        if (data === null || data === undefined || data === "") return "-";
+                        var num = Number(data);
+                        return isNaN(num) ? data : num.toLocaleString("en-US");
+                    }
+                },
+                {
+                    data: "weight",
+                    className: "text-right font-mono",
+                    render: function (data) {
+                        if (data === null || data === undefined || data === "") return "-";
+                        var num = Number(data);
+                        return isNaN(num) ? data : num.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
                     }
                 },
                 {
@@ -496,40 +568,6 @@
                     data: "h_no",
                     className: "text-center font-mono",
                     render: function (data) { return data ? data : "-"; }
-                },
-                {
-                    data: "weight",
-                    className: "text-right font-mono",
-                    render: function (data) {
-                        if (data === null || data === undefined || data === "") return "-";
-                        var num = Number(data);
-                        return isNaN(num) ? data : num.toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 2 });
-                    }
-                },
-                {
-                    data: "sno",
-                    className: "text-center font-bold text-red-600",
-                    render: function (data) { return data ? data : "-"; }
-                },
-                {
-                    data: null,
-                    className: "text-center",
-                    render: function () { return "-"; } // เลขที่คำร้องขอซื้อดวงตราตะกั่ว
-                },
-                {
-                    data: "uf_doc_no",
-                    className: "text-center font-mono",
-                    render: function (data) { return data ? data : "-"; }
-                },
-                {
-                    data: "po_line",
-                    className: "text-center font-mono",
-                    render: function (data) { return (data !== null && data !== undefined) ? data : "-"; }
-                },
-                {
-                    data: "description",
-                    className: "text-left",
-                    render: function (data) { return data ? data : "-"; }
                 }
             ],
             dom: "<'row'<'col-md-7'B><'col-md-5 text-right'f>>" +
@@ -539,18 +577,18 @@
                 {
                     extend: 'print',
                     text: "<i class='fa fa-print'></i>&nbsp;Print",
-                    title: 'รายงานนำวัตถุดิบออกจากคลัง'
+                    title: 'รายงานนำสินค้าขาออก'
                 },
                 {
                     extend: 'excel',
                     text: "<i class='fa fa-file-excel-o'></i>&nbsp;Excel",
-                    title: 'รายงานนำวัตถุดิบออกจากคลัง'
+                    title: 'รายงานนำสินค้าขาออก'
                 },
                 {
-                    text: "<i class='fa fa-file-pdf-o'></i>&nbsp;พิมพ์รายงานนำวัตถุดิบออกจากคลัง",
+                    text: "<i class='fa fa-file-pdf-o'></i>&nbsp;พิมพ์รายงานนำสินค้าขาออก",
                     className: "btn-dt-pdf",
                     action: function () {
-                        PrintPdfImage2();
+                        PrintPdfOut();
                     }
                 },
             ]
@@ -558,9 +596,9 @@
     }
 
     // =========================================================================
-    // Print PDF Image 2: รายงานนำวัตถุดิบออกจากคลังสินค้าทัณฑ์บนสาขาปู่เจ้าไปสาขาวังน้อย (10 columns, 25 rows/page)
+    // Print PDF ขาออก: STS_custom_OUTsp (14 columns, 25 rows/page)
     // =========================================================================
-    function PrintPdfImage2() {
+    function PrintPdfOut() {
         if (!g_reportData || g_reportData.length === 0) {
             $.alert("ไม่มีข้อมูลที่จะพิมพ์ PDF กรุณาค้นหาข้อมูลก่อน");
             return;
@@ -579,18 +617,22 @@
             var pageData = g_reportData.slice(p * rowsPerPage, (p + 1) * rowsPerPage);
             var tableBody = [];
 
-            // Table Header 10 Columns matching Image 2
+            // Table Header 14 Columns
             tableBody.push([
                 { text: "ลำดับ", bold: true, alignment: "center", fontSize: 10, margin: [0, 4, 0, 4] },
-                { text: "วันที่นำออกจาก\nสาขาปู่เจ้า", bold: true, alignment: "center", fontSize: 9.5, margin: [0, 1, 0, 1] },
+                { text: "วันที่เบิก", bold: true, alignment: "center", fontSize: 9, margin: [0, 1, 0, 1] },
+                { text: "ขนาด", bold: true, alignment: "center", fontSize: 10, margin: [0, 4, 0, 4] },
+                { text: "มาตรฐาน", bold: true, alignment: "center", fontSize: 10, margin: [0, 4, 0, 4] },
+                { text: "ความหนา", bold: true, alignment: "center", fontSize: 10, margin: [0, 4, 0, 4] },
+                { text: "ความยาว", bold: true, alignment: "center", fontSize: 10, margin: [0, 4, 0, 4] },
+                { text: "ชนิด", bold: true, alignment: "center", fontSize: 10, margin: [0, 4, 0, 4] },
+                { text: "เส้น/มัด", bold: true, alignment: "center", fontSize: 9.5, margin: [0, 4, 0, 4] },
+                { text: "STS No.", bold: true, alignment: "center", fontSize: 10, margin: [0, 4, 0, 4] },
+                { text: "จำนวนมัด", bold: true, alignment: "center", fontSize: 9.5, margin: [0, 4, 0, 4] },
+                { text: "จำนวนเส้น", bold: true, alignment: "center", fontSize: 9.5, margin: [0, 4, 0, 4] },
+                { text: "น้ำหนัก\n(Kg.)", bold: true, alignment: "center", fontSize: 9.5, margin: [0, 1, 0, 1] },
                 { text: "Coil No.", bold: true, alignment: "center", fontSize: 10, margin: [0, 4, 0, 4] },
                 { text: "H/N No.", bold: true, alignment: "center", fontSize: 10, margin: [0, 4, 0, 4] },
-                { text: "น้ำหนัก Coil (Kg.)", bold: true, alignment: "center", fontSize: 9.5, margin: [0, 4, 0, 4] },
-                { text: "STS No.", bold: true, alignment: "center", fontSize: 10, margin: [0, 4, 0, 4] },
-                { text: "เลขที่คำร้องขอ\nซื้อดวงตราตะกั่ว", bold: true, alignment: "center", fontSize: 9.5, margin: [0, 1, 0, 1] },
-                { text: "ใบขนสินค้าขาเข้าเลขที่", bold: true, alignment: "center", fontSize: 9.5, margin: [0, 4, 0, 4] },
-                { text: "รายการที่", bold: true, alignment: "center", fontSize: 9.5, margin: [0, 4, 0, 4] },
-                { text: "ชนิดของ", bold: true, alignment: "center", fontSize: 10, margin: [0, 4, 0, 4] },
             ]);
 
             // Table Rows (25 rows per page)
@@ -599,31 +641,45 @@
                 var rowIdx = (p * rowsPerPage) + r + 1;
 
                 if (rowItem) {
-                    var dtStr = rowItem.createdate_formatted || (rowItem.createdate ? (rowItem.createdate.date || rowItem.createdate) : "");
+                    var dtStr = rowItem.create_date_formatted || (rowItem.create_date ? (rowItem.create_date.date || rowItem.create_date) : "");
                     var shortDt = FormatThaiShortDate(dtStr);
 
                     var weightStr = "";
                     if (rowItem.weight !== null && rowItem.weight !== undefined && rowItem.weight !== "") {
                         var nw = Number(rowItem.weight);
-                        weightStr = isNaN(nw) ? String(rowItem.weight) : nw.toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+                        weightStr = isNaN(nw) ? String(rowItem.weight) : nw.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                    }
+
+                    var pcsStr = "";
+                    if (rowItem.PCS !== null && rowItem.PCS !== undefined && rowItem.PCS !== "") {
+                        var np = Number(rowItem.PCS);
+                        pcsStr = isNaN(np) ? String(rowItem.PCS) : np.toLocaleString("en-US");
                     }
 
                     tableBody.push([
                         { text: String(rowIdx), alignment: "center", fontSize: 9.5 },
-                        { text: shortDt, alignment: "center", fontSize: 9.5 },
-                        { text: String(rowItem.c_no || "-"), alignment: "center", fontSize: 9.5 },
-                        { text: String(rowItem.h_no || "-"), alignment: "center", fontSize: 9.5 },
+                        { text: shortDt, alignment: "center", fontSize: 9 },
+                        { text: String(rowItem.Uf_NPS || "-"), alignment: "center", fontSize: 9.5 },
+                        { text: String(rowItem.Uf_spec || "-"), alignment: "left", fontSize: 9 },
+                        { text: String(rowItem.Uf_Schedule || "-"), alignment: "center", fontSize: 9.5 },
+                        { text: String(rowItem.Uf_length || "-"), alignment: "center", fontSize: 9.5 },
+                        { text: String(rowItem.Uf_TypeEnd || "-"), alignment: "center", fontSize: 9.5 },
+                        { text: String(rowItem.uf_pack !== null && rowItem.uf_pack !== undefined ? rowItem.uf_pack : "-"), alignment: "center", fontSize: 9.5 },
+                        { text: String(rowItem.sts_no || "-"), alignment: "center", fontSize: 9.5 },
+                        { text: String(rowItem.countlot !== null && rowItem.countlot !== undefined ? rowItem.countlot : "-"), alignment: "center", fontSize: 9.5 },
+                        { text: pcsStr, alignment: "right", fontSize: 9.5 },
                         { text: weightStr, alignment: "right", fontSize: 9.5 },
-                        { text: String(rowItem.sno || "-"), alignment: "center", fontSize: 9.5 },
-                        { text: "", alignment: "center", fontSize: 9.5 }, // เลขที่คำร้องขอซื้อดวงตราตะกั่ว
-                        { text: String(rowItem.uf_doc_no || "-"), alignment: "center", fontSize: 9.5 },
-                        { text: String(rowItem.po_line !== null && rowItem.po_line !== undefined ? rowItem.po_line : "-"), alignment: "center", fontSize: 9.5 },
-                        { text: String(rowItem.description || "-"), alignment: "left", fontSize: 9.5 },
+                        { text: String(rowItem.c_no || "-"), alignment: "center", fontSize: 9 },
+                        { text: String(rowItem.h_no || "-"), alignment: "center", fontSize: 9 },
                     ]);
                 } else {
                     // Empty row padding up to 25 rows
                     tableBody.push([
                         { text: String(rowIdx), alignment: "center", fontSize: 9.5 },
+                        { text: "", alignment: "center" },
+                        { text: "", alignment: "center" },
+                        { text: "", alignment: "center" },
+                        { text: "", alignment: "center" },
                         { text: "", alignment: "center" },
                         { text: "", alignment: "center" },
                         { text: "", alignment: "center" },
@@ -639,7 +695,7 @@
 
             var pageContent = [
                 {
-                    text: "รายงานนำวัตถุดิบออกจากคลังสินค้าทัณฑ์บนสาขาปู่เจ้าไปสาขาวังน้อย ประจำสัปดาห์ " + dateRangeText,
+                    text: "รายงานนำสินค้าขาออก ประจำสัปดาห์ " + dateRangeText,
                     fontSize: 13.5,
                     bold: true,
                     alignment: "center",
@@ -647,13 +703,13 @@
                 },
                 {
                     table: {
-                        widths: [25, 60, 80, 75, 70, 60, 85, 110, 42, 114],
+                        widths: [22, 52, 36, 78, 40, 40, 38, 38, 54, 42, 42, 63, 88, 88],
                         headerRows: 1,
                         body: tableBody
                     },
                     layout: {
-                        paddingLeft: function () { return 3; },
-                        paddingRight: function () { return 3; },
+                        paddingLeft: function () { return 2; },
+                        paddingRight: function () { return 2; },
                         paddingTop: function () { return 2.2; },
                         paddingBottom: function () { return 2.2; }
                     }
