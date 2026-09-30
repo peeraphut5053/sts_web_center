@@ -351,7 +351,59 @@ from STS_custom_IN where date_in between '$StartDate' and '$EndDate' Order by da
         return $rs;
     }
 
+    function GetCustomInReport($startDate = '', $endDate = '', $sno = '') {
+        $where = "WHERE 1=1";
+        if (!empty($startDate) && !empty($endDate)) {
+            $sDate = str_replace("'", "''", $startDate);
+            $eDate = str_replace("'", "''", $endDate);
+            $where .= " AND (CONVERT(date, createdate) BETWEEN '$sDate' AND '$eDate')";
+        } elseif (!empty($startDate)) {
+            $sDate = str_replace("'", "''", $startDate);
+            $where .= " AND CONVERT(date, createdate) >= '$sDate'";
+        } elseif (!empty($endDate)) {
+            $eDate = str_replace("'", "''", $endDate);
+            $where .= " AND CONVERT(date, createdate) <= '$eDate'";
+        }
 
+        if (!empty($sno)) {
+            $safeSno = str_replace("'", "''", $sno);
+            $where .= " AND sno LIKE '%$safeSno%'";
+        }
+
+        $query = "SELECT * FROM V_STS_custom_IN $where ORDER BY createdate DESC, sno DESC";
+        $stmt = sqlsrv_query($this->StrConn, $query);
+        $result = array();
+        if ($stmt !== false) {
+            while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
+                if (isset($row['createdate']) && $row['createdate'] instanceof DateTime) {
+                    $row['createdate_formatted'] = $row['createdate']->format('Y-m-d H:i:s');
+                }
+                $result[] = $row;
+            }
+            sqlsrv_free_stmt($stmt);
+        }
+        return $result;
+    }
+
+    function GetCustomOutSpReport($transDateStarting = '', $transDateEnding = '', $docNum = '') {
+        $sDate = !empty($transDateStarting) ? "'" . str_replace("'", "''", $transDateStarting) . "'" : "NULL";
+        $eDate = !empty($transDateEnding) ? "'" . str_replace("'", "''", $transDateEnding) . "'" : "NULL";
+        $doc = !empty($docNum) ? "'" . str_replace("'", "''", $docNum) . "'" : "NULL";
+
+        $query = "EXEC [dbo].[STS_custom_OUTsp] @TransDateStarting = $sDate, @TransDateEnding = $eDate, @DocNum = $doc";
+        $stmt = sqlsrv_query($this->StrConn, $query);
+        $result = array();
+        if ($stmt !== false) {
+            while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
+                if (isset($row['create_date']) && $row['create_date'] instanceof DateTime) {
+                    $row['create_date_formatted'] = $row['create_date']->format('Y-m-d H:i:s');
+                }
+                $result[] = $row;
+            }
+            sqlsrv_free_stmt($stmt);
+        }
+        return $result;
+    }
 
 }
 ?>

@@ -1,0 +1,739 @@
+<style>
+    .content-wrapper,
+    #MainContent {
+        background-color: #ecf0f5 !important;
+    }
+
+    .hotroll-page-container {
+        padding: 10px 14px 24px 14px;
+        background-color: #ecf0f5;
+        min-height: calc(100vh - 101px);
+        margin: 0;
+    }
+
+    .hotroll-header {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-left: 4px solid #3c8dbc;
+        border-radius: 6px;
+        padding: 12px 18px;
+        margin-top: 0;
+        margin-bottom: 14px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .hotroll-header .hotroll-title-group {
+        display: flex;
+        align-items: baseline;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .hotroll-header h1 {
+        margin: 0;
+        font-size: 20px;
+        font-weight: 700;
+        color: #1e293b;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .hotroll-header .hotroll-subtitle {
+        font-size: 13px;
+        color: #64748b;
+        font-weight: 500;
+    }
+
+    .hotroll-header .badge-tag {
+        background: #eff6ff;
+        color: #1d4ed8;
+        border: 1px solid #bfdbfe;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 11.5px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .hotroll-filter-box {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        padding: 14px 14px 6px 14px;
+        margin-bottom: 16px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    }
+
+    .hotroll-filter-box .filter-box-title {
+        font-size: 12.5px;
+        font-weight: 700;
+        color: #475569;
+        margin-bottom: 10px;
+        padding-bottom: 6px;
+        border-bottom: 1px dashed #e2e8f0;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .col-search {
+        padding-left: 6px;
+        padding-right: 6px;
+        margin-bottom: 10px;
+    }
+
+    .hotroll-filter-box .input-group-addon {
+        background-color: #f8fafc;
+        border-color: #cbd5e1;
+        color: #334155;
+        font-size: 12px;
+        font-weight: 600;
+        padding: 6px 10px;
+        min-width: 105px;
+        text-align: left;
+        border-top-left-radius: 4px;
+        border-bottom-left-radius: 4px;
+    }
+
+    .hotroll-filter-box .form-control {
+        border-color: #cbd5e1;
+        font-size: 12.5px;
+        height: 34px;
+        color: #1e293b;
+        box-shadow: none;
+        border-top-right-radius: 4px;
+        border-bottom-right-radius: 4px;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .hotroll-filter-box .form-control:focus {
+        border-color: #3c8dbc;
+        box-shadow: 0 0 0 2px rgba(60, 141, 188, 0.2);
+    }
+
+    .btn-search-panel {
+        background: #3c8dbc;
+        border: 1px solid #367fa9;
+        color: #ffffff;
+        font-weight: 600;
+        font-size: 13px;
+        height: 34px;
+        padding: 6px 16px;
+        border-radius: 4px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+    }
+
+    .btn-search-panel:hover,
+    .btn-search-panel:focus {
+        background: #367fa9;
+        color: #ffffff;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-pdf-panel {
+        background: #e11d48;
+        border: 1px solid #be123c;
+        color: #ffffff;
+        font-weight: 600;
+        font-size: 13px;
+        height: 34px;
+        padding: 6px 16px;
+        border-radius: 4px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+    }
+
+    .btn-pdf-panel:hover,
+    .btn-pdf-panel:focus {
+        background: #be123c;
+        color: #ffffff;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-reset-panel {
+        background: #f8fafc;
+        border: 1px solid #cbd5e1;
+        color: #475569;
+        font-weight: 600;
+        font-size: 12.5px;
+        height: 34px;
+        padding: 6px 12px;
+        border-radius: 4px;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+    }
+
+    .btn-reset-panel:hover,
+    .btn-reset-panel:focus {
+        background: #e2e8f0;
+        color: #1e293b;
+    }
+
+    .table thead th {
+        text-align: center;
+        background-color: #f1f5f9;
+        color: #1e293b;
+        font-weight: 700;
+        border-bottom: 2px solid #cbd5e1 !important;
+    }
+
+    #tblReport th,
+    #tblReport td {
+        white-space: nowrap !important;
+        vertical-align: middle;
+        font-size: 12.5px;
+    }
+
+    .col-flt-page {
+        padding-top: 10px;
+        font-weight: bold;
+    }
+
+    #divReport {
+        margin-top: 10px;
+        margin-bottom: 20px;
+    }
+
+    #divReport .dataTables_wrapper .row {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+
+    #divReport .dataTables_wrapper [class*="col-"] {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    /* Normalize DataTables Toolbar Buttons (Print, Excel, PDF) */
+    #divReport .dt-buttons {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+        margin-top: 5px !important;
+        margin-bottom: 5px !important;
+    }
+
+    #divReport .dt-buttons .dt-button,
+    #divReport .dt-buttons .buttons-print,
+    #divReport .dt-buttons .buttons-excel,
+    #divReport .dt-buttons .btn-dt-pdf {
+        height: 32px !important;
+        max-height: 32px !important;
+        min-height: 32px !important;
+        line-height: 32px !important;
+        padding: 0 14px !important;
+        margin: 0 !important;
+        border: none !important;
+        border-radius: 4px !important;
+        font-size: 12.5px !important;
+        font-weight: 600 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        vertical-align: middle !important;
+        box-sizing: border-box !important;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08) !important;
+        transition: all 0.2s ease !important;
+    }
+
+    #divReport .dt-buttons .btn-dt-pdf {
+        background-color: #d9534f !important;
+        background-image: none !important;
+        color: #ffffff !important;
+    }
+
+    #divReport .dt-buttons .btn-dt-pdf:hover,
+    #divReport .dt-buttons .btn-dt-pdf:focus {
+        background-color: #c9302c !important;
+        color: #ffffff !important;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15) !important;
+    }
+</style>
+
+<div class="hotroll-page-container">
+    <div class="hotroll-header">
+        <div class="hotroll-title-group">
+            <h1><i class="fa fa-reply-all text-primary"></i> รายงานท่อขาเข้า</h1>
+        </div>
+    </div>
+
+    <div class="hotroll-filter-box">
+        <div class="filter-box-title">
+            <i class="fa fa-filter text-primary"></i> เงื่อนไขการค้นหา (Search Filters)
+        </div>
+        <div class="row">
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 col-search">
+                <div class="input-group">
+                    <div class="input-group-addon"><i class="fa fa-calendar text-muted"></i> From date</div>
+                    <input type="text" class="form-control txt-filter" id="txtFromDate" placeholder="YYYY-MM-DD"
+                        value="">
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 col-search">
+                <div class="input-group">
+                    <div class="input-group-addon"><i class="fa fa-calendar text-muted"></i> To date</div>
+                    <input type="text" class="form-control txt-filter" id="txtToDate" placeholder="YYYY-MM-DD" value="">
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 col-search">
+                <div class="input-group">
+                    <div class="input-group-addon"><i class="fa fa-file-text-o text-info"></i> Doc Num</div>
+                    <input type="text" class="form-control txt-filter" id="txtDocNum" placeholder="เช่น MQD...">
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 col-search" style="display: flex; gap: 6px;">
+                <button id="btnSearch" type="button" class="btn btn-search-panel" style="flex: 1;">
+                    <i class="fa fa-search"></i>&nbsp;ค้นหา
+                </button>
+                <button id="btnClear" type="button" class="btn btn-reset-panel" onclick="ResetFilter()"
+                    title="ล้างค่าการค้นหา">
+                    <i class="fa fa-refresh"></i>&nbsp;ล้างค่า
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="divReport">
+        <table class="table table-condensed table-bordered table-striped" id="tblReport" style="width: 100%;">
+            <thead>
+                <tr>
+                    <th>ลำดับ</th>
+                    <th>วันที่เบิกกลับเข้าสาขาปู่เจ้า</th>
+                    <th>ขนาด</th>
+                    <th>มาตรฐาน</th>
+                    <th>ความหนา</th>
+                    <th>ความยาว</th>
+                    <th>ชนิด</th>
+                    <th>เส้น/มัด</th>
+                    <th>STS No.</th>
+                    <th>จำนวนมัด</th>
+                    <th>จำนวนเส้น</th>
+                    <th>น้ำหนัก (Kg.)</th>
+                    <th>Coil No.</th>
+                    <th>H/N No.</th>
+                </tr>
+            </thead>
+            <tbody id="tbodytblReport">
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var g_reportData = [];
+
+    // PDF Fonts configuration
+    pdfMake.fonts = {
+        THSarabunNew: {
+            normal: 'THSarabunNew.ttf',
+            bold: 'THSarabunNew Bold.ttf',
+            italics: 'THSarabunNew-Italic.ttf',
+            bolditalics: 'THSarabunNew-BoldItalic.ttf'
+        }
+    };
+
+    $(document).ready(function () {
+        $("#txtFromDate, #txtToDate").datepicker({
+            dateFormat: 'yy-mm-dd',
+        });
+
+        $("#btnSearch").click(function () {
+            ReportSearch();
+        });
+
+        $(".txt-filter").on("keypress", function (e) {
+            if (e.keyCode == 13) {
+                ReportSearch();
+                return false;
+            }
+        });
+
+        RenderTable([]);
+    });
+
+    function GetToday() {
+        var d = new Date();
+        var month = '' + (d.getMonth() + 1);
+        var day = '' + d.getDate();
+        var year = d.getFullYear();
+        if (month.length < 2) month = '0' + month;
+        if (day.length < 2) day = '0' + day;
+        return [year, month, day].join('-');
+    }
+
+    function ResetFilter() {
+        $("#txtFromDate").val("2025-07-01");
+        $("#txtToDate").val(GetToday());
+        $("#txtDocNum").val("");
+    }
+
+    function FormatThaiShortDate(dateStr) {
+        if (!dateStr) return "";
+        var d = new Date(dateStr);
+        if (isNaN(d.getTime())) return dateStr;
+        var day = String(d.getDate()).padStart(2, "0");
+        var month = String(d.getMonth() + 1).padStart(2, "0");
+        var yearBE = (d.getFullYear() + 543) % 100;
+        return day + "/" + month + "/" + yearBE;
+    }
+
+    function GetThaiDateRangeText(startStr, endStr) {
+        var thaiMonths = [
+            "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน",
+            "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"
+        ];
+        if (!startStr && !endStr) return "";
+        var d1 = startStr ? new Date(startStr) : null;
+        var d2 = endStr ? new Date(endStr) : null;
+
+        if (d1 && !isNaN(d1.getTime()) && d2 && !isNaN(d2.getTime())) {
+            var y1 = d1.getFullYear() + 543;
+            var y2 = d2.getFullYear() + 543;
+            if (d1.getMonth() === d2.getMonth() && y1 === y2) {
+                return "วันที่ " + d1.getDate() + " - " + d2.getDate() + " " + thaiMonths[d2.getMonth()] + " " + y2;
+            }
+            return "วันที่ " + d1.getDate() + " " + thaiMonths[d1.getMonth()] + " " + y1 + " - " + d2.getDate() + " " + thaiMonths[d2.getMonth()] + " " + y2;
+        } else if (d1 && !isNaN(d1.getTime())) {
+            return "ตั้งแต่วันที่ " + d1.getDate() + " " + thaiMonths[d1.getMonth()] + " " + (d1.getFullYear() + 543);
+        } else if (d2 && !isNaN(d2.getTime())) {
+            return "ถึงวันที่ " + d2.getDate() + " " + thaiMonths[d2.getMonth()] + " " + (d2.getFullYear() + 543);
+        }
+        return "";
+    }
+
+    function ReportSearch() {
+        var txtFromDate = $("#txtFromDate").val().trim();
+        var txtToDate = $("#txtToDate").val().trim();
+        var doc_num = $("#txtDocNum").val().trim();
+
+        $.ajax({
+            type: 'POST',
+            url: "./module/RPT_HOT_ROLLED_COIL_IN/data.php",
+            dataType: 'json',
+            beforeSend: function () {
+                $("#btnSearch").html("<i class='fa fa-spinner fa-spin'></i>&nbsp;กำลังค้นหา...");
+            },
+            data: {
+                load: "pipe_in",
+                txtFromDate: txtFromDate,
+                txtToDate: txtToDate,
+                doc_num: doc_num
+            },
+            success: function (data) {
+                g_reportData = data || [];
+                RenderTable(g_reportData);
+                $("#btnSearch").html("<i class='fa fa-search'></i>&nbsp;ค้นหา");
+            },
+            error: function (e) {
+                console.log("Error loading data:", e);
+                $("#btnSearch").html("<i class='fa fa-search'></i>&nbsp;ค้นหา");
+                $.alert("เกิดข้อผิดพลาดในการดึงข้อมูลจากระบบ");
+            }
+        });
+    }
+
+    function RenderTable(data) {
+        if ($.fn.DataTable.isDataTable('#tblReport')) {
+            $('#tblReport').DataTable().destroy();
+        }
+
+        $('#tblReport').DataTable({
+            scrollY: "60vh",
+            scrollCollapse: true,
+            scrollX: true,
+            aaData: data,
+            paging: false,
+            searching: true,
+            bInfo: true,
+            language: {
+                emptyTable: (!data || data.length === 0) ? "กรุณาระบุเงื่อนไขแล้วกดปุ่มค้นหาข้อมูล" : "ไม่พบข้อมูลตามเงื่อนไขที่ค้นหา",
+                info: "แสดงทั้งหมด _TOTAL_ รายการ",
+                infoEmpty: "แสดง 0 รายการ",
+                infoFiltered: "(กรองจากทั้งหมด _MAX_ รายการ)",
+                search: "ค้นหาในตาราง:"
+            },
+            order: [[1, "asc"]],
+            drawCallback: function (settings) {
+                var api = this.api();
+                api.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                    cell.innerHTML = i + 1;
+                });
+            },
+            columns: [
+                {
+                    data: null,
+                    className: "text-center font-bold",
+                    orderable: false,
+                    searchable: false,
+                    render: function (data, type, row, meta) {
+                        return meta.row + 1;
+                    }
+                },
+                {
+                    data: "create_date",
+                    className: "text-center",
+                    render: function (data, type, row) {
+                        var rawDate = row && row.create_date_formatted ? row.create_date_formatted : (data && data.date ? data.date : data);
+                        if (!rawDate) return "-";
+                        if (type === "sort" || type === "type") {
+                            return moment(rawDate).isValid() ? moment(rawDate).format('YYYYMMDD') : rawDate;
+                        }
+                        return FormatThaiShortDate(rawDate);
+                    }
+                },
+                {
+                    data: "Uf_NPS",
+                    className: "text-center",
+                    render: function (data) { return data ? data : "-"; }
+                },
+                {
+                    data: "Uf_spec",
+                    className: "text-left",
+                    render: function (data) { return data ? data : "-"; }
+                },
+                {
+                    data: "Uf_Schedule",
+                    className: "text-center",
+                    render: function (data) { return data ? data : "-"; }
+                },
+                {
+                    data: "Uf_length",
+                    className: "text-center",
+                    render: function (data) { return data ? data : "-"; }
+                },
+                {
+                    data: "Uf_TypeEnd",
+                    className: "text-center",
+                    render: function (data) { return data ? data : "-"; }
+                },
+                {
+                    data: "uf_pack",
+                    className: "text-right font-mono",
+                    render: function (data) { return data !== null && data !== undefined ? data : "-"; }
+                },
+                {
+                    data: "sts_no",
+                    className: "text-center font-bold text-red-600",
+                    render: function (data) { return data ? data : "-"; }
+                },
+                {
+                    data: "countlot",
+                    className: "text-right font-mono",
+                    render: function (data) { return data !== null && data !== undefined ? data : "-"; }
+                },
+                {
+                    data: "PCS",
+                    className: "text-right font-mono",
+                    render: function (data) {
+                        if (data === null || data === undefined || data === "") return "-";
+                        var num = Number(data);
+                        return isNaN(num) ? data : num.toLocaleString("en-US");
+                    }
+                },
+                {
+                    data: "weight",
+                    className: "text-right font-mono",
+                    render: function (data) {
+                        if (data === null || data === undefined || data === "") return "-";
+                        var num = Number(data);
+                        return isNaN(num) ? data : num.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                    }
+                },
+                {
+                    data: "c_no",
+                    className: "text-center font-mono",
+                    render: function (data) { return data ? data : "-"; }
+                },
+                {
+                    data: "h_no",
+                    className: "text-center font-mono",
+                    render: function (data) { return data ? data : "-"; }
+                }
+            ],
+            dom: "<'row'<'col-md-7'B><'col-md-5 text-right'f>>" +
+                "<'row'<'col-md-12'tr>>" +
+                "<'row'<'col-md-12 text-left'i>>",
+            buttons: [
+                {
+                    extend: 'print',
+                    text: "<i class='fa fa-print'></i>&nbsp;Print",
+                    title: 'รายงานนำสินค้ากลับเข้าสาขาปู่เจ้า ประจำสัปดาห์'
+                },
+                {
+                    extend: 'excel',
+                    text: "<i class='fa fa-file-excel-o'></i>&nbsp;Excel",
+                    title: 'รายงานนำสินค้ากลับเข้าสาขาปู่เจ้า ประจำสัปดาห์'
+                },
+                {
+                    text: "<i class='fa fa-file-pdf-o'></i>&nbsp;พิมพ์รายงานนำสินค้ากลับเข้าสาขาปู่เจ้า ประจำสัปดาห์",
+                    className: "btn-dt-pdf",
+                    action: function () {
+                        PrintPdfImage1();
+                    }
+                },
+            ]
+        });
+    }
+
+    // =========================================================================
+    // Print PDF Image 1: รายงานนำสินค้ากลับเข้าสาขาปู่เจ้า (14 columns, 25 rows/page)
+    // =========================================================================
+    function PrintPdfImage1() {
+        if (!g_reportData || g_reportData.length === 0) {
+            $.alert("ไม่มีข้อมูลที่จะพิมพ์ PDF กรุณาค้นหาข้อมูลก่อน");
+            return;
+        }
+
+        var startStr = $("#txtFromDate").val().trim();
+        var endStr = $("#txtToDate").val().trim();
+        var dateRangeText = GetThaiDateRangeText(startStr, endStr);
+
+        var docPages = [];
+        var rowsPerPage = 25;
+        var totalItems = g_reportData.length;
+        var pageCount = Math.max(1, Math.ceil(totalItems / rowsPerPage));
+
+        for (var p = 0; p < pageCount; p++) {
+            var pageData = g_reportData.slice(p * rowsPerPage, (p + 1) * rowsPerPage);
+            var tableBody = [];
+
+            // Table Header 14 Columns matching Image 1
+            tableBody.push([
+                { text: "ลำดับ", bold: true, alignment: "center", fontSize: 10, margin: [0, 4, 0, 4] },
+                { text: "วันที่เบิกกลับเข้า\nสาขาปู่เจ้า", bold: true, alignment: "center", fontSize: 9, margin: [0, 1, 0, 1] },
+                { text: "ขนาด", bold: true, alignment: "center", fontSize: 10, margin: [0, 4, 0, 4] },
+                { text: "มาตรฐาน", bold: true, alignment: "center", fontSize: 10, margin: [0, 4, 0, 4] },
+                { text: "ความหนา", bold: true, alignment: "center", fontSize: 10, margin: [0, 4, 0, 4] },
+                { text: "ความยาว", bold: true, alignment: "center", fontSize: 10, margin: [0, 4, 0, 4] },
+                { text: "ชนิด", bold: true, alignment: "center", fontSize: 10, margin: [0, 4, 0, 4] },
+                { text: "เส้น/มัด", bold: true, alignment: "center", fontSize: 9.5, margin: [0, 4, 0, 4] },
+                { text: "STS No.", bold: true, alignment: "center", fontSize: 10, margin: [0, 4, 0, 4] },
+                { text: "จำนวนมัด", bold: true, alignment: "center", fontSize: 9.5, margin: [0, 4, 0, 4] },
+                { text: "จำนวนเส้น", bold: true, alignment: "center", fontSize: 9.5, margin: [0, 4, 0, 4] },
+                { text: "น้ำหนัก\n(Kg.)", bold: true, alignment: "center", fontSize: 9.5, margin: [0, 1, 0, 1] },
+                { text: "Coil No.", bold: true, alignment: "center", fontSize: 10, margin: [0, 4, 0, 4] },
+                { text: "H/N No.", bold: true, alignment: "center", fontSize: 10, margin: [0, 4, 0, 4] },
+            ]);
+
+            // Table Rows (25 rows per page)
+            for (var r = 0; r < rowsPerPage; r++) {
+                var rowItem = pageData[r];
+                var rowIdx = (p * rowsPerPage) + r + 1;
+
+                if (rowItem) {
+                    var dtStr = rowItem.create_date_formatted || (rowItem.create_date ? (rowItem.create_date.date || rowItem.create_date) : "");
+                    var shortDt = FormatThaiShortDate(dtStr);
+
+                    var weightStr = "";
+                    if (rowItem.weight !== null && rowItem.weight !== undefined && rowItem.weight !== "") {
+                        var nw = Number(rowItem.weight);
+                        weightStr = isNaN(nw) ? String(rowItem.weight) : nw.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                    }
+
+                    var pcsStr = "";
+                    if (rowItem.PCS !== null && rowItem.PCS !== undefined && rowItem.PCS !== "") {
+                        var np = Number(rowItem.PCS);
+                        pcsStr = isNaN(np) ? String(rowItem.PCS) : np.toLocaleString("en-US");
+                    }
+
+                    tableBody.push([
+                        { text: String(rowIdx), alignment: "center", fontSize: 9.5 },
+                        { text: shortDt, alignment: "center", fontSize: 9 },
+                        { text: String(rowItem.Uf_NPS || "-"), alignment: "center", fontSize: 9.5 },
+                        { text: String(rowItem.Uf_spec || "-"), alignment: "left", fontSize: 9 },
+                        { text: String(rowItem.Uf_Schedule || "-"), alignment: "center", fontSize: 9.5 },
+                        { text: String(rowItem.Uf_length || "-"), alignment: "center", fontSize: 9.5 },
+                        { text: String(rowItem.Uf_TypeEnd || "-"), alignment: "center", fontSize: 9.5 },
+                        { text: String(rowItem.uf_pack !== null && rowItem.uf_pack !== undefined ? rowItem.uf_pack : "-"), alignment: "center", fontSize: 9.5 },
+                        { text: String(rowItem.sts_no || "-"), alignment: "center", fontSize: 9.5 },
+                        { text: String(rowItem.countlot !== null && rowItem.countlot !== undefined ? rowItem.countlot : "-"), alignment: "center", fontSize: 9.5 },
+                        { text: pcsStr, alignment: "right", fontSize: 9.5 },
+                        { text: weightStr, alignment: "right", fontSize: 9.5 },
+                        { text: String(rowItem.c_no || "-"), alignment: "center", fontSize: 9 },
+                        { text: String(rowItem.h_no || "-"), alignment: "center", fontSize: 9 },
+                    ]);
+                } else {
+                    // Empty row padding up to 25 rows
+                    tableBody.push([
+                        { text: String(rowIdx), alignment: "center", fontSize: 9.5 },
+                        { text: "", alignment: "center" },
+                        { text: "", alignment: "center" },
+                        { text: "", alignment: "center" },
+                        { text: "", alignment: "center" },
+                        { text: "", alignment: "center" },
+                        { text: "", alignment: "center" },
+                        { text: "", alignment: "center" },
+                        { text: "", alignment: "center" },
+                        { text: "", alignment: "center" },
+                        { text: "", alignment: "center" },
+                        { text: "", alignment: "center" },
+                        { text: "", alignment: "center" },
+                        { text: "", alignment: "center" },
+                    ]);
+                }
+            }
+
+            var pageContent = [
+                {
+                    text: "รายงานนำสินค้ากลับเข้าสาขาปู่เจ้า ประจำสัปดาห์ " + dateRangeText,
+                    fontSize: 13.5,
+                    bold: true,
+                    alignment: "center",
+                    margin: [0, 0, 0, 8]
+                },
+                {
+                    table: {
+                        widths: [22, 52, 36, 78, 40, 40, 38, 38, 54, 42, 42, 63, 88, 88],
+                        headerRows: 1,
+                        body: tableBody
+                    },
+                    layout: {
+                        paddingLeft: function () { return 2; },
+                        paddingRight: function () { return 2; },
+                        paddingTop: function () { return 2.2; },
+                        paddingBottom: function () { return 2.2; }
+                    }
+                }
+            ];
+
+            if (p < pageCount - 1) {
+                pageContent.push({ text: "", pageBreak: "after" });
+            }
+
+            docPages.push(pageContent);
+        }
+
+        var docDefinition = {
+            pageSize: 'A4',
+            pageOrientation: 'landscape',
+            pageMargins: [25, 20, 25, 20],
+            content: docPages,
+            defaultStyle: {
+                font: 'THSarabunNew',
+                fontSize: 10
+            }
+        };
+
+        pdfMake.createPdf(docDefinition).open();
+    }
+</script>
