@@ -263,7 +263,7 @@
                         <th style="width: 80px;">QC</th>
                         <th style="width: 80px;">ผลิต</th>
                         <th style="width: 75px;">ขายต่าง</th>
-                        <th style="width: 50px;"><i class="fa fa-camera"></i></th>
+                        <th style="width: 100px;">รายงานตรวจสอบ</th>
                         <th style="width: 115px;">จัดการ</th>
                     </tr>
                 </thead>
@@ -814,7 +814,7 @@
                         render: function (data, type, row) {
                             var count = parseInt(data) || 0;
                             if (count > 0) {
-                                return '<button type="button" class="btn btn-xs btn-view-gallery" data-doc="' + row.doc_no + '" style="background-color: #8b5cf6; color: #fff; font-size: 12px; padding: 3px 9px; border-radius: 12px; border: none; font-weight: 600; cursor: pointer;" title="คลิกเพื่อดูรูปภาพ (' + count + ' รูป)"><i class="fa fa-camera"></i> ' + count + '</button>';
+                                return '<button type="button" class="btn btn-xs btn-view-gallery" data-doc="' + row.doc_no + '" style="background-color: #8b5cf6; color: #fff; font-size: 12px; padding: 3px 9px; border-radius: 12px; border: none; font-weight: 600; cursor: pointer;" title="คลิกเพื่อดูไฟล์ (' + count + ' ไฟล์)"><i class="fa fa-file-text-o"></i> ' + count + '</button>';
                             }
                             return '<span class="text-muted" style="font-size: 12px;">0</span>';
                         }
