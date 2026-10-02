@@ -177,7 +177,8 @@ if ($load == "CheckStockComplete") {
 }
 
 if ($load == "GetReportWithdraw") {
-    $rs = $STS_Custom->GetReportWithdraw($doc_no, $StartDate, $EndDate, $dept, $userApprove, $approve1,$approve2,$stock, $wc);
+    $item = isset($item) ? $item : "";
+    $rs = $STS_Custom->GetReportWithdraw($doc_no, $StartDate, $EndDate, $dept, $userApprove, $approve1,$approve2,$stock, $wc, $item);
     echo json_encode($rs);
 }
 

@@ -628,7 +628,7 @@ having  sum(mat.qty) < line.qty_rcvd";
         return $rs;
     }
 
-    function GetReportWithdraw($doc_no, $startDate, $endDate, $dept, $userApprove, $approve1,$approve2,$stock, $wc): array{
+    function GetReportWithdraw($doc_no, $startDate, $endDate, $dept, $userApprove, $approve1,$approve2,$stock, $wc, $item = ''): array{
         $wh = '';
 
         if ($doc_no != "") {
@@ -669,6 +669,11 @@ having  sum(mat.qty) < line.qty_rcvd";
 
         if ($wc != "") {
             $wh = $wh . "and line.wc_dest = '$wc' ";
+        }
+
+        if ($item != "") {
+            $cleanItem = str_replace("'", "''", $item);
+            $wh = $wh . "and (line.item like '%$cleanItem%' or item.[description] like '%$cleanItem%') ";
         }
 
         $query = "select hdr.doc_no, [date] = hdr.createdate
