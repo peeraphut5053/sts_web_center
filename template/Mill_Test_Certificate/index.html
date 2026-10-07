@@ -1576,7 +1576,7 @@
                         return {}
                     }
                 }
-                console.log(filter, 'filter');
+                var uf_spec = filter[0].Uf_spec.includes('API') ? true : false;
 
                 var docDefinition = {
                     pageSize: 'A4',
@@ -1616,10 +1616,10 @@
                                                 { text: ': SAHA THAI STEEL PIPE PCL', fontSize: 12, bold: true, alignment: 'right', margin: [0, 15, 0, 0] }
                                             ], fontSize: 12, bold: true, alignment: 'right', margin: [0, 15, 0, 0]
                                         },
-                                        { text: '78 Moo 3 Poochao Road,', fontSize: 10, bold: true, alignment: 'right', margin: [0, 0, 0, 0] },
-                                        { text: 'Bangyapraek, Phrapradaeng,', fontSize: 10, bold: true, alignment: 'right', margin: [0, 0, 0, 0] },
-                                        { text: 'Samuthprakarn 10131 Thailand.', fontSize: 10, bold: true, alignment: 'right', margin: [0, 0, 0, 0] },
-                                        { text: `Tel. +66 (0) 2385-9023`, fontSize: 10, bold: true, alignment: 'right', margin: [0, 0, 0, 0] },
+                                        { text: uf_spec ? '224 Moo 5 Lamsai, Wangnoi,' : '78 Moo 3 Poochao Road,', fontSize: 10, bold: true, alignment: 'right', margin: [0, 0, 0, 0] },
+                                        { text: uf_spec ? 'Phanakhonsriayutthaya, 13170,' : 'Bangyapraek, Phrapradaeng,', fontSize: 10, bold: true, alignment: 'right', margin: [0, 0, 0, 0] },
+                                        { text: uf_spec ? 'Thailand.' : 'Samuthprakarn 10131 Thailand.', fontSize: 10, bold: true, alignment: 'right', margin: [0, 0, 0, 0] },
+                                        { text: uf_spec ? 'Tel +66 (0) 35-272-555' : 'Tel. +66 (0) 2385-9023', fontSize: 10, bold: true, alignment: 'right', margin: [0, 0, 0, 0] },
                                         qrCode(currentPage, pageData),
                                     ],
 
@@ -1633,7 +1633,7 @@
                         return {
                             margin: [20, 15, 80, 10],
                             columns: [
-                                { text: 'FOMQC-80/01-JAN-25', fontSize: 10, bold: true, alignment: 'left' },
+                                { text: uf_spec ? 'FOMQC-79/01-JUN-26' : 'FOMQC-80/01-JAN-25', fontSize: 10, bold: true, alignment: 'left' },
                                 {
                                     text: [
                                         { text: `ISO 9001 Certificate by Bureau Veritas (#TH0` },
@@ -2154,6 +2154,7 @@
                     }
                 }
 
+                var uf_spec = filter[0].Uf_spec.includes('API') ? true : false;
 
                 var docDefinition = {
                     pageSize: 'A4',
@@ -2192,10 +2193,10 @@
                                                 { text: ': SAHA THAI STEEL PIPE PCL', fontSize: 12, bold: true, alignment: 'right', margin: [0, 15, 0, 0] }
                                             ], fontSize: 12, bold: true, alignment: 'right', margin: [0, 15, 0, 0]
                                         },
-                                        { text: '78 Moo 3 Poochao Road,', fontSize: 10, bold: true, alignment: 'right', margin: [0, 0, 0, 0] },
-                                        { text: 'Bangyapraek, Phrapradaeng,', fontSize: 10, bold: true, alignment: 'right', margin: [0, 0, 0, 0] },
-                                        { text: 'Samuthprakarn 10131 Thailand.', fontSize: 10, bold: true, alignment: 'right', margin: [0, 0, 0, 0] },
-                                        { text: `Tel. +66 (0) 2385-9023`, fontSize: 10, bold: true, alignment: 'right', margin: [0, 0, 0, 0] },
+                                        { text: uf_spec ? '224 Moo 5 Lamsai, Wangnoi,' : '78 Moo 3 Poochao Road,', fontSize: 10, bold: true, alignment: 'right', margin: [0, 0, 0, 0] },
+                                        { text: uf_spec ? 'Phanakhonsriayutthaya, 13170,' : 'Bangyapraek, Phrapradaeng,', fontSize: 10, bold: true, alignment: 'right', margin: [0, 0, 0, 0] },
+                                        { text: uf_spec ? 'Thailand.' : 'Samuthprakarn 10131 Thailand.', fontSize: 10, bold: true, alignment: 'right', margin: [0, 0, 0, 0] },
+                                        { text: uf_spec ? 'Tel +66 (0) 35-272-555' : 'Tel. +66 (0) 2385-9023', fontSize: 10, bold: true, alignment: 'right', margin: [0, 0, 0, 0] },
                                         qrCode(currentPage, pageData),
                                     ],
 
@@ -2209,7 +2210,7 @@
                         return {
                             margin: [20, 15, 80, 10],
                             columns: [
-                                { text: 'FOMQC-80/01-JAN-25', fontSize: 10, bold: true, alignment: 'left' },
+                                { text: uf_spec ? 'FOMQC-79/01-JUN-26' : 'FOMQC-80/01-JAN-25', fontSize: 10, bold: true, alignment: 'left' },
                                 {
                                     text: [
                                         { text: `ISO 9001 Certificate by Bureau Veritas (#TH0` },
@@ -2855,7 +2856,7 @@
                         return {}
                     }
                 }
-                console.log(filter, 'filter');
+                var uf_spec = filter[0].Uf_spec.includes('API') ? true : false;
 
                 var docDefinition = {
                     pageSize: 'A4',
@@ -2895,10 +2896,10 @@
                                                 { text: ': SAHA THAI STEEL PIPE PCL', fontSize: 12, bold: true, alignment: 'right', margin: [0, 15, 0, 0] }
                                             ], fontSize: 12, bold: true, alignment: 'right', margin: [0, 15, 0, 0]
                                         },
-                                        { text: '78 Moo 3 Poochao Road,', fontSize: 10, bold: true, alignment: 'right', margin: [0, 0, 0, 0] },
-                                        { text: 'Bangyapraek, Phrapradaeng,', fontSize: 10, bold: true, alignment: 'right', margin: [0, 0, 0, 0] },
-                                        { text: 'Samuthprakarn 10131 Thailand.', fontSize: 10, bold: true, alignment: 'right', margin: [0, 0, 0, 0] },
-                                        { text: `Tel. +66 (0) 2385-9023`, fontSize: 10, bold: true, alignment: 'right', margin: [0, 0, 0, 0] },
+                                        { text: uf_spec ? '224 Moo 5 Lamsai, Wangnoi,' : '78 Moo 3 Poochao Road,', fontSize: 10, bold: true, alignment: 'right', margin: [0, 0, 0, 0] },
+                                        { text: uf_spec ? 'Phanakhonsriayutthaya, 13170,' : 'Bangyapraek, Phrapradaeng,', fontSize: 10, bold: true, alignment: 'right', margin: [0, 0, 0, 0] },
+                                        { text: uf_spec ? 'Thailand.' : 'Samuthprakarn 10131 Thailand.', fontSize: 10, bold: true, alignment: 'right', margin: [0, 0, 0, 0] },
+                                        { text: uf_spec ? 'Tel +66 (0) 35-272-555' : 'Tel. +66 (0) 2385-9023', fontSize: 10, bold: true, alignment: 'right', margin: [0, 0, 0, 0] },
                                         qrCode(currentPage, pageData),
                                     ],
 
@@ -2912,7 +2913,7 @@
                         return {
                             margin: [20, 15, 80, 10],
                             columns: [
-                                { text: 'FOMQC-80/01-JAN-25', fontSize: 10, bold: true, alignment: 'left' },
+                                { text: uf_spec ? 'FOMQC-79/01-JUN-26' : 'FOMQC-80/01-JAN-25', fontSize: 10, bold: true, alignment: 'left' },
                                 {
                                     text: [
                                         { text: `ISO 9001 Certificate by Bureau Veritas (#TH0` },
@@ -3396,7 +3397,7 @@
                         return {}
                     }
                 }
-                console.log(filter, 'filter');
+                var uf_spec = filter[0].Uf_spec.includes('API') ? true : false;
 
                 var docDefinition = {
                     pageSize: 'A4',
@@ -3436,10 +3437,10 @@
                                                 { text: ': SAHA THAI STEEL PIPE PCL', fontSize: 12, bold: true, alignment: 'right', margin: [0, 15, 0, 0] }
                                             ], fontSize: 12, bold: true, alignment: 'right', margin: [0, 15, 0, 0]
                                         },
-                                        { text: '78 Moo 3 Poochao Road,', fontSize: 10, bold: true, alignment: 'right', margin: [0, 0, 0, 0] },
-                                        { text: 'Bangyapraek, Phrapradaeng,', fontSize: 10, bold: true, alignment: 'right', margin: [0, 0, 0, 0] },
-                                        { text: 'Samuthprakarn 10131 Thailand.', fontSize: 10, bold: true, alignment: 'right', margin: [0, 0, 0, 0] },
-                                        { text: `Tel. +66 (0) 2385-9023`, fontSize: 10, bold: true, alignment: 'right', margin: [0, 0, 0, 0] },
+                                        { text: uf_spec ? '224 Moo 5 Lamsai, Wangnoi,' : '78 Moo 3 Poochao Road,', fontSize: 10, bold: true, alignment: 'right', margin: [0, 0, 0, 0] },
+                                        { text: uf_spec ? 'Phanakhonsriayutthaya, 13170,' : 'Bangyapraek, Phrapradaeng,', fontSize: 10, bold: true, alignment: 'right', margin: [0, 0, 0, 0] },
+                                        { text: uf_spec ? 'Thailand.' : 'Samuthprakarn 10131 Thailand.', fontSize: 10, bold: true, alignment: 'right', margin: [0, 0, 0, 0] },
+                                        { text: uf_spec ? 'Tel +66 (0) 35-272-555' : 'Tel. +66 (0) 2385-9023', fontSize: 10, bold: true, alignment: 'right', margin: [0, 0, 0, 0] },
                                         qrCode(currentPage, pageData),
                                     ],
 
@@ -3453,7 +3454,7 @@
                         return {
                             margin: [20, 15, 80, 10],
                             columns: [
-                                { text: 'FOMQC-80/01-JAN-25', fontSize: 10, bold: true, alignment: 'left' },
+                                { text: uf_spec ? 'FOMQC-79/01-JUN-26' : 'FOMQC-80/01-JAN-25', fontSize: 10, bold: true, alignment: 'left' },
                                 {
                                     text: [
                                         { text: `ISO 9001 Certificate by Bureau Veritas (#TH0` },
@@ -3925,7 +3926,8 @@
                         return {}
                     }
                 }
-                console.log(filter, 'filter');
+
+                var uf_spec = filter[0].Uf_spec.includes('API') ? true : false;
 
                 var docDefinition = {
                     pageSize: 'A4',
@@ -3965,10 +3967,10 @@
                                                 { text: ': SAHA THAI STEEL PIPE PCL', fontSize: 12, bold: true, alignment: 'right', margin: [0, 15, 0, 0] }
                                             ], fontSize: 12, bold: true, alignment: 'right', margin: [0, 15, 0, 0]
                                         },
-                                        { text: '78 Moo 3 Poochao Road,', fontSize: 10, bold: true, alignment: 'right', margin: [0, 0, 0, 0] },
-                                        { text: 'Bangyapraek, Phrapradaeng,', fontSize: 10, bold: true, alignment: 'right', margin: [0, 0, 0, 0] },
-                                        { text: 'Samuthprakarn 10131 Thailand.', fontSize: 10, bold: true, alignment: 'right', margin: [0, 0, 0, 0] },
-                                        { text: `Tel. +66 (0) 2385-9023`, fontSize: 10, bold: true, alignment: 'right', margin: [0, 0, 0, 0] },
+                                        { text: uf_spec ? '224 Moo 5 Lamsai, Wangnoi,' : '78 Moo 3 Poochao Road,', fontSize: 10, bold: true, alignment: 'right', margin: [0, 0, 0, 0] },
+                                        { text: uf_spec ? 'Phanakhonsriayutthaya, 13170,' : 'Bangyapraek, Phrapradaeng,', fontSize: 10, bold: true, alignment: 'right', margin: [0, 0, 0, 0] },
+                                        { text: uf_spec ? 'Thailand.' : 'Samuthprakarn 10131 Thailand.', fontSize: 10, bold: true, alignment: 'right', margin: [0, 0, 0, 0] },
+                                        { text: uf_spec ? 'Tel +66 (0) 35-272-555' : 'Tel. +66 (0) 2385-9023', fontSize: 10, bold: true, alignment: 'right', margin: [0, 0, 0, 0] },
                                         qrCode(currentPage, pageData),
                                     ],
 
@@ -3982,7 +3984,7 @@
                         return {
                             margin: [20, 15, 80, 10],
                             columns: [
-                                { text: 'FOMQC-80/01-JAN-25', fontSize: 10, bold: true, alignment: 'left' },
+                                { text: uf_spec ? 'FOMQC-79/01-JUN-26' : 'FOMQC-80/01-JAN-25', fontSize: 10, bold: true, alignment: 'left' },
                                 {
                                     text: [
                                         { text: `ISO 9001 Certificate by Bureau Veritas (#TH0` },
