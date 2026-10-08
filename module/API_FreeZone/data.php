@@ -45,4 +45,7 @@ if ($load == "PostCreateDocument") {
 } elseif ($load == "STS_freezone_department") {
     $GenDocNumber = $CallModelObj->STS_freezone_department();
     echo json_encode($GenDocNumber);
-}
+} elseif ($load == "STS_rpt_credit_limit") {
+    $GenDocNumber = $CallModelObj->STS_rpt_credit_limit();
+    echo json_encode($GenDocNumber);
+} 

@@ -279,6 +279,12 @@ order by do_num desc";
         return $rs;
     }
 
-    
+    function STS_rpt_credit_limit() {
+        $cSql = new SqlSrv();
+        $query = "EXEC STS_rpt_credit_limit";
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
 
 }
