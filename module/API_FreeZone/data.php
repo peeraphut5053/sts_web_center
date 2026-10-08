@@ -51,5 +51,8 @@ if ($load == "PostCreateDocument") {
 } elseif ($load == "MV_PURCHASE_ORDER_REPORT") {
     $GenDocNumber = $CallModelObj->MV_PURCHASE_ORDER_REPORT_BY_PO_DATE_BY_ITEM_BY_VENDOR($DateStarting, $DateEnding);
     echo json_encode($GenDocNumber);
+} elseif ($load == "STS_creditNote") {
+    $GenDocNumber = $CallModelObj->STS_creditNote();
+    echo json_encode($GenDocNumber);
 } 
 

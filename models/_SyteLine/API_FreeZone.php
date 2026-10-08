@@ -297,4 +297,12 @@ order by do_num desc";
         return $rs;
     }
 
+    function STS_creditNote(){
+        $query = "EXEC STS_creditNote";
+        $cSql = new SqlSrv();
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
 }
