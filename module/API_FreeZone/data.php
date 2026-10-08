@@ -54,5 +54,8 @@ if ($load == "PostCreateDocument") {
 } elseif ($load == "STS_creditNote") {
     $GenDocNumber = $CallModelObj->STS_creditNote();
     echo json_encode($GenDocNumber);
-} 
+} elseif ($load == "STS_AI_DO") {
+    $GenDocNumber = $CallModelObj->STS_AI_DO();
+    echo json_encode($GenDocNumber);
+}
 
