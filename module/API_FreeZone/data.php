@@ -48,4 +48,8 @@ if ($load == "PostCreateDocument") {
 } elseif ($load == "STS_rpt_credit_limit") {
     $GenDocNumber = $CallModelObj->STS_rpt_credit_limit();
     echo json_encode($GenDocNumber);
+} elseif ($load == "MV_PURCHASE_ORDER_REPORT") {
+    $GenDocNumber = $CallModelObj->MV_PURCHASE_ORDER_REPORT_BY_PO_DATE_BY_ITEM_BY_VENDOR($DateStarting, $DateEnding);
+    echo json_encode($GenDocNumber);
 } 
+

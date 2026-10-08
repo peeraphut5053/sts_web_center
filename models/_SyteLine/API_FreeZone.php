@@ -287,4 +287,14 @@ order by do_num desc";
         return $rs;
     }
 
+     function MV_PURCHASE_ORDER_REPORT_BY_PO_DATE_BY_ITEM_BY_VENDOR($DateStarting ,$DateEnding) {
+        $cSql = new SqlSrv();
+        $query = "EXEC MV_PURCHASE_ORDER_REPORT_BY_PO_DATE_BY_ITEM_BY_VENDOR 
+        	@TransactionDateStarting = '$DateStarting',
+	        @TransactionDateEnding = '$DateEnding'";
+        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs, count($rs) - 1, 1);
+        return $rs;
+    }
+
 }
