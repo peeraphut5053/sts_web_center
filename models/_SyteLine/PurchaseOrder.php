@@ -141,4 +141,104 @@ order by item";
         return $rs;
     }
 
+    function GetPoCompareList($StartDate, $EndDate, $PoNum = '', $Vend = '', $FileStatus = 'ALL', $PrNum = '')
+    {
+        $where = array();
+        $params = array();
+
+        if (!empty($StartDate) && !empty($EndDate)) {
+            $where[] = "po.order_date BETWEEN ? AND ?";
+            $params[] = $StartDate . ' 00:00:00';
+            $params[] = $EndDate . ' 23:59:59';
+        } else if (!empty($StartDate)) {
+            $where[] = "po.order_date >= ?";
+            $params[] = $StartDate . ' 00:00:00';
+        } else if (!empty($EndDate)) {
+            $where[] = "po.order_date <= ?";
+            $params[] = $EndDate . ' 23:59:59';
+        }
+
+        if (!empty($PoNum)) {
+            $where[] = "po.po_num LIKE ?";
+            $params[] = "%" . $PoNum . "%";
+        }
+
+        if (!empty($Vend)) {
+            $where[] = "(po.vend_num LIKE ? OR ven.name LIKE ?)";
+            $params[] = "%" . $Vend . "%";
+            $params[] = "%" . $Vend . "%";
+        }
+
+        if (!empty($PrNum)) {
+            $where[] = "EXISTS (SELECT 1 FROM poitem_mst poi_f WHERE poi_f.po_num = po.po_num AND poi_f.req_num LIKE ?)";
+            $params[] = "%" . $PrNum . "%";
+        }
+
+        if ($FileStatus == 'HAS_FILE') {
+            $where[] = "(pic.path IS NOT NULL AND pic.path <> '')";
+        } else if ($FileStatus == 'NO_FILE') {
+            $where[] = "(pic.path IS NULL OR pic.path = '')";
+        }
+
+        $sqlWhere = (count($where) > 0) ? " WHERE " . implode(" AND ", $where) : "";
+
+        $query = "SELECT po.po_num,
+                         order_date = CONVERT(VARCHAR(10), po.order_date, 120),
+                         po.vend_num,
+                         ven.name AS vend_name,
+                         pr_num = (SELECT TOP 1 poi.req_num FROM poitem_mst poi WHERE poi.po_num = po.po_num),
+                         pic.path AS file_path,
+                         upload_date = CONVERT(VARCHAR(19), pic.createdate, 120),
+                         pic.[user] AS upload_user
+                  FROM po_mst po
+                  LEFT JOIN vendaddr_mst ven ON ven.vend_num = po.vend_num
+                  LEFT JOIN STS_po_pic pic ON pic.po_num = po.po_num
+                  $sqlWhere
+                  ORDER BY po.po_num DESC";
+
+        $stmt = sqlsrv_query($this->StrConn, $query, $params);
+        $result = array();
+        if ($stmt === false) {
+            return $result;
+        }
+        while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
+            $result[] = $row;
+        }
+        sqlsrv_free_stmt($stmt);
+        return $result;
+    }
+
+    function SavePoPic($po_num, $filename, $user = '')
+    {
+        $sqlCheck = "SELECT COUNT(*) as cnt FROM STS_po_pic WHERE po_num = ?";
+        $stmtCheck = sqlsrv_query($this->StrConn, $sqlCheck, array($po_num));
+        $exists = false;
+        if ($stmtCheck && $rowCheck = sqlsrv_fetch_array($stmtCheck, SQLSRV_FETCH_ASSOC)) {
+            $exists = ($rowCheck['cnt'] > 0);
+        }
+        if ($exists) {
+            $sql = "UPDATE STS_po_pic SET [path] = ?, createdate = GETDATE(), [user] = ? WHERE po_num = ?";
+            $params = array($filename, $user, $po_num);
+        } else {
+            $sql = "INSERT INTO STS_po_pic (po_num, [path], createdate, [user]) VALUES (?, ?, GETDATE(), ?)";
+            $params = array($po_num, $filename, $user);
+        }
+        $stmt = sqlsrv_query($this->StrConn, $sql, $params);
+        return ($stmt !== false);
+    }
+
+    function DeletePoPic($po_num)
+    {
+        $oldFile = "";
+        $sqlGet = "SELECT [path] FROM STS_po_pic WHERE po_num = ?";
+        $stmtGet = sqlsrv_query($this->StrConn, $sqlGet, array($po_num));
+        if ($stmtGet && $rowGet = sqlsrv_fetch_array($stmtGet, SQLSRV_FETCH_ASSOC)) {
+            $oldFile = $rowGet['path'];
+        }
+        $sql = "DELETE FROM STS_po_pic WHERE po_num = ?";
+        $stmt = sqlsrv_query($this->StrConn, $sql, array($po_num));
+        return array('success' => ($stmt !== false), 'file' => $oldFile);
+    }
+
 }
+

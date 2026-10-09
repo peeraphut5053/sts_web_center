@@ -1,0 +1,692 @@
+<style>
+    .col-search {
+        padding-left: 3px;
+        padding-right: 3px;
+    }
+
+    #tblPoPic thead th {
+        text-align: center;
+        background-color: #eef3f5;
+        color: #263238;
+        font-weight: 700;
+        border-bottom: 2px solid #b0bec5;
+        vertical-align: middle;
+        white-space: nowrap;
+    }
+
+    #tblPoPic tbody td {
+        vertical-align: middle;
+        font-size: 13px;
+    }
+
+    .col-flt-page {
+        padding-top: 10px;
+        font-weight: bold;
+    }
+
+    .stat-badge-box {
+        display: inline-block;
+        padding: 5px 12px;
+        margin-right: 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .stat-badge-total {
+        background-color: #e8f0fe;
+        color: #1a73e8;
+        border: 1px solid #c2e7ff;
+    }
+
+    .stat-badge-has-file {
+        background-color: #e6f4ea;
+        color: #137333;
+        border: 1px solid #ceead6;
+    }
+
+    .stat-badge-no-file {
+        background-color: #fef7e0;
+        color: #b06000;
+        border: 1px solid #feefc3;
+    }
+
+    .upload-dropzone {
+        border: 2px dashed #3c8dbc;
+        border-radius: 6px;
+        padding: 25px;
+        text-align: center;
+        background-color: #f9fbfd;
+        cursor: pointer;
+        transition: border-color 0.2s, background-color 0.2s;
+    }
+
+    .upload-dropzone:hover,
+    .upload-dropzone.dragover {
+        border-color: #205081;
+        background-color: #f0f7fd;
+    }
+
+    .upload-dropzone i {
+        font-size: 40px;
+        color: #3c8dbc;
+        margin-bottom: 10px;
+    }
+
+    .file-preview-card {
+        margin-top: 15px;
+        padding: 10px 15px;
+        background-color: #ffffff;
+        border: 1px solid #d2d6de;
+        border-radius: 4px;
+        display: none;
+    }
+</style>
+
+<div class="row">
+    <div style="margin-top: 10px; margin-bottom: 15px;">
+        <h1 class="my-header">รายงานจัดซื้อเทียบราคา</h1>
+    </div>
+</div>
+
+<!-- Filter Panel: 3 เงื่อนไขหลัก (From Date, To Date, PO No.) -->
+<div class="box box-solid"
+    style="border: 1px solid #d2d6de; border-radius: 4px; margin-bottom: 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+    <div class="box-body" style="padding: 15px;">
+        <div class="row">
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12" style="margin-bottom: 10px;">
+                <div class="input-group">
+                    <div class="input-group-addon"><i class="fa fa-calendar"></i> From Date</div>
+                    <input type="text" class="form-control" id="from_date_po" value="" autocomplete="off" />
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12" style="margin-bottom: 10px;">
+                <div class="input-group">
+                    <div class="input-group-addon"><i class="fa fa-calendar"></i> To Date</div>
+                    <input type="text" class="form-control" id="to_date_po" value="" autocomplete="off" />
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12" style="margin-bottom: 10px;">
+                <div class="input-group">
+                    <div class="input-group-addon">PO No.</div>
+                    <input type="text" class="form-control" id="txt_po_num" value="" placeholder="เช่น PO26"
+                        autocomplete="off" />
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12" style="margin-bottom: 10px;">
+                <button id="BtnSearchPoPic" class="btn btn-primary" type="button" style="margin-right: 5px;">
+                    <i class="fa fa-search"></i> ค้นหา
+                </button>
+                <button id="BtnResetFilter" class="btn btn-default" type="button" title="ล้างเงื่อนไข">
+                    <i class="fa fa-refresh"></i> รีเซ็ต
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Stats Summary Badges -->
+<div class="row" style="margin-bottom: 10px;">
+    <div class="col-md-12">
+        <span class="stat-badge-box stat-badge-total" id="badgeTotalBox">
+            <i class="fa fa-list"></i> รายการ PO ทั้งหมด: <span id="badge_total_count">0</span>
+        </span>
+        <span class="stat-badge-box stat-badge-has-file" id="badgeHasFileBox">
+            <i class="fa fa-check-circle"></i> มีไฟล์ PDF แล้ว: <span id="badge_has_file_count">0</span>
+        </span>
+        <span class="stat-badge-box stat-badge-no-file" id="badgeNoFileBox">
+            <i class="fa fa-clock-o"></i> ยังไม่มีไฟล์: <span id="badge_no_file_count">0</span>
+        </span>
+    </div>
+</div>
+
+<!-- Result Table -->
+<div class="row" id="rowResultTable">
+    <div class="col-md-12">
+        <div style="background: #ffffff; border: 1px solid #d2d6de; border-radius: 4px; padding: 10px;">
+            <table class="table table-condensed table-bordered table-striped hover" width="100%" id="tblPoPic">
+                <thead>
+                    <tr>
+                        <th style="width: 110px;">เลขที่ PO</th>
+                        <th style="width: 100px;">เลขที่ PR</th>
+                        <th style="width: 95px;">วันที่สั่งซื้อ</th>
+                        <th style="width: 95px;">รหัสผู้ขาย</th>
+                        <th>ชื่อผู้ขาย</th>
+                        <th style="width: 280px;">ไฟล์เทียบราคา (PDF)</th>
+                        <th style="width: 140px;">จัดการ</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Upload PDF -->
+<div class="modal fade" id="ModalUploadPdf" role="dialog" aria-labelledby="modalUploadTitle" aria-hidden="true"
+    data-backdrop="static">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header"
+                style="background-color: #3c8dbc; color: #ffffff; border-top-left-radius: 4px; border-top-right-radius: 4px;">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                    style="color: #ffffff; opacity: 0.9;">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="modalUploadTitle">
+                    <i class="fa fa-upload"></i> อัพโหลดไฟล์ PDF เทียบราคา
+                </h4>
+            </div>
+            <div class="modal-body" style="padding: 20px;">
+                <input type="hidden" id="upload_po_num" />
+
+                <div
+                    style="background-color: #f4f8fb; border-left: 4px solid #3c8dbc; padding: 10px 15px; margin-bottom: 20px; border-radius: 2px;">
+                    <div style="margin-bottom: 5px;">
+                        <strong>เลขที่ PO:</strong> <span id="modal_display_po"
+                            style="font-size: 16px; color: #205081; font-weight: bold;">-</span>
+                        <span style="margin-left: 15px;"><strong>เลขที่ PR:</strong> <span id="modal_display_pr"
+                                style="color: #555;">-</span></span>
+                    </div>
+                    <div>
+                        <strong>ผู้ขาย:</strong> <span id="modal_display_vend">-</span>
+                    </div>
+                </div>
+
+                <!-- Dropzone Area -->
+                <div class="upload-dropzone" id="dropzoneArea">
+                    <i class="fa fa-file-pdf-o"></i>
+                    <h5 style="margin-top: 5px; font-weight: bold; color: #333;">คลิกเลือกไฟล์ หรือลากไฟล์ PDF
+                        มาวางที่นี่</h5>
+                    <p class="text-muted" style="margin-bottom: 0; font-size: 12px;">รองรับเฉพาะไฟล์ .pdf เท่านั้น
+                        (ขนาดไม่เกิน 25 MB)</p>
+                </div>
+                <input type="file" id="file_input_pdf" accept="application/pdf,.pdf" style="display: none;" />
+
+                <!-- Selected File Card -->
+                <div class="file-preview-card" id="filePreviewCard">
+                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                        <div style="display: flex; align-items: center; overflow: hidden;">
+                            <i class="fa fa-file-pdf-o text-danger" style="font-size: 24px; margin-right: 12px;"></i>
+                            <div style="overflow: hidden;">
+                                <div id="previewFileName"
+                                    style="font-weight: bold; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">
+                                    filename.pdf</div>
+                                <div id="previewFileSize" class="text-muted" style="font-size: 11px;">0 KB</div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-default btn-xs text-danger" id="btnRemoveSelectedFile"
+                            title="ยกเลิกไฟล์นี้" style="margin-left: 10px;">
+                            <i class="fa fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="uploadAlertBox" style="margin-top: 15px; display: none;"></div>
+            </div>
+            <div class="modal-footer" style="background-color: #f9f9f9;">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    <i class="fa fa-times"></i> ปิด
+                </button>
+                <button type="button" class="btn btn-primary" id="btnSubmitUpload">
+                    <i class="fa fa-cloud-upload"></i> บันทึกและอัพโหลด
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var globalPoTable = null;
+    var currentSelectedFile = null;
+
+    $(document).ready(function () {
+        // Initialize Datepicker
+        $("#from_date_po, #to_date_po").datepicker({
+            dateFormat: "yy-mm-dd"
+        });
+
+        // Initialize DataTable
+        initDataTable();
+
+        // Search button click
+        $("#BtnSearchPoPic").click(function () {
+            SearchPoPicData();
+        });
+
+        // Enter key in PO No. input
+        $("#txt_po_num").keypress(function (e) {
+            if (e.which == 13) {
+                SearchPoPicData();
+            }
+        });
+
+        // Reset filter
+        $("#BtnResetFilter").click(function () {
+            $("#from_date_po").val("");
+            $("#to_date_po").val("");
+            $("#txt_po_num").val("");
+        });
+
+        // Setup File Dropzone & Input
+        setupDropzone();
+
+        // Submit Upload button
+        $("#btnSubmitUpload").click(function () {
+            ExecuteUpload();
+        });
+    });
+
+    function initDataTable() {
+        globalPoTable = $("#tblPoPic").DataTable({
+            data: [],
+            paging: false,
+            destroy: true,
+            processing: true,
+            scrollX: true,
+            scrollY: "58vh",
+            scrollCollapse: true,
+            order: [[0, "desc"]],
+            language: {
+                emptyTable: "ไม่พบข้อมูลรายการ PO ตามเงื่อนไขที่ระบุ",
+                info: "แสดง _START_ ถึง _END_ จากทั้งหมด _TOTAL_ รายการ",
+                infoEmpty: "แสดง 0 ถึง 0 จาก 0 รายการ",
+                lengthMenu: "แสดง _MENU_ รายการ",
+                search: "ค้นหาในตาราง:",
+                paginate: {
+                    first: "แรกสุด",
+                    last: "ท้ายสุด",
+                    next: "ถัดไป",
+                    previous: "ก่อนหน้า"
+                }
+            },
+            columns: [
+                {
+                    data: "po_num",
+                    className: "text-center",
+                    render: function (data) {
+                        return "<strong>" + (data || "-") + "</strong>";
+                    }
+                },
+                {
+                    data: "pr_num",
+                    className: "text-center",
+                    render: function (data) {
+                        if (data && data.trim() !== "") {
+                            return "<span class='label label-default' style='font-size: 11px;'>" + data + "</span>";
+                        }
+                        return "<span class='text-muted'>-</span>";
+                    }
+                },
+                {
+                    data: "order_date",
+                    className: "text-center",
+                    render: function (data) {
+                        if (!data) return "-";
+                        if (typeof moment === "function") {
+                            return moment(data).format("DD/MM/YYYY");
+                        }
+                        return data;
+                    }
+                },
+                {
+                    data: "vend_num",
+                    className: "text-center"
+                },
+                {
+                    data: "vend_name",
+                    className: "text-left",
+                    render: function (data) {
+                        return data ? data : "<span class='text-muted'>-</span>";
+                    }
+                },
+                {
+                    data: "file_path",
+                    className: "text-left",
+                    render: function (data, type, row) {
+                        if (data && data.trim() !== "") {
+                            var link = "module/STS_PO_PIC/files/" + encodeURIComponent(data);
+                            var uploadInfo = "";
+                            if (row.upload_date) {
+                                var formattedDate = (typeof moment === "function") ? moment(row.upload_date).format("DD/MM/YYYY HH:mm") : row.upload_date;
+                                uploadInfo = "<div style='font-size: 11px; color: #777; margin-top: 3px;'>" +
+                                    "<i class='fa fa-clock-o'></i> " + formattedDate +
+                                    (row.upload_user ? " โดย " + row.upload_user : "") +
+                                    "</div>";
+                            }
+                            return "<div style='display: flex; align-items: flex-start; justify-content: space-between;'>" +
+                                "<div>" +
+                                "<a href='" + link + "' target='_blank' class='btn btn-xs btn-danger' style='font-weight: 600;' title='คลิกเพื่อดูไฟล์ PDF'>" +
+                                "<i class='fa fa-file-pdf-o'></i> " + data +
+                                "</a>" +
+                                uploadInfo +
+                                "</div>" +
+                                "<button type='button' class='btn btn-default btn-xs text-danger' title='ลบไฟล์นี้' onclick='ConfirmDeleteFile(\"" + row.po_num + "\", \"" + data + "\")'>" +
+                                "<i class='fa fa-trash'></i>" +
+                                "</button>" +
+                                "</div>";
+                        }
+                        return "<span class='label label-warning' style='font-size: 11px;'><i class='fa fa-exclamation-circle'></i> ยังไม่มีไฟล์</span>";
+                    }
+                },
+                {
+                    data: null,
+                    className: "text-center",
+                    orderable: false,
+                    render: function (data, type, row) {
+                        var hasFile = (row.file_path && row.file_path.trim() !== "");
+                        var btnClass = hasFile ? "btn-warning" : "btn-primary";
+                        var btnText = hasFile ? "เปลี่ยนไฟล์" : "อัพโหลด PDF";
+                        var btnIcon = hasFile ? "fa-refresh" : "fa-upload";
+                        var safeVend = (row.vend_name || "").replace(/'/g, "\\'").replace(/"/g, "&quot;");
+                        var safePr = (row.pr_num || "").replace(/'/g, "\\'").replace(/"/g, "&quot;");
+
+                        return "<button type='button' class='btn btn-xs " + btnClass + "' onclick='OpenUploadModal(\"" + row.po_num + "\", \"" + safeVend + "\", \"" + safePr + "\")'>" +
+                            "<i class='fa " + btnIcon + "'></i> " + btnText +
+                            "</button>";
+                    }
+                }
+            ],
+            dom: "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+                "<'row'<'col-md-12'tr>>" +
+                "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+            buttons: [
+                {
+                    extend: "excel",
+                    text: "<i class='fa fa-file-excel-o'></i> Excel",
+                    className: "btn btn-default btn-sm",
+                    title: "รายงาน_PO_เทียบราคา_" + $("#from_date_po").val() + "_ถึง_" + $("#to_date_po").val()
+                },
+                {
+                    extend: "print",
+                    text: "<i class='fa fa-print'></i> Print",
+                    className: "btn btn-default btn-sm",
+                    title: "รายงาน PO เทียบราคา"
+                }
+            ]
+        });
+    }
+
+    function SearchPoPicData() {
+        var start_date = $("#from_date_po").val();
+        var end_date = $("#to_date_po").val();
+        var po_num = $("#txt_po_num").val();
+
+        var oldBtnHtml = $("#BtnSearchPoPic").html();
+        $("#BtnSearchPoPic").prop("disabled", true).html("<i class='fa fa-spinner fa-spin'></i> ค้นหา...");
+
+        if (typeof $.fn.loading === "function") {
+            $("#tblPoPic").loading();
+        }
+
+        $.ajax({
+            type: "GET",
+            url: "./module/STS_PO_PIC/data.php",
+            dataType: "json",
+            data: {
+                load: "SearchPO",
+                StartDate: start_date,
+                EndDate: end_date,
+                po_num: po_num
+            },
+            success: function (data) {
+                if (typeof $.fn.loading === "function") {
+                    $("#tblPoPic").loading("stop");
+                }
+                $("#BtnSearchPoPic").prop("disabled", false).html(oldBtnHtml);
+
+                if (!Array.isArray(data)) {
+                    data = [];
+                }
+
+                // Update summary badges
+                var totalCount = data.length;
+                var hasFileCount = 0;
+                var noFileCount = 0;
+
+                for (var i = 0; i < data.length; i++) {
+                    if (data[i].file_path && data[i].file_path.trim() !== "") {
+                        hasFileCount++;
+                    } else {
+                        noFileCount++;
+                    }
+                }
+
+                $("#badge_total_count").text(totalCount);
+                $("#badge_has_file_count").text(hasFileCount);
+                $("#badge_no_file_count").text(noFileCount);
+
+                // Update DataTable data
+                globalPoTable.clear();
+                globalPoTable.rows.add(data);
+                globalPoTable.draw();
+            },
+            error: function (xhr, status, error) {
+                if (typeof $.fn.loading === "function") {
+                    $("#tblPoPic").loading("stop");
+                }
+                $("#BtnSearchPoPic").prop("disabled", false).html(oldBtnHtml);
+                console.error("Search error:", error);
+                if (typeof swal === "function") {
+                    swal("เกิดข้อผิดพลาดในการดึงข้อมูล", error, "error");
+                } else {
+                    alert("เกิดข้อผิดพลาดในการดึงข้อมูล: " + error);
+                }
+            }
+        });
+    }
+
+    function setupDropzone() {
+        var dropzone = document.getElementById("dropzoneArea");
+        var fileInput = document.getElementById("file_input_pdf");
+
+        // Click on dropzone triggers file input safely without event bubbling loop
+        $("#dropzoneArea").off("click").on("click", function () {
+            $("#file_input_pdf").val("").trigger("click");
+        });
+
+        $("#file_input_pdf").off("click").on("click", function (e) {
+            e.stopPropagation();
+        });
+
+        ["dragenter", "dragover", "dragleave", "drop"].forEach(function (eventName) {
+            dropzone.addEventListener(eventName, function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }, false);
+        });
+
+        ["dragenter", "dragover"].forEach(function (eventName) {
+            dropzone.addEventListener(eventName, function () {
+                dropzone.classList.add("dragover");
+            }, false);
+        });
+
+        ["dragleave", "drop"].forEach(function (eventName) {
+            dropzone.addEventListener(eventName, function () {
+                dropzone.classList.remove("dragover");
+            }, false);
+        });
+
+        dropzone.addEventListener("drop", function (e) {
+            var files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFileSelect(files[0]);
+            }
+        }, false);
+
+        fileInput.addEventListener("change", function () {
+            if (fileInput.files.length > 0) {
+                handleFileSelect(fileInput.files[0]);
+            }
+        });
+
+        $("#btnRemoveSelectedFile").click(function () {
+            currentSelectedFile = null;
+            $("#file_input_pdf").val("");
+            $("#filePreviewCard").hide();
+            $("#dropzoneArea").show();
+        });
+    }
+
+    function handleFileSelect(file) {
+        $("#uploadAlertBox").hide().empty();
+
+        if (file.type !== "application/pdf" && !file.name.toLowerCase().endsWith(".pdf")) {
+            showAlert("กรุณาเลือกไฟล์ PDF (.pdf) เท่านั้น", "danger");
+            return;
+        }
+
+        // Limit 25MB
+        if (file.size > 25 * 1024 * 1024) {
+            showAlert("ไฟล์มีขนาดเกิน 25 MB กรุณาเลือกไฟล์ใหม่", "danger");
+            return;
+        }
+
+        currentSelectedFile = file;
+        $("#previewFileName").text(file.name);
+
+        var sizeText = "";
+        if (file.size >= 1024 * 1024) {
+            sizeText = (file.size / (1024 * 1024)).toFixed(2) + " MB";
+        } else {
+            sizeText = (file.size / 1024).toFixed(1) + " KB";
+        }
+        $("#previewFileSize").text(sizeText);
+
+        $("#dropzoneArea").hide();
+        $("#filePreviewCard").fadeIn();
+    }
+
+    function showAlert(message, type) {
+        $("#uploadAlertBox")
+            .removeClass("alert-danger alert-success alert-warning")
+            .addClass("alert alert-" + type)
+            .html("<i class='fa fa-info-circle'></i> " + message)
+            .show();
+    }
+
+    function OpenUploadModal(po_num, vend_name, pr_num) {
+        $("#upload_po_num").val(po_num);
+        $("#modal_display_po").text(po_num);
+        $("#modal_display_pr").text(pr_num || "-");
+        $("#modal_display_vend").text(vend_name || "-");
+
+        currentSelectedFile = null;
+        $("#file_input_pdf").val("");
+        $("#filePreviewCard").hide();
+        $("#dropzoneArea").show();
+        $("#uploadAlertBox").hide().empty();
+
+        $("#ModalUploadPdf").modal("show");
+    }
+
+    function ExecuteUpload() {
+        var po_num = $("#upload_po_num").val();
+
+        if (!currentSelectedFile) {
+            showAlert("กรุณาเลือกไฟล์ PDF ก่อนกดบันทึก", "warning");
+            return;
+        }
+
+        if (!po_num) {
+            showAlert("ไม่พบเลขที่ PO", "danger");
+            return;
+        }
+
+        var username = $("#user_prop").attr("login_username") || "";
+
+        var formData = new FormData();
+        formData.append("po_num", po_num);
+        formData.append("user", username);
+        formData.append("file", currentSelectedFile);
+
+        var oldBtnHtml = $("#btnSubmitUpload").html();
+        $("#btnSubmitUpload").prop("disabled", true).html("<i class='fa fa-spinner fa-spin'></i> กำลังอัพโหลด...");
+
+        $.ajax({
+            url: "./module/STS_PO_PIC/upload.php",
+            type: "POST",
+            data: formData,
+            dataType: "json",
+            contentType: false,
+            processData: false,
+            success: function (res) {
+                $("#btnSubmitUpload").prop("disabled", false).html(oldBtnHtml);
+
+                if (res.success) {
+                    $("#ModalUploadPdf").modal("hide");
+                    if (typeof swal === "function") {
+                        swal("สำเร็จ", res.message || "อัพโหลดไฟล์เรียบร้อยแล้ว", "success");
+                    } else {
+                        alert(res.message || "อัพโหลดไฟล์เรียบร้อยแล้ว");
+                    }
+                    SearchPoPicData();
+                } else {
+                    showAlert(res.message || "เกิดข้อผิดพลาดในการอัพโหลด", "danger");
+                }
+            },
+            error: function (xhr, status, error) {
+                $("#btnSubmitUpload").prop("disabled", false).html(oldBtnHtml);
+                showAlert("เกิดข้อผิดพลาดขณะส่งข้อมูล: " + error, "danger");
+            }
+        });
+    }
+
+    function ConfirmDeleteFile(po_num, filename) {
+        var doDelete = function () {
+            $.ajax({
+                url: "./module/STS_PO_PIC/data.php",
+                type: "POST",
+                dataType: "json",
+                data: {
+                    load: "DeleteFile",
+                    po_num: po_num
+                },
+                success: function (res) {
+                    if (res.success) {
+                        if (typeof swal === "function") {
+                            swal("สำเร็จ", "ลบไฟล์เรียบร้อยแล้ว", "success");
+                        } else {
+                            alert("ลบไฟล์เรียบร้อยแล้ว");
+                        }
+                        SearchPoPicData();
+                    } else {
+                        if (typeof swal === "function") {
+                            swal("ข้อผิดพลาด", res.message || "ลบไฟล์ไม่สำเร็จ", "error");
+                        } else {
+                            alert(res.message || "ลบไฟล์ไม่สำเร็จ");
+                        }
+                    }
+                },
+                error: function (xhr, status, error) {
+                    alert("เกิดข้อผิดพลาด: " + error);
+                }
+            });
+        };
+
+        if (typeof $.confirm === "function") {
+            $.confirm({
+                title: "ยืนยันการลบไฟล์?",
+                theme: "modern",
+                content: "คุณต้องการลบไฟล์เทียบราคาของ PO <strong>" + po_num + "</strong> (" + filename + ") ใช่หรือไม่?",
+                buttons: {
+                    confirm: {
+                        text: "ยืนยันลบ",
+                        btnClass: "btn-danger",
+                        action: function () {
+                            doDelete();
+                        }
+                    },
+                    cancel: {
+                        text: "ยกเลิก"
+                    }
+                }
+            });
+        } else {
+            if (confirm("คุณต้องการลบไฟล์เทียบราคาของ PO " + po_num + " ใช่หรือไม่?")) {
+                doDelete();
+            }
+        }
+    }
+</script>
