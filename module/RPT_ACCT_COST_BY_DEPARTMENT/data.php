@@ -201,101 +201,55 @@ if ($load == "RPT_ACCT_COST_BY_DEPARTMENT") {
     ];
     array_push($Cost, $total_weight);
 
-    if ($Cost3[0]['ฟอร์มมิ่ง-JHP'] > .000000) {
-        $total_DL_4 = $total_DL['ฟอร์มมิ่ง-JHP'] / $Cost3[0]['ฟอร์มมิ่ง-JHP'];
-    } else {
-        $total_DL_4 = 0;
-    }
-    
-    if ($Cost3[0]['พ่นสี-KRC'] > .000000) {
-        $total_DL_11 = $total_DL['ฟอร์มมิ่ง-JHP'] / $Cost3[0]['ฟอร์มมิ่ง-JHP'];
-    } else {
-        $total_DL_11 = 0;
-    }
-    
-    if ($Cost3[0]['รีดลดความหนา'] > .000000) {
-        $total_DL_14 = $total_DL['ฟอร์มมิ่ง-JHP'] / $Cost3[0]['ฟอร์มมิ่ง-JHP'];
-    } else {
-        $total_DL_14 = 0;
-    }
-    
-    if ($Cost3[0][' Prefabrication'] > .000000) {
-        $total_DL_16 = $total_DL['ฟอร์มมิ่ง-JHP'] / $Cost3[0]['ฟอร์มมิ่ง-JHP'];
-    } else {
-        $total_DL_16 = 0;
-    }
+    $departments = [
+        'ตัดแบ่ง sts',
+        'ตัดแบ่ง wng',
+        'ฟอร์มมิ่ง sts',
+        'ฟอร์มมิ่ง wng',
+        'ฟอร์มมิ่ง-JHP',
+        'เตาชุบ',
+        'ต๊าปเกลียว sts',
+        'ต๊าปเกลียว wng',
+        'พ่นสี sts',
+        'พ่นสี wng',
+        'พ่นสี-KRC',
+        'มัดท่อ sts',
+        'มัดท่อ wng',
+        'รีดลดความหนา',
+        'แผนกเครื่องรีดหลังคา',
+        ' Prefabrication',
+        'Total',
+    ];
+
     $xDL = [
         'acct' => 'xDL / Kg ',
         'description' => '',
-        'ตัดแบ่ง sts' => $total_DL['ตัดแบ่ง sts'] / $Cost3[0]['ตัดแบ่ง sts'],
-        'ตัดแบ่ง wng' => $total_DL['ตัดแบ่ง wng'] / $Cost3[0]['ตัดแบ่ง wng'],
-        'ฟอร์มมิ่ง sts' => $total_DL['ฟอร์มมิ่ง sts'] / $Cost3[0]['ฟอร์มมิ่ง sts'],
-        'ฟอร์มมิ่ง wng' => $total_DL['ฟอร์มมิ่ง wng'] / $Cost3[0]['ฟอร์มมิ่ง wng'],
-        'ฟอร์มมิ่ง-JHP' => $total_DL_4,
-        'เตาชุบ' => $total_DL['เตาชุบ'] / $Cost3[0]['เตาชุบ'],
-        'ต๊าปเกลียว sts' => $total_DL['ต๊าปเกลียว sts'] / $Cost3[0]['ต๊าปเกลียว sts'],
-        'ต๊าปเกลียว wng' => $total_DL['ต๊าปเกลียว wng'] / $Cost3[0]['ต๊าปเกลียว wng'],
-        'พ่นสี sts' => $total_DL['พ่นสี sts'] / $Cost3[0]['พ่นสี sts'],
-        'พ่นสี sts' => $total_DL['พ่นสี sts'] / $Cost3[0]['พ่นสี sts'],
-        'พ่นสี-KRC' => $total_DL_11,
-        'มัดท่อ sts' => $total_DL['มัดท่อ sts'] / $Cost3[0]['มัดท่อ sts'],
-        'มัดท่อ wng' => $total_DL['มัดท่อ wng'] / $Cost3[0]['มัดท่อ wng'],
-        'รีดลดความหนา' => $total_DL_14,
-        'แผนกเครื่องรีดหลังคา' => $total_DL['แผนกเครื่องรีดหลังคา'] / $Cost3[0]['แผนกเครื่องรีดหลังคา'],
-        ' Prefabrication' => $total_DL_16,
-        'Total' => $total_DL['Total'] / $Cost3[0]['Total'],
     ];
-    array_push($Cost, $xDL);
 
-    
-    
-    
-    
-    
     $xOH = [
         'acct' => 'xOH /Kg ',
-         'description' => '',
-        'ตัดแบ่ง sts' => $total_OH['ตัดแบ่ง sts'] / $Cost3[0]['ตัดแบ่ง sts'],
-        'ตัดแบ่ง wng' => $total_OH['ตัดแบ่ง wng'] / $Cost3[0]['ตัดแบ่ง wng'],
-        'ฟอร์มมิ่ง sts' => $total_OH['ฟอร์มมิ่ง sts'] / $Cost3[0]['ฟอร์มมิ่ง sts'],
-        'ฟอร์มมิ่ง wng' => $total_OH['ฟอร์มมิ่ง wng'] / $Cost3[0]['ฟอร์มมิ่ง wng'],
-        'ฟอร์มมิ่ง-JHP' => $total_OH_5,
-        'เตาชุบ' => $total_OH['เตาชุบ'] / $Cost3[0]['เตาชุบ'],
-        'ต๊าปเกลียว sts' => $total_OH['ต๊าปเกลียว sts'] / $Cost3[0]['ต๊าปเกลียว sts'],
-        'ต๊าปเกลียว wng' => $total_OH['ต๊าปเกลียว wng'] / $Cost3[0]['ต๊าปเกลียว wng'],
-        'พ่นสี sts' => $total_OH['พ่นสี sts'] / $Cost3[0]['พ่นสี sts'],
-        'พ่นสี sts' => $total_OH['พ่นสี sts'] / $Cost3[0]['พ่นสี sts'],
-        'พ่นสี-KRC' => $total_OH_11,
-        'มัดท่อ sts' => $total_OH['มัดท่อ sts'] / $Cost3[0]['มัดท่อ sts'],
-        'มัดท่อ wng' => $total_OH['มัดท่อ wng'] / $Cost3[0]['มัดท่อ wng'],
-        'รีดลดความหนา' => $total_OH_14,
-        'แผนกเครื่องรีดหลังคา' => $total_OH['แผนกเครื่องรีดหลังคา'] / $Cost3[0]['แผนกเครื่องรีดหลังคา'],
-        ' Prefabrication' => $total_OH_16,
-        'Total' => $total_OH['Total'] / $Cost3[0]['Total'],
+        'description' => '',
     ];
-    array_push($Cost, $xOH);
 
     $xTotal = [
         'acct' => 'xTotal',
         'description' => '',
-        'ตัดแบ่ง sts' => $xOH['ตัดแบ่ง sts'] + $xDL['ตัดแบ่ง sts'],
-        'ตัดแบ่ง wng' => $xOH['ตัดแบ่ง wng'] + $xDL['ตัดแบ่ง wng'],
-        'ฟอร์มมิ่ง sts' => $xOH['ฟอร์มมิ่ง sts'] + $xDL['ฟอร์มมิ่ง sts'],
-        'ฟอร์มมิ่ง wng' => $xOH['ฟอร์มมิ่ง wng']+ $xDL['ฟอร์มมิ่ง wng'],
-        'ฟอร์มมิ่ง-JHP' => $xOH['ฟอร์มมิ่ง-JHP']+ $xDL['ฟอร์มมิ่ง-JHP'],
-        'เตาชุบ' => $xOH['เตาชุบ']+ $xOH['เตาชุบ'],
-        'ต๊าปเกลียว sts' => $xOH['ต๊าปเกลียว sts']+ $xDL['ต๊าปเกลียว sts'],
-        'ต๊าปเกลียว wng' => $xOH['ต๊าปเกลียว wng']+ $xDL['ต๊าปเกลียว wng'], 
-        'พ่นสี sts' => $xOH['พ่นสี sts']+  $xDL['พ่นสี sts'],
-        'พ่นสี sts' => $xOH['พ่นสี sts']+ $xDL['พ่นสี sts'],
-        'พ่นสี-KRC' => $xOH['พ่นสี-KRC']+$xDL['พ่นสี-KRC'],
-        'มัดท่อ sts' => $xOH['มัดท่อ sts']+ $xDL['มัดท่อ sts'],
-        'มัดท่อ wng' => $xOH['มัดท่อ wng']+$xDL['มัดท่อ wng'],
-        'รีดลดความหนา' => $xOH['รีดลดความหนา']+ $xDL['รีดลดความหนา'],
-        'แผนกเครื่องรีดหลังคา' => $xOH['แผนกเครื่องรีดหลังคา']+ $xDL['แผนกเครื่องรีดหลังคา'],
-        ' Prefabrication' => $xOH[' Prefabrication']+ $xDL[' Prefabrication'],
-        'Total' => $xOH['Total']+ $xDL['Total'],
     ];
+
+    foreach ($departments as $dept) {
+        $weight = (isset($Cost3[0][$dept]) && is_numeric($Cost3[0][$dept])) ? (float)$Cost3[0][$dept] : 0;
+
+        $dl_val = (isset($total_DL[$dept]) && is_numeric($total_DL[$dept])) ? (float)$total_DL[$dept] : 0;
+        $xDL[$dept] = ($weight != 0.0) ? ($dl_val / $weight) : 0;
+
+        $oh_val = (isset($total_OH[$dept]) && is_numeric($total_OH[$dept])) ? (float)$total_OH[$dept] : 0;
+        $xOH[$dept] = ($weight != 0.0) ? ($oh_val / $weight) : 0;
+
+        $xTotal[$dept] = $xDL[$dept] + $xOH[$dept];
+    }
+
+    array_push($Cost, $xDL);
+    array_push($Cost, $xOH);
     array_push($Cost, $xTotal);
 
 //    echo '<pre>';

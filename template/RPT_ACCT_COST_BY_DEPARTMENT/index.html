@@ -12,13 +12,13 @@
     <div class="col-xs-2" >   
         <div class="input-group">
             <div class="input-group-addon">From Date</div>
-            <input type="text" autocomplete="off"  class="form-control txt-filter" value="2020-02-01" id="txtFromDate">
+            <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtFromDate">
         </div>
     </div>
     <div class="col-xs-2">   
         <div class="input-group">
             <div class="input-group-addon">To date</div>
-            <input type="text" autocomplete="off"  class="form-control txt-filter" value="2020-02-29" id="txtToDate">
+            <input type="text" autocomplete="off"  class="form-control txt-filter" id="txtToDate">
         </div>
     </div>
     <div class="col-xs-2">   
@@ -73,7 +73,7 @@
     $("#txtFromDate,#txtToDate").datepicker({
         dateFormat: 'yy-mm-dd',
     });
-    //$("#txtFromDate,#txtToDate").val(GetToday());
+    $("#txtFromDate,#txtToDate").val(GetToday());
     $("#btnSearch").click(function () {
         var tblReportId = '#tblReport';
         var btnSearch = '#btnSearch';
