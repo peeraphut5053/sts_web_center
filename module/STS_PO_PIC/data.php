@@ -31,14 +31,24 @@ if ($load == "SearchPO") {
     echo json_encode($rs);
 } else if ($load == "DeleteFile") {
     $po_num = isset($po_num) ? $po_num : '';
+    $file_name = isset($file_name) ? $file_name : (isset($file) ? $file : '');
     if (empty($po_num)) {
         echo json_encode(array("success" => false, "message" => "ไม่พบเลขที่ PO"));
         exit;
     }
 
-    $res = $PO->DeletePoPic($po_num);
+    $res = $PO->DeletePoPic($po_num, $file_name);
     if ($res['success']) {
-        if (!empty($res['file'])) {
+        if (!empty($res['files'])) {
+            foreach ($res['files'] as $f) {
+                if (!empty($f)) {
+                    $filePath = __DIR__ . "/files/" . $f;
+                    if (file_exists($filePath)) {
+                        @unlink($filePath);
+                    }
+                }
+            }
+        } else if (!empty($res['file'])) {
             $filePath = __DIR__ . "/files/" . $res['file'];
             if (file_exists($filePath)) {
                 @unlink($filePath);

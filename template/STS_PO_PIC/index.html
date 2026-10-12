@@ -131,8 +131,11 @@
         <span class="stat-badge-box stat-badge-total" id="badgeTotalBox">
             <i class="fa fa-list"></i> รายการ PO ทั้งหมด: <span id="badge_total_count">0</span>
         </span>
-        <span class="stat-badge-box stat-badge-has-file" id="badgeHasFileBox">
-            <i class="fa fa-check-circle"></i> มีไฟล์ PDF แล้ว: <span id="badge_has_file_count">0</span>
+        <span class="stat-badge-box" id="badgeBothFilesBox" style="background-color: #e6f4ea; color: #137333; border: 1px solid #ceead6;">
+            <i class="fa fa-check-circle"></i> มีครบ 2 ไฟล์: <span id="badge_both_count">0</span>
+        </span>
+        <span class="stat-badge-box" id="badgeOneFileBox" style="background-color: #e8f0fe; color: #1a73e8; border: 1px solid #c2e7ff;">
+            <i class="fa fa-file-text-o"></i> มี 1 ไฟล์: <span id="badge_one_count">0</span>
         </span>
         <span class="stat-badge-box stat-badge-no-file" id="badgeNoFileBox">
             <i class="fa fa-clock-o"></i> ยังไม่มีไฟล์: <span id="badge_no_file_count">0</span>
@@ -147,13 +150,13 @@
             <table class="table table-condensed table-bordered table-striped hover" width="100%" id="tblPoPic">
                 <thead>
                     <tr>
-                        <th style="width: 110px;">เลขที่ PO</th>
-                        <th style="width: 100px;">เลขที่ PR</th>
-                        <th style="width: 95px;">วันที่สั่งซื้อ</th>
-                        <th style="width: 95px;">รหัสผู้ขาย</th>
+                        <th style="width: 105px;">เลขที่ PO</th>
+                        <th style="width: 95px;">เลขที่ PR</th>
+                        <th style="width: 90px;">วันที่สั่งซื้อ</th>
+                        <th style="width: 90px;">รหัสผู้ขาย</th>
                         <th>ชื่อผู้ขาย</th>
-                        <th style="width: 280px;">ไฟล์เทียบราคา (PDF)</th>
-                        <th style="width: 140px;">จัดการ</th>
+                        <th style="width: 270px;">ไฟล์เทียบราคา 1 (PDF)</th>
+                        <th style="width: 270px;">ไฟล์เทียบราคา 2 (PDF)</th>
                     </tr>
                 </thead>
                 <tbody></tbody>
@@ -174,14 +177,15 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
                 <h4 class="modal-title" id="modalUploadTitle">
-                    <i class="fa fa-upload"></i> อัพโหลดไฟล์ PDF เทียบราคา
+                    <i class="fa fa-upload"></i> อัปโหลดไฟล์ PDF เทียบราคา
                 </h4>
             </div>
             <div class="modal-body" style="padding: 20px;">
                 <input type="hidden" id="upload_po_num" />
+                <input type="hidden" id="upload_file_seq" value="1" />
 
                 <div
-                    style="background-color: #f4f8fb; border-left: 4px solid #3c8dbc; padding: 10px 15px; margin-bottom: 20px; border-radius: 2px;">
+                    style="background-color: #f4f8fb; border-left: 4px solid #3c8dbc; padding: 10px 15px; margin-bottom: 15px; border-radius: 2px;">
                     <div style="margin-bottom: 5px;">
                         <strong>เลขที่ PO:</strong> <span id="modal_display_po"
                             style="font-size: 16px; color: #205081; font-weight: bold;">-</span>
@@ -190,6 +194,21 @@
                     </div>
                     <div>
                         <strong>ผู้ขาย:</strong> <span id="modal_display_vend">-</span>
+                    </div>
+                </div>
+
+                <!-- Select File Slot (File 1 or File 2) -->
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label style="font-weight: 600; color: #333; margin-bottom: 6px; display: block;">
+                        <i class="fa fa-folder-open-o text-primary"></i> เลือกลำดับไฟล์ที่ต้องการอัปโหลด:
+                    </label>
+                    <div class="btn-group btn-group-justified" id="fileSeqToggleGroup">
+                        <a href="javascript:void(0)" class="btn btn-primary" id="btnChooseSeq1" onclick="SetUploadSeq(1)">
+                            <i class="fa fa-file-pdf-o"></i> ไฟล์ที่ 1 (หลัก/เทียบราคา)
+                        </a>
+                        <a href="javascript:void(0)" class="btn btn-default" id="btnChooseSeq2" onclick="SetUploadSeq(2)">
+                            <i class="fa fa-file-pdf-o"></i> ไฟล์ที่ 2 (แนบ/เจ้าที่ 2)
+                        </a>
                     </div>
                 </div>
 
@@ -229,7 +248,7 @@
                     <i class="fa fa-times"></i> ปิด
                 </button>
                 <button type="button" class="btn btn-primary" id="btnSubmitUpload">
-                    <i class="fa fa-cloud-upload"></i> บันทึกและอัพโหลด
+                    <i class="fa fa-cloud-upload"></i> บันทึกและอัปโหลด
                 </button>
             </div>
         </div>
@@ -341,49 +360,91 @@
                     }
                 },
                 {
-                    data: "file_path",
+                    data: "file_path1",
                     className: "text-left",
                     render: function (data, type, row) {
-                        if (data && data.trim() !== "") {
-                            var link = "module/STS_PO_PIC/files/" + encodeURIComponent(data);
-                            var uploadInfo = "";
-                            if (row.upload_date) {
-                                var formattedDate = (typeof moment === "function") ? moment(row.upload_date).format("DD/MM/YYYY HH:mm") : row.upload_date;
-                                uploadInfo = "<div style='font-size: 11px; color: #777; margin-top: 3px;'>" +
-                                    "<i class='fa fa-clock-o'></i> " + formattedDate +
-                                    (row.upload_user ? " โดย " + row.upload_user : "") +
-                                    "</div>";
-                            }
-                            return "<div style='display: flex; align-items: flex-start; justify-content: space-between;'>" +
-                                "<div>" +
-                                "<a href='" + link + "' target='_blank' class='btn btn-xs btn-danger' style='font-weight: 600;' title='คลิกเพื่อดูไฟล์ PDF'>" +
-                                "<i class='fa fa-file-pdf-o'></i> " + data +
-                                "</a>" +
-                                uploadInfo +
-                                "</div>" +
-                                "<button type='button' class='btn btn-default btn-xs text-danger' title='ลบไฟล์นี้' onclick='ConfirmDeleteFile(\"" + row.po_num + "\", \"" + data + "\")'>" +
-                                "<i class='fa fa-trash'></i>" +
-                                "</button>" +
-                                "</div>";
-                        }
-                        return "<span class='label label-warning' style='font-size: 11px;'><i class='fa fa-exclamation-circle'></i> ยังไม่มีไฟล์</span>";
-                    }
-                },
-                {
-                    data: null,
-                    className: "text-center",
-                    orderable: false,
-                    render: function (data, type, row) {
-                        var hasFile = (row.file_path && row.file_path.trim() !== "");
-                        var btnClass = hasFile ? "btn-warning" : "btn-primary";
-                        var btnText = hasFile ? "เปลี่ยนไฟล์" : "อัพโหลด PDF";
-                        var btnIcon = hasFile ? "fa-refresh" : "fa-upload";
+                        var filePath = row.file_path1;
                         var safeVend = (row.vend_name || "").replace(/'/g, "\\'").replace(/"/g, "&quot;");
                         var safePr = (row.pr_num || "").replace(/'/g, "\\'").replace(/"/g, "&quot;");
 
-                        return "<button type='button' class='btn btn-xs " + btnClass + "' onclick='OpenUploadModal(\"" + row.po_num + "\", \"" + safeVend + "\", \"" + safePr + "\")'>" +
-                            "<i class='fa " + btnIcon + "'></i> " + btnText +
-                            "</button>";
+                        if (filePath && filePath.trim() !== "") {
+                            var link = "module/STS_PO_PIC/files/" + encodeURIComponent(filePath);
+                            var uploadInfo = "";
+                            if (row.upload_date1) {
+                                var formattedDate = (typeof moment === "function") ? moment(row.upload_date1).format("DD/MM/YYYY HH:mm") : row.upload_date1;
+                                uploadInfo = "<div style='font-size: 11px; color: #777; margin-top: 3px;'>" +
+                                    "<i class='fa fa-clock-o'></i> " + formattedDate +
+                                    (row.upload_user1 ? " โดย " + row.upload_user1 : "") +
+                                    "</div>";
+                            }
+                            return "<div style='display: flex; align-items: flex-start; justify-content: space-between; gap: 4px;'>" +
+                                "<div style='overflow: hidden; text-overflow: ellipsis; max-width: 195px;'>" +
+                                "<a href='" + link + "' target='_blank' class='btn btn-xs btn-danger' style='font-weight: 600;' title='คลิกเพื่อดูไฟล์ PDF 1'>" +
+                                "<i class='fa fa-file-pdf-o'></i> ไฟล์ 1" +
+                                "</a>" +
+                                "<div style='font-size: 11px; color: #555; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;' title='" + filePath + "'>" + filePath + "</div>" +
+                                uploadInfo +
+                                "</div>" +
+                                "<div style='white-space: nowrap;'>" +
+                                "<button type='button' class='btn btn-default btn-xs text-primary' title='เปลี่ยนไฟล์ 1' style='margin-right: 2px;' onclick='OpenUploadModal(\"" + row.po_num + "\", \"" + safeVend + "\", \"" + safePr + "\", 1)'>" +
+                                "<i class='fa fa-pencil'></i>" +
+                                "</button>" +
+                                "<button type='button' class='btn btn-default btn-xs text-danger' title='ลบไฟล์ 1' onclick='ConfirmDeleteFile(\"" + row.po_num + "\", \"" + filePath + "\", 1)'>" +
+                                "<i class='fa fa-trash'></i>" +
+                                "</button>" +
+                                "</div>" +
+                                "</div>";
+                        }
+                        return "<div style='display: flex; align-items: center; justify-content: space-between;'>" +
+                            "<span class='label label-warning' style='font-size: 11px;'><i class='fa fa-exclamation-circle'></i> ยังไม่มีไฟล์ 1</span>" +
+                            "<button type='button' class='btn btn-xs btn-primary' onclick='OpenUploadModal(\"" + row.po_num + "\", \"" + safeVend + "\", \"" + safePr + "\", 1)'>" +
+                            "<i class='fa fa-upload'></i> อัปโหลด 1" +
+                            "</button>" +
+                            "</div>";
+                    }
+                },
+                {
+                    data: "file_path2",
+                    className: "text-left",
+                    render: function (data, type, row) {
+                        var filePath = row.file_path2;
+                        var safeVend = (row.vend_name || "").replace(/'/g, "\\'").replace(/"/g, "&quot;");
+                        var safePr = (row.pr_num || "").replace(/'/g, "\\'").replace(/"/g, "&quot;");
+
+                        if (filePath && filePath.trim() !== "") {
+                            var link = "module/STS_PO_PIC/files/" + encodeURIComponent(filePath);
+                            var uploadInfo = "";
+                            if (row.upload_date2) {
+                                var formattedDate = (typeof moment === "function") ? moment(row.upload_date2).format("DD/MM/YYYY HH:mm") : row.upload_date2;
+                                uploadInfo = "<div style='font-size: 11px; color: #777; margin-top: 3px;'>" +
+                                    "<i class='fa fa-clock-o'></i> " + formattedDate +
+                                    (row.upload_user2 ? " โดย " + row.upload_user2 : "") +
+                                    "</div>";
+                            }
+                            return "<div style='display: flex; align-items: flex-start; justify-content: space-between; gap: 4px;'>" +
+                                "<div style='overflow: hidden; text-overflow: ellipsis; max-width: 195px;'>" +
+                                "<a href='" + link + "' target='_blank' class='btn btn-xs btn-danger' style='font-weight: 600;' title='คลิกเพื่อดูไฟล์ PDF 2'>" +
+                                "<i class='fa fa-file-pdf-o'></i> ไฟล์ 2" +
+                                "</a>" +
+                                "<div style='font-size: 11px; color: #555; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;' title='" + filePath + "'>" + filePath + "</div>" +
+                                uploadInfo +
+                                "</div>" +
+                                "<div style='white-space: nowrap;'>" +
+                                "<button type='button' class='btn btn-default btn-xs text-primary' title='เปลี่ยนไฟล์ 2' style='margin-right: 2px;' onclick='OpenUploadModal(\"" + row.po_num + "\", \"" + safeVend + "\", \"" + safePr + "\", 2)'>" +
+                                "<i class='fa fa-pencil'></i>" +
+                                "</button>" +
+                                "<button type='button' class='btn btn-default btn-xs text-danger' title='ลบไฟล์ 2' onclick='ConfirmDeleteFile(\"" + row.po_num + "\", \"" + filePath + "\", 2)'>" +
+                                "<i class='fa fa-trash'></i>" +
+                                "</button>" +
+                                "</div>" +
+                                "</div>";
+                        }
+                        return "<div style='display: flex; align-items: center; justify-content: space-between;'>" +
+                            "<span class='label label-warning' style='font-size: 11px;'><i class='fa fa-exclamation-circle'></i> ยังไม่มีไฟล์ 2</span>" +
+                            "<button type='button' class='btn btn-xs btn-default' style='color: #3c8dbc; border-color: #3c8dbc;' onclick='OpenUploadModal(\"" + row.po_num + "\", \"" + safeVend + "\", \"" + safePr + "\", 2)'>" +
+                            "<i class='fa fa-upload'></i> อัปโหลด 2" +
+                            "</button>" +
+                            "</div>";
                     }
                 }
             ],
@@ -441,19 +502,25 @@
 
                 // Update summary badges
                 var totalCount = data.length;
-                var hasFileCount = 0;
+                var bothCount = 0;
+                var oneCount = 0;
                 var noFileCount = 0;
 
                 for (var i = 0; i < data.length; i++) {
-                    if (data[i].file_path && data[i].file_path.trim() !== "") {
-                        hasFileCount++;
+                    var has1 = (data[i].file_path1 && data[i].file_path1.trim() !== "");
+                    var has2 = (data[i].file_path2 && data[i].file_path2.trim() !== "");
+                    if (has1 && has2) {
+                        bothCount++;
+                    } else if (has1 || has2) {
+                        oneCount++;
                     } else {
                         noFileCount++;
                     }
                 }
 
                 $("#badge_total_count").text(totalCount);
-                $("#badge_has_file_count").text(hasFileCount);
+                $("#badge_both_count").text(bothCount);
+                $("#badge_one_count").text(oneCount);
                 $("#badge_no_file_count").text(noFileCount);
 
                 // Update DataTable data
@@ -566,11 +633,27 @@
             .show();
     }
 
-    function OpenUploadModal(po_num, vend_name, pr_num) {
+    function SetUploadSeq(seq) {
+        seq = (parseInt(seq) === 2) ? 2 : 1;
+        $("#upload_file_seq").val(seq);
+        if (seq === 1) {
+            $("#btnChooseSeq1").removeClass("btn-default").addClass("btn-primary");
+            $("#btnChooseSeq2").removeClass("btn-primary").addClass("btn-default");
+            $("#modalUploadTitle").html("<i class='fa fa-upload'></i> อัปโหลดไฟล์ PDF เทียบราคา (ไฟล์ที่ 1)");
+        } else {
+            $("#btnChooseSeq2").removeClass("btn-default").addClass("btn-primary");
+            $("#btnChooseSeq1").removeClass("btn-primary").addClass("btn-default");
+            $("#modalUploadTitle").html("<i class='fa fa-upload'></i> อัปโหลดไฟล์ PDF เทียบราคา (ไฟล์ที่ 2)");
+        }
+    }
+
+    function OpenUploadModal(po_num, vend_name, pr_num, seq) {
         $("#upload_po_num").val(po_num);
         $("#modal_display_po").text(po_num);
         $("#modal_display_pr").text(pr_num || "-");
         $("#modal_display_vend").text(vend_name || "-");
+
+        SetUploadSeq(seq || 1);
 
         currentSelectedFile = null;
         $("#file_input_pdf").val("");
@@ -583,6 +666,7 @@
 
     function ExecuteUpload() {
         var po_num = $("#upload_po_num").val();
+        var file_seq = $("#upload_file_seq").val() || 1;
 
         if (!currentSelectedFile) {
             showAlert("กรุณาเลือกไฟล์ PDF ก่อนกดบันทึก", "warning");
@@ -598,11 +682,12 @@
 
         var formData = new FormData();
         formData.append("po_num", po_num);
+        formData.append("file_seq", file_seq);
         formData.append("user", username);
         formData.append("file", currentSelectedFile);
 
         var oldBtnHtml = $("#btnSubmitUpload").html();
-        $("#btnSubmitUpload").prop("disabled", true).html("<i class='fa fa-spinner fa-spin'></i> กำลังอัพโหลด...");
+        $("#btnSubmitUpload").prop("disabled", true).html("<i class='fa fa-spinner fa-spin'></i> กำลังอัปโหลด...");
 
         $.ajax({
             url: "./module/STS_PO_PIC/upload.php",
@@ -617,13 +702,13 @@
                 if (res.success) {
                     $("#ModalUploadPdf").modal("hide");
                     if (typeof swal === "function") {
-                        swal("สำเร็จ", res.message || "อัพโหลดไฟล์เรียบร้อยแล้ว", "success");
+                        swal("สำเร็จ", res.message || "อัปโหลดไฟล์เรียบร้อยแล้ว", "success");
                     } else {
-                        alert(res.message || "อัพโหลดไฟล์เรียบร้อยแล้ว");
+                        alert(res.message || "อัปโหลดไฟล์เรียบร้อยแล้ว");
                     }
                     SearchPoPicData();
                 } else {
-                    showAlert(res.message || "เกิดข้อผิดพลาดในการอัพโหลด", "danger");
+                    showAlert(res.message || "เกิดข้อผิดพลาดในการอัปโหลด", "danger");
                 }
             },
             error: function (xhr, status, error) {
@@ -633,7 +718,8 @@
         });
     }
 
-    function ConfirmDeleteFile(po_num, filename) {
+    function ConfirmDeleteFile(po_num, filename, file_seq) {
+        var seqText = file_seq ? " (ไฟล์ที่ " + file_seq + ")" : "";
         var doDelete = function () {
             $.ajax({
                 url: "./module/STS_PO_PIC/data.php",
@@ -641,7 +727,8 @@
                 dataType: "json",
                 data: {
                     load: "DeleteFile",
-                    po_num: po_num
+                    po_num: po_num,
+                    file_name: filename
                 },
                 success: function (res) {
                     if (res.success) {
@@ -665,11 +752,13 @@
             });
         };
 
+        var confirmContent = "คุณต้องการลบไฟล์เทียบราคา" + seqText + " ของ PO <strong>" + po_num + "</strong> (" + filename + ") ใช่หรือไม่?";
+
         if (typeof $.confirm === "function") {
             $.confirm({
                 title: "ยืนยันการลบไฟล์?",
                 theme: "modern",
-                content: "คุณต้องการลบไฟล์เทียบราคาของ PO <strong>" + po_num + "</strong> (" + filename + ") ใช่หรือไม่?",
+                content: confirmContent,
                 buttons: {
                     confirm: {
                         text: "ยืนยันลบ",
@@ -684,7 +773,7 @@
                 }
             });
         } else {
-            if (confirm("คุณต้องการลบไฟล์เทียบราคาของ PO " + po_num + " ใช่หรือไม่?")) {
+            if (confirm("คุณต้องการลบไฟล์เทียบราคา" + seqText + " ของ PO " + po_num + " ใช่หรือไม่?")) {
                 doDelete();
             }
         }

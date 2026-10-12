@@ -175,9 +175,13 @@ order by item";
         }
 
         if ($FileStatus == 'HAS_FILE') {
-            $where[] = "(pic.path IS NOT NULL AND pic.path <> '')";
+            $where[] = "(pic1.file_path1 IS NOT NULL OR pic2.file_path2 IS NOT NULL)";
         } else if ($FileStatus == 'NO_FILE') {
-            $where[] = "(pic.path IS NULL OR pic.path = '')";
+            $where[] = "(pic1.file_path1 IS NULL AND pic2.file_path2 IS NULL)";
+        } else if ($FileStatus == 'HAS_BOTH') {
+            $where[] = "(pic1.file_path1 IS NOT NULL AND pic2.file_path2 IS NOT NULL)";
+        } else if ($FileStatus == 'HAS_ONE') {
+            $where[] = "((pic1.file_path1 IS NOT NULL AND pic2.file_path2 IS NULL) OR (pic1.file_path1 IS NULL AND pic2.file_path2 IS NOT NULL))";
         }
 
         $sqlWhere = (count($where) > 0) ? " WHERE " . implode(" AND ", $where) : "";
@@ -187,12 +191,29 @@ order by item";
                          po.vend_num,
                          ven.name AS vend_name,
                          pr_num = (SELECT TOP 1 poi.req_num FROM poitem_mst poi WHERE poi.po_num = po.po_num),
-                         pic.path AS file_path,
-                         upload_date = CONVERT(VARCHAR(19), pic.createdate, 120),
-                         pic.[user] AS upload_user
+                         pic1.file_path1,
+                         pic1.upload_date1,
+                         pic1.upload_user1,
+                         pic2.file_path2,
+                         pic2.upload_date2,
+                         pic2.upload_user2,
+                         file_path = COALESCE(pic1.file_path1, pic2.file_path2),
+                         upload_date = COALESCE(pic1.upload_date1, pic2.upload_date2),
+                         upload_user = COALESCE(pic1.upload_user1, pic2.upload_user2)
                   FROM po_mst po
                   LEFT JOIN vendaddr_mst ven ON ven.vend_num = po.vend_num
-                  LEFT JOIN STS_po_pic pic ON pic.po_num = po.po_num
+                  OUTER APPLY (
+                      SELECT TOP 1 path AS file_path1, CONVERT(VARCHAR(19), createdate, 120) AS upload_date1, [user] AS upload_user1
+                      FROM STS_po_pic p1
+                      WHERE p1.po_num = po.po_num AND p1.path NOT LIKE po.po_num + '_2_%'
+                      ORDER BY p1.createdate DESC
+                  ) pic1
+                  OUTER APPLY (
+                      SELECT TOP 1 path AS file_path2, CONVERT(VARCHAR(19), createdate, 120) AS upload_date2, [user] AS upload_user2
+                      FROM STS_po_pic p2
+                      WHERE p2.po_num = po.po_num AND p2.path LIKE po.po_num + '_2_%'
+                      ORDER BY p2.createdate DESC
+                  ) pic2
                   $sqlWhere
                   ORDER BY po.po_num DESC";
 
@@ -208,36 +229,55 @@ order by item";
         return $result;
     }
 
-    function SavePoPic($po_num, $filename, $user = '')
+    function SavePoPic($po_num, $filename, $user = '', $file_seq = 1)
     {
-        $sqlCheck = "SELECT COUNT(*) as cnt FROM STS_po_pic WHERE po_num = ?";
-        $stmtCheck = sqlsrv_query($this->StrConn, $sqlCheck, array($po_num));
-        $exists = false;
-        if ($stmtCheck && $rowCheck = sqlsrv_fetch_array($stmtCheck, SQLSRV_FETCH_ASSOC)) {
-            $exists = ($rowCheck['cnt'] > 0);
+        $clean_po = preg_replace('/[^A-Za-z0-9_-]/', '', $po_num);
+        $oldFile = "";
+        if ($file_seq == 2) {
+            $sqlCheck = "SELECT TOP 1 [path] FROM STS_po_pic WHERE po_num = ? AND [path] LIKE ?";
+            $stmtCheck = sqlsrv_query($this->StrConn, $sqlCheck, array($po_num, $clean_po . '_2_%'));
+        } else {
+            $sqlCheck = "SELECT TOP 1 [path] FROM STS_po_pic WHERE po_num = ? AND [path] NOT LIKE ?";
+            $stmtCheck = sqlsrv_query($this->StrConn, $sqlCheck, array($po_num, $clean_po . '_2_%'));
         }
-        if ($exists) {
-            $sql = "UPDATE STS_po_pic SET [path] = ?, createdate = GETDATE(), [user] = ? WHERE po_num = ?";
-            $params = array($filename, $user, $po_num);
+
+        if ($stmtCheck && $rowCheck = sqlsrv_fetch_array($stmtCheck, SQLSRV_FETCH_ASSOC)) {
+            $oldFile = $rowCheck['path'];
+        }
+
+        if (!empty($oldFile)) {
+            $sql = "UPDATE STS_po_pic SET [path] = ?, createdate = GETDATE(), [user] = ? WHERE po_num = ? AND [path] = ?";
+            $params = array($filename, $user, $po_num, $oldFile);
+            $stmt = sqlsrv_query($this->StrConn, $sql, $params);
         } else {
             $sql = "INSERT INTO STS_po_pic (po_num, [path], createdate, [user]) VALUES (?, ?, GETDATE(), ?)";
             $params = array($po_num, $filename, $user);
+            $stmt = sqlsrv_query($this->StrConn, $sql, $params);
         }
-        $stmt = sqlsrv_query($this->StrConn, $sql, $params);
         return ($stmt !== false);
     }
 
-    function DeletePoPic($po_num)
+    function DeletePoPic($po_num, $filename = '')
     {
-        $oldFile = "";
-        $sqlGet = "SELECT [path] FROM STS_po_pic WHERE po_num = ?";
-        $stmtGet = sqlsrv_query($this->StrConn, $sqlGet, array($po_num));
-        if ($stmtGet && $rowGet = sqlsrv_fetch_array($stmtGet, SQLSRV_FETCH_ASSOC)) {
-            $oldFile = $rowGet['path'];
+        $deletedFiles = array();
+        if (!empty($filename)) {
+            $sqlGet = "SELECT [path] FROM STS_po_pic WHERE po_num = ? AND [path] = ?";
+            $stmtGet = sqlsrv_query($this->StrConn, $sqlGet, array($po_num, $filename));
+            if ($stmtGet && $rowGet = sqlsrv_fetch_array($stmtGet, SQLSRV_FETCH_ASSOC)) {
+                $deletedFiles[] = $rowGet['path'];
+            }
+            $sql = "DELETE FROM STS_po_pic WHERE po_num = ? AND [path] = ?";
+            $stmt = sqlsrv_query($this->StrConn, $sql, array($po_num, $filename));
+        } else {
+            $sqlGet = "SELECT [path] FROM STS_po_pic WHERE po_num = ?";
+            $stmtGet = sqlsrv_query($this->StrConn, $sqlGet, array($po_num));
+            while ($stmtGet && $rowGet = sqlsrv_fetch_array($stmtGet, SQLSRV_FETCH_ASSOC)) {
+                $deletedFiles[] = $rowGet['path'];
+            }
+            $sql = "DELETE FROM STS_po_pic WHERE po_num = ?";
+            $stmt = sqlsrv_query($this->StrConn, $sql, array($po_num));
         }
-        $sql = "DELETE FROM STS_po_pic WHERE po_num = ?";
-        $stmt = sqlsrv_query($this->StrConn, $sql, array($po_num));
-        return array('success' => ($stmt !== false), 'file' => $oldFile);
+        return array('success' => ($stmt !== false), 'files' => $deletedFiles, 'file' => (!empty($deletedFiles) ? $deletedFiles[0] : ''));
     }
 
 }

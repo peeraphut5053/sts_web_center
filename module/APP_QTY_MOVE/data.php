@@ -4,7 +4,7 @@ session_start();
 
 function delete_files($target) {
     if ($target != "") {
-        $target = '../../template/APP_QC_ISSUE_REPORT/img_tag/' . $target;
+        $target = '../../template/APP_QTY_MOVE/img_tag/' . $target;
         if (is_dir($target)) {
             $files = glob($target . '*', GLOB_MARK); //GLOB_MARK adds a slash to directories returned
             foreach ($files as $file) {
