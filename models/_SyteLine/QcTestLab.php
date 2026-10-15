@@ -155,6 +155,10 @@ from STS_QA_LAB inner join sts_po_qc
         return $rs0;
     }
 
+    function makeReportMexico($do_num){
+        return $this->makeReportCanada($do_num);
+    }
+
     function makeReportCanadaBulk($do_num, $co_num, $line_start, $line_end, $type){
     
             $query = "EXEC [dbo].[STS_QA_MILLCERT_CANADA_BULK]

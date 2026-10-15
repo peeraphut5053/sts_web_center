@@ -244,7 +244,7 @@ if ($load == 'makePDF') {
     echo json_encode($QcTestLab); 
 }
 
-if ($load == 'Canada') {
+if ($load == 'Canada' || $load == 'Mexico') {
     $CallModel = new CallModel();
     $CallModel->SyteLine_Models();
     $QcTestLab = new QcTestLab();
