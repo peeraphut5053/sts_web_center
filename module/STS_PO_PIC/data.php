@@ -36,53 +36,14 @@ if ($load == "SearchPO") {
         echo "File not found";
         exit;
     }
-    $candidates = [
-        '\\\\172.18.1.245\\test\\po-pic\\' . $file,
-        '//172.18.1.245/test/po-pic/' . $file,
-        'Z:\\po-pic\\' . $file,
-        'Z:/po-pic/' . $file,
-        __DIR__ . '/files/' . $file,
-    ];
 
-    if (isset($_GET['debug'])) {
-        header('Content-Type: text/plain; charset=utf-8');
-        echo "=== DEBUG INFO ===\n";
-        echo "PHP User: " . get_current_user() . "\n";
-        echo "open_basedir: " . (ini_get('open_basedir') ?: 'None') . "\n\n";
-        foreach ($candidates as $c) {
-            echo "Path: " . $c . "\n";
-            echo " - file_exists: " . (file_exists($c) ? "YES" : "NO") . "\n";
-            echo " - is_readable: " . (is_readable($c) ? "YES" : "NO") . "\n";
-            $fp = @fopen($c, 'rb');
-            if ($fp) {
-                echo " - fopen: SUCCESS\n";
-                fclose($fp);
-            } else {
-                $err = error_get_last();
-                echo " - fopen error: " . ($err ? $err['message'] : 'unknown') . "\n";
-            }
-            echo "\n";
-        }
+    // Stream directly from SeaweedFS (NAS Distributed Object Storage)
+    if (SeaweedFS::stream('po-pic', $file, 'application/pdf')) {
         exit;
     }
-    $target = '';
-    foreach ($candidates as $p) {
-        if (file_exists($p)) {
-            $target = $p;
-            break;
-        }
-    }
-    if (empty($target)) {
-        header("HTTP/1.0 404 Not Found");
-        echo "ไม่พบไฟล์ PDF ในระบบ";
-        exit;
-    }
-    header('Content-Type: application/pdf');
-    header('Content-Disposition: inline; filename="' . $file . '"');
-    header('Content-Length: ' . filesize($target));
-    header('Cache-Control: private, no-store');
-    header('X-Content-Type-Options: nosniff');
-    readfile($target);
+
+    header("HTTP/1.0 404 Not Found");
+    echo "ไม่พบไฟล์ PDF ใน SeaweedFS";
     exit;
 } else if ($load == "DeleteFile") {
     $po_num = isset($po_num) ? $po_num : '';
@@ -94,20 +55,10 @@ if ($load == "SearchPO") {
 
     $res = $PO->DeletePoPic($po_num, $file_name);
     if ($res['success']) {
-        $storage_candidates = [
-            '\\\\172.18.1.245\\test\\po-pic\\',
-            'Z:\\po-pic\\',
-            __DIR__ . '/files/',
-        ];
         $filesToDelete = !empty($res['files']) ? $res['files'] : (!empty($res['file']) ? array($res['file']) : array());
         foreach ($filesToDelete as $f) {
             if (!empty($f)) {
-                $cleanName = basename($f);
-                foreach ($storage_candidates as $cand) {
-                    if (file_exists($cand . $cleanName)) {
-                        @unlink($cand . $cleanName);
-                    }
-                }
+                SeaweedFS::delete('po-pic', basename($f));
             }
         }
         echo json_encode(array("success" => true, "message" => "ลบไฟล์สำเร็จ"));

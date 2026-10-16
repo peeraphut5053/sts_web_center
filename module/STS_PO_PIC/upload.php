@@ -21,31 +21,6 @@ if (session_status() == PHP_SESSION_NONE) {
 
 include "../../initial.php";
 
-// Network & local storage directory candidates
-$storage_candidates = [
-    '\\\\172.18.1.245\\test\\po-pic\\',
-    '//172.18.1.245/test/po-pic/',
-    'Z:\\po-pic\\',
-    'Z:/po-pic/',
-    __DIR__ . '/files/',
-];
-
-$upload_dir = __DIR__ . '/files/';
-foreach ($storage_candidates as $candidate) {
-    if (file_exists($candidate)) {
-        $upload_dir = $candidate;
-        break;
-    }
-    if (@mkdir($candidate, 0777, true)) {
-        $upload_dir = $candidate;
-        break;
-    }
-}
-
-if (!file_exists($upload_dir)) {
-    @mkdir($upload_dir, 0777, true);
-}
-
 $response = array();
 
 if (isset($_FILES['file']) && !empty($po_num)) {
@@ -68,14 +43,13 @@ if (isset($_FILES['file']) && !empty($po_num)) {
             if (strlen($new_filename) > 60) {
                 $new_filename = substr($clean_po, 0, 10) . "_" . $file_seq . "_" . time() . ".pdf";
             }
-            $upload_path = $upload_dir . $new_filename;
 
             $CallModel = new CallModel();
             $CallModel->SyteLine_Models();
             $PO = new PurchaseOrder();
             $PO->setConn($ConnSL);
 
-            // Delete old file of this slot if exists from all storage locations
+            // Delete old file of this slot from SeaweedFS if exists
             if ($file_seq == 2) {
                 $sqlOld = "SELECT [path] FROM STS_po_pic WHERE po_num = ? AND [path] LIKE ?";
                 $paramsOld = array($po_num, $clean_po . '_2_%');
@@ -86,16 +60,14 @@ if (isset($_FILES['file']) && !empty($po_num)) {
             $stmtOld = sqlsrv_query($ConnSL, $sqlOld, $paramsOld);
             if ($stmtOld && $rowOld = sqlsrv_fetch_array($stmtOld, SQLSRV_FETCH_ASSOC)) {
                 if (!empty($rowOld['path'])) {
-                    $oldName = $rowOld['path'];
-                    foreach ($storage_candidates as $cand) {
-                        if (file_exists($cand . $oldName)) {
-                            @unlink($cand . $oldName);
-                        }
-                    }
+                    SeaweedFS::delete('po-pic', $rowOld['path']);
                 }
             }
 
-            if (move_uploaded_file($file['tmp_name'], $upload_path)) {
+            // Upload 100% directly to SeaweedFS (NAS Distributed Object Storage)
+            $seaweedUploaded = SeaweedFS::upload('po-pic', $new_filename, $file['tmp_name']);
+
+            if ($seaweedUploaded) {
                 $username = !empty($user) ? $user : (isset($_SESSION['login_username']) ? $_SESSION['login_username'] : '');
                 $saved = $PO->SavePoPic($po_num, $new_filename, $username, $file_seq);
 
@@ -111,7 +83,7 @@ if (isset($_FILES['file']) && !empty($po_num)) {
                 }
             } else {
                 $response['success'] = false;
-                $response['message'] = 'ไม่สามารถบันทึกไฟล์ลงระบบได้ กรุณาตรวจสอบสิทธิ์ของโฟลเดอร์';
+                $response['message'] = 'ไม่สามารถอัปโหลดไฟล์ไปยัง SeaweedFS บน NAS ได้ กรุณาตรวจสอบการเชื่อมต่อ';
             }
         } else {
             $response['success'] = false;
