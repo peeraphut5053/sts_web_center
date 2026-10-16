@@ -2,6 +2,7 @@
 /**
  * SeaweedFS Client for STS Web Center
  * Direct HTTP REST API via SeaweedFS Filer (port 8888)
+ * Supports both cURL and Native PHP HTTP Streams (zero extension dependency)
  */
 class SeaweedFS {
     private static $filerUrl = "http://172.18.1.245:8888";
@@ -50,25 +51,52 @@ class SeaweedFS {
 
         $url = self::getUrl($path, $filename);
         $fileSize = filesize($localFilePath);
-        $fp = @fopen($localFilePath, 'rb');
-        if (!$fp) {
+
+        // 1. Try cURL if available
+        if (function_exists('curl_init')) {
+            $fp = @fopen($localFilePath, 'rb');
+            if ($fp) {
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, $url);
+                curl_setopt($ch, CURLOPT_PUT, true);
+                curl_setopt($ch, CURLOPT_INFILE, $fp);
+                curl_setopt($ch, CURLOPT_INFILESIZE, $fileSize);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+
+                curl_exec($ch);
+                $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                curl_close($ch);
+                fclose($fp);
+
+                if ($httpCode >= 200 && $httpCode < 300) {
+                    return true;
+                }
+            }
+        }
+
+        // 2. Fallback to native PHP HTTP stream (no extensions needed)
+        $content = @file_get_contents($localFilePath);
+        if ($content === false) {
             return false;
         }
 
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_PUT, true);
-        curl_setopt($ch, CURLOPT_INFILE, $fp);
-        curl_setopt($ch, CURLOPT_INFILESIZE, $fileSize);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+        $ctx = stream_context_create([
+            'http' => [
+                'method' => 'PUT',
+                'header' => "Content-Type: application/octet-stream\r\nContent-Length: " . strlen($content) . "\r\n",
+                'content' => $content,
+                'timeout' => 60,
+                'ignore_errors' => true
+            ]
+        ]);
 
-        $res = curl_exec($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
-        fclose($fp);
+        $res = @file_get_contents($url, false, $ctx);
+        if (isset($http_response_header[0]) && preg_match('/HTTP\/\S*\s+20[0-9]/i', $http_response_header[0])) {
+            return true;
+        }
 
-        return ($httpCode >= 200 && $httpCode < 300);
+        return false;
     }
 
     /**
@@ -79,20 +107,41 @@ class SeaweedFS {
      */
     public static function exists($path, $filename) {
         $urls = self::getCandidateUrls($path, $filename);
+
         foreach ($urls as $url) {
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_NOBODY, true);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+            // 1. Try cURL
+            if (function_exists('curl_init')) {
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, $url);
+                curl_setopt($ch, CURLOPT_NOBODY, true);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+                curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 
-            curl_exec($ch);
-            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            curl_close($ch);
+                curl_exec($ch);
+                $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                curl_close($ch);
 
-            if ($httpCode === 200) {
-                return true;
+                if ($httpCode === 200) {
+                    return true;
+                }
+            } else {
+                // 2. Native PHP stream
+                $ctx = stream_context_create([
+                    'http' => [
+                        'method' => 'HEAD',
+                        'timeout' => 5,
+                        'ignore_errors' => true
+                    ]
+                ]);
+                $fp = @fopen($url, 'r', false, $ctx);
+                if ($fp) {
+                    $meta = stream_get_meta_data($fp);
+                    fclose($fp);
+                    if (isset($meta['wrapper_data'][0]) && preg_match('/HTTP\/\S*\s+200/i', $meta['wrapper_data'][0])) {
+                        return true;
+                    }
+                }
             }
         }
 
@@ -107,19 +156,33 @@ class SeaweedFS {
      */
     public static function getContents($path, $filename) {
         $urls = self::getCandidateUrls($path, $filename);
+
         foreach ($urls as $url) {
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+            if (function_exists('curl_init')) {
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, $url);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+                curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 
-            $content = curl_exec($ch);
-            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            curl_close($ch);
+                $content = curl_exec($ch);
+                $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                curl_close($ch);
 
-            if ($httpCode === 200) {
-                return $content;
+                if ($httpCode === 200) {
+                    return $content;
+                }
+            } else {
+                $ctx = stream_context_create([
+                    'http' => [
+                        'timeout' => 30,
+                        'ignore_errors' => true
+                    ]
+                ]);
+                $content = @file_get_contents($url, false, $ctx);
+                if ($content !== false && isset($http_response_header[0]) && preg_match('/HTTP\/\S*\s+200/i', $http_response_header[0])) {
+                    return $content;
+                }
             }
         }
 
@@ -137,34 +200,66 @@ class SeaweedFS {
         $urls = self::getCandidateUrls($path, $filename);
 
         foreach ($urls as $url) {
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_HEADER, true);
-            curl_setopt($ch, CURLOPT_NOBODY, true);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-            curl_exec($ch);
-            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            $contentLength = curl_getinfo($ch, CURLINFO_CONTENT_LENGTH_DOWNLOAD);
-            curl_close($ch);
+            // Check headers & size first via cURL or stream
+            if (function_exists('curl_init')) {
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, $url);
+                curl_setopt($ch, CURLOPT_HEADER, true);
+                curl_setopt($ch, CURLOPT_NOBODY, true);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+                curl_exec($ch);
+                $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                $contentLength = curl_getinfo($ch, CURLINFO_CONTENT_LENGTH_DOWNLOAD);
+                curl_close($ch);
 
-            if ($httpCode === 200) {
-                header("Content-Type: " . $contentType);
-                header('Content-Disposition: inline; filename="' . basename($filename) . '"');
-                if ($contentLength > 0) {
-                    header('Content-Length: ' . $contentLength);
+                if ($httpCode === 200) {
+                    header("Content-Type: " . $contentType);
+                    header('Content-Disposition: inline; filename="' . basename($filename) . '"');
+                    if ($contentLength > 0) {
+                        header('Content-Length: ' . $contentLength);
+                    }
+                    header('Cache-Control: private, no-store');
+                    header('X-Content-Type-Options: nosniff');
+
+                    $chStream = curl_init();
+                    curl_setopt($chStream, CURLOPT_URL, $url);
+                    curl_setopt($chStream, CURLOPT_RETURNTRANSFER, false);
+                    curl_setopt($chStream, CURLOPT_TIMEOUT, 60);
+                    curl_exec($chStream);
+                    curl_close($chStream);
+
+                    return true;
                 }
-                header('Cache-Control: private, no-store');
-                header('X-Content-Type-Options: nosniff');
+            } else {
+                // Native stream handler (Zero extensions needed)
+                $ctx = stream_context_create([
+                    'http' => [
+                        'timeout' => 30,
+                        'ignore_errors' => true
+                    ]
+                ]);
+                $fp = @fopen($url, 'rb', false, $ctx);
+                if ($fp) {
+                    $meta = stream_get_meta_data($fp);
+                    $statusLine = isset($meta['wrapper_data'][0]) ? $meta['wrapper_data'][0] : '';
+                    if (preg_match('/HTTP\/\S*\s+200/i', $statusLine)) {
+                        header("Content-Type: " . $contentType);
+                        header('Content-Disposition: inline; filename="' . basename($filename) . '"');
+                        foreach ($meta['wrapper_data'] as $h) {
+                            if (stripos($h, 'Content-Length:') === 0) {
+                                header($h);
+                            }
+                        }
+                        header('Cache-Control: private, no-store');
+                        header('X-Content-Type-Options: nosniff');
 
-                $chStream = curl_init();
-                curl_setopt($chStream, CURLOPT_URL, $url);
-                curl_setopt($chStream, CURLOPT_RETURNTRANSFER, false);
-                curl_setopt($chStream, CURLOPT_TIMEOUT, 60);
-                curl_exec($chStream);
-                curl_close($chStream);
-
-                return true;
+                        fpassthru($fp);
+                        fclose($fp);
+                        return true;
+                    }
+                    fclose($fp);
+                }
             }
         }
 
@@ -180,19 +275,34 @@ class SeaweedFS {
     public static function delete($path, $filename) {
         $urls = self::getCandidateUrls($path, $filename);
         $deleted = false;
+
         foreach ($urls as $url) {
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+            if (function_exists('curl_init')) {
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, $url);
+                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_TIMEOUT, 10);
 
-            curl_exec($ch);
-            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            curl_close($ch);
+                curl_exec($ch);
+                $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                curl_close($ch);
 
-            if (($httpCode >= 200 && $httpCode < 300) || $httpCode === 404) {
-                $deleted = true;
+                if (($httpCode >= 200 && $httpCode < 300) || $httpCode === 404) {
+                    $deleted = true;
+                }
+            } else {
+                $ctx = stream_context_create([
+                    'http' => [
+                        'method' => 'DELETE',
+                        'timeout' => 10,
+                        'ignore_errors' => true
+                    ]
+                ]);
+                @file_get_contents($url, false, $ctx);
+                if (isset($http_response_header[0]) && preg_match('/HTTP\/\S*\s+(20[0-9]|404)/i', $http_response_header[0])) {
+                    $deleted = true;
+                }
             }
         }
 
