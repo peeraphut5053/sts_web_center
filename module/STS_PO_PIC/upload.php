@@ -24,7 +24,9 @@ include "../../initial.php";
 // Network & local storage directory candidates
 $storage_candidates = [
     '\\\\172.18.1.245\\test\\po-pic\\',
+    '//172.18.1.245/test/po-pic/',
     'Z:\\po-pic\\',
+    'Z:/po-pic/',
     __DIR__ . '/files/',
 ];
 

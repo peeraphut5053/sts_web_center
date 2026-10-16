@@ -38,9 +38,33 @@ if ($load == "SearchPO") {
     }
     $candidates = [
         '\\\\172.18.1.245\\test\\po-pic\\' . $file,
+        '//172.18.1.245/test/po-pic/' . $file,
         'Z:\\po-pic\\' . $file,
+        'Z:/po-pic/' . $file,
         __DIR__ . '/files/' . $file,
     ];
+
+    if (isset($_GET['debug'])) {
+        header('Content-Type: text/plain; charset=utf-8');
+        echo "=== DEBUG INFO ===\n";
+        echo "PHP User: " . get_current_user() . "\n";
+        echo "open_basedir: " . (ini_get('open_basedir') ?: 'None') . "\n\n";
+        foreach ($candidates as $c) {
+            echo "Path: " . $c . "\n";
+            echo " - file_exists: " . (file_exists($c) ? "YES" : "NO") . "\n";
+            echo " - is_readable: " . (is_readable($c) ? "YES" : "NO") . "\n";
+            $fp = @fopen($c, 'rb');
+            if ($fp) {
+                echo " - fopen: SUCCESS\n";
+                fclose($fp);
+            } else {
+                $err = error_get_last();
+                echo " - fopen error: " . ($err ? $err['message'] : 'unknown') . "\n";
+            }
+            echo "\n";
+        }
+        exit;
+    }
     $target = '';
     foreach ($candidates as $p) {
         if (file_exists($p)) {
