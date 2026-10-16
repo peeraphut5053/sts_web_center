@@ -38,6 +38,37 @@ class SeaweedFS {
     }
 
     /**
+     * Determine proper MIME type by filename extension
+     */
+    public static function getMimeType($filename, $localFilePath = '') {
+        $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+        $map = [
+            'pdf' => 'application/pdf',
+            'jpg' => 'image/jpeg',
+            'jpeg' => 'image/jpeg',
+            'png' => 'image/png',
+            'gif' => 'image/gif',
+            'webp' => 'image/webp',
+            'txt' => 'text/plain',
+            'json' => 'application/json',
+            'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'xls' => 'application/vnd.ms-excel',
+            'doc' => 'application/msword',
+            'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        ];
+        if (isset($map[$ext])) {
+            return $map[$ext];
+        }
+        if (!empty($localFilePath) && function_exists('mime_content_type') && file_exists($localFilePath)) {
+            $detected = @mime_content_type($localFilePath);
+            if ($detected) {
+                return $detected;
+            }
+        }
+        return 'application/octet-stream';
+    }
+
+    /**
      * Upload local file or uploaded temp file to SeaweedFS bucket
      * @param string $path e.g. 'po-pic' or 'buckets/po-pic'
      * @param string $filename target filename e.g. 'PO26003576_1_20261016_120000.pdf'
@@ -51,6 +82,7 @@ class SeaweedFS {
 
         $url = self::getUrl($path, $filename);
         $fileSize = filesize($localFilePath);
+        $mimeType = self::getMimeType($filename, $localFilePath);
 
         // 1. Try cURL if available
         if (function_exists('curl_init')) {
@@ -59,6 +91,7 @@ class SeaweedFS {
                 $ch = curl_init();
                 curl_setopt($ch, CURLOPT_URL, $url);
                 curl_setopt($ch, CURLOPT_PUT, true);
+                curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: ' . $mimeType));
                 curl_setopt($ch, CURLOPT_INFILE, $fp);
                 curl_setopt($ch, CURLOPT_INFILESIZE, $fileSize);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -84,7 +117,7 @@ class SeaweedFS {
         $ctx = stream_context_create([
             'http' => [
                 'method' => 'PUT',
-                'header' => "Content-Type: application/octet-stream\r\nContent-Length: " . strlen($content) . "\r\n",
+                'header' => "Content-Type: " . $mimeType . "\r\nContent-Length: " . strlen($content) . "\r\n",
                 'content' => $content,
                 'timeout' => 60,
                 'ignore_errors' => true
