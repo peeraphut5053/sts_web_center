@@ -205,13 +205,13 @@ order by item";
                   OUTER APPLY (
                       SELECT TOP 1 path AS file_path1, CONVERT(VARCHAR(19), createdate, 120) AS upload_date1, [user] AS upload_user1
                       FROM STS_po_pic p1
-                      WHERE p1.po_num = po.po_num AND p1.path NOT LIKE po.po_num + '_2_%'
+                      WHERE p1.po_num = po.po_num AND p1.path NOT LIKE po.po_num + '[_]2[_]%'
                       ORDER BY p1.createdate DESC
                   ) pic1
                   OUTER APPLY (
                       SELECT TOP 1 path AS file_path2, CONVERT(VARCHAR(19), createdate, 120) AS upload_date2, [user] AS upload_user2
                       FROM STS_po_pic p2
-                      WHERE p2.po_num = po.po_num AND p2.path LIKE po.po_num + '_2_%'
+                      WHERE p2.po_num = po.po_num AND p2.path LIKE po.po_num + '[_]2[_]%'
                       ORDER BY p2.createdate DESC
                   ) pic2
                   $sqlWhere

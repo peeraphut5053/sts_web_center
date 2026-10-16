@@ -52,10 +52,10 @@ if (isset($_FILES['file']) && !empty($po_num)) {
             // Delete old file of this slot from SeaweedFS if exists
             if ($file_seq == 2) {
                 $sqlOld = "SELECT [path] FROM STS_po_pic WHERE po_num = ? AND [path] LIKE ?";
-                $paramsOld = array($po_num, $clean_po . '_2_%');
+                $paramsOld = array($po_num, $clean_po . '[_]2[_]%');
             } else {
                 $sqlOld = "SELECT [path] FROM STS_po_pic WHERE po_num = ? AND [path] NOT LIKE ?";
-                $paramsOld = array($po_num, $clean_po . '_2_%');
+                $paramsOld = array($po_num, $clean_po . '[_]2[_]%');
             }
             $stmtOld = sqlsrv_query($ConnSL, $sqlOld, $paramsOld);
             if ($stmtOld && $rowOld = sqlsrv_fetch_array($stmtOld, SQLSRV_FETCH_ASSOC)) {
