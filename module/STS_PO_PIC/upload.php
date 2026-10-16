@@ -21,9 +21,27 @@ if (session_status() == PHP_SESSION_NONE) {
 
 include "../../initial.php";
 
+// Network & local storage directory candidates
+$storage_candidates = [
+    '\\\\172.18.1.245\\test\\po-pic\\',
+    'Z:\\po-pic\\',
+    __DIR__ . '/files/',
+];
+
 $upload_dir = __DIR__ . '/files/';
+foreach ($storage_candidates as $candidate) {
+    if (file_exists($candidate)) {
+        $upload_dir = $candidate;
+        break;
+    }
+    if (@mkdir($candidate, 0777, true)) {
+        $upload_dir = $candidate;
+        break;
+    }
+}
+
 if (!file_exists($upload_dir)) {
-    mkdir($upload_dir, 0777, true);
+    @mkdir($upload_dir, 0777, true);
 }
 
 $response = array();
@@ -55,7 +73,7 @@ if (isset($_FILES['file']) && !empty($po_num)) {
             $PO = new PurchaseOrder();
             $PO->setConn($ConnSL);
 
-            // Delete old file of this slot if exists
+            // Delete old file of this slot if exists from all storage locations
             if ($file_seq == 2) {
                 $sqlOld = "SELECT [path] FROM STS_po_pic WHERE po_num = ? AND [path] LIKE ?";
                 $paramsOld = array($po_num, $clean_po . '_2_%');
@@ -66,9 +84,11 @@ if (isset($_FILES['file']) && !empty($po_num)) {
             $stmtOld = sqlsrv_query($ConnSL, $sqlOld, $paramsOld);
             if ($stmtOld && $rowOld = sqlsrv_fetch_array($stmtOld, SQLSRV_FETCH_ASSOC)) {
                 if (!empty($rowOld['path'])) {
-                    $oldFilePath = $upload_dir . $rowOld['path'];
-                    if (file_exists($oldFilePath)) {
-                        @unlink($oldFilePath);
+                    $oldName = $rowOld['path'];
+                    foreach ($storage_candidates as $cand) {
+                        if (file_exists($cand . $oldName)) {
+                            @unlink($cand . $oldName);
+                        }
                     }
                 }
             }

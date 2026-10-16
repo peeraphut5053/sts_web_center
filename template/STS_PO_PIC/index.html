@@ -368,7 +368,7 @@
                         var safePr = (row.pr_num || "").replace(/'/g, "\\'").replace(/"/g, "&quot;");
 
                         if (filePath && filePath.trim() !== "") {
-                            var link = "module/STS_PO_PIC/files/" + encodeURIComponent(filePath);
+                            var link = "module/STS_PO_PIC/data.php?load=ViewFile&file=" + encodeURIComponent(filePath);
                             var uploadInfo = "";
                             if (row.upload_date1) {
                                 var formattedDate = (typeof moment === "function") ? moment(row.upload_date1).format("DD/MM/YYYY HH:mm") : row.upload_date1;
@@ -412,7 +412,7 @@
                         var safePr = (row.pr_num || "").replace(/'/g, "\\'").replace(/"/g, "&quot;");
 
                         if (filePath && filePath.trim() !== "") {
-                            var link = "module/STS_PO_PIC/files/" + encodeURIComponent(filePath);
+                            var link = "module/STS_PO_PIC/data.php?load=ViewFile&file=" + encodeURIComponent(filePath);
                             var uploadInfo = "";
                             if (row.upload_date2) {
                                 var formattedDate = (typeof moment === "function") ? moment(row.upload_date2).format("DD/MM/YYYY HH:mm") : row.upload_date2;
