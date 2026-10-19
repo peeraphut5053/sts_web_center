@@ -7,261 +7,572 @@
     <head>
 
         <meta charset="utf-8">
-<title>upload Tensile</title>
-<link rel ='stylesheet' href='../../css/bootstrap.min.css'>
+<title>upexcel_main</title>
+<link rel='stylesheet' href='../../css/bootstrap.min.css'>
 </head>
 
-<body>
+<body class="sub-import-page">
 
+    <style>
+        body.sub-import-page {
+            min-height: 100vh;
+            margin: 0;
+            background: #eef2f5;
+            color: #23313f;
+            font-family: "Tahoma", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        }
 
-<!--<form action="upload.php" method="post" enctype="multipart/form-data" name="form1" id="form1">
-  
-<table width="100%" border="0" cellspacing="0" cellpadding="0">
-  <tr>
-    <td bgcolor="#FFFFCC"><div align="center"><label for="file">Import File :</label>
-  <input name="fileCSV" type="file" id="fileCSV" size="15" />
-  <input name="btnSubmit" type="submit" id="btnSubmit" value="Submit" /></div></td>
-  </tr>
-</table>
+        .sub-import-shell {
+            padding: 24px;
+        }
 
-</form> -->
-<style>
-    .headingTable {
-        background-color: #cccccc;
-        text-align: center;
-        vertical-align: middle;
-    }
+        .sub-import-panel {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            border: 1px solid #d8e0e7;
+            border-top: 4px solid #2f7f75;
+            border-radius: 6px;
+            background: #ffffff;
+            box-shadow: 0 14px 30px rgba(35, 49, 63, .12);
+        }
 
-    .col-step1{
-        background-color:#94e8c8;
-        color:#FFFFFF;
-    }
-    .col-step2{
-        background-color:#43e8ab;
-        color:#FFFFFF;
-    }
-    .col-step3{
-        background-color:#13af75;
-        color:#FFFFFF;
-    }
-    .col-color{
-        position:fixed;
-        width:100%;
-    }
-    #ReaderExcel{
-        margin-top: 180px;
-    }
-    #ReaderExcel table,thead{
-         /* position:fixed; */
-    }
-</style>
+        .sub-import-header {
+            display: table;
+            width: 100%;
+            padding: 16px 18px 12px;
+            border-bottom: 1px solid #e3e8ed;
+        }
 
-<input type='hidden' id='hdfStsIdPrefix' value="">
+        .sub-import-title,
+        .sub-import-meta {
+            display: table-cell;
+            vertical-align: middle;
+        }
 
-<div class='alert alert-primary col-color'>
+        .sub-import-title h1 {
+            margin: 0;
+            color: #1f3f4a;
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 0;
+        }
 
-    <div class="col-md-6 text-left col-Hotroll" style='font-size: 18px;'>
-        <b>&nbsp;&nbsp;MAIN import</b>
-    </div><br>
+        .sub-import-title span {
+            display: block;
+            margin-top: 3px;
+            color: #73808c;
+            font-size: 12px;
+        }
 
-    <div class="row " style='margin-left:5px;margin-top:10px;margin-bottom:10px;'>
-        <div class="col-md-1 text-right col-step1">
-            <b>STEP 1</b><br>
-            เลือกไฟล์
-        </div>
-        <div class="col-md-3 text-right">
-            <div class='col-md-10 col-lg-10 col-sm-10 col-xs-10'>
-                <input type="file" id="files" accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+        .sub-import-meta {
+            text-align: right;
+        }
+
+        .status-pill {
+            display: inline-block;
+            min-width: 74px;
+            padding: 7px 12px;
+            border: 1px solid #cad7df;
+            border-radius: 4px;
+            background: #f7fafb;
+            color: #425160;
+            font-size: 12px;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .sub-step-grid {
+            display: table;
+            width: 100%;
+            table-layout: fixed;
+            padding: 14px 18px 18px;
+        }
+
+        .sub-step {
+            display: table-cell;
+            position: relative;
+            padding-right: 16px;
+            vertical-align: top;
+        }
+
+        .sub-step:last-child {
+            padding-right: 0;
+        }
+
+        .sub-step-card {
+            min-height: 116px;
+            padding: 14px;
+            border: 1px solid #dce5eb;
+            border-radius: 6px;
+            background: #fbfcfd;
+        }
+
+        .sub-step-card.active {
+            border-color: #47a79b;
+            background: #f4fbfa;
+        }
+
+        .step-kicker {
+            margin-bottom: 10px;
+            color: #2f7f75;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+        }
+
+        .step-title {
+            margin: 0 0 12px;
+            color: #263847;
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .step-control-row {
+            display: table;
+            width: 100%;
+        }
+
+        .step-control,
+        .step-result {
+            display: table-cell;
+            vertical-align: middle;
+        }
+
+        .step-result {
+            width: 38px;
+            padding-left: 8px;
+            color: #2f7f75;
+            text-align: center;
+        }
+
+        .step-result .glyphicon-refresh {
+            animation: sub-import-spin .8s linear infinite;
+        }
+
+        .file-control {
+            position: relative;
+        }
+
+        .file-control input[type="file"] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 1px;
+            height: 1px;
+            opacity: 0;
+        }
+
+        .file-trigger {
+            display: block;
+            width: 100%;
+            margin: 0;
+            padding: 9px 12px;
+            border: 1px solid #b8c7d1;
+            border-radius: 4px;
+            background: #ffffff;
+            color: #314555;
+            font-weight: 400;
+            cursor: pointer;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .file-trigger:hover,
+        .file-trigger:focus {
+            border-color: #2f7f75;
+            color: #1f665d;
+        }
+
+        .file-trigger .glyphicon,
+        #btnImport .glyphicon {
+            margin-right: 6px;
+        }
+
+        .form-control {
+            height: 40px;
+            border-color: #b8c7d1;
+            box-shadow: none;
+        }
+
+        .form-control:focus {
+            border-color: #2f7f75;
+            box-shadow: 0 0 0 2px rgba(47, 127, 117, .14);
+        }
+
+        #btnImport {
+            width: 100%;
+            height: 40px;
+            border-color: #2f7f75;
+            background: #2f7f75;
+            font-weight: 700;
+        }
+
+        #btnImport:hover,
+        #btnImport:focus {
+            border-color: #266c64;
+            background: #266c64;
+        }
+
+        #btnImport[disabled] {
+            border-color: #b7c1c9;
+            background: #b7c1c9;
+            opacity: 1;
+        }
+
+        .preview-wrap {
+            margin-top: 22px;
+            border: 1px solid #d8e0e7;
+            border-radius: 6px;
+            background: #ffffff;
+            box-shadow: 0 10px 24px rgba(35, 49, 63, .08);
+            overflow: hidden;
+        }
+
+        .preview-toolbar {
+            display: table;
+            width: 100%;
+            padding: 13px 16px;
+            border-bottom: 1px solid #e3e8ed;
+            background: #f8fafb;
+        }
+
+        .preview-title,
+        .preview-hint {
+            display: table-cell;
+            vertical-align: middle;
+        }
+
+        .preview-title {
+            color: #253847;
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .preview-hint {
+            color: #73808c;
+            font-size: 12px;
+            text-align: right;
+        }
+
+        #ReaderExcel {
+            min-height: 280px;
+            max-height: calc(100vh - 260px);
+            overflow: auto;
+            background: #ffffff;
+        }
+
+        .empty-preview {
+            padding: 70px 20px;
+            color: #7a8792;
+            text-align: center;
+        }
+
+        .empty-preview .glyphicon {
+            display: block;
+            margin-bottom: 12px;
+            color: #9aa9b4;
+            font-size: 34px;
+        }
+
+        #ReaderExcel table {
+            margin-bottom: 0;
+            white-space: nowrap;
+        }
+
+        #ReaderExcel table thead th {
+            position: sticky;
+            top: 0;
+            z-index: 5;
+            border-bottom: 1px solid #cad6de;
+            background: #263847;
+            color: #ffffff;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        #ReaderExcel table tbody td {
+            vertical-align: middle;
+            font-size: 12px;
+        }
+
+        #ReaderExcel table tbody tr:hover td {
+            background: #f2f8f7;
+        }
+
+        #DivResult {
+            margin: 12px 0 0;
+        }
+
+        .import-result {
+            display: inline-block;
+            padding: 8px 12px;
+            border-radius: 4px;
+            background: #f1f6f8;
+            color: #405160;
+            font-weight: 700;
+        }
+
+        @media (max-width: 991px) {
+            .sub-import-shell {
+                padding: 14px;
+            }
+
+            .sub-import-panel {
+                position: static;
+            }
+
+            .sub-import-title,
+            .sub-import-meta,
+            .sub-step,
+            .preview-title,
+            .preview-hint {
+                display: block;
+                width: 100%;
+                text-align: left;
+            }
+
+            .sub-import-meta,
+            .preview-hint {
+                margin-top: 10px;
+            }
+
+            .sub-step-grid {
+                display: block;
+            }
+
+            .sub-step {
+                padding: 0 0 12px;
+            }
+
+            #ReaderExcel {
+                max-height: none;
+            }
+        }
+
+        @keyframes sub-import-spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+
+    <input type='hidden' id='hdfStsIdPrefix' value="">
+
+    <div class="sub-import-shell">
+        <div class="sub-import-panel">
+            <div class="sub-import-header">
+                <div class="sub-import-title">
+                    <h1>MAIN Import</h1>
+                    <span>Upload an Excel workbook, choose a sheet, review data, then import.</span>
+                </div>
+                <div class="sub-import-meta">
+                    <span class="status-pill" id="colResultButtonMain">No rows</span>
+                </div>
             </div>
-            <div class='col-md-2 col-lg-2 col-sm-2 col-xs-2 colResultBrowse'>
+
+            <div class="sub-step-grid">
+                <div class="sub-step">
+                    <div class="sub-step-card active">
+                        <div class="step-kicker">Step 1</div>
+                        <h2 class="step-title">Choose Excel file</h2>
+                        <div class="step-control-row">
+                            <div class="step-control">
+                                <div class="file-control">
+                                    <input type="file" id="files"
+                                        accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+                                    <label class="file-trigger" for="files" id="fileLabel">
+                                        <span class="glyphicon glyphicon-folder-open"></span>
+                                         เลือกไฟล์ Excel 
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="step-result colResultBrowse"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sub-step">
+                    <div class="sub-step-card">
+                        <div class="step-kicker">Step 2</div>
+                        <h2 class="step-title">Select sheet</h2>
+                        <div class="step-control-row">
+                            <div class="step-control">
+                                <select class='form-control' id='sheet_name' disabled>
+                                    <option value="">... Please select ...</option>
+                                </select>
+                            </div>
+                            <div class="step-result colResultSheet"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sub-step">
+                    <div class="sub-step-card">
+                        <div class="step-kicker">Step 3</div>
+                        <h2 class="step-title">Import reviewed data</h2>
+                        <button class="btn btn-success" id="btnImport" disabled>
+                            <span class="glyphicon glyphicon-download-alt"></span>
+                            Import
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="col-md-1 text-right col-step2">
-            <b>STEP 2</b><br>
-            เลือก Sheet
-        </div>
-        <div class="col-md-3">
-            <div class='col-md-10 col-lg-10 col-sm-10 col-xs-10'> 
-                <select class='form-control'  id='sheet_name' disabled>
-                    <option value="">... Please select ...</option>
-                </select>
-            </div>
-            <div class='col-md-2 col-lg-2 col-sm-2 col-xs-2 colResultSheet'></div>
-        </div>
+        <div id='DivResult' class='text-center'></div>
 
-        <div class="col-md-1 text-right col-step3">
-            <b>STEP 3</b><br>
-            import
-        </div>
-        <div class="col-md-1">
-            <button class="btn btn-success" id="btnImport" disabled><i class='fa fa-download'></i>Import</button>
-            <label id='colResultButtonMain'></label>
+        <div class="preview-wrap">
+            <div class="preview-toolbar">
+                <div class="preview-title">Excel Preview</div>
+                <div class="preview-hint">Review workbook rows before importing.</div>
+            </div>
+            <div id="ReaderExcel">
+                <div class="empty-preview">
+                    <span class="glyphicon glyphicon-list-alt"></span>
+                    Select a workbook and sheet to preview data.
+                </div>
+            </div>
         </div>
     </div>
-</div>
 
-<div id='DivResult' class='row text-center'></div>
+    <div class="row text-center">
+        <script type='text/javascript' src='../../js/jquery.js'></script>
+        <script type='text/javascript' src='../../js/xlsx.core.min.js'></script>
+        <script type='text/javascript' src='../../js/xlsx.full.min.js'></script>
+        <script type="text/javascript">
 
-<div  id="ReaderExcel"></div>
+            var loadingDiv = "<span class='glyphicon glyphicon-refresh'></span>";
+            function setFileLabel(fileName) {
+                $("#fileLabel")
+                    .empty()
+                    .append($("<span>").addClass("glyphicon glyphicon-folder-open"))
+                    .append(document.createTextNode(" " + (fileName || "Browse workbook")));
+            }
 
-<div class="row text-center" >
-	<script type='text/javascript' src='../../js/jquery.js'></script>
-    <script type='text/javascript' src='../../js/xlsx.core.min.js'></script>
-    <script type='text/javascript' src='../../js/xlsx.full.min.js'></script>
-    <script type="text/javascript">
-        
-        var loadingDiv = "<i class='fa fa-spinner fa-spin'></i>";
-        // function RemoveColumns() {
-        //     $('#ReaderExcel tr').find('td:eq(18),th:eq(18)').remove();
-        //     $('#ReaderExcel tr').find('td:eq(19),th:eq(19)').remove();
-        //     var i = 0;
-        //     for (i = 22; i <= 47; i++) {
-        //         $('#ReaderExcel tr').find('td:eq(' + i + '),th:eq(' + i + ')').remove();
-        //     }
-        // }
-        $('#files').change(function (e) {
-            $('#ReaderExcel').empty();
-            $(".colResultBrowse").html(loadingDiv);
-            var sheet_name = $("#sheet_name").val();
-            $('#ReaderExcel').empty();
-//            alert(this.files[0].mozFullPath);
-            $("#FilePath").html();
-            var reader = new FileReader();
-            reader.readAsArrayBuffer(e.target.files[0]);
-            reader.onload = function (e) {
-                var data = new Uint8Array(reader.result);
-                var wb = XLSX.read(data, {type: 'array'});
-                var sheetcount = wb.SheetNames.length;
-                var i = 0;
-                $("#sheet_name").empty();
-                $("#sheet_name").append('<option value="">... Please select ...</option>');
-                for (i = 0; i < sheetcount; i++) {
-                    $("#sheet_name").append('<option value="' + wb.SheetNames[i] + '">' + wb.SheetNames[i] + '</option>');
+            $('#files').change(function (e) {
+                $('#ReaderExcel').empty();
+                $(".colResultBrowse").html(loadingDiv);
+                setFileLabel(e.target.files[0] ? e.target.files[0].name : "");
+                $("#colResultButtonMain").html("No rows");
+                $("#btnImport").attr("disabled", true);
+                $("#sheet_name").attr("disabled", true);
+                var sheet_name = $("#sheet_name").val();
+                $('#ReaderExcel').empty();
+                $("#FilePath").html();
+                var reader = new FileReader();
+                reader.readAsArrayBuffer(e.target.files[0]);
+                reader.onload = function (e) {
+                    var data = new Uint8Array(reader.result);
+                    var wb = XLSX.read(data, { type: 'array' });
+                    var sheetcount = wb.SheetNames.length;
+                    var i = 0;
+                    $("#sheet_name").empty();
+                    $("#sheet_name").append('<option value="">... Please select ...</option>');
+                    for (i = 0; i < sheetcount; i++) {
+                        $("#sheet_name").append('<option value="' + wb.SheetNames[i] + '">' + wb.SheetNames[i] + '</option>');
+                    }
+                    $(".colResultBrowse").html("<span class='glyphicon glyphicon-ok'></span>");
+                    $("#sheet_name").removeAttr("disabled");
                 }
-                $(".colResultBrowse").html("");
-                $("#sheet_name").removeAttr("disabled");
-            }
-        });
+            });
 
-        $("#sheet_name").change(function () {
-            $(".colResultSheet").html(loadingDiv);
-            var files_input = document.getElementById("files");
-            var file = files_input.files[0];
+            $("#sheet_name").change(function () {
+                $(".colResultSheet").html(loadingDiv);
+                var files_input = document.getElementById("files");
+                var file = files_input.files[0];
 
-            if (!file) {
-                $.alert({
-                    title: 'Can not import excel file !',
-                    content: "Please select excel file"
-                });
-                return false;
-            }
-            var sheet_name = $("#sheet_name").val();
-            var file_name = $('#files').val().replace(/C:\\fakepath\\/i, '');
-            $("#tmpXlsSheet").val(sheet_name);
-            $("#tmpXlsFile").val(file_name);
-            console.log();
-            var reader = new FileReader();
-            reader.readAsArrayBuffer(file);
-            reader.onload = function (e) {
-                var data = new Uint8Array(reader.result);
-                try {
-                    var wb = XLSX.read(data, {type: 'array'});
-                    var htmlstr = XLSX.write(wb, {sheet: sheet_name, type: 'binary', bookType: 'html'});
-                    $('#ReaderExcel').empty();
-                    $('#ReaderExcel')[0].innerHTML += htmlstr;
-                    $('#ReaderExcel table').addClass('table table-striped table-bordered table-condensed');
-	//========== remove head =========
-			$('table tbody tr:eq(0)').remove();
-            $('table tbody tr:eq(0)').remove();
-//=========add nre head =========
-                    $('table').prepend("<thead> <th>sts_c</th> <th>sts_si</th> <th>sts_mn</th> <th>sts_p</th> <th>sts_s</th> <th>sts_cu</th> <th>sts_v</th> <th>sts_ni</th> <th>sts_cr</th> <th>sts_mo</th> <th>sts_ti</th> <th>sts_nb</th> <th>sts_al</th> <th>sts_b</th> <th>sts_co</th> <th>sts_pb</th> <th>sts_fe</th> <th>sts_ts</th> <th>sts_ys</th> <th>sts_el</th> </tr></thead>");
-			$('table thead').find('tr').each(function(){
-                $(this).find('th').eq(0).before('<th>sup_el</th>');
-                $(this).find('th').eq(0).before('<th>sup_ys</th>');
-                $(this).find('th').eq(0).before('<th>sup_ts</th>');
-                $(this).find('th').eq(0).before('<th>sup_fe</th>');
-                $(this).find('th').eq(0).before('<th>sup_pb</th>');
-                $(this).find('th').eq(0).before('<th>sup_co</th>');
-                $(this).find('th').eq(0).before('<th>sup_b</th>');
-                $(this).find('th').eq(0).before('<th>sup_al</th>');
-                $(this).find('th').eq(0).before('<th>sup_nb</th>');
-                $(this).find('th').eq(0).before('<th>sup_ti</th>');
-                $(this).find('th').eq(0).before('<th>sup_mo</th>');
-                $(this).find('th').eq(0).before('<th>sup_cr</th>');
-                $(this).find('th').eq(0).before('<th>sup_ni</th>');
-                $(this).find('th').eq(0).before('<th>sup_v</th>');
-                $(this).find('th').eq(0).before('<th>sup_cu</th>');
-                $(this).find('th').eq(0).before('<th>sup_s</th>');
-                $(this).find('th').eq(0).before('<th>sup_p</th>');
-                $(this).find('th').eq(0).before('<th>sup_mn</th>');
-                $(this).find('th').eq(0).before('<th>sup_si</th>');
-                $(this).find('th').eq(0).before('<th>sup_c</th>');
-                $(this).find('th').eq(0).before('<th>h_no</th>');
-                $(this).find('th').eq(0).before('<th>c_no</th>');
-                $(this).find('th').eq(0).before('<th>sts_no</th>');
-                $(this).find('th').eq(0).before('<th>weight</th>');
-				$(this).find('th').eq(0).before('<th>width</th>');
-			    $(this).find('th').eq(0).before('<th>thick</th>');		
-				$(this).find('th').eq(0).before('<th>standard</th>');
-		   });
-		//    	$('table tbody').find('tr').each(function(){
-		// 		$(this).find('td').eq(0).before('<td></td>');
-		// 		$(this).find('td').eq(0).before('<td></td>');
-		// 		$(this).find('td').eq(0).before('<td></td>');
-		//    });
-            var x = 0 ;
-            var i=0 ;
-		    var CountTr = $("tbody tr").length ;
-			
-			var LastStsId = $('#LastStsId').text().trim();
-
-			var StsNo = $('#StsNo').text().trim();
-
-			// var PoDate = $('#PoDate').text().trim();
-			// var prefix = $('#hdfStsIdPrefix').val();
-			
-					// var KeepVal =0 ;
-			for(i=0;i<CountTr;i++){				
-				x++;
-				// $('table tbody tr:eq('+i+') ').find('td:eq(0)').text();
-						 
-// 					if ($('#StsNo').text().indexOf("GI")!= -1  ){
-// 						KeepVal = parseInt(StsNo)+x  -1 ;
-// 							$('table tbody tr:eq('+i+') ').find('td:eq(1)').text();
-						
-// 					}else{
-// 						KeepVal = parseInt(StsNo)+x ;
-// 							$('table tbody tr:eq('+i+') ').find('td:eq(1)').text();
-// console.log(KeepVal);
-// 					}
-				$('table tbody tr:eq('+i+') ').find('td:eq(0)').text();
-			}
-                    //============render datatable========//                  
-                    //=================================//
-                    $(".colResultSheet").html("");
-                   
-                    $("#colResultButtonMain").html(CountTr + ' Rows');
-                    $("#btnImport").removeAttr("disabled");
-                } catch (err) {
-					alert(err);
-                //    $.alert({
-                      //  title: 'Can not import excel file !',
-                     //   content: err,
-                  //  });
-                    $(".colResultSheet").html("");
+                if (!file) {
+                    $.alert({
+                        title: 'Can not import excel file !',
+                        content: "Please select excel file"
+                    });
+                    return false;
                 }
+                var sheet_name = $("#sheet_name").val();
+                var file_name = $('#files').val().replace(/C:\\fakepath\\/i, '');
+                $("#tmpXlsSheet").val(sheet_name);
+                $("#tmpXlsFile").val(file_name);
+                console.log();
+                var reader = new FileReader();
+                reader.readAsArrayBuffer(file);
+                reader.onload = function (e) {
+                    var data = new Uint8Array(reader.result);
+                    try {
+                        var wb = XLSX.read(data, { type: 'array' });
+                        var htmlstr = XLSX.write(wb, { sheet: sheet_name, type: 'binary', bookType: 'html' });
+                        $('#ReaderExcel').empty();
+                        $('#ReaderExcel')[0].innerHTML += htmlstr;
+                        $('#ReaderExcel table').addClass('table table-striped table-bordered table-condensed');
+                        //========== remove head =========
+                        $('table tbody tr:eq(0)').remove();
+                        $('table tbody tr:eq(0)').remove();
+                        //=========add nre head =========
+                        $('table').prepend("<thead> <th>sts_c</th> <th>sts_si</th> <th>sts_mn</th> <th>sts_p</th> <th>sts_s</th> <th>sts_cu</th> <th>sts_v</th> <th>sts_ni</th> <th>sts_cr</th> <th>sts_mo</th> <th>sts_ti</th> <th>sts_nb</th> <th>sts_al</th> <th>sts_b</th> <th>sts_co</th> <th>sts_pb</th> <th>sts_fe</th> <th>sts_ts</th> <th>sts_ys</th> <th>sts_el</th> </tr></thead>");
+                        $('table thead').find('tr').each(function () {
+                            $(this).find('th').eq(0).before('<th>sup_el</th>');
+                            $(this).find('th').eq(0).before('<th>sup_ys</th>');
+                            $(this).find('th').eq(0).before('<th>sup_ts</th>');
+                            $(this).find('th').eq(0).before('<th>sup_fe</th>');
+                            $(this).find('th').eq(0).before('<th>sup_pb</th>');
+                            $(this).find('th').eq(0).before('<th>sup_co</th>');
+                            $(this).find('th').eq(0).before('<th>sup_b</th>');
+                            $(this).find('th').eq(0).before('<th>sup_al</th>');
+                            $(this).find('th').eq(0).before('<th>sup_nb</th>');
+                            $(this).find('th').eq(0).before('<th>sup_ti</th>');
+                            $(this).find('th').eq(0).before('<th>sup_mo</th>');
+                            $(this).find('th').eq(0).before('<th>sup_cr</th>');
+                            $(this).find('th').eq(0).before('<th>sup_ni</th>');
+                            $(this).find('th').eq(0).before('<th>sup_v</th>');
+                            $(this).find('th').eq(0).before('<th>sup_cu</th>');
+                            $(this).find('th').eq(0).before('<th>sup_s</th>');
+                            $(this).find('th').eq(0).before('<th>sup_p</th>');
+                            $(this).find('th').eq(0).before('<th>sup_mn</th>');
+                            $(this).find('th').eq(0).before('<th>sup_si</th>');
+                            $(this).find('th').eq(0).before('<th>sup_c</th>');
+                            $(this).find('th').eq(0).before('<th>h_no</th>');
+                            $(this).find('th').eq(0).before('<th>c_no</th>');
+                            $(this).find('th').eq(0).before('<th>sts_no</th>');
+                            $(this).find('th').eq(0).before('<th>weight</th>');
+                            $(this).find('th').eq(0).before('<th>width</th>');
+                            $(this).find('th').eq(0).before('<th>thick</th>');
+                            $(this).find('th').eq(0).before('<th>standard</th>');
+                        });
+                        var x = 0;
+                        var i = 0;
+                        var CountTr = $("tbody tr").length;
+
+                        var LastStsId = $('#LastStsId').text().trim();
+
+                        var StsNo = $('#StsNo').text().trim();
+
+                        for (i = 0; i < CountTr; i++) {
+                            x++;
+                            $('table tbody tr:eq(' + i + ') ').find('td:eq(0)').text();
+                        }
+                        //============render datatable========//                  
+                        //=================================//
+                        $(".colResultSheet").html("<span class='glyphicon glyphicon-ok'></span>");
+
+                        $("#colResultButtonMain").html(CountTr + ' Rows');
+                        $("#btnImport").removeAttr("disabled");
+                    } catch (err) {
+                        alert(err);
+                        $(".colResultSheet").html("");
+                    }
+                }
+            });
+            function pad(str, max) {
+                str = str.toString();
+                return str.length < max ? pad("0" + str, max) : str;
             }
-        });
-		function pad (str, max) {
-		  str = str.toString();
-		  return str.length < max ? pad("0" + str, max) : str;
-		}
-        $("#btnImport").click(function () {
-          if(confirm('Do you want to Import data ? ')==true){
-			PackDataToArrayAndSave();
-		  }
-        });
+            $("#btnImport").click(function () {
+                if (confirm('Do you want to Import data ? ') == true) {
+                    PackDataToArrayAndSave();
+                }
+            });
 
         function PackDataToArrayAndSave() {
             var i = 0;
@@ -500,7 +811,8 @@
             });
         }
      
-    </script>
+        </script>
+    </div>
 </body>
-<script type='text/javascript' src='../../js/jquery.js'></script>
+
 </html>
