@@ -298,7 +298,7 @@
                 {
                     "data": "path",
                     "render": function (data, type, row) {
-                        return '<div style="display: flex; align-items: center; justify-content: center;"><img src="module/STS_RETURN_ITEM/upload/' + data + '?v=' + Date.now() + '" style="width: 50px; height: 50px; " onclick="openImage(this.src)"></div>';
+                        return '<div style="display: flex; align-items: center; justify-content: center;"><img src="module/STS_RETURN_ITEM/view_file.php?file=' + encodeURIComponent(data) + '&v=' + Date.now() + '" style="width: 50px; height: 50px; " onclick="openImage(this.src)"></div>';
                     }
                 },
                 {

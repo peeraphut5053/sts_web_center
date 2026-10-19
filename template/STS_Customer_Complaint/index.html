@@ -773,15 +773,25 @@
                         data: 'cost',
                         className: 'text-right',
                         render: function (data) {
-                            if (!data || parseFloat(data) === 0) return '<span class="text-muted">-</span>';
-                            return '<strong class="font-mono" style="font-size: 14px;">' + parseFloat(data).toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '</strong>';
+                            if (data === null || data === undefined || data === '') return '<span class="text-muted">-</span>';
+                            var num = parseFloat(data);
+                            if (isNaN(num) || num === 0) return '<span class="text-muted">-</span>';
+                            return '<strong class="font-mono" style="font-size: 14px;">' + num.toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '</strong>';
                         }
                     },
                     {
                         data: 'paid',
                         className: 'text-center',
                         render: function (data) {
-                            return '<strong class="font-mono" style="font-size: 14px;">' + parseFloat(data).toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '</strong>';
+                            if (data === null || data === undefined || data.toString().trim() === '') {
+                                return '<span class="text-muted">-</span>';
+                            }
+                            var str = data.toString().trim();
+                            var num = parseFloat(str);
+                            if (!isNaN(num) && /^-?\d+(\.\d+)?$/.test(str)) {
+                                return '<strong class="font-mono" style="font-size: 13.5px;">' + num.toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '</strong>';
+                            }
+                            return '<span class="badge-status badge-secondary-custom" style="font-size: 12.5px;">' + str + '</span>';
                         }
                     },
                     {
@@ -861,6 +871,12 @@
             $('#modalComplaint').modal('show');
         });
 
+        function resolveComplaintFileUrl(path) {
+            if (!path) return '';
+            var filename = path.replace(/^[/\\]+/, '').split(/[/\\]/).pop();
+            return './module/STS_Customer_Complaint/data.php?load=view_file&file=' + encodeURIComponent(filename);
+        }
+
         // 4. View Photo Gallery Click
         $('#tblComplaints').on('click', '.btn-view-gallery', function () {
             var docNo = $(this).data('doc');
@@ -881,22 +897,23 @@
                         $('#galleryPicsGrid').empty();
                         if (d.pictures && d.pictures.length > 0) {
                             $.each(d.pictures, function (idx, pic) {
+                                var fileUrl = resolveComplaintFileUrl(pic.path);
                                 var cleanPath = pic.path ? pic.path.replace(/^[\/\\]+/, '') : '';
                                 var isPdf = cleanPath.toLowerCase().endsWith('.pdf');
                                 var cardHtml = '';
                                 if (isPdf) {
                                     cardHtml = '<div style="background: #fff; border: 1px solid #cbd5e1; border-radius: 8px; padding: 14px; text-align: center; width: 150px; box-shadow: 0 1px 3px rgba(0,0,0,0.08);">' +
-                                        '<a href="' + cleanPath + '" target="_blank" style="text-decoration: none; display: flex; flex-direction: column; align-items: center;">' +
+                                        '<a href="' + fileUrl + '" target="_blank" style="text-decoration: none; display: flex; flex-direction: column; align-items: center;">' +
                                         '<i class="fa fa-file-pdf-o text-red" style="font-size: 42px; margin-bottom: 8px;"></i>' +
                                         '<span style="font-size: 12px; color: #334155; font-weight: 600;">เปิดไฟล์ PDF</span>' +
                                         '</a>' +
                                         '</div>';
                                 } else {
                                     cardHtml = '<div style="background: #fff; border: 1px solid #cbd5e1; border-radius: 8px; overflow: hidden; width: 150px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); text-align: center;">' +
-                                        '<img src="' + cleanPath + '" class="preview-lightbox" data-src="' + cleanPath + '" style="width: 100%; height: 120px; object-fit: cover; cursor: pointer; display: block;" title="คลิกเพื่อดูรูปขยาย">' +
+                                        '<img src="' + fileUrl + '" class="preview-lightbox" data-src="' + fileUrl + '" style="width: 100%; height: 120px; object-fit: cover; cursor: pointer; display: block;" title="คลิกเพื่อดูรูปขยาย">' +
                                         '<div style="padding: 6px 8px; font-size: 11.5px; background: #f8fafc; border-top: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center;">' +
                                         '<span class="text-muted" style="font-size: 11px;"><i class="fa fa-search-plus"></i> คลิกซูม</span>' +
-                                        '<a href="' + cleanPath + '" target="_blank" title="เปิดแท็บใหม่" style="color: #6366f1; font-weight: 600;"><i class="fa fa-external-link"></i></a>' +
+                                        '<a href="' + fileUrl + '" target="_blank" title="เปิดแท็บใหม่" style="color: #6366f1; font-weight: 600;"><i class="fa fa-external-link"></i></a>' +
                                         '</div>' +
                                         '</div>';
                                 }
@@ -1018,11 +1035,12 @@
                         if (d.pictures && d.pictures.length > 0) {
                             $('#existingPicsContainer').show();
                             $.each(d.pictures, function (idx, pic) {
+                                var fileUrl = resolveComplaintFileUrl(pic.path);
                                 var cleanPath = pic.path ? pic.path.replace(/^\/+/, '') : '';
                                 var isPdf = cleanPath.toLowerCase().endsWith('.pdf');
                                 var previewEl = isPdf
-                                    ? '<a href="' + cleanPath + '" target="_blank" class="btn btn-default" style="width: 85px; height: 85px; display: inline-flex; flex-direction: column; align-items: center; justify-content: center; margin-right: 10px; margin-bottom: 10px; border-radius: 6px;"><i class="fa fa-file-pdf-o text-red" style="font-size: 24px;"></i><span style="font-size: 10px; margin-top: 4px;">PDF</span></a>'
-                                    : '<img src="' + cleanPath + '" class="img-thumbnail-complaint preview-lightbox" data-src="' + cleanPath + '">';
+                                    ? '<a href="' + fileUrl + '" target="_blank" class="btn btn-default" style="width: 85px; height: 85px; display: inline-flex; flex-direction: column; align-items: center; justify-content: center; margin-right: 10px; margin-bottom: 10px; border-radius: 6px;"><i class="fa fa-file-pdf-o text-red" style="font-size: 24px;"></i><span style="font-size: 10px; margin-top: 4px;">PDF</span></a>'
+                                    : '<img src="' + fileUrl + '" class="img-thumbnail-complaint preview-lightbox" data-src="' + fileUrl + '">';
 
                                 var imgHtml = '<div style="position: relative; display: inline-block;">' +
                                     previewEl +
@@ -1156,11 +1174,12 @@
                         if (d.pictures && d.pictures.length > 0) {
                             $('#reviewPicsContainer').show();
                             $.each(d.pictures, function (idx, pic) {
+                                var fileUrl = resolveComplaintFileUrl(pic.path);
                                 var cleanPath = pic.path ? pic.path.replace(/^\/+/, '') : '';
                                 var isPdf = cleanPath.toLowerCase().endsWith('.pdf');
                                 var previewEl = isPdf
-                                    ? '<a href="' + cleanPath + '" target="_blank" class="btn btn-default" style="width: 85px; height: 85px; display: inline-flex; flex-direction: column; align-items: center; justify-content: center; margin-right: 10px; margin-bottom: 10px; border-radius: 6px;"><i class="fa fa-file-pdf-o text-red" style="font-size: 24px;"></i><span style="font-size: 10px; margin-top: 4px;">PDF</span></a>'
-                                    : '<img src="' + cleanPath + '" class="img-thumbnail-complaint preview-lightbox" data-src="' + cleanPath + '">';
+                                    ? '<a href="' + fileUrl + '" target="_blank" class="btn btn-default" style="width: 85px; height: 85px; display: inline-flex; flex-direction: column; align-items: center; justify-content: center; margin-right: 10px; margin-bottom: 10px; border-radius: 6px;"><i class="fa fa-file-pdf-o text-red" style="font-size: 24px;"></i><span style="font-size: 10px; margin-top: 4px;">PDF</span></a>'
+                                    : '<img src="' + fileUrl + '" class="img-thumbnail-complaint preview-lightbox" data-src="' + fileUrl + '">';
                                 $('#reviewPicsList').append(previewEl);
                             });
                         } else {

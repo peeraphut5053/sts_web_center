@@ -21,6 +21,7 @@ foreach ($_POST as $key => $value) {
 }
 
 include "../../initial.php";
+require_once __DIR__ . "/../../include/class.SeaweedFS.php";
 
 try {
     if (isset($params['load']) && $params['load'] == 'CreateCountPipe') {
@@ -43,19 +44,10 @@ try {
         $STS_Custom = new API_FreeZone();
         $STS_Custom->setConn($ConnSL);
         
-        $upload_dir = 'upload/';
         $files = $_FILES['file'];
         $allowed_types = array('jpg', 'jpeg', 'png');
         $file_count = count($files['name']);
         
-        // สร้าง directory ถ้ายังไม่มี
-        if (!file_exists($upload_dir)) {
-            if (!mkdir($upload_dir, 0777, true)) {
-                throw new Exception("Cannot create upload directory");
-            }
-        }
-        
-        // เรียก CreateCountPipe ครั้งเดียว
         $remark = isset($params['remark']) ? $params['remark'] : '';
         $result = $STS_Custom->CreateCountPipe(
             $params['do_num'], 
@@ -92,31 +84,27 @@ try {
             }
             
             // บันทึกข้อมูล path ลง database
-            $rs = $STS_Custom->InsertImagePath($params['do_num'], $file_type, $params['user']);
-            
-            if (!empty($rs) && isset($rs[0]['path'])) {
-                $file_name = $rs[0]['path'];
-                $file_path = $upload_dir . $file_name;
-                
-                // ย้ายไฟล์
-                if (move_uploaded_file($files['tmp_name'][$i], $file_path)) {
-                    // เปลี่ยน permission ให้อ่านได้
-                    @chmod($file_path, 0644);
-                    $uploaded_files[] = array(
-                        'path' => $file_name,
-                        'original_name' => $files['name'][$i]
-                    );
-                } else {
-                    $errors[] = "File {$i}: Cannot move uploaded file";
-                }
+            $clean_doc = substr(preg_replace('/[^A-Za-z0-9_-]/', '-', $params['do_num']), 0, 23);
+            $file_name = 'CP_' . $clean_doc . '_' . date('Ymd_His') . '_' . bin2hex(random_bytes(6)) . '.' . $file_type;
+            if (!is_uploaded_file($files['tmp_name'][$i]) || !SeaweedFS::upload('App-Count-Pipe', $file_name, $files['tmp_name'][$i])) {
+                $errors[] = "File {$i}: Cannot upload to SeaweedFS";
+                continue;
+            }
+            $saved = sqlsrv_query($ConnSL,
+                'INSERT INTO STS_count_pipe_pic (do_num, path, [user]) VALUES (?, ?, ?)',
+                array($params['do_num'], $file_name, $params['user']));
+            if ($saved === false) {
+                SeaweedFS::delete('App-Count-Pipe', $file_name);
+                $errors[] = "File {$i}: Cannot save image record";
             } else {
-                $errors[] = "File {$i}: Cannot insert image path to database";
+                sqlsrv_free_stmt($saved);
+                $uploaded_files[] = array('path' => $file_name, 'original_name' => $files['name'][$i]);
             }
         }
         
         // Response เดียวเท่านั้น
         echo json_encode(array(
-            'success' => true,
+            'success' => count($uploaded_files) > 0 && empty($errors),
             'message' => 'Upload completed',
             'uploaded' => count($uploaded_files),
             'total' => $file_count,

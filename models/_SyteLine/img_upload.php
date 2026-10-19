@@ -124,11 +124,24 @@ class img_upload {
 //        $query = " SELECT * FROM Mv_Bc_Tag_img_upload"
 //                . " LEFT JOIN Mv_Bc_Tag ON Mv_Bc_Tag.id = Mv_Bc_Tag_img_upload.tag_id  where 1=1 ";
 
+        $params = array();
         if ($FromTagId != "") {
-            $query = $query . "and Mv_Bc_Tag_img_upload.tag_id = '$FromTagId' ";
+            $query .= "and Mv_Bc_Tag_img_upload.tag_id = ? ";
+            $params[] = $FromTagId;
         }
         if ($job != "") {
-            $query = $query . "and Mv_Bc_Tag_img_upload.lot like '%$job%' ";
+            $query .= "and Mv_Bc_Tag_img_upload.lot like ? ";
+            $params[] = '%' . $job . '%';
+        }
+        if ($sts_no != '') {
+            $query .= "and (Mv_Bc_Tag.sts_no like ? OR Mv_Bc_Tag.sts_no2 like ? OR Mv_Bc_Tag.sts_no3 like ?) ";
+            $params[] = '%' . $sts_no . '%';
+            $params[] = '%' . $sts_no . '%';
+            $params[] = '%' . $sts_no . '%';
+        }
+        if ($size_list != '') {
+            $query .= "and item_mst.Uf_NPS like ? ";
+            $params[] = '%' . $size_list . '%';
         }
         ////        $query = " select id,tag_id,lot,file_name_1,file_name_2,"
 //                . " create_date,create_by,remark,"
@@ -141,7 +154,7 @@ class img_upload {
 //        }
 //        $query = $query . " )";
         $cSql = new SqlSrv();
-        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        $rs0 = $cSql->SqlQuery2($this->StrConn, $query, $params);
         array_splice($rs0, count($rs0) - 1, 1);
         return $rs0;
     }

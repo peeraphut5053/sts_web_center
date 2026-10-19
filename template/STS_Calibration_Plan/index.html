@@ -626,7 +626,7 @@
 
                 var ret = `
                   <div style="display: flex; flex-direction: column; align-items: center;">
-                    ${data ? `<a href='module/STS_Calibration_Plan/files/${data}' target='_blank' style='font-size: 11px;'><i class='fa fa-file-pdf'></i> ${data}</a>` : ''}
+                    ${data ? `<a href='module/STS_Calibration_Plan/view_file.php?file=${encodeURIComponent(data)}' target='_blank' style='font-size: 11px;'><i class='fa fa-file-pdf'></i> ${data}</a>` : ''}
                     <input type="file" id="${uniqueId}" name="file" accept="application/pdf" 
                            onchange="UploadFiles('${row.RptNo}', this, '${data}')" 
                            style="display: none;" />

@@ -18,21 +18,22 @@ foreach ($_POST as $key => $value) {
 }
 
 include "../../initial.php";
+require_once __DIR__ . "/../../include/class.SeaweedFS.php";
 
 if ($_POST['load'] == 'CreateReturnPic') {
     $CallModel = new CallModel();
     $CallModel->SyteLine_Models();
     $STS_Custom = new DeliveryOrder();
-    $upload_dir = 'upload/';
 
     $files = $_FILES['file'];
     $allowed_types = array('jpg', 'jpeg', 'png');
     $dept = isset($_POST['dept']) ? $_POST['dept'] : '';
+    if (empty($_POST['doc_no']) || !in_array($dept, array('Sales', 'QC'), true) || !isset($files['name']) || !is_array($files['name'])) {
+        echo json_encode(array('success' => false, 'message' => 'Invalid document, department or files'));
+        exit;
+    }
     $STS_Custom->setConn($ConnSL);
 
-    if (!file_exists($upload_dir)) {
-        mkdir($upload_dir, 0777, true);
-    }
 
     $results = array();
     $errors = array();
@@ -90,26 +91,21 @@ if ($_POST['load'] == 'CreateReturnPic') {
         }
 
         // สร้าง record ในฐานข้อมูล
-        $rs = $STS_Custom->CreateReturnPic($_POST['doc_no'], $file_type, $dept);
-
-        if (count($rs) > 0) {
-            $file_name = $rs[0]['path'];
-            $file_path = $upload_dir . $file_name;
-
-            // ย้ายไฟล์
-            if (move_uploaded_file($files['tmp_name'][$i], $file_path)) {
-                $results[] = $rs[0];
-            } else {
-                $errors[] = array(
-                    'file' => $files['name'][$i],
-                    'message' => 'ไม่สามารถบันทึกไฟล์ได้'
-                );
-            }
+        $clean_doc = substr(preg_replace('/[^A-Za-z0-9_-]/', '-', $_POST['doc_no']), 0, 17);
+        $file_name = 'RT_' . $dept . '_' . $clean_doc . '_' . date('Ymd_His') . '_' . bin2hex(random_bytes(6)) . '.' . $file_type;
+        if (!is_uploaded_file($files['tmp_name'][$i]) || !SeaweedFS::upload('Return-Item', $file_name, $files['tmp_name'][$i])) {
+            $errors[] = array('file' => $files['name'][$i], 'message' => 'Cannot upload to SeaweedFS');
+            continue;
+        }
+        $saved = sqlsrv_query($ConnSL,
+            'INSERT INTO STS_return_pic (doc_no, path, dept) OUTPUT INSERTED.* VALUES (?, ?, ?)',
+            array($_POST['doc_no'], $file_name, $dept));
+        if ($saved === false) {
+            SeaweedFS::delete('Return-Item', $file_name);
+            $errors[] = array('file' => $files['name'][$i], 'message' => 'Cannot save image record');
         } else {
-            $errors[] = array(
-                'file' => $files['name'][$i],
-                'message' => 'ไม่สามารถสร้าง record ในฐานข้อมูลได้'
-            );
+            $results[] = sqlsrv_fetch_array($saved, SQLSRV_FETCH_ASSOC);
+            sqlsrv_free_stmt($saved);
         }
     }
 
@@ -124,7 +120,6 @@ if ($_POST['load'] == 'CreateReturnPic') {
 }
 
 if ($_POST['load'] == 'DeleteReturnPic') {
-    $upload_dir = 'upload/';
     $CallModel = new CallModel();
     $CallModel->SyteLine_Models();
     $STS_Custom = new DeliveryOrder();
@@ -140,11 +135,12 @@ if ($_POST['load'] == 'DeleteReturnPic') {
         exit;
     }
 
-    $STS_Custom->DeleteReturnPic($_POST['path'], $dept);
-
-    if (file_exists($upload_dir . $_POST['path'])) {
-        unlink($upload_dir . $_POST['path']);
+    $filename = basename(str_replace('\\', '/', $pic[0]['path']));
+    if (!SeaweedFS::delete('Return-Item', $filename)) {
+        echo json_encode(array('success' => false, 'message' => 'Cannot delete file from SeaweedFS'));
+        exit;
     }
+    $STS_Custom->DeleteReturnPic($_POST['path'], $dept);
 
     echo json_encode(array(
         'success' => true

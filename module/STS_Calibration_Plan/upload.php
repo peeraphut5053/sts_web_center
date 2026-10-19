@@ -18,11 +18,7 @@ foreach ($_POST as $key => $value) {
 }
 
 include "../../initial.php";
-// ตั้งค่าโฟลเดอร์สำหรับเก็บไฟล์
-$upload_dir = 'files/';
-if (!file_exists($upload_dir)) {
-    mkdir($upload_dir, 0777, true);
-}
+require_once __DIR__ . '/../../include/class.SeaweedFS.php';
 
 if (isset($_FILES['file'])) {
     $file = $_FILES['file'];
@@ -34,33 +30,29 @@ if (isset($_FILES['file'])) {
         // ตรวจสอบนามสกุลไฟล์
         $file_type = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
         if (in_array($file_type, $allowed_types)) {
-            // ลบไฟล์เก่าถ้ามี
-            if (isset($old_file) && !empty($old_file)) {
-                $old_upload_path = $upload_dir . $old_file;
-                if (file_exists($old_upload_path)) {
-                    unlink($old_upload_path);
-                }
-            }
-
-            // ใช้ชื่อไฟล์
-            $new_filename = $file['name'];
-            $upload_path = $upload_dir . $new_filename;
-            
-            // ย้ายไฟล์
-            if (move_uploaded_file($file['tmp_name'], $upload_path)) {
-                $response['success'] = true;
-                $response['message'] = 'อัพโหลดสำเร็จ';
-                $response['file_url'] = $upload_dir . $new_filename;
-                
-                try {
-                    $CallModel = new CallModel();
-                    $CallModel->SyteLine_Models();
-                    $STS_Custom = new QcTestLab();
-                    $STS_Custom->setConn($ConnSL);
-                    $rs = $STS_Custom->UploadFileCalDocument($RptNo, $new_filename);
-                } catch (Exception $e) {
-                    // บันทึกข้อผิดพลาดแต่ไม่แสดงให้ผู้ใช้เห็น
-                    error_log("Error calling model: " . $e->getMessage());
+            $new_filename = basename(str_replace('\\', '/', $file['name']));
+            if (empty($RptNo)) {
+                $response['success'] = false;
+                $response['message'] = 'Missing report number';
+            } else if (is_uploaded_file($file['tmp_name']) && SeaweedFS::upload('Calibration-Plan', $new_filename, $file['tmp_name'])) {
+                $saved = sqlsrv_query($ConnSL,
+                    'UPDATE STS_QA_LAB_CalPlan SET Doc = ? WHERE RptNo = ?',
+                    array($new_filename, $RptNo));
+                if ($saved !== false && sqlsrv_rows_affected($saved) > 0) {
+                    sqlsrv_free_stmt($saved);
+                    $response['success'] = true;
+                    $response['message'] = 'Upload successful';
+                    $response['file_url'] = 'module/STS_Calibration_Plan/view_file.php?file=' . rawurlencode($new_filename);
+                    // Remove the previous attachment only after the replacement is saved.
+                    if (!empty($old_file)) {
+                        $old_name = basename(str_replace('\\', '/', $old_file));
+                        if ($old_name !== $new_filename) {
+                            SeaweedFS::delete('Calibration-Plan', $old_name);
+                        }
+                    }
+                } else {
+                    $response['success'] = false;
+                    $response['message'] = 'Failed to save document attachment';
                 }
             } else {
                 $response['success'] = false;

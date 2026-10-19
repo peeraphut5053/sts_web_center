@@ -86,6 +86,10 @@ and open the template in the editor.
             url: urlModule,
             dataType: 'json',
             beforeSend: function () {
+                if (![tag_id, sts_no, size, job].some(function (value) { return value && value.trim() !== ''; })) {
+                    $(tblReportId).after($('<p>').text('กรุณาระบุ Job, Tag, STS NO หรือ Size อย่างน้อย 1 ช่อง'));
+                    return false;
+                }
                 $(btnSearch).html("<i class='fa fa-spinner fa-spin'></i>");
             },
             data: {
@@ -110,9 +114,13 @@ and open the template in the editor.
                     "columns": tablecolumsArr,
                 });
                 $(tblReportId).loading("stop");
-                setTimeout(function () {
-                    window.print();
-                }, 1000);
+                Promise.all(Array.from(document.querySelectorAll('#tblReport img')).map(function (image) {
+                    return new Promise(function (resolve) {
+                        if (image.complete) return resolve();
+                        image.onload = resolve;
+                        image.onerror = resolve;
+                    });
+                })).then(function () { window.print(); });
 
             },
             error: function (e) {
@@ -124,7 +132,7 @@ and open the template in the editor.
         var tablecolumsArr = [
             {
                 "width": 10,
-                "data": "id",
+                "data": null,
                 render: function (data, type, row, meta) {
                     return meta.row + meta.settings._iDisplayStart + 1;
                 }
@@ -154,7 +162,7 @@ and open the template in the editor.
                 "data": "file_name_1",
                 "className": "text-center",
                 "render": function (data, type, row) {
-                    var ret = "<img height='230' width='230' src='APP_DO_PHOTO_PACKING_img/" + data + "'/>";
+                    var ret = (data ? "<img height='230' width='230' src='../../module/APP_DO_PHOTO_PACKING/view_file.php?file=" + encodeURIComponent(data) + "'/>" : "");
                     return ret;
                 }
             },
@@ -163,7 +171,7 @@ and open the template in the editor.
                 "data": "file_name_2",
                 "className": "text-center",
                 "render": function (data, type, row, meta) {
-                    var ret = "<img height='230' width='230' src='APP_DO_PHOTO_PACKING_img/" + data + "'/>";
+                    var ret = (data ? "<img height='230' width='230' src='../../module/APP_DO_PHOTO_PACKING/view_file.php?file=" + encodeURIComponent(data) + "'/>" : "");
                     return ret;
                 }
             },

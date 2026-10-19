@@ -669,7 +669,7 @@
                   return "";
                 }
 
-                var imagePath = escapeAttribute("module/Report_Repair_Open/upload/" + data);
+                var imagePath = escapeAttribute("module/Report_Repair_Open/view_file.php?file=" + encodeURIComponent(data));
                 var ret = "<img src='" + imagePath + "' onclick='btnShowImage(\"" + row.DocNo + "\")' style='width: 60px; height: 60px; object-fit: cover; cursor: pointer;' alt='Image'>";
                 return ret;
 
@@ -1023,7 +1023,7 @@
           // Add slide
           $('.carousel-inner').append(`
             <div class="item ${index === 0 ? 'active' : ''}">
-                <img src="module/Report_Repair_Open/upload/${img.path}" alt="Image">
+                <img src="module/Report_Repair_Open/view_file.php?file=${encodeURIComponent(img.path)}" alt="Image">
             </div>
         `);
         });

@@ -7,6 +7,7 @@ header("Content-Type: application/json; charset=UTF-8");
 
 include "../../initial.php";
 require_once "../../models/_WebApp/CustomerComplaint.php";
+require_once "../../include/class.SeaweedFS.php";
 
 $model = new CustomerComplaint();
 $model->setConn($ConnSL);
@@ -111,6 +112,25 @@ switch ($load) {
         echo json_encode($res);
         break;
 
+    case "view_file":
+        $file = isset($_REQUEST['file']) ? basename($_REQUEST['file']) : (isset($_REQUEST['path']) ? basename($_REQUEST['path']) : '');
+        if (empty($file)) {
+            header("HTTP/1.0 404 Not Found");
+            echo "File not found";
+            exit;
+        }
+
+        $mime = SeaweedFS::getMimeType($file);
+
+        // 1. Try streaming directly from SeaweedFS /buckets/Customer-Complaint/
+        if (SeaweedFS::stream('Customer-Complaint', $file, $mime)) {
+            exit;
+        }
+
+        header("HTTP/1.0 404 Not Found");
+        echo "File not found in SeaweedFS";
+        exit;
+
     case "upload_images":
         $docNo = isset($_POST["doc_no"]) ? trim($_POST["doc_no"]) : "";
         if (empty($docNo)) {
@@ -118,13 +138,27 @@ switch ($load) {
             break;
         }
 
-        $uploadDir = dirname(__DIR__, 2) . "/uploads/complaints/";
-        if (!file_exists($uploadDir)) {
-            mkdir($uploadDir, 0777, true);
-        }
-
         $uploadedCount = 0;
         $fileErrors = array();
+
+        $processSingleUpload = function($tmpName, $name, $key) use ($docNo, &$uploadedCount, &$fileErrors, $model, $currentUser) {
+            $ext = strtolower(pathinfo($name, PATHINFO_EXTENSION));
+            if (!in_array($ext, array("jpg", "jpeg", "png", "gif", "webp", "pdf"))) {
+                $fileErrors[] = "Invalid extension: " . $ext;
+                return;
+            }
+            $newFileName = $docNo . "_" . time() . "_" . $key . "." . $ext;
+            // Upload to SeaweedFS /buckets/Customer-Complaint/
+            $seaweedOk = SeaweedFS::upload('Customer-Complaint', $newFileName, $tmpName);
+
+            if ($seaweedOk) {
+                $dbPath = "uploads/complaints/" . $newFileName;
+                $model->AddPicture($docNo, $dbPath, $currentUser);
+                $uploadedCount++;
+            } else {
+                $fileErrors[] = "Failed to upload file to SeaweedFS: " . $name;
+            }
+        };
 
         if (isset($_FILES['files'])) {
             $files = $_FILES['files'];
@@ -133,21 +167,7 @@ switch ($load) {
                     if (empty($name)) continue;
                     $err = $files['error'][$key];
                     if ($err === UPLOAD_ERR_OK) {
-                        $tmpName = $files['tmp_name'][$key];
-                        $ext = strtolower(pathinfo($name, PATHINFO_EXTENSION));
-                        if (in_array($ext, array("jpg", "jpeg", "png", "gif", "webp", "pdf"))) {
-                            $newFileName = $docNo . "_" . time() . "_" . $key . "." . $ext;
-                            $targetPath = $uploadDir . $newFileName;
-                            if (move_uploaded_file($tmpName, $targetPath)) {
-                                $dbPath = "uploads/complaints/" . $newFileName;
-                                $model->AddPicture($docNo, $dbPath, $currentUser);
-                                $uploadedCount++;
-                            } else {
-                                $fileErrors[] = "Failed to move uploaded file: " . $name;
-                            }
-                        } else {
-                            $fileErrors[] = "Invalid extension: " . $ext;
-                        }
+                        $processSingleUpload($files['tmp_name'][$key], $name, $key);
                     } else {
                         $fileErrors[] = "Upload error code: " . $err;
                     }
@@ -155,22 +175,7 @@ switch ($load) {
             } else if (!empty($files['name'])) {
                 $err = $files['error'];
                 if ($err === UPLOAD_ERR_OK) {
-                    $tmpName = $files['tmp_name'];
-                    $name = $files['name'];
-                    $ext = strtolower(pathinfo($name, PATHINFO_EXTENSION));
-                    if (in_array($ext, array("jpg", "jpeg", "png", "gif", "webp", "pdf"))) {
-                        $newFileName = $docNo . "_" . time() . "_0." . $ext;
-                        $targetPath = $uploadDir . $newFileName;
-                        if (move_uploaded_file($tmpName, $targetPath)) {
-                            $dbPath = "uploads/complaints/" . $newFileName;
-                            $model->AddPicture($docNo, $dbPath, $currentUser);
-                            $uploadedCount++;
-                        } else {
-                            $fileErrors[] = "Failed to move uploaded file: " . $name;
-                        }
-                    } else {
-                        $fileErrors[] = "Invalid extension: " . $ext;
-                    }
+                    $processSingleUpload($files['tmp_name'], $files['name'], 0);
                 } else {
                     $fileErrors[] = "Upload error code: " . $err;
                 }
@@ -192,12 +197,9 @@ switch ($load) {
             break;
         }
 
-        // Unlink physical file if exists
-        $cleanPath = ltrim($path, '/\\');
-        $fullPath = dirname(__DIR__, 2) . "/" . $cleanPath;
-        if (file_exists($fullPath) && is_file($fullPath)) {
-            @unlink($fullPath);
-        }
+        // Delete from SeaweedFS /buckets/Customer-Complaint/
+        $filename = basename($path);
+        SeaweedFS::delete('Customer-Complaint', $filename);
 
         $res = $model->DeletePicture($docNo, $path);
         echo json_encode($res);
@@ -210,36 +212,18 @@ switch ($load) {
             break;
         }
 
-        $rootDir = dirname(__DIR__, 2);
-        $uploadDir = $rootDir . "/uploads/complaints/";
-
-        // 1. Delete all physical picture files from DB records
+        // Delete files from SeaweedFS only.
         $detail = $model->GetComplaintDetail($docNo);
         if ($detail && !empty($detail['pictures'])) {
             foreach ($detail['pictures'] as $pic) {
                 if (!empty($pic['path'])) {
-                    $cleanPath = ltrim($pic['path'], '/\\');
-                    $fullPath = $rootDir . "/" . $cleanPath;
-                    if (file_exists($fullPath) && is_file($fullPath)) {
-                        @unlink($fullPath);
-                    }
+                    $fn = basename($pic['path']);
+                    SeaweedFS::delete('Customer-Complaint', $fn);
+
                 }
             }
         }
 
-        // 2. Fallback: Clean up any files on disk matching $docNo
-        if (!empty($docNo) && is_dir($uploadDir)) {
-            $matchingFiles = glob($uploadDir . $docNo . "_*");
-            if ($matchingFiles) {
-                foreach ($matchingFiles as $f) {
-                    if (file_exists($f) && is_file($f)) {
-                        @unlink($f);
-                    }
-                }
-            }
-        }
-
-        // 3. Delete database records
         $res = $model->DeleteComplaint($docNo);
         echo json_encode($res);
         break;

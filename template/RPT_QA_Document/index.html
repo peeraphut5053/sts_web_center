@@ -494,7 +494,7 @@
                             className: "text-left",
                             render: function (data, type, row) {
                                 // link open file pdf
-                                var ret = "<a href='module/RPT_QA_Document/files/" + data + "' target='_blank'> " + data + " </a>";
+                                var ret = "<a href='module/RPT_QA_Document/view_file.php?file=" + encodeURIComponent(data) + "' target='_blank'> " + data + " </a>";
                                 return ret;
                             }
                         },
