@@ -1,6 +1,22 @@
 <?php
-// ตั้งค่า CORS ถ้าจำเป็น
-header('Content-Type: application/json');
+// The repair dialog uploads directly from the React application.
+$repairAllowedOrigins = array(
+    'http://localhost:3000', 'http://localhost:5000',
+    'http://127.0.0.1:3000', 'http://127.0.0.1:5000',
+    'http://172.18.1.194:3000', 'http://172.18.1.194:5000',
+    'http://61.90.156.165', 'http://61.90.156.165:3000', 'http://61.90.156.165:5000',
+    'http://61.90.156.170', 'http://61.90.156.170:3000', 'http://61.90.156.170:5000'
+);
+if (isset($_SERVER['HTTP_ORIGIN']) && in_array($_SERVER['HTTP_ORIGIN'], $repairAllowedOrigins, true)) {
+    header('Access-Control-Allow-Origin: ' . $_SERVER['HTTP_ORIGIN']);
+    header('Vary: Origin');
+    header('Access-Control-Allow-Methods: POST, OPTIONS');
+}
+if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(204);
+    exit;
+}
+header('Content-Type: application/json; charset=utf-8');
 
 foreach ($_GET as $key => $value) {
     $$key = trim($value);
@@ -49,7 +65,7 @@ if (isset($_FILES['file'])) {
                     if ($saved === false) {
                         SeaweedFS::delete('Report-Repair', $new_filename);
                         $response['success'][] = false;
-                        $response['message'][] = 'Failed to save repair attachment';
+                        $response['message'][] = 'อัปโหลดเข้า SeaweedFS แล้ว แต่บันทึกข้อมูลรูปในฐานข้อมูลไม่สำเร็จ';
                     } else {
                         sqlsrv_free_stmt($saved);
                         $response['success'][] = true;
@@ -58,7 +74,7 @@ if (isset($_FILES['file'])) {
                     }
                 } else {
                     $response['success'][] = false;
-                    $response['message'][] = 'ไม่สามารถบันทึกไฟล์ได้';
+                    $response['message'][] = 'ไม่สามารถส่งรูปเข้า SeaweedFS bucket Report-Repair ได้';
                 }
             } else {
                 $response['success'][] = false;
@@ -66,7 +82,11 @@ if (isset($_FILES['file'])) {
             }
         } else {
             $response['success'][] = false;
-            $response['message'][] = 'เกิดข้อผิดพลาดในการอัพโหลด: ' . $error;
+            if ($error === UPLOAD_ERR_INI_SIZE || $error === UPLOAD_ERR_FORM_SIZE) {
+                $response['message'][] = 'รูปมีขนาดเกินที่ PHP อนุญาต (upload_max_filesize=' . ini_get('upload_max_filesize') . ')';
+            } else {
+                $response['message'][] = 'PHP รับไฟล์ไม่สำเร็จ (upload error ' . $error . ')';
+            }
         }
     }
 } else {

@@ -945,52 +945,6 @@ FROM V_WebApp_InvItem_IN_noVAT where 1=1 ";
         return $rs0;
     }
 
-    function RPT_SALES_EX_ITEMS($InvFromDate, $InvToDate, $inv_num, $cust_num, $item, $country) {
-        $query = " select *,CONVERT(varchar(10),inv_date,120) as inv_date  FROM STS_sales_EX where 1=1 ";
-
-        if ($InvFromDate != "" && $InvFromDate != "") {
-            $query = $query . " and inv_date BETWEEN '$InvFromDate 00:00:00.000' and '$InvToDate 23:59:59.000'";
-        }
-        if ($inv_num != "") {
-            $query = $query . " and inv_num like '%$inv_num%' ";
-        }
-        if ($cust_num != "") {
-            $query = $query . " and (cust_num like '%$cust_num%' or name like '%$cust_num%' )";
-        }
-        if ($item != "") {
-            $query = $query . " and item like '%$item%' ";
-        }
-        if ($country != "") {
-            $query = $query . " and country like '%$country%' ";
-        }
-        $cSql = new SqlSrv();
-        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
-        array_splice($rs0, count($rs0) - 1, 1);
-        return $rs0;
-    }
-
-    function RPT_SALES_IN_ITEMS($InvFromDate, $InvToDate, $inv_num, $cust_num, $item) {
-        $query = " select *,CONVERT(varchar(10),inv_date,120) as inv_date  FROM STS_sales_IN where 1=1 ";
-
-        if ($InvFromDate != "" && $InvFromDate != "") {
-            $query = $query . " and inv_date BETWEEN '$InvFromDate 00:00:00.000' and '$InvToDate 23:59:59.000'";
-        }
-        if ($inv_num != "") {
-            $query = $query . " and inv_num like '%$inv_num%' ";
-        }
-        if ($cust_num != "") {
-            $query = $query . " and (customer like '%$cust_num%' or cust_name like '%$cust_num%' )";
-        }
-        if ($item != "") {
-            $query = $query . " and item like '%$item%' ";
-        }
-
-        $cSql = new SqlSrv();
-        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
-        array_splice($rs0, count($rs0) - 1, 1);
-        return $rs0;
-    }
-
     function Getinv_num($from_invnum, $to_invnum) {
         $query = "select inv_hdr_mst.inv_num,
         rtrim(ltrim(STS_AD_Entry_Summary.temp)) as temp,
