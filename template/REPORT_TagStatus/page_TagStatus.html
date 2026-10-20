@@ -121,6 +121,9 @@
     #tagImportModal input[type="file"]::file-selector-button { border: 1px solid #b9d3d3; border-radius: 4px; padding: 7px 12px; margin-right: 12px; background: #fff; color: #175e64; cursor: pointer; }
     #tagImportModal input:focus-visible, #tagImportModal button:focus-visible { outline: 3px solid #63b6bc; outline-offset: 3px; }
     #tagImportModal .tag-import-file-controls { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 16px; min-width: 0; }
+    #tagImportModal .tag-import-example { margin-left: auto; flex-shrink: 0; border-color: #d99a13; color: #493000; background: #ffd166; font-weight: 700; padding: 9px 14px; box-shadow: 0 2px 4px rgba(115, 76, 0, .15); }
+    #tagImportModal .tag-import-example:hover,
+    #tagImportModal .tag-import-example:focus { background: #ffc247; border-color: #b87d08; color: #362300; }
     #tagImportModal summary { cursor: pointer; color: #355d67; }
     #tagImportModal .tag-import-formats { margin: 0; font-size: 12px; color: #6a8085; }
     #tagImportModal .tag-import-guide { margin: 8px 0 10px; flex-shrink: 0; color: #62777d; font-size: 12px; line-height: 1.7; }
@@ -144,7 +147,7 @@
     @media (max-width: 600px) {
         #tagImportModal .modal-dialog { width: calc(100% - 20px); margin: 10px auto; }
         #tagImportModal .modal-header, #tagImportModal .modal-body, #tagImportModal .modal-footer { padding: 16px; }
-        #tagImportModal .tag-import-upload { padding: 14px; gap: 12px; }
+        #tagImportModal .tag-import-upload { padding: 14px; gap: 12px; flex-wrap: wrap; }
         #tagImportModal .tag-import-icon { display: none; }
         #tagImportModal .modal-content { height: calc(100vh - 20px); }
     }
@@ -249,6 +252,9 @@
                         <input type="file" id="tagImportFile" accept=".xlsx,.xls" aria-describedby="tagImportHelp" />
                         <div class="tag-import-formats">.xlsx / .xls &nbsp; · &nbsp; ไม่เกิน 10 MB &nbsp; · &nbsp; สูงสุด 1,000 แถว</div>
                         </div>
+                        <a class="btn btn-default btn-sm tag-import-example" href="template/REPORT_TagStatus/tag-status-example.xlsx" download="ตัวอย่าง update tag status.xlsx">
+                            <i class="fa fa-download" aria-hidden="true"></i>&nbsp; โหลดไฟล์ตัวอย่าง
+                        </a>
                     </div>
                     <div class="tag-import-guide" id="tagImportHelp">
                         <details><summary>รูปแบบไฟล์และหัวคอลัมน์ · ใช้ข้อมูลจากชีตแรก</summary>
