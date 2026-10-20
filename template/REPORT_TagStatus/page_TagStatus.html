@@ -20,6 +20,14 @@
         margin: 0;
     }
 
+    .tag-status-actions {
+        align-items: center;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        justify-content: flex-end;
+    }
+
     .tag-status-meta {
         color: #607d8b;
         font-size: 12px;
@@ -99,6 +107,47 @@
         min-height: 28px;
         padding: 3px 6px;
     }
+    #tagImportModal .modal-dialog { width: calc(100% - 48px); max-width: 1600px; margin: 16px auto; }
+    #tagImportModal .modal-content { display: flex; flex-direction: column; height: calc(100vh - 32px); border: 0; border-radius: 12px; overflow: hidden; box-shadow: 0 20px 60px rgba(14, 42, 49, .24); }
+    #tagImportModal .modal-header { background: #123c46; color: #fff; padding: 14px 22px; border: 0; flex-shrink: 0; }
+    #tagImportModal .modal-title { font-size: 20px; font-weight: 700; color: #fff; }
+    #tagImportModal .modal-header p { margin: 3px 0 0; color: #c4dce0; font-size: 13px; }
+    #tagImportModal .close { color: #fff; opacity: .8; font-size: 28px; }
+    #tagImportModal .modal-body { background: #fff; padding: 14px 22px; display: flex; flex-direction: column; flex: 1; min-height: 0; overflow: auto; }
+    #tagImportModal .tag-import-upload { display: flex; align-items: center; gap: 12px; padding: 10px 14px; flex-shrink: 0; background: #f3f9f8; border: 1px dashed #8bbab7; border-radius: 8px; }
+    #tagImportModal .tag-import-icon { display: flex; align-items: center; justify-content: center; flex-shrink: 0; width: 34px; height: 38px; border-radius: 8px; background: #dfeee9; color: #21755b; font-size: 22px; }
+    #tagImportModal .tag-import-upload label { margin: 0; color: #183f48; font-size: 15px; }
+    #tagImportModal input[type="file"] { max-width: 100%; font-size: 13px; color: #42636b; }
+    #tagImportModal input[type="file"]::file-selector-button { border: 1px solid #b9d3d3; border-radius: 4px; padding: 7px 12px; margin-right: 12px; background: #fff; color: #175e64; cursor: pointer; }
+    #tagImportModal input:focus-visible, #tagImportModal button:focus-visible { outline: 3px solid #63b6bc; outline-offset: 3px; }
+    #tagImportModal .tag-import-file-controls { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 16px; min-width: 0; }
+    #tagImportModal summary { cursor: pointer; color: #355d67; }
+    #tagImportModal .tag-import-formats { margin: 0; font-size: 12px; color: #6a8085; }
+    #tagImportModal .tag-import-guide { margin: 8px 0 10px; flex-shrink: 0; color: #62777d; font-size: 12px; line-height: 1.7; }
+    #tagImportModal .tag-import-guide code { background: #edf3f5; color: #355d67; white-space: normal; }
+    #tagImportModal .tag-import-warning { color: #94621b; }
+    #tagImportModal .tag-import-preview-title { display: flex; flex-wrap: wrap; align-items: baseline; gap: 12px; border-top: 1px solid #e5edef; padding-top: 10px; flex-shrink: 0; color: #183f48; }
+    #tagImportModal .tag-import-preview-title strong { font-size: 15px; }
+    #tagImportMessage { font-size: 13px; color: #476970; }
+    #tagImportPreview { flex: 1; min-height: 120px; overflow: auto; margin-top: 10px; border: 1px solid #dbe6e9; border-radius: 6px; }
+    #tagImportPreview:empty { display: none; }
+    #tagImportPreview table { margin: 0; border: 0; font-size: 13px; }
+    #tagImportPreview thead th { position: sticky; top: 0; z-index: 1; background: #eaf2f4; color: #244b56; padding: 11px 10px; border-color: #dbe6e9; white-space: nowrap; }
+    #tagImportPreview tbody td { padding: 9px 10px; border-color: #e7eef0; color: #3d555c; white-space: nowrap; }
+    #tagImportPreview tbody tr:nth-child(even) { background: #f7fafb; }
+    #tagImportPreview tbody tr:hover { background: #edf7f5; }
+    #tagImportPreview tbody td:last-child { min-width: 260px; max-width: 400px; white-space: normal; }
+    #tagImportModal .modal-footer { flex-shrink: 0; padding: 10px 22px; background: #f7fafb; border-color: #e5edef; }
+    #tagImportModal .modal-footer .btn { padding: 9px 18px; border-radius: 5px; font-weight: 700; }
+    #tagImportSave { background: #16757d; border-color: #12636a; }
+    #tagImportSave:hover { background: #12636a; }
+    @media (max-width: 600px) {
+        #tagImportModal .modal-dialog { width: calc(100% - 20px); margin: 10px auto; }
+        #tagImportModal .modal-header, #tagImportModal .modal-body, #tagImportModal .modal-footer { padding: 16px; }
+        #tagImportModal .tag-import-upload { padding: 14px; gap: 12px; }
+        #tagImportModal .tag-import-icon { display: none; }
+        #tagImportModal .modal-content { height: calc(100vh - 20px); }
+    }
 </style>
 
 <div class="tag-status-page">
@@ -106,7 +155,12 @@
         <div class="col-sm-8">
             <h1 class="my-header">Tag Status</h1>
         </div>
-        <div class="col-sm-4 tag-status-meta" id="tagStatusResultMeta">Ready</div>
+        <div class="col-sm-4 tag-status-actions">
+            <span class="tag-status-meta" id="tagStatusResultMeta">Ready</span>
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#tagImportModal">
+                <i class="fa fa-upload" aria-hidden="true"></i>&nbsp; Import Excel Update
+            </button>
+        </div>
     </div>
 
     <div class="tag-status-filter">
@@ -179,6 +233,43 @@
         </div>
     </div>
 
+    <div class="modal fade" id="tagImportModal" tabindex="-1" role="dialog" aria-labelledby="tagImportTitle">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="ปิด"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="tagImportTitle">Import Excel Update</h4>
+                    <p>อัปเดตข้อมูล Tag Status จากไฟล์ Excel</p>
+                </div>
+                <div class="modal-body">
+                    <div class="tag-import-upload">
+                        <div class="tag-import-icon" aria-hidden="true"><i class="fa fa-file-excel-o"></i></div>
+                        <div class="tag-import-file-controls">
+                        <label for="tagImportFile">เลือกไฟล์ที่ต้องการอัปเดต</label>
+                        <input type="file" id="tagImportFile" accept=".xlsx,.xls" aria-describedby="tagImportHelp" />
+                        <div class="tag-import-formats">.xlsx / .xls &nbsp; · &nbsp; ไม่เกิน 10 MB &nbsp; · &nbsp; สูงสุด 1,000 แถว</div>
+                        </div>
+                    </div>
+                    <div class="tag-import-guide" id="tagImportHelp">
+                        <details><summary>รูปแบบไฟล์และหัวคอลัมน์ · ใช้ข้อมูลจากชีตแรก</summary>
+                        <code>id, NC_QTY, QC_loc, QA_recordDate, Tag_Status, Issue, Minor_cause, Main_cause, Detail</code><br>
+                        จับคู่ด้วย <strong>id</strong> · วันที่ใช้ YYYY-MM-DD หรือวันที่ Excel</details>
+                        <span class="tag-import-warning"><i class="fa fa-info-circle" aria-hidden="true"></i> ช่องว่างในไฟล์จะล้างค่าเดิม กรุณาตรวจสอบข้อมูลก่อนยืนยัน</span>
+                    </div>
+                    <div class="tag-import-preview-title">
+                        <strong>ตัวอย่างข้อมูล</strong>
+                        <div id="tagImportMessage" role="status" aria-live="polite">เลือกไฟล์เพื่อแสดงตัวอย่างก่อนอัปเดต</div>
+                    </div>
+                    <div id="tagImportPreview" class="table-responsive"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">ปิด</button>
+                    <button type="button" id="tagImportSave" class="btn btn-success" disabled>ยืนยันอัปเดต Excel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="row tag-status-table-wrap" id="divReportM">
         <table class="table table-condensed table-bordered table-striped" id="tblReportShow">
             <thead>
@@ -217,6 +308,8 @@
     </div>
 </div>
 
+<script src="js/xlsx.full.min.js"></script>
+<script src="template/REPORT_TagStatus/import.js"></script>
 <script type="text/javascript">
     $("#mfg_date").datepicker({
         dateFormat: 'yy-mm-dd'

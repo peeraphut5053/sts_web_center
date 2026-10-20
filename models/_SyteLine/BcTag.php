@@ -7,6 +7,74 @@ class BcTag {
     public $_EndDate = "";
     public $_docs = array();
 
+    // Validate the entire workbook before writing; rollback the batch on any failure.
+    function ImportTagStatus($rows) {
+        $fields = array('id', 'NC_QTY', 'QC_loc', 'QA_recordDate', 'Tag_Status', 'Issue', 'Minor_cause', 'Main_cause', 'Detail');
+        $seen = array();
+        $statuses = array('', 'Good', 'OnHold', 'Follow', 'Reject', 'Fixed', 'Nc Accept');
+        $mains = array('', 'SL', 'FO', 'FI', 'Ma', 'Wa', 'Ot');
+        $transaction = false;
+        try {
+            $lookups = array();
+            foreach (array('Issue' => 'STS_QA_TAG_ISSUE', 'Minor_cause' => 'STS_QA_TAG_Minor') as $field => $table) {
+                $stmt = sqlsrv_query($this->StrConn, 'SELECT id FROM ' . $table);
+                if ($stmt === false) throw new Exception('Cannot load reference data');
+                $lookups[$field] = array();
+                while ($item = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
+                    $lookups[$field][(string)$item['id']] = true;
+                }
+                sqlsrv_free_stmt($stmt);
+            }
+            foreach ($rows as $i => &$row) {
+                $prefix = 'Row ' . ($i + 2) . ': ';
+                if (!is_array($row)) throw new Exception($prefix . 'Invalid row');
+                foreach ($fields as $field) {
+                    if (!array_key_exists($field, $row) || !is_scalar($row[$field])) throw new Exception($prefix . 'Missing/invalid ' . $field);
+                    $row[$field] = trim((string)$row[$field]);
+                }
+                if (!preg_match('/^[0-9]+$/D', $row['id']) || isset($seen[$row['id']])) throw new Exception($prefix . 'Invalid/duplicate id');
+                $seen[$row['id']] = true;
+                if ($row['NC_QTY'] !== '' && (!is_numeric($row['NC_QTY']) || !is_finite((float)$row['NC_QTY']) || (float)$row['NC_QTY'] < 0)) throw new Exception($prefix . 'Invalid NC_QTY');
+                $date = $row['QA_recordDate'];
+                if ($date !== '') {
+                    $parsed = DateTime::createFromFormat('!Y-m-d', $date);
+                    if (!$parsed || $parsed->format('Y-m-d') !== $date || (int)$parsed->format('Y') < 1753) throw new Exception($prefix . 'Date must be YYYY-MM-DD');
+                }
+                if (!in_array($row['Tag_Status'], $statuses, true)) throw new Exception($prefix . 'Invalid Tag_Status');
+                if (!in_array($row['Main_cause'], $mains, true)) throw new Exception($prefix . 'Invalid Main_cause');
+                foreach ($lookups as $field => $values) {
+                    if ($row[$field] !== '' && !isset($values[$row[$field]])) throw new Exception($prefix . 'Unknown ' . $field . ' code');
+                }
+            }
+            unset($row);
+            if (!sqlsrv_begin_transaction($this->StrConn)) throw new Exception('Cannot begin import');
+            $transaction = true;
+            foreach ($rows as $i => $row) {
+                $params = array();
+                foreach (array_slice($fields, 1) as $field) $params[] = $row[$field] === '' ? null : $row[$field];
+                $params[] = $row['id'];
+                $stmt = sqlsrv_query($this->StrConn,
+                    'DECLARE @updated TABLE (id nvarchar(255)); UPDATE mv_bc_tag SET NC_QTY=?, QC_loc=?, QA_RecordDate=?, tag_status=?, issue=?, Minor_cause=?, Main_cause=?, detail=? OUTPUT INSERTED.id INTO @updated WHERE id=?; SELECT id FROM @updated', $params);
+                if ($stmt === false) throw new Exception('Row ' . ($i + 2) . ': Update failed; check field lengths and values');
+                $updated = 0;
+                do {
+                    if (sqlsrv_num_fields($stmt) > 0) {
+                        while ($record = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) $updated++;
+                    }
+                    $next = sqlsrv_next_result($stmt);
+                    if ($next === false) throw new Exception('Row ' . ($i + 2) . ': Database rejected update');
+                } while ($next === true);
+                sqlsrv_free_stmt($stmt);
+                if ($updated !== 1) throw new Exception('Row ' . ($i + 2) . ': id not found or not unique');
+            }
+            if (!sqlsrv_commit($this->StrConn)) throw new Exception('Cannot commit import');
+            return array('success' => true, 'updated' => count($rows));
+        } catch (Exception $error) {
+            if ($transaction) sqlsrv_rollback($this->StrConn);
+            return array('success' => false, 'error' => $error->getMessage() . ' (No rows saved)');
+        }
+    }
+
     function setConn($c) {
         $this->StrConn = $c;
     }
