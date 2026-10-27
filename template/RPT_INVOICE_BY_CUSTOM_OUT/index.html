@@ -29,6 +29,8 @@
     justify-content: center;
     align-items: center;
     margin-bottom: 12px;
+    flex-wrap: wrap;
+    gap: 6px;
   }
   .sub-header-badge {
     font-size: 16px;
@@ -48,7 +50,7 @@
 </div>
 
 <div class="row item-center">
-  <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+  <div class="col-lg-2 col-md-2 col-sm-6 col-xs-6">
     <div class="input-group">
       <div class="input-group-addon">From Date</div>
       <input
@@ -59,7 +61,7 @@
       />
     </div>
   </div>
-  <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+  <div class="col-lg-2 col-md-2 col-sm-6 col-xs-6">
     <div class="input-group">
       <div class="input-group-addon">To Date</div>
       <input
@@ -68,6 +70,26 @@
         id="txtToDate"
         autocomplete="off"
       />
+    </div>
+  </div>
+  <div class="col-lg-2 col-md-2 col-sm-6 col-xs-6">
+    <div class="input-group">
+      <div class="input-group-addon">Invoice</div>
+      <input
+        type="text"
+        class="form-control txt-filter"
+        id="txtInvNum"
+        placeholder="inv_num..."
+        autocomplete="off"
+      />
+    </div>
+  </div>
+  <div class="col-lg-2 col-md-2 col-sm-6 col-xs-6">
+    <div class="input-group">
+      <div class="input-group-addon">Size</div>
+      <select class="form-control txt-filter" id="selItemSize">
+        <option value="">ทั้งหมด (All)</option>
+      </select>
     </div>
   </div>
   <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6 col-search">
@@ -113,17 +135,50 @@
   });
   $("#txtFromDate,#txtToDate").val(GetToday());
 
+  LoadSizeList();
+
+  function LoadSizeList() {
+    $.ajax({
+      type: "POST",
+      url: "././module/RPT_INVOICE_BY_CUSTOM_OUT/data.php",
+      dataType: "json",
+      data: {
+        load: "GetSizeList",
+      },
+      success: function (data) {
+        if (Array.isArray(data)) {
+          var $sel = $("#selItemSize");
+          $sel.empty().append($("<option>", { value: "", text: "ทั้งหมด (All)" }));
+          for (var i = 0; i < data.length; i++) {
+            var nps = data[i].Uf_NPS ? $.trim(data[i].Uf_NPS) : "";
+            if (nps !== "") {
+              $sel.append($("<option>", { value: nps, text: nps }));
+            }
+          }
+        }
+      },
+    });
+  }
+
   $("#btnSearch").click(function () {
     ReportItemSearch();
+  });
+
+  $("#txtInvNum").keypress(function (e) {
+    if (e.which == 13) {
+      ReportItemSearch();
+    }
   });
 
   function ReportItemSearch() {
     var OldHtml = $("#btnSearch").html();
     var StartDate = $("#txtFromDate").val();
     var EndDate = $("#txtToDate").val();
+    var inv_num = $.trim($("#txtInvNum").val());
+    var item_size = $("#selItemSize").val();
 
-    if (StartDate == "" || EndDate == "") {
-      $.alert("กรุณาเลือกวันที่เริ่มต้นและสิ้นสุดให้ครบถ้วน");
+    if ((StartDate == "" || EndDate == "") && inv_num == "") {
+      $.alert("กรุณาเลือกวันที่เริ่มต้น-สิ้นสุด หรือระบุเลขที่ Invoice");
       return false;
     }
 
@@ -142,6 +197,8 @@
         load: "ajax",
         StartDate: StartDate,
         EndDate: EndDate,
+        inv_num: inv_num,
+        item_size: item_size,
       },
       success: function (data) {
         $("#tblReport").DataTable().clear();
@@ -313,4 +370,3 @@
     });
   }
 </script>
-

@@ -1102,13 +1102,37 @@ order by inv_date,inv_num";
         return $rs0;
     }
 
-    function GetInvoiceByCustomOut($StartDate, $EndDate) {
+    function GetExportSizeList() {
+        $query = "select distinct Uf_NPS
+FROM item_mst
+where uf_market in ('USA', 'AUS') and Uf_NPS is not null and ltrim(rtrim(Uf_NPS)) <> ''
+order by Uf_NPS";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+
+    function GetInvoiceByCustomOut($StartDate, $EndDate, $inv_num = "", $item_size = "") {
+        $where = " WHERE 1=1 ";
+        if ($StartDate != "" && $EndDate != "") {
+            $where .= " AND v.inv_date between '$StartDate' and '$EndDate' ";
+        }
+        if ($inv_num != "") {
+            $safeInv = str_replace("'", "''", trim($inv_num));
+            $where .= " AND v.inv_num LIKE '%$safeInv%' ";
+        }
+        if ($item_size != "") {
+            $safeSize = str_replace('"', '', str_replace("'", "''", trim($item_size)));
+            $where .= " AND (LTRIM(RTRIM(v.item_size)) = '$safeSize\"' OR LTRIM(RTRIM(v.item_size)) = '$safeSize') ";
+        }
+
         $query = "select v.inv_date , v.inv_num , v.cust_num , v.name , v.item , v.description , item_size , item_thick 
  , item_width , item_length , unit_weight , group_code , group_final , country , spec
  , [Ton] = sum(qtykg)/1000 , STS_custom_OUT.doc_no
 FROM V_WebApp_InvItem_EX v
      left join STS_custom_OUT on v.inv_num = Rtrim(STS_custom_OUT.inv_no)
-WHERE v.inv_date between '$StartDate' and '$EndDate' 
+$where
 group by v.inv_date , v.inv_num , v.cust_num , v.name , v.item , v.description , item_size , item_thick 
  , item_width , item_length , unit_weight , group_code , group_final ,  country , spec , STS_custom_OUT.doc_no
 order by v.inv_date , v.inv_num";
