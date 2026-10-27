@@ -193,6 +193,7 @@
         <th class="bg-gray"></th>
         <th class="bg-gray"></th>
         <th class="bg-gray">date submit</th>
+        <th class="bg-gray">Status 04</th>
     </thead>
     <!--        <tbody id="tblReportList">
                       <tr><td align="center" colspan="12">.... No item search ....</td></tr>
@@ -419,7 +420,7 @@
           })
           $("#tblReport").DataTable().clear();
           $("#tblReport").append(
-            "<tfoot><tr><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th></tr></tfoot>"
+            "<tfoot><tr><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th></tr></tfoot>"
           );
           $("#tblReport").dataTable({
             aaData: newData,
@@ -622,6 +623,14 @@
                 let ret = `<span hidden>${(valdata)}</span><input type='text' class='input-text-value input_date_submit' size='20' onchange="SaveEdit('${row.doc_no}', value, 'date_submit');" value='${(valdata)}' />`;
                 return ret;
 
+                }
+              }
+              ,{
+                data: "status04",
+                className: "text-center",
+                render: function (data, type, row) {
+                  const checked = Number(data) === 1;
+                  return `<input type='checkbox' ${checked ? "checked" : ""} onchange="SaveEdit('${row.doc_no}', this.checked ? 1 : 0, 'status04');" aria-label='Status 04' />`;
                 }
               }
             ],

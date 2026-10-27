@@ -124,6 +124,7 @@
         <th class="bg-gray">spec</th>
         <th class="bg-gray">Ton</th>
         <th class="bg-gray">doc_no</th>
+        <th class="bg-gray">status04</th>
       </tr>
     </thead>
   </table>
@@ -312,6 +313,13 @@
             {
               data: "doc_no",
               className: "text-center",
+            },
+            {
+              data: "status04",
+              className: "text-center",
+              render: function (data) {
+                return String(data || "").trim() === "04" ? "04" : "-";
+              },
             },
           ],
           dom:
