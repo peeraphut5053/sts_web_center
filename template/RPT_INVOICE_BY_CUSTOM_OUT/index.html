@@ -114,12 +114,6 @@
         <th class="bg-gray">item</th>
         <th class="bg-gray">description</th>
         <th class="bg-gray">item_size</th>
-        <th class="bg-gray">item_thick</th>
-        <th class="bg-gray">item_width</th>
-        <th class="bg-gray">item_length</th>
-        <th class="bg-gray">unit_weight</th>
-        <th class="bg-gray">group_code</th>
-        <th class="bg-gray">group_final</th>
         <th class="bg-gray">country</th>
         <th class="bg-gray">spec</th>
         <th class="bg-gray">Ton</th>
@@ -202,10 +196,12 @@
         item_size: item_size,
       },
       success: function (data) {
-        $("#tblReport").DataTable().clear();
+        if ($.fn.DataTable.isDataTable("#tblReport")) {
+          $("#tblReport").DataTable().clear().destroy();
+        }
+        $("#tblReport tfoot").remove();
         $("#tblReport").append(
           "<tfoot><tr>" +
-            "<td></td><td></td><td></td><td></td><td></td>" +
             "<td></td><td></td><td></td><td></td><td></td>" +
             "<td></td><td></td><td></td><td></td><td></td>" +
             "<td></td><td></td>" +
@@ -258,37 +254,6 @@
             },
             {
               data: "item_size",
-              className: "text-center",
-            },
-            {
-              data: "item_thick",
-              className: "text-center",
-            },
-            {
-              data: "item_width",
-              className: "text-center",
-            },
-            {
-              data: "item_length",
-              className: "text-center",
-            },
-            {
-              data: "unit_weight",
-              className: "text-right",
-              render: function (data, type, row) {
-                if (data === null || data === undefined || data === "") {
-                  return "0.000";
-                }
-                var num = parseFloat(data);
-                return isNaN(num) ? data : addCommas(num.toFixed(3));
-              },
-            },
-            {
-              data: "group_code",
-              className: "text-center",
-            },
-            {
-              data: "group_final",
               className: "text-center",
             },
             {
@@ -353,14 +318,14 @@
                 : 0;
             };
             var totalTon = api
-              .column(15, { page: "current" })
+              .column(9, { page: "current" })
               .data()
               .reduce(function (a, b) {
                 return intVal(a) + intVal(b);
               }, 0);
 
-            $(api.column(14).footer()).html("<b>รวม (Ton)</b>");
-            $(api.column(15).footer()).html(
+            $(api.column(8).footer()).html("<b>รวม (Ton)</b>");
+            $(api.column(9).footer()).html(
               "<b>" + addCommas(totalTon.toFixed(3)) + "</b>"
             );
           },
