@@ -1,0 +1,316 @@
+<style>
+  .col-search {
+    padding-left: 3px;
+    padding-right: 3px;
+  }
+  .table thead th {
+    text-align: center;
+    white-space: nowrap;
+  }
+  .col-flt-page {
+    padding-top: 10px;
+    font-weight: bold;
+  }
+  #tblReport tbody tr td a {
+    cursor: pointer;
+  }
+  table.dataTable.fixedHeader-floating,
+  table.dataTable.fixedHeader-locked {
+    background-color: white;
+    margin-top: 50px !important;
+    margin-bottom: 0 !important;
+  }
+  .text-header {
+    font-weight: bold;
+    font-size: 20px;
+  }
+  .item-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  .sub-header-badge {
+    font-size: 16px;
+    color: #555;
+    font-weight: normal;
+    margin-left: 8px;
+  }
+</style>
+
+<div class="row">
+  <div style="margin-top: 10px; margin-bottom: 20px;">
+    <h1 class="my-header">
+      รายงานขายต่างตามใบขน
+      <span class="sub-header-badge">(รายงานท่อส่ง สมอ.)</span>
+    </h1>
+  </div>
+</div>
+
+<div class="row item-center">
+  <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+    <div class="input-group">
+      <div class="input-group-addon">From Date</div>
+      <input
+        type="text"
+        class="form-control txt-filter"
+        id="txtFromDate"
+        autocomplete="off"
+      />
+    </div>
+  </div>
+  <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+    <div class="input-group">
+      <div class="input-group-addon">To Date</div>
+      <input
+        type="text"
+        class="form-control txt-filter"
+        id="txtToDate"
+        autocomplete="off"
+      />
+    </div>
+  </div>
+  <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6 col-search">
+    <button id="btnSearch" class="btn btn-info">
+      <i class="fa fa-search"></i>&nbsp;ค้นหา
+    </button>
+  </div>
+</div>
+
+<div class="row" id="divReport">
+  <table
+    class="table table-condensed table-bordered table-striped"
+    width="100%"
+    id="tblReport"
+  >
+    <thead>
+      <tr>
+        <th class="bg-gray">inv_date</th>
+        <th class="bg-gray">inv_num</th>
+        <th class="bg-gray">cust_num</th>
+        <th class="bg-gray">name</th>
+        <th class="bg-gray">item</th>
+        <th class="bg-gray">description</th>
+        <th class="bg-gray">item_size</th>
+        <th class="bg-gray">item_thick</th>
+        <th class="bg-gray">item_width</th>
+        <th class="bg-gray">item_length</th>
+        <th class="bg-gray">unit_weight</th>
+        <th class="bg-gray">group_code</th>
+        <th class="bg-gray">group_final</th>
+        <th class="bg-gray">country</th>
+        <th class="bg-gray">spec</th>
+        <th class="bg-gray">Ton</th>
+        <th class="bg-gray">doc_no</th>
+      </tr>
+    </thead>
+  </table>
+</div>
+
+<script type="text/javascript">
+  $("#txtFromDate,#txtToDate").datepicker({
+    dateFormat: "yy-mm-dd",
+  });
+  $("#txtFromDate,#txtToDate").val(GetToday());
+
+  $("#btnSearch").click(function () {
+    ReportItemSearch();
+  });
+
+  function ReportItemSearch() {
+    var OldHtml = $("#btnSearch").html();
+    var StartDate = $("#txtFromDate").val();
+    var EndDate = $("#txtToDate").val();
+
+    if (StartDate == "" || EndDate == "") {
+      $.alert("กรุณาเลือกวันที่เริ่มต้นและสิ้นสุดให้ครบถ้วน");
+      return false;
+    }
+
+    $("#btnSearch").html("<i class='fa fa-spinner fa-spin'></i>");
+    $("#tblReport").loading();
+    $("#tblReport tfoot").remove();
+
+    $.ajax({
+      type: "POST",
+      url: "././module/RPT_INVOICE_BY_CUSTOM_OUT/data.php",
+      dataType: "json",
+      beforeSend: function () {
+        $("#btnSearch").html("<i class='fa fa-spinner fa-spin'></i>");
+      },
+      data: {
+        load: "ajax",
+        StartDate: StartDate,
+        EndDate: EndDate,
+      },
+      success: function (data) {
+        $("#tblReport").DataTable().clear();
+        $("#tblReport").append(
+          "<tfoot><tr>" +
+            "<td></td><td></td><td></td><td></td><td></td>" +
+            "<td></td><td></td><td></td><td></td><td></td>" +
+            "<td></td><td></td><td></td><td></td><td></td>" +
+            "<td></td><td></td>" +
+          "</tr></tfoot>"
+        );
+
+        $("#tblReport").dataTable({
+          aaData: data,
+          paging: false,
+          fixedHeader: true,
+          destroy: true,
+          processing: true,
+          scrollY: "65vh",
+          scrollCollapse: true,
+          scrollX: true,
+          select: false,
+          columns: [
+            {
+              data: "inv_date",
+              className: "text-center",
+              render: function (data, type, row) {
+                if (!data) return "";
+                if (typeof data === "object" && data.date) {
+                  return moment(data.date).format("YYYY-MM-DD");
+                }
+                return moment(data).isValid()
+                  ? moment(data).format("YYYY-MM-DD")
+                  : data;
+              },
+            },
+            {
+              data: "inv_num",
+              className: "text-center",
+            },
+            {
+              data: "cust_num",
+              className: "text-center",
+            },
+            {
+              data: "name",
+              className: "text-left",
+            },
+            {
+              data: "item",
+              className: "text-left",
+            },
+            {
+              data: "description",
+              className: "text-left",
+            },
+            {
+              data: "item_size",
+              className: "text-center",
+            },
+            {
+              data: "item_thick",
+              className: "text-center",
+            },
+            {
+              data: "item_width",
+              className: "text-center",
+            },
+            {
+              data: "item_length",
+              className: "text-center",
+            },
+            {
+              data: "unit_weight",
+              className: "text-right",
+              render: function (data, type, row) {
+                if (data === null || data === undefined || data === "") {
+                  return "0.000";
+                }
+                var num = parseFloat(data);
+                return isNaN(num) ? data : addCommas(num.toFixed(3));
+              },
+            },
+            {
+              data: "group_code",
+              className: "text-center",
+            },
+            {
+              data: "group_final",
+              className: "text-center",
+            },
+            {
+              data: "country",
+              className: "text-center",
+            },
+            {
+              data: "spec",
+              className: "text-center",
+            },
+            {
+              data: "Ton",
+              className: "text-right",
+              render: function (data, type, row) {
+                if (data === null || data === undefined || data === "") {
+                  return "0.000";
+                }
+                var num = parseFloat(data);
+                return isNaN(num) ? data : addCommas(num.toFixed(3));
+              },
+            },
+            {
+              data: "doc_no",
+              className: "text-center",
+            },
+          ],
+          dom:
+            "<'row'<'col-md-5'B><'col-md-7 text-right col-flt-page'lf>>" +
+            "<'row'<'col-md-12'tr>>" +
+            "<'row'<'col-md-5 text-left'i><'col-sm-7 text-right'p>>",
+          buttons: [
+            {
+              extend: "print",
+              text: "<i class='fa fa-print'></i>&nbsp;Print",
+              title: "รายงานขายต่างตามใบขน (รายงานท่อส่ง สมอ.)",
+            },
+            {
+              extend: "excel",
+              footer: true,
+              text: "<i class='fa fa-file-excel'></i>&nbsp;Excel",
+              title:
+                "รายงานขายต่างตามใบขน_รายงานท่อส่ง_สมอ_" +
+                StartDate +
+                "_to_" +
+                EndDate,
+            },
+          ],
+          footerCallback: function (row, data, start, end, display) {
+            var api = this.api();
+            var intVal = function (i) {
+              return typeof i === "string"
+                ? i.replace(/[\$,]/g, "") * 1
+                : typeof i === "number"
+                ? i
+                : 0;
+            };
+            var totalTon = api
+              .column(15, { page: "current" })
+              .data()
+              .reduce(function (a, b) {
+                return intVal(a) + intVal(b);
+              }, 0);
+
+            $(api.column(14).footer()).html("<b>รวม (Ton)</b>");
+            $(api.column(15).footer()).html(
+              "<b>" + addCommas(totalTon.toFixed(3)) + "</b>"
+            );
+          },
+        });
+
+        $("#tblReport").loading("stop");
+        $("#btnSearch").html(OldHtml);
+      },
+      error: function (e) {
+        $("#tblReport").loading("stop");
+        $("#btnSearch").html(OldHtml);
+        console.log("There was an error with your request...");
+        console.log("error: " + JSON.stringify(e));
+      },
+    });
+  }
+</script>
+

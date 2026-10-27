@@ -1102,4 +1102,20 @@ order by inv_date,inv_num";
         return $rs0;
     }
 
+    function GetInvoiceByCustomOut($StartDate, $EndDate) {
+        $query = "select v.inv_date , v.inv_num , v.cust_num , v.name , v.item , v.description , item_size , item_thick 
+ , item_width , item_length , unit_weight , group_code , group_final , country , spec
+ , [Ton] = sum(qtykg)/1000 , STS_custom_OUT.doc_no
+FROM V_WebApp_InvItem_EX v
+     left join STS_custom_OUT on v.inv_num = Rtrim(STS_custom_OUT.inv_no)
+WHERE v.inv_date between '$StartDate' and '$EndDate' 
+group by v.inv_date , v.inv_num , v.cust_num , v.name , v.item , v.description , item_size , item_thick 
+ , item_width , item_length , unit_weight , group_code , group_final ,  country , spec , STS_custom_OUT.doc_no
+order by v.inv_date , v.inv_num";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
+
 }
