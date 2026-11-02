@@ -111,8 +111,6 @@
         <th class="bg-gray">inv_num</th>
         <th class="bg-gray">cust_num</th>
         <th class="bg-gray">name</th>
-        <th class="bg-gray">item</th>
-        <th class="bg-gray">description</th>
         <th class="bg-gray">item_size</th>
         <th class="bg-gray">country</th>
         <th class="bg-gray">spec</th>
@@ -204,7 +202,6 @@
           "<tfoot><tr>" +
             "<td></td><td></td><td></td><td></td><td></td>" +
             "<td></td><td></td><td></td><td></td><td></td>" +
-            "<td></td><td></td>" +
           "</tr></tfoot>"
         );
 
@@ -242,14 +239,6 @@
             },
             {
               data: "name",
-              className: "text-left",
-            },
-            {
-              data: "item",
-              className: "text-left",
-            },
-            {
-              data: "description",
               className: "text-left",
             },
             {
@@ -324,8 +313,8 @@
                 return intVal(a) + intVal(b);
               }, 0);
 
-            $(api.column(8).footer()).html("<b>รวม (Ton)</b>");
-            $(api.column(9).footer()).html(
+            $(api.column(6).footer()).html("<b>รวม (Ton)</b>");
+            $(api.column(7).footer()).html(
               "<b>" + addCommas(totalTon.toFixed(3)) + "</b>"
             );
           },

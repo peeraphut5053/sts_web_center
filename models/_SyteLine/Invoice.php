@@ -1127,13 +1127,13 @@ order by Uf_NPS";
             $where .= " AND (LTRIM(RTRIM(v.item_size)) = '$safeSize\"' OR LTRIM(RTRIM(v.item_size)) = '$safeSize') ";
         }
 
-        $query = "select v.inv_date , v.inv_num , v.cust_num , v.name , v.item , v.description , item_size , country , spec
+        $query = "select v.inv_date , v.inv_num , v.cust_num , v.name , item_size , country , spec
  , [Ton] = sum(qtykg)/1000 , STS_custom_OUT.doc_no
  , status04 = case when STS_custom_OUT.status04 = 1 then '04' else '' end
 FROM V_WebApp_InvItem_EX v
      left join STS_custom_OUT on v.inv_num = Rtrim(STS_custom_OUT.inv_no)
 $where
-group by v.inv_date , v.inv_num , v.cust_num , v.name , v.item , v.description , item_size , country , spec , STS_custom_OUT.doc_no
+group by v.inv_date , v.inv_num , v.cust_num , v.name , item_size , country , spec , STS_custom_OUT.doc_no
  , case when STS_custom_OUT.status04 = 1 then '04' else '' end
 order by v.inv_date , v.inv_num";
         $cSql = new SqlSrv();
