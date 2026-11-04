@@ -28,7 +28,7 @@ if ($load == "GetReportCountPipe") {
     $CM->SyteLine_Models();
     $STS_COUNT = new API_FreeZone();
     $STS_COUNT->setConn($ConnSL);
-    $rs = $STS_COUNT->GetReportCountPipe($do_num, $start_date, $end_date);
+    $rs = $STS_COUNT->GetReportCountPipe($do_num, $start_date, $end_date, isset($date_field) ? $date_field : 'createdate');
     echo json_encode($rs);
 }
 

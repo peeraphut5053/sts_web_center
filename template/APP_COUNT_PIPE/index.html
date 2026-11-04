@@ -76,18 +76,46 @@
     display: flex;
     justify-content: center;
   }
+
+  #count-pipe-filters {
+    flex-wrap: wrap;
+    align-items: flex-start;
+    padding-bottom: 10px;
+  }
+
+  #count-pipe-filters > div {
+    margin-bottom: 8px;
+  }
+
+  #count-pipe-filters .input-group {
+    width: 100%;
+  }
+
+  #count-pipe-filters label.input-group-addon {
+    margin-bottom: 0;
+    font-weight: normal;
+  }
 </style>
 <div style="margin-top: 10px; margin-bottom: 20px;">
   <h1 class="my-header">รายงานการนับท่อ</h1>
 </div>
-<div class="row item-center">
+<div class="row item-center" id="count-pipe-filters">
+  <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+    <div class="input-group">
+      <label for="count_pipe_date_field" class="input-group-addon">ค้นหาตามวันที่</label>
+      <select id="count_pipe_date_field" class="form-control">
+        <option value="createdate">Create Date</option>
+        <option value="count_date">วันที่ตรวจนับ</option>
+      </select>
+    </div>
+  </div>
   <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
     <div class="input-group">
       <div class="input-group-addon">From Date</div>
       <input type="text" class="form-control" id="start_date_count_pipe" autocomplete="off" />
     </div>
   </div>
-  <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+  <div class="col-lg-2 col-md-2 col-sm-6 col-xs-6">
     <div class="input-group">
       <div class="input-group-addon">To Date</div>
       <input type="text" class="form-control" id="end_date_count_pipe" autocomplete="off" />
@@ -114,7 +142,8 @@
         <th class="bg-gray">จำนวนที่ระบบนับ</th>
         <th class="bg-gray">จำนวนนับจริง</th>
         <th class="bg-gray">รูปภาพ</th>
-        <!--<th class="bg-gray">Create Date</th>-->
+        <th class="bg-gray">วันที่ตรวจนับ</th>
+        <th class="bg-gray">Create Date</th>
         <th class="bg-gray">User</th>
         <th class="bg-gray">หมายเหตุ</th>
       </tr>
@@ -159,6 +188,44 @@
 </div>
 <script type="text/javascript">
   var username_session = GetUserProp("login_username");
+  var canEditPipeCountDate = false;
+  var pipeCountDateCsrf = null;
+  $.getJSON('././module/APP_COUNT_PIPE/update-count-date.php', function (permissions) {
+    canEditPipeCountDate = permissions.can_edit === true;
+    pipeCountDateCsrf = permissions.csrf_token;
+    if ($.fn.dataTable.isDataTable('#tblReportCountPipe')) {
+      $('#tblReportCountPipe').DataTable().rows().invalidate().draw(false);
+    }
+  });
+
+  $('#tblReportCountPipe').off('click.countDate', '.edit-count-date').on('click.countDate', '.edit-count-date', function () {
+    if (!canEditPipeCountDate) return;
+    var table = $('#tblReportCountPipe').DataTable();
+    var row = table.row($(this).closest('tr'));
+    var record = row.data();
+    var rawDate = record.count_date && (record.count_date.date || record.count_date);
+    var input = $('<input>', { type: 'date', class: 'form-control input-sm', 'aria-label': 'วันที่ตรวจนับ' }).val(rawDate ? String(rawDate).slice(0, 10) : '');
+    var save = $('<button>', { type: 'button', class: 'btn btn-success btn-xs', text: 'บันทึก' });
+    var cancel = $('<button>', { type: 'button', class: 'btn btn-default btn-xs', text: 'ยกเลิก' });
+    $(this).closest('td').empty().append(input, save, ' ', cancel);
+    cancel.on('click', function () { row.invalidate().draw(false); });
+    save.on('click', function () {
+      if (!input.val()) { input.focus(); return; }
+      input.add(save).add(cancel).prop('disabled', true);
+      $.ajax({
+        type: 'POST', url: '././module/APP_COUNT_PIPE/update-count-date.php', dataType: 'json',
+        data: { do_num: record.do_num, record_createdate: record.record_createdate, count_date: input.val(), csrf_token: pipeCountDateCsrf },
+        success: function (result) {
+          if (result.success) { ReportItemSearch(); }
+          else { input.add(save).add(cancel).prop('disabled', false); $.alert(result.message || 'บันทึกไม่สำเร็จ'); }
+        },
+        error: function (xhr) {
+          input.add(save).add(cancel).prop('disabled', false);
+          $.alert(xhr.responseJSON && xhr.responseJSON.message || 'บันทึกไม่สำเร็จ');
+        }
+      });
+    });
+  });
   $("#btnSearchReportCountPipe").click(function () {
     ReportItemSearch();
   });
@@ -203,6 +270,7 @@
         do_num: do_num,
         start_date: start_date,
         end_date: end_date,
+        date_field: $("#count_pipe_date_field").val(),
       },
       success: function (data) {
         $("#tblReportCountPipe").DataTable().clear();
@@ -242,13 +310,26 @@
                 // return '<div style="display: flex; align-items: center; justify-content: center;"><img src="module/APP_COUNT_PIPE/view_file.php?file=' + encodeURIComponent(data) + '&v=' + Date.now() + '" style="width: 50px; height: 50px; " onclick="openImage(this.src)"></div>';
               }
             },
-            /* {
-               data: "createdate.date",
-               className: "text-center",
-               render: function (data, type, row) {
-                 return moment(data).format("DD/MM/YYYY");
-               },
-             },*/
+            {
+              data: "count_date.date",
+              defaultContent: "-",
+              className: "text-center",
+              render: function (data, type, row) {
+                var value = data || (typeof row.count_date === "string" ? row.count_date : null);
+                if (type === 'sort' || type === 'type') return value || '';
+                var label = value ? moment(value).format('DD/MM/YYYY') : '-';
+                return type === 'display' && canEditPipeCountDate
+                  ? label + ' <button type="button" class="btn btn-default btn-xs edit-count-date">แก้ไข</button>'
+                  : label;
+              },
+            },
+            {
+              data: "createdate.date",
+              className: "text-center",
+              render: function (data, type, row) {
+                return moment(data).format("DD/MM/YYYY");
+              },
+            },
             {
               data: "user",
               className: "text-center",

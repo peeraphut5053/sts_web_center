@@ -54,7 +54,8 @@ try {
             $params['qty_system'], 
             $params['qty_human'], 
             $params['user'], 
-            $remark
+            $remark,
+            isset($params['count_date']) ? $params['count_date'] : null
         );
         
         $uploaded_files = array();

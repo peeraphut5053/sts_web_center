@@ -227,27 +227,53 @@ order by do_num desc";
         return $rs;
     }
 
-    function GetReportCountPipe($do_num, $start_date, $end_date) {
+    function GetReportCountPipe($do_num, $start_date, $end_date, $date_field = 'createdate') {
+        $date_column = $date_field === 'count_date' ? 'count_date' : 'createdate';
         $wh = '';
         if ($do_num !== '') {
             $wh = $wh . "and do_num = '$do_num' ";
         }
         
         if ($start_date !== '' && $end_date !== '') {
-            $wh = $wh . "and convert(date, createdate) between '$start_date' and '$end_date' ";
+            $wh = $wh . "and convert(date, $date_column) between '$start_date' and '$end_date' ";
         }
 
-        $query = "SELECT * FROM STS_count_pipe WHERE 1=1 $wh";
+        $query = "SELECT *, CONVERT(varchar(23), createdate, 126) AS record_createdate FROM STS_count_pipe WHERE 1=1 $wh";
         $cSql = new SqlSrv();
         $rs = $cSql->SqlQuery($this->StrConn, $query);
         array_splice($rs, count($rs) - 1, 1);
         return $rs;
     }
 
-    function CreateCountPipe($do_num, $qty_system, $qty_human, $user, $remark) {
-        $query = "INSERT INTO STS_count_pipe (do_num,qty_system_count,qty_human_count,[user],remark) OUTPUT INSERTED.* VALUES('$do_num','$qty_system','$qty_human','$user' ,'$remark')";
+    function UpdateCountPipeDate($do_num, $record_createdate, $count_date) {
+        if (!sqlsrv_begin_transaction($this->StrConn)) throw new Exception('Cannot begin transaction');
+        try {
+            $params = array($do_num, $record_createdate);
+            $stmt = sqlsrv_query($this->StrConn, 'SELECT COUNT(*) AS total FROM STS_count_pipe WITH (UPDLOCK, HOLDLOCK) WHERE do_num = ? AND createdate = CONVERT(datetime, ?, 126)', $params);
+            if ($stmt === false) throw new Exception('Cannot locate count record');
+            $row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
+            sqlsrv_free_stmt($stmt);
+            if (!$row || (int)$row['total'] !== 1) throw new Exception('Record not found or ambiguous. Please search again.');
+            $stmt = sqlsrv_query($this->StrConn, 'UPDATE STS_count_pipe SET count_date = CONVERT(date, ?) WHERE do_num = ? AND createdate = CONVERT(datetime, ?, 126)', array($count_date, $do_num, $record_createdate));
+            if ($stmt === false) throw new Exception('Cannot update count date');
+            sqlsrv_free_stmt($stmt);
+            if (!sqlsrv_commit($this->StrConn)) throw new Exception('Cannot commit count date');
+        } catch (Exception $e) {
+            sqlsrv_rollback($this->StrConn);
+            throw $e;
+        }
+    }
+
+    function CreateCountPipe($do_num, $qty_system, $qty_human, $user, $remark, $count_date = null) {
+        if ($count_date !== null) {
+            $date = DateTime::createFromFormat('!Y-m-d', $count_date);
+            if (!$date || $date->format('Y-m-d') !== $count_date || (int)substr($count_date, 0, 4) < 1) {
+                throw new Exception('Invalid count_date (YYYY-MM-DD)');
+            }
+        }
+        $query = "INSERT INTO STS_count_pipe (do_num,qty_system_count,qty_human_count,[user],remark,count_date) OUTPUT INSERTED.* VALUES(?,?,?,?,?,COALESCE(CONVERT(date, ?), CONVERT(date, GETDATE())))";
         $cSql = new SqlSrv();
-        $rs = $cSql->SqlQuery($this->StrConn, $query);
+        $rs = $cSql->SqlQuery2($this->StrConn, $query, array($do_num, $qty_system, $qty_human, $user, $remark, $count_date));
         array_splice($rs, count($rs) - 1, 1);
         return $rs;
     }
