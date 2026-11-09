@@ -147,6 +147,11 @@ if ($load == "editActualWeight") {
     echo json_encode($editActualWeight);
 }
 
+if ($load == "editPort") {
+    $editPort = $CallModelObj->editPort($doc_num, $port);
+    echo json_encode($editPort);
+}
+
 
 // BoatNoteOnly 14/3/2024 bymay
 
@@ -164,8 +169,9 @@ if ($load == "moveqty_create_hdr_BoatNoteOnly") {
     (isset($doc_type)) ? $doc_type = $doc_type : $doc_type = "Internal";
     (isset($do_num)) ? $do_num = $do_num : $do_num = "";
     (isset($boatList)) ? $boatList = $boatList : $boatList = "";
+    (isset($port)) ? $port = $port : $port = "";
 
-    $moveqty_create_hdr_BoatNoteOnly = $CallModelObj->moveqty_create_hdr_BoatNoteOnly($toLoc, $w_c, $doc_type, $do_num, $boatList, $destination, $ActWeight,$round);
+    $moveqty_create_hdr_BoatNoteOnly = $CallModelObj->moveqty_create_hdr_BoatNoteOnly($toLoc, $w_c, $doc_type, $do_num, $boatList, $destination, $ActWeight, $round, $port);
     echo json_encode($moveqty_create_hdr_BoatNoteOnly);
 }
 

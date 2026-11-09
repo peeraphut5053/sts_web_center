@@ -1403,13 +1403,24 @@ WHERE id = '$id' ";
         array_splice($rs0, count($rs0) - 1, 1);
         return $rs0;
     }
+
+    function BoatNoteByPort($do_group_name,$loc) {
+        $query = "EXEC STS_BOATNOTE_PORT @do_group_name = N'$do_group_name', @loc = N'$loc' ";
+        $cSql = new SqlSrv();
+        $rs0 = $cSql->SqlQuery($this->StrConn, $query);
+        array_splice($rs0, count($rs0) - 1, 1);
+        return $rs0;
+    }
 	
-	function BoatNoteSummaryByDoGroup($do_group_name,$loc) {
+	function BoatNoteSummaryByDoGroup($do_group_name,$loc,$port = '') {
         $query = "select uf_by,loc,loc_description, cust_name,city,sts_PO,sum(countsts_PO) as sumSTS_PO, sum([weight]) as sumWeight, cust_po, loc_no, startDate, endDate
+                  , Port
                   from V_STS_BoatNote_SUM
                   where do_group_name = '$do_group_name'
                   and case when '$loc' is null or '$loc' = '' then '1' else loc end = case when '$loc' is null or '$loc' = '' then '1' else '$loc' end
+                  and case when '$port' is null or '$port' = '' then '1' else Port end = case when '$port' is null or '$port' = '' then '1' else '$port' end
                   group by uf_by,loc,loc_description, cust_name,city,sts_PO,do_group_name, cust_po, loc_no, startDate, endDate
+                  , Port
                   order by sts_PO ";
         $cSql = new SqlSrv();
         $rs0 = $cSql->SqlQuery($this->StrConn, $query);
