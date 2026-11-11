@@ -317,6 +317,23 @@
     });
 
 
+    async function readQaUploadResponse(response) {
+        const text = await response.text();
+        if (!text.trim()) {
+            throw new Error('Server returned an empty upload response (HTTP ' + response.status + '). Please check the server log.');
+        }
+        let data;
+        try {
+            data = JSON.parse(text);
+        } catch (error) {
+            throw new Error('Server returned an invalid upload response (HTTP ' + response.status + '). Please check the server log.');
+        }
+        if (!response.ok || !data || data.success !== true) {
+            throw new Error((data && data.message) || 'Upload failed (HTTP ' + response.status + ').');
+        }
+        return data;
+    }
+
     async function UploadFiles(DocNo) {
 
         const fileInput = document.getElementById('file-input');
@@ -329,7 +346,7 @@
         const formData = new FormData();
         formData.append('code', DocNo);
         formData.append('file', files[0]);
-        formData.append('old_file', null);
+        formData.append('old_file', '');
         try {
 
             const response = await fetch('././module/RPT_QA_Document/upload.php', {
@@ -337,9 +354,8 @@
                 body: formData
             });
 
-            if (response.ok) {
-                const data = await response.json();
-                if (data.success) {
+            const data = await readQaUploadResponse(response);
+            if (data.success) {
                     alert('บันทึกสําเร็จ');
                     $('#qa_dept').val('');
                     $('#qa_code').val('');
@@ -349,11 +365,6 @@
                     fileInput.value = '';
                     $("#ModalQaAdd").modal("hide");
                     ReportItemSearch();
-                } else {
-                    alert('การอัพโหลดล้มเหลว');
-                }
-            } else {
-                throw new Error('การอัพโหลดล้มเหลว');
             }
         } catch (error) {
             alert('เกิดข้อผิดพลาดในการอัพโหลด: ' + error.message);
@@ -381,9 +392,8 @@
                 body: formData
             });
 
-            if (response.ok) {
-                const data = await response.json();
-                if (data.success) {
+            const data = await readQaUploadResponse(response);
+            if (data.success) {
                     $('#qa_dept_edit').val('');
                     $('#qa_code_edit').val('');
                     $('#qa_title_edit').val('');
@@ -397,11 +407,6 @@
                         alert("แก้ไขข้อมูลสําเร็จ");
                     }
                     ReportItemSearch();
-                } else {
-                    alert('การอัพโหลดล้มเหลว');
-                }
-            } else {
-                throw new Error('การอัพโหลดล้มเหลว');
             }
         } catch (error) {
             alert('เกิดข้อผิดพลาดในการอัพโหลด: ' + error.message);
