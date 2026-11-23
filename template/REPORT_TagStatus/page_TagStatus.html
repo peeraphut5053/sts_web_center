@@ -256,8 +256,12 @@
                             <i class="fa fa-download" aria-hidden="true"></i>&nbsp; โหลดไฟล์ตัวอย่าง
                         </a>
                     </div>
+                    <div class="form-group" id="tagImportSheetField" hidden>
+                        <label for="tagImportSheet">เลือกชีต</label>
+                        <select id="tagImportSheet" class="form-control" aria-describedby="tagImportHelp" disabled></select>
+                    </div>
                     <div class="tag-import-guide" id="tagImportHelp">
-                        <details><summary>รูปแบบไฟล์และหัวคอลัมน์ · ใช้ข้อมูลจากชีตแรก</summary>
+                        <details><summary>รูปแบบไฟล์และหัวคอลัมน์ · ใช้ข้อมูลจากชีตที่เลือก</summary>
                         <code>id, NC_QTY, QC_loc, QA_recordDate, Tag_Status, Issue, Minor_cause, Main_cause, Detail</code><br>
                         จับคู่ด้วย <strong>id</strong> · วันที่ใช้ YYYY-MM-DD หรือวันที่ Excel</details>
                         <span class="tag-import-warning"><i class="fa fa-info-circle" aria-hidden="true"></i> ช่องว่างในไฟล์จะล้างค่าเดิม กรุณาตรวจสอบข้อมูลก่อนยืนยัน</span>
@@ -315,7 +319,7 @@
 </div>
 
 <script src="js/xlsx.full.min.js"></script>
-<script src="template/REPORT_TagStatus/import.js"></script>
+<script src="template/REPORT_TagStatus/import.js?v=3"></script>
 <script type="text/javascript">
     $("#mfg_date").datepicker({
         dateFormat: 'yy-mm-dd'
