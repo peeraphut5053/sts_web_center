@@ -18,11 +18,32 @@ require_once __DIR__ . '/../../include/class.SeaweedFS.php';
 
 function doPhotoQuery($db, $sql, $args) {
     $result = sqlsrv_query($db, $sql, $args);
-    if (!$result) throw new RuntimeException('Database request failed', 500);
+    if (!$result) {
+        $errors = sqlsrv_errors(SQLSRV_ERR_ERRORS) ?: array();
+        foreach ($errors as $error) {
+            error_log('[DO group photos] SQLSTATE ' . $error['SQLSTATE'] . ', code ' . $error['code']);
+        }
+        throw new RuntimeException('DO group database is unavailable', 503);
+    }
     return $result;
 }
 
 function doPhotoStorage($url, $method = 'GET') {
+    if (!function_exists('curl_init')) {
+        $context = stream_context_create(array('http' => array(
+            'method' => $method,
+            'header' => "Accept: application/json\r\n",
+            'ignore_errors' => true,
+            'follow_location' => 0,
+            'timeout' => 15,
+        )));
+        $body = @file_get_contents($url, false, $context);
+        if ($body === false || !isset($http_response_header[0])
+            || !preg_match('/^HTTP\/\S+\s+(\d{3})/', $http_response_header[0], $match)) {
+            throw new RuntimeException('Photo storage is unavailable', 503);
+        }
+        return array((int) $match[1], $body);
+    }
     $request = curl_init($url);
     curl_setopt_array($request, array(
         CURLOPT_CUSTOMREQUEST => $method,
