@@ -3,7 +3,7 @@ use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
 header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Headers: Authorization, Content-Type');
+header('Access-Control-Allow-Headers: Authorization, Content-Type, X-STS-Token');
 header('Access-Control-Allow-Methods: GET, POST, PUT, OPTIONS');
 header('Cache-Control: private, no-store');
 header('X-Content-Type-Options: nosniff');
@@ -78,8 +78,12 @@ try {
     $authorization = isset($_SERVER['HTTP_AUTHORIZATION']) ? $_SERVER['HTTP_AUTHORIZATION']
         : (isset($_SERVER['REDIRECT_HTTP_AUTHORIZATION']) ? $_SERVER['REDIRECT_HTTP_AUTHORIZATION'] : '');
     try {
-        if (!preg_match('/\ABearer ([^\s]+)\z/i', $authorization, $match)) throw new RuntimeException();
-        $session = JWT::decode($match[1], new Key($key, 'HS256'));
+        $token = isset($_SERVER['HTTP_X_STS_TOKEN']) ? $_SERVER['HTTP_X_STS_TOKEN'] : '';
+        if ($token === '' && preg_match('/\ABearer ([^\s]+)\z/i', $authorization, $match)) {
+            $token = $match[1];
+        }
+        if ($token === '') throw new RuntimeException();
+        $session = JWT::decode($token, new Key($key, 'HS256'));
         if (empty($session->user) || empty($session->exp)) throw new RuntimeException();
     } catch (Throwable $error) {
         throw new RuntimeException('Please sign in again', 401);
